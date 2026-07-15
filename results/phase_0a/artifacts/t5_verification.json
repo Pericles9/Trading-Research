@@ -1,0 +1,29 @@
+{
+  "inventory_diff_summary": {
+    "before_count": 948,
+    "after_count": 950,
+    "unmoved_count": 947,
+    "moved_count": 0,
+    "new_count": 2,
+    "new_paths": ["docs/Research-Library-Map.md", "results/phase_0a/artifacts/t3_import_check.json"],
+    "changed_in_place_count": 1,
+    "changed_in_place": [
+      {
+        "path": "results/phase_0a/artifacts/reference_map.json",
+        "before_size": 9455,
+        "after_size": 9296,
+        "explanation": "T1 self-correction: a false-positive D:\\ match against this script's own docstring was fixed and the artifact regenerated before commit. Not a repo-content change."
+      }
+    ],
+    "unexplained_missing_count": 0
+  },
+  "t5a_git_log_follow": {
+    "status": "vacuous_by_design",
+    "reason": "T2 was approved with zero git mv operations - no pre-existing file changed path in this phase, so there is no rename history for --follow to resolve. Spot-checked git log --follow on 3 pre-existing files instead, to confirm the mechanism works and that these files' history begins cleanly at the T0 baseline commit (53e589e), as expected for files that were never renamed.",
+    "spot_checks": [
+      {"path": "archive/CLAUDE.md", "note": "see command output in REPORT.md"},
+      {"path": "research/00-Index.md", "note": "see command output in REPORT.md"},
+      {"path": "results/hardware/d_drive_inventory.md", "note": "see command output in REPORT.md"}
+    ]
+  }
+}

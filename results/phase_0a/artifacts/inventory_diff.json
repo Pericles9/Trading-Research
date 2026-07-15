@@ -1,0 +1,22 @@
+{
+  "before_count": 948,
+  "after_count": 950,
+  "unmoved_count": 947,
+  "moved_count": 0,
+  "moved": [],
+  "new_count": 2,
+  "new_paths": [
+    "docs/Research-Library-Map.md",
+    "results/phase_0a/artifacts/t3_import_check.json"
+  ],
+  "changed_in_place_count": 1,
+  "changed_in_place": [
+    {
+      "path": "results/phase_0a/artifacts/reference_map.json",
+      "before_size": 9455,
+      "after_size": 9296
+    }
+  ],
+  "unexplained_missing_count": 0,
+  "unexplained_missing": []
+}
