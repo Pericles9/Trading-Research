@@ -1,0 +1,87 @@
+{
+  "phase": "0a",
+  "title": "Repo Inventory, Organization & Library Map",
+  "branch": "phase/0a",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-15",
+  "baseline": null,
+  "summary": "Inventoried the repo, found it far larger and more structured than the phase prompt assumed (two independent nested git repos, an Obsidian vault, a recent D:->E: hardware migration, and a live-but-missing src/ data layer), scoped the reorg to the top-level orchestration area only, executed zero file moves (everything already sat in a sensible, documented location), and produced a full per-file Research Library Map.",
+  "escalations_triggered": [
+    {
+      "criterion": "in_scope_file_count_gt_300",
+      "observed": 940,
+      "resolution": "explicit_user_override",
+      "note": "User directed archive/runs/ to get per-file treatment in the inventory manifest rather than folder-level grouping, keeping the count over threshold deliberately. Confirmed during plan-mode negotiation before any writes."
+    },
+    {
+      "criterion": "file_references_d_drive_path",
+      "observed_count": 50,
+      "resolution": "posted_not_fixed",
+      "note": "8 confirmed live .py hardcodes (D:\\Mom_db, D:\\Trading...), 3 .ipynb hardcodes (d:\\Mom. DB started 11-21-25\\...), 1 out-of-scope sibling-repo doc reference, ~39 inert archived-output metadata references. Full list in reference_map.json and REPORT.md section 5."
+    }
+  ],
+  "decisions_log": [
+    {
+      "decision": "Scope Phase 0a to archive/, docs/, notebooks/, prompts/, research/, results/, and repo-root loose files only.",
+      "reason": "hawkes-ofi-impact/ and scanner-epg-momentum/ are independent, already-git-tracked, mature strategy projects with their own CLAUDE.md/MEMORY.md and commit history - not loose scripts the directory contract was designed to absorb. User confirmed this scope explicitly."
+    },
+    {
+      "decision": "archive/runs/ (685 files) gets per-file entries in the inventory JSON manifests, but folder-level entries (9, one per run subdirectory) in the human-readable map.",
+      "reason": "User rejected folder-level treatment for the manifest ('per-file, as the prompt literally specifies'). But the map has its own explicit ~600-line size cap the prompt says to resolve via grouping if hit - 685 individual lines for repetitive machine-generated output alone would blow that cap. Splitting the two artifacts' treatment satisfies both constraints: the JSON manifest is the literal per-file record, the map groups only where its own size rule requires it."
+    },
+    {
+      "decision": "research/ (Obsidian vault) and notebooks/ are described in place; zero files moved.",
+      "reason": "Both already have their own documented conventions (research/CLAUDE.md, notebooks/CLAUDE.md) predating this phase. Moving vault notes risks breaking Obsidian's filename-resolved wikilink graph for no integration benefit. User confirmed changes aren't ruled out in principle, but none were needed here."
+    },
+    {
+      "decision": "archive/runs/ (~1.5GB) and notebooks/*.ipynb (up to ~262MB) are excluded from git history via .gitignore, while still being fully catalogued per-file in the inventory JSON.",
+      "reason": "User flagged that committing large regenerable/immutable output into commit one is unrecoverable without a history rewrite, and that notebooks/CLAUDE.md already documents 'not git-tracked for outputs' as a pre-existing convention. Matches the same logic the prompt already applies to results/**/artifacts."
+    },
+    {
+      "decision": "Two nested repos get a summary section in the map (2-level tree + CLAUDE.md/MEMORY.md digest + relationship to this program) rather than a one-line 'out of scope' mention.",
+      "reason": "User pushed back on a bare exclusion note: the map's purpose is to give context, and blindly excluding a third of the workspace (9,933 files) defeats that purpose even if a full file walk is out of scope."
+    },
+    {
+      "decision": "git init was performed at the top level, with local (repo-scoped) user.name/user.email set to match the identity already used by both nested repos, since no global .gitconfig exists.",
+      "reason": "T0 requires cutting phase/0a from main, which requires a git repo and a commit identity to exist first. Repo-scoped config, not global - does not touch any other repo's or the user's global git configuration."
+    }
+  ],
+  "surprises": [
+    "The repo was not a git repository at the top level at the start of this phase.",
+    "hawkes-ofi-impact/ and scanner-epg-momentum/ are independent, mature, already-git-tracked strategy projects nested inside the target directory, each with extensive phase-based development history and their own CLAUDE.md/MEMORY.md standards docs.",
+    "research/ is a live Obsidian vault (graph view, wikilinks, tags, symlinks into archive/ and hawkes-ofi-impact/), not a loose notes folder - and its target path collides with the directory contract's own research/phase_{x}/ convention.",
+    "archive/CLAUDE.md, research/CLAUDE.md, and notebooks/CLAUDE.md, plus ~50 vault companion docs, all reference an extensive src/ codebase (models, signals, backtest runners including a v5 strategy, GPU tensor engine, archetype classifiers, a data access layer) that does not exist anywhere in the current checkout.",
+    "data/Schema.md, reviewed the day before this phase (2026-07-14), describes src/data/db.py, ingest.py, and paths.py as the live code that just ingested 4.9B+ rows into main.duckdb - and results/ingestion_fixes/investigation_and_fixes.md documents active edits to src/data/ingest.py as recently as 2026-07-11. That code is absent from the checkout as of this phase.",
+    "results/'s 9 topic-named subdirectories (cleanup, data_inventory, final_gap_fill, hardware, ingestion_fixes, ingestion_run, momentum_curation, quotes_fix, rebuild_stage1) are the working record of a D:-drive hardware failure and migration to E:, dated 2026-07-10 through 2026-07-12 - two to five days before this phase.",
+    "notebooks/CLAUDE.md's own file table has drifted from the actual directory contents: it lists two notebooks (Intensity_Gating.ipynb, Flow_Z-Score_Indicator.ipynb) that don't exist on disk, and omits 7 notebooks that do (ITT.ipynb, Signal_Analysis.ipynb, VIsualize 5 random (filtered).ipynb, regime.ipynb, tps.ipynb, tps_backup_grid.ipynb, volume.ipynb).",
+    "Three notebooks (ITT.ipynb, VIsualize 5 random (filtered).ipynb, regime.ipynb) contain a third, distinct D:\\ path pattern (d:\\Mom. DB started 11-21-25\\data\\filtered) not caught by the .py-only reference-map scan - found only by manually reading notebook cells during map authoring.",
+    "archive/misc/stat_validator.py and archive/misc/select_high_momentum_events.py both reference canonical src/ modules (src/backtest/stat_validator.py, strategies.bivariate_momentum_hawkes.data_loader) that are likewise absent from the checkout - consistent with the broader src/ finding above, not an isolated incident."
+  ],
+  "output_files": {
+    "inventory_before": "results/phase_0a/artifacts/inventory_before.json",
+    "reference_map": "results/phase_0a/artifacts/reference_map.json",
+    "inventory_after": "results/phase_0a/artifacts/inventory_after.json",
+    "inventory_diff": "results/phase_0a/artifacts/inventory_diff.json",
+    "t3_import_check": "results/phase_0a/artifacts/t3_import_check.json",
+    "t5_verification": "results/phase_0a/artifacts/t5_verification.json",
+    "map": "docs/Research-Library-Map.md",
+    "report": "results/phase_0a/REPORT.md",
+    "digest": "results/phase_0a/digest.json"
+  },
+  "counts": {
+    "in_scope_files_t1": 948,
+    "in_scope_files_final": 950,
+    "files_moved": 0,
+    "files_unmoved": 947,
+    "files_newly_created_this_phase": 5,
+    "unknown_classification_files": 0,
+    "deletion_candidate_groups": 4,
+    "nested_repos_out_of_scope": 2,
+    "nested_repo_files_not_walked": 9933
+  },
+  "blocking_items_for_next_phase": [
+    "src/data/db.py, ingest.py, paths.py location is unresolved - Phase 0 needs to know where the program's data layer actually lives (top level, inside one of the two nested repos, or elsewhere) before it can proceed. Not decided by this phase - see decisions_log and REPORT.md section 6.",
+    "D:\\ hardcodes in 8 live .py files and 3 notebooks are posted but not fixed - review needed before any of those scripts run again."
+  ],
+  "approval_gate": "Do not begin Phase 0 or any follow-on work until Cooper has reviewed the map and the diff and given explicit approval, per the phase prompt's Approval Gate."
+}
