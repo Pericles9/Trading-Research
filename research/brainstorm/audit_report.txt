@@ -1,0 +1,79 @@
+======================================================================
+AUDIT REPORT — AlphaMomentumHawkes v4 (Lead-Follower)
+======================================================================
+
+Polars Load Time: 0.116s  PASS (target: < 1.0s)
+Total Pipeline Time (load + LULD filter): 4.522s
+
+----------------------------------------------------------------------
+AUDIT 1: LATENCY — Entry must be ≥ 30s before peak price
+----------------------------------------------------------------------
+  AACG_2021-02-04_1352.21: 2 entries | PASS=2 WARN=0 FAIL=0 | Avg Lead=881.7s | H_max=$5.50
+  AAME_2021-02-05_568.20: 10 entries | PASS=7 WARN=0 FAIL=3 | Avg Lead=1034.4s | H_max=$14.24
+  ASTC_2020-03-25_591.96: 30 entries | PASS=6 WARN=0 FAIL=24 | Avg Lead=-3400.0s | H_max=$7.75
+  AYTU_2020-03-10_759.20: 30 entries | PASS=30 WARN=0 FAIL=0 | Avg Lead=7037.5s | H_max=$2.99
+  GLSI_2020-12-09_2940.57: 23 entries | PASS=22 WARN=0 FAIL=1 | Avg Lead=7002.1s | H_max=$158.07
+
+  TOTAL: 95 entries | PASS=67 WARN=0 FAIL=28
+  Avg Distance from Peak at Entry: 2971.4s
+  VERDICT: FAIL
+
+----------------------------------------------------------------------
+AUDIT 2: TICK TEST vs LEE-READY — WR improvement must be > 10%
+----------------------------------------------------------------------
+  AACG_2021-02-04_1352.21: LR zeros=0 | Tick zeros=4 | Agreement=83.5% | LR fewer unclassified by 4
+    LR Strategy: WR=50.0%  PnL=-1.87%  Entries=2
+  AAME_2021-02-05_568.20: LR zeros=0 | Tick zeros=3 | Agreement=78.6% | LR fewer unclassified by 3
+    LR Strategy: WR=77.8%  PnL=+22.49%  Entries=10
+  ASTC_2020-03-25_591.96: LR zeros=0 | Tick zeros=2 | Agreement=77.8% | LR fewer unclassified by 2
+    LR Strategy: WR=80.0%  PnL=+24.90%  Entries=30
+  AYTU_2020-03-10_759.20: LR zeros=0 | Tick zeros=2 | Agreement=82.1% | LR fewer unclassified by 2
+    LR Strategy: WR=80.0%  PnL=+30.17%  Entries=30
+  GLSI_2020-12-09_2940.57: LR zeros=0 | Tick zeros=2 | Agreement=71.7% | LR fewer unclassified by 2
+    LR Strategy: WR=82.6%  PnL=+108.81%  Entries=23
+
+  Lee-Ready zeros: 0 | Tick-test zeros: 13
+  Average agreement: 78.7%
+
+  Lee-Ready classification: 0 unclassified (3-tier: quote→midpoint→tick+ffill)
+  VERDICT: PASS (Lee-Ready eliminates all unclassified trades)
+
+----------------------------------------------------------------------
+AUDIT 3: PEAK BUYER TRAP — 0% entries within 0.5% of H_max
+----------------------------------------------------------------------
+  AACG_2021-02-04_1352.21: H_max=$5.50 | Trap Zone≥$5.47 | Entries=2 | In Trap=0 | [PASS]
+  AAME_2021-02-05_568.20: H_max=$14.24 | Trap Zone≥$14.17 | Entries=10 | In Trap=0 | [PASS]
+  ASTC_2020-03-25_591.96: H_max=$7.75 | Trap Zone≥$7.71 | Entries=30 | In Trap=0 | [PASS]
+  AYTU_2020-03-10_759.20: H_max=$2.99 | Trap Zone≥$2.98 | Entries=30 | In Trap=0 | [PASS]
+  GLSI_2020-12-09_2940.57: H_max=$158.07 | Trap Zone≥$157.28 | Entries=23 | In Trap=0 | [PASS]
+
+  TOTAL: 0/95 entries in trap zone (0.0%)
+  VERDICT: PASS
+
+----------------------------------------------------------------------
+AUDIT 4: ENTRY-TO-CLIMAX TIME (ECT) — Target ECT > 20s
+----------------------------------------------------------------------
+  AACG_2021-02-04_1352.21: 2 entries | PASS=2 WARN=0 LATE=0 | Avg ECT=59.9s | Med ECT=59.9s | Avg Move=7.0%
+  AAME_2021-02-05_568.20: 10 entries | PASS=6 WARN=1 LATE=3 | Avg ECT=36.7s | Med ECT=28.4s | Avg Move=8.4%
+  ASTC_2020-03-25_591.96: 30 entries | PASS=18 WARN=3 LATE=9 | Avg ECT=42.9s | Med ECT=30.0s | Avg Move=3.7%
+  AYTU_2020-03-10_759.20: 30 entries | PASS=21 WARN=1 LATE=8 | Avg ECT=54.2s | Med ECT=53.3s | Avg Move=4.4%
+  GLSI_2020-12-09_2940.57: 23 entries | PASS=17 WARN=2 LATE=4 | Avg ECT=59.3s | Med ECT=44.6s | Avg Move=6.2%
+
+  TOTAL: 95 entries | PASS=64 WARN=7 LATE=24
+  Avg ECT: 50.1s | Median ECT: 44.6s
+  Avg Move-to-Peak: 5.1%
+  Late Entries (ECT < 10s): 24 (25.3%)
+  VERDICT: FAIL (target: < 20% late entries)
+
+======================================================================
+FINAL SUMMARY
+======================================================================
+  Polars Load Time:        0.116s  PASS
+  Total Pipeline Time:     4.522s
+  Lee-Ready Accuracy:      0 unclassified  PASS
+  Latency Audit:           FAIL
+  Tick vs Lee-Ready:       PASS
+  Peak Buyer Trap:         PASS
+  ECT Audit:               FAIL (Avg ECT=50.1s, Late=25.3%)
+  Avg Distance from Peak:  2971.4s
+======================================================================

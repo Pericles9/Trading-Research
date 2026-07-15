@@ -1,0 +1,251 @@
+{
+  "filtered_trades": {
+    "n_files": 24609,
+    "n_distinct_columns": 12,
+    "columns": [
+      {
+        "column": "correction",
+        "files_with_column": 3863,
+        "files_missing_column": 20746,
+        "pct_present": 15.7,
+        "types_seen": {
+          "DOUBLE": 3863
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "element",
+        "files_with_column": 17352,
+        "files_missing_column": 7257,
+        "pct_present": 70.51,
+        "types_seen": {
+          "BIGINT": 17352
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "exchange",
+        "files_with_column": 17357,
+        "files_missing_column": 7252,
+        "pct_present": 70.53,
+        "types_seen": {
+          "BIGINT": 17357
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "id",
+        "files_with_column": 17357,
+        "files_missing_column": 7252,
+        "pct_present": 70.53,
+        "types_seen": {
+          "VARCHAR": 17357
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "participant_timestamp",
+        "files_with_column": 17203,
+        "files_missing_column": 7406,
+        "pct_present": 69.91,
+        "types_seen": {
+          "BIGINT": 17188,
+          "DOUBLE": 15
+        },
+        "type_conflict": true
+      },
+      {
+        "column": "price",
+        "files_with_column": 24609,
+        "files_missing_column": 0,
+        "pct_present": 100.0,
+        "types_seen": {
+          "DOUBLE": 24609
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "sequence_number",
+        "files_with_column": 17357,
+        "files_missing_column": 7252,
+        "pct_present": 70.53,
+        "types_seen": {
+          "BIGINT": 17357
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "sip_timestamp",
+        "files_with_column": 24609,
+        "files_missing_column": 0,
+        "pct_present": 100.0,
+        "types_seen": {
+          "BIGINT": 24609
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "size",
+        "files_with_column": 24609,
+        "files_missing_column": 0,
+        "pct_present": 100.0,
+        "types_seen": {
+          "BIGINT": 23719,
+          "DOUBLE": 890
+        },
+        "type_conflict": true
+      },
+      {
+        "column": "tape",
+        "files_with_column": 17357,
+        "files_missing_column": 7252,
+        "pct_present": 70.53,
+        "types_seen": {
+          "BIGINT": 17357
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "trf_id",
+        "files_with_column": 17202,
+        "files_missing_column": 7407,
+        "pct_present": 69.9,
+        "types_seen": {
+          "DOUBLE": 17202
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "trf_timestamp",
+        "files_with_column": 17202,
+        "files_missing_column": 7407,
+        "pct_present": 69.9,
+        "types_seen": {
+          "DOUBLE": 17202
+        },
+        "type_conflict": false
+      }
+    ]
+  },
+  "filtered_quotes": {
+    "n_files": 23003,
+    "n_distinct_columns": 11,
+    "columns": [
+      {
+        "column": "ask_exchange",
+        "files_with_column": 17203,
+        "files_missing_column": 5800,
+        "pct_present": 74.79,
+        "types_seen": {
+          "BIGINT": 17203
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "ask_price",
+        "files_with_column": 23003,
+        "files_missing_column": 0,
+        "pct_present": 100.0,
+        "types_seen": {
+          "DOUBLE": 23003
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "ask_size",
+        "files_with_column": 23003,
+        "files_missing_column": 0,
+        "pct_present": 100.0,
+        "types_seen": {
+          "BIGINT": 22866,
+          "DOUBLE": 137
+        },
+        "type_conflict": true
+      },
+      {
+        "column": "bid_exchange",
+        "files_with_column": 17203,
+        "files_missing_column": 5800,
+        "pct_present": 74.79,
+        "types_seen": {
+          "BIGINT": 17203
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "bid_price",
+        "files_with_column": 23003,
+        "files_missing_column": 0,
+        "pct_present": 100.0,
+        "types_seen": {
+          "DOUBLE": 23003
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "bid_size",
+        "files_with_column": 23003,
+        "files_missing_column": 0,
+        "pct_present": 100.0,
+        "types_seen": {
+          "BIGINT": 22856,
+          "DOUBLE": 147
+        },
+        "type_conflict": true
+      },
+      {
+        "column": "element",
+        "files_with_column": 17203,
+        "files_missing_column": 5800,
+        "pct_present": 74.79,
+        "types_seen": {
+          "BIGINT": 17203
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "participant_timestamp",
+        "files_with_column": 17203,
+        "files_missing_column": 5800,
+        "pct_present": 74.79,
+        "types_seen": {
+          "BIGINT": 17203
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "sequence_number",
+        "files_with_column": 17203,
+        "files_missing_column": 5800,
+        "pct_present": 74.79,
+        "types_seen": {
+          "BIGINT": 17203
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "sip_timestamp",
+        "files_with_column": 23003,
+        "files_missing_column": 0,
+        "pct_present": 100.0,
+        "types_seen": {
+          "BIGINT": 23003
+        },
+        "type_conflict": false
+      },
+      {
+        "column": "tape",
+        "files_with_column": 17203,
+        "files_missing_column": 5800,
+        "pct_present": 74.79,
+        "types_seen": {
+          "BIGINT": 17203
+        },
+        "type_conflict": false
+      }
+    ]
+  },
+  "raw_quotes": {
+    "error": "Invalid Input Error: File 'data\\quote_data\\CING_quotes_2024_08_16.parquet' too small to be a Parquet file"
+  }
+}

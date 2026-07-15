@@ -1,0 +1,1704 @@
+{
+  "polars_load_time_sec": 0.11649949999991804,
+  "total_pipeline_time_sec": 4.521953999999823,
+  "latency": {
+    "audit": "LATENCY",
+    "results": [
+      {
+        "event": "AACG_2021-02-04_1352.21",
+        "h_max": 5.5,
+        "t_peak": 72472.663759,
+        "n_entries": 2,
+        "n_pass": 2,
+        "n_warn": 0,
+        "n_fail": 0,
+        "avg_lead_sec": 881.7335254999998,
+        "entries": [
+          {
+            "entry_time": 71479.454622,
+            "entry_price": 4.79,
+            "lead_sec": 993.209136999998,
+            "dist_from_peak_pct": 12.909090909090908,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 71702.405845,
+            "entry_price": 4.78,
+            "lead_sec": 770.2579140000016,
+            "dist_from_peak_pct": 13.090909090909086,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "event": "AAME_2021-02-05_568.20",
+        "h_max": 14.24,
+        "t_peak": 73791.52863900001,
+        "n_entries": 10,
+        "n_pass": 7,
+        "n_warn": 0,
+        "n_fail": 3,
+        "avg_lead_sec": 1034.418082600004,
+        "entries": [
+          {
+            "entry_time": 70764.78551300001,
+            "entry_price": 3.9776,
+            "lead_sec": 3026.743126000001,
+            "dist_from_peak_pct": 72.06741573033707,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 70878.143139,
+            "entry_price": 3.8103,
+            "lead_sec": 2913.385500000004,
+            "dist_from_peak_pct": 73.24227528089888,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 71038.63331800001,
+            "entry_price": 3.945,
+            "lead_sec": 2752.8953210000036,
+            "dist_from_peak_pct": 72.29634831460675,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 71332.50657700001,
+            "entry_price": 5.06,
+            "lead_sec": 2459.0220620000036,
+            "dist_from_peak_pct": 64.46629213483146,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 71658.813456,
+            "entry_price": 5.6,
+            "lead_sec": 2132.7151830000075,
+            "dist_from_peak_pct": 60.67415730337079,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 72864.59272700001,
+            "entry_price": 9.8005,
+            "lead_sec": 926.9359120000008,
+            "dist_from_peak_pct": 31.176264044943824,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 72952.51233900001,
+            "entry_price": 11.04,
+            "lead_sec": 839.016300000003,
+            "dist_from_peak_pct": 22.47191011235956,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 74766.260802,
+            "entry_price": 8.5906,
+            "lead_sec": -974.7321629999933,
+            "dist_from_peak_pct": 39.67275280898876,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 74939.82575300001,
+            "entry_price": 9.2906,
+            "lead_sec": -1148.2971140000009,
+            "dist_from_peak_pct": 34.75702247191011,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 76375.03194,
+            "entry_price": 9.3101,
+            "lead_sec": -2583.5033009999897,
+            "dist_from_peak_pct": 34.62008426966292,
+            "status": "FAIL"
+          }
+        ]
+      },
+      {
+        "event": "ASTC_2020-03-25_591.96",
+        "h_max": 7.75,
+        "t_peak": 75151.805475,
+        "n_entries": 30,
+        "n_pass": 6,
+        "n_warn": 0,
+        "n_fail": 24,
+        "avg_lead_sec": -3400.0305788333358,
+        "entries": [
+          {
+            "entry_time": 71535.983997,
+            "entry_price": 4.1323,
+            "lead_sec": 3615.821477999998,
+            "dist_from_peak_pct": 46.68,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 71729.30395300001,
+            "entry_price": 4.2,
+            "lead_sec": 3422.5015219999914,
+            "dist_from_peak_pct": 45.806451612903224,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 72421.682319,
+            "entry_price": 4.125,
+            "lead_sec": 2730.1231560000015,
+            "dist_from_peak_pct": 46.774193548387096,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 73718.90810300001,
+            "entry_price": 6.8,
+            "lead_sec": 1432.8973719999922,
+            "dist_from_peak_pct": 12.258064516129034,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 74500.721453,
+            "entry_price": 6.9,
+            "lead_sec": 651.0840219999955,
+            "dist_from_peak_pct": 10.967741935483867,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 74982.68204500001,
+            "entry_price": 6.9826,
+            "lead_sec": 169.12342999999237,
+            "dist_from_peak_pct": 9.901935483870972,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76030.89125,
+            "entry_price": 5.965,
+            "lead_sec": -879.0857749999996,
+            "dist_from_peak_pct": 23.03225806451613,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 76381.029698,
+            "entry_price": 6.0597,
+            "lead_sec": -1229.2242229999974,
+            "dist_from_peak_pct": 21.81032258064516,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 76722.733884,
+            "entry_price": 6.36,
+            "lead_sec": -1570.928409,
+            "dist_from_peak_pct": 17.93548387096774,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 76900.098085,
+            "entry_price": 6.34,
+            "lead_sec": -1748.292610000004,
+            "dist_from_peak_pct": 18.193548387096776,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 76931.45881,
+            "entry_price": 6.25,
+            "lead_sec": -1779.6533349999954,
+            "dist_from_peak_pct": 19.35483870967742,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 77309.064096,
+            "entry_price": 6.565,
+            "lead_sec": -2157.258621000001,
+            "dist_from_peak_pct": 15.290322580645158,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 77347.886186,
+            "entry_price": 6.7,
+            "lead_sec": -2196.0807110000023,
+            "dist_from_peak_pct": 13.548387096774192,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 77985.61706,
+            "entry_price": 6.555,
+            "lead_sec": -2833.811585000003,
+            "dist_from_peak_pct": 15.419354838709681,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 78344.996402,
+            "entry_price": 6.93,
+            "lead_sec": -3193.1909270000033,
+            "dist_from_peak_pct": 10.580645161290327,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 79064.45193600001,
+            "entry_price": 7.12,
+            "lead_sec": -3912.646461000011,
+            "dist_from_peak_pct": 8.129032258064514,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 79204.31703600001,
+            "entry_price": 7.1742,
+            "lead_sec": -4052.5115610000066,
+            "dist_from_peak_pct": 7.42967741935484,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 79517.819045,
+            "entry_price": 7.025,
+            "lead_sec": -4366.0135699999955,
+            "dist_from_peak_pct": 9.354838709677415,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 80571.531714,
+            "entry_price": 6.35,
+            "lead_sec": -5419.726238999996,
+            "dist_from_peak_pct": 18.064516129032263,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 80640.863799,
+            "entry_price": 6.43,
+            "lead_sec": -5489.058323999998,
+            "dist_from_peak_pct": 17.03225806451613,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 81225.59124000001,
+            "entry_price": 5.775,
+            "lead_sec": -6073.785765000008,
+            "dist_from_peak_pct": 25.48387096774193,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 81314.880781,
+            "entry_price": 5.83,
+            "lead_sec": -6163.075305999999,
+            "dist_from_peak_pct": 24.774193548387096,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 81524.503704,
+            "entry_price": 6.11,
+            "lead_sec": -6372.698229000001,
+            "dist_from_peak_pct": 21.16129032258064,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 81960.457637,
+            "entry_price": 6.01,
+            "lead_sec": -6808.6521619999985,
+            "dist_from_peak_pct": 22.451612903225808,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 82003.45243,
+            "entry_price": 6.1,
+            "lead_sec": -6851.646955000004,
+            "dist_from_peak_pct": 21.290322580645167,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 82557.84581500001,
+            "entry_price": 5.88,
+            "lead_sec": -7406.040340000007,
+            "dist_from_peak_pct": 24.129032258064516,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 82780.83988900001,
+            "entry_price": 5.8994,
+            "lead_sec": -7629.034414000009,
+            "dist_from_peak_pct": 23.878709677419355,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 82919.493247,
+            "entry_price": 5.99,
+            "lead_sec": -7767.687772000005,
+            "dist_from_peak_pct": 22.709677419354836,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 83862.042774,
+            "entry_price": 4.88,
+            "lead_sec": -8710.237299,
+            "dist_from_peak_pct": 37.032258064516135,
+            "status": "FAIL"
+          },
+          {
+            "entry_time": 84563.933227,
+            "entry_price": 5.21,
+            "lead_sec": -9412.127752,
+            "dist_from_peak_pct": 32.774193548387096,
+            "status": "FAIL"
+          }
+        ]
+      },
+      {
+        "event": "AYTU_2020-03-10_759.20",
+        "h_max": 2.99,
+        "t_peak": 84714.916052,
+        "n_entries": 30,
+        "n_pass": 30,
+        "n_warn": 0,
+        "n_fail": 0,
+        "avg_lead_sec": 7037.466577366666,
+        "entries": [
+          {
+            "entry_time": 72221.870441,
+            "entry_price": 1.08,
+            "lead_sec": 12493.045610999994,
+            "dist_from_peak_pct": 63.87959866220736,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 73323.185089,
+            "entry_price": 1.23,
+            "lead_sec": 11391.730962999995,
+            "dist_from_peak_pct": 58.862876254180605,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 73601.552711,
+            "entry_price": 1.22,
+            "lead_sec": 11113.363341000004,
+            "dist_from_peak_pct": 59.19732441471572,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 73935.268391,
+            "entry_price": 1.19,
+            "lead_sec": 10779.647660999995,
+            "dist_from_peak_pct": 60.200668896321076,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 74486.06989,
+            "entry_price": 1.305,
+            "lead_sec": 10228.846162000002,
+            "dist_from_peak_pct": 56.35451505016723,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 74648.86002000001,
+            "entry_price": 1.31,
+            "lead_sec": 10066.056031999993,
+            "dist_from_peak_pct": 56.187290969899664,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76268.531656,
+            "entry_price": 1.0398,
+            "lead_sec": 8446.384395999994,
+            "dist_from_peak_pct": 65.22408026755852,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76360.467927,
+            "entry_price": 1.09,
+            "lead_sec": 8354.448124999995,
+            "dist_from_peak_pct": 63.54515050167224,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76787.780196,
+            "entry_price": 1.1,
+            "lead_sec": 7927.1358559999935,
+            "dist_from_peak_pct": 63.21070234113713,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76833.85638900001,
+            "entry_price": 1.11,
+            "lead_sec": 7881.059662999993,
+            "dist_from_peak_pct": 62.87625418060201,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76907.870549,
+            "entry_price": 1.12,
+            "lead_sec": 7807.045503000001,
+            "dist_from_peak_pct": 62.54180602006689,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77119.692482,
+            "entry_price": 1.135,
+            "lead_sec": 7595.223570000002,
+            "dist_from_peak_pct": 62.04013377926422,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77363.628132,
+            "entry_price": 1.14,
+            "lead_sec": 7351.2879200000025,
+            "dist_from_peak_pct": 61.87290969899666,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77785.34650500001,
+            "entry_price": 1.19,
+            "lead_sec": 6929.569546999992,
+            "dist_from_peak_pct": 60.200668896321076,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77824.557469,
+            "entry_price": 1.2039,
+            "lead_sec": 6890.358582999994,
+            "dist_from_peak_pct": 59.735785953177256,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77929.122338,
+            "entry_price": 1.23,
+            "lead_sec": 6785.793713999999,
+            "dist_from_peak_pct": 58.862876254180605,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78631.48748,
+            "entry_price": 1.215,
+            "lead_sec": 6083.428572000004,
+            "dist_from_peak_pct": 59.36454849498328,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78705.711218,
+            "entry_price": 1.246,
+            "lead_sec": 6009.204834000004,
+            "dist_from_peak_pct": 58.32775919732441,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78756.726408,
+            "entry_price": 1.2883,
+            "lead_sec": 5958.189643999998,
+            "dist_from_peak_pct": 56.913043478260875,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79255.473382,
+            "entry_price": 1.3,
+            "lead_sec": 5459.442670000004,
+            "dist_from_peak_pct": 56.52173913043479,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79324.466316,
+            "entry_price": 1.4,
+            "lead_sec": 5390.449735999995,
+            "dist_from_peak_pct": 53.17725752508362,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79441.998454,
+            "entry_price": 1.4,
+            "lead_sec": 5272.917598,
+            "dist_from_peak_pct": 53.17725752508362,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79643.131727,
+            "entry_price": 1.44,
+            "lead_sec": 5071.7843250000005,
+            "dist_from_peak_pct": 51.839464882943155,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79800.278403,
+            "entry_price": 1.48,
+            "lead_sec": 4914.637648999997,
+            "dist_from_peak_pct": 50.50167224080268,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80016.208216,
+            "entry_price": 1.55,
+            "lead_sec": 4698.707836000001,
+            "dist_from_peak_pct": 48.16053511705686,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80122.35492700001,
+            "entry_price": 1.46,
+            "lead_sec": 4592.561124999993,
+            "dist_from_peak_pct": 51.17056856187291,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80322.150736,
+            "entry_price": 1.5243,
+            "lead_sec": 4392.7653160000045,
+            "dist_from_peak_pct": 49.02006688963211,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80484.04149,
+            "entry_price": 1.46,
+            "lead_sec": 4230.874561999997,
+            "dist_from_peak_pct": 51.17056856187291,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 81096.541135,
+            "entry_price": 1.46,
+            "lead_sec": 3618.3749169999937,
+            "dist_from_peak_pct": 51.17056856187291,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 81325.254162,
+            "entry_price": 1.4999,
+            "lead_sec": 3389.661890000003,
+            "dist_from_peak_pct": 49.836120401337794,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "event": "GLSI_2020-12-09_2940.57",
+        "h_max": 158.07,
+        "t_peak": 87686.51314699999,
+        "n_entries": 23,
+        "n_pass": 22,
+        "n_warn": 0,
+        "n_fail": 1,
+        "avg_lead_sec": 7002.124473086952,
+        "entries": [
+          {
+            "entry_time": 77016.551368,
+            "entry_price": 24.7672,
+            "lead_sec": 10669.96177899999,
+            "dist_from_peak_pct": 84.3314987031062,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77130.882937,
+            "entry_price": 25.0,
+            "lead_sec": 10555.630209999988,
+            "dist_from_peak_pct": 84.18422218004682,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77304.53920999999,
+            "entry_price": 25.8357,
+            "lead_sec": 10381.973937000002,
+            "dist_from_peak_pct": 83.65553235908142,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77720.858773,
+            "entry_price": 25.2115,
+            "lead_sec": 9965.65437399999,
+            "dist_from_peak_pct": 84.05042069969001,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77745.441442,
+            "entry_price": 25.6903,
+            "lead_sec": 9941.071704999995,
+            "dist_from_peak_pct": 83.74751692288226,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78155.88246699999,
+            "entry_price": 27.8091,
+            "lead_sec": 9530.630680000002,
+            "dist_from_peak_pct": 82.4070981210856,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78462.44677699999,
+            "entry_price": 28.64,
+            "lead_sec": 9224.06637,
+            "dist_from_peak_pct": 81.88144492946165,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78940.80034399999,
+            "entry_price": 26.36,
+            "lead_sec": 8745.712803000002,
+            "dist_from_peak_pct": 83.32384386664135,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79341.505993,
+            "entry_price": 26.7958,
+            "lead_sec": 8345.007153999992,
+            "dist_from_peak_pct": 83.04814322768395,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79451.389467,
+            "entry_price": 27.5,
+            "lead_sec": 8235.12367999999,
+            "dist_from_peak_pct": 82.6026443980515,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79807.911125,
+            "entry_price": 27.0,
+            "lead_sec": 7878.602021999992,
+            "dist_from_peak_pct": 82.91895995445056,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80889.00436199999,
+            "entry_price": 25.19,
+            "lead_sec": 6797.508784999998,
+            "dist_from_peak_pct": 84.06402226861516,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80938.504368,
+            "entry_price": 25.8795,
+            "lead_sec": 6748.008778999996,
+            "dist_from_peak_pct": 83.62782311634086,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80993.269529,
+            "entry_price": 26.88,
+            "lead_sec": 6693.243617999993,
+            "dist_from_peak_pct": 82.99487568798634,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 81128.583279,
+            "entry_price": 27.3888,
+            "lead_sec": 6557.929867999992,
+            "dist_from_peak_pct": 82.67299297779465,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82061.290605,
+            "entry_price": 25.74,
+            "lead_sec": 5625.222541999989,
+            "dist_from_peak_pct": 83.7160751565762,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82214.04231399999,
+            "entry_price": 26.33,
+            "lead_sec": 5472.470832999999,
+            "dist_from_peak_pct": 83.34282280002532,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82513.244372,
+            "entry_price": 27.2,
+            "lead_sec": 5173.26877499999,
+            "dist_from_peak_pct": 82.79243373189094,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82698.646905,
+            "entry_price": 27.64,
+            "lead_sec": 4987.866241999989,
+            "dist_from_peak_pct": 82.51407604225976,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82761.063453,
+            "entry_price": 28.88,
+            "lead_sec": 4925.449693999995,
+            "dist_from_peak_pct": 81.72961346239008,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 83155.46498599999,
+            "entry_price": 34.7101,
+            "lead_sec": 4531.048160999999,
+            "dist_from_peak_pct": 78.04131081166572,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 84547.001398,
+            "entry_price": 46.7001,
+            "lead_sec": 3139.5117489999975,
+            "dist_from_peak_pct": 70.45606376921617,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 90762.614026,
+            "entry_price": 45.67,
+            "lead_sec": -3076.100879000005,
+            "dist_from_peak_pct": 71.10773707850952,
+            "status": "FAIL"
+          }
+        ]
+      }
+    ]
+  },
+  "tick_vs_lee_ready": {
+    "audit": "TICK_VS_LEE_READY",
+    "results": [
+      {
+        "event": "AACG_2021-02-04_1352.21",
+        "lee_ready": {
+          "buys": 105936,
+          "sells": 94064,
+          "zeros": 0,
+          "wr": 50.0,
+          "pnl": -1.8745468680392507,
+          "entries": 2
+        },
+        "tick_test": {
+          "buys": 100997,
+          "sells": 98999,
+          "zeros": 4
+        },
+        "agreement_pct": 83.4585,
+        "lr_fewer_unclassified": 4
+      },
+      {
+        "event": "AAME_2021-02-05_568.20",
+        "lee_ready": {
+          "buys": 102059,
+          "sells": 97941,
+          "zeros": 0,
+          "wr": 77.77777777777779,
+          "pnl": 22.489570914458536,
+          "entries": 10
+        },
+        "tick_test": {
+          "buys": 101402,
+          "sells": 98595,
+          "zeros": 3
+        },
+        "agreement_pct": 78.57600000000001,
+        "lr_fewer_unclassified": 3
+      },
+      {
+        "event": "ASTC_2020-03-25_591.96",
+        "lee_ready": {
+          "buys": 100060,
+          "sells": 99940,
+          "zeros": 0,
+          "wr": 80.0,
+          "pnl": 24.89860693042294,
+          "entries": 30
+        },
+        "tick_test": {
+          "buys": 97715,
+          "sells": 102283,
+          "zeros": 2
+        },
+        "agreement_pct": 77.7855,
+        "lr_fewer_unclassified": 2
+      },
+      {
+        "event": "AYTU_2020-03-10_759.20",
+        "lee_ready": {
+          "buys": 116960,
+          "sells": 83040,
+          "zeros": 0,
+          "wr": 80.0,
+          "pnl": 30.171442947584985,
+          "entries": 30
+        },
+        "tick_test": {
+          "buys": 107764,
+          "sells": 92234,
+          "zeros": 2
+        },
+        "agreement_pct": 82.148,
+        "lr_fewer_unclassified": 2
+      },
+      {
+        "event": "GLSI_2020-12-09_2940.57",
+        "lee_ready": {
+          "buys": 98699,
+          "sells": 101301,
+          "zeros": 0,
+          "wr": 82.6086956521739,
+          "pnl": 108.80763149623877,
+          "entries": 23
+        },
+        "tick_test": {
+          "buys": 101349,
+          "sells": 98649,
+          "zeros": 2
+        },
+        "agreement_pct": 71.732,
+        "lr_fewer_unclassified": 2
+      }
+    ]
+  },
+  "peak_buyer_trap": {
+    "audit": "PEAK_BUYER_TRAP",
+    "results": [
+      {
+        "event": "AACG_2021-02-04_1352.21",
+        "h_max": 5.5,
+        "trap_zone_floor": 5.4725,
+        "n_entries": 2,
+        "n_in_trap": 0,
+        "pct_in_trap": 0.0,
+        "status": "PASS"
+      },
+      {
+        "event": "AAME_2021-02-05_568.20",
+        "h_max": 14.24,
+        "trap_zone_floor": 14.168800000000001,
+        "n_entries": 10,
+        "n_in_trap": 0,
+        "pct_in_trap": 0.0,
+        "status": "PASS"
+      },
+      {
+        "event": "ASTC_2020-03-25_591.96",
+        "h_max": 7.75,
+        "trap_zone_floor": 7.71125,
+        "n_entries": 30,
+        "n_in_trap": 0,
+        "pct_in_trap": 0.0,
+        "status": "PASS"
+      },
+      {
+        "event": "AYTU_2020-03-10_759.20",
+        "h_max": 2.99,
+        "trap_zone_floor": 2.9750500000000004,
+        "n_entries": 30,
+        "n_in_trap": 0,
+        "pct_in_trap": 0.0,
+        "status": "PASS"
+      },
+      {
+        "event": "GLSI_2020-12-09_2940.57",
+        "h_max": 158.07,
+        "trap_zone_floor": 157.27965,
+        "n_entries": 23,
+        "n_in_trap": 0,
+        "pct_in_trap": 0.0,
+        "status": "PASS"
+      }
+    ]
+  },
+  "entry_to_climax": {
+    "audit": "ENTRY_TO_CLIMAX",
+    "results": [
+      {
+        "event": "AACG_2021-02-04_1352.21",
+        "n_entries": 2,
+        "n_pass": 2,
+        "n_warn": 0,
+        "n_late": 0,
+        "avg_ect_sec": 59.87370799999917,
+        "median_ect_sec": 59.87370799999917,
+        "avg_move_to_peak_pct": 7.007057939745449,
+        "entries": [
+          {
+            "entry_time": 71479.454622,
+            "entry_price": 4.79,
+            "local_peak_price": 4.85,
+            "ect_sec": 41.68133300000045,
+            "move_to_peak_pct": 1.2526096033402843,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 71702.405845,
+            "entry_price": 4.78,
+            "local_peak_price": 5.39,
+            "ect_sec": 78.06608299999789,
+            "move_to_peak_pct": 12.761506276150614,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "event": "AAME_2021-02-05_568.20",
+        "n_entries": 10,
+        "n_pass": 6,
+        "n_warn": 1,
+        "n_late": 3,
+        "avg_ect_sec": 36.70927490000031,
+        "median_ect_sec": 28.43075750000571,
+        "avg_move_to_peak_pct": 8.368843363610548,
+        "entries": [
+          {
+            "entry_time": 70764.78551300001,
+            "entry_price": 3.9776,
+            "local_peak_price": 4.05,
+            "ect_sec": 72.75110799999675,
+            "move_to_peak_pct": 1.8201930812550289,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 70878.143139,
+            "entry_price": 3.8103,
+            "local_peak_price": 4.0,
+            "ect_sec": 0.4396430000051623,
+            "move_to_peak_pct": 4.978610608088607,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 71038.63331800001,
+            "entry_price": 3.945,
+            "local_peak_price": 4.5,
+            "ect_sec": 63.957204999998794,
+            "move_to_peak_pct": 14.068441064638787,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 71332.50657700001,
+            "entry_price": 5.06,
+            "local_peak_price": 5.61,
+            "ect_sec": 10.997271000000183,
+            "move_to_peak_pct": 10.869565217391319,
+            "status": "WARN"
+          },
+          {
+            "entry_time": 71658.813456,
+            "entry_price": 5.6,
+            "local_peak_price": 6.7,
+            "ect_sec": 22.10949200000323,
+            "move_to_peak_pct": 19.642857142857153,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 72864.59272700001,
+            "entry_price": 9.8005,
+            "local_peak_price": 11.2,
+            "ect_sec": 87.96321899999748,
+            "move_to_peak_pct": 14.27988367940411,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 72952.51233900001,
+            "entry_price": 11.04,
+            "local_peak_price": 11.2,
+            "ect_sec": 0.04360699999961071,
+            "move_to_peak_pct": 1.449275362318842,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 74766.260802,
+            "entry_price": 8.5906,
+            "local_peak_price": 9.2862,
+            "ect_sec": 73.2843850000063,
+            "move_to_peak_pct": 8.097222545573054,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 74939.82575300001,
+            "entry_price": 9.2906,
+            "local_peak_price": 9.49,
+            "ect_sec": 0.7947959999874001,
+            "move_to_peak_pct": 2.1462553548748273,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 76375.03194,
+            "entry_price": 9.3101,
+            "local_peak_price": 9.9,
+            "ect_sec": 34.752023000008194,
+            "move_to_peak_pct": 6.336129579703763,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "event": "ASTC_2020-03-25_591.96",
+        "n_entries": 30,
+        "n_pass": 18,
+        "n_warn": 3,
+        "n_late": 9,
+        "avg_ect_sec": 42.865471433333006,
+        "median_ect_sec": 30.0408099999986,
+        "avg_move_to_peak_pct": 3.7062570287218706,
+        "entries": [
+          {
+            "entry_time": 71535.983997,
+            "entry_price": 4.1323,
+            "local_peak_price": 4.27,
+            "ect_sec": 65.23217000000295,
+            "move_to_peak_pct": 3.3322846840742373,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 71729.30395300001,
+            "entry_price": 4.2,
+            "local_peak_price": 4.34,
+            "ect_sec": 1.495476999989478,
+            "move_to_peak_pct": 3.3333333333333255,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 72421.682319,
+            "entry_price": 4.125,
+            "local_peak_price": 4.76,
+            "ect_sec": 33.995723,
+            "move_to_peak_pct": 15.393939393939387,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 73718.90810300001,
+            "entry_price": 6.8,
+            "local_peak_price": 7.25,
+            "ect_sec": 13.589238000000478,
+            "move_to_peak_pct": 6.6176470588235325,
+            "status": "WARN"
+          },
+          {
+            "entry_time": 74500.721453,
+            "entry_price": 6.9,
+            "local_peak_price": 7.1,
+            "ect_sec": 2.3495140000013635,
+            "move_to_peak_pct": 2.898550724637671,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 74982.68204500001,
+            "entry_price": 6.9826,
+            "local_peak_price": 7.1,
+            "ect_sec": 0.37256999999226537,
+            "move_to_peak_pct": 1.681322143614126,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 76030.89125,
+            "entry_price": 5.965,
+            "local_peak_price": 6.17,
+            "ect_sec": 26.203059999999823,
+            "move_to_peak_pct": 3.436714165968149,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76381.029698,
+            "entry_price": 6.0597,
+            "local_peak_price": 6.4,
+            "ect_sec": 115.86451400000078,
+            "move_to_peak_pct": 5.615789560539302,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76722.733884,
+            "entry_price": 6.36,
+            "local_peak_price": 6.4,
+            "ect_sec": 0.0022360000002663583,
+            "move_to_peak_pct": 0.6289308176100634,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 76900.098085,
+            "entry_price": 6.34,
+            "local_peak_price": 6.7,
+            "ect_sec": 53.23562599999423,
+            "move_to_peak_pct": 5.678233438485809,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76931.45881,
+            "entry_price": 6.25,
+            "local_peak_price": 6.7,
+            "ect_sec": 21.874901000002865,
+            "move_to_peak_pct": 7.200000000000002,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77309.064096,
+            "entry_price": 6.565,
+            "local_peak_price": 6.8,
+            "ect_sec": 54.68366100000276,
+            "move_to_peak_pct": 3.5795887281035705,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77347.886186,
+            "entry_price": 6.7,
+            "local_peak_price": 6.8,
+            "ect_sec": 15.861571000001277,
+            "move_to_peak_pct": 1.4925373134328304,
+            "status": "WARN"
+          },
+          {
+            "entry_time": 77985.61706,
+            "entry_price": 6.555,
+            "local_peak_price": 6.9,
+            "ect_sec": 64.23461600000155,
+            "move_to_peak_pct": 5.263157894736852,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78344.996402,
+            "entry_price": 6.93,
+            "local_peak_price": 7.45,
+            "ect_sec": 118.05357000000367,
+            "move_to_peak_pct": 7.503607503607511,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79064.45193600001,
+            "entry_price": 7.12,
+            "local_peak_price": 7.2,
+            "ect_sec": 119.83929899998475,
+            "move_to_peak_pct": 1.1235955056179785,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79204.31703600001,
+            "entry_price": 7.1742,
+            "local_peak_price": 7.27,
+            "ect_sec": 1.2021909999893978,
+            "move_to_peak_pct": 1.3353405257729039,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 79517.819045,
+            "entry_price": 7.025,
+            "local_peak_price": 7.15,
+            "ect_sec": 25.358568000010564,
+            "move_to_peak_pct": 1.779359430604982,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80571.531714,
+            "entry_price": 6.35,
+            "local_peak_price": 6.7,
+            "ect_sec": 70.7577350000065,
+            "move_to_peak_pct": 5.511811023622056,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80640.863799,
+            "entry_price": 6.43,
+            "local_peak_price": 6.75,
+            "ect_sec": 90.13237700000172,
+            "move_to_peak_pct": 4.97667185069985,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 81225.59124000001,
+            "entry_price": 5.775,
+            "local_peak_price": 5.96,
+            "ect_sec": 90.91300200000114,
+            "move_to_peak_pct": 3.2034632034631962,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 81314.880781,
+            "entry_price": 5.83,
+            "local_peak_price": 5.96,
+            "ect_sec": 1.6234610000101384,
+            "move_to_peak_pct": 2.2298456260720396,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 81524.503704,
+            "entry_price": 6.11,
+            "local_peak_price": 6.15,
+            "ect_sec": 0.6685589999979129,
+            "move_to_peak_pct": 0.6546644844517191,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 81960.457637,
+            "entry_price": 6.01,
+            "local_peak_price": 6.22,
+            "ect_sec": 76.87335300000268,
+            "move_to_peak_pct": 3.494176372712146,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82003.45243,
+            "entry_price": 6.1,
+            "local_peak_price": 6.22,
+            "ect_sec": 33.87855999999738,
+            "move_to_peak_pct": 1.9672131147541003,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82557.84581500001,
+            "entry_price": 5.88,
+            "local_peak_price": 5.98,
+            "ect_sec": 93.25480999999854,
+            "move_to_peak_pct": 1.7006802721088528,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82780.83988900001,
+            "entry_price": 5.8994,
+            "local_peak_price": 6.0,
+            "ect_sec": 12.419240999995964,
+            "move_to_peak_pct": 1.705258161846968,
+            "status": "WARN"
+          },
+          {
+            "entry_time": 82919.493247,
+            "entry_price": 5.99,
+            "local_peak_price": 6.0,
+            "ect_sec": 0.009292999995523132,
+            "move_to_peak_pct": 0.16694490818029692,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 83862.042774,
+            "entry_price": 4.88,
+            "local_peak_price": 5.18,
+            "ect_sec": 80.22430899999745,
+            "move_to_peak_pct": 6.147540983606554,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 84563.933227,
+            "entry_price": 5.21,
+            "local_peak_price": 5.29,
+            "ect_sec": 1.7609380000067176,
+            "move_to_peak_pct": 1.5355086372360858,
+            "status": "LATE"
+          }
+        ]
+      },
+      {
+        "event": "AYTU_2020-03-10_759.20",
+        "n_entries": 30,
+        "n_pass": 21,
+        "n_warn": 1,
+        "n_late": 8,
+        "avg_ect_sec": 54.21282613333169,
+        "median_ect_sec": 53.2511694999921,
+        "avg_move_to_peak_pct": 4.395487226211557,
+        "entries": [
+          {
+            "entry_time": 72221.870441,
+            "entry_price": 1.08,
+            "local_peak_price": 1.16,
+            "ect_sec": 51.10976199999277,
+            "move_to_peak_pct": 7.407407407407393,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 73323.185089,
+            "entry_price": 1.23,
+            "local_peak_price": 1.25,
+            "ect_sec": 0.8267300000006799,
+            "move_to_peak_pct": 1.6260162601626031,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 73601.552711,
+            "entry_price": 1.22,
+            "local_peak_price": 1.23,
+            "ect_sec": 0.02100300000165589,
+            "move_to_peak_pct": 0.8196721311475417,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 73935.268391,
+            "entry_price": 1.19,
+            "local_peak_price": 1.36,
+            "ect_sec": 114.48976199999743,
+            "move_to_peak_pct": 14.285714285714299,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 74486.06989,
+            "entry_price": 1.305,
+            "local_peak_price": 1.33,
+            "ect_sec": 97.74682300000859,
+            "move_to_peak_pct": 1.9157088122605466,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 74648.86002000001,
+            "entry_price": 1.31,
+            "local_peak_price": 1.34,
+            "ect_sec": 9.736318999988725,
+            "move_to_peak_pct": 2.2900763358778646,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 76268.531656,
+            "entry_price": 1.0398,
+            "local_peak_price": 1.13,
+            "ect_sec": 110.62948199998937,
+            "move_to_peak_pct": 8.674745143296771,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76360.467927,
+            "entry_price": 1.09,
+            "local_peak_price": 1.14,
+            "ect_sec": 49.46041200000036,
+            "move_to_peak_pct": 4.587155963302736,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76787.780196,
+            "entry_price": 1.1,
+            "local_peak_price": 1.13,
+            "ect_sec": 9.450757999991765,
+            "move_to_peak_pct": 2.7272727272727093,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 76833.85638900001,
+            "entry_price": 1.11,
+            "local_peak_price": 1.15,
+            "ect_sec": 96.98700599999574,
+            "move_to_peak_pct": 3.6036036036035863,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 76907.870549,
+            "entry_price": 1.12,
+            "local_peak_price": 1.15,
+            "ect_sec": 22.97284600000421,
+            "move_to_peak_pct": 2.6785714285714106,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77119.692482,
+            "entry_price": 1.135,
+            "local_peak_price": 1.15,
+            "ect_sec": 6.000002031214535e-06,
+            "move_to_peak_pct": 1.3215859030836918,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 77363.628132,
+            "entry_price": 1.14,
+            "local_peak_price": 1.22,
+            "ect_sec": 77.42713100000401,
+            "move_to_peak_pct": 7.0175438596491295,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77785.34650500001,
+            "entry_price": 1.19,
+            "local_peak_price": 1.25,
+            "ect_sec": 94.60354099998949,
+            "move_to_peak_pct": 5.042016806722694,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77824.557469,
+            "entry_price": 1.2039,
+            "local_peak_price": 1.25,
+            "ect_sec": 55.392576999991434,
+            "move_to_peak_pct": 3.8292216961541685,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77929.122338,
+            "entry_price": 1.23,
+            "local_peak_price": 1.29,
+            "ect_sec": 104.67975399999705,
+            "move_to_peak_pct": 4.878048780487809,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78631.48748,
+            "entry_price": 1.215,
+            "local_peak_price": 1.29,
+            "ect_sec": 80.74068899999838,
+            "move_to_peak_pct": 6.172839506172836,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78705.711218,
+            "entry_price": 1.246,
+            "local_peak_price": 1.34,
+            "ect_sec": 100.37539400000242,
+            "move_to_peak_pct": 7.544141252006427,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78756.726408,
+            "entry_price": 1.2883,
+            "local_peak_price": 1.34,
+            "ect_sec": 49.360203999996884,
+            "move_to_peak_pct": 4.013040440891103,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79255.473382,
+            "entry_price": 1.3,
+            "local_peak_price": 1.45,
+            "ect_sec": 104.49957800000266,
+            "move_to_peak_pct": 11.538461538461531,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79324.466316,
+            "entry_price": 1.4,
+            "local_peak_price": 1.48,
+            "ect_sec": 60.33683499999461,
+            "move_to_peak_pct": 5.71428571428572,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79441.998454,
+            "entry_price": 1.4,
+            "local_peak_price": 1.42,
+            "ect_sec": 0.2846129999961704,
+            "move_to_peak_pct": 1.42857142857143,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 79643.131727,
+            "entry_price": 1.44,
+            "local_peak_price": 1.5,
+            "ect_sec": 119.95479499999783,
+            "move_to_peak_pct": 4.1666666666666705,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79800.278403,
+            "entry_price": 1.48,
+            "local_peak_price": 1.54,
+            "ect_sec": 67.0296559999988,
+            "move_to_peak_pct": 4.054054054054058,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80016.208216,
+            "entry_price": 1.55,
+            "local_peak_price": 1.57,
+            "ect_sec": 0.03099300000758376,
+            "move_to_peak_pct": 1.2903225806451624,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 80122.35492700001,
+            "entry_price": 1.46,
+            "local_peak_price": 1.49,
+            "ect_sec": 28.748428999999305,
+            "move_to_peak_pct": 2.054794520547947,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80322.150736,
+            "entry_price": 1.5243,
+            "local_peak_price": 1.54,
+            "ect_sec": 6.10966100000951,
+            "move_to_peak_pct": 1.0299809748737156,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 80484.04149,
+            "entry_price": 1.46,
+            "local_peak_price": 1.51,
+            "ect_sec": 61.62914699999965,
+            "move_to_peak_pct": 3.424657534246579,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 81096.541135,
+            "entry_price": 1.46,
+            "local_peak_price": 1.49,
+            "ect_sec": 15.319840999989538,
+            "move_to_peak_pct": 2.054794520547947,
+            "status": "WARN"
+          },
+          {
+            "entry_time": 81325.254162,
+            "entry_price": 1.4999,
+            "local_peak_price": 1.57,
+            "ect_sec": 36.43103700000211,
+            "move_to_peak_pct": 4.673644909660648,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "event": "GLSI_2020-12-09_2940.57",
+        "n_entries": 23,
+        "n_pass": 17,
+        "n_warn": 2,
+        "n_late": 4,
+        "avg_ect_sec": 59.317610217389934,
+        "median_ect_sec": 44.63953299999412,
+        "avg_move_to_peak_pct": 6.206466408361289,
+        "entries": [
+          {
+            "entry_time": 77016.551368,
+            "entry_price": 24.7672,
+            "local_peak_price": 25.89,
+            "ect_sec": 116.65851499998826,
+            "move_to_peak_pct": 4.533415161988443,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77130.882937,
+            "entry_price": 25.0,
+            "local_peak_price": 26.97,
+            "ect_sec": 44.63953299999412,
+            "move_to_peak_pct": 7.8799999999999955,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77304.53920999999,
+            "entry_price": 25.8357,
+            "local_peak_price": 26.35,
+            "ect_sec": 21.843393000002834,
+            "move_to_peak_pct": 1.9906563398708075,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77720.858773,
+            "entry_price": 25.2115,
+            "local_peak_price": 27.96,
+            "ect_sec": 115.03571499999089,
+            "move_to_peak_pct": 10.901771017194534,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 77745.441442,
+            "entry_price": 25.6903,
+            "local_peak_price": 28.36,
+            "ect_sec": 115.94474999999511,
+            "move_to_peak_pct": 10.391859962709656,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78155.88246699999,
+            "entry_price": 27.8091,
+            "local_peak_price": 29.5,
+            "ect_sec": 86.04611700000532,
+            "move_to_peak_pct": 6.08038375927304,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78462.44677699999,
+            "entry_price": 28.64,
+            "local_peak_price": 29.46,
+            "ect_sec": 88.61128300000564,
+            "move_to_peak_pct": 2.8631284916201127,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 78940.80034399999,
+            "entry_price": 26.36,
+            "local_peak_price": 26.47,
+            "ect_sec": 3.757666000004974,
+            "move_to_peak_pct": 0.4172989377845199,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 79341.505993,
+            "entry_price": 26.7958,
+            "local_peak_price": 27.95,
+            "ect_sec": 27.669911999997566,
+            "move_to_peak_pct": 4.307391456870104,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 79451.389467,
+            "entry_price": 27.5,
+            "local_peak_price": 28.0,
+            "ect_sec": 10.261422999989009,
+            "move_to_peak_pct": 1.8181818181818181,
+            "status": "WARN"
+          },
+          {
+            "entry_time": 79807.911125,
+            "entry_price": 27.0,
+            "local_peak_price": 27.06,
+            "ect_sec": 1.6494609999936074,
+            "move_to_peak_pct": 0.2222222222222175,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 80889.00436199999,
+            "entry_price": 25.19,
+            "local_peak_price": 27.88,
+            "ect_sec": 119.5570299999963,
+            "move_to_peak_pct": 10.678840809845166,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80938.504368,
+            "entry_price": 25.8795,
+            "local_peak_price": 28.5,
+            "ect_sec": 73.62819600000512,
+            "move_to_peak_pct": 10.125775227496666,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 80993.269529,
+            "entry_price": 26.88,
+            "local_peak_price": 28.5,
+            "ect_sec": 18.863035000002128,
+            "move_to_peak_pct": 6.026785714285719,
+            "status": "WARN"
+          },
+          {
+            "entry_time": 81128.583279,
+            "entry_price": 27.3888,
+            "local_peak_price": 27.8,
+            "ect_sec": 44.331944999998086,
+            "move_to_peak_pct": 1.5013436149082868,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82061.290605,
+            "entry_price": 25.74,
+            "local_peak_price": 25.88,
+            "ect_sec": 119.07598999999755,
+            "move_to_peak_pct": 0.5439005439005462,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82214.04231399999,
+            "entry_price": 26.33,
+            "local_peak_price": 26.4,
+            "ect_sec": 0.24687899999844376,
+            "move_to_peak_pct": 0.2658564375237383,
+            "status": "LATE"
+          },
+          {
+            "entry_time": 82513.244372,
+            "entry_price": 27.2,
+            "local_peak_price": 27.98,
+            "ect_sec": 97.62028499999724,
+            "move_to_peak_pct": 2.867647058823534,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82698.646905,
+            "entry_price": 27.64,
+            "local_peak_price": 31.22,
+            "ect_sec": 102.81135399999039,
+            "move_to_peak_pct": 12.95224312590448,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 82761.063453,
+            "entry_price": 28.88,
+            "local_peak_price": 31.22,
+            "ect_sec": 40.394805999996606,
+            "move_to_peak_pct": 8.102493074792244,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 83155.46498599999,
+            "entry_price": 34.7101,
+            "local_peak_price": 37.96,
+            "ect_sec": 33.09430900000734,
+            "move_to_peak_pct": 9.362980803858255,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 84547.001398,
+            "entry_price": 46.7001,
+            "local_peak_price": 52.35,
+            "ect_sec": 75.97786900000938,
+            "move_to_peak_pct": 12.098261031560966,
+            "status": "PASS"
+          },
+          {
+            "entry_time": 90762.614026,
+            "entry_price": 45.67,
+            "local_peak_price": 53.35,
+            "ect_sec": 6.585569000002579,
+            "move_to_peak_pct": 16.816290781694764,
+            "status": "LATE"
+          }
+        ]
+      }
+    ]
+  }
+}

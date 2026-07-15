@@ -1,0 +1,21 @@
+# Environments
+.venv/
+
+# Data root - never tracked, documented separately in data/Schema.md
+data/
+
+# Independent, already-git-tracked sibling projects - out of scope for this repo
+hawkes-ofi-impact/
+scanner-epg-momentum/
+
+# Immutable machine-generated run outputs (~1.5GB) - catalogued in
+# results/phase_0a/artifacts/inventory_*.json, not tracked in git history
+archive/runs/
+
+# Exploratory notebooks - per notebooks/CLAUDE.md, not git-tracked for outputs
+notebooks/*.ipynb
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/

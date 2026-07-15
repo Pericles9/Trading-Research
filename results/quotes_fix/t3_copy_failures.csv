@@ -1,0 +1,3 @@
+ticker,event_date,error
+PLRZ,2025-07-23,"IO Error: Could not read file ""data/quote_data/PLRZ_quotes_2025_07_23.parquet"" (error in ReadFile(location: 25, nr_bytes: 793120)): Data error (cyclic redundancy check).
+"

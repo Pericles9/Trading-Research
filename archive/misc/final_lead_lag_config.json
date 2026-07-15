@@ -1,0 +1,15 @@
+{
+    "strategy_name": "Lead_Lag_Intent_v1",
+    "ticker_analyzed": "XCUR_2023-12-15_32.76",
+    "golden_parameters": {
+        "lookback_window_sec": 30,
+        "forward_horizon_sec": 600,
+        "correlation_score": 0.026182500156708127,
+        "predictive_power_ic": 0.026182500156708127
+    },
+    "thresholds": {
+        "entry_intensity": 0.5,
+        "slippage_model": 0.002
+    },
+    "generated_at": "2026-01-25T22:15:50.581955"
+}

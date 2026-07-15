@@ -1,0 +1,226 @@
+{
+  "main": {
+    "id": "c6075ad25c817428",
+    "type": "split",
+    "children": [
+      {
+        "id": "646c8a40ff6b9b1f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9ae30e59d7175eac",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "alpha-hypotheses/Scanner-Hawkes-OFI Impact.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Scanner-Hawkes-OFI Impact"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "61203adf6fba507a",
+    "type": "split",
+    "children": [
+      {
+        "id": "c9df5d48ebbb0248",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2fc2e40dd25da4ee",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "d2f21b6dc35eb35a",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "c9beea2f26912433",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "b3cd70b947a4218e",
+    "type": "split",
+    "children": [
+      {
+        "id": "6b46c187ab1122c5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d88792067e71a194",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "phase_3_alpha_hunter/plots/calibration_curve.png",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for calibration_curve"
+            }
+          },
+          {
+            "id": "1929e5360a2ed61d",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "phase_3_alpha_hunter/plots/calibration_curve.png",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from calibration_curve"
+            }
+          },
+          {
+            "id": "a3c5b281cf34e59f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "6d587f292dc3fa21",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "da76f9e8b075773b",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "phase_3_alpha_hunter/plots/calibration_curve.png",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of calibration_curve"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "9ae30e59d7175eac",
+  "lastOpenFiles": [
+    "alpha-hypotheses/_template.md",
+    "Hawkes Engine.md",
+    "alpha-hypotheses/Scanner-Hawkes-OFI Impact.md",
+    "Tradeable Setup Filter.md",
+    "ReadMe.md",
+    "Scanner-Hawkes-OFI",
+    "LULD Halt Detection.md",
+    "LULD Halt Logic.md",
+    "brainstorm/Price Impact Bridge.md",
+    "Bivariate Strategy.md",
+    "00-Index.md",
+    "Signal Processor.md",
+    "Tensor Engine.md",
+    "Trade Analyzer.md",
+    "Utils Index.md",
+    "V5 Backtest Runner.md",
+    "V2 Backtest Runner.md",
+    "brainstorm/v5_3_Final_Report.md",
+    "brainstorm/v5_Battle_Results.md",
+    "brainstorm/README_MHP.md",
+    "brainstorm/README.md",
+    "brainstorm/PREMATURE_EXIT_FIX_SUMMARY.md",
+    "brainstorm/MHP_IMPLEMENTATION_SUMMARY.md",
+    "phase_2_signal_forge/plots/anatomy_VSSYW_2024-06-07.png",
+    "phase_2_signal_forge/plots/anatomy_SMRT_2021-08-25.png",
+    "phase_2_signal_forge/plots/intensity_heatmap.png",
+    "phase_2_signal_forge/plots/anatomy_NE_2021-06-09.png",
+    "phase_2_signal_forge/plots/anatomy_CURR_2024-09-03.png",
+    "phase_2_signal_forge/plots_v2/anatomy_SDRL_2022-10-14.png",
+    "phase_2_signal_forge/plots_v2/anatomy_VAL_2021-05-03.png",
+    "phase_2_signal_forge/plots_v2/anatomy_SMRT_2021-08-25.png",
+    "phase_2_signal_forge/plots_v2/anatomy_PFH_2020-09-02.png",
+    "phase_2_signal_forge/plots_v2/anatomy_GEN_2022-11-08.png",
+    "phase_2_signal_forge/Forge_Audit_Log_v2.md",
+    "phase_2_signal_forge/Forge_Audit_Log.md",
+    "phase_3_alpha_hunter/Alpha_Audit.md",
+    "phase_3_alpha_hunter/GOLDEN_FEATURES.md"
+  ]
+}

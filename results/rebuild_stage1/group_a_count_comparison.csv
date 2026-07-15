@@ -1,0 +1,11 @@
+ticker,date,old_legacy,old_current,new_count,verdict
+AMC,2021-01-27,384997,6696486,6696489,PASS (meets/exceeds best prior)
+OCGN,2021-02-08,357000,3361742,3361742,PASS (meets/exceeds best prior)
+GME,2021-01-27,393997,3151694,3151697,PASS (meets/exceeds best prior)
+PHUN,2021-10-22,404000,2671951,2671951,PASS (meets/exceeds best prior)
+GME,2021-01-25,392997,2140745,2140748,PASS (meets/exceeds best prior)
+KODK,2020-07-29,389997,1663618,1663621,PASS (meets/exceeds best prior)
+HTZ,2020-10-16,392997,1486613,1486616,PASS (meets/exceeds best prior)
+SCKT,2021-02-16,431000,1478830,1478830,PASS (meets/exceeds best prior)
+VERU,2022-04-11,388000,1441872,1441872,PASS (meets/exceeds best prior)
+OCGN,2020-12-23,466000,1428771,1343977,FAIL (below best prior)
