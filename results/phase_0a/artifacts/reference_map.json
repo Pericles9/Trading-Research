@@ -1,0 +1,386 @@
+{
+  "count_py_files": 15,
+  "drive_letter_path_finding": {
+    "description": "Hardware-rule escalation (prompts/phase_0a.md escalation table): files referencing a drive-letter path other than the workspace root E:. Not fixed in this phase - flagged only.",
+    "count_files": 8,
+    "files": [
+      {
+        "path": "research/phase_1_context/build_scanner_context.py",
+        "matches": [
+          "D:\\Mom_db"
+        ]
+      },
+      {
+        "path": "research/phase_2_signal_forge/build_signal_forge.py",
+        "matches": [
+          "D:\\Mom_db"
+        ]
+      },
+      {
+        "path": "research/phase_2_signal_forge/build_signal_forge_v2.py",
+        "matches": [
+          "D:\\Mom_db"
+        ]
+      },
+      {
+        "path": "research/phase_3_alpha_hunter/build_alpha_hunter.py",
+        "matches": [
+          "D:\\Mom_db"
+        ]
+      },
+      {
+        "path": "research/phase_4_campaign/build_campaign.py",
+        "matches": [
+          "D:\\Mom_db"
+        ]
+      },
+      {
+        "path": "research/phase_4_campaign/build_campaign_hpc.py",
+        "matches": [
+          "D:\\Mom_db"
+        ]
+      },
+      {
+        "path": "results/rebuild_stage1/collect_massive_data_v2.py",
+        "matches": [
+          "D:\\Trading"
+        ]
+      },
+      {
+        "path": "results/rebuild_stage1/run_validation_sample.py",
+        "matches": [
+          "D:\\Trading"
+        ]
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "archive/misc/quick_select_momentum.py",
+      "imports": [
+        "__future__",
+        "argparse",
+        "logging",
+        "pathlib",
+        "re",
+        "typing"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [],
+      "repo_relative_paths": []
+    },
+    {
+      "path": "archive/misc/select_high_momentum_events.py",
+      "imports": [
+        "__future__",
+        "argparse",
+        "logging",
+        "numpy",
+        "pandas",
+        "pathlib",
+        "strategies.bivariate_momentum_hawkes.data_loader",
+        "sys",
+        "typing"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [],
+      "repo_relative_paths": []
+    },
+    {
+      "path": "archive/misc/stat_validator.py",
+      "imports": [
+        "__future__",
+        "argparse",
+        "datetime",
+        "json",
+        "logging",
+        "matplotlib",
+        "matplotlib.pyplot",
+        "numpy",
+        "os",
+        "pathlib",
+        "polars",
+        "random",
+        "strategies.alpha_momentum_hawkes.analytics.trade_analyzer",
+        "strategies.alpha_momentum_hawkes.backtest_runner",
+        "strategies.alpha_momentum_hawkes.parallel_runner",
+        "sys",
+        "time",
+        "typing",
+        "utils.polars_loader"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [],
+      "repo_relative_paths": []
+    },
+    {
+      "path": "research/phase_0a/__init__.py",
+      "imports": [],
+      "parse_error": null,
+      "drive_letter_paths": [],
+      "repo_relative_paths": []
+    },
+    {
+      "path": "research/phase_0a/build_inventory.py",
+      "imports": [
+        "__future__",
+        "datetime",
+        "json",
+        "pathlib",
+        "subprocess",
+        "sys"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [],
+      "repo_relative_paths": [
+        "archive/,",
+        "data/,",
+        "notebooks/,",
+        "research/,",
+        "results/,",
+        "results/phase_0a/artifacts/inventory_before.json"
+      ]
+    },
+    {
+      "path": "research/phase_0a/build_reference_map.py",
+      "imports": [
+        "__future__",
+        "ast",
+        "json",
+        "pathlib",
+        "re",
+        "sys"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [],
+      "repo_relative_paths": [
+        "results/phase_0a/artifacts/reference_map.json"
+      ]
+    },
+    {
+      "path": "research/phase_0a/diff_inventory.py",
+      "imports": [
+        "__future__",
+        "json",
+        "pathlib",
+        "sys"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [],
+      "repo_relative_paths": [
+        "results/phase_0a/artifacts/inventory_after.json",
+        "results/phase_0a/artifacts/inventory_before.json",
+        "results/phase_0a/artifacts/inventory_diff.json"
+      ]
+    },
+    {
+      "path": "research/phase_1_context/build_scanner_context.py",
+      "imports": [
+        "collections",
+        "datetime",
+        "matplotlib",
+        "matplotlib.dates",
+        "matplotlib.gridspec",
+        "matplotlib.pyplot",
+        "matplotlib.ticker",
+        "numpy",
+        "os",
+        "pandas",
+        "pathlib",
+        "sys",
+        "textwrap",
+        "time",
+        "warnings"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [
+        "D:\\Mom_db"
+      ],
+      "repo_relative_paths": [
+        "research/phase_1_context/build_log.md",
+        "research/phase_1_context/plots/*.png",
+        "research/phase_1_context/scanner_context.parquet"
+      ]
+    },
+    {
+      "path": "research/phase_2_signal_forge/build_signal_forge.py",
+      "imports": [
+        "collections",
+        "datetime",
+        "matplotlib",
+        "matplotlib.dates",
+        "matplotlib.gridspec",
+        "matplotlib.pyplot",
+        "numba",
+        "numpy",
+        "os",
+        "pandas",
+        "pathlib",
+        "scipy.signal",
+        "sys",
+        "time",
+        "torch",
+        "traceback",
+        "warnings"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [
+        "D:\\Mom_db"
+      ],
+      "repo_relative_paths": []
+    },
+    {
+      "path": "research/phase_2_signal_forge/build_signal_forge_v2.py",
+      "imports": [
+        "collections",
+        "datetime",
+        "matplotlib",
+        "matplotlib.dates",
+        "matplotlib.gridspec",
+        "matplotlib.patches",
+        "matplotlib.pyplot",
+        "numba",
+        "numpy",
+        "os",
+        "pandas",
+        "pathlib",
+        "scipy.signal",
+        "sys",
+        "time",
+        "torch",
+        "traceback",
+        "warnings"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [
+        "D:\\Mom_db"
+      ],
+      "repo_relative_paths": []
+    },
+    {
+      "path": "research/phase_3_alpha_hunter/build_alpha_hunter.py",
+      "imports": [
+        "datetime",
+        "json",
+        "matplotlib",
+        "matplotlib.dates",
+        "matplotlib.gridspec",
+        "matplotlib.pyplot",
+        "numba",
+        "numpy",
+        "os",
+        "pandas",
+        "pathlib",
+        "shap",
+        "sklearn.metrics",
+        "sklearn.model_selection",
+        "sys",
+        "time",
+        "umap",
+        "warnings",
+        "xgboost"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [
+        "D:\\Mom_db"
+      ],
+      "repo_relative_paths": []
+    },
+    {
+      "path": "research/phase_4_campaign/build_campaign.py",
+      "imports": [
+        "dataclasses",
+        "datetime",
+        "json",
+        "matplotlib",
+        "matplotlib.gridspec",
+        "matplotlib.pyplot",
+        "numba",
+        "numpy",
+        "os",
+        "pandas",
+        "pathlib",
+        "sys",
+        "time",
+        "typing",
+        "warnings",
+        "xgboost"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [
+        "D:\\Mom_db"
+      ],
+      "repo_relative_paths": []
+    },
+    {
+      "path": "research/phase_4_campaign/build_campaign_hpc.py",
+      "imports": [
+        "datetime",
+        "joblib",
+        "matplotlib",
+        "matplotlib.gridspec",
+        "matplotlib.pyplot",
+        "numba",
+        "numpy",
+        "os",
+        "pandas",
+        "pathlib",
+        "sys",
+        "time",
+        "torch",
+        "tqdm",
+        "typing",
+        "warnings",
+        "xgboost"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [
+        "D:\\Mom_db"
+      ],
+      "repo_relative_paths": []
+    },
+    {
+      "path": "results/rebuild_stage1/collect_massive_data_v2.py",
+      "imports": [
+        "logging",
+        "os",
+        "pandas",
+        "requests",
+        "requests.adapters",
+        "requests.exceptions",
+        "threading",
+        "time",
+        "urllib3.exceptions",
+        "urllib3.util.retry"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [
+        "D:\\Trading"
+      ],
+      "repo_relative_paths": [
+        "data/collection_scripts/collect_massive_data.py:",
+        "data/filtered/*/trades.parquet",
+        "data/trade_data/high_momentum.",
+        "data/trade_data/rebuild_validation_sample/"
+      ]
+    },
+    {
+      "path": "results/rebuild_stage1/run_validation_sample.py",
+      "imports": [
+        "collect_massive_data_v2",
+        "concurrent.futures",
+        "duckdb",
+        "json",
+        "os",
+        "pandas",
+        "sys",
+        "time"
+      ],
+      "parse_error": null,
+      "drive_letter_paths": [
+        "D:\\Trading"
+      ],
+      "repo_relative_paths": []
+    }
+  ]
+}
