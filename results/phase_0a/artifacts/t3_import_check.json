@@ -1,0 +1,10 @@
+{
+  "t2_approval": "Cooper approved the T2 reorganization proposal as posted: zero git mv operations (no existing file in archive/, notebooks/, research/, or results/ moves). Only new additions: prompts/, research/phase_0a/, results/phase_0a/, docs/.",
+  "moves_executed": [],
+  "moves_executed_count": 0,
+  "t3a_import_check": {
+    "status": "vacuous_by_design",
+    "reason": "No top-level src/ directory exists within Phase 0a's scope (excludes hawkes-ofi-impact/ and scanner-epg-momentum/, each of which has its own internal module tree under a different name). There is nothing under src/ to import-check.",
+    "errors": []
+  }
+}
