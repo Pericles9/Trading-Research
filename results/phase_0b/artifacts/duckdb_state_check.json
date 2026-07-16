@@ -1,0 +1,45 @@
+{
+  "checked_at": "2026-07-16T00:09:06.826178+00:00",
+  "duckdb_path": "E:\\Trading Research\\data\\duckdb\\main.duckdb",
+  "schema_md_reviewed_date": "2026-07-14",
+  "tables_present": [
+    "collection_stats",
+    "filtered_quotes",
+    "filtered_trades",
+    "raw_quotes",
+    "symbols_metadata"
+  ],
+  "comparison": [
+    {
+      "table": "collection_stats",
+      "expected_per_schema_md": 1,
+      "observed": 1,
+      "match": true
+    },
+    {
+      "table": "filtered_quotes",
+      "expected_per_schema_md": 3775991856,
+      "observed": 3775991856,
+      "match": true
+    },
+    {
+      "table": "filtered_trades",
+      "expected_per_schema_md": 4899401773,
+      "observed": 4899401773,
+      "match": true
+    },
+    {
+      "table": "raw_quotes",
+      "expected_per_schema_md": 1757761017,
+      "observed": 1757761017,
+      "match": true
+    },
+    {
+      "table": "symbols_metadata",
+      "expected_per_schema_md": 2,
+      "observed": 2,
+      "match": true
+    }
+  ],
+  "escalation_triggered": false
+}

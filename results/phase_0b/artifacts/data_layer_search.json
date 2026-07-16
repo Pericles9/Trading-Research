@@ -1,0 +1,59 @@
+{
+  "searched_at": "2026-07-15",
+  "target_files": [
+    "src/data/db.py",
+    "src/data/ingest.py",
+    "src/data/paths.py",
+    "src/data/prepare_database_split.py"
+  ],
+  "search_passes": [
+    {
+      "pass": "a_working_trees",
+      "method": "find hawkes-ofi-impact scanner-epg-momentum -iname '<each target filename>'",
+      "scope": "Both nested repos' current working trees, exact filename match (case-insensitive)",
+      "matches_found": 0
+    },
+    {
+      "pass": "b_git_history",
+      "method": "git -C <repo> log --all --diff-filter=A --name-only -- '*paths.py' '*db.py' '*ingest.py' '*prepare_database_split.py'",
+      "scope": "Both nested repos, all branches, every commit that ever added a matching path",
+      "matches_found": 0,
+      "near_misses_excluded": [
+        {
+          "path": "scanner-epg-momentum/backtest/tools/seb_x/build_paths.py",
+          "commit": "72e3d63",
+          "date": "2026-06-24",
+          "excluded_because": "Matched the '*paths.py' glob but the actual filename is build_paths.py, not paths.py. Different file - a chart/tool path-resolution helper, not the data-access-layer module."
+        },
+        {
+          "path": "scanner-epg-momentum/data/schemas/mom_db.py",
+          "commit": "626a3f4",
+          "date": "2026-05-04",
+          "excluded_because": "Matched the '*db.py' glob but the actual filename is mom_db.py, not db.py. This is a schema/constants module (DATA_ROOT etc.), not the DuckDB connection manager Schema.md describes."
+        }
+      ]
+    },
+    {
+      "pass": "c_e_drive_outside_data",
+      "method": "find <root> -iname '<filename>' excluding .venv/venv/__pycache__/node_modules/site-packages; plus content grep for the distinctive env-var strings MOM_DB_DUCKDB_PATH and MOM_DB_DATABASE_ROOT, same exclusions",
+      "scope": [
+        "E:\\Trading Research (top-level loose files - none exist outside the already-searched archive/notebooks/research/results/prompts/docs/config)",
+        "E:\\Mom. DB failed 11-21-25 (an older, unrelated SQLite/S3-based 'Mom DB' dashboard/GUI project dated Nov 2025; has its own src/ but shaped as src/database, src/datafetch, src/processing, src/storage, src/utils - no data/db.py-equivalent module; matches the 'd:\\Mom. DB started 11-21-25\\...' path hardcoded in 3 notebooks per results/phase_0a/REPORT.md, but is not the current program's src/)",
+        "E:\\archived (a graveyard of roughly 25 unrelated legacy strategy projects under archived/old_projects/, plus archived_scripts/, backtests/, legacy_system/ - none Hawkes/EPG/OFI related by name except 'Momentum Hawkes v0 (legacy)', which was not opened beyond a top-level listing since T1's search is filename/content-targeted, not an architecture survey)"
+      ],
+      "matches_found": 0,
+      "false_positive_excluded": {
+        "path": "E:/archived/old_projects/Momentum Hawkes v0 (legacy)/venv/Lib/site-packages/IPython/paths.py",
+        "excluded_because": "Third-party IPython library file inside a virtualenv's site-packages, unrelated to this project."
+      },
+      "content_grep_result": "Zero matches for MOM_DB_DUCKDB_PATH or MOM_DB_DATABASE_ROOT in either E:\\Mom. DB failed 11-21-25 or E:\\archived (excluding venv/site-packages)."
+    }
+  ],
+  "conclusion": {
+    "files_found": [],
+    "status": "not_found_anywhere",
+    "escalation_triggered": true,
+    "escalation_criterion": "Data-layer files not found anywhere (working trees, git histories, E:) - any of the 3 core files missing everywhere -> Hard stop, the access layer must be rewritten, which is a Cooper decision.",
+    "note": "T1a normally reports path/repo/commit/last-modified/default-path-match per copy found, and diffs multiple versions. There is nothing to report against those fields - zero copies exist anywhere searched."
+  }
+}
