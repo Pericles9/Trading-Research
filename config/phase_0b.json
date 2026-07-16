@@ -1,0 +1,12 @@
+{
+  "phase": "0b",
+  "dev_sample": {
+    "n_events": 50,
+    "strata": "momentum_pct_deciles",
+    "n_strata": 10,
+    "per_stratum": 5,
+    "seed": 42,
+    "eligibility": "event must have an existing filtered/ folder",
+    "deterministic_ordering": "sort by ticker, then date, before sampling"
+  }
+}
