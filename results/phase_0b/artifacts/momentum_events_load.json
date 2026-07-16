@@ -1,0 +1,25 @@
+{
+  "loaded_at": "2026-07-15",
+  "load_command": "python -m src.data.ingest --dataset momentum_events",
+  "operational_note": "The vendored ingest.py logging format uses Unicode box-drawing/arrow characters ('─', '→') that this Windows console's cp1252 codepage cannot encode, producing repeated 'Logging error' tracebacks on stdout and in logs/ingest.log during the run. This is cosmetic only - Python's logging module swallows handler errors and continues; the actual CREATE TABLE / INSERT operation completed and is independently verified below via a clean read-only query. Not fixed here per the src/data/ quarantine (content unmodified from the D: copy, per CLAUDE.md).",
+  "three_way_count_check": {
+    "table_momentum_events": 23268,
+    "parquet_filtered_events_power_law_q05": 23268,
+    "csv_filtered_events_power_law_q05": 23268,
+    "all_match": true
+  },
+  "t4a_counts_only": {
+    "total_events": 23268,
+    "distinct_tickers": 3366,
+    "min_event_date": "2020-01-03",
+    "max_event_date": "2024-12-31",
+    "null_momentum_pct_count": 0,
+    "escalation_triggered": false,
+    "escalation_criterion": "momentum_pct nulls > 0 - not triggered"
+  },
+  "t4b_event_vs_folder_count": {
+    "distinct_events_ticker_date": 19170,
+    "distinct_filtered_folders": 24723,
+    "note": "Recorded only, not reconciled - reconciliation is explicitly Phase 4's job per prompts/phase_0b.md T4b. momentum_events has 23,268 total rows but only 19,170 distinct (ticker,date) pairs (some ticker-dates appear more than once, disambiguated by the 'id' column) - also recorded, not investigated."
+  }
+}
