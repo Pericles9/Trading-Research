@@ -1,0 +1,55 @@
+{
+  "phase": "1",
+  "title": "Filter Forensics",
+  "branch": "phase/1",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-16",
+  "baseline": "phase-0c-approved",
+  "summary": "Line-cited spec of filter_events_power_law.py: q=0.05 quantile regression, log10(volume)~log10(momentum_pct), keep rule is a volume floor conditional on momentum (not a momentum-extremity filter). Read-only refit matches momentum_events exactly (23,268/23,268, 100% overlap both directions). Traced the 5,911 NULL-date rows to a structural script gap (file2 has no 'date' column, only 'event_date'; the script's only schema reconciliation - volume->event_volume - doesn't cover it) - classification (b). Re-tested the 7,252 orphan folders and found 5,911 of them (81.5%) are the same date-bug artifact, not genuinely missing - true orphan count is 1,341, all consistent with ordinary filter rejects (0 sit above the boundary).",
+  "headline_metrics": [
+    {"metric": "NULL-date vs dated momentum_pct distribution", "value": "medians close (44.41 vs 42.60) but NULL-date tail has a 53.8M outlier vs 48.6K max", "chart": "results/phase_1/charts/01_momentum_pct_by_date_status.html"},
+    {"metric": "Refit kept-set vs momentum_events overlap", "value": "23,268/23,268 both directions, 100%", "chart": "results/phase_1/charts/02_q05_boundary.html"},
+    {"metric": "Orphan folders: matched vs false-orphan (date bug) vs genuine orphan", "value": "17,357 / 5,911 / 1,341", "chart": "results/phase_1/charts/03_orphans_vs_boundary.html"}
+  ],
+  "escalations_triggered": [
+    {"criterion": "T0: canonical docs absent, or standard header not v1.3", "observed_before_fix": "docs/Agent_Prompt_Standard.md absent; only untracked (1).md copy at v1.1/v1.2", "resolution": "Cooper placed the file; verified v1.3 at exact path", "observed_after_fix": "both docs present, v1.3 confirmed"}
+  ],
+  "escalations_checked_not_triggered": [
+    {"criterion": "T1: filter_events_power_law.py missing/unreadable", "observed": "present, 87 lines, read in full"},
+    {"criterion": "T2: momentum_events schema vs script write logic", "observed": "21/21 columns match exactly, no type mismatches"},
+    {"criterion": "T2: refit overlap < 0.95", "observed": "1.0 both directions"},
+    {"criterion": "T5b: any dev-sample event with zero rows", "observed": "0 of 50"}
+  ],
+  "decisions_log": [
+    {"decision": "momentum_pct formula (T1c) determined empirically ((high-prev_close)/prev_close*100, corr 0.9997) rather than left undetermined", "reason": "the script never computes it and the generating scanner isn't in the repo; empirical match against file1 is strong enough to report as a finding, flagged as not code-confirmed"},
+    {"decision": "T2 comparison key coalesces date with event_date: (ticker, COALESCE(date,event_date), momentum_pct 2dp)", "reason": "date is structurally NULL for all file2-sourced rows; a plain date-only key would silently exclude 25% of rows from the comparison"},
+    {"decision": "orphan_classification.parquet and other results/phase_*/artifacts/*.parquet gitignored going forward", "reason": "Agent_Prompt_Standard.md v1.3 SS12 marks artifact parquets as regenerable, not source; phase_0c's already-tracked parquet is unaffected"}
+  ],
+  "surprises": [
+    "5,911 of the 7,252 'orphan' folders (81.5%) are not orphans - they are exactly the 5,911 NULL-date momentum_events rows, misclassified by 0c's date-based join. Re-joining on ticker+momentum+(date OR event_date) recovers them exactly.",
+    "0/409 parser-fix-recovered folders (dot-ticker/lowercase-suffix) have any rows in filtered_trades or filtered_quotes - confirmed genuine: the tables' entire 3,272-ticker universe contains zero dot or lowercase tickers.",
+    "market_cap_est and sector are declared momentum_events columns but are 100% NULL for every row in both date-status groups.",
+    "0c's own docs/ discovery (Agent_Prompt_Standard v1.2 copy, Strategy Program doc) predates this phase; the v1.3 promotion and canonical placement happened via Cooper's T0 instruction mid-phase."
+  ],
+  "output_files": {
+    "prompt": "prompts/phase_1.md", "config": "config/phase_1.json",
+    "spec": "results/phase_1/filter_spec.md",
+    "artifacts": "results/phase_1/artifacts/*.json (scan_input_inventory, refit_comparison, null_date_forensics, orphan_summary, ingestion_spotcheck) + orphan_classification.parquet (gitignored, regenerable)",
+    "charts": ["results/phase_1/charts/01_momentum_pct_by_date_status.html", "results/phase_1/charts/02_q05_boundary.html", "results/phase_1/charts/03_orphans_vs_boundary.html"],
+    "report": "results/phase_1/REPORT.md", "digest": "results/phase_1/digest.json"
+  },
+  "counts": {
+    "momentum_events_total": 23268, "null_date": 5911, "dated": 17357,
+    "refit_kept": 23268, "refit_overlap_both_directions": 23268,
+    "orphans_total": 7252, "orphans_false_date_bug": 5911, "orphans_genuine": 1341,
+    "orphans_genuine_below_boundary": 1232, "orphans_genuine_volume_undetermined": 109, "orphans_genuine_above_boundary": 0,
+    "parser_fix_folders_409_present_in_filtered_trades": 0, "parser_fix_folders_409_present_in_filtered_quotes": 0,
+    "dev_sample_events_zero_rows": 0
+  },
+  "blocking_items_for_next_phase": [
+    "1,341 genuine orphan folders exist on disk with trades/quotes data but no momentum_events row and no scan-input record explaining their absence beyond the q05 filter/invalid-volume split - not further characterized here.",
+    "409 parser-fix-recovered folders have zero DB coverage in filtered_trades/filtered_quotes - the folders and their parquet files exist on disk (per 0c) but were never ingested into the DuckDB tables; not remediated here (data/ is read-only, no ingestion performed).",
+    "The 5,911 false-orphan misclassification is a 0c artifact, not fixed at the source (0c's join_reconciliation_detail.json) - flagged here, not corrected in place, since that would be a Phase 0c file edit outside this phase's scope."
+  ],
+  "approval_gate": "Do not begin Phase 2 or any follow-on work until Cooper has reviewed results and given explicit approval."
+}

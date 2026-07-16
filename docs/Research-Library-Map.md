@@ -1,8 +1,8 @@
 # Research Library Map
 
-**Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b — added `config/`, `.claude/`, `src/`, `CLAUDE.md`, and both phases' `research/phase_0b/`/`results/phase_0b/` content), updated 2026-07-16 (Phase 0c — added `config/phase_0c.json`, `prompts/phase_0c.md`, two untracked `docs/` entries, and `research/phase_0c/`/`results/phase_0c/` content)
-**Reflects commit:** end of Phase 0c (branch `phase/0c`), post-`phase-0b-approved`
-**File count covered:** 1011 files — 326 individual per-file entries below + 9 folder-level entries covering `archive/runs/`'s other 685 files, per the coverage rules established in Phase 0a.
+**Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b — added `config/`, `.claude/`, `src/`, `CLAUDE.md`, and both phases' `research/phase_0b/`/`results/phase_0b/` content), updated 2026-07-16 (Phase 0c — added `config/phase_0c.json`, `prompts/phase_0c.md`, two untracked `docs/` entries, and `research/phase_0c/`/`results/phase_0c/` content), updated 2026-07-16 (Phase 1 — added `config/phase_1.json`, `prompts/phase_1.md`, `docs/Agent_Prompt_Standard.md` now tracked at v1.3, `docs/Mom-DB-Strategy-Research-Program.md` now tracked, and `research/phase_1/`/`results/phase_1/` content)
+**Reflects commit:** end of Phase 1 (branch `phase/1`), post-`phase-0c-approved`
+**File count covered:** 1032 files — 344 individual per-file entries below + 9 folder-level entries covering `archive/runs/`'s other 685 files, per the coverage rules established in Phase 0a.
 **Standing rule:** Any phase that adds, moves, or removes repo files must update this map in the same phase.
 
 This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `research/`, `results/`, `src/`, `.claude/`, and repo-root loose files. `data/` is excluded per standing rule (documented separately in `data/Schema.md`). `hawkes-ofi-impact/` and `scanner-epg-momentum/` are independent, already-git-tracked sibling projects — not walked file-by-file, but each gets a summary section below so this map isn't blind to a third of the workspace.
@@ -27,16 +27,23 @@ E:\Trading Research/
 ├── CLAUDE.md
 ├── config/
 │   ├── phase_0b.json
+│   ├── phase_0c.json
+│   ├── phase_1.json
 │   └── dev_sample_events.csv
 ├── docs/
-│   └── Research-Library-Map.md
+│   ├── Research-Library-Map.md
+│   ├── Agent_Prompt_Standard.md      (tracked Phase 1 - v1.3)
+│   ├── Agent_Prompt_Standard (1).md  [untracked - v1.1/1.2 copy, deletion candidate]
+│   └── Mom-DB-Strategy-Research-Program.md (tracked Phase 1)
 ├── hawkes-ofi-impact/          [independent git repo — out of scope, see summary below]
 ├── notebooks/
 │   ├── CLAUDE.md
 │   └── *.ipynb (15 notebooks)
 ├── prompts/
 │   ├── phase_0a.md
-│   └── phase_0b.md
+│   ├── phase_0b.md
+│   ├── phase_0c.md
+│   └── phase_1.md
 ├── research/                   [Obsidian vault]
 │   ├── .obsidian/
 │   ├── CLAUDE.md
@@ -44,6 +51,8 @@ E:\Trading Research/
 │   ├── brainstorm/
 │   ├── phase_0a/
 │   ├── phase_0b/
+│   ├── phase_0c/
+│   ├── phase_1/                (this phase's own tooling, distinct from phase_1_context/ below)
 │   ├── phase_1_context/
 │   ├── phase_1_ext_hours/
 │   ├── phase_2_signal_forge/
@@ -60,6 +69,8 @@ E:\Trading Research/
 │   ├── momentum_curation/
 │   ├── phase_0a/
 │   ├── phase_0b/
+│   ├── phase_0c/
+│   ├── phase_1/
 │   ├── quotes_fix/
 │   └── rebuild_stage1/
 ├── scanner-epg-momentum/       [independent git repo — out of scope, see summary below]
@@ -186,6 +197,7 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 - `config/phase_0b.json` — Dev-sample parameters (n_events, n_strata, per_stratum, seed, eligibility rule).
 - `config/dev_sample_events.csv` — The pinned 50-event dev sample list. Committed, never regenerated in place — a disagreement on rebuild is an escalation, not a refresh.
 - `config/phase_0c.json` — Seed, per-class failure-sample size, data root, and the folder-name format string under test for the join reconciliation.
+- `config/phase_1.json` — Overlap threshold (0.95), chart subsample cap (50,000), seed (42), scan-input/filter-output/phase_0c-artifact paths for the filter forensics phase.
 
 ## `.claude/`
 
@@ -199,12 +211,14 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 - `prompts/phase_0a.md` — This phase's own instructions (task specification for Phase 0a: repo inventory, reorganization, and library-map generation).
 - `prompts/phase_0b.md` — Phase 0b's own instructions (data-layer recovery, `CLAUDE.md`, table loads, dev sample, digest tooling).
 - `prompts/phase_0c.md` — Phase 0c's own instructions (bidirectional join reconciliation between `momentum_events` and `data/filtered/`).
+- `prompts/phase_1.md` — Phase 1's own instructions (filter forensics: line-cited spec of `filter_events_power_law.py`, NULL-date and orphan-folder origin classification, DB coverage spot-check).
 
 ## `docs/`
 
 - `docs/Research-Library-Map.md` — This file.
-- `docs/Agent_Prompt_Standard (1).md` — **Untracked.** Appeared during Phase 0c with an mtime predating that phase; not found by Phase 0b's exhaustive search. v1.2 of the prompt-structure standard (8 sections; still does not define a Verification Block or Digest Contract section). Not committed — a decision on whether/how to track it is Cooper's.
-- `docs/Mom-DB-Strategy-Research-Program.md` — **Untracked.** Same appearance circumstances as above. A detailed research-program spec (data audit → structural constraints → two-signal regime architecture → development process) whose §2.3 explicitly calls for the join reconciliation Phase 0c performs. Not committed.
+- `docs/Agent_Prompt_Standard.md` — **Tracked, committed Phase 1 T0.** Cooper placed this at v1.3 (2026-07-14: Evidence Standard, §9 Chart Contract mandatory on analysis-only phases, §10 Verification Block, §11 Digest Contract, §12 Git Discipline). Resolves the Phase 0b/0c gap where no file existed at this exact path.
+- `docs/Agent_Prompt_Standard (1).md` — **Still untracked.** The v1.1/v1.2 copy found during Phase 0c, now superseded by the tracked v1.3 file above. Listed as a deletion candidate in `results/phase_1/REPORT.md`; not deleted (outside this phase's write scope — Cooper's call).
+- `docs/Mom-DB-Strategy-Research-Program.md` — **Tracked, committed Phase 1 T0.** Same appearance circumstances as the prompt standard (found untracked during Phase 0c). A detailed research-program spec (data audit → structural constraints → two-signal regime architecture → development process) whose §2.3 explicitly calls for the join reconciliation Phase 0c performed and the filter forensics Phase 1 performs.
 
 ## `src/` (recovered Phase 0b T2 — see `results/phase_0b/artifacts/data_layer_search_d_drive.json` for full provenance)
 
@@ -219,7 +233,7 @@ Did not exist anywhere in this checkout as of Phase 0a. Recovered by locating th
 
 ## Repo root
 
-- `.gitignore` — Excludes `.venv/`, the top-level `data/` root only (anchored `/data/` — fixed in Phase 0b after an unanchored version also matched `src/data/`), the two sibling repos, `archive/runs/`, `notebooks/*.ipynb`, `/logs/`, and standard Python/cache artifacts from git tracking.
+- `.gitignore` — Excludes `.venv/`, the top-level `data/` root only (anchored `/data/` — fixed in Phase 0b after an unanchored version also matched `src/data/`), the two sibling repos, `archive/runs/`, `notebooks/*.ipynb`, `/logs/`, standard Python/cache artifacts, and (added Phase 1) `results/phase_*/artifacts/*.parquet` per Agent_Prompt_Standard.md v1.3 §12 (artifact parquets are regenerable, not source; phase_0c's already-tracked parquet predates the rule and is unaffected).
 - `CLAUDE.md` — Standing constraints for this program: hard data rules, provenance quarantine, methodology, repo layout, reporting, escalation, and pointers to the other standing docs (two of which don't resolve — see the file itself).
 
 ---
@@ -352,6 +366,14 @@ Note: the great majority of the top-level notes below are companion docs for a `
 - `research/phase_0c/chart_01_momentum_pct.py` — Builds `01_momentum_pct_joinable_vs_dropped.html` (overlaid ECDFs + strip sample).
 - `research/phase_0c/chart_02_events_over_time.py` — Builds `02_events_over_time_by_join_status.html` (monthly stacked bars by join status).
 - `research/phase_0c/chart_03_failure_classes.py` — Builds `03_failure_class_counts.html` (bar chart, all 6 T2b classes).
+
+### `research/phase_1/` (this phase's own tooling — filter forensics; distinct from the pre-existing `research/phase_1_context/` below, an earlier, differently-numbered pipeline stage)
+
+- `research/phase_1/refit_boundary.py` — Read-only re-implementation of `filter_events_power_law.py`'s fit (T2); derives the kept set and compares against `momentum_events` on a date/event_date-coalesced key, writing `refit_comparison.json`.
+- `research/phase_1/orphan_drift.py` — T4's orphan membership test against raw scan inputs and the re-derived kept set; discovers and flags the 5,911 false-orphan date-bug subset, writing `orphan_classification.parquet` and `orphan_summary.json`.
+- `research/phase_1/ingestion_spotcheck.py` — T5a: reconstructs the 409 parser-fix-recovered folders from `folder_inventory.parquet` and runs aggregated ticker-level/event-date presence queries against `filtered_trades`/`filtered_quotes`.
+- `research/phase_1/dev_sample_spotcheck.py` — T5b: per-event row counts for the 50 dev-sample events against `filtered_trades_dev`/`filtered_quotes_dev`.
+- `research/phase_1/build_charts.py` — Builds all three Chart Contract charts (T6): NULL-date ECDF, q05 boundary scatter, orphan reclassification ECDF.
 
 ### `research/phase_1_context/`
 
@@ -542,4 +564,17 @@ Per `results/hardware/`, `results/ingestion_run/`, `results/rebuild_stage1/`, et
 - `results/phase_0c/artifacts/repeat_ticker_comparison.json` — T4's third joinable-vs-dropped comparison (repeat-ticker rate).
 - `results/phase_0c/charts/01_momentum_pct_joinable_vs_dropped.html`, `02_events_over_time_by_join_status.html`, `03_failure_class_counts.html` — This phase's three required charts.
 - `results/phase_0c/digest.json`, `results/phase_0c/REPORT.md` — This phase's digest and written report.
+
+### `results/phase_1/` (this phase's own outputs)
+
+- `results/phase_1/filter_spec.md` — T1's line-cited spec of `filter_events_power_law.py`: the fit, the keep rule, the empirically-determined `momentum_pct` formula, and the NULL-date mechanism.
+- `results/phase_1/artifacts/scan_input_inventory.json` — T1a's input inventory: existence, row counts, columns, and cleaning stats for both scan-input files.
+- `results/phase_1/artifacts/refit_comparison.json` — T2's read-only refit vs `momentum_events` comparison (23,268/23,268, 100% overlap both directions).
+- `results/phase_1/artifacts/null_date_forensics.json` — T3's NULL-date origin classification (b), evidence, and the `none_date_lookup` cross-reference.
+- `results/phase_1/artifacts/orphan_classification.parquet` — T4's per-orphan membership/reclassification flags. **Gitignored** (regenerable via `research/phase_1/orphan_drift.py`), not committed.
+- `results/phase_1/artifacts/orphan_summary.json` — T4's orphan fractions by class, including the false-orphan/genuine-orphan split.
+- `results/phase_1/artifacts/ingestion_spotcheck.json` — T5's merged 409-folder DB-presence and 50-dev-event row-count results.
+- `results/phase_1/artifacts/ingestion_spotcheck_409_detail.parquet` — T5a's per-folder detail backing the summary above. **Gitignored**, not committed.
+- `results/phase_1/charts/01_momentum_pct_by_date_status.html`, `02_q05_boundary.html`, `03_orphans_vs_boundary.html` — This phase's three required charts.
+- `results/phase_1/digest.json`, `results/phase_1/REPORT.md` — This phase's digest and written report.
 
