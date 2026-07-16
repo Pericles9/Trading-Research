@@ -1,0 +1,374 @@
+{
+  "folder_absent": {
+    "class_total_count": 5911,
+    "sampled_count": 20,
+    "examples": [
+      {
+        "ticker": "UBXG",
+        "date": "None",
+        "momentum_pct_full_precision": 35.76,
+        "expected_folder": "UBXG_None_35.76",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "BTCT",
+        "date": "None",
+        "momentum_pct_full_precision": 37.99,
+        "expected_folder": "BTCT_None_37.99",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "AIHS",
+        "date": "None",
+        "momentum_pct_full_precision": 53.5,
+        "expected_folder": "AIHS_None_53.50",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "HOLO",
+        "date": "None",
+        "momentum_pct_full_precision": 52.1,
+        "expected_folder": "HOLO_None_52.10",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "GGR",
+        "date": "None",
+        "momentum_pct_full_precision": 46.12,
+        "expected_folder": "GGR_None_46.12",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "FGL",
+        "date": "None",
+        "momentum_pct_full_precision": 30.08,
+        "expected_folder": "FGL_None_30.08",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "CISO",
+        "date": "None",
+        "momentum_pct_full_precision": 33.64,
+        "expected_folder": "CISO_None_33.64",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "BNZI",
+        "date": "None",
+        "momentum_pct_full_precision": 78.69,
+        "expected_folder": "BNZI_None_78.69",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "WHLR",
+        "date": "None",
+        "momentum_pct_full_precision": 54.29,
+        "expected_folder": "WHLR_None_54.29",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "SBET",
+        "date": "None",
+        "momentum_pct_full_precision": 54.72,
+        "expected_folder": "SBET_None_54.72",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "BHAT",
+        "date": "None",
+        "momentum_pct_full_precision": 52.78,
+        "expected_folder": "BHAT_None_52.78",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "SQNS",
+        "date": "None",
+        "momentum_pct_full_precision": 41.03,
+        "expected_folder": "SQNS_None_41.03",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "NNNN",
+        "date": "None",
+        "momentum_pct_full_precision": 60.03,
+        "expected_folder": "NNNN_None_60.03",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "ALLO",
+        "date": "None",
+        "momentum_pct_full_precision": 84.31,
+        "expected_folder": "ALLO_None_84.31",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "AKAN",
+        "date": "None",
+        "momentum_pct_full_precision": 113.32,
+        "expected_folder": "AKAN_None_113.32",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "BKSY",
+        "date": "None",
+        "momentum_pct_full_precision": 34.32,
+        "expected_folder": "BKSY_None_34.32",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "FBYD",
+        "date": "None",
+        "momentum_pct_full_precision": 33.7,
+        "expected_folder": "FBYD_None_33.70",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "FTCI",
+        "date": "None",
+        "momentum_pct_full_precision": 30.84,
+        "expected_folder": "FTCI_None_30.84",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "RAIL",
+        "date": "None",
+        "momentum_pct_full_precision": 33.23,
+        "expected_folder": "RAIL_None_33.23",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      },
+      {
+        "ticker": "STSS",
+        "date": "None",
+        "momentum_pct_full_precision": 50.94,
+        "expected_folder": "STSS_None_50.94",
+        "disk_listing_matching_prefix": [],
+        "classified_reason": "folder_absent"
+      }
+    ]
+  },
+  "missing_quotes": {
+    "class_total_count": 154,
+    "sampled_count": 20,
+    "examples": [
+      {
+        "ticker": "CETY",
+        "date": "2022-01-05",
+        "momentum_pct_full_precision": 33.33,
+        "expected_folder": "CETY_2022-01-05_33.33",
+        "disk_listing_matching_prefix": [
+          "CETY_2022-01-05_33.33"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "ALMU",
+        "date": "2024-12-11",
+        "momentum_pct_full_precision": 45.21,
+        "expected_folder": "ALMU_2024-12-11_45.21",
+        "disk_listing_matching_prefix": [
+          "ALMU_2024-12-11_45.21"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "NUKK",
+        "date": "2023-09-07",
+        "momentum_pct_full_precision": 95.0,
+        "expected_folder": "NUKK_2023-09-07_95.00",
+        "disk_listing_matching_prefix": [
+          "NUKK_2023-09-07_95.00"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "NUKK",
+        "date": "2022-05-16",
+        "momentum_pct_full_precision": 40.4,
+        "expected_folder": "NUKK_2022-05-16_40.40",
+        "disk_listing_matching_prefix": [
+          "NUKK_2022-05-16_40.40"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "NUKK",
+        "date": "2022-01-14",
+        "momentum_pct_full_precision": 31.03,
+        "expected_folder": "NUKK_2022-01-14_31.03",
+        "disk_listing_matching_prefix": [
+          "NUKK_2022-01-14_31.03"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "CIIT",
+        "date": "2023-01-17",
+        "momentum_pct_full_precision": 62.5,
+        "expected_folder": "CIIT_2023-01-17_62.50",
+        "disk_listing_matching_prefix": [
+          "CIIT_2023-01-17_62.50"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "CAPS",
+        "date": "2024-12-16",
+        "momentum_pct_full_precision": 65.94,
+        "expected_folder": "CAPS_2024-12-16_65.94",
+        "disk_listing_matching_prefix": [
+          "CAPS_2024-12-16_65.94"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "TSSI",
+        "date": "2024-05-14",
+        "momentum_pct_full_precision": 60.22,
+        "expected_folder": "TSSI_2024-05-14_60.22",
+        "disk_listing_matching_prefix": [
+          "TSSI_2024-05-14_60.22"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "BTTC",
+        "date": "2024-01-08",
+        "momentum_pct_full_precision": 48.15,
+        "expected_folder": "BTTC_2024-01-08_48.15",
+        "disk_listing_matching_prefix": [
+          "BTTC_2024-01-08_48.15"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "WETH",
+        "date": "2023-03-10",
+        "momentum_pct_full_precision": 37.93,
+        "expected_folder": "WETH_2023-03-10_37.93",
+        "disk_listing_matching_prefix": [
+          "WETH_2023-03-10_37.93"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "SMTK",
+        "date": "2024-03-28",
+        "momentum_pct_full_precision": 72.73,
+        "expected_folder": "SMTK_2024-03-28_72.73",
+        "disk_listing_matching_prefix": [
+          "SMTK_2024-03-28_72.73"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "ALMU",
+        "date": "2024-12-16",
+        "momentum_pct_full_precision": 42.56,
+        "expected_folder": "ALMU_2024-12-16_42.56",
+        "disk_listing_matching_prefix": [
+          "ALMU_2024-12-16_42.56"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "ALMU",
+        "date": "2024-12-13",
+        "momentum_pct_full_precision": 285.03,
+        "expected_folder": "ALMU_2024-12-13_285.03",
+        "disk_listing_matching_prefix": [
+          "ALMU_2024-12-13_285.03"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "BTTC",
+        "date": "2024-05-06",
+        "momentum_pct_full_precision": 59.33,
+        "expected_folder": "BTTC_2024-05-06_59.33",
+        "disk_listing_matching_prefix": [
+          "BTTC_2024-05-06_59.33"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "NESR",
+        "date": "2023-12-28",
+        "momentum_pct_full_precision": 30.0,
+        "expected_folder": "NESR_2023-12-28_30.00",
+        "disk_listing_matching_prefix": [
+          "NESR_2023-12-28_30.00"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "NUKK",
+        "date": "2022-03-23",
+        "momentum_pct_full_precision": 31.58,
+        "expected_folder": "NUKK_2022-03-23_31.58",
+        "disk_listing_matching_prefix": [
+          "NUKK_2022-03-23_31.58"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "SOWG",
+        "date": "2022-06-03",
+        "momentum_pct_full_precision": 40.84,
+        "expected_folder": "SOWG_2022-06-03_40.84",
+        "disk_listing_matching_prefix": [
+          "SOWG_2022-06-03_40.84"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "TZUP",
+        "date": "2023-07-24",
+        "momentum_pct_full_precision": 31.54,
+        "expected_folder": "TZUP_2023-07-24_31.54",
+        "disk_listing_matching_prefix": [
+          "TZUP_2023-07-24_31.54"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "MKZR",
+        "date": "2024-07-11",
+        "momentum_pct_full_precision": 34.09,
+        "expected_folder": "MKZR_2024-07-11_34.09",
+        "disk_listing_matching_prefix": [
+          "MKZR_2024-07-11_34.09"
+        ],
+        "classified_reason": "missing_quotes"
+      },
+      {
+        "ticker": "SMTK",
+        "date": "2024-03-21",
+        "momentum_pct_full_precision": 46.43,
+        "expected_folder": "SMTK_2024-03-21_46.43",
+        "disk_listing_matching_prefix": [
+          "SMTK_2024-03-21_46.43"
+        ],
+        "classified_reason": "missing_quotes"
+      }
+    ]
+  }
+}
