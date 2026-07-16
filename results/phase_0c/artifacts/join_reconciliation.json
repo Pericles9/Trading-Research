@@ -1,0 +1,34 @@
+{
+  "t2a": {
+    "eligible_count": 17203,
+    "expected": 17203,
+    "matches": true,
+    "non_eligible_count": 6065
+  },
+  "t2b_class_counts": {
+    "folder_absent": 5911,
+    "missing_quotes": 154
+  },
+  "t2b_sum_check": true,
+  "t2b_sum_check_detail": {
+    "sum": 6065,
+    "expected": 6065
+  },
+  "t2c_class_counts": {
+    "matched": 17357,
+    "orphan": 7252,
+    "none_date_unresolved": 114
+  },
+  "t2c_sum_check": true,
+  "t2c_sum_check_detail": {
+    "sum": 24723,
+    "expected": 24723
+  },
+  "escalations": {
+    "t2a_mismatch": false,
+    "format_mismatch_nonzero": false,
+    "duplicate_collision_nonzero": false,
+    "t2b_not_a_partition": false,
+    "t2c_not_a_partition": false
+  }
+}
