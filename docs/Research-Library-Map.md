@@ -1,11 +1,11 @@
 # Research Library Map
 
-**Generated:** 2026-07-15
-**Reflects commit:** post-`b7be7c5` (branch `phase/0a`, this file's own commit follows)
-**File count covered:** 950 files (matches `results/phase_0a/artifacts/inventory_after.json` count) — 265 individual per-file entries below (archive/misc, notebooks, prompts, docs, and all of research/ and results/) + 9 folder-level entries covering `archive/runs/`'s other 685 files, per the coverage rules for this phase.
+**Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b T2 — added `src/`)
+**Reflects commit:** post-`b7be7c5` (Phase 0a) + Phase 0b T2, T3+ still to be folded in at T7
+**File count covered:** 950 files as of Phase 0a's `inventory_after.json`, +6 for `src/` added in Phase 0b T2 (full recount at Phase 0b T7)
 **Standing rule:** Any phase that adds, moves, or removes repo files must update this map in the same phase.
 
-This map covers the Phase 0a in-scope area (`archive/`, `docs/`, `notebooks/`, `prompts/`, `research/`, `results/`, and repo-root loose files). `data/` is excluded per standing rule (documented separately in `data/Schema.md`). `hawkes-ofi-impact/` and `scanner-epg-momentum/` are independent, already-git-tracked sibling projects — not walked file-by-file, but each gets a summary section below so this map isn't blind to a third of the workspace.
+This map covers the Phase 0a in-scope area (`archive/`, `docs/`, `notebooks/`, `prompts/`, `research/`, `results/`, and repo-root loose files), now joined by `src/` (Phase 0b T2). `data/` is excluded per standing rule (documented separately in `data/Schema.md`). `hawkes-ofi-impact/` and `scanner-epg-momentum/` are independent, already-git-tracked sibling projects — not walked file-by-file, but each gets a summary section below so this map isn't blind to a third of the workspace.
 
 Per the coverage rules for this phase, `archive/runs/` (685 files of repetitive machine-generated run output) is described at the folder level, one entry per run subdirectory, rather than per file — every one of those 685 files is still individually catalogued in `results/phase_0a/artifacts/inventory_before.json` / `inventory_after.json`. Everything else gets a per-file entry.
 
@@ -50,9 +50,13 @@ E:\Trading Research/
 │   ├── ingestion_run/
 │   ├── momentum_curation/
 │   ├── phase_0a/
+│   ├── phase_0b/
 │   ├── quotes_fix/
 │   └── rebuild_stage1/
-└── scanner-epg-momentum/       [independent git repo — out of scope, see summary below]
+├── scanner-epg-momentum/       [independent git repo — out of scope, see summary below]
+└── src/                        [recovered from D:\Trading Research in Phase 0b T2]
+    └── data/
+        ├── db.py, ingest.py, paths.py, prepare_database_split.py, __init__.py
 ```
 
 ---
@@ -174,6 +178,17 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 ## `docs/`
 
 - `docs/Research-Library-Map.md` — This file.
+
+## `src/` (recovered Phase 0b T2 — see `results/phase_0b/artifacts/data_layer_search_d_drive.json` for full provenance)
+
+Did not exist anywhere in this checkout as of Phase 0a. Recovered by locating the only surviving copy at `D:\Trading Research\src\data\` (uncommitted/untracked working-tree state on that drive's own independent git repo — no commit hash applies) and copying `src/data/` only, per `data/Schema.md`'s documented interface. The rest of `D:\Trading Research\src\` (`backtest/`, `models/`, `signals/`, `utils/` — the modules the `research/` vault's companion docs describe) was not copied; only `src/data/` was in scope for this phase.
+
+- `src/__init__.py` — Empty package marker (`"""Quant project source package."""`).
+- `src/data/__init__.py` — Empty package marker (`"""Data ingestion and DuckDB access layer."""`).
+- `src/data/paths.py` — Central path resolution (`resolve_data_root`, `resolve_database_root`, `resolve_duckdb_path`) with `MOM_DB_DATA_ROOT` / `MOM_DB_DATABASE_ROOT` / `MOM_DB_DUCKDB_PATH` env-var override precedence over hardcoded E: defaults.
+- `src/data/db.py` — `get_connection()`: returns a DuckDB connection to the path `paths.py` resolves, creating the parent directory if needed.
+- `src/data/ingest.py` — Multi-dataset ingest CLI (`--all` / `--dataset` / `--data-root` / `--db-path` / `--verify-only`); 11 registered loaders (`filtered`, `daily`, `minute`, `second10`, `quote_data`, `momentum_events`, `metadata`, `market_hours`, `symbol_properties`, `nautilus_catalog`, `trade_data`), each independently skip-if-exists.
+- `src/data/prepare_database_split.py` — CLI that scaffolds/migrates storage to an external database root, writing a migration manifest and `env.example` template.
 
 ## Repo root
 
