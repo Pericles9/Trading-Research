@@ -1,0 +1,73 @@
+{
+  "phase": "1",
+  "task": "T1a",
+  "script": "data/collection_scripts/filter_events_power_law.py",
+  "generated_by": "read-only DuckDB inspection, research/phase_1 (T1a)",
+  "note": "Row counts/columns read directly from the parquet files. filter_events_power_law.py was never executed.",
+  "inputs": [
+    {
+      "role": "file1 (script line 7-8)",
+      "path_in_script": "d:\\Mom. DB started 11-21-25\\data\\momentum_events\\full_2020_2024_momentum_scan_20251122_000515.parquet",
+      "path_on_disk_today": "data/momentum_events/full_2020_2024_momentum_scan_20251122_000515.parquet",
+      "exists_today": true,
+      "note_on_path": "Script hardcodes a D:\\ path not on CLAUDE.md's known-D:-hardcode file list. Script is never executed (per phase constraint); file resolved by filename match under the current data root.",
+      "row_count": 18660,
+      "columns": [
+        ["ticker", "VARCHAR"], ["date", "VARCHAR"], ["prev_close", "DOUBLE"],
+        ["high", "DOUBLE"], ["open", "DOUBLE"], ["close", "DOUBLE"],
+        ["volume", "BIGINT"], ["momentum_pct", "DOUBLE"], ["price_move", "DOUBLE"]
+      ],
+      "cleaning_stats": {
+        "momentum_pct_null": 0,
+        "volume_null": 0,
+        "volume_le_0": 109,
+        "momentum_pct_le_0": 0,
+        "rows_surviving_calc_df_filter_L27_29": 18551
+      }
+    },
+    {
+      "role": "file2 (script line 7,9)",
+      "path_in_script": "d:\\Mom. DB started 11-21-25\\data\\momentum_events\\momentum_scan_2025.parquet",
+      "path_on_disk_today": "data/momentum_events/momentum_scan_2025.parquet",
+      "exists_today": true,
+      "row_count": 5950,
+      "columns": [
+        ["id", "BIGINT"], ["ticker", "VARCHAR"], ["event_date", "VARCHAR"],
+        ["prev_close", "DOUBLE"], ["event_high", "DOUBLE"], ["event_open", "DOUBLE"],
+        ["event_close", "DOUBLE"], ["event_volume", "BIGINT"], ["momentum_pct", "DOUBLE"],
+        ["price_move", "DOUBLE"], ["market_cap_est", "INTEGER"], ["sector", "INTEGER"],
+        ["has_minute_data", "BIGINT"], ["has_trade_data", "BIGINT"], ["created_at", "VARCHAR"]
+      ],
+      "cleaning_stats": {
+        "momentum_pct_null": 0,
+        "event_volume_null": 0,
+        "event_volume_le_0": 0,
+        "momentum_pct_le_0": 0,
+        "rows_surviving_calc_df_filter_L27_29": 5950
+      },
+      "critical_schema_note": "file2 has NO 'date' column. It has 'event_date' instead. Script L15-16 renames file1's 'volume' -> 'event_volume' to align schemas with file2, but performs no equivalent rename/reconciliation of 'date' <-> 'event_date'. See filter_spec.md T1d / T3 for the resulting NULL-date consequence."
+    }
+  ],
+  "output": {
+    "role": "output_file (script line 10, written line 78/83)",
+    "path_on_disk_today": "data/momentum_events/filtered_events_power_law_q05.parquet",
+    "csv_sibling": "data/momentum_events/filtered_events_power_law_q05.csv",
+    "row_count": 23268,
+    "columns_count": 21,
+    "matches_momentum_events_table_schema": true,
+    "momentum_events_row_count": 23268
+  },
+  "other_files_in_momentum_events_dir": [
+    "filtered_events_power_law_q05.csv",
+    "filtered_events_power_law_q05.parquet",
+    "full_2020_2024_momentum_scan_20251122_000515.parquet",
+    "momentum_scan_2025.parquet"
+  ],
+  "concat_arithmetic": {
+    "file1_plus_file2_raw": 24610,
+    "file1_plus_file2_after_L27_29_cleaning": 24501,
+    "final_kept_after_q05_filter": 23268,
+    "dropped_by_q05_filter": 1233,
+    "dropped_by_q05_filter_pct": 5.03
+  }
+}
