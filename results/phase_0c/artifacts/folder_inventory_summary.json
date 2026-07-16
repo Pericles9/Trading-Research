@@ -1,0 +1,18 @@
+{
+  "total_entries": 24726,
+  "class_counts": {
+    "both_files": 22660,
+    "trades_only": 1540,
+    "unparseable_name": 526,
+    "quotes_only": 0,
+    "neither": 0
+  },
+  "all_classes": [
+    "both_files",
+    "trades_only",
+    "quotes_only",
+    "neither",
+    "unparseable_name"
+  ],
+  "sum_check": true
+}
