@@ -1,11 +1,17 @@
 {
-  "total_entries": 24726,
+  "total_entries": 24723,
+  "excluded_non_directory_entries_count": 3,
+  "excluded_non_directory_entries": [
+    "filtered_events_power_law_q05.parquet",
+    "METADATA.md",
+    "scanner_hit_catalog.json"
+  ],
   "class_counts": {
-    "both_files": 22660,
-    "trades_only": 1540,
-    "unparseable_name": 526,
+    "both_files": 23003,
+    "trades_only": 1606,
+    "neither": 114,
     "quotes_only": 0,
-    "neither": 0
+    "unparseable_name": 0
   },
   "all_classes": [
     "both_files",
@@ -14,5 +20,6 @@
     "neither",
     "unparseable_name"
   ],
+  "date_is_none_count": 114,
   "sum_check": true
 }

@@ -1,0 +1,814 @@
+{
+  "total_none_date_folders": 114,
+  "momentum_events_date_column_null_count_overall": 5911,
+  "outcome_counts": {
+    "matched_valid_date": 0,
+    "matched_null_date": 113,
+    "no_match_found": 0,
+    "multiple_matches": 1
+  },
+  "sum_check": true,
+  "results": [
+    {
+      "folder_name": "ACHR.WS_None_32.60",
+      "ticker": "ACHR.WS",
+      "momentum_str_from_folder": "32.60",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "ACHR.WS_None_33.10",
+      "ticker": "ACHR.WS",
+      "momentum_str_from_folder": "33.10",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "ACHR.WS_None_39.75",
+      "ticker": "ACHR.WS",
+      "momentum_str_from_folder": "39.75",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "ACHR.WS_None_41.98",
+      "ticker": "ACHR.WS",
+      "momentum_str_from_folder": "41.98",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "AMPX.WS_None_33.47",
+      "ticker": "AMPX.WS",
+      "momentum_str_from_folder": "33.47",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "AMPX.WS_None_34.20",
+      "ticker": "AMPX.WS",
+      "momentum_str_from_folder": "34.20",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "AMPX.WS_None_34.29",
+      "ticker": "AMPX.WS",
+      "momentum_str_from_folder": "34.29",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "AMPX.WS_None_42.76",
+      "ticker": "AMPX.WS",
+      "momentum_str_from_folder": "42.76",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "AMPX.WS_None_63.70",
+      "ticker": "AMPX.WS",
+      "momentum_str_from_folder": "63.70",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "AMPX.WS_None_90.48",
+      "ticker": "AMPX.WS",
+      "momentum_str_from_folder": "90.48",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "AREB_None_86.29",
+      "ticker": "AREB",
+      "momentum_str_from_folder": "86.29",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_31.97",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "31.97",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_33.33",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "33.33",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_36.46",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "36.46",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_38.15",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "38.15",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_38.66",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "38.66",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_39.34",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "39.34",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_40.16",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "40.16",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_47.74",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "47.74",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_53.59",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "53.59",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_54.84",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "54.84",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_58.05",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "58.05",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BBAI.WS_None_60.87",
+      "ticker": "BBAI.WS",
+      "momentum_str_from_folder": "60.87",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BWpA_None_38.43",
+      "ticker": "BWpA",
+      "momentum_str_from_folder": "38.43",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BWpA_None_40.09",
+      "ticker": "BWpA",
+      "momentum_str_from_folder": "40.09",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BWpA_None_64.15",
+      "ticker": "BWpA",
+      "momentum_str_from_folder": "64.15",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BWpA_None_99.47",
+      "ticker": "BWpA",
+      "momentum_str_from_folder": "99.47",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BYND_None_112.43",
+      "ticker": "BYND",
+      "momentum_str_from_folder": "112.43",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "BYND_None_162.59",
+      "ticker": "BYND",
+      "momentum_str_from_folder": "162.59",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "CAPS_None_46.92",
+      "ticker": "CAPS",
+      "momentum_str_from_folder": "46.92",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "CIOpA_None_30.19",
+      "ticker": "CIOpA",
+      "momentum_str_from_folder": "30.19",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "CVE.WS_None_32.73",
+      "ticker": "CVE.WS",
+      "momentum_str_from_folder": "32.73",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "DBGI_None_119.23",
+      "ticker": "DBGI",
+      "momentum_str_from_folder": "119.23",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "DBGI_None_203.79",
+      "ticker": "DBGI",
+      "momentum_str_from_folder": "203.79",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "DBGI_None_30.13",
+      "ticker": "DBGI",
+      "momentum_str_from_folder": "30.13",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "DBGI_None_31.90",
+      "ticker": "DBGI",
+      "momentum_str_from_folder": "31.90",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "DBGI_None_34.19",
+      "ticker": "DBGI",
+      "momentum_str_from_folder": "34.19",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "DBGI_None_34.51",
+      "ticker": "DBGI",
+      "momentum_str_from_folder": "34.51",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "DBGI_None_34.94",
+      "ticker": "DBGI",
+      "momentum_str_from_folder": "34.94",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "DBGI_None_36.96",
+      "ticker": "DBGI",
+      "momentum_str_from_folder": "36.96",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "DBGI_None_51.52",
+      "ticker": "DBGI",
+      "momentum_str_from_folder": "51.52",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "DBGI_None_60.65",
+      "ticker": "DBGI",
+      "momentum_str_from_folder": "60.65",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "DNOW_None_30.48",
+      "ticker": "DNOW",
+      "momentum_str_from_folder": "30.48",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "ENTA_None_35.29",
+      "ticker": "ENTA",
+      "momentum_str_from_folder": "35.29",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "FLDDW_None_42.22",
+      "ticker": "FLDDW",
+      "momentum_str_from_folder": "42.22",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "GTN.A_None_31.87",
+      "ticker": "GTN.A",
+      "momentum_str_from_folder": "31.87",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "HYAC.WS_None_81.36",
+      "ticker": "HYAC.WS",
+      "momentum_str_from_folder": "81.36",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "INTC_None_30.03",
+      "ticker": "INTC",
+      "momentum_str_from_folder": "30.03",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "IONQ.WS_None_31.59",
+      "ticker": "IONQ.WS",
+      "momentum_str_from_folder": "31.59",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "IONQ.WS_None_33.82",
+      "ticker": "IONQ.WS",
+      "momentum_str_from_folder": "33.82",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "IONQ.WS_None_35.89",
+      "ticker": "IONQ.WS",
+      "momentum_str_from_folder": "35.89",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "IONQ.WS_None_47.66",
+      "ticker": "IONQ.WS",
+      "momentum_str_from_folder": "47.66",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "IONQ.WS_None_51.15",
+      "ticker": "IONQ.WS",
+      "momentum_str_from_folder": "51.15",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "IONQ.WS_None_57.45",
+      "ticker": "IONQ.WS",
+      "momentum_str_from_folder": "57.45",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "IONQ.WS_None_66.39",
+      "ticker": "IONQ.WS",
+      "momentum_str_from_folder": "66.39",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "IRS.WS_None_38.89",
+      "ticker": "IRS.WS",
+      "momentum_str_from_folder": "38.89",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "JOBY.WS_None_31.44",
+      "ticker": "JOBY.WS",
+      "momentum_str_from_folder": "31.44",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "JOBY.WS_None_31.53",
+      "ticker": "JOBY.WS",
+      "momentum_str_from_folder": "31.53",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "JOBY.WS_None_32.59",
+      "ticker": "JOBY.WS",
+      "momentum_str_from_folder": "32.59",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "JOBY.WS_None_33.97",
+      "ticker": "JOBY.WS",
+      "momentum_str_from_folder": "33.97",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "JOBY.WS_None_46.84",
+      "ticker": "JOBY.WS",
+      "momentum_str_from_folder": "46.84",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "JOBY.WS_None_46.92",
+      "ticker": "JOBY.WS",
+      "momentum_str_from_folder": "46.92",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "JOBY.WS_None_57.55",
+      "ticker": "JOBY.WS",
+      "momentum_str_from_folder": "57.55",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "NE.WS.A_None_33.10",
+      "ticker": "NE.WS.A",
+      "momentum_str_from_folder": "33.10",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "NE.WS.A_None_34.78",
+      "ticker": "NE.WS.A",
+      "momentum_str_from_folder": "34.78",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "NE.WS.A_None_69.91",
+      "ticker": "NE.WS.A",
+      "momentum_str_from_folder": "69.91",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "NE.WS_None_30.49",
+      "ticker": "NE.WS",
+      "momentum_str_from_folder": "30.49",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "NPWR.WS_None_42.05",
+      "ticker": "NPWR.WS",
+      "momentum_str_from_folder": "42.05",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "NPWR.WS_None_42.26",
+      "ticker": "NPWR.WS",
+      "momentum_str_from_folder": "42.26",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "NPWR.WS_None_66.62",
+      "ticker": "NPWR.WS",
+      "momentum_str_from_folder": "66.62",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "NVDL_None_37.76",
+      "ticker": "NVDL",
+      "momentum_str_from_folder": "37.76",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "NVDU_None_38.24",
+      "ticker": "NVDU",
+      "momentum_str_from_folder": "38.24",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "OPEN_None_120.89",
+      "ticker": "OPEN",
+      "momentum_str_from_folder": "120.89",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "OPFI.WS_None_33.54",
+      "ticker": "OPFI.WS",
+      "momentum_str_from_folder": "33.54",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "OPFI.WS_None_41.13",
+      "ticker": "OPFI.WS",
+      "momentum_str_from_folder": "41.13",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "OPFI.WS_None_41.78",
+      "ticker": "OPFI.WS",
+      "momentum_str_from_folder": "41.78",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "OPFI.WS_None_56.57",
+      "ticker": "OPFI.WS",
+      "momentum_str_from_folder": "56.57",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "OPFI.WS_None_79.98",
+      "ticker": "OPFI.WS",
+      "momentum_str_from_folder": "79.98",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PEW.WS_None_41.51",
+      "ticker": "PEW.WS",
+      "momentum_str_from_folder": "41.51",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PL.WS_None_112.50",
+      "ticker": "PL.WS",
+      "momentum_str_from_folder": "112.50",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PL.WS_None_30.99",
+      "ticker": "PL.WS",
+      "momentum_str_from_folder": "30.99",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PL.WS_None_39.14",
+      "ticker": "PL.WS",
+      "momentum_str_from_folder": "39.14",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PLRZ_None_68.97",
+      "ticker": "PLRZ",
+      "momentum_str_from_folder": "68.97",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_102.90",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "102.90",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_112.50",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "112.50",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_122.22",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "122.22",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_30.00",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "30.00",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_31.39",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "31.39",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_39.20",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "39.20",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_44.71",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "44.71",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_45.06",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "45.06",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_49.35",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "49.35",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_49.79",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "49.79",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_50.00",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "50.00",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_54.64",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "54.64",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_63.32",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "63.32",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_65.60",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "65.60",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_66.67",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "66.67",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "PPCB_None_76.33",
+      "ticker": "PPCB",
+      "momentum_str_from_folder": "76.33",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "SBXD.WS_None_149.41",
+      "ticker": "SBXD.WS",
+      "momentum_str_from_folder": "149.41",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "SBXD.WS_None_66.51",
+      "ticker": "SBXD.WS",
+      "momentum_str_from_folder": "66.51",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "SPRB_None_44.89",
+      "ticker": "SPRB",
+      "momentum_str_from_folder": "44.89",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "SPRB_None_47.97",
+      "ticker": "SPRB",
+      "momentum_str_from_folder": "47.97",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "SPRB_None_55.31",
+      "ticker": "SPRB",
+      "momentum_str_from_folder": "55.31",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "SSII_None_66.67",
+      "ticker": "SSII",
+      "momentum_str_from_folder": "66.67",
+      "event_row_date": [
+        "2023-06-06",
+        "None"
+      ],
+      "outcome": "multiple_matches"
+    },
+    {
+      "folder_name": "TQQQ_None_37.30",
+      "ticker": "TQQQ",
+      "momentum_str_from_folder": "37.30",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "TSLL_None_47.56",
+      "ticker": "TSLL",
+      "momentum_str_from_folder": "47.56",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "TSLQ_None_35.54",
+      "ticker": "TSLQ",
+      "momentum_str_from_folder": "35.54",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "VAL.WS_None_33.47",
+      "ticker": "VAL.WS",
+      "momentum_str_from_folder": "33.47",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "VBIX_None_40.00",
+      "ticker": "VBIX",
+      "momentum_str_from_folder": "40.00",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "VBIX_None_63.40",
+      "ticker": "VBIX",
+      "momentum_str_from_folder": "63.40",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "VBIX_None_72.89",
+      "ticker": "VBIX",
+      "momentum_str_from_folder": "72.89",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "VBIX_None_93.55",
+      "ticker": "VBIX",
+      "momentum_str_from_folder": "93.55",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    },
+    {
+      "folder_name": "WLDSW_None_33.33",
+      "ticker": "WLDSW",
+      "momentum_str_from_folder": "33.33",
+      "event_row_date": null,
+      "outcome": "matched_null_date"
+    }
+  ]
+}
