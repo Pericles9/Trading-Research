@@ -43,12 +43,7 @@
   and the observed value, wait for instruction.
 
 ## Pointers
-- All phase prompts follow docs/Agent_Prompt_Standard.md — no file exists at that path. The only
-  copy found anywhere on E: or D: is scanner-epg-momentum/backtest/docs/Agent_Prompt_Standard (1).md
-  (v1.1, 2026-05-10, inside the independent scanner-epg-momentum repo). That version does not define
-  "§10 Verification Block" or "§11 Digest Contract," both referenced by prompts/phase_0a.md and
-  prompts/phase_0b.md — a v1.2 or later likely exists somewhere this search didn't reach. Until it
-  turns up, digest.json shape follows the precedent set by results/phase_0a/digest.json.
-- Strategy context: docs/Mom-DB-Strategy-Research-Program.md — does not exist anywhere in this
-  checkout (E: or D:) under any name found. Not fabricated as a pointer.
+- All phase prompts follow docs/Agent_Prompt_Standard.md (v1.3, 2026-07-14) — defines the Evidence
+  Standard, §9 Chart Contract, §10 Verification Block, §11 Digest Contract, §12 Git Discipline.
+- Strategy context: docs/Mom-DB-Strategy-Research-Program.md.
 - Repo map: docs/Research-Library-Map.md. Data layout: data/Schema.md.
