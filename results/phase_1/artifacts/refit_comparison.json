@@ -1,0 +1,28 @@
+{
+  "phase": "1",
+  "task": "T2",
+  "config_hash": "9921f1cb",
+  "methodology": {
+    "join_key": "(ticker, COALESCE(date, event_date), ROUND(momentum_pct, 2))",
+    "why_coalesced": "date is structurally NULL for every file2-sourced row (filter_spec.md T1d). Coalescing with event_date is the only way to compare full coverage rather than just the file1 subset."
+  },
+  "row_counts": {
+    "raw_concat": 24610,
+    "cleaned_calc_df": 24501,
+    "training_set_le_995pct": 24378,
+    "re_derived_kept": 23268,
+    "momentum_events_table": 23268
+  },
+  "quantreg_params": {
+    "Intercept": 2.126137499821757,
+    "log_mom": 0.5845564672282861
+  },
+  "overlap": {
+    "n_both": 23268,
+    "n_only_re_derived": 0,
+    "n_only_momentum_events": 0,
+    "re_derived_in_db_pct": 100.0,
+    "db_in_re_derived_pct": 100.0
+  },
+  "overlap_threshold_config": 0.95
+}
