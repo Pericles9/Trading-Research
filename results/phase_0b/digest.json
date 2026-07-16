@@ -1,0 +1,60 @@
+{
+  "phase": "0b",
+  "title": "Harness Setup: Data Layer, CLAUDE.md, Table Loads, Dev Sample, Digest Tooling",
+  "branch": "phase/0b",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-15",
+  "baseline": "phase-0a-approved",
+  "summary": "Located the missing src/data/ layer on D:\\ (not found anywhere else, per T1's exhaustive search), recovered it, loaded momentum_events, wrote CLAUDE.md, built and pinned a 50-event dev sample spanning the full momentum_pct distribution, and stood up digest tooling - discovering the digest contract itself (and the strategy-program doc) can't be located anywhere in this checkout.",
+  "headline_metrics": [
+    {"metric": "Dev sample (5/decile x 10 momentum_pct deciles) spans the full eligible pool, no empty deciles", "value": "eligible_per_decile: [1721,1721,1721,1720x7]", "chart": "results/phase_0b/charts/01_dev_sample_stratification.html"},
+    {"metric": "Dev-tier representative query (trade count + minute-bucketed volume, 50 events) well under the 60s target", "value": "5.31s, 123,145 rows", "chart": "results/phase_0b/charts/02_dev_sample_event_sizes.html"}
+  ],
+  "escalations_triggered": [],
+  "escalations_checked_not_triggered": [
+    {"criterion": "data-layer files missing everywhere", "note": "triggered at T1, resolved by T1d's D:\\ find"},
+    {"criterion": "E: DuckDB vs Schema.md row counts", "observed": "exact match, 5 tables"},
+    {"criterion": "momentum_events 3-way count", "observed": "23268=23268=23268"},
+    {"criterion": "momentum_pct nulls", "observed": 0},
+    {"criterion": "eligible/decile < 5", "observed_min": 1720},
+    {"criterion": "dev sample rebuild not identical", "observed": "SHA256 identical"},
+    {"criterion": "dev query > 600s", "observed": "5.31s"},
+    {"criterion": "Phase 0a digest round-trip", "observed": "failed headline_metrics_present - reported, not fixed"}
+  ],
+  "decisions_log": [
+    {"decision": "T1c resolved by elimination once T1d found the files on D: - no further question asked", "reason": "vendor-from-nested-repo wasn't available; rewrite was moot once intact code was found"},
+    {"decision": "Only src/data/ copied, not the rest of D:'s src/ tree", "reason": "T2's scope is explicitly src/data/; recovering the rest is a bigger decision for a future phase"},
+    {"decision": "Provenance notes say 'uncommitted/untracked on D:, no commit hash applies'", "reason": "git status on D: showed these 4 files modified/untracked relative to that repo's own HEAD"},
+    {"decision": "CLAUDE.md's Agent_Prompt_Standard.md pointer repointed to its actual (odd) location, with a version-gap note", "reason": "T3a: fix the pointer, not the doc - only copy found anywhere is v1.1, missing the digest/verification sections this program's prompts already use"},
+    {"decision": "Mom-DB-Strategy-Research-Program.md pointer states the doc doesn't exist, rather than pointing anywhere", "reason": "not found on E: or D: under any name"},
+    {"decision": "validate_digest.py reconstructed from T6a's literal spec fragment + Phase 0a's actual field usage", "reason": "the real standard document wasn't found; needed something usable now"},
+    {"decision": "Phase 0a's digest.json not edited after the round-trip found it missing headline_metrics", "reason": "escalation table: report, don't retroactively edit a prior phase's digest"},
+    {"decision": "Decile assignment uses a fixed contiguous-split rule, not a library quantile function", "reason": "removes pandas/numpy version dependence from T5c's byte-identical rebuild requirement"}
+  ],
+  "surprises": [
+    "D:\\Trading Research is a full, independently git-tracked repo (own main branch, prompts/, .claude/, hawkes-ofi-impact/+scanner-epg-momentum/ copies) with substantial uncommitted changes matching Phase 0a's results/cleanup/ findings almost exactly - the migration scripts likely ran from this checkout and were never committed there.",
+    "docs/Agent_Prompt_Standard.md doesn't exist at that path anywhere; the only copy found (v1.1, '(1)'-suffixed, inside scanner-epg-momentum/) doesn't define the Verification Block/Digest Contract sections both phase prompts already reference - a v1.2 (per Cooper's own earlier reference to it) wasn't found anywhere on E: or D:.",
+    "docs/Mom-DB-Strategy-Research-Program.md also doesn't exist anywhere in this checkout under any name searched.",
+    "Vendored src/data/ingest.py's Unicode log formatting fails on this Windows console's cp1252 codepage - harmless, swallowed by logging, not patched (quarantine on modifying vendored content).",
+    "momentum_events has 23,268 rows but only 19,170 distinct (ticker,date) pairs - recorded, not investigated, per T4b."
+  ],
+  "output_files": {
+    "prompt": "prompts/phase_0b.md", "config": "config/phase_0b.json", "dev_sample_pin": "config/dev_sample_events.csv",
+    "artifacts": "results/phase_0b/artifacts/*.json (7 files - data_layer_search[_d_drive], duckdb_state_check, momentum_events_load, dev_sample_build, dev_tables_materialized, digest_roundtrip_check)",
+    "claude_md": "CLAUDE.md", "src_data": "src/data/{db,ingest,paths,prepare_database_split}.py",
+    "digest_validator": "research/phase_0b/validate_digest.py", "slash_commands": ".claude/commands/{digest,verify,gate}.md",
+    "charts": ["results/phase_0b/charts/01_dev_sample_stratification.html", "results/phase_0b/charts/02_dev_sample_event_sizes.html"],
+    "report": "results/phase_0b/REPORT.md", "digest": "results/phase_0b/digest.json"
+  },
+  "counts": {
+    "momentum_events_rows": 23268, "momentum_events_distinct_tickers": 3366, "eligible_events_for_dev_sample": 17203,
+    "dev_sample_size": 50, "filtered_trades_dev_rows": 8198488, "filtered_quotes_dev_rows": 7152287
+  },
+  "blocking_items_for_next_phase": [
+    "Rest of D:\\Trading Research\\src\\ (backtest/, models/, signals/, utils/) not recovered - only src/data/ was in scope.",
+    "Agent_Prompt_Standard.md v1.2+ and Mom-DB-Strategy-Research-Program.md not located anywhere - future phases work against a reconstructed digest contract.",
+    "D:'s uncommitted working-tree state (README.md, archive/INVENTORY.md, data/Schema.md modified; trade_data/high_momentum/* deleted) not reconciled.",
+    "8 .py files + 3 notebooks still carry live D:\\ hardcodes - quarantined, not remediated."
+  ],
+  "approval_gate": "Do not begin Phase 1 or any follow-on work until Cooper has reviewed results and given explicit approval. Tag phase-0b-approved on merge."
+}

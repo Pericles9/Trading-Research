@@ -1,11 +1,11 @@
 # Research Library Map
 
-**Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b T2 — added `src/`)
-**Reflects commit:** post-`b7be7c5` (Phase 0a) + Phase 0b T2, T3+ still to be folded in at T7
-**File count covered:** 950 files as of Phase 0a's `inventory_after.json`, +6 for `src/` added in Phase 0b T2 (full recount at Phase 0b T7)
+**Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b — added `config/`, `.claude/`, `src/`, `CLAUDE.md`, and both phases' `research/phase_0b/`/`results/phase_0b/` content)
+**Reflects commit:** end of Phase 0b (branch `phase/0b`), post-`phase-0a-approved`
+**File count covered:** 987 files — 302 individual per-file entries below + 9 folder-level entries covering `archive/runs/`'s other 685 files, per the coverage rules established in Phase 0a.
 **Standing rule:** Any phase that adds, moves, or removes repo files must update this map in the same phase.
 
-This map covers the Phase 0a in-scope area (`archive/`, `docs/`, `notebooks/`, `prompts/`, `research/`, `results/`, and repo-root loose files), now joined by `src/` (Phase 0b T2). `data/` is excluded per standing rule (documented separately in `data/Schema.md`). `hawkes-ofi-impact/` and `scanner-epg-momentum/` are independent, already-git-tracked sibling projects — not walked file-by-file, but each gets a summary section below so this map isn't blind to a third of the workspace.
+This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `research/`, `results/`, `src/`, `.claude/`, and repo-root loose files. `data/` is excluded per standing rule (documented separately in `data/Schema.md`). `hawkes-ofi-impact/` and `scanner-epg-momentum/` are independent, already-git-tracked sibling projects — not walked file-by-file, but each gets a summary section below so this map isn't blind to a third of the workspace.
 
 Per the coverage rules for this phase, `archive/runs/` (685 files of repetitive machine-generated run output) is described at the folder level, one entry per run subdirectory, rather than per file — every one of those 685 files is still individually catalogued in `results/phase_0a/artifacts/inventory_before.json` / `inventory_after.json`. Everything else gets a per-file entry.
 
@@ -15,12 +15,19 @@ Per the coverage rules for this phase, `archive/runs/` (685 files of repetitive 
 
 ```text
 E:\Trading Research/
+├── .claude/
+│   ├── commands/            (digest.md, verify.md, gate.md)
+│   └── scheduled_tasks.lock
 ├── .gitignore
 ├── archive/
 │   ├── CLAUDE.md
 │   ├── INVENTORY.md
 │   ├── misc/
 │   └── runs/
+├── CLAUDE.md
+├── config/
+│   ├── phase_0b.json
+│   └── dev_sample_events.csv
 ├── docs/
 │   └── Research-Library-Map.md
 ├── hawkes-ofi-impact/          [independent git repo — out of scope, see summary below]
@@ -28,13 +35,15 @@ E:\Trading Research/
 │   ├── CLAUDE.md
 │   └── *.ipynb (15 notebooks)
 ├── prompts/
-│   └── phase_0a.md
+│   ├── phase_0a.md
+│   └── phase_0b.md
 ├── research/                   [Obsidian vault]
 │   ├── .obsidian/
 │   ├── CLAUDE.md
 │   ├── alpha-hypotheses/
 │   ├── brainstorm/
 │   ├── phase_0a/
+│   ├── phase_0b/
 │   ├── phase_1_context/
 │   ├── phase_1_ext_hours/
 │   ├── phase_2_signal_forge/
@@ -55,8 +64,9 @@ E:\Trading Research/
 │   └── rebuild_stage1/
 ├── scanner-epg-momentum/       [independent git repo — out of scope, see summary below]
 └── src/                        [recovered from D:\Trading Research in Phase 0b T2]
+    ├── __init__.py
     └── data/
-        ├── db.py, ingest.py, paths.py, prepare_database_split.py, __init__.py
+        └── db.py, ingest.py, paths.py, prepare_database_split.py, __init__.py
 ```
 
 ---
@@ -171,9 +181,22 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 
 ---
 
+## `config/`
+
+- `config/phase_0b.json` — Dev-sample parameters (n_events, n_strata, per_stratum, seed, eligibility rule).
+- `config/dev_sample_events.csv` — The pinned 50-event dev sample list. Committed, never regenerated in place — a disagreement on rebuild is an escalation, not a refresh.
+
+## `.claude/`
+
+- `.claude/commands/digest.md` — `/digest`: regenerates the current phase's `digest.json` from its artifacts.
+- `.claude/commands/verify.md` — `/verify`: re-runs every repro command in the current phase's digest/report and diffs the numbers.
+- `.claude/commands/gate.md` — `/gate`: prints the current phase's escalation check table against live state.
+- `.claude/scheduled_tasks.lock` — Harness-managed lock file for scheduled-wakeup state; not phase content.
+
 ## `prompts/`
 
 - `prompts/phase_0a.md` — This phase's own instructions (task specification for Phase 0a: repo inventory, reorganization, and library-map generation).
+- `prompts/phase_0b.md` — Phase 0b's own instructions (data-layer recovery, `CLAUDE.md`, table loads, dev sample, digest tooling).
 
 ## `docs/`
 
@@ -192,7 +215,8 @@ Did not exist anywhere in this checkout as of Phase 0a. Recovered by locating th
 
 ## Repo root
 
-- `.gitignore` — Excludes `.venv/`, `data/`, the two sibling repos, `archive/runs/`, `notebooks/*.ipynb`, and standard Python/cache artifacts from git tracking.
+- `.gitignore` — Excludes `.venv/`, the top-level `data/` root only (anchored `/data/` — fixed in Phase 0b after an unanchored version also matched `src/data/`), the two sibling repos, `archive/runs/`, `notebooks/*.ipynb`, `/logs/`, and standard Python/cache artifacts from git tracking.
+- `CLAUDE.md` — Standing constraints for this program: hard data rules, provenance quarantine, methodology, repo layout, reporting, escalation, and pointers to the other standing docs (two of which don't resolve — see the file itself).
 
 ---
 
@@ -303,6 +327,16 @@ Note: the great majority of the top-level notes below are companion docs for a `
 - `research/phase_0a/build_inventory.py` — Walks the Phase 0a in-scope directories and writes the per-file inventory manifest (`inventory_before.json`/`inventory_after.json`).
 - `research/phase_0a/build_reference_map.py` — Parses every in-scope `.py` file's imports and hardcoded path strings (including the `D:\` hardware-rule finding) into `reference_map.json`.
 - `research/phase_0a/diff_inventory.py` — Diffs two inventory manifests and classifies every path as unmoved/moved/new/unexplained-missing; the Verification Block's repro script for T5.
+
+### `research/phase_0b/` (this phase's own tooling)
+
+- `research/phase_0b/__init__.py` — Empty package marker enabling `python -m research.phase_0b.*` invocation.
+- `research/phase_0b/check_duckdb_state.py` — Opens the E: DuckDB read-only and compares table row counts against the baseline recorded in `data/Schema.md`; T1b's repro script.
+- `research/phase_0b/build_dev_sample.py` — Builds the pinned 50-event dev sample: eligibility (must have a `filtered/` folder), momentum_pct-decile stratification via a fixed contiguous-split rule, seeded per-decile sampling; writes `config/dev_sample_events.csv`.
+- `research/phase_0b/materialize_dev_tables.py` — Reads the pinned CSV and materializes `dev_events`, `filtered_trades_dev`, `filtered_quotes_dev` in the E: DuckDB, reusing `src.data.ingest`'s schema-union helpers.
+- `research/phase_0b/chart_01_stratification.py` — Builds `01_dev_sample_stratification.html` (full-universe histogram/ECDF + dev-sample rug overlay by decile).
+- `research/phase_0b/chart_02_event_sizes.py` — Builds `02_dev_sample_event_sizes.html` (per-event trade+quote row counts, log scale, cumulative-% line).
+- `research/phase_0b/validate_digest.py` — Schema-validates a `digest.json` against a reconstruction of the (unlocated) digest contract; see `CLAUDE.md`'s Pointers section.
 
 ### `research/phase_1_context/`
 
@@ -471,4 +505,16 @@ Per `results/hardware/`, `results/ingestion_run/`, `results/rebuild_stage1/`, et
 
 - `results/phase_0a/artifacts/` — Machine-readable inventory manifests and reference maps produced by this phase (see `REPORT.md` for the full list).
 - `results/phase_0a/digest.json`, `results/phase_0a/REPORT.md` — This phase's digest and written report (see `REPORT.md` itself for what it contains).
+
+### `results/phase_0b/` (this phase's own outputs)
+
+- `results/phase_0b/artifacts/data_layer_search.json` — T1's E:\ search (working trees + git history + rest of E:\): zero matches.
+- `results/phase_0b/artifacts/data_layer_search_d_drive.json` — T1d's D:\ search: all 4 target files found at `D:\Trading Research\src\data\`, with mtimes, interface diffs, and git-provenance detail.
+- `results/phase_0b/artifacts/duckdb_state_check.json` — T1b's table/row-count comparison against `data/Schema.md`; clean match.
+- `results/phase_0b/artifacts/momentum_events_load.json` — T4's three-way count verification and T4a/T4b stats.
+- `results/phase_0b/artifacts/dev_sample_build.json` — Eligibility waterfall, per-decile counts, T5c rebuild-hash check, T5d timing.
+- `results/phase_0b/artifacts/dev_tables_materialized.json` — Per-event row counts for `filtered_trades_dev`/`filtered_quotes_dev`.
+- `results/phase_0b/artifacts/digest_roundtrip_check.json` — T6c's round-trip result (Phase 0a's digest fails `headline_metrics_present`, reported not fixed).
+- `results/phase_0b/charts/01_dev_sample_stratification.html`, `02_dev_sample_event_sizes.html` — This phase's two required charts.
+- `results/phase_0b/digest.json`, `results/phase_0b/REPORT.md` — This phase's digest and written report.
 
