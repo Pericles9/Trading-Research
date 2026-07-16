@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-07-15",
+  "validator": "research/phase_0b/validate_digest.py",
+  "note": "The validator is a reconstruction (see its own docstring) - no canonical §11 Digest Contract document was found anywhere on E: or D: despite an exhaustive search. It combines the one concrete spec fragment that exists in this checkout (prompts/phase_0b.md T6a: 'required fields, headline_metrics[].chart present, <=100 lines') with the fields results/phase_0a/digest.json actually used.",
+  "phase_0a_digest": {
+    "path": "results/phase_0a/digest.json",
+    "all_passed": false,
+    "failing_check": "headline_metrics_present",
+    "reason": "Phase 0a's digest was written before this reconstruction existed and predates the headline_metrics[].chart requirement found in T6a's task text - it never had this field.",
+    "action_taken": "None. Per prompts/phase_0b.md's escalation table ('Digest round-trip (T6c) | Phase 0a digest fails validation | Report the failure as a finding; do not edit Phase 0a's digest; continue'), this is reported here as a finding, not corrected retroactively."
+  },
+  "phase_0b_digest": {
+    "path": "results/phase_0b/digest.json",
+    "status": "checked in T7, after this phase's own digest.json is written"
+  }
+}
