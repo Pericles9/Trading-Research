@@ -1,0 +1,53 @@
+{
+  "phase": "1",
+  "task": "T4",
+  "n_orphans": 7252,
+  "false_orphan_reclassification": {
+    "headline": "5,911 of the 7,252 'orphan' folders (81.5%) are not orphans at all - they are the same events already present in momentum_events as the 5,911 NULL-date rows (T3), misclassified as 'orphan' because 0c's folder-vs-momentum_events join used momentum_events.date, which is structurally NULL for every file2-sourced row. Re-joining on ticker + momentum_pct(2dp) + (date OR event_date) recovers the match exactly.",
+    "n_false_orphans_date_bug": 5911,
+    "n_false_orphans_pct_of_total": 81.51,
+    "n_genuine_orphans": 1341,
+    "n_genuine_orphans_pct_of_total": 18.49,
+    "false_orphan_source_breakdown": {
+      "from_file2_matches_null_date_row": 5911,
+      "from_file1": 0
+    }
+  },
+  "membership_i_scan_inputs_raw": {
+    "in_file1_raw": 1303,
+    "in_file2_raw": 5949,
+    "in_any_scan_input": 7252,
+    "not_in_any_scan_input": 0,
+    "not_in_any_scan_input_pct": 0.0
+  },
+  "membership_ii_t2_re_derived_kept_set": {
+    "note": "T2 (refit_comparison.json) showed the re-derived kept set and momentum_events overlap 100% both directions, so the false-orphan subset above (which IS in momentum_events) is also, by construction, in the re-derived kept set. The 1,341 genuine orphans match neither.",
+    "n_matching_re_derived_kept_set": 5911
+  },
+  "membership_iii_other_filtered_events_files": {
+    "note": "Only filtered_events_power_law_q05.parquet/.csv exist in data/momentum_events/ (T1a directory listing) - the same file that populates momentum_events. No independent 'other' file to test against."
+  },
+  "q05_boundary_test_matched_subset": {
+    "note": "All orphans found in a raw scan input carry a real volume, so this subset gets the true 2D (momentum, volume) boundary test using T2's fitted quantreg line - regardless of false/genuine status.",
+    "n_with_matched_volume": 7143,
+    "n_above_boundary_would_have_passed_filter": 5911,
+    "n_below_boundary_would_have_been_dropped": 1232,
+    "above_boundary_pct_of_matched": 82.75
+  },
+  "q05_boundary_test_genuine_orphans_only": {
+    "note": "The boundary test restricted to the 1,341 genuine orphans - this is the population that actually bears on the 'residue of a looser filter run' hypothesis (chart 03). Keys are stringified booleans/NA from pandas value_counts.",
+    "n_genuine_orphans": 1341,
+    "counts": {
+      "False": 1232,
+      "None": 109
+    },
+    "interpretation": "If genuine orphans cluster below the boundary (would have been correctly dropped by the current filter), there is no drift - they are ordinary filter rejects with an on-disk folder. If a material share sits above the boundary (should be kept but isn't), that is evidence of drift or a separate join gap."
+  },
+  "momentum_only_test_all_orphans": {
+    "note": "For all 7,252 orphans (matched or not), momentum_pct parsed from the folder name vs. the minimum momentum_pct among the 23,268 kept momentum_events rows. This is the reference line plotted in chart 03.",
+    "min_kept_momentum_pct": 30.0,
+    "n_below_min_kept_momentum": 0,
+    "n_at_or_above_min_kept_momentum": 7252,
+    "below_min_kept_momentum_pct": 0.0
+  }
+}
