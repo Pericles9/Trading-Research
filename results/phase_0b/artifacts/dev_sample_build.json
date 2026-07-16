@@ -1,0 +1,45 @@
+{
+  "config": {
+    "n_events": 50,
+    "n_strata": 10,
+    "per_stratum": 5,
+    "seed": 42,
+    "eligibility": "event must have data/filtered/{ticker}_{date}_{momentum_pct:.2f}/ with both trades.parquet and quotes.parquet"
+  },
+  "eligibility_waterfall": {
+    "momentum_events_total": 23268,
+    "eligible_with_filtered_folder": 17203,
+    "excluded_no_matching_folder": 6065
+  },
+  "eligible_per_decile": [1721, 1721, 1721, 1720, 1720, 1720, 1720, 1720, 1720, 1720],
+  "min_eligible_per_decile": 1720,
+  "escalation_check_t5_min_eligible": {
+    "threshold": "< per_stratum (5) in any decile",
+    "observed_min": 1720,
+    "triggered": false
+  },
+  "selected_count": 50,
+  "dev_sample_csv_sha256": "acb71acce5b18bf3d87b13a60b0f4d2033116bdcb44b1e9bbd7db8f18769b2e1",
+  "t5c_rebuild_check": {
+    "method": "reran research/phase_0b/build_dev_sample.py in a fresh process, compared SHA256 of config/dev_sample_events.csv before and after",
+    "hash_before": "acb71acce5b18bf3d87b13a60b0f4d2033116bdcb44b1e9bbd7db8f18769b2e1",
+    "hash_after": "acb71acce5b18bf3d87b13a60b0f4d2033116bdcb44b1e9bbd7db8f18769b2e1",
+    "byte_identical": true,
+    "escalation_triggered": false
+  },
+  "dev_tables": {
+    "dev_events_rows": 50,
+    "filtered_trades_dev_rows": 8198488,
+    "filtered_quotes_dev_rows": 7152287,
+    "detail": "see results/phase_0b/artifacts/dev_tables_materialized.json for per-event row counts"
+  },
+  "t5d_representative_query": {
+    "description": "per-event trade count + minute-bucketed volume across all 50 dev events",
+    "sql": "SELECT ticker, event_date, COUNT(*) AS n_trades, date_trunc('minute', to_timestamp(sip_timestamp/1e9)) AS minute_bucket, SUM(size) AS volume FROM filtered_trades_dev GROUP BY ticker, event_date, minute_bucket ORDER BY ticker, event_date, minute_bucket",
+    "rows_returned": 123145,
+    "elapsed_sec": 5.31,
+    "target_sec": 60,
+    "hard_stop_threshold_sec": 600,
+    "escalation_triggered": false
+  }
+}
