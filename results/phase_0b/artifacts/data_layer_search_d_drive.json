@@ -1,0 +1,107 @@
+{
+  "searched_at": "2026-07-15",
+  "read_only": true,
+  "writes_performed_on_d": [],
+  "drive_accessibility": {
+    "mounted": true,
+    "timeouts_or_unreliable_reads": false,
+    "note": "D:\\ mounted and responded normally to every read performed. Two grep invocations returned zero/errored results early in this task, but both were traced to search-scoping mistakes on my part (not excluding the Windows-protected 'System Volume Information' directory, then over-broadly excluding any directory named 'data' including the target's own src/data/) - not drive failures. Corrected and reran; see search_passes below. This is not the 'drive fails to mount / reads unreliable' scenario the task asked to watch for."
+  },
+  "target_files": [
+    "src/data/db.py",
+    "src/data/ingest.py",
+    "src/data/paths.py",
+    "src/data/prepare_database_split.py"
+  ],
+  "search_passes": [
+    {
+      "pass": "top_level_d_listing",
+      "method": "ls -la /d/",
+      "result": "D:\\ has, alongside expected system/hardware-report items: D:\\Trading Research (a full git repo, branch main), D:\\Mom. DB failed 11-21-25, D:\\archived, D:\\PostgreSQL - the first three mirror directory names already known from E:\\ and results/phase_0a findings."
+    },
+    {
+      "pass": "filename_search_all_of_d",
+      "method": "find /d -maxdepth 6 -iname '<each target filename>', excluding .venv/venv/__pycache__/node_modules/site-packages/System Volume Information/$RECYCLE.BIN",
+      "matches_found": 4,
+      "matches": [
+        "/d/Trading Research/src/data/db.py",
+        "/d/Trading Research/src/data/ingest.py",
+        "/d/Trading Research/src/data/paths.py",
+        "/d/Trading Research/src/data/prepare_database_split.py"
+      ],
+      "other_locations_checked_no_match": ["D:\\Mom. DB failed 11-21-25", "D:\\archived"]
+    },
+    {
+      "pass": "content_grep_all_of_d",
+      "method": "grep -rlE 'MOM_DB_DUCKDB_PATH|MOM_DB_DATABASE_ROOT|MOM_DB_DATA_ROOT' /d --include=*.py, excluding .venv/venv/__pycache__/site-packages/System Volume Information/$RECYCLE.BIN/PostgreSQL/Recovery",
+      "matches_found": 4,
+      "matches": [
+        "/d/Trading Research/src/data/db.py",
+        "/d/Trading Research/src/data/ingest.py",
+        "/d/Trading Research/src/data/paths.py",
+        "/d/Trading Research/src/data/prepare_database_split.py"
+      ],
+      "note": "Same 4 files as the filename pass - confirms no renamed/relocated copy exists elsewhere on D:."
+    }
+  ],
+  "files_found": [
+    {
+      "target": "src/data/paths.py",
+      "path": "D:\\Trading Research\\src\\data\\paths.py",
+      "mtime": "2026-07-13T12:48:48-04:00",
+      "size_bytes": 2238,
+      "interface_diff_vs_schema_md": "Exact match. resolve_duckdb_path() implements the documented 4-level precedence (explicit -> MOM_DB_DUCKDB_PATH -> MOM_DB_DATABASE_ROOT/main.duckdb -> DEFAULT_DUCKDB_PATH) verbatim. DEFAULT_DATA_ROOT is already hardcoded to E:\\Trading Research\\data (not D:) - the file's own comment explains why: 'D: (Samsung 870 EVO) has confirmed, worsening hardware defects... Data and the DuckDB file both live on E: now - see results/hardware/ for the migration and verification record.' This comment directly references the results/hardware/ directory catalogued in Phase 0a, confirming this file was edited as part of/after that migration."
+    },
+    {
+      "target": "src/data/db.py",
+      "path": "D:\\Trading Research\\src\\data\\db.py",
+      "mtime": "2026-03-14T22:04:16-04:00",
+      "size_bytes": 677,
+      "interface_diff_vs_schema_md": "Exact match. get_connection(read_only=False, db_path=None) resolves the path via paths.resolve_duckdb_path(), creates the parent dir, returns duckdb.connect(). Matches Schema.md's description exactly. Unmodified since March, well before the E: migration - no changes were needed here since it delegates path resolution entirely to paths.py."
+    },
+    {
+      "target": "src/data/ingest.py",
+      "path": "D:\\Trading Research\\src\\data\\ingest.py",
+      "mtime": "2026-07-12T00:07:11-04:00",
+      "size_bytes": 33704,
+      "interface_diff_vs_schema_md": "CLI flags confirmed present and matching: --all, --dataset, --data-root, --db-path, --verify-only. Module docstring examples match Schema.md's CLI Reference section verbatim ('python -m src.data.ingest --all', '--dataset filtered', etc.). mtime is the same calendar day as the documented migration completion (2026-07-12) - this file was being actively edited on migration day itself."
+    },
+    {
+      "target": "src/data/prepare_database_split.py",
+      "path": "D:\\Trading Research\\src\\data\\prepare_database_split.py",
+      "mtime": "2026-03-14T22:04:12-04:00",
+      "size_bytes": 4088,
+      "interface_diff_vs_schema_md": "Matches research/Database Split.md's description: CLI tool that scaffolds/migrates storage to an external database root, writing a migration manifest. Docstring's usage example shows '--target-root D:/mom_db_storage' - a stale example path in documentation text only, not a live hardcoded default (the actual defaults come from paths.py, which is already E:-correct). Unmodified since March, same day as db.py."
+    }
+  ],
+  "git_provenance": {
+    "repo": "D:\\Trading Research",
+    "branch": "main",
+    "reorg_commit_that_added_src": {
+      "hash": "d5c449176edd29c962b38706bd2a17abd8214f67",
+      "date": "2026-02-28",
+      "message": "chore: full repo reorganization  refactor into src/, add research docs, clean legacy structure"
+    },
+    "current_head": {
+      "hash": "adde20ea40fcd431a88124fe57c1c95bc6abdfb4",
+      "date": "2026-04-03",
+      "message": "Refactor log-likelihood computations to use pre-event convention, fixing intensity saturation issues"
+    },
+    "multiple_versions_found": false,
+    "note": "Only one commit ever touched any of the 4 target files across the repo's full history (--all branches) - a single clean addition, nothing to diff/reconcile."
+  },
+  "surprise_finding_beyond_t1d_scope": {
+    "summary": "D:\\Trading Research is not just a location containing 4 files - it is a full, independently git-tracked repository (own .git, main branch, its own copies of hawkes-ofi-impact/ and scanner-epg-momentum/, prompts/, .claude/, research/, results/, archive/, src/) that appears to be the original, more complete source E:\\Trading Research was incompletely derived from.",
+    "evidence": [
+      "E:\\Trading Research had no git history of its own before Phase 0a's git init - confirmed in that phase.",
+      "D:\\Trading Research has a working main branch with real commit history through 2026-04-03.",
+      "D:\\Trading Research's working tree currently has substantial UNCOMMITTED local changes: modified README.md, archive/INVENTORY.md, data/Schema.md, and a large number of deleted data/trade_data/high_momentum/*.json files - this deletion churn matches exactly the high_momentum cleanup migration documented in E:\\Trading Research's results/cleanup/ and results/data_inventory/ (both dated 2026-07-11, catalogued in Phase 0a). This suggests the migration/cleanup scripts were run from this D:\\ checkout, with results copied to E:, but the working-tree changes on D: were never committed there.",
+      "prompts/, .claude/, and src/ do not exist anywhere on E:\\Trading Research prior to this phase's own additions, but all exist on D:\\Trading Research."
+    ],
+    "not_investigated_further": "Per this task's read-only, narrowly-scoped mandate (locate and characterize 4 specific files), no further diffing of D: vs E: content, no examination of D:'s nested hawkes-ofi-impact/scanner-epg-momentum copies, and no attempt to reconcile the uncommitted working-tree state was performed. Flagged here because it is directly relevant to the T1c hosting decision - the available options may be broader than 'copy/vendor/rewrite' if D:\\Trading Research is effectively the canonical repo."
+  },
+  "conclusion": {
+    "escalation_from_t1_still_applies": false,
+    "note": "T1's original 'missing everywhere' hard stop is resolved by this finding - the files exist, in one place, uncorrupted, with content matching the documented interface exactly. This does not itself decide T1c's hosting question; it changes the option set Cooper is choosing from."
+  }
+}
