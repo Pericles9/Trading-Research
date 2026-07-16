@@ -1,0 +1,9 @@
+{
+  "phase": "0c",
+  "seed": 42,
+  "per_class_failure_sample_size": 20,
+  "data_root": "data",
+  "filtered_dir": "data/filtered",
+  "folder_name_format": "{ticker}_{date}_{momentum_pct:.2f}",
+  "required_files": ["trades.parquet", "quotes.parquet"]
+}
