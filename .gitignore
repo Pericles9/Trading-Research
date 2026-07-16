@@ -2,7 +2,9 @@
 .venv/
 
 # Data root - never tracked, documented separately in data/Schema.md
-data/
+# Anchored to repo root (leading /) - unanchored 'data/' would also match
+# src/data/, which must be tracked.
+/data/
 
 # Independent, already-git-tracked sibling projects - out of scope for this repo
 hawkes-ofi-impact/
@@ -19,3 +21,6 @@ notebooks/*.ipynb
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# Runtime logs (e.g. src/data/ingest.py's LOG_DIR) - regenerable, not source
+/logs/
