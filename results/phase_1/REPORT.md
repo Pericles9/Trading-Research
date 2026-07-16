@@ -6,6 +6,12 @@ No recommendations below — description only, per the Evidence Standard. Every 
 
 ---
 
+## 0. T0 docs housekeeping note
+
+`docs/Agent_Prompt_Standard.md` (v1.3) and `docs/Mom-DB-Strategy-Research-Program.md` are now committed at their canonical paths (commit `fa4a86d`). `docs/Agent_Prompt_Standard (1).md` (the v1.1/v1.2 copy) was left untracked as instructed, and was still present on disk immediately after that commit — flagged there as a deletion candidate. By T7 (this report), the file is **no longer present on disk at all**. This phase never wrote to `docs/` after T0, so the removal happened outside this phase's actions — noted here rather than silently reconciled. See `docs/Research-Library-Map.md`'s `docs/` section for the same note.
+
+---
+
 ## 1. Hardcoded parameter table (T1e)
 
 All line numbers refer to `data/collection_scripts/filter_events_power_law.py`.

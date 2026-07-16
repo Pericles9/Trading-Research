@@ -217,7 +217,7 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 
 - `docs/Research-Library-Map.md` — This file.
 - `docs/Agent_Prompt_Standard.md` — **Tracked, committed Phase 1 T0.** Cooper placed this at v1.3 (2026-07-14: Evidence Standard, §9 Chart Contract mandatory on analysis-only phases, §10 Verification Block, §11 Digest Contract, §12 Git Discipline). Resolves the Phase 0b/0c gap where no file existed at this exact path.
-- `docs/Agent_Prompt_Standard (1).md` — **Still untracked.** The v1.1/v1.2 copy found during Phase 0c, now superseded by the tracked v1.3 file above. Listed as a deletion candidate in `results/phase_1/REPORT.md`; not deleted (outside this phase's write scope — Cooper's call).
+- `docs/Agent_Prompt_Standard (1).md` — **No longer present on disk.** The v1.1/v1.2 copy found during Phase 0c was still there and untracked immediately after T0's docs-housekeeping commit (verified, flagged as a deletion candidate). By T7 it was gone — removed or absorbed by Cooper's own fix rather than by any action taken in this phase, since this phase's write scope never touched `docs/`. Noted here so the discrepancy between T0's and T7's observations is on record rather than silently smoothed over.
 - `docs/Mom-DB-Strategy-Research-Program.md` — **Tracked, committed Phase 1 T0.** Same appearance circumstances as the prompt standard (found untracked during Phase 0c). A detailed research-program spec (data audit → structural constraints → two-signal regime architecture → development process) whose §2.3 explicitly calls for the join reconciliation Phase 0c performed and the filter forensics Phase 1 performs.
 
 ## `src/` (recovered Phase 0b T2 — see `results/phase_0b/artifacts/data_layer_search_d_drive.json` for full provenance)

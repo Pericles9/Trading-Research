@@ -29,7 +29,8 @@
     "5,911 of the 7,252 'orphan' folders (81.5%) are not orphans - they are exactly the 5,911 NULL-date momentum_events rows, misclassified by 0c's date-based join. Re-joining on ticker+momentum+(date OR event_date) recovers them exactly.",
     "0/409 parser-fix-recovered folders (dot-ticker/lowercase-suffix) have any rows in filtered_trades or filtered_quotes - confirmed genuine: the tables' entire 3,272-ticker universe contains zero dot or lowercase tickers.",
     "market_cap_est and sector are declared momentum_events columns but are 100% NULL for every row in both date-status groups.",
-    "0c's own docs/ discovery (Agent_Prompt_Standard v1.2 copy, Strategy Program doc) predates this phase; the v1.3 promotion and canonical placement happened via Cooper's T0 instruction mid-phase."
+    "0c's own docs/ discovery (Agent_Prompt_Standard v1.2 copy, Strategy Program doc) predates this phase; the v1.3 promotion and canonical placement happened via Cooper's T0 instruction mid-phase.",
+    "docs/Agent_Prompt_Standard (1).md (the v1.2 copy) was present and untracked right after T0's commit; by T7 it is gone from disk entirely - removed outside this phase's actions, since nothing here wrote to docs/ after T0."
   ],
   "output_files": {
     "prompt": "prompts/phase_1.md", "config": "config/phase_1.json",
