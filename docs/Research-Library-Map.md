@@ -1,8 +1,8 @@
 # Research Library Map
 
-**Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b — added `config/`, `.claude/`, `src/`, `CLAUDE.md`, and both phases' `research/phase_0b/`/`results/phase_0b/` content)
-**Reflects commit:** end of Phase 0b (branch `phase/0b`), post-`phase-0a-approved`
-**File count covered:** 987 files — 302 individual per-file entries below + 9 folder-level entries covering `archive/runs/`'s other 685 files, per the coverage rules established in Phase 0a.
+**Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b — added `config/`, `.claude/`, `src/`, `CLAUDE.md`, and both phases' `research/phase_0b/`/`results/phase_0b/` content), updated 2026-07-16 (Phase 0c — added `config/phase_0c.json`, `prompts/phase_0c.md`, two untracked `docs/` entries, and `research/phase_0c/`/`results/phase_0c/` content)
+**Reflects commit:** end of Phase 0c (branch `phase/0c`), post-`phase-0b-approved`
+**File count covered:** 1011 files — 326 individual per-file entries below + 9 folder-level entries covering `archive/runs/`'s other 685 files, per the coverage rules established in Phase 0a.
 **Standing rule:** Any phase that adds, moves, or removes repo files must update this map in the same phase.
 
 This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `research/`, `results/`, `src/`, `.claude/`, and repo-root loose files. `data/` is excluded per standing rule (documented separately in `data/Schema.md`). `hawkes-ofi-impact/` and `scanner-epg-momentum/` are independent, already-git-tracked sibling projects — not walked file-by-file, but each gets a summary section below so this map isn't blind to a third of the workspace.
@@ -185,6 +185,7 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 
 - `config/phase_0b.json` — Dev-sample parameters (n_events, n_strata, per_stratum, seed, eligibility rule).
 - `config/dev_sample_events.csv` — The pinned 50-event dev sample list. Committed, never regenerated in place — a disagreement on rebuild is an escalation, not a refresh.
+- `config/phase_0c.json` — Seed, per-class failure-sample size, data root, and the folder-name format string under test for the join reconciliation.
 
 ## `.claude/`
 
@@ -197,10 +198,13 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 
 - `prompts/phase_0a.md` — This phase's own instructions (task specification for Phase 0a: repo inventory, reorganization, and library-map generation).
 - `prompts/phase_0b.md` — Phase 0b's own instructions (data-layer recovery, `CLAUDE.md`, table loads, dev sample, digest tooling).
+- `prompts/phase_0c.md` — Phase 0c's own instructions (bidirectional join reconciliation between `momentum_events` and `data/filtered/`).
 
 ## `docs/`
 
 - `docs/Research-Library-Map.md` — This file.
+- `docs/Agent_Prompt_Standard (1).md` — **Untracked.** Appeared during Phase 0c with an mtime predating that phase; not found by Phase 0b's exhaustive search. v1.2 of the prompt-structure standard (8 sections; still does not define a Verification Block or Digest Contract section). Not committed — a decision on whether/how to track it is Cooper's.
+- `docs/Mom-DB-Strategy-Research-Program.md` — **Untracked.** Same appearance circumstances as above. A detailed research-program spec (data audit → structural constraints → two-signal regime architecture → development process) whose §2.3 explicitly calls for the join reconciliation Phase 0c performs. Not committed.
 
 ## `src/` (recovered Phase 0b T2 — see `results/phase_0b/artifacts/data_layer_search_d_drive.json` for full provenance)
 
@@ -337,6 +341,17 @@ Note: the great majority of the top-level notes below are companion docs for a `
 - `research/phase_0b/chart_01_stratification.py` — Builds `01_dev_sample_stratification.html` (full-universe histogram/ECDF + dev-sample rug overlay by decile).
 - `research/phase_0b/chart_02_event_sizes.py` — Builds `02_dev_sample_event_sizes.html` (per-event trade+quote row counts, log scale, cumulative-% line).
 - `research/phase_0b/validate_digest.py` — Schema-validates a `digest.json` against a reconstruction of the (unlocated) digest contract; see `CLAUDE.md`'s Pointers section.
+
+### `research/phase_0c/` (this phase's own tooling)
+
+- `research/phase_0c/__init__.py` — Empty package marker enabling `python -m research.phase_0c.*` invocation.
+- `research/phase_0c/build_folder_inventory.py` — Single `os.scandir` pass over `data/filtered/`; classifies every entry (ticker/date/momentum-string parsing, both-files/trades-only/quotes-only/neither/unparseable, `date_is_none` flag). Ticker segment accepts `.` and lowercase letters (warrant/preferred-share conventions); stray non-directory entries excluded from the classified denominator.
+- `research/phase_0c/none_date_lookup.py` — Cross-references the `date_is_none` folders against `momentum_events` by (ticker, momentum_pct), reporting whether the corresponding event row's own date is valid, also null, unmatched, or ambiguous.
+- `research/phase_0c/build_join_reconciliation.py` — T2a (reproduces Phase 0b's exact eligibility check), T2b (classifies non-joinable events into 6 failure classes), T2c (classifies every folder into matched/orphan/ambiguous/none_date_unresolved/unparseable).
+- `research/phase_0c/build_failure_samples.py` — Draws up to 20 seeded examples per nonzero T2b class with full event detail and an actual disk listing for the ticker+date prefix.
+- `research/phase_0c/chart_01_momentum_pct.py` — Builds `01_momentum_pct_joinable_vs_dropped.html` (overlaid ECDFs + strip sample).
+- `research/phase_0c/chart_02_events_over_time.py` — Builds `02_events_over_time_by_join_status.html` (monthly stacked bars by join status).
+- `research/phase_0c/chart_03_failure_classes.py` — Builds `03_failure_class_counts.html` (bar chart, all 6 T2b classes).
 
 ### `research/phase_1_context/`
 
@@ -517,4 +532,14 @@ Per `results/hardware/`, `results/ingestion_run/`, `results/rebuild_stage1/`, et
 - `results/phase_0b/artifacts/digest_roundtrip_check.json` — T6c's round-trip result (Phase 0a's digest fails `headline_metrics_present`, reported not fixed).
 - `results/phase_0b/charts/01_dev_sample_stratification.html`, `02_dev_sample_event_sizes.html` — This phase's two required charts.
 - `results/phase_0b/digest.json`, `results/phase_0b/REPORT.md` — This phase's digest and written report.
+
+### `results/phase_0c/` (this phase's own outputs)
+
+- `results/phase_0c/artifacts/folder_inventory.parquet`, `folder_inventory_summary.json` — T1's full per-folder classification (post ticker-parser fix), and its summary counts.
+- `results/phase_0c/artifacts/none_date_lookup.json` — T1 hard-stop resolution's cross-reference of the 114 `date_is_none` folders against `momentum_events`.
+- `results/phase_0c/artifacts/join_reconciliation.json`, `join_reconciliation_detail.json` — T2a/T2b/T2c bidirectional join classification, summary and full per-row detail.
+- `results/phase_0c/artifacts/failure_samples.json` — T3's seeded samples (up to 20 per nonzero T2b class) with disk-listing spot checks.
+- `results/phase_0c/artifacts/repeat_ticker_comparison.json` — T4's third joinable-vs-dropped comparison (repeat-ticker rate).
+- `results/phase_0c/charts/01_momentum_pct_joinable_vs_dropped.html`, `02_events_over_time_by_join_status.html`, `03_failure_class_counts.html` — This phase's three required charts.
+- `results/phase_0c/digest.json`, `results/phase_0c/REPORT.md` — This phase's digest and written report.
 

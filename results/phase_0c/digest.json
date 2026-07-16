@@ -1,0 +1,56 @@
+{
+  "phase": "0c",
+  "title": "Event/Folder Join Reconciliation",
+  "branch": "phase/0c",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-16",
+  "baseline": "phase-0b-approved",
+  "summary": "Reproduced Phase 0b's 17,203/6,065 eligibility split exactly, then classified every non-joinable event and every on-disk folder into exactly one failure/match class in both directions. Hit and resolved a T1 hard stop (526 unparseable folder names, three unrelated causes). Surfaced a major, previously-unknown data-quality fact along the way: momentum_events.date is null for 25.4% of rows.",
+  "headline_metrics": [
+    {"metric": "momentum_pct distribution, joinable (n=17,203) vs dropped (n=6,065)", "value": "overlapping ECDFs, no separation - see chart", "chart": "results/phase_0c/charts/01_momentum_pct_joinable_vs_dropped.html"},
+    {"metric": "Drops by month vs joinable by month", "value": "5,911 null-date events excluded from the time axis (no month to bin)", "chart": "results/phase_0c/charts/02_events_over_time_by_join_status.html"},
+    {"metric": "T2b failure-class breakdown of the 6,065 non-joinable events", "value": "folder_absent=5911, missing_quotes=154, all other classes 0", "chart": "results/phase_0c/charts/03_failure_class_counts.html"}
+  ],
+  "escalations_triggered": [
+    {"criterion": "unparseable_name (T1) > 50", "observed_before_fix": 526, "resolution": "Cooper-directed 3-part fix (ticker parser, stray-file exclusion, None-date deferral)", "observed_after_fix": 0}
+  ],
+  "escalations_checked_not_triggered": [
+    {"criterion": "T2a reproduction != 17203", "observed": 17203},
+    {"criterion": "format_mismatch > 0", "observed": 0},
+    {"criterion": "duplicate_collision > 0", "observed": 0},
+    {"criterion": "T2b class sum != 6065", "observed": "6065, passes"},
+    {"criterion": "T2c class sum != folder total", "observed": "24723, passes"}
+  ],
+  "decisions_log": [
+    {"decision": "Ticker parser extended to accept '.' and lowercase letters, applied only in T1's classifier, not in T2a's reproduction", "reason": "T2a must reproduce Phase 0b's original direct-string-construction logic exactly, which never used regex at all - the parser fix only affects how T1 labels pre-existing folders, not what's on disk"},
+    {"decision": "3 stray non-folder files excluded from the classified denominator, listed separately in the summary rather than silently dropped", "reason": "Cooper's instruction; keeps the sum-check auditable"},
+    {"decision": "None-date folders looked up by (ticker, momentum_pct) instead of (ticker, date), since date is unusable", "reason": "Cooper's instruction; the only other usable join key the folder name provides"},
+    {"decision": "None-date folders excluded from T2b's per-event (ticker,date) lookup index, so null-date events classify as folder_absent rather than being matched against an empty placeholder", "reason": "T2b has no 'matched' class - the precision concern in Cooper's instruction (don't silently land in matched) is a T2c concept; documented as a judgment call, not silently made"},
+    {"decision": "T2b/T2c priority-ordered classification implemented as literal first-match-wins chains per the phase prompt's exact ordering", "reason": "duplicate_collision structurally unreachable under this ordering when format_mismatch is checked first - observed 0, consistent with the escalation table's implicit expectation"}
+  ],
+  "surprises": [
+    "momentum_events.date is NULL for 5,911 of 23,268 rows (25.4%) - not previously known; discovered via the None-date folder lookup, not searched for directly.",
+    "folder_absent (5,911) exactly equals the momentum_events null-date count - not asserted as causal, but the exact match is itself informative.",
+    "orphan (folders with no matching event row) is 7,252 - notably larger than the ~932 implied by Schema.md's orientation-only reference counts (24,200 trades files vs 23,268 events); that reference was explicitly marked not-ground-truth and this confirms why.",
+    "Two files appeared in docs/ (Agent_Prompt_Standard (1).md confirming a real v1.2, and Mom-DB-Strategy-Research-Program.md) with mtimes predating this phase - not found in Phase 0b's exhaustive searches; not explained, not acted on (outside this phase's write scope), flagged for Cooper.",
+    "v1.2 of the prompt standard still does not define a Verification Block or Digest Contract section - the Phase 0b gap is not resolved by its appearance."
+  ],
+  "output_files": {
+    "prompt": "prompts/phase_0c.md", "config": "config/phase_0c.json",
+    "artifacts": "results/phase_0c/artifacts/*.json + folder_inventory.parquet (9 files: folder_inventory[.parquet/_summary.json], none_date_lookup, join_reconciliation[.json/_detail.json], failure_samples, repeat_ticker_comparison)",
+    "charts": ["results/phase_0c/charts/01_momentum_pct_joinable_vs_dropped.html", "results/phase_0c/charts/02_events_over_time_by_join_status.html", "results/phase_0c/charts/03_failure_class_counts.html"],
+    "report": "results/phase_0c/REPORT.md", "digest": "results/phase_0c/digest.json"
+  },
+  "counts": {
+    "momentum_events_total": 23268, "joinable": 17203, "non_joinable": 6065,
+    "folder_absent": 5911, "missing_quotes": 154,
+    "folder_total_post_fix": 24723, "matched": 17357, "orphan": 7252, "none_date_unresolved": 114,
+    "momentum_events_null_date_count": 5911
+  },
+  "blocking_items_for_next_phase": [
+    "momentum_events.date null rate (25.4%) is a newly-surfaced, unresolved data-quality issue - not investigated further here (out of scope; T4 explicitly forbids interpretation).",
+    "7,252 orphan folders (no matching event row) not characterized beyond the count - could include pre-filter-revision collection runs, is not investigated here.",
+    "docs/Agent_Prompt_Standard (1).md and docs/Mom-DB-Strategy-Research-Program.md remain untracked - a decision on whether/how to commit them is Cooper's, not made here (outside this phase's write scope)."
+  ],
+  "approval_gate": "Do not begin Phase 1 or any follow-on work until Cooper has reviewed results and given explicit approval."
+}
