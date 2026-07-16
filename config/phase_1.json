@@ -16,9 +16,9 @@
     "csv": "data/momentum_events/filtered_events_power_law_q05.csv"
   },
   "phase_0c_artifacts": {
-    "folder_inventory": "results/phase_0c/folder_inventory.parquet",
-    "join_reconciliation_detail": "results/phase_0c/join_reconciliation_detail.json",
-    "none_date_lookup": "results/phase_0c/none_date_lookup.json"
+    "folder_inventory": "results/phase_0c/artifacts/folder_inventory.parquet",
+    "join_reconciliation_detail": "results/phase_0c/artifacts/join_reconciliation_detail.json",
+    "none_date_lookup": "results/phase_0c/artifacts/none_date_lookup.json"
   },
   "dev_sample_events": "config/dev_sample_events.csv",
   "note": "candidate_scan_inputs is a T0-time directory listing, not verified. T1a re-derives and confirms the authoritative input list from the script itself."

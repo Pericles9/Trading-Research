@@ -1,0 +1,87 @@
+{
+  "phase": "1",
+  "task": "T3",
+  "classification": {
+    "origin": "b",
+    "label": "introduced by the filter script",
+    "statement": "The 5,911 NULL-date rows are exactly the rows sourced from file2 (momentum_scan_2025.parquet), which never had a 'date' column at all - it has 'event_date' instead. filter_events_power_law.py's pd.concat([df1, df2], ignore_index=True) (line 22) is a column-union concat; it reconciles 'volume'->'event_volume' explicitly (lines 15-16) but performs no equivalent reconciliation of 'date'<->'event_date'. Every file2-sourced row therefore gets date=NaN by construction of the concat, not from any NULL value present in a source file.",
+    "why_not_a": "Category (a) would mean the scan inputs already carried NULL in an existing 'date' field. That is not what happens: file2 has no 'date' field to be NULL in - the field is absent from its schema entirely. The NULL is manufactured by the union-concat at script line 22, which is squarely the filter script's doing.",
+    "why_not_c": "The evidence is fully determinable and disjoint/exhaustive (see evidence below), so (c) does not apply."
+  },
+  "evidence": {
+    "perfect_partition_check": {
+      "query": "SELECT date IS NULL, COUNT(*), COUNT(event_date) FROM momentum_events GROUP BY 1",
+      "null_date_rows": 5911,
+      "null_date_rows_with_event_date_populated": 5911,
+      "null_date_rows_with_event_date_populated_pct": 100.0,
+      "dated_rows": 17357,
+      "dated_rows_with_event_date_populated": 0,
+      "dated_rows_with_event_date_populated_pct": 0.0,
+      "interpretation": "date IS NULL and event_date IS NOT NULL are the same 5,911 rows, and date IS NOT NULL and event_date IS NULL are the same 17,357 rows. The partition is perfect and disjoint - direct confirmation that 'date' and 'event_date' are mutually-exclusive artifacts of which input file a row came from, not independent fields."
+    },
+    "schema_origin": {
+      "file1_full_2020_2024": {
+        "path": "data/momentum_events/full_2020_2024_momentum_scan_20251122_000515.parquet",
+        "has_date_column": true,
+        "has_event_date_column": false,
+        "raw_rows": 18660
+      },
+      "file2_momentum_scan_2025": {
+        "path": "data/momentum_events/momentum_scan_2025.parquet",
+        "has_date_column": false,
+        "has_event_date_column": true,
+        "raw_rows": 5950
+      },
+      "script_reconciliation": "filter_events_power_law.py:15-16 renames file1's 'volume' to 'event_volume' - the only schema reconciliation performed between the two files. No equivalent step exists for date/event_date."
+    },
+    "row_arithmetic": {
+      "file2_raw_rows": 5950,
+      "file2_rows_surviving_L27_29_cleaning": 5950,
+      "file2_rows_in_final_null_date_set": 5911,
+      "difference_dropped_by_q05_filter": 39,
+      "note": "All 5,911 NULL-date rows in momentum_events are file2-sourced rows that additionally survived the q05 volume-floor filter (script line 62). 39 of the 5,950 raw file2 rows were dropped by that filter, same mechanism as any other row - see refit_comparison.json (T2)."
+    }
+  },
+  "none_date_lookup_cross_reference": {
+    "source": "results/phase_0c/artifacts/none_date_lookup.json",
+    "total_none_date_folders": 114,
+    "outcome_counts": {
+      "matched_valid_date": 0,
+      "matched_null_date": 113,
+      "no_match_found": 0,
+      "multiple_matches": 1
+    },
+    "relationship": "subset",
+    "statement": "All 114 folders whose name contains the literal string 'None' as the date token resolve to momentum_events rows with a NULL date column (113 matched cleanly to a single NULL-date row, 1 matched multiple NULL-date rows ambiguously - ticker had >1 NULL-date event, folder-name momentum alone did not disambiguate). Zero matched a valid-date row. The 114 literal-None folders are a strict subset of the 5,911 NULL-date rows (114/5,911 = 1.93%) - they are the subset of file2-sourced events for which the folder-naming step (collect_massive_data.py:126, date_str = str(row.date)) stringified the missing date as the literal text 'None' rather than a blank/NaN token, when building the folder name {ticker}_{date}_{momentum_pct}."
+  },
+  "null_vs_dated_comparison": {
+    "note": "Comparable columns only - file1 and file2 have almost entirely disjoint schemas beyond ticker/prev_close/momentum_pct/price_move/event_volume (see schema_split_columns below). Full distribution in chart 01_momentum_pct_by_date_status.html (T6); numbers below are the summary stats behind it, all with n.",
+    "momentum_pct": {
+      "null_date": {"n": 5911, "min": 30.0, "q25": 35.21, "median": 44.41, "q75": 67.41, "max": 53799900.0, "mean": 9177.71},
+      "dated": {"n": 17357, "min": 30.0, "q25": 34.63, "median": 42.6, "q75": 62.53, "max": 48557.72, "mean": 73.06},
+      "observation": "Medians are close (44.41 vs 42.6) but the null-date group's max is ~1,100x the dated group's max (53.8M vs 48.6K), which drags its mean three orders of magnitude above its own median. Not a simple 'same distribution' - see chart 01 for the full ECDF, log-scale, outliers shown per Evidence Standard."
+    },
+    "event_volume": {
+      "null_date": {"n": 5911, "min": 1123, "median": 2501041.0, "max": 2227815279, "mean": 24163030.7},
+      "dated": {"n": 17357, "min": 994, "median": 901435.0, "max": 1148839809, "mean": 11774987.8}
+    },
+    "prev_close": {
+      "null_date": {"n": 5911, "min": 0.0, "median": 3.72, "max": 3816.58},
+      "dated": {"n": 17357, "min": 0.02, "median": 7.13, "max": 210988.8}
+    },
+    "price_move": {
+      "null_date": {"n": 5911, "min": 0.24, "median": 1.99, "max": 2215.12},
+      "dated": {"n": 17357, "min": 0.23, "median": 3.58, "max": 507932.74}
+    },
+    "schema_split_columns": {
+      "note": "These columns are populated in exactly one group by construction of which input file a row came from - not a genuine distributional comparison, just confirms the file1/file2 split from T1a.",
+      "dated_only_populated": ["high", "open", "close"],
+      "null_date_only_populated": ["event_high", "event_open", "event_close", "id", "created_at", "has_minute_data", "has_trade_data"],
+      "populated_in_neither_group": ["market_cap_est", "sector"]
+    }
+  },
+  "surprises": [
+    "market_cap_est and sector are declared columns in file2/momentum_events but are 100% NULL in both groups (0/17357 dated, 0/5911 null-date) - the columns exist but were never populated for any surviving row.",
+    "The NULL-date group's momentum_pct has a max of 53,799,900 (%), ~1,100x the dated group's max of 48,557.72 - an extreme outlier or data-quality artifact in file2 that chart 01 will need to show without clipping."
+  ]
+}
