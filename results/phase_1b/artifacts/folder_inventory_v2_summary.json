@@ -1,0 +1,39 @@
+{
+  "phase": "1b",
+  "task": "T4c_T4R2",
+  "n_folders_total_date_valid": 24609,
+  "n_recovered_409": 409,
+  "ingestion_scope_status_counts": {
+    "not_applicable_pre_existing": 24200,
+    "out_of_scope_unigested": 402,
+    "ingested": 7
+  },
+  "t4r2_trades_only_headline": {
+    "n_folders_trades_file_no_quotes_file": 1606,
+    "n_events_affected": 1606,
+    "by_instrument_class": {
+      "common": 1223,
+      "warrant": 291,
+      "common_adr": 44,
+      "fund_product": 36,
+      "preferred": 7,
+      "unit": 4,
+      "right": 1
+    },
+    "by_year": {
+      "2020": 172,
+      "2021": 70,
+      "2022": 483,
+      "2023": 468,
+      "2024": 264,
+      "2025": 149
+    }
+  },
+  "t4r2a_cross_check": {
+    "observed": 1606,
+    "expected_approx": 1540,
+    "diff": 66,
+    "diff_exceeds_50": true,
+    "note": "Not a hard stop per Amendment 2 T4-R2a - noted as a surprise if diff > 50, Phase 4 owns the explanation."
+  }
+}
