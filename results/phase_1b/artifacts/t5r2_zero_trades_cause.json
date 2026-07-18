@@ -1,0 +1,70 @@
+{
+  "phase": "1b",
+  "task": "T5-R2",
+  "n_calendar_bug": 142,
+  "n_unknown": 8,
+  "expected": {
+    "calendar_bug": 142,
+    "unknown": 8
+  },
+  "matches_expected": true,
+  "t5r2a_unknown_singletons_quotes_check": [
+    {
+      "ticker": "APPS",
+      "event_date": "2022-11-10",
+      "momentum_pct": 62.12,
+      "n_quotes_event_day": 125935,
+      "possible_full_day_halt": true
+    },
+    {
+      "ticker": "AMPG",
+      "event_date": "2024-11-22",
+      "momentum_pct": 55.48,
+      "n_quotes_event_day": 1744,
+      "possible_full_day_halt": true
+    },
+    {
+      "ticker": "ANY",
+      "event_date": "2023-12-20",
+      "momentum_pct": 46.15,
+      "n_quotes_event_day": 48803,
+      "possible_full_day_halt": true
+    },
+    {
+      "ticker": "APM",
+      "event_date": "2023-05-03",
+      "momentum_pct": 211.45,
+      "n_quotes_event_day": 39367,
+      "possible_full_day_halt": true
+    },
+    {
+      "ticker": "APM",
+      "event_date": "2024-03-14",
+      "momentum_pct": 106.24,
+      "n_quotes_event_day": 84944,
+      "possible_full_day_halt": true
+    },
+    {
+      "ticker": "AMTX",
+      "event_date": "2023-05-19",
+      "momentum_pct": 52.87,
+      "n_quotes_event_day": 71849,
+      "possible_full_day_halt": true
+    },
+    {
+      "ticker": "BBBY",
+      "event_date": "2023-01-11",
+      "momentum_pct": 71.5,
+      "n_quotes_event_day": 346009,
+      "possible_full_day_halt": true
+    },
+    {
+      "ticker": "ANVS",
+      "event_date": "2024-07-02",
+      "momentum_pct": 137.38,
+      "n_quotes_event_day": 152357,
+      "possible_full_day_halt": true
+    }
+  ],
+  "n_possible_full_day_halt": 8
+}
