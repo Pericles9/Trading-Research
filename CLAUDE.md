@@ -42,6 +42,16 @@
 - Hard stop means stop. Do not fix. Do not tune. Do not proceed. Commit state, post the criterion
   and the observed value, wait for instruction.
 
+**Universe rules (Phase 1b, Cooper-approved):**
+- Universe membership = inner join to `momentum_events_canonical` WHERE `in_scope = TRUE`. Never aggregate `filtered_trades`/`filtered_quotes` without this join — the tables physically contain out-of-universe rows (1,341 orphan-folder events and non-common instruments).
+- Canonical event date = `event_date_canonical`. Never use raw `momentum_events.date` (structurally NULL for all file2 rows).
+- Instrument scope: common stock only (all share classes, ADRs), per vendor reference type CS/ADRC. Preferreds, warrants, rights, units, ETFs/ETNs/funds, and unresolved tickers are out of scope. Classification source of record: `results/phase_1b/artifacts/ticker_reference_snapshot.parquet` — never re-query the API for classification.
+- Outliers are flags, never deletions. Default exclusion happens in the canonical view. Changing a flag definition is a Cooper decision.
+- Dev sample = v2 (`config/dev_sample_v2.json`, seed 42). v1 and the `*_dev` tables are retired — do not read them. Dev tables are materialized from main tables only.
+- Coverage is per-side: `trades_ingested` and `quotes_ingested` on the canonical view. Any quote-derived statistic filters on `quotes_ingested = TRUE` and reports the n excluded by that filter. Trades-only events (~1,540-folder population, Phase 4 owns the explanation) are in scope for trade-side work only.
+- Session calendar: pinned `exchange_calendars` XNYS only. The federal holiday calendar is banned from all market logic — `collect_massive_data.py` used it and corrupted collection windows (see Phase 1b amendment 3). `market-hours-database.json` remains quarantined pending Phase 4 validation.
+- `flag_missing_event_day` events are out of scope pending Phase 1c re-collection. `flag_window_calendar_bug` events are in scope for event-day work; any use of flanking sessions filters on this flag per damaged offset and reports the n excluded.
+
 ## Pointers
 - All phase prompts follow docs/Agent_Prompt_Standard.md (v1.3, 2026-07-14) — defines the Evidence
   Standard, §9 Chart Contract, §10 Verification Block, §11 Digest Contract, §12 Git Discipline.
