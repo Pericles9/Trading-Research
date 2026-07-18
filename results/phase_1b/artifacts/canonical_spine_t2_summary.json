@@ -1,0 +1,20 @@
+{
+  "phase": "1b",
+  "task": "T2",
+  "t2a_row_count_check": {
+    "observed": 23268,
+    "expected": 23268,
+    "pass": true
+  },
+  "t2b_folder_join_ambiguity": {
+    "n_events_with_multiple_folder_matches": 0,
+    "n_folders_with_multiple_event_matches": 0,
+    "escalation_threshold": 25,
+    "escalation_triggered": false
+  },
+  "t2c_no_folder_coverage": {
+    "n_total_no_folder": 0,
+    "by_instrument_class": {},
+    "note": "Headline number only - deep-dive stays in Phase 4 per the phase prompt."
+  }
+}
