@@ -1,6 +1,9 @@
 # Environments
 .venv/
 
+# Local secrets - never committed (Phase 1b Amendment 1: Massive/Polygon API key)
+.secrets/
+
 # Data root - never tracked, documented separately in data/Schema.md
 # Anchored to repo root (leading /) - unanchored 'data/' would also match
 # src/data/, which must be tracked.
