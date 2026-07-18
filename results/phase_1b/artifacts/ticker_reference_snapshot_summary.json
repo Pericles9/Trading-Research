@@ -1,0 +1,23 @@
+{
+  "phase": "1b",
+  "task": "T1-R1",
+  "bulk_snapshot": {
+    "endpoint": "/v3/reference/tickers",
+    "params": {
+      "market": "stocks",
+      "active": "[true, false]",
+      "limit": 1000
+    },
+    "n_rows_active": 13022,
+    "n_rows_inactive": 23260,
+    "n_rows_total": 36282,
+    "n_distinct_tickers_in_snapshot": 36221
+  },
+  "t1_r1a_join": {
+    "n_universe_tickers": 3377,
+    "n_matched": 3377,
+    "n_unmatched": 0,
+    "unmatched_pct": 0.0,
+    "unmatched_tickers": []
+  }
+}
