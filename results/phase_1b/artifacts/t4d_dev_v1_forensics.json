@@ -1,0 +1,21 @@
+{
+  "phase": "1b",
+  "task": "T4d",
+  "forensic_check": {
+    "AHTpG": {
+      "main_trades": 0,
+      "dev_trades": 2837,
+      "main_quotes": 0,
+      "dev_quotes": 5455
+    },
+    "BHRpB": {
+      "main_trades": 0,
+      "dev_trades": 987,
+      "main_quotes": 0,
+      "dev_quotes": 2051
+    }
+  },
+  "conclusion": "Both tickers have zero rows in filtered_trades/filtered_quotes but nonzero rows in filtered_trades_dev/filtered_quotes_dev - confirms dev v1 was materialized from a source other than the main tables.",
+  "root_cause_note": "src/data/ingest.py load_filtered still uses the pre-fix ticker pattern ^[A-Z0-9]+_... (never received Phase 0c commit 18ccc23s widened [A-Za-z0-9.]+ pattern, which only touched research/phase_0c/build_folder_inventory.py). AHTpG/BHRpB are lowercase-p preferred tickers this pattern cannot match, so their folders were never eligible for main-table ingestion - the same root cause class as the 409 recovered folders (Phase 1 T5a: 0/409 have any main-table rows). Both tickers classify preferred (out of scope) per T1-R3 regardless.",
+  "action": "No repair of dev v1 attempted - retired per Amendment 1/2 and the original T4d instruction, not fixed."
+}

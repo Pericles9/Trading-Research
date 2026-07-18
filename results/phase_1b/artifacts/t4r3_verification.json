@@ -1,0 +1,94 @@
+{
+  "phase": "1b",
+  "task": "T4-R3",
+  "criterion": "Re-ingested folder with 0 rows post-ingest WHERE the source parquet existed on disk -> hard stop. Source parquet absent -> record, not a stop.",
+  "verification": [
+    {
+      "folder_name": "CIG.C_2020-06-22_451.45",
+      "ticker": "CIG.C",
+      "date": "2020-06-22",
+      "trades_parquet_existed": true,
+      "quotes_parquet_existed": true,
+      "n_trades_rows": 86656,
+      "n_quotes_rows": 65313,
+      "trades_ok": true,
+      "quotes_ok": true,
+      "pass": true
+    },
+    {
+      "folder_name": "GTN.A_2023-11-02_33.62",
+      "ticker": "GTN.A",
+      "date": "2023-11-02",
+      "trades_parquet_existed": true,
+      "quotes_parquet_existed": true,
+      "n_trades_rows": 569,
+      "n_quotes_rows": 3388,
+      "trades_ok": true,
+      "quotes_ok": true,
+      "pass": true
+    },
+    {
+      "folder_name": "GTN.A_2024-04-22_36.55",
+      "ticker": "GTN.A",
+      "date": "2024-04-22",
+      "trades_parquet_existed": true,
+      "quotes_parquet_existed": true,
+      "n_trades_rows": 421,
+      "n_quotes_rows": 2904,
+      "trades_ok": true,
+      "quotes_ok": true,
+      "pass": true
+    },
+    {
+      "folder_name": "GTN.A_2024-05-02_33.09",
+      "ticker": "GTN.A",
+      "date": "2024-05-02",
+      "trades_parquet_existed": true,
+      "quotes_parquet_existed": true,
+      "n_trades_rows": 745,
+      "n_quotes_rows": 1576,
+      "trades_ok": true,
+      "quotes_ok": true,
+      "pass": true
+    },
+    {
+      "folder_name": "GTN.A_2024-11-14_112.00",
+      "ticker": "GTN.A",
+      "date": "2024-11-14",
+      "trades_parquet_existed": true,
+      "quotes_parquet_existed": true,
+      "n_trades_rows": 9957,
+      "n_quotes_rows": 10046,
+      "trades_ok": true,
+      "quotes_ok": true,
+      "pass": true
+    },
+    {
+      "folder_name": "GTN.A_2024-11-15_38.37",
+      "ticker": "GTN.A",
+      "date": "2024-11-15",
+      "trades_parquet_existed": true,
+      "quotes_parquet_existed": true,
+      "n_trades_rows": 10137,
+      "n_quotes_rows": 8557,
+      "trades_ok": true,
+      "quotes_ok": true,
+      "pass": true
+    },
+    {
+      "folder_name": "GTN.A_2025-06-12_31.87",
+      "ticker": "GTN.A",
+      "date": "2025-06-12",
+      "trades_parquet_existed": true,
+      "quotes_parquet_existed": false,
+      "n_trades_rows": 885,
+      "n_quotes_rows": 0,
+      "trades_ok": true,
+      "quotes_ok": true,
+      "pass": true
+    }
+  ],
+  "n_pass": 7,
+  "n_total": 7,
+  "all_pass": true
+}
