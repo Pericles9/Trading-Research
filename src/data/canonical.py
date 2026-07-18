@@ -7,6 +7,14 @@ rather than aggregating filtered_trades/filtered_quotes directly; the
 physical tables contain out-of-universe rows (non-common instruments,
 genuine orphan-folder events, outlier-flagged events).
 
+Coverage is per-side (Amendment 2, T4-R1): trades_ingested and
+quotes_ingested are computed independently from filtered_trades and
+filtered_quotes respectively. in_scope does not depend on either -
+missing quote coverage is a recorded fact (~1,540 folders have a
+trades.parquet but no quotes.parquet on disk), not an eligibility veto.
+Any quote-derived statistic downstream must filter on
+quotes_ingested = TRUE explicitly and report the n excluded.
+
 Built in three stages, matching the order Phase 1b computes its inputs:
   - stage="t2": flag_bad_denominator computed directly (simple, static
     formula over raw columns); flag_trades_mom_outlier and in_scope are
@@ -111,7 +119,8 @@ def create_view(
               AND fi.date = CAST(COALESCE(me.date, me.event_date) AS VARCHAR)
               AND ROUND(TRY_CAST(fi.momentum_str AS DOUBLE), 2) = ROUND(me.momentum_pct, 2)
         ) AS has_folder,
-        (ft_distinct.ticker IS NOT NULL) AS folder_ingested,
+        (ft_distinct.ticker IS NOT NULL) AS trades_ingested,
+        (fq_distinct.ticker IS NOT NULL) AS quotes_ingested,
         {in_scope_expr} AS in_scope
     FROM momentum_events me
     LEFT JOIN read_parquet('{classification}') ic ON me.ticker = ic.ticker
@@ -122,6 +131,13 @@ def create_view(
       ON me.ticker = ft_distinct.ticker
      AND COALESCE(me.date, me.event_date) = ft_distinct.event_date
      AND ROUND(me.momentum_pct, 2) = ft_distinct.mom_2dp
+    LEFT JOIN (
+        SELECT DISTINCT ticker, event_date, ROUND(momentum_pct, 2) AS mom_2dp
+        FROM filtered_quotes
+    ) fq_distinct
+      ON me.ticker = fq_distinct.ticker
+     AND COALESCE(me.date, me.event_date) = fq_distinct.event_date
+     AND ROUND(me.momentum_pct, 2) = fq_distinct.mom_2dp
     {flag_zero_trades_join}
     """
     con.execute(sql)
