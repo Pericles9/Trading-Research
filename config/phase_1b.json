@@ -48,5 +48,14 @@
   "retired_dev_v1": {
     "note": "filtered_trades_dev/filtered_quotes_dev and config/dev_sample_events.csv are retired - known-bad, not derived from main tables. Do not read.",
     "known_bad_tickers": ["AHTpG", "BHRpB"]
+  },
+  "session_calendar": {
+    "library": "pandas_market_calendars",
+    "library_version": "5.4.0",
+    "underlying_engine": "exchange_calendars",
+    "underlying_engine_version": "4.13.2",
+    "calendar_code": "XNYS",
+    "derivation_range": {"start": "2020-01-01", "end": "2025-12-31"},
+    "note": "Amendment 3 (2026-07-18). The US federal holiday calendar (pandas.tseries.holiday.USFederalHolidayCalendar) is banned from all market-session logic in this project - it is what corrupted collect_massive_data.py's collection windows. market-hours-database.json remains quarantined pending Phase 4 validation against this pinned library."
   }
 }
