@@ -1,0 +1,13 @@
+{
+  "phase": "1b",
+  "task": "T1-R4",
+  "gate_recheck": {
+    "criterion": "unresolved class > 2% of distinct tickers",
+    "n_unresolved": 0,
+    "n_distinct_tickers": 3377,
+    "pct_unresolved": 0.0,
+    "threshold_pct": 2.0,
+    "escalation_triggered": false,
+    "result": "PASS - T1 gate clear, resuming original prompt at T2"
+  }
+}
