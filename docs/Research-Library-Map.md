@@ -1,8 +1,8 @@
 # Research Library Map
 
-**Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b — added `config/`, `.claude/`, `src/`, `CLAUDE.md`, and both phases' `research/phase_0b/`/`results/phase_0b/` content), updated 2026-07-16 (Phase 0c — added `config/phase_0c.json`, `prompts/phase_0c.md`, two untracked `docs/` entries, and `research/phase_0c/`/`results/phase_0c/` content), updated 2026-07-16 (Phase 1 — added `config/phase_1.json`, `prompts/phase_1.md`, `docs/Agent_Prompt_Standard.md` now tracked at v1.3, `docs/Mom-DB-Strategy-Research-Program.md` now tracked, and `research/phase_1/`/`results/phase_1/` content)
-**Reflects commit:** end of Phase 1 (branch `phase/1`), post-`phase-0c-approved`
-**File count covered:** 1032 files — 344 individual per-file entries below + 9 folder-level entries covering `archive/runs/`'s other 685 files, per the coverage rules established in Phase 0a.
+**Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b — added `config/`, `.claude/`, `src/`, `CLAUDE.md`, and both phases' `research/phase_0b/`/`results/phase_0b/` content), updated 2026-07-16 (Phase 0c — added `config/phase_0c.json`, `prompts/phase_0c.md`, two untracked `docs/` entries, and `research/phase_0c/`/`results/phase_0c/` content), updated 2026-07-16 (Phase 1 — added `config/phase_1.json`, `prompts/phase_1.md`, `docs/Agent_Prompt_Standard.md` now tracked at v1.3, `docs/Mom-DB-Strategy-Research-Program.md` now tracked, and `research/phase_1/`/`results/phase_1/` content), updated 2026-07-18 (Phase 1b — added `config/phase_1b.json`, `config/dev_sample_v2.json`, four `prompts/phase_1b*.md` (base + 3 amendments), `src/data/canonical.py`, `.secrets/` gitignore entry, and `research/phase_1b/`/`results/phase_1b/` content)
+**Reflects commit:** end of Phase 1b (branch `phase/1b`), post-`phase-1-approved`
+**File count covered:** 1080 files — 365 individual per-file entries below + 9 folder-level entries covering `archive/runs/`'s other 685 files, per the coverage rules established in Phase 0a.
 **Standing rule:** Any phase that adds, moves, or removes repo files must update this map in the same phase.
 
 This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `research/`, `results/`, `src/`, `.claude/`, and repo-root loose files. `data/` is excluded per standing rule (documented separately in `data/Schema.md`). `hawkes-ofi-impact/` and `scanner-epg-momentum/` are independent, already-git-tracked sibling projects — not walked file-by-file, but each gets a summary section below so this map isn't blind to a third of the workspace.
@@ -198,6 +198,8 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 - `config/dev_sample_events.csv` — The pinned 50-event dev sample list. Committed, never regenerated in place — a disagreement on rebuild is an escalation, not a refresh.
 - `config/phase_0c.json` — Seed, per-class failure-sample size, data root, and the folder-name format string under test for the join reconciliation.
 - `config/phase_1.json` — Overlap threshold (0.95), chart subsample cap (50,000), seed (42), scan-input/filter-output/phase_0c-artifact paths for the filter forensics phase.
+- `config/phase_1b.json` — Seed, dev-sample strat rule, outlier-flag thresholds, classification rule set + escalation thresholds, session-calendar library pin (`pandas_market_calendars` 5.4.0 / `exchange_calendars` 4.13.2, XNYS), retired-dev-v1 note.
+- `config/dev_sample_v2.json` — Dev sample v2 manifest: 50 events, 10 deciles, seed 42, eligibility rule.
 
 ## `.claude/`
 
@@ -212,6 +214,10 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 - `prompts/phase_0b.md` — Phase 0b's own instructions (data-layer recovery, `CLAUDE.md`, table loads, dev sample, digest tooling).
 - `prompts/phase_0c.md` — Phase 0c's own instructions (bidirectional join reconciliation between `momentum_events` and `data/filtered/`).
 - `prompts/phase_1.md` — Phase 1's own instructions (filter forensics: line-cited spec of `filter_events_power_law.py`, NULL-date and orphan-folder origin classification, DB coverage spot-check).
+- `prompts/phase_1b.md` — Phase 1b's own instructions (universe repair & canonicalization: `momentum_events_canonical` view, instrument classification, outlier flags, dev sample v2).
+- `prompts/phase_1b_amendment_1.md` — T1 escalation resolution: vendor reference API classification replaces the unusable advisory CSV.
+- `prompts/phase_1b_amendment_2.md` — T4b escalation resolution: per-side (`trades_ingested`/`quotes_ingested`) coverage replaces the single `folder_ingested` flag.
+- `prompts/phase_1b_amendment_3.md` — T5b escalation resolution: session-calendar mismatch root cause, `flag_missing_event_day`/`flag_window_calendar_bug`, XNYS calendar pinned project-wide.
 
 ## `docs/`
 
@@ -230,10 +236,11 @@ Did not exist anywhere in this checkout as of Phase 0a. Recovered by locating th
 - `src/data/db.py` — `get_connection()`: returns a DuckDB connection to the path `paths.py` resolves, creating the parent directory if needed.
 - `src/data/ingest.py` — Multi-dataset ingest CLI (`--all` / `--dataset` / `--data-root` / `--db-path` / `--verify-only`); 11 registered loaders (`filtered`, `daily`, `minute`, `second10`, `quote_data`, `momentum_events`, `metadata`, `market_hours`, `symbol_properties`, `nautilus_catalog`, `trade_data`), each independently skip-if-exists.
 - `src/data/prepare_database_split.py` — CLI that scaffolds/migrates storage to an external database root, writing a migration manifest and `env.example` template.
+- `src/data/canonical.py` — **Added Phase 1b (instructed promotion, D1/D2).** `momentum_events_canonical` view over the raw `momentum_events` table (never modified). Staged construction (`create_view(con, stage=...)`: t2/t5/t6) as Phase 1b's own inputs became available. Per-side coverage (`trades_ingested`/`quotes_ingested`, Amendment 2), `flag_missing_event_day`/`flag_window_calendar_bug` (Amendment 3). `in_scope` is the single join point downstream code must use — the physical `filtered_trades`/`filtered_quotes` tables contain out-of-universe rows.
 
 ## Repo root
 
-- `.gitignore` — Excludes `.venv/`, the top-level `data/` root only (anchored `/data/` — fixed in Phase 0b after an unanchored version also matched `src/data/`), the two sibling repos, `archive/runs/`, `notebooks/*.ipynb`, `/logs/`, standard Python/cache artifacts, and (added Phase 1) `results/phase_*/artifacts/*.parquet` per Agent_Prompt_Standard.md v1.3 §12 (artifact parquets are regenerable, not source; phase_0c's already-tracked parquet predates the rule and is unaffected).
+- `.gitignore` — Excludes `.venv/`, the top-level `data/` root only (anchored `/data/` — fixed in Phase 0b after an unanchored version also matched `src/data/`), the two sibling repos, `archive/runs/`, `notebooks/*.ipynb`, `/logs/`, standard Python/cache artifacts, `results/phase_*/artifacts/*.parquet` (added Phase 1, per Agent_Prompt_Standard.md v1.3 §12), and (added Phase 1b) `.secrets/` — local-only API key storage for Amendment 1's vendor reference pull, never committed.
 - `CLAUDE.md` — Standing constraints for this program: hard data rules, provenance quarantine, methodology, repo layout, reporting, escalation, and pointers to the other standing docs (two of which don't resolve — see the file itself).
 
 ---
@@ -374,6 +381,22 @@ Note: the great majority of the top-level notes below are companion docs for a `
 - `research/phase_1/ingestion_spotcheck.py` — T5a: reconstructs the 409 parser-fix-recovered folders from `folder_inventory.parquet` and runs aggregated ticker-level/event-date presence queries against `filtered_trades`/`filtered_quotes`.
 - `research/phase_1/dev_sample_spotcheck.py` — T5b: per-event row counts for the 50 dev-sample events against `filtered_trades_dev`/`filtered_quotes_dev`.
 - `research/phase_1/build_charts.py` — Builds all three Chart Contract charts (T6): NULL-date ECDF, q05 boundary scatter, orphan reclassification ECDF.
+
+### `research/phase_1b/` (this phase's own tooling — universe repair & canonicalization)
+
+- `research/phase_1b/classify_instruments.py` — T1's original 9-rule heuristic classifier + advisory cross-check (superseded as verdict by Amendment 1, retained as validation).
+- `research/phase_1b/fetch_ticker_reference.py` — Amendment 1 T1-R1: paginated bulk pull of `/v3/reference/tickers` (active + inactive) from the Massive API, writing `ticker_reference_snapshot.parquet`.
+- `research/phase_1b/rebuild_classification.py` — Amendment 1 T1-R3: rebuilds `instrument_classification.parquet` with vendor `type` as the verdict; heuristic confusion matrix, ticker-reuse check.
+- `research/phase_1b/build_canonical_spine.py` — T2: builds `momentum_events_canonical` (stage=t2), row-count/folder-join-ambiguity/no-folder-coverage checks.
+- `research/phase_1b/mechanism_outlier_flag.py` — T3: `flag_bad_denominator`, confirms the 53.8M% row is caught.
+- `research/phase_1b/reingest_recovered_folders.py` — T4b: re-ingests the 7 in-scope recovered folders into `filtered_trades`/`filtered_quotes` via `src.data.ingest`'s schema-union helpers.
+- `research/phase_1b/build_folder_inventory_v2.py` — T4c/Amendment 2 T4-R2: builds `folder_inventory_v2.parquet` (scope/ingestion status), the universe-wide trades-only-folder headline.
+- `research/phase_1b/zero_trades_cause_annotation.py` — Amendment 3 T5-R2: annotates the 150 zero-event-day-trades events `calendar_bug`/`unknown`, checks quote coverage for the 8 unknowns.
+- `research/phase_1b/window_calendar_bug_quantification.py` — Amendment 3 T5-R3: reconstructs the legacy collector's exact window-stepping logic, compares against the pinned XNYS calendar session-by-session, quantifies `flag_window_calendar_bug`'s blast radius.
+- `research/phase_1b/bivariate_outlier_flag.py` — T5: `flag_trades_mom_outlier` (q=0.995 quantile regression), `n_trades_event_day` (true-calendar-day trade count, not the folder's anchor-date tag).
+- `research/phase_1b/build_waterfall.py` — T6: finalizes `in_scope`, event-side + folder-side accounting waterfalls.
+- `research/phase_1b/build_dev_sample_v2.py` — T7: dev sample v2 manifest + `filtered_trades_dev_v2`/`filtered_quotes_dev_v2` materialization from the main tables, subset/zero-row verification.
+- `research/phase_1b/build_chart_01.py` … `build_chart_05.py` — The five Chart Contract charts (01 trades-vs-momentum flags, 02 instrument classes, 03 universe waterfall, 04 dev v2 coverage, 05 calendar damage by offset).
 
 ### `research/phase_1_context/`
 
@@ -577,4 +600,27 @@ Per `results/hardware/`, `results/ingestion_run/`, `results/rebuild_stage1/`, et
 - `results/phase_1/artifacts/ingestion_spotcheck_409_detail.parquet` — T5a's per-folder detail backing the summary above. **Gitignored**, not committed.
 - `results/phase_1/charts/01_momentum_pct_by_date_status.html`, `02_q05_boundary.html`, `03_orphans_vs_boundary.html` — This phase's three required charts.
 - `results/phase_1/digest.json`, `results/phase_1/REPORT.md` — This phase's digest and written report.
+
+### `results/phase_1b/` (this phase's own outputs)
+
+- `results/phase_1b/artifacts/instrument_classification.parquet` — Rebuilt (Amendment 1) vendor-verdict classification, heuristic validation columns. **Gitignored**, not committed.
+- `results/phase_1b/artifacts/instrument_classification_summary.json`, `instrument_classification_rebuild_summary.json` — T1a's original heuristic counts, then Amendment 1's rebuilt vendor-verdict counts + confusion matrix.
+- `results/phase_1b/artifacts/ticker_reference_snapshot_summary.json` — Amendment 1 T1-R1a: 36,282-row bulk snapshot fetch + universe join summary (the snapshot parquet itself is gitignored).
+- `results/phase_1b/artifacts/t1_gate_recheck.json` — Amendment 1 T1-R4: suspect-class gate re-check (0% unresolved).
+- `results/phase_1b/artifacts/canonical_spine_t2_summary.json` — T2a/b/c: row count, folder-join ambiguity, no-folder coverage checks.
+- `results/phase_1b/artifacts/mechanism_outlier_flag_summary.json` — T3: `flag_bad_denominator` counts, top-10 table, 53.8M% row confirmation.
+- `results/phase_1b/artifacts/t4_pre_ingestion_list.json`, `t4_reingest_summary.json`, `t4r3_verification.json` — T4a pre-flight list, T4b post-ingest per-folder verification (the `GTN.A` escalation), Amendment 2 T4-R3's re-verification under the rewritten criterion.
+- `results/phase_1b/artifacts/folder_inventory_v2.parquet`, `folder_inventory_v2_summary.json` — T4c/Amendment 2 T4-R2: 24,609-folder scope/ingestion status, universe-wide trades-only-folder headline (1,606 folders).
+- `results/phase_1b/artifacts/t4d_dev_v1_forensics.json` — T4d: confirms dev v1 was materialized from a source other than the main tables.
+- `results/phase_1b/artifacts/bivariate_outlier_flag_summary.json` — T5: `flag_trades_mom_outlier` fit + counts, the 150 zero-event-day-trades events + root-cause diagnosis.
+- `results/phase_1b/artifacts/t5r1_calendar_mismatch.json` — Amendment 3 T5-R1: Set A (14 phantom-holiday dates) / Set B (7 phantom-session dates), 142-date cross-check.
+- `results/phase_1b/artifacts/t5r2_zero_trades_cause.json` — Amendment 3 T5-R2: 142 `calendar_bug` / 8 `unknown` cause split, quote-coverage check for the 8 singletons.
+- `results/phase_1b/artifacts/event_flags.parquet` — Per-event flags + `n_trades_event_day`, consolidated across T5 and Amendment 3. **Gitignored**, not committed.
+- `results/phase_1b/artifacts/window_damage.parquet` — Amendment 3 T5-R3: per-event damaged-offset detail. **Gitignored**, not committed.
+- `results/phase_1b/artifacts/t5r3_window_damage_summary.json` — Amendment 3 T5-R3: `flag_window_calendar_bug` blast radius (1,849/20,802), damage-by-offset table, 20-event corroboration sample.
+- `results/phase_1b/artifacts/t5r4_gate_recheck.json` — Amendment 3 T5-R4: final gate re-check, all criteria pass.
+- `results/phase_1b/artifacts/t6_waterfall_summary.json` — T6: event-side + folder-side accounting waterfalls, both residual 0.
+- `results/phase_1b/artifacts/t7_dev_sample_v2_summary.json` — T7: dev v2 build, subset verification (0 mismatches), zero-row check (0 events).
+- `results/phase_1b/charts/01_trades_vs_momentum_flags.html`, `02_instrument_classes.html`, `03_universe_waterfall.html`, `04_dev_v2_coverage.html`, `05_calendar_damage_by_offset.html` — This phase's five charts (04 is the contract's #4; 05 is Amendment 3's addition).
+- `results/phase_1b/digest.json`, `results/phase_1b/REPORT.md` — This phase's digest and written report, covering the base prompt and all three amendments.
 

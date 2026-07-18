@@ -1,0 +1,64 @@
+{
+  "phase": "1b",
+  "title": "Universe Repair & Canonicalization",
+  "branch": "phase/1b",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-18",
+  "baseline": "phase-1-approved",
+  "config_hash": "2d1fb57a",
+  "summary": "momentum_events_canonical built (23,268 rows, exact). Instrument classification rebuilt on vendor reference data (Amendment 1) after the original 9-rule heuristic left 5.15% suspect-unresolved. Re-ingested 7 in-scope recovered folders; one (GTN.A_2025-06-12) had no quotes.parquet on disk, resolved by splitting coverage per-side (Amendment 2). The bivariate outlier fit surfaced 150 zero-event-day-trades events, traced to a real collector bug: collect_massive_data.py used the US federal holiday calendar instead of the exchange calendar, so Columbus Day/Veterans Day/Juneteenth-2021 events were never collected (142 of 150) and 1,849 in-scope windows (8.89%) carry session-shape damage (Amendment 3). Final in-scope universe: 20,802/23,268. Waterfall and folder-side accounting both balance to 0 residual. Dev sample v2 (50 events) built and verified as a strict main-table subset.",
+  "headline_metrics": [
+    {"metric": "Canonical spine row count", "value": "23,268 (exact)", "chart": "results/phase_1b/charts/03_universe_waterfall.html"},
+    {"metric": "Instrument classification (vendor verdict, n=3,377)", "value": "CS=2717, ADRC=227, WARRANT=191, PFD=95, ETF=91, FUND=23, SP=13, UNIT=13, RIGHT=7; 0 unresolved", "chart": "results/phase_1b/artifacts/instrument_classification_rebuild_summary.json"},
+    {"metric": "Bivariate outlier flag", "value": "105/20,907 fit population (0.50%)", "chart": "results/phase_1b/charts/01_trades_vs_momentum_flags.html"},
+    {"metric": "Zero-event-day-trades (calendar bug)", "value": "150 events: 142 calendar_bug, 8 unknown", "chart": "results/phase_1b/charts/05_calendar_damage_by_offset.html"},
+    {"metric": "Window calendar-bug blast radius", "value": "1,849/20,802 in-scope events (8.89%)", "chart": "results/phase_1b/charts/05_calendar_damage_by_offset.html"},
+    {"metric": "Final in-scope universe", "value": "20,802/23,268; 20,623 both-sides ingested, 179 trades-only, 0 no-folder", "chart": "results/phase_1b/charts/03_universe_waterfall.html"},
+    {"metric": "Dev sample v2", "value": "50 events, 10 deciles, 0 subset mismatches, 0 zero-row events", "chart": "results/phase_1b/charts/04_dev_v2_coverage.html"}
+  ],
+  "escalations_triggered_and_resolved": [
+    {"criterion": "T1: suspect-class unresolved > 2%", "observed": "5.15% (174/3,377)", "resolution": "Amendment 1 - vendor reference API classification", "observed_after": "0% unresolved"},
+    {"criterion": "T4b: re-ingested folder with 0 rows post-ingest", "observed": "GTN.A_2025-06-12_31.87, 0 rows filtered_quotes", "resolution": "Amendment 2 - per-side coverage (trades_ingested/quotes_ingested), event stays in scope", "observed_after": "7/7 pass under rewritten criterion"},
+    {"criterion": "T5b: zero-event-day-trades > 50", "observed": "150 events", "resolution": "Amendment 3 - root-caused to collect_massive_data.py's federal-vs-exchange calendar bug, flagged not repaired (Phase 1c deferred)", "observed_after": "142/8 cause split, all criteria in Amendment 3 pass"}
+  ],
+  "escalations_checked_not_triggered": [
+    {"criterion": "T2a row count != 23,268", "observed": "23,268"},
+    {"criterion": "T2b folder-join multi-matches > 25", "observed": 0},
+    {"criterion": "T3a: 53.8M% row not caught", "observed": "caught (ticker SOLS)"},
+    {"criterion": "T1-R1: universe tickers unmatched > 2%", "observed": "0%"},
+    {"criterion": "T1-R3b: ticker-reuse conflicts > 25", "observed": 0},
+    {"criterion": "T1-R3a: heuristic-vendor disagreement > 5%", "observed": "4.71%"},
+    {"criterion": "T5a bivariate flag rate > 1.5%", "observed": "0.50%"},
+    {"criterion": "T5-R1: 142 dates missing from Set A", "observed": 0},
+    {"criterion": "T5-R3: flag_window_calendar_bug > 3,000", "observed": "1,849 (8.89%)"},
+    {"criterion": "T6 waterfall/folder residual != 0", "observed": 0},
+    {"criterion": "T7a/b: dev v2 subset mismatch / zero-row", "observed": "0 / 0"}
+  ],
+  "decisions_log": [
+    {"decision": "symbol-properties-database.csv dropped entirely as advisory source", "reason": "confirmed 0/3,377 per-ticker matches - it is a generic broker contract-spec file (wildcard usa,[*],equity row), not a symbol master"},
+    {"decision": "in_scope excludes flag_missing_event_day but not flag_window_calendar_bug", "reason": "Amendment 3 - the flag governs use of flanking sessions, not event-day membership"},
+    {"decision": "data/Schema.md's T8 addendum could not be committed", "reason": "/data/ is gitignored project-wide and Schema.md has never been tracked in git history (verified); the edit is live on disk, not force-added past the standing convention"}
+  ],
+  "surprises": [
+    "collect_massive_data.py used pandas' USFederalHolidayCalendar for session windows - it includes Columbus Day, Veterans Day, and (in 2021) Juneteenth's first observance, none of which are XNYS holidays.",
+    "33 in-scope events anchored exactly on Columbus Day 2025 have trades on the anchor day (unlike the 142-event pattern) - get_trading_window's date_range excludes a non-business-day center entirely, breaking the offset model; not root-caused further.",
+    "1,606 folders have a trades file but no quotes file, vs. the ~1,540 expected from prior context (diff 66 > 50 threshold) - noted, not investigated (Phase 4 owns it).",
+    "The T1 heuristic's catch-all 'common' class silently absorbed 114 fund_product and 27 preferred tickers it had no pattern for (e.g. all-caps-P preferred suffixes like APOpA)."
+  ],
+  "output_files": {
+    "prompts": ["prompts/phase_1b.md", "prompts/phase_1b_amendment_1.md", "prompts/phase_1b_amendment_2.md", "prompts/phase_1b_amendment_3.md"],
+    "config": ["config/phase_1b.json", "config/dev_sample_v2.json"],
+    "src": ["src/data/canonical.py"],
+    "artifacts": "results/phase_1b/artifacts/*.json + *.parquet (gitignored, regenerable)",
+    "charts": ["results/phase_1b/charts/01_trades_vs_momentum_flags.html", "results/phase_1b/charts/02_instrument_classes.html", "results/phase_1b/charts/03_universe_waterfall.html", "results/phase_1b/charts/04_dev_v2_coverage.html", "results/phase_1b/charts/05_calendar_damage_by_offset.html"],
+    "report": "results/phase_1b/REPORT.md", "digest": "results/phase_1b/digest.json"
+  },
+  "commits": 27,
+  "reproduce": "python research/phase_1b/build_canonical_spine.py && python research/phase_1b/build_waterfall.py",
+  "blocking_items_for_next_phase": [
+    "Phase 1c (targeted re-collection of the 142 flag_missing_event_day events + 1,849 flag_window_calendar_bug-damaged windows) is scoped but not started - gated separately after this phase's approval per Amendment 3.",
+    "1,606 trades-only folders (no quotes.parquet) - Phase 4 owns the explanation.",
+    "33 anchor-on-Set-A anomaly events - not root-caused."
+  ],
+  "approval_gate": "Do not begin Phase 2 or any follow-on work until Cooper has reviewed results and given explicit approval. This gate also constitutes approval of the Phase 1c scope draft as next work."
+}
