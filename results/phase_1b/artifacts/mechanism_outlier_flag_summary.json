@@ -1,0 +1,75 @@
+{
+  "phase": "1b",
+  "task": "T3",
+  "thresholds": {
+    "prev_close_floor": 0.01,
+    "mom_sanity_cap": 10000
+  },
+  "n_total_flagged": 8,
+  "n_total_flagged_pct": 0.0344,
+  "by_source_file": {
+    "file2": {
+      "n_total": 5911,
+      "n_flagged": 4
+    },
+    "file1": {
+      "n_total": 17357,
+      "n_flagged": 4
+    }
+  },
+  "top_10_flagged_rows": [
+    {
+      "ticker": "SOLS",
+      "event_date_canonical": "2025-10-30",
+      "prev_close": 0.0,
+      "momentum_pct": 53799900.0
+    },
+    {
+      "ticker": "CBL",
+      "event_date_canonical": "2021-11-02",
+      "prev_close": 0.09,
+      "momentum_pct": 48557.72
+    },
+    {
+      "ticker": "SMRT",
+      "event_date_canonical": "2021-08-25",
+      "prev_close": 0.07,
+      "momentum_pct": 20387.14
+    },
+    {
+      "ticker": "WW",
+      "event_date_canonical": "2025-07-07",
+      "prev_close": 0.25,
+      "momentum_pct": 16570.27
+    },
+    {
+      "ticker": "SRZNW",
+      "event_date_canonical": "2025-10-28",
+      "prev_close": 0.01,
+      "momentum_pct": 13495.51
+    },
+    {
+      "ticker": "NE",
+      "event_date_canonical": "2021-06-09",
+      "prev_close": 0.2,
+      "momentum_pct": 12582.93
+    },
+    {
+      "ticker": "WBUY",
+      "event_date_canonical": "2025-05-08",
+      "prev_close": 0.12,
+      "momentum_pct": 11236.03
+    },
+    {
+      "ticker": "DBD",
+      "event_date_canonical": "2023-08-14",
+      "prev_close": 0.25,
+      "momentum_pct": 10052.0
+    }
+  ],
+  "t3a_538m_row_check": {
+    "momentum_pct": 53799900.0,
+    "caught_by_rule": true,
+    "n_matching_rows": 1
+  }
+}
