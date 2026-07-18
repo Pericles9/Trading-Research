@@ -1,0 +1,431 @@
+{
+  "phase": "1b",
+  "task": "T5-R3",
+  "n_in_scope_population": 20802,
+  "n_flagged_window_calendar_bug": 1849,
+  "flagged_pct_of_in_scope": 8.8886,
+  "escalation_threshold_n": 3000,
+  "escalation_triggered": false,
+  "damage_by_offset": {
+    "-3": {
+      "missing_session": 500,
+      "short_window": 0
+    },
+    "-2": {
+      "missing_session": 213,
+      "short_window": 100
+    },
+    "-1": {
+      "missing_session": 162,
+      "short_window": 111
+    },
+    "1": {
+      "missing_session": 161,
+      "short_window": 134
+    },
+    "2": {
+      "missing_session": 223,
+      "short_window": 117
+    },
+    "3": {
+      "missing_session": 557,
+      "short_window": 0
+    }
+  },
+  "damage_type_totals": {
+    "missing_session": 1816,
+    "short_window": 462
+  },
+  "corroboration_sample": {
+    "n_sampled": 20,
+    "n_corroborated": 9,
+    "note": "Sample restricted to missing_session damage at the outer offsets (-3 or +3) specifically - the only cases where the extra-outer-session prediction applies. Damage at inner offsets, or missing_session caused by a Set B date consuming a legacy step without extending window reach (e.g. Good Friday mid-window), doesn't predict a T-4/T+4 session.",
+    "rows": [
+      {
+        "ticker": "ALF",
+        "event_date": "2021-06-15",
+        "damaged_offsets": {
+          "3": "missing_session"
+        },
+        "t4_before_date": "2021-06-09",
+        "has_t4_before_session": false,
+        "t4_after_date": "2021-06-21",
+        "has_t4_after_session": true,
+        "relevant_side_confirmed": true
+      },
+      {
+        "ticker": "ATER",
+        "event_date": "2022-04-13",
+        "damaged_offsets": {
+          "2": "short_window",
+          "3": "missing_session"
+        },
+        "t4_before_date": "2022-04-07",
+        "has_t4_before_session": false,
+        "t4_after_date": "2022-04-20",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": false
+      },
+      {
+        "ticker": "AVR",
+        "event_date": "2025-04-23",
+        "damaged_offsets": {
+          "-3": "missing_session"
+        },
+        "t4_before_date": "2025-04-16",
+        "has_t4_before_session": false,
+        "t4_after_date": "2025-04-29",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": false
+      },
+      {
+        "ticker": "CCG",
+        "event_date": "2025-04-21",
+        "damaged_offsets": {
+          "-3": "missing_session",
+          "-1": "short_window"
+        },
+        "t4_before_date": "2025-04-14",
+        "has_t4_before_session": false,
+        "t4_after_date": "2025-04-25",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": false
+      },
+      {
+        "ticker": "EVGO",
+        "event_date": "2021-11-08",
+        "damaged_offsets": {
+          "3": "missing_session"
+        },
+        "t4_before_date": "2021-11-02",
+        "has_t4_before_session": false,
+        "t4_after_date": "2021-11-12",
+        "has_t4_after_session": true,
+        "relevant_side_confirmed": true
+      },
+      {
+        "ticker": "FLGC",
+        "event_date": "2024-04-03",
+        "damaged_offsets": {
+          "-3": "missing_session"
+        },
+        "t4_before_date": "2024-03-27",
+        "has_t4_before_session": false,
+        "t4_after_date": "2024-04-09",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": false
+      },
+      {
+        "ticker": "GIII",
+        "event_date": "2020-04-07",
+        "damaged_offsets": {
+          "3": "missing_session"
+        },
+        "t4_before_date": "2020-04-01",
+        "has_t4_before_session": false,
+        "t4_after_date": "2020-04-14",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": false
+      },
+      {
+        "ticker": "INHD",
+        "event_date": "2024-10-09",
+        "damaged_offsets": {
+          "3": "missing_session"
+        },
+        "t4_before_date": "2024-10-03",
+        "has_t4_before_session": false,
+        "t4_after_date": "2024-10-15",
+        "has_t4_after_session": true,
+        "relevant_side_confirmed": true
+      },
+      {
+        "ticker": "IVR",
+        "event_date": "2020-04-07",
+        "damaged_offsets": {
+          "3": "missing_session"
+        },
+        "t4_before_date": "2020-04-01",
+        "has_t4_before_session": false,
+        "t4_after_date": "2020-04-14",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": false
+      },
+      {
+        "ticker": "LXEH",
+        "event_date": "2023-10-12",
+        "damaged_offsets": {
+          "-3": "missing_session"
+        },
+        "t4_before_date": "2023-10-06",
+        "has_t4_before_session": true,
+        "t4_after_date": "2023-10-18",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": true
+      },
+      {
+        "ticker": "POLA",
+        "event_date": "2021-11-08",
+        "damaged_offsets": {
+          "3": "missing_session"
+        },
+        "t4_before_date": "2021-11-02",
+        "has_t4_before_session": false,
+        "t4_after_date": "2021-11-12",
+        "has_t4_after_session": true,
+        "relevant_side_confirmed": true
+      },
+      {
+        "ticker": "ZEO",
+        "event_date": "2025-04-16",
+        "damaged_offsets": {
+          "2": "short_window",
+          "3": "missing_session"
+        },
+        "t4_before_date": "2025-04-10",
+        "has_t4_before_session": false,
+        "t4_after_date": "2025-04-23",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": false
+      },
+      {
+        "ticker": "COIN",
+        "event_date": "2024-11-06",
+        "damaged_offsets": {
+          "3": "missing_session"
+        },
+        "t4_before_date": "2024-10-31",
+        "has_t4_before_session": false,
+        "t4_after_date": "2024-11-12",
+        "has_t4_after_session": true,
+        "relevant_side_confirmed": true
+      },
+      {
+        "ticker": "INKT",
+        "event_date": "2022-04-12",
+        "damaged_offsets": {
+          "3": "missing_session"
+        },
+        "t4_before_date": "2022-04-06",
+        "has_t4_before_session": false,
+        "t4_after_date": "2022-04-19",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": false
+      },
+      {
+        "ticker": "INVZ",
+        "event_date": "2025-01-07",
+        "damaged_offsets": {
+          "2": "short_window",
+          "3": "missing_session"
+        },
+        "t4_before_date": "2024-12-31",
+        "has_t4_before_session": false,
+        "t4_after_date": "2025-01-14",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": false
+      },
+      {
+        "ticker": "MGNX",
+        "event_date": "2023-11-07",
+        "damaged_offsets": {
+          "3": "missing_session"
+        },
+        "t4_before_date": "2023-11-01",
+        "has_t4_before_session": false,
+        "t4_after_date": "2023-11-13",
+        "has_t4_after_session": true,
+        "relevant_side_confirmed": true
+      },
+      {
+        "ticker": "NTIC",
+        "event_date": "2020-04-07",
+        "damaged_offsets": {
+          "3": "missing_session"
+        },
+        "t4_before_date": "2020-04-01",
+        "has_t4_before_session": false,
+        "t4_after_date": "2020-04-14",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": false
+      },
+      {
+        "ticker": "REBN",
+        "event_date": "2023-11-15",
+        "damaged_offsets": {
+          "-3": "missing_session"
+        },
+        "t4_before_date": "2023-11-09",
+        "has_t4_before_session": true,
+        "t4_after_date": "2023-11-21",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": true
+      },
+      {
+        "ticker": "SLDB",
+        "event_date": "2023-11-15",
+        "damaged_offsets": {
+          "-3": "missing_session"
+        },
+        "t4_before_date": "2023-11-09",
+        "has_t4_before_session": true,
+        "t4_after_date": "2023-11-21",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": true
+      },
+      {
+        "ticker": "SPCE",
+        "event_date": "2020-04-14",
+        "damaged_offsets": {
+          "-3": "missing_session",
+          "-2": "short_window"
+        },
+        "t4_before_date": "2020-04-07",
+        "has_t4_before_session": false,
+        "t4_after_date": "2020-04-20",
+        "has_t4_after_session": false,
+        "relevant_side_confirmed": false
+      }
+    ]
+  },
+  "surprises": {
+    "anchor_on_set_a": {
+      "n": 33,
+      "description": "In-scope events whose anchor date itself falls in Set A (e.g. Columbus Day 2025-10-13) but which - unlike the 142-event flag_missing_event_day pattern - DO have trades on the anchor day. The get_trading_window(D) date_range never includes D itself when D is not a valid business day per the federal calendar, so the offset-mapping logic used for the rest of this quantification does not apply cleanly to these events. Flagged flag_window_calendar_bug=TRUE with damaged_offsets={'0': 'anchor_on_set_a'} rather than a T-3..T+3 offset breakdown. Not root-caused further - out of Amendment 3's defined scope (quantify the already-diagnosed mechanism, not investigate new ones).",
+      "events": [
+        {
+          "ticker": "NVA",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "NAMM",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "BLBX",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "VELO",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "MTEX",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "ELBM",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "STI",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "SDST",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "NMG",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "NUKK",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "LGO",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "BE",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "CHNR",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "CRML",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "AQMS",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "DFLI",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "LITM",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "NDRA",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "USAR",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "CAN",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "IPDN",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "PSIG",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "ASPI",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "TAOX",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "GWH",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "ABAT",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "ACON",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "HOVR",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "FOFO",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "PMAX",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "XCH",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "ELWS",
+          "event_date_canonical": "2025-10-13"
+        },
+        {
+          "ticker": "CLIK",
+          "event_date_canonical": "2025-10-13"
+        }
+      ]
+    }
+  }
+}
