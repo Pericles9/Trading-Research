@@ -1,0 +1,33 @@
+{
+  "phase": "1b",
+  "task": "T5-R4",
+  "gate_recheck": [
+    {
+      "criterion": "142 event dates not in derived Set A",
+      "threshold": "any",
+      "observed": 0,
+      "pass": true
+    },
+    {
+      "criterion": "flag_window_calendar_bug count",
+      "threshold": "> 3000 (~15% of in-scope)",
+      "observed": 1849,
+      "observed_pct": 8.8886,
+      "pass": true
+    },
+    {
+      "criterion": "mismatch dates outside expected families (T5-R1)",
+      "threshold": "not a stop, list under surprises",
+      "observed": 0,
+      "pass": true
+    },
+    {
+      "criterion": "Set B short-window damage",
+      "threshold": "not a stop, quantify only",
+      "observed": 462,
+      "pass": true
+    }
+  ],
+  "all_pass": true,
+  "result": "T5b superseded, all Amendment 3 criteria pass - resuming original prompt at T6"
+}
