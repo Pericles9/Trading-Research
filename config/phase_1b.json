@@ -1,0 +1,52 @@
+{
+  "phase": "1b",
+  "seed": 42,
+  "dev_sample": {
+    "n_events": 50,
+    "n_deciles": 10,
+    "per_decile": 5,
+    "decile_source_population": "in_scope = TRUE AND folder_ingested = TRUE"
+  },
+  "outlier_flags": {
+    "prev_close_floor": 0.01,
+    "mom_sanity_cap": 10000,
+    "q_outlier": 0.995
+  },
+  "classification": {
+    "rule_version": "v1",
+    "rules_in_order": [
+      {"priority": 1, "pattern": "contains .WS segment", "class": "warrant"},
+      {"priority": 2, "pattern": "[A-Z]+p[A-Z]?$", "class": "preferred"},
+      {"priority": 3, "pattern": "ends .U", "class": "unit"},
+      {"priority": 4, "pattern": "ends .R", "class": "right"},
+      {"priority": 5, "pattern": "ends .A/.B/.C (no .WS segment)", "class": "common_class_share"},
+      {"priority": 6, "pattern": "5-letter all-caps ending W", "class": "warrant_suspect"},
+      {"priority": 7, "pattern": "5-letter all-caps ending U", "class": "unit_suspect"},
+      {"priority": 8, "pattern": "5-letter all-caps ending R", "class": "right_suspect"},
+      {"priority": 9, "pattern": "anything else", "class": "common"}
+    ],
+    "in_scope_classes": ["common", "common_class_share"],
+    "advisory_source": "data/symbol-properties/symbol-properties-database.csv",
+    "advisory_provenance": "Unknown (quarantined) - advisory only, never load-bearing"
+  },
+  "escalation_thresholds": {
+    "canonical_row_count_expected": 23268,
+    "suspect_unresolved_pct_of_distinct_tickers": 0.02,
+    "classification_disagreement_pct_of_overlap": 0.05,
+    "folder_join_multimatch_max_events": 25,
+    "bivariate_flag_rate_pct_of_fit_population": 0.015,
+    "zero_event_day_trades_max_events": 50
+  },
+  "paths": {
+    "momentum_events_db": "data/duckdb/main.duckdb",
+    "folder_inventory_v1": "results/phase_0c/artifacts/folder_inventory.parquet",
+    "orphan_classification_v1": "results/phase_1/artifacts/orphan_classification.parquet",
+    "recovered_409_source": "results/phase_1/artifacts/ingestion_spotcheck.json",
+    "filtered_folders_root": "data/filtered",
+    "canonical_view_module": "src/data/canonical.py"
+  },
+  "retired_dev_v1": {
+    "note": "filtered_trades_dev/filtered_quotes_dev and config/dev_sample_events.csv are retired - known-bad, not derived from main tables. Do not read.",
+    "known_bad_tickers": ["AHTpG", "BHRpB"]
+  }
+}
