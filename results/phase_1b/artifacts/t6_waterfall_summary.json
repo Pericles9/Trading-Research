@@ -1,0 +1,71 @@
+{
+  "phase": "1b",
+  "task": "T6",
+  "event_side_waterfall": {
+    "steps": [
+      {
+        "step": "start",
+        "n": 23268
+      },
+      {
+        "step": "minus_non_common_instruments (excl. fund_product)",
+        "n_dropped": 1897,
+        "n_remaining": 21371
+      },
+      {
+        "step": "minus_fund_product",
+        "n_dropped": 307,
+        "n_remaining": 21064
+      },
+      {
+        "step": "minus_bad_denominator",
+        "n_dropped": 7,
+        "n_remaining": 21057
+      },
+      {
+        "step": "minus_bivariate_outliers",
+        "n_dropped": 105,
+        "n_remaining": 20952
+      },
+      {
+        "step": "minus_zero_trade_events",
+        "n_dropped": 150,
+        "n_remaining": 20802
+      },
+      {
+        "step": "minus_flag_missing_event_day (pending 1c repair)",
+        "n_dropped": 0,
+        "n_remaining": 20802,
+        "note": "Same underlying set as the prior step (flag_missing_event_day == flag_zero_event_day_trades currently) - 0 additional drop expected."
+      }
+    ],
+    "n_in_scope_computed_via_waterfall": 20802,
+    "n_in_scope_actual_from_view": 20802,
+    "waterfall_matches_view": true,
+    "terminal_coverage_split": {
+      "both_sides_ingested": 20623,
+      "trades_only": 179,
+      "no_folder": 0,
+      "sum": 20802,
+      "residual": 0
+    },
+    "flag_window_calendar_bug_annotation": {
+      "n_in_scope_and_flagged": 1849,
+      "note": "Annotation only - these events remain in scope for event-day work per Amendment 3."
+    }
+  },
+  "folder_side_accounting": {
+    "total_folders_24200_plus_409": 24609,
+    "matched_to_spine": 23268,
+    "genuine_orphans": 1341,
+    "of_which_false_orphans_date_bug_already_in_matched": 5911,
+    "residual": 0,
+    "escalation_triggered": false
+  },
+  "escalation": {
+    "criterion": "waterfall residual != 0",
+    "event_side_residual": 0,
+    "folder_side_residual": 0,
+    "triggered": false
+  }
+}

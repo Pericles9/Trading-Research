@@ -15,13 +15,24 @@ trades.parquet but no quotes.parquet on disk), not an eligibility veto.
 Any quote-derived statistic downstream must filter on
 quotes_ingested = TRUE explicitly and report the n excluded.
 
+flag_missing_event_day (Amendment 3, T5-R2) = zero trades on the event's
+own calendar day, regardless of cause (calendar_bug or unknown) -
+excluded from in_scope, pending Phase 1c repair. flag_window_calendar_bug
+(Amendment 3, T5-R3) = the event's T-3..T+3 window has session-shape
+damage from the same collector bug - these events stay IN scope for
+event-day work; the flag governs use of flanking sessions, not
+membership. Any analysis touching flanking sessions must filter on
+flag_window_calendar_bug = FALSE and report the n excluded.
+
 Built in three stages, matching the order Phase 1b computes its inputs:
   - stage="t2": flag_bad_denominator computed directly (simple, static
     formula over raw columns); flag_trades_mom_outlier and in_scope are
     NULL placeholders.
-  - stage="t5": adds flag_trades_mom_outlier and flag_zero_event_day_trades
-    from event_flags.parquet (T5's output). in_scope still NULL.
-  - stage="t6": in_scope gets its final formula (D5 + D4 combined).
+  - stage="t5": adds flag_trades_mom_outlier, flag_missing_event_day, and
+    flag_window_calendar_bug from event_flags.parquet (T5's output).
+    in_scope still NULL.
+  - stage="t6": in_scope gets its final formula (D5 + D4 + Amendment 3
+    combined).
 
 Callers re-run create_view() with the later stage once the corresponding
 artifact exists; DuckDB views are cheap to redefine (no data migration).
@@ -76,10 +87,14 @@ def create_view(
 
     if stage == "t2":
         flag_trades_mom_outlier_expr = "CAST(NULL AS BOOLEAN)"
+        flag_missing_event_day_expr = "CAST(NULL AS BOOLEAN)"
+        flag_window_calendar_bug_expr = "CAST(NULL AS BOOLEAN)"
         flag_zero_trades_join = ""
         in_scope_expr = "CAST(NULL AS BOOLEAN)"
     elif stage in ("t5", "t6"):
         flag_trades_mom_outlier_expr = "ef.flag_trades_mom_outlier"
+        flag_missing_event_day_expr = "COALESCE(ef.flag_missing_event_day, FALSE)"
+        flag_window_calendar_bug_expr = "COALESCE(ef.flag_window_calendar_bug, FALSE)"
         flag_zero_trades_join = f"""
         LEFT JOIN read_parquet('{event_flags}') ef
           ON me.ticker = ef.ticker
@@ -93,7 +108,7 @@ def create_view(
                 ic.class IN {IN_SCOPE_CLASSES}
                 AND NOT COALESCE(flag_bad_denominator, FALSE)
                 AND NOT COALESCE(ef.flag_trades_mom_outlier, FALSE)
-                AND NOT COALESCE(ef.flag_zero_event_day_trades, FALSE)
+                AND NOT COALESCE(ef.flag_missing_event_day, FALSE)
             )"""
     else:
         raise ValueError(f"unknown stage: {stage!r}")
@@ -112,6 +127,8 @@ def create_view(
         ic.vendor_type AS vendor_type,
         (me.prev_close < {prev_close_floor} OR me.momentum_pct >= {mom_sanity_cap}) AS flag_bad_denominator,
         {flag_trades_mom_outlier_expr} AS flag_trades_mom_outlier,
+        {flag_missing_event_day_expr} AS flag_missing_event_day,
+        {flag_window_calendar_bug_expr} AS flag_window_calendar_bug,
         EXISTS (
             SELECT 1 FROM read_parquet('{folder_inv}') fi
             WHERE fi.ticker = me.ticker
