@@ -1,0 +1,153 @@
+{
+  "phase": "1b",
+  "task": "T1-R3",
+  "n_tickers": 3377,
+  "n_matched_vendor": 3377,
+  "n_unresolved": 0,
+  "unresolved_pct": 0.0,
+  "vendor_type_distribution": {
+    "CS": 2717,
+    "ADRC": 227,
+    "WARRANT": 191,
+    "PFD": 95,
+    "ETF": 91,
+    "FUND": 23,
+    "SP": 13,
+    "UNIT": 13,
+    "RIGHT": 7
+  },
+  "other_vendor_types_not_in_mapping_table": [
+    "SP"
+  ],
+  "class_counts_by_class_and_source": {
+    "common": {
+      "momentum_events": 2712,
+      "folder_only": 5
+    },
+    "common_adr": {
+      "momentum_events": 227,
+      "folder_only": 0
+    },
+    "fund_product": {
+      "momentum_events": 111,
+      "folder_only": 3
+    },
+    "other": {
+      "momentum_events": 13,
+      "folder_only": 0
+    },
+    "preferred": {
+      "momentum_events": 95,
+      "folder_only": 0
+    },
+    "right": {
+      "momentum_events": 7,
+      "folder_only": 0
+    },
+    "unit": {
+      "momentum_events": 11,
+      "folder_only": 2
+    },
+    "warrant": {
+      "momentum_events": 190,
+      "folder_only": 1
+    }
+  },
+  "t1_r3a_confusion_matrix_heuristic_rows_vendor_cols": {
+    "common": {
+      "common": 2716,
+      "common_adr": 226,
+      "fund_product": 114,
+      "other": 10,
+      "preferred": 27,
+      "right": 0,
+      "unit": 1,
+      "warrant": 4
+    },
+    "common_class_share": {
+      "common": 1,
+      "common_adr": 1,
+      "fund_product": 0,
+      "other": 0,
+      "preferred": 0,
+      "right": 0,
+      "unit": 0,
+      "warrant": 0
+    },
+    "preferred": {
+      "common": 0,
+      "common_adr": 0,
+      "fund_product": 0,
+      "other": 3,
+      "preferred": 68,
+      "right": 0,
+      "unit": 0,
+      "warrant": 0
+    },
+    "right_suspect": {
+      "common": 0,
+      "common_adr": 0,
+      "fund_product": 0,
+      "other": 0,
+      "preferred": 0,
+      "right": 7,
+      "unit": 0,
+      "warrant": 0
+    },
+    "unit": {
+      "common": 0,
+      "common_adr": 0,
+      "fund_product": 0,
+      "other": 0,
+      "preferred": 0,
+      "right": 0,
+      "unit": 1,
+      "warrant": 0
+    },
+    "unit_suspect": {
+      "common": 0,
+      "common_adr": 0,
+      "fund_product": 0,
+      "other": 0,
+      "preferred": 0,
+      "right": 0,
+      "unit": 11,
+      "warrant": 0
+    },
+    "warrant": {
+      "common": 0,
+      "common_adr": 0,
+      "fund_product": 0,
+      "other": 0,
+      "preferred": 0,
+      "right": 0,
+      "unit": 0,
+      "warrant": 31
+    },
+    "warrant_suspect": {
+      "common": 0,
+      "common_adr": 0,
+      "fund_product": 0,
+      "other": 0,
+      "preferred": 0,
+      "right": 0,
+      "unit": 0,
+      "warrant": 156
+    }
+  },
+  "t1_r3a_disagreements": {
+    "n_total_disagreements": 159,
+    "n_non_suspect_disagreements": 159,
+    "non_suspect_disagree_pct_of_matched": 4.7083,
+    "escalation_threshold_pct": 5.0,
+    "escalation_triggered": false,
+    "non_suspect_disagreement_tickers": "159 rows, see artifact"
+  },
+  "t1_r3b_reuse_check": {
+    "n_checked": 3366,
+    "n_conflicts": 0,
+    "escalation_threshold": 25,
+    "escalation_triggered": false,
+    "conflict_tickers": []
+  }
+}
