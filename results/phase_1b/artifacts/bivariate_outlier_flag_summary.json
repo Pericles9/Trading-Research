@@ -1,0 +1,806 @@
+{
+  "phase": "1b",
+  "task": "T5",
+  "q_outlier": 0.995,
+  "quantreg_params": {
+    "Intercept": 3.667404101254026,
+    "log_trades": 0.21929299728866367
+  },
+  "t5a_bivariate_flag": {
+    "n_fit_population": 20907,
+    "n_flagged": 105,
+    "flagged_pct": 0.5022,
+    "design_expectation_pct": 0.5,
+    "escalation_threshold_pct": 1.5,
+    "escalation_triggered": false
+  },
+  "t5b_zero_event_day_trades": {
+    "n_zero_trades_events": 150,
+    "escalation_threshold": 50,
+    "escalation_triggered": true,
+    "events": [
+      {
+        "ticker": "RILY",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 32.57
+      },
+      {
+        "ticker": "XELB",
+        "event_date_canonical": "2020-10-12",
+        "momentum_pct": 31.85
+      },
+      {
+        "ticker": "NTRB",
+        "event_date_canonical": "2021-12-31",
+        "momentum_pct": 211.51
+      },
+      {
+        "ticker": "TRVI",
+        "event_date_canonical": "2021-10-11",
+        "momentum_pct": 37.5
+      },
+      {
+        "ticker": "SNCR",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 43.31
+      },
+      {
+        "ticker": "VS",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 40.0
+      },
+      {
+        "ticker": "MARA",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 32.29
+      },
+      {
+        "ticker": "APPS",
+        "event_date_canonical": "2022-11-10",
+        "momentum_pct": 62.12
+      },
+      {
+        "ticker": "ILAG",
+        "event_date_canonical": "2022-10-10",
+        "momentum_pct": 41.51
+      },
+      {
+        "ticker": "UBXG",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 35.88
+      },
+      {
+        "ticker": "RANI",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 65.35
+      },
+      {
+        "ticker": "RILYG",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 44.0
+      },
+      {
+        "ticker": "UCL",
+        "event_date_canonical": "2021-12-31",
+        "momentum_pct": 36.66
+      },
+      {
+        "ticker": "SOBR",
+        "event_date_canonical": "2022-10-10",
+        "momentum_pct": 50.2
+      },
+      {
+        "ticker": "PSHG",
+        "event_date_canonical": "2020-11-11",
+        "momentum_pct": 77.85
+      },
+      {
+        "ticker": "ICON",
+        "event_date_canonical": "2020-10-12",
+        "momentum_pct": 56.94
+      },
+      {
+        "ticker": "NAOV",
+        "event_date_canonical": "2021-10-11",
+        "momentum_pct": 30.0
+      },
+      {
+        "ticker": "UCL",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 56.92
+      },
+      {
+        "ticker": "XOS",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 40.63
+      },
+      {
+        "ticker": "LVTX",
+        "event_date_canonical": "2021-12-31",
+        "momentum_pct": 39.6
+      },
+      {
+        "ticker": "INKT",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 37.61
+      },
+      {
+        "ticker": "INBS",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 60.87
+      },
+      {
+        "ticker": "MNTS",
+        "event_date_canonical": "2023-10-09",
+        "momentum_pct": 51.28
+      },
+      {
+        "ticker": "MTEK",
+        "event_date_canonical": "2023-10-09",
+        "momentum_pct": 54.02
+      },
+      {
+        "ticker": "GOTU",
+        "event_date_canonical": "2021-10-11",
+        "momentum_pct": 30.36
+      },
+      {
+        "ticker": "HUBC",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 31.52
+      },
+      {
+        "ticker": "GOVX",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 66.67
+      },
+      {
+        "ticker": "ACXP",
+        "event_date_canonical": "2023-10-09",
+        "momentum_pct": 79.69
+      },
+      {
+        "ticker": "DRUG",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 146.32
+      },
+      {
+        "ticker": "ALGS",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 73.7
+      },
+      {
+        "ticker": "NUTX",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 45.98
+      },
+      {
+        "ticker": "WIMI",
+        "event_date_canonical": "2020-10-12",
+        "momentum_pct": 55.28
+      },
+      {
+        "ticker": "WTO",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 30.38
+      },
+      {
+        "ticker": "ALF",
+        "event_date_canonical": "2021-06-18",
+        "momentum_pct": 39.19
+      },
+      {
+        "ticker": "TLS",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 43.27
+      },
+      {
+        "ticker": "AMPX",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 30.04
+      },
+      {
+        "ticker": "EQ",
+        "event_date_canonical": "2020-11-11",
+        "momentum_pct": 85.06
+      },
+      {
+        "ticker": "MKZR",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 56.36
+      },
+      {
+        "ticker": "DDL",
+        "event_date_canonical": "2021-12-31",
+        "momentum_pct": 49.4
+      },
+      {
+        "ticker": "AMPG",
+        "event_date_canonical": "2024-11-22",
+        "momentum_pct": 55.48
+      },
+      {
+        "ticker": "FUBO",
+        "event_date_canonical": "2020-11-11",
+        "momentum_pct": 30.03
+      },
+      {
+        "ticker": "VMAR",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 66.15
+      },
+      {
+        "ticker": "CDIO",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 36.26
+      },
+      {
+        "ticker": "DRCT",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 64.75
+      },
+      {
+        "ticker": "PTGX",
+        "event_date_canonical": "2021-10-11",
+        "momentum_pct": 103.4
+      },
+      {
+        "ticker": "ANY",
+        "event_date_canonical": "2023-12-20",
+        "momentum_pct": 46.15
+      },
+      {
+        "ticker": "BCG",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 229.13
+      },
+      {
+        "ticker": "LEDS",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 41.18
+      },
+      {
+        "ticker": "AVDL",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 30.81
+      },
+      {
+        "ticker": "GERN",
+        "event_date_canonical": "2021-06-18",
+        "momentum_pct": 58.16
+      },
+      {
+        "ticker": "SNAL",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 93.78
+      },
+      {
+        "ticker": "APM",
+        "event_date_canonical": "2023-05-03",
+        "momentum_pct": 211.45
+      },
+      {
+        "ticker": "ONMD",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 44.1
+      },
+      {
+        "ticker": "JFBR",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 48.12
+      },
+      {
+        "ticker": "FTEK",
+        "event_date_canonical": "2020-11-11",
+        "momentum_pct": 169.38
+      },
+      {
+        "ticker": "SNWV",
+        "event_date_canonical": "2022-10-10",
+        "momentum_pct": 54.79
+      },
+      {
+        "ticker": "MSTR",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 30.07
+      },
+      {
+        "ticker": "SEZL",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 35.94
+      },
+      {
+        "ticker": "JSPR",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 30.65
+      },
+      {
+        "ticker": "DRCT",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 31.46
+      },
+      {
+        "ticker": "TLSA",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 36.56
+      },
+      {
+        "ticker": "ANY",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 32.0
+      },
+      {
+        "ticker": "IVA",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 50.79
+      },
+      {
+        "ticker": "PPSI",
+        "event_date_canonical": "2021-11-11",
+        "momentum_pct": 48.45
+      },
+      {
+        "ticker": "APM",
+        "event_date_canonical": "2024-03-14",
+        "momentum_pct": 106.24
+      },
+      {
+        "ticker": "MDRR",
+        "event_date_canonical": "2021-12-31",
+        "momentum_pct": 51.96
+      },
+      {
+        "ticker": "CING",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 31.99
+      },
+      {
+        "ticker": "AMTX",
+        "event_date_canonical": "2023-05-19",
+        "momentum_pct": 52.87
+      },
+      {
+        "ticker": "PRZO",
+        "event_date_canonical": "2023-10-09",
+        "momentum_pct": 145.69
+      },
+      {
+        "ticker": "WKHS",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 52.38
+      },
+      {
+        "ticker": "XPON",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 77.82
+      },
+      {
+        "ticker": "AKA",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 33.77
+      },
+      {
+        "ticker": "RBOT",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 39.24
+      },
+      {
+        "ticker": "WAFU",
+        "event_date_canonical": "2021-06-18",
+        "momentum_pct": 32.33
+      },
+      {
+        "ticker": "TANH",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 61.51
+      },
+      {
+        "ticker": "CAI",
+        "event_date_canonical": "2021-06-18",
+        "momentum_pct": 47.09
+      },
+      {
+        "ticker": "IMRN",
+        "event_date_canonical": "2020-11-11",
+        "momentum_pct": 40.44
+      },
+      {
+        "ticker": "TLS",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 30.26
+      },
+      {
+        "ticker": "BBBY",
+        "event_date_canonical": "2023-01-11",
+        "momentum_pct": 71.5
+      },
+      {
+        "ticker": "WAFU",
+        "event_date_canonical": "2020-10-12",
+        "momentum_pct": 142.81
+      },
+      {
+        "ticker": "CHR",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 30.3
+      },
+      {
+        "ticker": "FOA",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 47.58
+      },
+      {
+        "ticker": "IMUX",
+        "event_date_canonical": "2022-10-10",
+        "momentum_pct": 57.32
+      },
+      {
+        "ticker": "SGLY",
+        "event_date_canonical": "2023-10-09",
+        "momentum_pct": 37.93
+      },
+      {
+        "ticker": "FTEL",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 35.92
+      },
+      {
+        "ticker": "IVA",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 33.74
+      },
+      {
+        "ticker": "FOSL",
+        "event_date_canonical": "2021-11-11",
+        "momentum_pct": 44.51
+      },
+      {
+        "ticker": "NUKK",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 49.65
+      },
+      {
+        "ticker": "SUGP",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 59.7
+      },
+      {
+        "ticker": "TNYA",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 39.71
+      },
+      {
+        "ticker": "SGHT",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 48.92
+      },
+      {
+        "ticker": "EDTK",
+        "event_date_canonical": "2020-10-12",
+        "momentum_pct": 33.33
+      },
+      {
+        "ticker": "SNT",
+        "event_date_canonical": "2023-10-09",
+        "momentum_pct": 31.25
+      },
+      {
+        "ticker": "USCB",
+        "event_date_canonical": "2021-11-11",
+        "momentum_pct": 34.02
+      },
+      {
+        "ticker": "NAOV",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 38.44
+      },
+      {
+        "ticker": "NYC",
+        "event_date_canonical": "2021-12-31",
+        "momentum_pct": 31.42
+      },
+      {
+        "ticker": "SGD",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 123.74
+      },
+      {
+        "ticker": "SOUN",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 38.62
+      },
+      {
+        "ticker": "SRZN",
+        "event_date_canonical": "2021-11-11",
+        "momentum_pct": 30.24
+      },
+      {
+        "ticker": "EPOW",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 31.52
+      },
+      {
+        "ticker": "IH",
+        "event_date_canonical": "2020-10-12",
+        "momentum_pct": 56.25
+      },
+      {
+        "ticker": "JWEL",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 31.25
+      },
+      {
+        "ticker": "KORE",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 42.18
+      },
+      {
+        "ticker": "SMLR",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 36.65
+      },
+      {
+        "ticker": "PAVS",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 37.1
+      },
+      {
+        "ticker": "OUST",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 34.29
+      },
+      {
+        "ticker": "COMP",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 73.25
+      },
+      {
+        "ticker": "SEV",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 41.59
+      },
+      {
+        "ticker": "WULF",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 30.77
+      },
+      {
+        "ticker": "NUWE",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 41.99
+      },
+      {
+        "ticker": "EDRY",
+        "event_date_canonical": "2020-10-12",
+        "momentum_pct": 51.76
+      },
+      {
+        "ticker": "ANVS",
+        "event_date_canonical": "2024-07-02",
+        "momentum_pct": 137.38
+      },
+      {
+        "ticker": "BTCT",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 67.42
+      },
+      {
+        "ticker": "CPOP",
+        "event_date_canonical": "2021-12-31",
+        "momentum_pct": 30.1
+      },
+      {
+        "ticker": "JAKK",
+        "event_date_canonical": "2020-10-12",
+        "momentum_pct": 48.49
+      },
+      {
+        "ticker": "TVGN",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 245.1
+      },
+      {
+        "ticker": "AMPX",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 42.77
+      },
+      {
+        "ticker": "DOCS",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 34.56
+      },
+      {
+        "ticker": "FGL",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 87.11
+      },
+      {
+        "ticker": "AACG",
+        "event_date_canonical": "2020-10-12",
+        "momentum_pct": 32.41
+      },
+      {
+        "ticker": "WRD",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 46.39
+      },
+      {
+        "ticker": "COSM",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 40.87
+      },
+      {
+        "ticker": "LGCB",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 33.29
+      },
+      {
+        "ticker": "CRGO",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 30.05
+      },
+      {
+        "ticker": "HUBC",
+        "event_date_canonical": "2023-10-09",
+        "momentum_pct": 241.18
+      },
+      {
+        "ticker": "BTM",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 102.3
+      },
+      {
+        "ticker": "BTCS",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 35.46
+      },
+      {
+        "ticker": "RILYL",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 40.0
+      },
+      {
+        "ticker": "DSY",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 41.42
+      },
+      {
+        "ticker": "BKKT",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 32.28
+      },
+      {
+        "ticker": "TACT",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 34.29
+      },
+      {
+        "ticker": "SINT",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 30.77
+      },
+      {
+        "ticker": "BLNK",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 38.21
+      },
+      {
+        "ticker": "FTFT",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 42.59
+      },
+      {
+        "ticker": "MAXN",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 38.89
+      },
+      {
+        "ticker": "XERS",
+        "event_date_canonical": "2021-12-31",
+        "momentum_pct": 30.4
+      },
+      {
+        "ticker": "PROK",
+        "event_date_canonical": "2022-11-11",
+        "momentum_pct": 31.46
+      },
+      {
+        "ticker": "GDC",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 50.61
+      },
+      {
+        "ticker": "ZVIA",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 30.71
+      },
+      {
+        "ticker": "NUKK",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 33.62
+      },
+      {
+        "ticker": "OPTX",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 89.11
+      },
+      {
+        "ticker": "DDS",
+        "event_date_canonical": "2020-10-12",
+        "momentum_pct": 46.15
+      },
+      {
+        "ticker": "PSHG",
+        "event_date_canonical": "2020-10-12",
+        "momentum_pct": 51.05
+      },
+      {
+        "ticker": "SELX",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 37.0
+      },
+      {
+        "ticker": "MRKR",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 49.82
+      },
+      {
+        "ticker": "CAN",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 42.85
+      },
+      {
+        "ticker": "CLSK",
+        "event_date_canonical": "2024-11-11",
+        "momentum_pct": 31.69
+      },
+      {
+        "ticker": "ROOT",
+        "event_date_canonical": "2021-11-11",
+        "momentum_pct": 38.87
+      },
+      {
+        "ticker": "BTOG",
+        "event_date_canonical": "2023-11-10",
+        "momentum_pct": 42.85
+      },
+      {
+        "ticker": "WAVE",
+        "event_date_canonical": "2024-10-14",
+        "momentum_pct": 48.48
+      }
+    ],
+    "root_cause_diagnosis": {
+      "finding": "MSTR/2024-11-11 spot-checked directly: 2,747,522 rows tagged event_date=2024-11-11 in filtered_trades, spanning actual trade dates 2024-11-06..2024-11-08 and 2024-11-12..2024-11-14 - zero rows fall on 2024-11-11 itself, despite MSTR being one of the most liquid tickers in the universe. Not a join bug (verified against raw filtered_trades directly, bypassing the T5 join entirely).",
+      "root_cause": "data/collection_scripts/collect_massive_data.py get_trading_window() builds the T-3..T+3 window using pandas.tseries.holiday.USFederalHolidayCalendar via CustomBusinessDay. That calendar includes Columbus Day and Veterans Day as holidays. NYSE/NASDAQ do NOT observe either - both are regular trading days. When a momentum event's date fell on one of these pseudo-holidays, the collector's business-day window silently excluded the genuine event day itself, so it was never collected into the filtered/ folder.",
+      "evidence_date_clustering": {
+        "2020-10-12": 11,
+        "2020-11-11": 5,
+        "2021-06-18": 4,
+        "2021-10-11": 4,
+        "2021-11-11": 5,
+        "2021-12-31": 8,
+        "2022-10-10": 4,
+        "2022-11-11": 21,
+        "2023-10-09": 7,
+        "2023-11-10": 21,
+        "2024-10-14": 18,
+        "2024-11-11": 34
+      },
+      "dates_explained": "Columbus Day (10-12/10-11/10-10/10-09/10-14 across 2020-2024), Veterans Day and its Fri-observed shift (11-11/11-10 across 2020-2024), and 2021-12-31 (federal observed New Year's Day shift, since 2022-01-01 fell on a Saturday). 2021-06-18 is the first-ever federal Juneteenth observance (signed into law days before June 19 2021, which fell on a Saturday) - NYSE did not add Juneteenth as a market holiday until 2022.",
+      "n_explained_by_calendar_bug": 142,
+      "n_unexplained_singletons": 8,
+      "unexplained_dates": [
+        "2022-11-10",
+        "2023-01-11",
+        "2023-05-03",
+        "2023-05-19",
+        "2023-12-20",
+        "2024-03-14",
+        "2024-07-02",
+        "2024-11-22"
+      ],
+      "action_taken": "Diagnosis only - collect_massive_data.py is on CLAUDE.md's never-execute list and this is a repair/canonicalization phase, not a re-collection phase. No backfill, no threshold adjustment, no silent exclusion of these events from the flag. Reported per the standing escalation criterion."
+    }
+  }
+}
