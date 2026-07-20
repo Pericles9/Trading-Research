@@ -1,0 +1,15 @@
+{
+  "phase": "1c",
+  "task": "T6-R2",
+  "before_target_session_count": 3207,
+  "after_delete_count": 0,
+  "after_restore_count": 1603,
+  "expected_count": 1603,
+  "target_correct": true,
+  "baseline_total_sdot_quotes": 306778,
+  "after_total_sdot_quotes": 305174,
+  "total_correct": true,
+  "other_sessions_unchanged": true,
+  "repair_sibling_removed": true,
+  "overall_pass": true
+}
