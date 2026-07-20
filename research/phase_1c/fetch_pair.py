@@ -133,26 +133,45 @@ def fetch_side(session: requests.Session, ticker: str, session_date: str, side: 
     return fetch_all_pages(session, url, params, api_key, context=f"{ticker} {session_date} {side}")
 
 
-def align_to_archive_schema(records: list[dict], side: str) -> tuple[pd.DataFrame, list[str]]:
+def align_to_archive_schema(records: list[dict], side: str) -> tuple[pd.DataFrame, list[str], list[str]]:
     """Cast the raw vendor records to the archive's file-level column set.
-    Returns (aligned_df, dropped_vendor_fields). Raises ArchiveSchemaViolation
-    if an archive column is absent from every record - T2/T3 escalation
-    criterion, not silently NULL-filled."""
+
+    Amendment 1 (T3-R2): archive columns split into required vs optional
+    (config's optional_fields, derived in T3-R1 from archive evidence -
+    non-null rate < 1% AND demonstrably absent from some archive files'
+    own schema, e.g. correction). A REQUIRED column absent from the vendor
+    response still raises ArchiveSchemaViolation (hard stop, unchanged). An
+    OPTIONAL column absent is NULL-filled here; whether that NULL-fill was
+    legitimate for a given (ticker, session) - i.e. the archive's own rows
+    for that exact pair are also all-null in that field - is verified
+    against archive ground truth by the caller (only meaningful where
+    archive data exists to compare against, i.e. control fetches; heal
+    fetches have no prior archive row for that pair by construction).
+
+    Returns (aligned_df, dropped_vendor_fields, optional_fields_null_filled).
+    """
     archive_cols = ARCHIVE_SCHEMA[f"{side}_columns"]
+    optional_cols = set(CFG["optional_fields"][side])
+    required_cols = [c for c in archive_cols if c not in optional_cols]
+
     if not records:
-        return pd.DataFrame(columns=archive_cols), []
+        return pd.DataFrame(columns=archive_cols), [], []
 
     df = pd.DataFrame(records)
     vendor_cols = set(df.columns)
-    missing_archive_cols = [c for c in archive_cols if c not in vendor_cols]
-    if missing_archive_cols:
+    missing_required = [c for c in required_cols if c not in vendor_cols]
+    if missing_required:
         raise ArchiveSchemaViolation(
-            f"Archive column(s) {missing_archive_cols} absent from vendor {side} response "
+            f"Required archive column(s) {missing_required} absent from vendor {side} response "
             f"(vendor returned: {sorted(vendor_cols)})"
         )
+    missing_optional = [c for c in archive_cols if c in optional_cols and c not in vendor_cols]
+    for c in missing_optional:
+        df[c] = None
+
     dropped = sorted(vendor_cols - set(archive_cols))
     aligned = df[archive_cols].copy()
-    return aligned, dropped
+    return aligned, dropped, missing_optional
 
 
 def stage_pair(ticker: str, session: str, side: str, records: list[dict]) -> dict:
@@ -164,12 +183,13 @@ def stage_pair(ticker: str, session: str, side: str, records: list[dict]) -> dic
     raw_df = pd.DataFrame(records)
     raw_df.to_parquet(folder / f"{side}_raw.parquet", index=False)
 
-    aligned_df, dropped_fields = align_to_archive_schema(records, side)
+    aligned_df, dropped_fields, optional_fields_null_filled = align_to_archive_schema(records, side)
     aligned_df.to_parquet(folder / f"{side}_aligned.parquet", index=False)
 
     return {
         "ticker": ticker, "session": session, "side": side,
         "n_records": len(records), "dropped_vendor_fields": dropped_fields,
+        "optional_fields_null_filled": optional_fields_null_filled,
         "aligned_path": str((folder / f"{side}_aligned.parquet").as_posix()),
         "raw_path": str((folder / f"{side}_raw.parquet").as_posix()),
     }

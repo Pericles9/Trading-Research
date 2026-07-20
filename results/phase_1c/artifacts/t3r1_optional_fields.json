@@ -1,0 +1,240 @@
+{
+  "phase": "1c",
+  "task": "T3-R1",
+  "threshold_non_null_pct": 1.0,
+  "file_sample_size": 200,
+  "seed": 43,
+  "tables": {
+    "trades": {
+      "fields": {
+        "exchange": {
+          "non_null_count": 4109871407,
+          "total_rows": 4899511143,
+          "non_null_rate_pct": 83.883295,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 64,
+          "file_absence_rate_pct": 32.0,
+          "optional": false
+        },
+        "id": {
+          "non_null_count": 4109871407,
+          "total_rows": 4899511143,
+          "non_null_rate_pct": 83.883295,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 64,
+          "file_absence_rate_pct": 32.0,
+          "optional": false
+        },
+        "participant_timestamp": {
+          "non_null_count": 4109757591,
+          "total_rows": 4899511143,
+          "non_null_rate_pct": 83.880972,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 64,
+          "file_absence_rate_pct": 32.0,
+          "optional": false
+        },
+        "price": {
+          "non_null_count": 4901596504,
+          "total_rows": 4899511143,
+          "non_null_rate_pct": 100.042563,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 0,
+          "file_absence_rate_pct": 0.0,
+          "optional": false
+        },
+        "sequence_number": {
+          "non_null_count": 4109871407,
+          "total_rows": 4899511143,
+          "non_null_rate_pct": 83.883295,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 64,
+          "file_absence_rate_pct": 32.0,
+          "optional": false
+        },
+        "sip_timestamp": {
+          "non_null_count": 4901596504,
+          "total_rows": 4899511143,
+          "non_null_rate_pct": 100.042563,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 0,
+          "file_absence_rate_pct": 0.0,
+          "optional": false
+        },
+        "size": {
+          "non_null_count": 4901596504,
+          "total_rows": 4899511143,
+          "non_null_rate_pct": 100.042563,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 0,
+          "file_absence_rate_pct": 0.0,
+          "optional": false
+        },
+        "tape": {
+          "non_null_count": 4109871407,
+          "total_rows": 4899511143,
+          "non_null_rate_pct": 83.883295,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 64,
+          "file_absence_rate_pct": 32.0,
+          "optional": false
+        },
+        "trf_id": {
+          "non_null_count": 1650714568,
+          "total_rows": 4899511143,
+          "non_null_rate_pct": 33.691414,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 64,
+          "file_absence_rate_pct": 32.0,
+          "optional": false
+        },
+        "trf_timestamp": {
+          "non_null_count": 1650714568,
+          "total_rows": 4899511143,
+          "non_null_rate_pct": 33.691414,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 64,
+          "file_absence_rate_pct": 32.0,
+          "optional": false
+        },
+        "correction": {
+          "non_null_count": 155675,
+          "total_rows": 4899511143,
+          "non_null_rate_pct": 0.003177,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 163,
+          "file_absence_rate_pct": 81.5,
+          "optional": true
+        },
+        "conditions": {
+          "non_null_count": null,
+          "total_rows": null,
+          "non_null_rate_pct": null,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 200,
+          "file_absence_rate_pct": 100.0,
+          "optional": false,
+          "note": "LIST-typed, dropped from DB tables by design (unrelated to sparsity) - non-null rate not measurable against the DB table; treated as required absent file-absence evidence."
+        }
+      },
+      "optional_fields": [
+        "correction"
+      ]
+    },
+    "quotes": {
+      "fields": {
+        "ask_exchange": {
+          "non_null_count": 3190147610,
+          "total_rows": 3776083640,
+          "non_null_rate_pct": 84.48297,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 42,
+          "file_absence_rate_pct": 21.0,
+          "optional": false
+        },
+        "ask_price": {
+          "non_null_count": 3787286022,
+          "total_rows": 3776083640,
+          "non_null_rate_pct": 100.296667,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 0,
+          "file_absence_rate_pct": 0.0,
+          "optional": false
+        },
+        "ask_size": {
+          "non_null_count": 3787286022,
+          "total_rows": 3776083640,
+          "non_null_rate_pct": 100.296667,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 0,
+          "file_absence_rate_pct": 0.0,
+          "optional": false
+        },
+        "bid_exchange": {
+          "non_null_count": 3190147610,
+          "total_rows": 3776083640,
+          "non_null_rate_pct": 84.48297,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 42,
+          "file_absence_rate_pct": 21.0,
+          "optional": false
+        },
+        "bid_price": {
+          "non_null_count": 3787286022,
+          "total_rows": 3776083640,
+          "non_null_rate_pct": 100.296667,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 0,
+          "file_absence_rate_pct": 0.0,
+          "optional": false
+        },
+        "bid_size": {
+          "non_null_count": 3787286022,
+          "total_rows": 3776083640,
+          "non_null_rate_pct": 100.296667,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 0,
+          "file_absence_rate_pct": 0.0,
+          "optional": false
+        },
+        "participant_timestamp": {
+          "non_null_count": 3190147610,
+          "total_rows": 3776083640,
+          "non_null_rate_pct": 84.48297,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 42,
+          "file_absence_rate_pct": 21.0,
+          "optional": false
+        },
+        "sequence_number": {
+          "non_null_count": 3190147610,
+          "total_rows": 3776083640,
+          "non_null_rate_pct": 84.48297,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 42,
+          "file_absence_rate_pct": 21.0,
+          "optional": false
+        },
+        "sip_timestamp": {
+          "non_null_count": 3787286022,
+          "total_rows": 3776083640,
+          "non_null_rate_pct": 100.296667,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 0,
+          "file_absence_rate_pct": 0.0,
+          "optional": false
+        },
+        "tape": {
+          "non_null_count": 3190147610,
+          "total_rows": 3776083640,
+          "non_null_rate_pct": 84.48297,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 42,
+          "file_absence_rate_pct": 21.0,
+          "optional": false
+        },
+        "conditions": {
+          "non_null_count": null,
+          "total_rows": null,
+          "non_null_rate_pct": null,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 200,
+          "file_absence_rate_pct": 100.0,
+          "optional": false,
+          "note": "LIST-typed, dropped from DB tables by design (unrelated to sparsity) - non-null rate not measurable against the DB table; treated as required absent file-absence evidence."
+        },
+        "indicators": {
+          "non_null_count": null,
+          "total_rows": null,
+          "non_null_rate_pct": null,
+          "n_files_sampled": 200,
+          "n_files_missing_column": 200,
+          "file_absence_rate_pct": 100.0,
+          "optional": false,
+          "note": "LIST-typed, dropped from DB tables by design (unrelated to sparsity) - non-null rate not measurable against the DB table; treated as required absent file-absence evidence."
+        }
+      },
+      "optional_fields": []
+    }
+  }
+}

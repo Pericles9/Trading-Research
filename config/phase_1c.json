@@ -7,7 +7,10 @@
     "underlying_engine": "exchange_calendars",
     "underlying_engine_version": "4.13.2",
     "calendar_code": "XNYS",
-    "derivation_range": {"start": "2019-12-01", "end": "2026-01-15"},
+    "derivation_range": {
+      "start": "2019-12-01",
+      "end": "2026-01-15"
+    },
     "note": "Same pin as config/phase_1b.json (Amendment 3). Restated here per phase-config-is-self-contained convention. Range padded beyond the event range for T-3/T+3 lookups at the edges, matching research/phase_1b/window_calendar_bug_quantification.py."
   },
   "legacy_window_replication": {
@@ -20,7 +23,11 @@
     "base_url": "https://api.massive.com",
     "trades_endpoint": "/v3/trades/{ticker}",
     "quotes_endpoint": "/v3/quotes/{ticker}",
-    "params_template": {"timestamp": "{session_date}", "limit": 50000, "sort": "timestamp"},
+    "params_template": {
+      "timestamp": "{session_date}",
+      "limit": 50000,
+      "sort": "timestamp"
+    },
     "api_key_path": ".secrets/polygon_api_key.txt",
     "api_key_env_var": "MOM_DB_MASSIVE_API_KEY",
     "note": "Endpoint and param shape confirmed from results/rebuild_stage1/collect_massive_data_v2.py (T2-fixed, validated trades collector - read for reference only, not executed) and data/collection_scripts/collect_massive_data.py (read-only reference for the quotes endpoint symmetry). Single-target-date-per-request, matching the archive's one-file-per-(ticker,date) shape - not the legacy 7-day-window-per-request pattern."
@@ -33,19 +40,91 @@
     "resumable_via_manifest_status": true
   },
   "control_fetch": {
-    "seed": 42,
+    "seed": 43,
+    "seed_note": "Amendment 1 - re-drawn from the original seed 42 selection (superseded, never fetched beyond the METC pre-flight test) per T3-R3's amended 15+5 stratification.",
     "n_pairs": 20,
-    "years": [2020, 2021, 2022, 2023, 2024, 2025],
+    "n_stratified_pairs": 15,
+    "n_targeted_optional_field_pairs": 5,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
     "stratify_by": "event_day_trade_count_tercile",
     "sides": "both_where_coverage_exists",
     "population": "event_day_only, in_scope=TRUE, trades_ingested=TRUE"
   },
+  "optional_field_derivation": {
+    "note": "Amendment 1 (T3-R1). A column is optional iff non-null rate in the full table < non_null_rate_threshold_pct AND absent from the per-file schema of >=1 of a seeded sample of file_sample_size archive files per table.",
+    "non_null_rate_threshold_pct": 1.0,
+    "file_sample_size": 200,
+    "seed": 43
+  },
+  "optional_fields": {
+    "note": "Populated by research/phase_1c/derive_optional_fields.py (T3-R1). Empty until that script runs.",
+    "trades": [
+      "correction"
+    ],
+    "quotes": []
+  },
   "archive_schema": {
-    "trades_columns": ["conditions", "exchange", "id", "participant_timestamp", "price", "sequence_number", "sip_timestamp", "size", "tape", "trf_id", "trf_timestamp", "correction"],
-    "quotes_columns": ["ask_exchange", "ask_price", "ask_size", "bid_exchange", "bid_price", "bid_size", "conditions", "indicators", "participant_timestamp", "sequence_number", "sip_timestamp", "tape"],
+    "trades_columns": [
+      "conditions",
+      "exchange",
+      "id",
+      "participant_timestamp",
+      "price",
+      "sequence_number",
+      "sip_timestamp",
+      "size",
+      "tape",
+      "trf_id",
+      "trf_timestamp",
+      "correction"
+    ],
+    "quotes_columns": [
+      "ask_exchange",
+      "ask_price",
+      "ask_size",
+      "bid_exchange",
+      "bid_price",
+      "bid_size",
+      "conditions",
+      "indicators",
+      "participant_timestamp",
+      "sequence_number",
+      "sip_timestamp",
+      "tape"
+    ],
     "note": "File-level (per-folder trades.parquet/quotes.parquet) archive schema, confirmed via a full-corpus parquet_schema() scan (research/phase_1c/derive_archive_schema.py). This is the target for staged fetch alignment and for T6 repair sibling files. The filtered_trades/filtered_quotes DB tables further drop conditions/indicators (LIST-typed columns) on ingest per src/data/ingest.py's PARQUET_LIST_INTERNAL_NAMES design - unchanged, unrelated to this phase.",
-    "db_table_columns_trades": ["exchange", "id", "participant_timestamp", "price", "sequence_number", "sip_timestamp", "size", "tape", "trf_id", "trf_timestamp", "correction"],
-    "db_table_columns_quotes": ["ask_exchange", "ask_price", "ask_size", "bid_exchange", "bid_price", "bid_size", "participant_timestamp", "sequence_number", "sip_timestamp", "tape"]
+    "db_table_columns_trades": [
+      "exchange",
+      "id",
+      "participant_timestamp",
+      "price",
+      "sequence_number",
+      "sip_timestamp",
+      "size",
+      "tape",
+      "trf_id",
+      "trf_timestamp",
+      "correction"
+    ],
+    "db_table_columns_quotes": [
+      "ask_exchange",
+      "ask_price",
+      "ask_size",
+      "bid_exchange",
+      "bid_price",
+      "bid_size",
+      "participant_timestamp",
+      "sequence_number",
+      "sip_timestamp",
+      "tape"
+    ]
   },
   "escalation_thresholds": {
     "heal_manifest_max_pairs": 6000,
@@ -53,7 +132,10 @@
     "control_fetch_field_mismatch_pct_max": 0.1,
     "set_a_event_day_zero_trades_pct_max": 5.0,
     "unresolved_vendor_failure_pct_max": 2.0,
-    "volume_reconciliation_median_ratio_range": [0.5, 2.0]
+    "volume_reconciliation_median_ratio_range": [
+      0.5,
+      2.0
+    ]
   },
   "paths": {
     "momentum_events_db": "data/duckdb/main.duckdb",
