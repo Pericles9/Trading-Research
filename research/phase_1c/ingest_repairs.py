@@ -20,6 +20,21 @@ n_records>0):
      _scan_union_schema/_build_select_for_file mechanism Phase 1b's T4b
      reuse used. Post-ingest: table row count for (ticker, session) ==
      staged row count exactly, or hard stop.
+
+IMPORTANT (discovered live, first run): the table's `event_date` column is
+NOT each row's own trade date - src/data/ingest.py's load_filtered()
+assigns it as a per-FOLDER constant (the event's own anchor date, parsed
+from the folder name), applied uniformly to every row regardless of which
+of the T-3..T+3 days it actually trades on. The first run tagged inserted
+rows with event_date=session_date (the specific day being healed), which
+only coincidentally matched the folder convention for event_day-type
+heals (session == anchor date) and would have created a genuine schema
+inconsistency for flanking-day heals (a new, table-wide-unique event_date
+value nobody else's data used, invisible to any WHERE ticker=X AND
+event_date=<the event's real anchor date> query). Fixed: every inserted
+row now uses event_date_canonical (the folder's own anchor date), matching
+convention exactly. Verification is scoped by the row's real sip_timestamp
+date, not the (folder-level, not session-specific) event_date column.
 """
 import json
 import sys
@@ -93,15 +108,27 @@ def main():
         print(f"WARNING: {len(missing_folder)} heal rows have no folder_name match")
 
     con = get_connection(read_only=False)
-    ledger_rows = []
+
+    # Resume-safety: a prior run may have already ingested some pairs (the
+    # repair sibling file's existence on disk is the resume signal - it is
+    # only ever written right before its matching INSERT in this same loop
+    # body, so its presence means that INSERT already ran).
+    if Path(OUT_LEDGER).exists():
+        ledger_df_prior = pd.read_parquet(OUT_LEDGER)
+        ledger_rows = ledger_df_prior.to_dict("records")
+        already_done = set(zip(ledger_df_prior["event_key"], ledger_df_prior["side"]))
+    else:
+        ledger_rows = []
+        already_done = set()
     hard_stops = []
 
     for _, row in heal_rows.iterrows():
         if pd.isna(row["folder_name"]):
             continue
         ticker, session_date, folder_name = row["ticker"], row["session"], row["folder_name"]
+        event_date_canonical = row["event_date_canonical"]
         for side, do_fetch in [("trades", row["fetch_trades"]), ("quotes", row["fetch_quotes"])]:
-            if not do_fetch:
+            if not do_fetch or (row["event_key"], side) in already_done:
                 continue
             fs = fetched[(fetched["ticker"] == ticker) & (fetched["session"] == session_date) & (fetched["side"] == side)]
             if fs.empty:
@@ -120,15 +147,19 @@ def main():
             posix_path = repair_path.as_posix()
             select_list = _build_select_for_file(
                 posix_path, union_schema, file_columns,
-                [("ticker", f"'{ticker}'"), ("event_date", f"'{session_date}'::DATE"), ("momentum_pct", f"CAST({row['momentum_str']} AS DOUBLE)")],
+                [("ticker", f"'{ticker}'"), ("event_date", f"'{event_date_canonical}'::DATE"), ("momentum_pct", f"CAST({row['momentum_str']} AS DOUBLE)")],
             )
             con.execute(f'INSERT INTO "{table_name}" BY NAME SELECT {select_list} FROM read_parquet(\'{posix_path}\')')
             after = _row_count(con, table_name)
             rows_ingested = after - before
 
+            # Scoped by the row's real trade date (sip_timestamp), not the
+            # folder-level event_date column - isolates just this session's
+            # contribution regardless of event_day vs. flanking-day heal.
             post_check = con.execute(
-                f'SELECT COUNT(*) FROM "{table_name}" WHERE ticker = ? AND event_date = ?',
-                [ticker, session_date],
+                f'SELECT COUNT(*) FROM "{table_name}" WHERE ticker = ? AND event_date = ? '
+                f"AND CAST(TO_TIMESTAMP(sip_timestamp/1e9) AS DATE) = ?",
+                [ticker, event_date_canonical, session_date],
             ).fetchone()[0]
             verification_status = "ok" if not problems and post_check == len(staged_df) else "MISMATCH"
             if post_check != len(staged_df):
@@ -138,12 +169,15 @@ def main():
                 })
 
             ledger_rows.append({
-                "event_key": row["event_key"], "ticker": ticker, "session": session_date, "side": side,
+                "event_key": row["event_key"], "ticker": ticker, "session": session_date,
+                "event_date_canonical": event_date_canonical, "side": side,
                 "folder_name": folder_name, "rows_staged": len(staged_df), "rows_ingested": rows_ingested,
                 "post_ingest_row_count_for_pair": post_check, "repair_file_path": str(repair_path.as_posix()),
                 "verification_problems": problems, "verification_status": verification_status,
             })
 
+            if hard_stops:
+                break
         if hard_stops:
             break
 
