@@ -1,0 +1,95 @@
+{
+  "phase": "1c",
+  "task": "T4",
+  "n_distinct_pairs": 3605,
+  "n_fetched": 3585,
+  "n_empty": 8,
+  "n_failed": 12,
+  "t4a_set_a_event_day_zero_trades": {
+    "n_event_day_pairs": 142,
+    "n_zero_trades": 0,
+    "pct": 0.0,
+    "threshold_pct": 5.0,
+    "triggered": false
+  },
+  "t4b_unresolved_failures": {
+    "n_failed": 12,
+    "pct": 0.33,
+    "threshold_pct": 2.0,
+    "triggered": false
+  },
+  "failed_pairs_detail": [
+    {
+      "ticker": "SNWV",
+      "session": "2022-10-10",
+      "side": "trades",
+      "error": "Required archive column(s) ['conditions', 'participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    },
+    {
+      "ticker": "CETY",
+      "session": "2021-12-31",
+      "side": "trades",
+      "error": "Required archive column(s) ['participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['conditions', 'decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    },
+    {
+      "ticker": "PSIX",
+      "session": "2022-11-11",
+      "side": "trades",
+      "error": "Required archive column(s) ['participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['conditions', 'decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    },
+    {
+      "ticker": "NUKK",
+      "session": "2022-04-12",
+      "side": "trades",
+      "error": "Required archive column(s) ['conditions', 'participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    },
+    {
+      "ticker": "SMTK",
+      "session": "2024-03-26",
+      "side": "trades",
+      "error": "Required archive column(s) ['participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['conditions', 'decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    },
+    {
+      "ticker": "COEP",
+      "session": "2022-04-13",
+      "side": "trades",
+      "error": "Required archive column(s) ['participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['conditions', 'decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    },
+    {
+      "ticker": "VBIX",
+      "session": "2025-04-17",
+      "side": "trades",
+      "error": "Required archive column(s) ['conditions', 'participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    },
+    {
+      "ticker": "SOWG",
+      "session": "2023-11-10",
+      "side": "trades",
+      "error": "Required archive column(s) ['participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['conditions', 'decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    },
+    {
+      "ticker": "ATLX",
+      "session": "2022-11-11",
+      "side": "trades",
+      "error": "Required archive column(s) ['participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['conditions', 'decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    },
+    {
+      "ticker": "SMTK",
+      "session": "2024-04-03",
+      "side": "trades",
+      "error": "Required archive column(s) ['participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['conditions', 'decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    },
+    {
+      "ticker": "MODD",
+      "session": "2021-12-31",
+      "side": "trades",
+      "error": "Required archive column(s) ['participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['conditions', 'decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    },
+    {
+      "ticker": "VBIX",
+      "session": "2024-10-14",
+      "side": "trades",
+      "error": "Required archive column(s) ['conditions', 'participant_timestamp', 'trf_id', 'trf_timestamp'] absent from vendor trades response (vendor returned: ['decimal_size', 'exchange', 'id', 'price', 'sequence_number', 'sip_timestamp', 'size', 'tape'])"
+    }
+  ]
+}

@@ -79,6 +79,8 @@ def main():
             })
         if (i + 1) % 50 == 0:
             print(f"  {i + 1}/{len(todo)} fetched...")
+            checkpoint = pd.concat([state, pd.DataFrame(new_rows)], ignore_index=True)
+            checkpoint.to_parquet(FETCH_STATE, index=False)
 
     if new_rows:
         state = pd.concat([state, pd.DataFrame(new_rows)], ignore_index=True)
