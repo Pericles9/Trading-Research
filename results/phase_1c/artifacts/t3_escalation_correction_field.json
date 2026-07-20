@@ -1,0 +1,25 @@
+{
+  "phase": "1c",
+  "task": "T3",
+  "escalation": {
+    "criterion": "Archive schema column absent from vendor response (T2/T3)",
+    "threshold": "any",
+    "action": "Hard stop",
+    "trigger_pair": {"ticker": "METC", "session": "2020-03-13", "side": "trades"}
+  },
+  "observed": {
+    "archive_trades_columns_expected": ["conditions", "exchange", "id", "participant_timestamp", "price", "sequence_number", "sip_timestamp", "size", "tape", "trf_id", "trf_timestamp", "correction"],
+    "vendor_response_columns": ["conditions", "exchange", "id", "participant_timestamp", "price", "sequence_number", "sip_timestamp", "size", "tape", "decimal_size", "trf_id", "trf_timestamp"],
+    "missing_archive_column": "correction",
+    "new_vendor_field_not_in_archive": "decimal_size",
+    "n_records_fetched": 845
+  },
+  "investigation": {
+    "step_1": "correction not present as a key anywhere in the raw vendor JSON response for this pair (845/845 records) - not present-but-null, genuinely absent from the payload.",
+    "step_2": "Checked METC_2020-03-13_*/trades.parquet (the archive's own on-disk file for this exact event): 'correction' column does not exist in that file either (DuckDB binder error confirms it - not even present as an all-null column). The archive's own per-file schema already lacks this column for this ticker/date.",
+    "step_3": "Checked correction's non-null rate across the full filtered_trades table (4,899,511,143 rows): 155,599 non-null (0.00318%). It is one of the rarest fields in the schema (matches its DOUBLE, not BIGINT, typing in the original ingest - already flagged as an optional/sparse field by src/data/ingest.py's type_overrides commentary).",
+    "step_4": "trf_id/trf_timestamp (also DOUBLE, also sparse) ARE present as keys in this same vendor response, just null-valued - so the vendor does not uniformly omit all sparse fields; 'correction' specifically appears to be a conditionally-omitted key (present as a JSON field only on records where it applies), consistent with how the archive's own union-schema construction (src/data/ingest.py's _scan_union_schema/_build_select_for_file) already handles this: individual files may lack the column entirely, and it is NULL-filled automatically via INSERT ... BY NAME.",
+    "conclusion": "The evidence is consistent with 'correction' being a legitimately sparse, conditionally-present field whose absence from a single (or even many) fetch responses is expected and does not indicate vendor schema regression - the exact same per-file variability the archive's own ingest mechanism was built to tolerate. It is not proof of a genuine vendor-side schema change of the kind this escalation criterion is designed to catch (e.g. price/size/sip_timestamp disappearing)."
+  },
+  "not_yet_resolved": "This is presented as investigation, not as a self-authorized fix. Per standing escalation protocol (CLAUDE.md: 'Hard stop means stop. Do not fix. Do not tune. Do not proceed.'), align_to_archive_schema()'s strict all-columns-required check has not been modified, and no control or heal fetch has proceeded past this single test call. Waiting on instruction: e.g. whether to treat known-sparse optional fields (correction; possibly trf_id/trf_timestamp under different conditions) as NULL-fillable rather than hard-stop triggers, and if so, which fields qualify and on what basis (a fixed list vs. a measured sparsity threshold)."
+}
