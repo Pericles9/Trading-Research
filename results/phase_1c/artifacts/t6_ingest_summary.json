@@ -1,0 +1,17 @@
+{
+  "phase": "1c",
+  "task": "T6",
+  "n_pairs_ingested": 1042,
+  "total_rows_added_trades": 21109764,
+  "total_rows_added_quotes": 18195125,
+  "hard_stops": [
+    {
+      "ticker": "SDOT",
+      "session": "2025-10-13",
+      "side": "quotes",
+      "staged_rows": 1604,
+      "post_ingest_rows": 3207
+    }
+  ],
+  "overall_pass": false
+}

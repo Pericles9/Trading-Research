@@ -1,0 +1,37 @@
+{
+  "phase": "1c",
+  "task": "T6",
+  "escalation": {
+    "criterion": "Post-ingest row count != staged row count (T6)",
+    "threshold": "any pair",
+    "action": "Hard stop",
+    "trigger_pair": {"ticker": "SDOT", "session": "2025-10-13", "side": "quotes", "event_key": "SDOT_2025-10-15"}
+  },
+  "progress_before_stop": {
+    "n_pairs_ingested_ok": 1042,
+    "total_rows_added_trades": 21109764,
+    "total_rows_added_quotes": 18195125,
+    "note": "All 1,042 passed the corrected (real-trade-date-scoped) verification exactly - none affected by the issue below."
+  },
+  "root_cause": {
+    "summary": "Quotes and trades collection for a calendar-bug-affected session do not always fail together. SDOT_2025-10-15_150.87's flanking heal target (2025-10-13, Columbus Day 2025) has trades.parquet confirmed at 0 rows for that date (matches the manifest's derivation exactly) but quotes.parquet already had 1,603 real rows for that same date - collected successfully despite trades failing. The heal fetch added 1,604 more quotes on top, producing 3,207 total (likely overlapping/duplicate records, not verified row-for-row).",
+    "evidence": "Directly confirmed via the original (pre-repair) data/filtered/SDOT_2025-10-15_150.87/quotes.parquet and trades.parquet files - not inferred from the table.",
+    "scope_investigation": {
+      "method": "Read-only scan (research/phase_1c/scan_preexisting_quotes.py, scan_preexisting_trades.py) of every remaining un-ingested heal target's ORIGINAL archive file for non-zero rows on its target session date, before any further writes.",
+      "quotes_side": {"n_scanned": 1423, "n_affected": 1, "affected": [{"ticker": "SHMD", "session": "2025-10-13", "n_preexisting": 357, "status": "caught before ingestion - no duplication created"}]},
+      "trades_side": {"n_scanned": 1437, "n_affected": 0},
+      "conclusion": "Exactly 2 affected pairs total across the entire heal population (SDOT already-inserted/duplicated; SHMD caught pre-insertion) - both on the identical calendar date (2025-10-13). Trades side is completely clean (0/1437 + the 1,042 already-verified). The issue is narrow, quotes-only, and concentrated on the most recent Set A date in the dataset."
+    }
+  },
+  "state": {
+    "sdot_quotes_2025-10-13": "ALREADY INGESTED, contains likely-duplicate data (3,207 rows where 1,603 pre-existed and 1,604 were added by this phase's fetch). Not remediated - awaiting decision.",
+    "shmd_quotes_2025-10-13": "NOT ingested (caught by the scan before any insert). trades side for this same event is unaffected and still a genuine gap.",
+    "everything_else": "1,042 already-ingested pairs are independently confirmed clean (verification_status=ok under the real-trade-date-scoped check). ~2,461 remaining trades+quotes targets (excluding SDOT/SHMD quotes) confirmed to have zero pre-existing archive rows for their target sessions - safe to proceed once a decision is made on SDOT/SHMD."
+  },
+  "open_questions_for_cooper": [
+    "SDOT quotes 2025-10-13: deduplicate the now-3,207-row set (compare staged vs. pre-existing rows on some key and drop true duplicates), leave as-is (if the two batches are determined to be genuinely non-overlapping quotes, e.g. from different report timings), or another remediation?",
+    "SHMD quotes 2025-10-13: skip the quotes heal for this pair (357 pre-existing rows already represent real coverage) and proceed only with its trades heal, or fetch anyway and reconcile the same way as SDOT is resolved?",
+    "Should T1's manifest-derivation methodology note (for the record, not necessarily requiring a rebuild) that quotes gaps cannot be assumed to mirror trades gaps 1:1 - the side rule was 'trades_ingested=TRUE & quotes_ingested=TRUE -> heal both', which does not verify the SPECIFIC session already has zero quotes coverage before adding to the fetch list, unlike what this scan just did retroactively.",
+    "Given the bounded scope (2/2,465 quotes pairs, 0/1,437+ trades pairs, both on one calendar date), is a pre-insertion existence check (skip fetching a side if the archive already has non-zero rows for that exact session) worth adding as a permanent safeguard before resuming, or is manual resolution of just these 2 pairs sufficient?"
+  ]
+}

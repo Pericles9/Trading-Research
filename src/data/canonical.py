@@ -24,6 +24,14 @@ event-day work; the flag governs use of flanking sessions, not
 membership. Any analysis touching flanking sessions must filter on
 flag_window_calendar_bug = FALSE and report the n excluded.
 
+repaired_1c (Phase 1c, T7) = TRUE where a heal fetch was ingested and
+verified for that event (see filtered/{event}/*_repair_1c.parquet sibling
+files and results/phase_1c/artifacts/repair_ledger.parquet - the record of
+what was healed and how; never re-derive by re-querying the vendor API).
+Both flag columns above are cleared by Phase 1c where the event's gap was
+successfully healed; a small residual of each flag remains TRUE where the
+heal fetch failed (results/phase_1c/artifacts/t4_fetch_run_summary.json).
+
 Built in three stages, matching the order Phase 1b computes its inputs:
   - stage="t2": flag_bad_denominator computed directly (simple, static
     formula over raw columns); flag_trades_mom_outlier and in_scope are
@@ -89,12 +97,14 @@ def create_view(
         flag_trades_mom_outlier_expr = "CAST(NULL AS BOOLEAN)"
         flag_missing_event_day_expr = "CAST(NULL AS BOOLEAN)"
         flag_window_calendar_bug_expr = "CAST(NULL AS BOOLEAN)"
+        repaired_1c_expr = "CAST(NULL AS BOOLEAN)"
         flag_zero_trades_join = ""
         in_scope_expr = "CAST(NULL AS BOOLEAN)"
     elif stage in ("t5", "t6"):
         flag_trades_mom_outlier_expr = "ef.flag_trades_mom_outlier"
         flag_missing_event_day_expr = "COALESCE(ef.flag_missing_event_day, FALSE)"
         flag_window_calendar_bug_expr = "COALESCE(ef.flag_window_calendar_bug, FALSE)"
+        repaired_1c_expr = "COALESCE(ef.repaired_1c, FALSE)"
         flag_zero_trades_join = f"""
         LEFT JOIN read_parquet('{event_flags}') ef
           ON me.ticker = ef.ticker
@@ -129,6 +139,7 @@ def create_view(
         {flag_trades_mom_outlier_expr} AS flag_trades_mom_outlier,
         {flag_missing_event_day_expr} AS flag_missing_event_day,
         {flag_window_calendar_bug_expr} AS flag_window_calendar_bug,
+        {repaired_1c_expr} AS repaired_1c,
         EXISTS (
             SELECT 1 FROM read_parquet('{folder_inv}') fi
             WHERE fi.ticker = me.ticker
