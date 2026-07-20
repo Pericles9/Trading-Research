@@ -1,0 +1,32 @@
+{
+  "phase": "1c",
+  "task": "T1b",
+  "check1_event_day_count": {
+    "observed": 142,
+    "expected": 142,
+    "pass": true
+  },
+  "check2_set_a_dates": {
+    "n_set_a_dates": 14,
+    "n_present_in_manifest": 13,
+    "n_absent_from_manifest": 1,
+    "absent_dates_resolution": [
+      {
+        "date": "2025-11-11",
+        "window_checked": [
+          "2025-11-06",
+          "2025-11-14"
+        ],
+        "n_momentum_events_any_scope_in_window": 0,
+        "resolution": "genuine_data_gap_no_events_nearby"
+      }
+    ],
+    "all_explained": true
+  },
+  "check3_quote_side_hard_boundary": {
+    "n_violations": 0,
+    "pass": true,
+    "violation_sample": []
+  },
+  "overall_pass": true
+}

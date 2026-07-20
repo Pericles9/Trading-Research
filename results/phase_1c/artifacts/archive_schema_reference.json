@@ -1,0 +1,60 @@
+{
+  "phase": "1c",
+  "task": "T0-support",
+  "n_trades_files_scanned": 24609,
+  "n_quotes_files_scanned": 23003,
+  "trades_file_level_schema": {
+    "exchange": "BIGINT",
+    "id": "VARCHAR",
+    "participant_timestamp": "BIGINT",
+    "price": "DOUBLE",
+    "sequence_number": "BIGINT",
+    "sip_timestamp": "BIGINT",
+    "size": "BIGINT",
+    "tape": "BIGINT",
+    "trf_id": "DOUBLE",
+    "trf_timestamp": "DOUBLE",
+    "correction": "DOUBLE",
+    "conditions": "BIGINT[]"
+  },
+  "quotes_file_level_schema": {
+    "ask_exchange": "BIGINT",
+    "ask_price": "DOUBLE",
+    "ask_size": "BIGINT",
+    "bid_exchange": "BIGINT",
+    "bid_price": "DOUBLE",
+    "bid_size": "BIGINT",
+    "participant_timestamp": "BIGINT",
+    "sequence_number": "BIGINT",
+    "sip_timestamp": "BIGINT",
+    "tape": "BIGINT",
+    "conditions": "BIGINT[]",
+    "indicators": "BIGINT[]"
+  },
+  "trades_db_table_schema": {
+    "exchange": "BIGINT",
+    "id": "VARCHAR",
+    "participant_timestamp": "BIGINT",
+    "price": "DOUBLE",
+    "sequence_number": "BIGINT",
+    "sip_timestamp": "BIGINT",
+    "size": "BIGINT",
+    "tape": "BIGINT",
+    "trf_id": "DOUBLE",
+    "trf_timestamp": "DOUBLE",
+    "correction": "DOUBLE"
+  },
+  "quotes_db_table_schema": {
+    "ask_exchange": "BIGINT",
+    "ask_price": "DOUBLE",
+    "ask_size": "BIGINT",
+    "bid_exchange": "BIGINT",
+    "bid_price": "DOUBLE",
+    "bid_size": "BIGINT",
+    "participant_timestamp": "BIGINT",
+    "sequence_number": "BIGINT",
+    "sip_timestamp": "BIGINT",
+    "tape": "BIGINT"
+  },
+  "note": "file_level = archive schema for fetch alignment (T2) and repair siblings (T6). db_table = filtered_trades/filtered_quotes as ingested (conditions/indicators dropped by src/data/ingest.py's deliberate LIST-column-drop design, unchanged by this phase)."
+}

@@ -1,0 +1,62 @@
+{
+  "phase": "1c",
+  "task": "T1",
+  "n_heal_events": 1991,
+  "n_diagnostic_events": 8,
+  "n_manifest_rows": 1966,
+  "n_distinct_ticker_session_pairs": 1809,
+  "pairs_by_target_type": {
+    "flanking_setA": 1080,
+    "outer_setB": 736,
+    "event_day": 142,
+    "diagnostic_unknown": 8
+  },
+  "pairs_by_side": {
+    "trades": 1966,
+    "quotes": 1952
+  },
+  "events_with_zero_derived_gap": {
+    "n": 33,
+    "note": "heal-population events (flag_missing_event_day/flag_window_calendar_bug=TRUE) for which the fresh set-difference found no true session missing from the legacy window - possible if Phase 1b's flag was based on a damaged_offsets_json placeholder (the anchor_on_set_a surprise) that this phase's direct membership test resolves cleanly. Listed, not treated as an error.",
+    "event_keys": [
+      "NVA_2025-10-13",
+      "NAMM_2025-10-13",
+      "BLBX_2025-10-13",
+      "VELO_2025-10-13",
+      "MTEX_2025-10-13",
+      "ELBM_2025-10-13",
+      "STI_2025-10-13",
+      "SDST_2025-10-13",
+      "NMG_2025-10-13",
+      "NUKK_2025-10-13",
+      "LGO_2025-10-13",
+      "BE_2025-10-13",
+      "CHNR_2025-10-13",
+      "CRML_2025-10-13",
+      "AQMS_2025-10-13",
+      "DFLI_2025-10-13",
+      "LITM_2025-10-13",
+      "NDRA_2025-10-13",
+      "USAR_2025-10-13",
+      "CAN_2025-10-13",
+      "IPDN_2025-10-13",
+      "PSIG_2025-10-13",
+      "ASPI_2025-10-13",
+      "TAOX_2025-10-13",
+      "GWH_2025-10-13",
+      "ABAT_2025-10-13",
+      "ACON_2025-10-13",
+      "HOVR_2025-10-13",
+      "FOFO_2025-10-13",
+      "PMAX_2025-10-13",
+      "XCH_2025-10-13",
+      "ELWS_2025-10-13",
+      "CLIK_2025-10-13"
+    ]
+  },
+  "escalation_t1a": {
+    "criterion": "manifest size > 6000 pairs",
+    "observed": 1966,
+    "triggered": false
+  }
+}
