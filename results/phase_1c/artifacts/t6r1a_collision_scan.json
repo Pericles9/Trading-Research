@@ -1,0 +1,22 @@
+{
+  "phase": "1c",
+  "task": "T6-R1a",
+  "note": "Collision list for all remaining (not-yet-ingested at the time of the T6 stop) heal targets, checked against the LIVE table state via research/phase_1c/scan_preexisting_quotes.py and scan_preexisting_trades.py before the guard was formalized in ingest_repairs.py. Superseded going forward by the guard itself, which re-checks live at write time for every remaining pair in T6-R4.",
+  "quotes": {
+    "n_scanned": 1423,
+    "n_affected": 1
+  },
+  "trades": {
+    "n_scanned": 1437,
+    "n_affected": 0
+  },
+  "collisions_found": [
+    {
+      "ticker": "SHMD",
+      "session": "2025-10-13",
+      "side": "quotes",
+      "preexisting_rows": 357
+    }
+  ],
+  "surprises": "None beyond the 2 already known (SDOT, SHMD) - both the identical calendar date (2025-10-13, Columbus Day 2025)."
+}

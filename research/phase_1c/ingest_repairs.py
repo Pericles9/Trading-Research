@@ -35,6 +35,22 @@ event_date=<the event's real anchor date> query). Fixed: every inserted
 row now uses event_date_canonical (the folder's own anchor date), matching
 convention exactly. Verification is scoped by the row's real sip_timestamp
 date, not the (folder-level, not session-specific) event_date column.
+
+AMENDMENT 2 (T6-R1, second live discovery): trades and quotes collection
+for a calendar-bug session can fail INDEPENDENTLY - SDOT_2025-10-15_150.87's
+2025-10-13 flanking heal had trades confirmed at 0 (correct) but quotes
+already had 1,603 real rows (partial success), and the original insert
+added 1,604 more on top, producing likely-duplicate data. A whole-population
+scan found this pattern in exactly 2/2,465 quotes targets (SDOT, SHMD - both
+2025-10-13) and 0/1,437+ trades targets. Fixed with a standing pre-insertion
+collision guard: before writing any (ticker, session, side), query existing
+rows at that exact (ticker, event_date_canonical, real-session-date) tuple.
+Zero -> heal normally (genuine absence, the only case heal is authorized to
+fill). Non-zero -> skip this side for this session entirely (no merge, no
+dedupe, no supplement) and record collision_status=skipped_collision with
+the pre-existing count. The manifest's side rule selected candidates; this
+guard is the write-time authority, since the manifest's derivation assumed
+trades/quotes fail together, which is now known to be incomplete.
 """
 import json
 import sys
@@ -134,6 +150,33 @@ def main():
             if fs.empty:
                 continue  # not yet fetched, or empty/failed - not a heal candidate this pass
 
+            table_name = "filtered_trades" if side == "trades" else "filtered_quotes"
+
+            # T6-R1: pre-insertion collision guard - the write-time authority,
+            # independent of what the manifest/side-rule selected.
+            preexisting = con.execute(
+                f'SELECT COUNT(*) FROM "{table_name}" WHERE ticker = ? AND event_date = ? '
+                f"AND CAST(TO_TIMESTAMP(sip_timestamp/1e9) AS DATE) = ?",
+                [ticker, event_date_canonical, session_date],
+            ).fetchone()[0]
+            if preexisting > 0:
+                if side == "trades":
+                    hard_stops.append({
+                        "ticker": ticker, "session": session_date, "side": side,
+                        "reason": "collision guard tripped on TRADES - contradicts the T6 whole-population scan (0/1,437+ affected)",
+                        "preexisting_rows": preexisting,
+                    })
+                    break
+                ledger_rows.append({
+                    "event_key": row["event_key"], "ticker": ticker, "session": session_date,
+                    "event_date_canonical": event_date_canonical, "side": side,
+                    "folder_name": folder_name, "rows_staged": 0, "rows_ingested": 0,
+                    "post_ingest_row_count_for_pair": preexisting, "repair_file_path": None,
+                    "verification_problems": [], "verification_status": "skipped_collision",
+                    "collision_status": "skipped_collision", "preexisting_rows": preexisting,
+                })
+                continue
+
             staged_path = STAGING_ROOT / f"{ticker}_{session_date}" / f"{side}_aligned.parquet"
             staged_df = pd.read_parquet(staged_path)
             problems = verify_staged(staged_df, ticker, session_date)
@@ -141,7 +184,6 @@ def main():
             repair_path = FILTERED_ROOT / folder_name / f"{side}_repair_1c.parquet"
             staged_df.to_parquet(repair_path, index=False)
 
-            table_name = "filtered_trades" if side == "trades" else "filtered_quotes"
             union_schema, file_columns = _scan_union_schema(con, [repair_path], type_overrides=TYPE_OVERRIDES[side])
             before = _row_count(con, table_name)
             posix_path = repair_path.as_posix()
@@ -174,6 +216,7 @@ def main():
                 "folder_name": folder_name, "rows_staged": len(staged_df), "rows_ingested": rows_ingested,
                 "post_ingest_row_count_for_pair": post_check, "repair_file_path": str(repair_path.as_posix()),
                 "verification_problems": problems, "verification_status": verification_status,
+                "collision_status": "healed", "preexisting_rows": 0,
             })
 
             if hard_stops:
