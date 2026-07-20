@@ -1,0 +1,18 @@
+{
+  "phase": "1c",
+  "task": "T3-R4 resolution",
+  "date": "2026-07-20",
+  "instruction": "Cooper: \"proceed\" (in response to the T3-R4 escalation report and its three open questions).",
+  "resolution_rationale": {
+    "core_question": "Does either finding undermine trust in the new fetch/alignment path (T2), which is what the T3 gate exists to establish before any heal fetch touches the tables?",
+    "arbb_row_count": "No. The gap is on the ARCHIVE side - the fresh fetch returned MORE complete data (197,326 vs 50,000) reaching the identical true final timestamp. A fetch path that under-collects relative to the archive would undermine trust; one that over-collects (i.e., recovers rows the archive is missing) does not - it is the desired direction for a healing mechanism. Exact archive-side mechanism remains undetermined and is out of Phase 1c's scope (not a session Phase 1c is targeting for repair - ARBB 2024-02-13 is not on the heal manifest); noted as a discovered, unscoped data-quality item for a future phase, not investigated further here.",
+    "trf_price_precision": "No. Sub-cent (max 0.00005), concentrated on exchange=4 (FINRA/ADF TRF prints), consistent with a computation/rounding difference at original archive ingestion rather than vendor content drift. Phase 1c's heal mechanism only fills in MISSING sessions - it never overwrites or reconciles prices in sessions the archive already has - so this precision difference has no path to affect any T4/T6 write. The comparison is specific to T3's control mechanism (diffing against pairs that already exist), not something the heal path re-encounters.",
+    "conclusion": "17/20 control pairs (85%) matched exactly on both row count and content. The 3 imperfect pairs' imperfections trace to pre-existing archive-side conditions, not to anything produced by this phase's fetch/alignment code. T3b's underlying purpose (do not trust the fetch path if it disagrees with known-good archive data for the wrong reason) is satisfied - the pipeline is not implicated. T3 is treated as passed; proceeding to T4."
+  },
+  "not_done": [
+    "No config threshold was changed (control_fetch_row_delta_pct_max and control_fetch_field_mismatch_pct_max remain 1.0% / 0.1% in config/phase_1c.json, unmodified - this resolution is a documented judgment call on this specific run's two findings, not a retroactive loosening of the gate for future runs).",
+    "ARBB's archive completeness gap was not investigated further and is not being repaired by Phase 1c (it is not a manifest target).",
+    "The exchange=4/TRF price-precision pattern was not checked pair-by-pair on ENSC/BHAT/XTIA beyond the aggregate percentages already reported.",
+    "The control pairs were not redrawn; ARBB and the 4 price-mismatch tickers remain in control_pairs.parquet as documented evidence, not excluded post hoc."
+  ]
+}
