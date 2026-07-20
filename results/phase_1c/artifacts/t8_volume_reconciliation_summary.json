@@ -1,0 +1,22 @@
+{
+  "phase": "1c",
+  "task": "T8",
+  "n_events_reconciled": 149,
+  "n_excluded_missing_data": 0,
+  "ratio_stats": {
+    "median": 1.0171081040933612,
+    "mean": 40.46301466178851,
+    "min": 0.16754594723614563,
+    "max": 2203.916218581968,
+    "p25": 1.0035239415690842,
+    "p75": 10.018914434700166
+  },
+  "escalation": {
+    "threshold_range": [
+      0.5,
+      2.0
+    ],
+    "median_ratio": 1.0171081040933612,
+    "triggered": false
+  }
+}
