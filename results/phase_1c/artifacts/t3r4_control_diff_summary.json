@@ -1,0 +1,164 @@
+{
+  "phase": "1c",
+  "task": "T3-R4",
+  "n_pairs": 20,
+  "n_side_fetches": 40,
+  "dropped_vendor_fields_enumerated": [
+    "decimal_size"
+  ],
+  "hard_stop_reasons": [],
+  "gate_violations": [
+    {
+      "archive_n": 4665,
+      "staged_n": 4665,
+      "row_delta_pct": 0.0,
+      "n_matched_rows": 4665,
+      "n_mismatched_rows": 294,
+      "field_mismatch_pct": 6.3023,
+      "venue_codes_archive_only": [],
+      "venue_codes_staged_only": [],
+      "condition_codes_archive_only": [],
+      "condition_codes_staged_only": [],
+      "optional_field_non_null_counts": {
+        "correction": {
+          "archive_non_null": 0,
+          "staged_non_null": 0
+        }
+      },
+      "ticker": "NTZ",
+      "session": "2020-04-30",
+      "folder_name": "NTZ_2020-04-30_70.78",
+      "side": "trades",
+      "pool": "stratified",
+      "targeted_optional_field": null,
+      "optional_fields_null_filled": [
+        "correction"
+      ],
+      "fetch_seconds": 0.56
+    },
+    {
+      "archive_n": 33605,
+      "staged_n": 33605,
+      "row_delta_pct": 0.0,
+      "n_matched_rows": 33605,
+      "n_mismatched_rows": 2484,
+      "field_mismatch_pct": 7.3918,
+      "venue_codes_archive_only": [],
+      "venue_codes_staged_only": [],
+      "condition_codes_archive_only": [],
+      "condition_codes_staged_only": [],
+      "optional_field_non_null_counts": {
+        "correction": {
+          "archive_non_null": 0,
+          "staged_non_null": 0
+        }
+      },
+      "ticker": "ENSC",
+      "session": "2022-06-30",
+      "folder_name": "ENSC_2022-06-30_83.38",
+      "side": "trades",
+      "pool": "stratified",
+      "targeted_optional_field": null,
+      "optional_fields_null_filled": [
+        "correction"
+      ],
+      "fetch_seconds": 0.95
+    },
+    {
+      "archive_n": 2216,
+      "staged_n": 2216,
+      "row_delta_pct": 0.0,
+      "n_matched_rows": 2216,
+      "n_mismatched_rows": 159,
+      "field_mismatch_pct": 7.1751,
+      "venue_codes_archive_only": [],
+      "venue_codes_staged_only": [],
+      "condition_codes_archive_only": [],
+      "condition_codes_staged_only": [],
+      "optional_field_non_null_counts": {
+        "correction": {
+          "archive_non_null": 2,
+          "staged_non_null": 2
+        }
+      },
+      "ticker": "BHAT",
+      "session": "2024-10-29",
+      "folder_name": "BHAT_2024-10-29_31.58",
+      "side": "trades",
+      "pool": "stratified",
+      "targeted_optional_field": null,
+      "optional_fields_null_filled": [],
+      "fetch_seconds": 0.21
+    },
+    {
+      "archive_n": 50000,
+      "staged_n": 197326,
+      "row_delta_pct": 294.652,
+      "n_matched_rows": 50000,
+      "n_mismatched_rows": 0,
+      "field_mismatch_pct": 0.0,
+      "venue_codes_archive_only": [],
+      "venue_codes_staged_only": [],
+      "condition_codes_archive_only": [],
+      "condition_codes_staged_only": [
+        "13",
+        "16",
+        "17"
+      ],
+      "optional_field_non_null_counts": {
+        "correction": {
+          "archive_non_null": 0,
+          "staged_non_null": 0
+        }
+      },
+      "ticker": "ARBB",
+      "session": "2024-02-13",
+      "folder_name": "ARBB_2024-02-13_195.45",
+      "side": "trades",
+      "pool": "stratified",
+      "targeted_optional_field": null,
+      "optional_fields_null_filled": [
+        "correction"
+      ],
+      "fetch_seconds": 5.34
+    },
+    {
+      "archive_n": 61647,
+      "staged_n": 61647,
+      "row_delta_pct": 0.0,
+      "n_matched_rows": 61647,
+      "n_mismatched_rows": 4035,
+      "field_mismatch_pct": 6.5453,
+      "venue_codes_archive_only": [],
+      "venue_codes_staged_only": [],
+      "condition_codes_archive_only": [],
+      "condition_codes_staged_only": [],
+      "optional_field_non_null_counts": {
+        "correction": {
+          "archive_non_null": 2,
+          "staged_non_null": 2
+        }
+      },
+      "ticker": "XTIA",
+      "session": "2024-06-12",
+      "folder_name": "XTIA_2024-06-12_42.20",
+      "side": "trades",
+      "pool": "targeted_optional_field",
+      "targeted_optional_field": "correction",
+      "optional_fields_null_filled": [],
+      "fetch_seconds": 1.75
+    }
+  ],
+  "overall_pass": false,
+  "thresholds": {
+    "heal_manifest_max_pairs": 6000,
+    "control_fetch_row_delta_pct_max": 1.0,
+    "control_fetch_field_mismatch_pct_max": 0.1,
+    "set_a_event_day_zero_trades_pct_max": 5.0,
+    "unresolved_vendor_failure_pct_max": 2.0,
+    "volume_reconciliation_median_ratio_range": [
+      0.5,
+      2.0
+    ]
+  }
+}

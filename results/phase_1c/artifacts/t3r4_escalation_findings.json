@@ -1,0 +1,51 @@
+{
+  "phase": "1c",
+  "task": "T3-R4",
+  "escalation": {
+    "criteria_tripped": ["control_fetch_row_delta_pct_max (1.0%)", "control_fetch_field_mismatch_pct_max (0.1%)"],
+    "note": "These are the ORIGINAL T3b gate thresholds, unchanged by Amendment 1. Amendment 1 only resolved the correction/optional-field escalation - it did not touch this gate. Both trips are new findings from the first live formal 20-pair run."
+  },
+  "run_result": {
+    "n_pairs": 20, "n_side_fetches": 40, "all_fetches_succeeded": true,
+    "dropped_vendor_fields_enumerated": ["decimal_size"],
+    "optional_field_null_fills": "none triggered - correction was present (as non-null) in all 5 targeted pairs, consistent with T3-R1's conditional-emission hypothesis; no Amendment-1 gate violation"
+  },
+  "finding_1_row_count": {
+    "pair": {"ticker": "ARBB", "session": "2024-02-13", "pool": "targeted_optional_field (drawn for the correction field, incidentally also exposed this)"},
+    "observed": {"archive_n": 50000, "staged_n": 197326, "row_delta_pct": 294.652},
+    "investigation": {
+      "archive_time_span": "2024-02-13 14:35:08.984 UTC to 2024-02-14 00:59:35.713 UTC",
+      "staged_time_span": "2024-02-13 09:00:00.033 UTC (premarket open) to 2024-02-14 00:59:35.713 UTC (identical end)",
+      "key_observation": "Archive's max timestamp EXACTLY matches the fresh fetch's max timestamp (identical to the nanosecond) despite covering only 50,000/197,326 rows (25.3%) - the archive is missing rows spread across most of the session (including the entire premarket window, 09:00-14:35 UTC) while still reaching the true final trade. This is NOT the simple 'pagination stopped and returned a partial prefix' pattern the T2 rebuild docstring (results/rebuild_stage1/collect_massive_data_v2.py) describes for the known ~400-500k-trade Group A truncations - a prefix truncation would leave the archive's max timestamp earlier than the true max, not identical to it.",
+      "exact_mechanism": "NOT DETERMINED. Investigated but not resolved - would require forensic reconstruction of the original collector's exact page-retry/next_url-handling behavior for this specific run, which is a scope decision, not undertaken here.",
+      "confirmed_fact": "The archive file data/filtered/ARBB_2024-02-13_195.45/trades.parquet is genuinely incomplete for its anchor event day - 147,326 real trades are absent from the archive, independent of anything this phase's fetch script did."
+    }
+  },
+  "finding_2_price_precision": {
+    "affected_pairs": [
+      {"ticker": "NTZ", "session": "2020-04-30", "field_mismatch_pct": 6.3023},
+      {"ticker": "ENSC", "session": "2022-06-30", "field_mismatch_pct": 7.3918},
+      {"ticker": "BHAT", "session": "2024-10-29", "field_mismatch_pct": 7.1751},
+      {"ticker": "XTIA", "session": "2024-06-12", "field_mismatch_pct": 6.5453}
+    ],
+    "unaffected_or_below_threshold": {
+      "exactly_zero": ["SD", "JFIN", "RELL", "BMRA", "DFLI", "ANGH", "PSHG", "HYPR", "TRON", "GAME", "AMST", "NCNA", "DVAX"],
+      "below_0.1pct_threshold": [{"ticker": "JMIA", "pct": 0.0182}, {"ticker": "IRBT", "pct": 0.0011}]
+    },
+    "investigation_on_NTZ": {
+      "n_matched_rows": 4665, "n_mismatched": 294,
+      "mismatch_type": "price only - 0/294 have a size mismatch",
+      "magnitude": "archive price consistently rounds to the fresh-fetch price at 4 decimal places (e.g. archive 0.839899 vs fetched 0.8399); diff distribution: mean -0.000012, std 0.000031, min -0.00005, max +0.000049 - bounded to roughly one rounding unit at the 4th-5th decimal, not a substantive price difference",
+      "concentration": "291/294 (99%) of mismatches are on exchange=4 (FINRA/ADF, TRF-reported off-exchange prints) out of 1,630 exchange=4 rows total (17.9% of that exchange's rows affected); all other exchanges (1,2,3,7,8,10,12,15,17,18,19) show 0 mismatches except exchange=11 (3/551). Strongly suggests the archive's price field for TRF-reported trades went through a different computation/rounding path at original ingestion than the vendor's current raw response - not confirmed further.",
+      "not_yet_checked": "whether this same exchange-4/price-precision pattern holds on the other 3 affected tickers (ENSC, BHAT, XTIA) - plausible given the consistent magnitude and shape, not verified pair-by-pair."
+    }
+  },
+  "not_a_finding": {
+    "note": "17/20 pairs (85%) show 0.0% row delta and field mismatch at or under 0.02%, well inside both thresholds - the fetch/alignment/staging pipeline itself (T2) is not implicated by the majority of pairs."
+  },
+  "open_questions_for_cooper": [
+    "Is the ARBB-style row-count gap a known/expected characteristic of a subset of the archive (e.g., a specific high-volume-name Group, akin to the already-documented Group A ~400-500k truncations), and if so does its scope need measuring before Phase 1c's heal fetches proceed - given a heal fetch has no prior archive row to diff against, an undetected archive-side gap of this kind would be invisible in T4/T6's mechanics as currently designed.",
+    "Is the TRF/exchange=4 price-precision drift tolerable (e.g., add a small epsilon tolerance to the field-mismatch comparison, informed by this evidence) or does it need its own root-cause before the control gate can pass.",
+    "Whether ARBB's targeted-pool selection (drawn for the correction field) should be swapped for a different targeted pair, and whether the stratified pool's 4 affected tickers should be redrawn or kept as informative evidence."
+  ]
+}
