@@ -1,8 +1,8 @@
 # Research Library Map
 
-**Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b — added `config/`, `.claude/`, `src/`, `CLAUDE.md`, and both phases' `research/phase_0b/`/`results/phase_0b/` content), updated 2026-07-16 (Phase 0c — added `config/phase_0c.json`, `prompts/phase_0c.md`, two untracked `docs/` entries, and `research/phase_0c/`/`results/phase_0c/` content), updated 2026-07-16 (Phase 1 — added `config/phase_1.json`, `prompts/phase_1.md`, `docs/Agent_Prompt_Standard.md` now tracked at v1.3, `docs/Mom-DB-Strategy-Research-Program.md` now tracked, and `research/phase_1/`/`results/phase_1/` content), updated 2026-07-18 (Phase 1b — added `config/phase_1b.json`, `config/dev_sample_v2.json`, four `prompts/phase_1b*.md` (base + 3 amendments), `src/data/canonical.py`, `.secrets/` gitignore entry, and `research/phase_1b/`/`results/phase_1b/` content)
-**Reflects commit:** end of Phase 1b (branch `phase/1b`), post-`phase-1-approved`
-**File count covered:** 1080 files — 365 individual per-file entries below + 9 folder-level entries covering `archive/runs/`'s other 685 files, per the coverage rules established in Phase 0a.
+**Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b — added `config/`, `.claude/`, `src/`, `CLAUDE.md`, and both phases' `research/phase_0b/`/`results/phase_0b/` content), updated 2026-07-16 (Phase 0c — added `config/phase_0c.json`, `prompts/phase_0c.md`, two untracked `docs/` entries, and `research/phase_0c/`/`results/phase_0c/` content), updated 2026-07-16 (Phase 1 — added `config/phase_1.json`, `prompts/phase_1.md`, `docs/Agent_Prompt_Standard.md` now tracked at v1.3, `docs/Mom-DB-Strategy-Research-Program.md` now tracked, and `research/phase_1/`/`results/phase_1/` content), updated 2026-07-18 (Phase 1b — added `config/phase_1b.json`, `config/dev_sample_v2.json`, four `prompts/phase_1b*.md` (base + 3 amendments), `src/data/canonical.py`, `.secrets/` gitignore entry, and `research/phase_1b/`/`results/phase_1b/` content), updated 2026-07-20 (Phase 1c — added `config/phase_1c.json`, three `prompts/phase_1c*.md` (base + 2 amendments), `src/data/canonical.py` extended (`repaired_1c` column), and `research/phase_1c/`/`results/phase_1c/` content; `filtered/{event}/*_repair_1c.parquet` sibling files noted as a new data/ pattern, not individually catalogued per data/'s standing exclusion)
+**Reflects commit:** end of Phase 1c (branch `phase/1c`), post-`phase-1b-approved`
+**File count covered:** ~1132 files — ~417 individual per-file entries below + 9 folder-level entries covering `archive/runs/`'s other 685 files, plus `results/phase_1c/staging/`'s thousands of gitignored fetch-output files (folder-level, not catalogued individually), per the coverage rules established in Phase 0a.
 **Standing rule:** Any phase that adds, moves, or removes repo files must update this map in the same phase.
 
 This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `research/`, `results/`, `src/`, `.claude/`, and repo-root loose files. `data/` is excluded per standing rule (documented separately in `data/Schema.md`). `hawkes-ofi-impact/` and `scanner-epg-momentum/` are independent, already-git-tracked sibling projects — not walked file-by-file, but each gets a summary section below so this map isn't blind to a third of the workspace.
@@ -200,6 +200,7 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 - `config/phase_1.json` — Overlap threshold (0.95), chart subsample cap (50,000), seed (42), scan-input/filter-output/phase_0c-artifact paths for the filter forensics phase.
 - `config/phase_1b.json` — Seed, dev-sample strat rule, outlier-flag thresholds, classification rule set + escalation thresholds, session-calendar library pin (`pandas_market_calendars` 5.4.0 / `exchange_calendars` 4.13.2, XNYS), retired-dev-v1 note.
 - `config/dev_sample_v2.json` — Dev sample v2 manifest: 50 events, 10 deciles, seed 42, eligibility rule.
+- `config/phase_1c.json` — Vendor API endpoint/param shape, archive schema (required + `optional_fields`), fetch/retry/rate-limit settings, control-fetch stratification, all escalation thresholds.
 
 ## `.claude/`
 
@@ -218,6 +219,9 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 - `prompts/phase_1b_amendment_1.md` — T1 escalation resolution: vendor reference API classification replaces the unusable advisory CSV.
 - `prompts/phase_1b_amendment_2.md` — T4b escalation resolution: per-side (`trades_ingested`/`quotes_ingested`) coverage replaces the single `folder_ingested` flag.
 - `prompts/phase_1b_amendment_3.md` — T5b escalation resolution: session-calendar mismatch root cause, `flag_missing_event_day`/`flag_window_calendar_bug`, XNYS calendar pinned project-wide.
+- `prompts/phase_1c.md` — Phase 1c's own instructions (targeted re-collection: heal `flag_missing_event_day`/`flag_window_calendar_bug` via vendor re-fetch, trust-gate control fetches, flag flips, universe recompute).
+- `prompts/phase_1c_amendment_1.md` — T3 escalation resolution: archive-schema-equality replaced with content-equivalence (optional sparse fields).
+- `prompts/phase_1c_amendment_2.md` — T6 escalation resolution: pre-insertion collision guard (standing rule) + SDOT remediation.
 
 ## `docs/`
 
@@ -397,6 +401,24 @@ Note: the great majority of the top-level notes below are companion docs for a `
 - `research/phase_1b/build_waterfall.py` — T6: finalizes `in_scope`, event-side + folder-side accounting waterfalls.
 - `research/phase_1b/build_dev_sample_v2.py` — T7: dev sample v2 manifest + `filtered_trades_dev_v2`/`filtered_quotes_dev_v2` materialization from the main tables, subset/zero-row verification.
 - `research/phase_1b/build_chart_01.py` … `build_chart_05.py` — The five Chart Contract charts (01 trades-vs-momentum flags, 02 instrument classes, 03 universe waterfall, 04 dev v2 coverage, 05 calendar damage by offset).
+
+### `research/phase_1c/` (this phase's own tooling — targeted re-collection, calendar-bug heal)
+
+- `research/phase_1c/derive_archive_schema.py` — T0 support: full-corpus `parquet_schema()` scan confirming the file-level vs. DB-table archive schema (conditions/indicators LIST-typed and dropped by design).
+- `research/phase_1c/build_heal_manifest.py` — T1: derives 1,966 heal-target pairs via pure per-event set difference (true XNYS window minus a replicated legacy `get_trading_window()`), not positional offset-index mapping.
+- `research/phase_1c/t1_crosschecks.py` — T1b: 142-event-day / Set-A-date / quote-side-hard-boundary cross-checks.
+- `research/phase_1c/fetch_pair.py` — T2: fetch + archive-schema-alignment primitives (required vs. optional columns, rate-limited pagination), reused by every downstream fetch script.
+- `research/phase_1c/select_control_pairs.py` — T3/Amendment 1 T3-R3: 20-pair control selection (15 stratified + 5 targeted for the `correction` optional field).
+- `research/phase_1c/derive_optional_fields.py` — Amendment 1 T3-R1: derives `optional_fields` from archive evidence (non-null rate + file-absence), via fast parquet-footer-metadata scan (not a full data scan).
+- `research/phase_1c/run_control_fetch.py` — Amendment 1 T3-R4: formal 20-pair control diff against the archive.
+- `research/phase_1c/run_full_fetch.py` — T4: executes the heal manifest (3,605 distinct pairs), checkpointed.
+- `research/phase_1c/resolve_unknowns.py` — T5: resolves the 8 `unknown`-cause events via their diagnostic fetches.
+- `research/phase_1c/ingest_repairs.py` — T6/Amendment 2: verify, place `*_repair_1c.parquet` siblings, ingest under the pre-insertion collision guard (T6-R1).
+- `research/phase_1c/remediate_sdot.py` — Amendment 2 T6-R2: surgical removal + re-derivation of SDOT's duplicated quotes session.
+- `research/phase_1c/scan_preexisting_quotes.py`, `scan_preexisting_trades.py` — Investigative (T6-R1a): whole-population pre-existing-row scan informing the collision guard's design.
+- `research/phase_1c/flag_flips_and_recompute.py` — T7: flag clearing (coverage vs. authorship), universe recompute, `repaired_1c` cross-check.
+- `research/phase_1c/volume_reconciliation.py` — T8: healed event-day fetched-vs-scan volume reconciliation.
+- `research/phase_1c/build_chart_01.py` … `build_chart_04.py` — The four Chart Contract charts (01 control fetch diffs, 02 healed sessions by offset, 03 volume reconciliation, 04 universe waterfall v2).
 
 ### `research/phase_1_context/`
 
@@ -623,4 +645,23 @@ Per `results/hardware/`, `results/ingestion_run/`, `results/rebuild_stage1/`, et
 - `results/phase_1b/artifacts/t7_dev_sample_v2_summary.json` — T7: dev v2 build, subset verification (0 mismatches), zero-row check (0 events).
 - `results/phase_1b/charts/01_trades_vs_momentum_flags.html`, `02_instrument_classes.html`, `03_universe_waterfall.html`, `04_dev_v2_coverage.html`, `05_calendar_damage_by_offset.html` — This phase's five charts (04 is the contract's #4; 05 is Amendment 3's addition).
 - `results/phase_1b/digest.json`, `results/phase_1b/REPORT.md` — This phase's digest and written report, covering the base prompt and all three amendments.
+
+### `results/phase_1c/` (this phase's own outputs)
+
+- `results/phase_1c/artifacts/archive_schema_reference.json` — T0 support: file-level vs. DB-table archive schema, full-corpus confirmed.
+- `results/phase_1c/artifacts/heal_manifest.parquet` — T1: 1,966-pair deterministic heal-target list. **Gitignored**, not committed.
+- `results/phase_1c/artifacts/t1_manifest_summary.json`, `t1b_crosscheck_summary.json` — T1a/b: pair counts by type/side, cross-check results.
+- `results/phase_1c/artifacts/t3_escalation_correction_field.json` — T3: the original `correction`-absent hard-stop investigation.
+- `results/phase_1c/artifacts/t3r1_optional_fields.json` — Amendment 1 T3-R1: per-column non-null rate + file-absence rate, `optional_fields` derivation.
+- `results/phase_1c/artifacts/control_fetch_diffs.parquet`, `t3r4_control_diff_summary.json`, `t3r4_escalation_findings.json`, `t3r4_resolution.json` — Amendment 1 T3-R4: the 20-pair control diff, the ARBB/TRF-precision escalation, and its resolution (Cooper: "proceed").
+- `results/phase_1c/artifacts/fetch_state.parquet` — T4: per-(ticker,session,side) fetch outcome. **Gitignored**, not committed.
+- `results/phase_1c/artifacts/t4_fetch_run_summary.json` — T4: 3,605-pair fetch run outcome (3,585/8/12).
+- `results/phase_1c/artifacts/t5_unknowns_resolution.parquet`, `t5_unknowns_summary.json` — T5: the 8 unknowns' diagnostic-fetch resolution (8/8 `collection_failure`).
+- `results/phase_1c/artifacts/repair_ledger.parquet` — T6: per-pair staged/ingested/verified/collision record. **Gitignored**, not committed.
+- `results/phase_1c/artifacts/t6_ingest_summary.json`, `t6_escalation_findings.json`, `t6r1a_collision_scan.json`, `t6r2_sdot_remediation.json` — T6/Amendment 2: ingestion summary, the RILY/SDOT escalations, the collision scan, SDOT's remediation verification.
+- `results/phase_1c/artifacts/t7_recompute_summary.json` — T7: flag-flip counts, universe arithmetic (20,802 → 20,951), `repaired_1c` cross-check.
+- `results/phase_1c/artifacts/volume_reconciliation.parquet`, `t8_volume_reconciliation_summary.json` — T8: 149-event fetched-vs-scan volume ratios.
+- `results/phase_1c/staging/` — Raw + archive-schema-aligned fetch output per (ticker, session), thousands of files. **Gitignored**, not committed.
+- `results/phase_1c/charts/01_control_fetch_diffs.html`, `02_healed_sessions_by_offset.html`, `03_volume_reconciliation.html`, `04_universe_waterfall_v2.html` — This phase's four Chart Contract charts.
+- `results/phase_1c/digest.json`, `results/phase_1c/REPORT.md` — This phase's digest and written report, covering the base prompt and both amendments.
 
