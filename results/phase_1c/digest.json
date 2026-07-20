@@ -1,0 +1,62 @@
+{
+  "phase": "1c",
+  "title": "Targeted Re-Collection: Calendar-Bug Heal",
+  "branch": "phase/1c",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-20",
+  "baseline": "phase-1b-approved",
+  "summary": "Healed the 142 flag_missing_event_day (calendar_bug) events and 1,849 flag_window_calendar_bug window-damaged events via targeted vendor re-fetch. Two amendments: Amendment 1 replaced a too-strict archive-schema-equality gate with content-equivalence (optional sparse fields NULL-fillable); Amendment 2 added a standing pre-insertion collision guard after discovering trades/quotes collection can fail independently, and remediated one already-inserted duplicate (SDOT). Final: 149/150 event-days and 1,832/1,849 window-damage events healed/resolved; universe 20,802 -> 20,951. Trades-only quote-gap hard boundary respected throughout - never touched.",
+  "headline_metrics": [
+    {"metric": "Heal manifest", "value": "1,966 pairs across 1,991+8 events, under the 6,000 threshold", "chart": "results/phase_1c/artifacts/t1_manifest_summary.json"},
+    {"metric": "Control fetch trust gate", "value": "20 pairs; 17/20 exact match; ARBB row-gap + 4 tickers' TRF price-precision resolved as archive-side, not fetch-path", "chart": "results/phase_1c/charts/01_control_fetch_diffs.html"},
+    {"metric": "Full fetch run (T4)", "value": "3,605 pairs: 3,585 fetched, 8 empty, 12 failed (0.33%, under 2% threshold)", "chart": "results/phase_1c/artifacts/t4_fetch_run_summary.json"},
+    {"metric": "8 unknowns resolved", "value": "8/8 collection_failure (real trades+quotes existed), 0 confirmed-zero", "chart": "results/phase_1c/artifacts/t5_unknowns_summary.json"},
+    {"metric": "Ingestion (T6, guarded)", "value": "3,885 healed (52.1M trades + 49.1M quotes rows), 10 skipped_collision", "chart": "results/phase_1c/charts/02_healed_sessions_by_offset.html"},
+    {"metric": "Universe recompute", "value": "20,802 + 149 restored - 0 confirmed-zero = 20,951; arithmetic reconciles exactly", "chart": "results/phase_1c/charts/04_universe_waterfall_v2.html"},
+    {"metric": "Volume reconciliation", "value": "149/149 reconciled, median ratio 1.02x (threshold [0.5,2.0])", "chart": "results/phase_1c/charts/03_volume_reconciliation.html"}
+  ],
+  "escalations_triggered_and_resolved": [
+    {"criterion": "T3: archive column absent from vendor response (correction)", "resolution": "Amendment 1 - content-equivalence; correction confirmed optional (0.0032% non-null), no fix needed"},
+    {"criterion": "T3-R4: control diff trips original row-delta/field-mismatch gate", "resolution": "Investigated and resolved by Cooper decision ('proceed') - both findings archive-side, not fetch-path"},
+    {"criterion": "T6: post-ingest row count mismatch (RILY, then SDOT)", "resolution": "RILY - fixed event_date semantics (folder-level anchor date, not session date). SDOT - Amendment 2 collision guard + surgical remediation (restored to 1,603 pre-existing rows)"}
+  ],
+  "escalations_checked_not_triggered": [
+    {"criterion": "T1a manifest > 6,000 pairs", "observed": 1966},
+    {"criterion": "T4a Set A event-day zero-trades > 5% of 142", "observed": "0%"},
+    {"criterion": "T4b unresolved failures > 2%", "observed": "0.33%"},
+    {"criterion": "T7 arithmetic/repaired_1c cross-check", "observed": "both pass exactly"},
+    {"criterion": "T7a waterfall residual != 0", "observed": 0},
+    {"criterion": "T8 volume median ratio outside [0.5,2.0]", "observed": "1.02"}
+  ],
+  "decisions_log": [
+    {"decision": "T1 heal targets derived via pure per-event set difference, not positional offset-index mapping", "reason": "more precise than Phase 1b's original labeling - verified on ATER 2022-04-13, and cleanly resolves the 33 anchor_on_set_a events as true negatives"},
+    {"decision": "optional_fields derived from archive evidence (non-null rate <1% AND file-absence), not assumed", "reason": "Amendment 1 - correction qualifies, trf_id/trf_timestamp (33.7% non-null) do not despite appearing in the same failure"},
+    {"decision": "Pre-insertion collision guard is a standing rule, not a one-off patch", "reason": "Amendment 2 - trades/quotes can fail independently; manifest-time assumptions are not write-time-safe"},
+    {"decision": "SDOT remediated via delete-and-rederive-from-original-file, not partial row removal", "reason": "avoids ambiguity from any sip_timestamp+sequence_number overlap between the two batches"},
+    {"decision": "flag-clearing uses 'covered' (healed OR skipped_collision); repaired_1c uses 'healed' only", "reason": "Amendment 2 - the flag tracks coverage, not authorship"}
+  ],
+  "surprises": [
+    "Phase 1b's original per-offset damage labeling overcounted: ATER 2022-04-13 was flagged with 2 damaged offsets but only 1 was a real gap - the other date was already correctly archived, just at a shifted legacy-window position.",
+    "Trades and quotes collection for a calendar-bug session can fail independently - 10 events (SDOT, SHMD, and all 8 T5 'unknowns') had quotes already present while trades were genuinely zero.",
+    "exchange/id/participant_timestamp/sequence_number/tape/trf_id/trf_timestamp are present in only ~84% of trades rows (absent from ~32% of a 200-file sample) - a large, previously-uncharacterized corpus split, not flagged optional (above the 1% threshold) and not investigated further.",
+    "ARBB 2024-02-13's archive trades are capped at exactly 50,000 rows (25% of the true 197,326) yet reach the identical true final timestamp - not the simple prefix-truncation pattern already documented for Group A; mechanism undetermined.",
+    "4/20 control pairs show sub-cent price-precision drift (max $0.00005), 99% concentrated on exchange=4 (FINRA/ADF TRF-reported prints)."
+  ],
+  "output_files": {
+    "prompts": ["prompts/phase_1c.md", "prompts/phase_1c_amendment_1.md", "prompts/phase_1c_amendment_2.md"],
+    "config": ["config/phase_1c.json"],
+    "src": ["src/data/canonical.py (repaired_1c column added)"],
+    "scripts": "research/phase_1c/*.py (17 scripts)",
+    "artifacts": "results/phase_1c/artifacts/*.json + *.parquet (gitignored, regenerable)",
+    "repair_siblings": "filtered/{event}/*_repair_1c.parquet, 3,885 healed pairs",
+    "charts": ["results/phase_1c/charts/01_control_fetch_diffs.html", "results/phase_1c/charts/02_healed_sessions_by_offset.html", "results/phase_1c/charts/03_volume_reconciliation.html", "results/phase_1c/charts/04_universe_waterfall_v2.html"],
+    "report": "results/phase_1c/REPORT.md", "digest": "results/phase_1c/digest.json"
+  },
+  "commits": 26,
+  "reproduce": "python research/phase_1c/build_heal_manifest.py && python research/phase_1c/ingest_repairs.py && python research/phase_1c/flag_flips_and_recompute.py",
+  "blocking_items_for_next_phase": [
+    "1 flag_missing_event_day + 17 flag_window_calendar_bug residual events (SNWV and 17 others) - all traced to T4 vendor-fetch failures or confirmed-empty thin sessions, not investigated further.",
+    "ARBB 2024-02-13's archive row-count gap - discovered, not repaired (not a Phase 1c manifest target)."
+  ],
+  "approval_gate": "Do not begin Phase 2 or any follow-on work until Cooper has reviewed results and given explicit approval."
+}
