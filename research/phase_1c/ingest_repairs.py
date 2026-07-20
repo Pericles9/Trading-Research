@@ -68,11 +68,23 @@ def main():
     state = pd.read_parquet(FETCH_STATE)
     con_dup = duckdb.connect(read_only=False)
     inv = con_dup.execute(
-        f"SELECT ticker, date AS event_date_canonical, folder_name FROM read_parquet('{FOLDER_INV}')"
+        f"SELECT ticker, date AS event_date_canonical, folder_name, momentum_str FROM read_parquet('{FOLDER_INV}')"
     ).fetchdf()
     con_dup.close()
 
     heal_rows = manifest[manifest["target_type"] != "diagnostic_unknown"].copy()
+
+    # T5: the 8 diagnostic_unknown pairs are excluded above by default, but
+    # all 8 resolved to collection_failure (real trades/quotes exist) and
+    # joins_heal_set=TRUE - include them here so T6 ingests them like any
+    # other healed pair.
+    t5_resolution = pd.read_parquet("results/phase_1c/artifacts/t5_unknowns_resolution.parquet")
+    resolved_keys = set(t5_resolution[t5_resolution["joins_heal_set"]]["event_key"])
+    diagnostic_rows = manifest[
+        (manifest["target_type"] == "diagnostic_unknown") & manifest["event_key"].isin(resolved_keys)
+    ].copy()
+    heal_rows = pd.concat([heal_rows, diagnostic_rows], ignore_index=True)
+
     fetched = state[(state["status"] == "fetched") & (state["n_records"] > 0)]
 
     heal_rows = heal_rows.merge(inv, on=["ticker", "event_date_canonical"], how="left")
@@ -108,7 +120,7 @@ def main():
             posix_path = repair_path.as_posix()
             select_list = _build_select_for_file(
                 posix_path, union_schema, file_columns,
-                [("ticker", f"'{ticker}'"), ("event_date", f"'{session_date}'::DATE"), ("momentum_pct", "CAST(NULL AS DOUBLE)")],
+                [("ticker", f"'{ticker}'"), ("event_date", f"'{session_date}'::DATE"), ("momentum_pct", f"CAST({row['momentum_str']} AS DOUBLE)")],
             )
             con.execute(f'INSERT INTO "{table_name}" BY NAME SELECT {select_list} FROM read_parquet(\'{posix_path}\')')
             after = _row_count(con, table_name)
