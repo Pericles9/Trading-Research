@@ -83,11 +83,19 @@ TYPE_OVERRIDES = {
 
 
 def verify_staged(df: pd.DataFrame, ticker: str, session_date: str) -> list[str]:
+    """Sanity-check that fetched rows correspond to the right calendar day
+    (catches a vendor-parameter bug, not a data defect). Widened past a
+    rigid UTC-midnight cutoff: extended-hours trading legitimately spills
+    past UTC midnight into the next calendar date (e.g. 8pm ET = ~00:00-
+    01:00 UTC depending on DST) - confirmed directly on ARBB 2024-02-13
+    (session's true last trade at 2024-02-14 00:59:35 UTC). A 6-hour
+    tolerance comfortably covers any realistic after-hours session end."""
     problems = []
     if df.empty:
         return problems
     ts = pd.to_datetime(df["sip_timestamp"], unit="ns")
-    lo, hi = pd.Timestamp(session_date), pd.Timestamp(session_date) + pd.Timedelta(days=1)
+    lo = pd.Timestamp(session_date) - pd.Timedelta(hours=6)
+    hi = pd.Timestamp(session_date) + pd.Timedelta(days=1) + pd.Timedelta(hours=6)
     out_of_bounds = ((ts < lo) | (ts >= hi)).sum()
     if out_of_bounds:
         problems.append(f"{out_of_bounds} rows outside session bounds [{lo}, {hi})")
@@ -218,6 +226,10 @@ def main():
                 "verification_problems": problems, "verification_status": verification_status,
                 "collision_status": "healed", "preexisting_rows": 0,
             })
+
+            if len(ledger_rows) % 50 == 0:
+                pd.DataFrame(ledger_rows).to_parquet(OUT_LEDGER, index=False)
+                print(f"  checkpoint: {len(ledger_rows)} ledger rows written")
 
             if hard_stops:
                 break
