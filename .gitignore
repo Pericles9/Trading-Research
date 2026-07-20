@@ -33,3 +33,8 @@ __pycache__/
 # already-tracked artifacts/*.parquet are unaffected and stay committed as-is;
 # this pattern only stops *new* untracked parquet artifacts from being added.
 results/phase_*/artifacts/*.parquet
+
+# Phase 1c - staged vendor fetch output (raw + aligned parquet per
+# (ticker, session) pair, thousands of files). Regenerable via the heal
+# manifest + fetch script; the repair ledger is the record, not this.
+results/phase_1c/staging/
