@@ -61,6 +61,12 @@ def main():
 
     flags["event_key"] = flags["ticker"] + "_" + flags["event_date_canonical"].astype(str)
 
+    # Amendment 2: a session covered by skipped_collision (pre-existing
+    # rows found at write time) counts as covered for flag-clearing purposes
+    # - the flag tracks coverage, not authorship. repaired_1c uses the
+    # narrower ok-only set (actual rows written by this phase).
+    covered_ledger = ledger[ledger["verification_status"].isin(["ok", "skipped_collision"])]
+    covered_sides_by_event = covered_ledger.groupby("event_key")["side"].apply(set).to_dict()
     ok_ledger = ledger[ledger["verification_status"] == "ok"]
     ok_sides_by_event = ok_ledger.groupby("event_key")["side"].apply(set).to_dict()
 
@@ -96,15 +102,18 @@ def main():
     for _, row in flags.iterrows():
         ek = row["event_key"]
         fmed, fwcb, spr = row["flag_missing_event_day"], row["flag_window_calendar_bug"], row["scope_pending_repair"]
-        repaired = False
+
+        # repaired_1c: this phase actually wrote rows for this event (ok-only,
+        # narrower than "covered" - authorship, not coverage).
+        if ok_sides_by_event.get(ek):
+            repaired_1c_keys.add(ek)
 
         if bool(fmed) and ek in (heal_pop_keys | diag_keys):
             required = event_required_sides(ek)
-            achieved = ok_sides_by_event.get(ek, set())
-            if required and required.issubset(achieved):
+            covered = covered_sides_by_event.get(ek, set())
+            if required and required.issubset(covered):
                 fmed = False
                 spr = False
-                repaired = True
                 n_missing_event_day_cleared += 1
             else:
                 n_still_flagged += 1
@@ -115,16 +124,12 @@ def main():
                 n_window_bug_cleared_reclassified += 1
             elif ek in heal_pop_keys:
                 required = event_required_sides(ek)
-                achieved = ok_sides_by_event.get(ek, set())
-                if required and required.issubset(achieved):
+                covered = covered_sides_by_event.get(ek, set())
+                if required and required.issubset(covered):
                     fwcb = False
-                    repaired = True
                     n_window_bug_cleared_repaired += 1
                 else:
                     n_still_flagged += 1
-
-        if repaired:
-            repaired_1c_keys.add(ek)
 
         new_flag_missing.append(fmed)
         new_flag_window.append(fwcb)

@@ -1,0 +1,18 @@
+{
+  "phase": "1c",
+  "task": "T7",
+  "flag_missing_event_day_cleared": 149,
+  "flag_missing_event_day_still_flagged": 1,
+  "flag_window_calendar_bug_cleared_via_repair": 1799,
+  "flag_window_calendar_bug_cleared_via_reclassification": 33,
+  "flag_window_calendar_bug_still_flagged": 17,
+  "n_repaired_1c_python_side": 1948,
+  "n_repaired_1c_view_side": 1948,
+  "repaired_1c_cross_check_pass": true,
+  "prior_in_scope": 20802,
+  "new_in_scope": 20951,
+  "delta": 149,
+  "n_confirmed_zero_exclusions": 0,
+  "arithmetic": "20802 + 149 restored - 0 confirmed-zero = 20951",
+  "arithmetic_reconciles_against_ledger": true
+}
