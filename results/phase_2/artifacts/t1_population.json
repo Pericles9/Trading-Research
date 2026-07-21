@@ -1,0 +1,127 @@
+{
+  "phase": "2",
+  "task": "T1",
+  "config_hash_inputs": {
+    "prev_close_floor": 0.01,
+    "mom_sanity_cap": 10000
+  },
+  "spine_guard": {
+    "expected": 20951,
+    "observed": 20951,
+    "pass": true
+  },
+  "population_by_source_file": [
+    {
+      "source_file": "file1",
+      "in_scope": false,
+      "n": 1594
+    },
+    {
+      "source_file": "file1",
+      "in_scope": true,
+      "n": 15763
+    },
+    {
+      "source_file": "file2",
+      "in_scope": false,
+      "n": 723
+    },
+    {
+      "source_file": "file2",
+      "in_scope": true,
+      "n": 5188
+    }
+  ],
+  "2025_slice": {
+    "definition": "momentum_events_canonical.source_file = 'file2' (confirmed: file1 has zero 2025 rows, file2 has zero pre-2025 rows)",
+    "raw_file2_total_n": 5911,
+    "in_scope_n": 5188,
+    "excluded_n": 723,
+    "reconciles_to_file2_total": true,
+    "repaired_1c_n": 518,
+    "residual_flag_missing_event_day_n": 0,
+    "residual_flag_window_calendar_bug_n": 3,
+    "trades_only_n": 37,
+    "trades_ingested_n": 5188,
+    "quotes_ingested_n": 5151,
+    "skipped_collision_2025_n_sessions": 2,
+    "skipped_collision_2025_events": [
+      {
+        "ticker": "SDOT",
+        "event_date_canonical": "2025-10-15",
+        "session": "2025-10-13"
+      },
+      {
+        "ticker": "SHMD",
+        "event_date_canonical": "2025-10-15",
+        "session": "2025-10-13"
+      }
+    ]
+  },
+  "2025_excluded_reasons": [
+    {
+      "instrument_class": "warrant",
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": null,
+      "flag_missing_event_day": false,
+      "n": 474
+    },
+    {
+      "instrument_class": "fund_product",
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": null,
+      "flag_missing_event_day": false,
+      "n": 177
+    },
+    {
+      "instrument_class": "preferred",
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": null,
+      "flag_missing_event_day": false,
+      "n": 22
+    },
+    {
+      "instrument_class": "common",
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "n": 19
+    },
+    {
+      "instrument_class": "right",
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": null,
+      "flag_missing_event_day": false,
+      "n": 16
+    },
+    {
+      "instrument_class": "other",
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": null,
+      "flag_missing_event_day": false,
+      "n": 8
+    },
+    {
+      "instrument_class": "unit",
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": null,
+      "flag_missing_event_day": false,
+      "n": 3
+    },
+    {
+      "instrument_class": "common",
+      "flag_bad_denominator": true,
+      "flag_trades_mom_outlier": null,
+      "flag_missing_event_day": false,
+      "n": 3
+    },
+    {
+      "instrument_class": "warrant",
+      "flag_bad_denominator": true,
+      "flag_trades_mom_outlier": null,
+      "flag_missing_event_day": false,
+      "n": 1
+    }
+  ],
+  "source": "research/phase_2/t1_population.py:main"
+}
