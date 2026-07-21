@@ -201,6 +201,7 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 - `config/phase_1b.json` — Seed, dev-sample strat rule, outlier-flag thresholds, classification rule set + escalation thresholds, session-calendar library pin (`pandas_market_calendars` 5.4.0 / `exchange_calendars` 4.13.2, XNYS), retired-dev-v1 note.
 - `config/dev_sample_v2.json` — Dev sample v2 manifest: 50 events, 10 deciles, seed 42, eligibility rule.
 - `config/phase_1c.json` — Vendor API endpoint/param shape, archive schema (required + `optional_fields`), fetch/retry/rate-limit settings, control-fetch stratification, all escalation thresholds.
+- `config/phase_2.json` — 2025-slice definition (confirmed `source_file='file2'`), session-calendar pin (records both the phase_1c pin and the actually-installed `.venv` version, which had drifted), quality-screen and escalation thresholds, `trade_data/`-quarantine path pointers.
 
 ## `.claude/`
 
@@ -222,6 +223,7 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 - `prompts/phase_1c.md` — Phase 1c's own instructions (targeted re-collection: heal `flag_missing_event_day`/`flag_window_calendar_bug` via vendor re-fetch, trust-gate control fetches, flag flips, universe recompute).
 - `prompts/phase_1c_amendment_1.md` — T3 escalation resolution: archive-schema-equality replaced with content-equivalence (optional sparse fields).
 - `prompts/phase_1c_amendment_2.md` — T6 escalation resolution: pre-insertion collision guard (standing rule) + SDOT remediation.
+- `prompts/phase_2.md` — Phase 2's own instructions (2025 reconciliation, `trade_data/high_momentum/` window coverage), including an addendum recording the pre-T1 finding that `high_momentum/` was already migrated into `filtered/` before this phase was cut.
 
 ## `docs/`
 
@@ -229,6 +231,7 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 - `docs/Agent_Prompt_Standard.md` — **Tracked, committed Phase 1 T0.** Cooper placed this at v1.3 (2026-07-14: Evidence Standard, §9 Chart Contract mandatory on analysis-only phases, §10 Verification Block, §11 Digest Contract, §12 Git Discipline). Resolves the Phase 0b/0c gap where no file existed at this exact path.
 - `docs/Agent_Prompt_Standard (1).md` — **No longer present on disk.** The v1.1/v1.2 copy found during Phase 0c was still there and untracked immediately after T0's docs-housekeeping commit (verified, flagged as a deletion candidate). By T7 it was gone — removed or absorbed by Cooper's own fix rather than by any action taken in this phase, since this phase's write scope never touched `docs/`. Noted here so the discrepancy between T0's and T7's observations is on record rather than silently smoothed over.
 - `docs/Mom-DB-Strategy-Research-Program.md` — **Tracked, committed Phase 1 T0.** Same appearance circumstances as the prompt standard (found untracked during Phase 0c). A detailed research-program spec (data audit → structural constraints → two-signal regime architecture → development process) whose §2.3 explicitly calls for the join reconciliation Phase 0c performed and the filter forensics Phase 1 performs.
+- `docs/Open-Items-Register.md` — **Added Phase 2 T8.** Standing, append-only log of items surfaced but not resolved in the phase that found them (the 47 untraced `high_momentum` files, unread `enhanced/`/`rebuild_validation_sample/`, stale `Schema.md` `trade_data/` structure, uncorrected `.venv` calendar-library drift). No pre-existing register was found anywhere in the repo before this.
 
 ## `src/` (recovered Phase 0b T2 — see `results/phase_0b/artifacts/data_layer_search_d_drive.json` for full provenance)
 
@@ -240,7 +243,7 @@ Did not exist anywhere in this checkout as of Phase 0a. Recovered by locating th
 - `src/data/db.py` — `get_connection()`: returns a DuckDB connection to the path `paths.py` resolves, creating the parent directory if needed.
 - `src/data/ingest.py` — Multi-dataset ingest CLI (`--all` / `--dataset` / `--data-root` / `--db-path` / `--verify-only`); 11 registered loaders (`filtered`, `daily`, `minute`, `second10`, `quote_data`, `momentum_events`, `metadata`, `market_hours`, `symbol_properties`, `nautilus_catalog`, `trade_data`), each independently skip-if-exists.
 - `src/data/prepare_database_split.py` — CLI that scaffolds/migrates storage to an external database root, writing a migration manifest and `env.example` template.
-- `src/data/canonical.py` — **Added Phase 1b (instructed promotion, D1/D2).** `momentum_events_canonical` view over the raw `momentum_events` table (never modified). Staged construction (`create_view(con, stage=...)`: t2/t5/t6) as Phase 1b's own inputs became available. Per-side coverage (`trades_ingested`/`quotes_ingested`, Amendment 2), `flag_missing_event_day`/`flag_window_calendar_bug` (Amendment 3). `in_scope` is the single join point downstream code must use — the physical `filtered_trades`/`filtered_quotes` tables contain out-of-universe rows.
+- `src/data/canonical.py` — **Added Phase 1b (instructed promotion, D1/D2).** `momentum_events_canonical` view over the raw `momentum_events` table (never modified). Staged construction (`create_view(con, stage=...)`: t2/t5/t6) as Phase 1b's own inputs became available. Per-side coverage (`trades_ingested`/`quotes_ingested`, Amendment 2), `flag_missing_event_day`/`flag_window_calendar_bug` (Amendment 3). `in_scope` is the single join point downstream code must use — the physical `filtered_trades`/`filtered_quotes` tables contain out-of-universe rows. **Extended Phase 2 T8:** `coverage_class` (`full_window`/`event_day_only`, off `filtered_trades`) and `quotes_full_window` (boolean, off `filtered_quotes`) — additive, non-destructive, joined from `results/phase_2/artifacts/coverage_class.parquet`. Governs the full_window primary-analysis population, not spine membership.
 
 ## Repo root
 
@@ -419,6 +422,16 @@ Note: the great majority of the top-level notes below are companion docs for a `
 - `research/phase_1c/flag_flips_and_recompute.py` — T7: flag clearing (coverage vs. authorship), universe recompute, `repaired_1c` cross-check.
 - `research/phase_1c/volume_reconciliation.py` — T8: healed event-day fetched-vs-scan volume reconciliation.
 - `research/phase_1c/build_chart_01.py` … `build_chart_04.py` — The four Chart Contract charts (01 control fetch diffs, 02 healed sessions by offset, 03 volume reconciliation, 04 universe waterfall v2).
+
+### `research/phase_2/` (this phase's own tooling — 2025 reconciliation, `high_momentum/` window coverage)
+
+- `research/phase_2/t1_population.py` — T1: spine guard (20,951) + 2025-slice population, replicated as a read-only CTE (zero-DuckDB-write phase — no `create_view()` calls until T8).
+- `research/phase_2/t2_quality_screen.py` — T2: 2025 `momentum_pct` distribution, junk flags (sanity bound / `prev_close` floor / stored-vs-recomputed mismatch), duplicates, per-month counts, plus the migration-signature schema-fingerprint facet.
+- `research/phase_2/t3_high_momentum_inventory.py` — T3a/b: documents `high_momentum/`'s absence from the E: data root (migrated into `filtered/` pre-phase, see `results/cleanup/`) and characterizes `momentum_events_for_collection.parquet`'s overlap with the canonical spine.
+- `research/phase_2/t4_window_coverage.py` — T4: the core per-event × offset × source window-coverage matrix for the 5,188 2025 in-scope events (`high_momentum` N/A throughout).
+- `research/phase_2/t5_source_comparison.py` — T5: overlap comparison between `filtered_trades` and `high_momentum` — N/A (0 compared pairs), documented rather than skipped.
+- `research/phase_2/t8_coverage_class.py` — T8 addendum: generalizes T4's logic to ALL 20,951 in-scope events, producing `coverage_class`/`quotes_full_window` for `src/data/canonical.py`'s view extension.
+- `research/phase_2/build_chart_01.py`, `build_chart_02.py`, `build_chart_03.py` — The three Chart Contract charts (01 window coverage by offset, 02 2025 momentum quality, 03 source row-count comparison — an annotated empty-state). Chart 04 not produced — condition (pre-2025 dates in `high_momentum`) never triggered.
 
 ### `research/phase_1_context/`
 
@@ -664,4 +677,16 @@ Per `results/hardware/`, `results/ingestion_run/`, `results/rebuild_stage1/`, et
 - `results/phase_1c/staging/` — Raw + archive-schema-aligned fetch output per (ticker, session), thousands of files. **Gitignored**, not committed.
 - `results/phase_1c/charts/01_control_fetch_diffs.html`, `02_healed_sessions_by_offset.html`, `03_volume_reconciliation.html`, `04_universe_waterfall_v2.html` — This phase's four Chart Contract charts.
 - `results/phase_1c/digest.json`, `results/phase_1c/REPORT.md` — This phase's digest and written report, covering the base prompt and both amendments.
+
+### `results/phase_2/` (this phase's own outputs)
+
+- `results/phase_2/artifacts/t1_population.json` — T1: spine guard + 2025-slice population and strata.
+- `results/phase_2/artifacts/scan_2025_quality.json`, `scan_2025_quality_rows.parquet` — T2: quality-screen summary + row-level detail. Parquet **gitignored**, not committed.
+- `results/phase_2/artifacts/high_momentum_inventory_summary.json` — T3a: documents `high_momentum/`'s absence (no per-file inventory exists — nothing to inventory).
+- `results/phase_2/artifacts/collection_list_overlap.json` — T3b: `momentum_events_for_collection.parquet` characterization + spine overlap, both directions.
+- `results/phase_2/artifacts/window_coverage.parquet`, `window_coverage_summary.json` — T4: the core per-event × offset × source coverage matrix (2025 only) + summary. Parquet **gitignored**, not committed.
+- `results/phase_2/artifacts/source_comparison.parquet`, `source_comparison_summary.json` — T5: empty-state overlap-comparison artifact + summary (N/A, `high_momentum` absent).
+- `results/phase_2/artifacts/coverage_class.parquet`, `coverage_class_summary.json` — T8: per-event `coverage_class`/`quotes_full_window` for ALL in-scope events, joined into `momentum_events_canonical`. Parquet **gitignored**, not committed — regenerated by `research/phase_2/t8_coverage_class.py` before any fresh `create_view()` call.
+- `results/phase_2/charts/01_window_coverage_by_offset.html`, `02_2025_momentum_quality.html`, `03_source_rowcount_comparison.html` — This phase's three Chart Contract charts.
+- `results/phase_2/digest.json`, `results/phase_2/REPORT.md` — This phase's digest and written report, covering T1-T5 and the T8 addendum.
 

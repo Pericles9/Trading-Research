@@ -1,0 +1,38 @@
+{
+  "phase": "2",
+  "task": "T8",
+  "population": "momentum_events_canonical.in_scope=TRUE (ALL, not just 2025)",
+  "n_events": 20951,
+  "n_events_anchor_not_xnys_session": 0,
+  "n_events_in_matrix": 20951,
+  "coverage_class_overall": {
+    "full_window": 15476,
+    "event_day_only": 5475
+  },
+  "coverage_class_by_era": {
+    "2025": {
+      "event_day_only": 5188,
+      "full_window": 0
+    },
+    "pre_2025": {
+      "event_day_only": 287,
+      "full_window": 15476
+    }
+  },
+  "quotes_full_window_overall": {
+    "True": 15378,
+    "False": 5573
+  },
+  "quotes_full_window_by_era": {
+    "2025": {
+      "False": 5187,
+      "True": 1
+    },
+    "pre_2025": {
+      "False": 386,
+      "True": 15377
+    }
+  },
+  "source": "research/phase_2/t8_coverage_class.py:main",
+  "artifact": "results/phase_2/artifacts/coverage_class.parquet"
+}

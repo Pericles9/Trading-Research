@@ -151,6 +151,43 @@ T0 branch/prompt/config · T1 spine guard + 2025 population · T2 2025 quality s
 
 ---
 
+---
+
+## 8. Addendum — T8: 2025 disposition + close-out
+
+**Gate decision (Cooper):** 2025 = **exclude + flag, recollection option open.** Not full inclusion, not terminal holdout. 2025 events stay in the spine (`in_scope` unchanged, still 20,951) but are excluded from the `full_window` primary population via a new flag, not a deletion.
+
+**`coverage_class` / `quotes_full_window`** (additive, non-destructive — same rule as `in_scope`/`flag_bad_denominator`): added to `momentum_events_canonical` via `src/data/canonical.py`, joined from `results/phase_2/artifacts/coverage_class.parquet` (`research/phase_2/t8_coverage_class.py`, generalizing T4's per-event × offset × source logic from the 2025 slice to **all** 20,951 in-scope events). `coverage_class` = `'full_window'` iff all 7 T-3..T+3 offsets are present in `filtered_trades`, else `'event_day_only'`. `quotes_full_window` = same logic off `filtered_quotes`, boolean.
+
+| | `full_window` | `event_day_only` | n |
+|---|---|---|---|
+| Overall | 15,476 | 5,475 | 20,951 |
+| pre-2025 (file1) | 15,476 | 287 | 15,763 |
+| 2025 (file2) | **0** | **5,188** | 5,188 |
+
+| `quotes_full_window` | True | False | n |
+|---|---|---|---|
+| Overall | 15,378 | 5,573 | 20,951 |
+| pre-2025 (file1) | 15,377 | 386 | 15,763 |
+| 2025 (file2) | 1 | 5,187 | 5,188 |
+
+Every single 2025 in-scope event is `event_day_only` — 0/5,188 have full T-3..T+3 trades coverage, confirming T4's finding at full-population scale rather than as a sampled artifact. Pre-2025 events are `full_window` at 98.2% (15,476/15,763); the 287 pre-2025 `event_day_only` events are a separate, smaller population not investigated further this phase.
+
+View change verified: `in_scope` guard still 20,951 (unaffected), `repaired_1c` still 1,948 (unaffected) — the new columns are additive only. Source: `results/phase_2/artifacts/coverage_class_summary.json`.
+
+**REPORT addendum statements (per the gate decision):**
+- 2025 is retained in the spine, excluded from the `full_window` primary population by `coverage_class`, not deleted or flagged out of `in_scope`.
+- Recollection (re-fetching the 2025 T-3..T+3 flanking sessions properly) is explicitly a **future scoped phase** — not opened by this addendum.
+- Dev sample v2 is **not** re-pinned; its eligibility pool is unchanged (it was drawn before 2025 data existed in scope and remains a pre-2025 sample).
+
+**Logged verbatim to `docs/Open-Items-Register.md`** (not resolved this phase): the 47 kept-back `high_momentum` events untraced between 2026-07-11 and the E: migration; `enhanced/` + `rebuild_validation_sample/` unread under the `trade_data/` quarantine; `Schema.md` stale on `trade_data/`'s actual structure; the `.venv` calendar-library drift vs. the phase 1c pin (5.4.0/4.13.2), left uncorrected.
+
+No new escalation criteria — this addendum is a flag column + docs, not a data operation (nothing in `filtered_trades`/`filtered_quotes`/`momentum_events` was modified; only the view's SELECT list gained two additive columns).
+
+**Verification:** `coverage_class` value counts cross-checked identical between the standalone artifact (`t8_coverage_class.py`'s own summary) and a live query against the recreated view — see table above and `results/phase_2/artifacts/coverage_class_summary.json`. Repro: `.venv/Scripts/python.exe -m research.phase_2.t8_coverage_class` then `.venv/Scripts/python.exe -c "import duckdb; from src.data import canonical; con = duckdb.connect('data/duckdb/main.duckdb'); canonical.create_view(con, stage='t6')"`.
+
+---
+
 ## Approval Gate
 
-Do not begin Phase 3 or any follow-on work until Cooper has reviewed results and given explicit approval. Pending: **2025 inclusion vs. terminal-holdout status**, and — conditional on that — whether the dev sample is re-pinned to a 2025-inclusive eligibility pool.
+Phase 2 (T0-T8) is complete. Merged to `main` and tagged `phase-2-approved` per Cooper's T8 close-out instruction. Do not begin Phase 3 or any follow-on work beyond what T8 explicitly authorized (the flag column + docs) without further review.

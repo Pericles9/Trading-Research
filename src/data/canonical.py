@@ -32,6 +32,19 @@ Both flag columns above are cleared by Phase 1c where the event's gap was
 successfully healed; a small residual of each flag remains TRUE where the
 heal fetch failed (results/phase_1c/artifacts/t4_fetch_run_summary.json).
 
+coverage_class (Phase 2, T8) = 'full_window' where all 7 of the event's
+XNYS T-3..T+3 offsets are present in filtered_trades (post-1c heal),
+else 'event_day_only'. quotes_full_window (Phase 2, T8) = same logic off
+filtered_quotes, boolean. Both are additive, non-destructive flags - same
+rule as flag_bad_denominator/in_scope: nothing is deleted, coverage_class
+governs which population counts as the "full_window" primary analysis
+set, not spine membership. Source: results/phase_2/t8_coverage_class.py,
+results/phase_2/artifacts/coverage_class.parquet (one row per in-scope
+event; NULL for any event not in_scope). Cooper's T8 gate decision: 2025
+events are retained in the spine (in_scope unchanged) but excluded from
+the full_window primary population - nearly all of them land in
+event_day_only (results/phase_2/REPORT.md addendum).
+
 Built in three stages, matching the order Phase 1b computes its inputs:
   - stage="t2": flag_bad_denominator computed directly (simple, static
     formula over raw columns); flag_trades_mom_outlier and in_scope are
@@ -62,6 +75,7 @@ FOLDER_INVENTORY_PATH = PROJECT_ROOT / "results" / "phase_0c" / "artifacts" / "f
 CLASSIFICATION_PATH = PROJECT_ROOT / "results" / "phase_1b" / "artifacts" / "instrument_classification.parquet"
 EVENT_FLAGS_PATH = PROJECT_ROOT / "results" / "phase_1b" / "artifacts" / "event_flags.parquet"
 CONFIG_PATH = PROJECT_ROOT / "config" / "phase_1b.json"
+COVERAGE_CLASS_PATH = PROJECT_ROOT / "results" / "phase_2" / "artifacts" / "coverage_class.parquet"
 
 IN_SCOPE_CLASSES = ("common", "common_adr")
 
@@ -92,6 +106,7 @@ def create_view(
     folder_inv = _p(FOLDER_INVENTORY_PATH)
     classification = _p(CLASSIFICATION_PATH)
     event_flags = _p(EVENT_FLAGS_PATH)
+    coverage_class = _p(COVERAGE_CLASS_PATH)
 
     if stage == "t2":
         flag_trades_mom_outlier_expr = "CAST(NULL AS BOOLEAN)"
@@ -149,7 +164,9 @@ def create_view(
         ) AS has_folder,
         (ft_distinct.ticker IS NOT NULL) AS trades_ingested,
         (fq_distinct.ticker IS NOT NULL) AS quotes_ingested,
-        {in_scope_expr} AS in_scope
+        {in_scope_expr} AS in_scope,
+        cc.coverage_class AS coverage_class,
+        cc.quotes_full_window AS quotes_full_window
     FROM momentum_events me
     LEFT JOIN read_parquet('{classification}') ic ON me.ticker = ic.ticker
     LEFT JOIN (
@@ -166,6 +183,10 @@ def create_view(
       ON me.ticker = fq_distinct.ticker
      AND COALESCE(me.date, me.event_date) = fq_distinct.event_date
      AND ROUND(me.momentum_pct, 2) = fq_distinct.mom_2dp
+    LEFT JOIN read_parquet('{coverage_class}') cc
+      ON me.ticker = cc.ticker
+     AND COALESCE(me.date, me.event_date) = cc.event_date_canonical
+     AND ROUND(me.momentum_pct, 2) = ROUND(cc.momentum_pct, 2)
     {flag_zero_trades_join}
     """
     con.execute(sql)
