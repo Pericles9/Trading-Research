@@ -1,0 +1,43 @@
+{
+  "phase": "3",
+  "task": "T1",
+  "spine_guard": {
+    "expected": 20951,
+    "observed": 20951,
+    "pass": true
+  },
+  "cohort_derivation": "pre-2025 (source_file='file1') AND in_scope=TRUE AND coverage_class='event_day_only' (trades cohort); same population AND quotes_full_window=FALSE (quotes cohort). Derived from the live momentum_events_canonical view.",
+  "live_view": {
+    "in_scope_n": 20951,
+    "trades_cohort_n": 287,
+    "trades_full_window_n": 15476,
+    "file1_inscope_n": 15763,
+    "quotes_cohort_n": 386,
+    "quotes_full_window_n": 15377
+  },
+  "coverage_class_parquet": {
+    "file1_inscope_n": 15763,
+    "trades_cohort_n": 287,
+    "trades_full_window_n": 15476,
+    "quotes_cohort_n": 386,
+    "quotes_full_window_n": 15377
+  },
+  "reconciliation": {
+    "trades_cohort_match": true,
+    "trades_full_window_match": true,
+    "quotes_cohort_match": true,
+    "quotes_full_window_match": true,
+    "file1_inscope_n_match": true
+  },
+  "all_reconciled": true,
+  "escalation_checks": {
+    "spine_guard_pass": true,
+    "trades_cohort_expected": 287,
+    "trades_cohort_observed": 287,
+    "trades_cohort_pass": true,
+    "quotes_cohort_expected": 386,
+    "quotes_cohort_observed": 386,
+    "quotes_cohort_pass": true
+  },
+  "source": "research/phase_3/t1_cohort.py:main"
+}
