@@ -1,0 +1,28 @@
+{
+  "phase": "2",
+  "task": "T3a",
+  "expected_path": "data/trade_data/high_momentum",
+  "high_momentum_dir_exists": false,
+  "high_momentum_file_count": 0,
+  "logs_dir_exists": false,
+  "metadata_dir_exists": false,
+  "trade_data_top_level_entries": [
+    "collection_progress.json",
+    "enhanced",
+    "high_momentum_progress.json",
+    "momentum_events_for_collection.parquet",
+    "optimized_progress.json",
+    "rebuild_validation_sample",
+    "robust_progress.json",
+    "ultra_optimized_progress.json"
+  ],
+  "finding": "high_momentum/ is absent from the current E: data root (no subfolder, 0 files - not even the 47 previously-blocked files documented as kept-back in the final deletion report). Root cause, per git-tracked results/cleanup/deletion_report.md and results/cleanup/emergency_unblock_report.md (both dated 2026-07-11, one day before the D:->E: hardware migration on 2026-07-12): high_momentum's contents were already migrated into filtered/ on D: before this phase was cut - 5,902 of 5,949 unique 2025-gap (ticker,date) pairs migrated (subtractive 3-column schema: sip_timestamp/price/size only, ms->ns converted, trades-only, no quotes), 47 confirmed-lost/blocked events kept back and not deleted. The 47 remaining files are not present on E: either; their fate between 2026-07-11 and the E: migration has not been traced further (out of this phase's scope, per the addendum in prompts/phase_2.md). logs/ and metadata/ (the other two paths this phase's scoped lift authorized) are also absent. Per the escalation table's 'high_momentum absent - post finding + continue; T3a/T4(c-source)/T5 marked N/A. Not a stop' row, and Cooper's explicit instruction to proceed as literally scoped: T3a produces this documentation artifact in place of an inventory; no per-file rows exist to write to a parquet artifact.",
+  "out_of_scope_siblings_observed_not_read": {
+    "note": "enhanced/ and rebuild_validation_sample/ exist under trade_data/ but are not among the four paths this phase's scoped quarantine lift authorizes (high_momentum/, momentum_events_for_collection.parquet, logs/, metadata/). Directory listing only (names/sizes) was used for this honest-inventory note; no file contents were read, per CLAUDE.md's trade_data/ quarantine ('do not touch, ever, without explicit instruction')."
+  },
+  "escalation_check": {
+    "condition": "high_momentum/ absent or unreadable at the expected path",
+    "triggered": true,
+    "action": "Post finding + continue; T3a/T4(c-source)/T5 marked N/A. Not a stop."
+  }
+}

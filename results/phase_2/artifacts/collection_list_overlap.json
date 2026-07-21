@@ -1,0 +1,53 @@
+{
+  "phase": "2",
+  "task": "T3b",
+  "path": "data/trade_data/momentum_events_for_collection.parquet",
+  "readable": true,
+  "n_rows": 4359,
+  "columns": [
+    "ticker",
+    "date",
+    "prev_close",
+    "high",
+    "open",
+    "close",
+    "volume",
+    "momentum_pct",
+    "price_move"
+  ],
+  "date_range": {
+    "min": "2024-01-02",
+    "max": "2024-12-31"
+  },
+  "year_counts": {
+    "2024": 4359
+  },
+  "n_duplicate_ticker_date_pairs": 0,
+  "n_nulls_by_column": {
+    "ticker": 0,
+    "date": 0,
+    "prev_close": 0,
+    "high": 0,
+    "open": 0,
+    "close": 0,
+    "volume": 0,
+    "momentum_pct": 0,
+    "price_move": 0
+  },
+  "finding": "momentum_events_for_collection.parquet is 100% year-2024 dated (2024-01-02..2024-12-31, 4359 rows, 0 nulls, 0 duplicate (ticker,date) pairs). It does NOT establish the 2025 high_momentum population as the prompt anticipated - this file has zero 2025 rows. Its actual purpose/relationship to the 2025 gap-fill migration described in results/cleanup/ is not established by this file's contents alone and is not further investigated here (out of scope - only overlap with the canonical spine was asked for).",
+  "overlap": {
+    "collection_list_to_canonical": {
+      "n_collection_list_rows": 4359,
+      "n_matched_any_canonical": 4359,
+      "n_matched_canonical_in_scope": 4154,
+      "n_matched_file1_population": 4359,
+      "pct_matched_any": 100.0
+    },
+    "canonical_2025_inscope_to_collection_list": {
+      "n_2025_inscope_events": 5188,
+      "n_matched_in_collection_list": 0,
+      "pct_matched": 0.0
+    }
+  },
+  "source": "research/phase_2/t3_high_momentum_inventory.py:t3b_collection_list"
+}
