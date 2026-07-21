@@ -1,0 +1,101 @@
+{
+  "phase": "3",
+  "task": "T3",
+  "n_cohort": 287,
+  "file1_observed_session_date_range": {
+    "min": "2019-12-30",
+    "max": "2025-01-06"
+  },
+  "label_counts": {
+    "backward_missing": 215,
+    "calendar_residue": 35,
+    "forward_missing": 26,
+    "both_sides": 11
+  },
+  "label_counts_pct_of_cohort": {
+    "backward_missing": 74.91,
+    "calendar_residue": 12.2,
+    "forward_missing": 9.06,
+    "both_sides": 3.83
+  },
+  "bitmap_top3_by_label": {
+    "backward_missing": {
+      "0011111": 117,
+      "0111111": 63,
+      "0001111": 18
+    },
+    "both_sides": {
+      "0101011": 2,
+      "0111011": 2,
+      "0111101": 2
+    },
+    "calendar_residue": {
+      "0011111": 14,
+      "0111111": 12,
+      "1111011": 2
+    },
+    "forward_missing": {
+      "1111011": 8,
+      "1111101": 6,
+      "1111000": 4
+    }
+  },
+  "label_by_year": {
+    "2020": {
+      "backward_missing": 20,
+      "both_sides": 0,
+      "calendar_residue": 3,
+      "forward_missing": 4
+    },
+    "2021": {
+      "backward_missing": 39,
+      "both_sides": 1,
+      "calendar_residue": 2,
+      "forward_missing": 4
+    },
+    "2022": {
+      "backward_missing": 47,
+      "both_sides": 2,
+      "calendar_residue": 11,
+      "forward_missing": 3
+    },
+    "2023": {
+      "backward_missing": 49,
+      "both_sides": 4,
+      "calendar_residue": 9,
+      "forward_missing": 4
+    },
+    "2024": {
+      "backward_missing": 60,
+      "both_sides": 4,
+      "calendar_residue": 10,
+      "forward_missing": 11
+    }
+  },
+  "t3a_forward_missing_signature": {
+    "n_forward_missing": 26,
+    "n_is_last_seen_signature": 3,
+    "note": "weak within-archive delisting signature - absence of a ticker's data after an event is not proof of delisting; it may simply mean no later event for that ticker. Within-archive signature only, not externally confirmed."
+  },
+  "a1t4_backward_missing_signature": {
+    "n_backward_missing": 215,
+    "n_weak_listing_signature": 173,
+    "note": "weak within-archive listing signature - absence of pre-event data is consistent with late listing but is not proof; within an event-conditional archive it is indistinguishable from flank-collection loss without external reference data, which is out of scope. PLBY_2021-02-16 is the illustrative exemplar (SPAC merger with MCAC consummated 2021-02-10; began trading as PLBY on Nasdaq 2021-02-11; event day 2021-02-16 -> T-3 predates the ticker's existence) - not a per-event external lookup performed on the cohort."
+  },
+  "t3c_cohort_overlap": {
+    "n_trades_cohort": 287,
+    "n_quotes_cohort": 386,
+    "n_both": 259,
+    "n_trades_only": 28,
+    "n_quotes_only": 127
+  },
+  "escalation_check": {
+    "condition": "unclassified label count > 30% of 287",
+    "threshold_pct": 30.0,
+    "observed_n": 0,
+    "observed_pct": 0.0,
+    "triggered": false
+  },
+  "source": "research/phase_3/t3_classify.py:main",
+  "artifact": "results/phase_3/artifacts/classification.parquet"
+}
