@@ -51,7 +51,7 @@
     "new_db_tables": ["filtered_trades_dev_v3", "filtered_quotes_dev_v3 (materialized from main tables only)"],
     "report": "results/phase_3/REPORT.md", "digest": "results/phase_3/digest.json"
   },
-  "commits": 13,
+  "commits": 12,
   "reproduce": ".venv/Scripts/python.exe -m research.phase_3.t1_cohort && ... t2/a1_t1/build_dev_sample_v3/a1_t3a/t3_classify && .venv/Scripts/python.exe -m research.phase_3.build_chart_01",
   "approval_gate": "Do not begin any follow-on work - including coverage_class semantic changes, further dev-sample action, or recollection scoping - until Cooper reviews and gives explicit approval."
 }
