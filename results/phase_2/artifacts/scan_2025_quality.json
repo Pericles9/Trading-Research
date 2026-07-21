@@ -1,0 +1,63 @@
+{
+  "phase": "2",
+  "task": "T2",
+  "population": "momentum_events_canonical.source_file='file2' AND in_scope=TRUE (T1-defined 2025 slice)",
+  "n": 5188,
+  "momentum_pct_distribution": {
+    "n": 5188,
+    "mean": 68.09708558211257,
+    "median": 45.045,
+    "std": 68.58128204763936,
+    "min": 30.0,
+    "max": 918.26,
+    "p01": 30.1887,
+    "p05": 30.8,
+    "p25": 35.3275,
+    "p75": 69.11,
+    "p95": 184.76649999999984,
+    "p99": 366.59300000000025
+  },
+  "junk_flags": {
+    "junk_momentum_gt_bound_n": 0,
+    "junk_prev_close_floor_n": 0,
+    "junk_recompute_mismatch_n": 1385,
+    "recompute_undefined_n_null_event_high": 0,
+    "any_junk_flag_n": 1385,
+    "any_junk_flag_pct": 26.6962,
+    "sanity_bound": 10000,
+    "prev_close_floor": 0.01,
+    "recompute_mismatch_tolerance": 0.01
+  },
+  "duplicates": {
+    "n_duplicate_pairs": 0,
+    "n_rows_involved": 0,
+    "examples": []
+  },
+  "event_day_range_and_per_month": {
+    "min": "2025-01-03",
+    "max": "2025-10-31",
+    "per_month": {
+      "2025-01": 514,
+      "2025-02": 426,
+      "2025-03": 422,
+      "2025-04": 508,
+      "2025-05": 609,
+      "2025-06": 523,
+      "2025-07": 585,
+      "2025-08": 463,
+      "2025-09": 584,
+      "2025-10": 554
+    }
+  },
+  "migration_signature_facet": {
+    "note": "Descriptive schema-fingerprint check only, not proof of origin. 'all' = >=99.9% of an event's filtered_trades rows have all 8 dropped columns NULL simultaneously (exchange/id/participant_timestamp/sequence_number/tape/trf_id/trf_timestamp/correction).",
+    "n_2025_trades_ingested_events_checked": 5848,
+    "n_events_zero_migration_signature_rows": 0,
+    "n_events_any_migration_signature_rows": 5848,
+    "n_events_fully_migration_signature": 5352,
+    "total_rows_scanned": 772028038,
+    "total_rows_migration_signature": 756392767
+  },
+  "source": "research/phase_2/t2_quality_screen.py:main",
+  "row_level_artifact": "results/phase_2/artifacts/scan_2025_quality_rows.parquet"
+}
