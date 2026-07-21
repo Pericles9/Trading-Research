@@ -1,0 +1,38 @@
+{
+  "phase": "3",
+  "title": "2025 disposition + close-out follow-on (Phase 2b in the prompt title)",
+  "baseline": "phase-2-approved",
+  "session_calendar": {
+    "library": "pandas_market_calendars",
+    "library_version_pinned_by_phase_1c": "5.4.0",
+    "underlying_engine_version_pinned_by_phase_1c": "4.13.2",
+    "library_version_actually_used": "5.3.0",
+    "underlying_engine_version_actually_used": "4.12",
+    "calendar_code": "XNYS",
+    "derivation_range": {"start": "2019-12-01", "end": "2026-01-15"},
+    "note": "Same drift as config/phase_2.json - not corrected this phase either (logged to docs/Open-Items-Register.md, T6)."
+  },
+  "session_date_derivation": {
+    "expr": "CAST(TO_TIMESTAMP(sip_timestamp / 1e9) AS DATE)",
+    "note": "Identical to research/phase_2/t4_window_coverage.py, per prompt instruction."
+  },
+  "escalation_thresholds": {
+    "canonical_in_scope_expected": 20951,
+    "trades_cohort_expected": 287,
+    "quotes_cohort_expected": 386,
+    "unclassified_remainder_max_pct": 0.30
+  },
+  "dev_sample": {
+    "manifest_path": "config/dev_sample_v2.json",
+    "note": "Two candidate files exist: config/dev_sample_v2.json (phase 1b, 50 events, seed 42, 10 deciles) and config/dev_sample_events.csv (older, no _v2 suffix, phase 0b/pre-1b). CLAUDE.md's standing universe rules resolve this unambiguously: 'Dev sample = v2 (config/dev_sample_v2.json, seed 42). v1 and the *_dev tables are retired - do not read them.' Not treated as an escalation-worthy ambiguity - the standing doc already names the file explicitly."
+  },
+  "paths": {
+    "momentum_events_db": "data/duckdb/main.duckdb",
+    "canonical_view_module": "src/data/canonical.py",
+    "canonical_view_note": "Read-only phase - no create_view() calls, no writes to the view. Queries the live view as-is for T1/T2's explicit 'live view' requirements; T3 uses a lightweight read-only CTE replica (same pattern as Phase 2) plus direct reads of coverage_class.parquet/event_flags.parquet to avoid re-paying the view's internal trades_ingested/quotes_ingested DISTINCT-scan cost on every query.",
+    "coverage_class_artifact": "results/phase_2/artifacts/coverage_class.parquet",
+    "event_flags": "results/phase_1b/artifacts/event_flags.parquet",
+    "classification_path": "results/phase_1b/artifacts/instrument_classification.parquet",
+    "phase_1b_config": "config/phase_1b.json"
+  }
+}
