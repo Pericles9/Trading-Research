@@ -1,0 +1,22 @@
+{
+  "phase": "3",
+  "amendment": "1",
+  "task": "A1-T3",
+  "n_eligible_population": 15349,
+  "n_deciles_available": 10,
+  "n_sample": 50,
+  "filtered_trades_dev_v3_rows": 11871483,
+  "filtered_quotes_dev_v3_rows": 7943227,
+  "a1t3b_rule_verification": {
+    "n_events_checked": 50,
+    "n_rule_fail": 0,
+    "escalation_triggered": false,
+    "failures": []
+  },
+  "subset_verification": {
+    "n_events_checked": 50,
+    "n_mismatch": 0,
+    "escalation_triggered": false
+  },
+  "source": "research/phase_3/build_dev_sample_v3.py:main"
+}

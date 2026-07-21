@@ -1,0 +1,312 @@
+{
+  "phase": "3",
+  "amendment": "1",
+  "seed": 42,
+  "n_deciles": 10,
+  "per_decile": 5,
+  "eligibility": "in_scope=TRUE AND trades_ingested=TRUE AND quotes_ingested=TRUE AND flag_window_calendar_bug=FALSE AND coverage_class='full_window' AND quotes_full_window=TRUE",
+  "n_eligible_population": 15349,
+  "n_events": 50,
+  "events": [
+    {
+      "ticker": "CBRL",
+      "date": "2020-03-24",
+      "momentum_pct": 31.13,
+      "decile": 0
+    },
+    {
+      "ticker": "ENSC",
+      "date": "2021-07-30",
+      "momentum_pct": 30.22,
+      "decile": 0
+    },
+    {
+      "ticker": "LVRO",
+      "date": "2023-03-20",
+      "momentum_pct": 31.54,
+      "decile": 0
+    },
+    {
+      "ticker": "POLA",
+      "date": "2021-01-25",
+      "momentum_pct": 30.59,
+      "decile": 0
+    },
+    {
+      "ticker": "SNT",
+      "date": "2023-10-09",
+      "momentum_pct": 31.25,
+      "decile": 0
+    },
+    {
+      "ticker": "AISP",
+      "date": "2024-03-13",
+      "momentum_pct": 33.07,
+      "decile": 1
+    },
+    {
+      "ticker": "ANEB",
+      "date": "2022-06-22",
+      "momentum_pct": 33.09,
+      "decile": 1
+    },
+    {
+      "ticker": "AVTX",
+      "date": "2023-09-14",
+      "momentum_pct": 32.32,
+      "decile": 1
+    },
+    {
+      "ticker": "BGM",
+      "date": "2024-12-02",
+      "momentum_pct": 32.31,
+      "decile": 1
+    },
+    {
+      "ticker": "SPRC",
+      "date": "2023-04-11",
+      "momentum_pct": 33.44,
+      "decile": 1
+    },
+    {
+      "ticker": "EQ",
+      "date": "2020-01-24",
+      "momentum_pct": 33.64,
+      "decile": 2
+    },
+    {
+      "ticker": "INM",
+      "date": "2022-09-06",
+      "momentum_pct": 34.25,
+      "decile": 2
+    },
+    {
+      "ticker": "OBLG",
+      "date": "2024-06-26",
+      "momentum_pct": 34.76,
+      "decile": 2
+    },
+    {
+      "ticker": "SYBX",
+      "date": "2020-12-14",
+      "momentum_pct": 35.71,
+      "decile": 2
+    },
+    {
+      "ticker": "TOMZ",
+      "date": "2023-10-05",
+      "momentum_pct": 35.59,
+      "decile": 2
+    },
+    {
+      "ticker": "BILL",
+      "date": "2021-02-05",
+      "momentum_pct": 36.05,
+      "decile": 3
+    },
+    {
+      "ticker": "BLBX",
+      "date": "2023-03-01",
+      "momentum_pct": 37.25,
+      "decile": 3
+    },
+    {
+      "ticker": "NAAS",
+      "date": "2023-03-28",
+      "momentum_pct": 36.91,
+      "decile": 3
+    },
+    {
+      "ticker": "OPAD",
+      "date": "2022-08-12",
+      "momentum_pct": 37.28,
+      "decile": 3
+    },
+    {
+      "ticker": "VTGN",
+      "date": "2023-05-31",
+      "momentum_pct": 37.57,
+      "decile": 3
+    },
+    {
+      "ticker": "DGLY",
+      "date": "2020-11-02",
+      "momentum_pct": 39.3,
+      "decile": 4
+    },
+    {
+      "ticker": "MATX",
+      "date": "2020-07-10",
+      "momentum_pct": 40.64,
+      "decile": 4
+    },
+    {
+      "ticker": "RIGL",
+      "date": "2020-07-13",
+      "momentum_pct": 39.33,
+      "decile": 4
+    },
+    {
+      "ticker": "STKS",
+      "date": "2021-03-23",
+      "momentum_pct": 39.39,
+      "decile": 4
+    },
+    {
+      "ticker": "VSME",
+      "date": "2023-10-04",
+      "momentum_pct": 39.69,
+      "decile": 4
+    },
+    {
+      "ticker": "IPW",
+      "date": "2024-01-08",
+      "momentum_pct": 42.8,
+      "decile": 5
+    },
+    {
+      "ticker": "MARA",
+      "date": "2020-07-28",
+      "momentum_pct": 42.96,
+      "decile": 5
+    },
+    {
+      "ticker": "MSGM",
+      "date": "2022-12-30",
+      "momentum_pct": 44.95,
+      "decile": 5
+    },
+    {
+      "ticker": "PENN",
+      "date": "2020-03-24",
+      "momentum_pct": 46.84,
+      "decile": 5
+    },
+    {
+      "ticker": "SOS",
+      "date": "2021-01-06",
+      "momentum_pct": 46.76,
+      "decile": 5
+    },
+    {
+      "ticker": "ISPO",
+      "date": "2024-08-16",
+      "momentum_pct": 47.32,
+      "decile": 6
+    },
+    {
+      "ticker": "LYRA",
+      "date": "2022-04-11",
+      "momentum_pct": 51.52,
+      "decile": 6
+    },
+    {
+      "ticker": "PDEX",
+      "date": "2024-11-01",
+      "momentum_pct": 49.9,
+      "decile": 6
+    },
+    {
+      "ticker": "WKSP",
+      "date": "2024-04-30",
+      "momentum_pct": 51.46,
+      "decile": 6
+    },
+    {
+      "ticker": "YQ",
+      "date": "2022-06-08",
+      "momentum_pct": 55.19,
+      "decile": 6
+    },
+    {
+      "ticker": "BBGI",
+      "date": "2020-11-03",
+      "momentum_pct": 65.32,
+      "decile": 7
+    },
+    {
+      "ticker": "ITRM",
+      "date": "2020-10-20",
+      "momentum_pct": 62.35,
+      "decile": 7
+    },
+    {
+      "ticker": "LICN",
+      "date": "2024-12-12",
+      "momentum_pct": 56.84,
+      "decile": 7
+    },
+    {
+      "ticker": "POWW",
+      "date": "2021-01-13",
+      "momentum_pct": 65.68,
+      "decile": 7
+    },
+    {
+      "ticker": "SWVL",
+      "date": "2024-01-05",
+      "momentum_pct": 62.45,
+      "decile": 7
+    },
+    {
+      "ticker": "EBON",
+      "date": "2023-12-20",
+      "momentum_pct": 74.99,
+      "decile": 8
+    },
+    {
+      "ticker": "HYMC",
+      "date": "2022-03-28",
+      "momentum_pct": 87.5,
+      "decile": 8
+    },
+    {
+      "ticker": "KSCP",
+      "date": "2024-10-21",
+      "momentum_pct": 84.32,
+      "decile": 8
+    },
+    {
+      "ticker": "OLB",
+      "date": "2024-05-02",
+      "momentum_pct": 76.99,
+      "decile": 8
+    },
+    {
+      "ticker": "VEON",
+      "date": "2022-03-04",
+      "momentum_pct": 82.55,
+      "decile": 8
+    },
+    {
+      "ticker": "BBLG",
+      "date": "2023-12-28",
+      "momentum_pct": 127.1,
+      "decile": 9
+    },
+    {
+      "ticker": "ILAG",
+      "date": "2022-10-14",
+      "momentum_pct": 128.14,
+      "decile": 9
+    },
+    {
+      "ticker": "JAGX",
+      "date": "2024-04-16",
+      "momentum_pct": 118.69,
+      "decile": 9
+    },
+    {
+      "ticker": "KAVL",
+      "date": "2024-06-14",
+      "momentum_pct": 515.44,
+      "decile": 9
+    },
+    {
+      "ticker": "ONFO",
+      "date": "2023-05-26",
+      "momentum_pct": 105.13,
+      "decile": 9
+    }
+  ]
+}
