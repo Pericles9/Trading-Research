@@ -1,0 +1,215 @@
+{
+  "phase": "2",
+  "task": "T4",
+  "population": "momentum_events_canonical.source_file='file2' AND in_scope=TRUE",
+  "n_events": 5188,
+  "n_events_anchor_not_xnys_session": 0,
+  "n_events_in_matrix": 5188,
+  "high_momentum_source": "N/A - absent from E: data root, see T3a (results/phase_2/artifacts/high_momentum_inventory_summary.json)",
+  "chart_04_branch": "not triggered - T3a found no high_momentum dates at all (dir absent), so no pre-2025 extension is possible; 2025-only matrix per decisions_log",
+  "coverage_by_offset": [
+    {
+      "offset": -3,
+      "n_events": 5188,
+      "pct_filtered_trades": 3.62,
+      "pct_filtered_quotes": 3.7
+    },
+    {
+      "offset": -2,
+      "n_events": 5188,
+      "pct_filtered_trades": 0.73,
+      "pct_filtered_quotes": 1.56
+    },
+    {
+      "offset": -1,
+      "n_events": 5188,
+      "pct_filtered_trades": 0.69,
+      "pct_filtered_quotes": 2.31
+    },
+    {
+      "offset": 0,
+      "n_events": 5188,
+      "pct_filtered_trades": 100.0,
+      "pct_filtered_quotes": 99.29
+    },
+    {
+      "offset": 1,
+      "n_events": 5188,
+      "pct_filtered_trades": 0.46,
+      "pct_filtered_quotes": 0.5
+    },
+    {
+      "offset": 2,
+      "n_events": 5188,
+      "pct_filtered_trades": 0.46,
+      "pct_filtered_quotes": 0.5
+    },
+    {
+      "offset": 3,
+      "n_events": 5188,
+      "pct_filtered_trades": 4.01,
+      "pct_filtered_quotes": 4.03
+    }
+  ],
+  "per_event_covered_session_count_distribution": {
+    "filtered_trades": {
+      "1": 4670,
+      "2": 518
+    },
+    "filtered_quotes": {
+      "0": 37,
+      "1": 4559,
+      "2": 543,
+      "3": 40,
+      "4": 7,
+      "5": 1,
+      "7": 1
+    }
+  },
+  "strata": {
+    "repaired_1c": {
+      "n_events": 518,
+      "coverage_by_offset": [
+        {
+          "offset": -3,
+          "n_events": 518,
+          "pct_filtered_trades": 36.29,
+          "pct_filtered_quotes": 36.29
+        },
+        {
+          "offset": -2,
+          "n_events": 518,
+          "pct_filtered_trades": 7.34,
+          "pct_filtered_quotes": 8.11
+        },
+        {
+          "offset": -1,
+          "n_events": 518,
+          "pct_filtered_trades": 6.95,
+          "pct_filtered_quotes": 8.69
+        },
+        {
+          "offset": 0,
+          "n_events": 518,
+          "pct_filtered_trades": 100.0,
+          "pct_filtered_quotes": 99.81
+        },
+        {
+          "offset": 1,
+          "n_events": 518,
+          "pct_filtered_trades": 4.63,
+          "pct_filtered_quotes": 4.63
+        },
+        {
+          "offset": 2,
+          "n_events": 518,
+          "pct_filtered_trades": 4.63,
+          "pct_filtered_quotes": 4.63
+        },
+        {
+          "offset": 3,
+          "n_events": 518,
+          "pct_filtered_trades": 40.15,
+          "pct_filtered_quotes": 39.96
+        }
+      ]
+    },
+    "residual_flag_window_calendar_bug": {
+      "n_events": 3,
+      "coverage_by_offset": [
+        {
+          "offset": -3,
+          "n_events": 3,
+          "pct_filtered_trades": 0.0,
+          "pct_filtered_quotes": 0.0
+        },
+        {
+          "offset": -2,
+          "n_events": 3,
+          "pct_filtered_trades": 0.0,
+          "pct_filtered_quotes": 0.0
+        },
+        {
+          "offset": -1,
+          "n_events": 3,
+          "pct_filtered_trades": 0.0,
+          "pct_filtered_quotes": 0.0
+        },
+        {
+          "offset": 0,
+          "n_events": 3,
+          "pct_filtered_trades": 100.0,
+          "pct_filtered_quotes": 66.67
+        },
+        {
+          "offset": 1,
+          "n_events": 3,
+          "pct_filtered_trades": 0.0,
+          "pct_filtered_quotes": 0.0
+        },
+        {
+          "offset": 2,
+          "n_events": 3,
+          "pct_filtered_trades": 0.0,
+          "pct_filtered_quotes": 0.0
+        },
+        {
+          "offset": 3,
+          "n_events": 3,
+          "pct_filtered_trades": 0.0,
+          "pct_filtered_quotes": 0.0
+        }
+      ]
+    },
+    "trades_only_quotes_not_ingested": {
+      "n_events": 37,
+      "coverage_by_offset": [
+        {
+          "offset": -3,
+          "n_events": 37,
+          "pct_filtered_trades": 0.0,
+          "pct_filtered_quotes": 0.0
+        },
+        {
+          "offset": -2,
+          "n_events": 37,
+          "pct_filtered_trades": 0.0,
+          "pct_filtered_quotes": 0.0
+        },
+        {
+          "offset": -1,
+          "n_events": 37,
+          "pct_filtered_trades": 0.0,
+          "pct_filtered_quotes": 0.0
+        },
+        {
+          "offset": 0,
+          "n_events": 37,
+          "pct_filtered_trades": 100.0,
+          "pct_filtered_quotes": 0.0
+        },
+        {
+          "offset": 1,
+          "n_events": 37,
+          "pct_filtered_trades": 0.0,
+          "pct_filtered_quotes": 0.0
+        },
+        {
+          "offset": 2,
+          "n_events": 37,
+          "pct_filtered_trades": 0.0,
+          "pct_filtered_quotes": 0.0
+        },
+        {
+          "offset": 3,
+          "n_events": 37,
+          "pct_filtered_trades": 2.7,
+          "pct_filtered_quotes": 0.0
+        }
+      ],
+      "note": "quotes_ingested=FALSE by definition - 0% filtered_quotes coverage at every offset is expected, not a new finding"
+    }
+  },
+  "source": "research/phase_2/t4_window_coverage.py:main",
+  "artifact": "results/phase_2/artifacts/window_coverage.parquet"
+}
