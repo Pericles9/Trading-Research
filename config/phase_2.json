@@ -4,13 +4,17 @@
   "seed": 42,
   "session_calendar": {
     "library": "pandas_market_calendars",
-    "library_version": "5.4.0",
+    "library_version_pinned_by_phase_1c": "5.4.0",
+    "underlying_engine_version_pinned_by_phase_1c": "4.13.2",
+    "library_version_actually_used": "5.3.0",
+    "underlying_engine_version_actually_used": "4.12",
+    "version_drift_note": "config/phase_1c.json pins pandas_market_calendars 5.4.0 / exchange_calendars 4.13.2. The project .venv (E:/Trading Research/.venv) has 5.3.0 / 4.12 installed - the environment drifted since phase 1c ran. Not upgraded to match the pin, to avoid an unrequested environment change affecting other work; used what's installed instead and recorded the drift here. Not independently cross-verified session-by-session against phase 1b/1c's fitted output beyond this note - risk judged low (patch-level differences in a well-established calendar for a mostly-historical date range) but not zero.",
     "calendar_code": "XNYS",
     "derivation_range": {
       "start": "2019-12-01",
       "end": "2026-01-15"
     },
-    "note": "Same pin as config/phase_1b.json (Amendment 3) and config/phase_1c.json. Restated here per phase-config-is-self-contained convention. The legacy federal-holiday-calendar function (research/phase_1b/window_calendar_bug_quantification.py's legacy_window()) is not used anywhere in this phase - XNYS only, per prompt constraint."
+    "note": "Same pin intent as config/phase_1b.json (Amendment 3) and config/phase_1c.json. Restated here per phase-config-is-self-contained convention. The legacy federal-holiday-calendar function (research/phase_1b/window_calendar_bug_quantification.py's legacy_window()) is not used anywhere in this phase - XNYS only, per prompt constraint."
   },
   "session_date_derivation": {
     "note": "filtered_trades/filtered_quotes carry no per-row session-date column, only the event's anchor event_date. Session date per row is derived from sip_timestamp exactly as research/phase_1b/window_calendar_bug_quantification.py does it, for consistency with the established project convention.",

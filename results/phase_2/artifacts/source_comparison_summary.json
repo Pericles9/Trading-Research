@@ -1,0 +1,52 @@
+{
+  "phase": "2",
+  "task": "T5",
+  "n_compared_event_sessions": 0,
+  "reason": "high_momentum/ absent from the E: data root (T3a) - zero (event, session) pairs can be present in both sources.",
+  "escalation_check": {
+    "condition": "row divergence > 10% on > 10% of compared event-sessions",
+    "n_compared": 0,
+    "triggered": false,
+    "note": "Vacuously not triggered - no pairs to compare, not evidence of agreement."
+  },
+  "column_schema_diff": {
+    "note": "high_momentum/ is absent (T3a) - this schema diff is reported from results/cleanup/deletion_report.md's description of the migration write path, not from reading a live high_momentum file. Not independently verified.",
+    "filtered_trades_db_columns": [
+      "exchange",
+      "id",
+      "participant_timestamp",
+      "price",
+      "sequence_number",
+      "sip_timestamp",
+      "size",
+      "tape",
+      "trf_id",
+      "trf_timestamp",
+      "correction"
+    ],
+    "high_momentum_documented_columns": [
+      "sip_timestamp",
+      "price",
+      "size"
+    ],
+    "columns_only_in_filtered_trades": [
+      "correction",
+      "exchange",
+      "id",
+      "participant_timestamp",
+      "sequence_number",
+      "tape",
+      "trf_id",
+      "trf_timestamp"
+    ],
+    "columns_only_in_high_momentum": [],
+    "columns_in_both": [
+      "price",
+      "sip_timestamp",
+      "size"
+    ],
+    "documented_transform": "sip_timestamp converted ms->ns (x1,000,000) on write into filtered/; corrupted rows (null sip_timestamp/price/size) dropped at copy time."
+  },
+  "source": "research/phase_2/t5_source_comparison.py:main",
+  "artifact": "results/phase_2/artifacts/source_comparison.parquet"
+}
