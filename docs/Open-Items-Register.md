@@ -30,4 +30,4 @@ created per Phase 2's T8 addendum instruction to "log verbatim to the register."
 
 ## Closed
 
-_(none yet)_
+- **Dev sample re-pinned v2→v3.** `config/dev_sample_v2.json`'s eligibility rule predated `coverage_class` (Phase 2 T8) and never screened T-3..T+3 window completeness — Phase 3 T2 found 15/50 v2 events were `event_day_only`. Re-pinned as v3 (`config/dev_sample_v3.json`, same seed 42, same decile stratification, eligibility rule adds `coverage_class='full_window' AND quotes_full_window=TRUE`). v2 remains committed as the historical sample, not deleted. — closed Phase 3 Amendment 1 (A1-T5), 2026-07-21.
