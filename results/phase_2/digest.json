@@ -1,0 +1,53 @@
+{
+  "phase": "2",
+  "title": "2025 Reconciliation & trade_data/high_momentum/ Window Coverage",
+  "branch": "phase/2",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-20",
+  "baseline": "phase-1c-approved",
+  "summary": "Spine guard confirms 20,951 in-scope (unchanged). 2025 slice = source_file='file2' (confirmed: file1 has zero 2025 rows), 5,188/5,911 in-scope. Pre-T1 finding: trade_data/high_momentum/ is absent from the E: data root - migrated into filtered/ on D: on 2026-07-11 (results/cleanup/), one day before the D:->E: hardware migration, subtractive 3-column schema, trades-only. Per Cooper's explicit instruction, executed as literally scoped: T3a/T4(c-source)/T5 are N/A per the escalation table's own 'absent - not a stop' row. Core T4 finding: filtered_trades coverage is ~100% at the event day and collapses to 0.5-4.0% at every other T-3..T+3 offset (5,188 events) - the 2025 population is effectively event-day-only, consistent with T2's finding that 91.5% of 2025 events' trades rows bear the migration's schema fingerprint. T5 vacuously N/A (0 compared pairs).",
+  "headline_metrics": [
+    {"metric": "Spine + 2025 population", "value": "20,951 in-scope guard PASS; 2025 slice 5,188/5,911 in-scope (723 excluded); 518 repaired_1c, 3 residual flag_window_calendar_bug, 37 trades-only", "chart": "results/phase_2/artifacts/t1_population.json"},
+    {"metric": "2025 quality screen", "value": "0 rows exceed the 10,000 sanity bound (max 918.26); 0 prev_close<=0.01; 1,385/5,188 (26.7%) recompute-mismatch flagged, median 0.10pp, low-prev_close concentrated; 0 duplicate (ticker,event_day) pairs", "chart": "results/phase_2/charts/02_2025_momentum_quality.html"},
+    {"metric": "Migration-signature facet", "value": "5,848/5,848 2025 events with any filtered_trades rows show some migration-schema-null rows; 5,352 (91.5%) fully so", "chart": "results/phase_2/artifacts/scan_2025_quality.json"},
+    {"metric": "high_momentum/ inventory", "value": "absent (0 files, no subfolder); logs/ and metadata/ also absent; migrated into filtered/ pre-phase per results/cleanup/", "chart": "results/phase_2/artifacts/high_momentum_inventory_summary.json"},
+    {"metric": "Collection-list overlap", "value": "momentum_events_for_collection.parquet: 4,359 rows, 100% year-2024; matches 4,359/4,359 vs file1 population, 0/5,188 vs 2025 in-scope - unrelated to the 2025 migration", "chart": "results/phase_2/artifacts/collection_list_overlap.json"},
+    {"metric": "Window coverage - core finding", "value": "filtered_trades: 100.0% at T=0, 3.62/0.73/0.69/0.46/0.46/4.01% at T-3..T+3 excl. 0 (5,188 events); 4,670 events have exactly 1/7 sessions covered", "chart": "results/phase_2/charts/01_window_coverage_by_offset.html"},
+    {"metric": "Overlap comparison (T5)", "value": "N/A - 0 (event,session) pairs present in both sources; escalation check vacuously not triggered", "chart": "results/phase_2/charts/03_source_rowcount_comparison.html"}
+  ],
+  "escalations_triggered_and_resolved": [
+    {"criterion": "T3: high_momentum/ absent or unreadable at the expected path", "resolution": "Post finding + continue per the table's own row; T3a/T4(c-source)/T5 executed as N/A/absent-source, Cooper confirmed proceed-as-scoped"}
+  ],
+  "escalations_checked_not_triggered": [
+    {"criterion": "T1 canonical in-scope != 20,951", "observed": 20951},
+    {"criterion": "Any DB/data-root write required", "observed": "none - read_only=True throughout, verified"},
+    {"criterion": "T3a filename parse rate < 95%", "observed": "N/A - no files"},
+    {"criterion": "T3a unreadable files > 2%", "observed": "N/A - no files"},
+    {"criterion": "T5 row divergence > 10% on > 10% event-sessions", "observed": "N/A - 0 compared pairs"}
+  ],
+  "decisions_log": [
+    {"decision": "2025 slice = momentum_events_canonical.source_file='file2'", "reason": "confirmed directly: file1 (date) spans 2020-01-03..2024-12-31 with zero 2025 rows; file2 (event_date) spans 2025-01-03..2025-10-31 with zero pre-2025 rows"},
+    {"decision": "Proceed as literally scoped despite the high_momentum-absence finding being larger than the escalation row anticipated", "reason": "Cooper explicitly chose this option after the pre-T1 finding was surfaced; documented fully in prompts/phase_2.md's addendum rather than silently reinterpreting T4/T5"},
+    {"decision": "Used installed pandas_market_calendars 5.3.0/exchange_calendars 4.12, not the phase_1c pin (5.4.0/4.13.2)", "reason": "project .venv has drifted since phase 1c ran; upgrading it was judged an unrequested environment change with effects beyond this phase, so used what's installed and documented the drift instead"},
+    {"decision": "T4 strata bug (apply-based key match returned empty for repaired_1c/flag_window_calendar_bug) fixed before commit", "reason": "matrix already carried both flags per-row from the join; switched to direct column filtering and re-ran full script for a consistent script+artifact pair"}
+  ],
+  "surprises": [
+    "high_momentum/ isn't just absent - it was already migrated into filtered/ on D: on 2026-07-11 (5,902/5,949 events, subtractive 3-column schema, trades-only), one day before the D:->E: hardware migration; the 47 kept-back 'blocked' files are also missing from E:, untraced further (out of scope).",
+    "momentum_events_for_collection.parquet (the one file this phase's scoped lift found readable) is 100% year-2024-dated and has zero overlap with the 2025 in-scope population - it does not establish 'what high_momentum was built to cover' as the prompt anticipated.",
+    "91.5% of 2025 events' filtered_trades rows bear the migration's exact subtractive-schema null pattern - the 2025 population in filtered/ is overwhelmingly migrated data, not organic 7-day vendor collection.",
+    "Window coverage confirms it: filtered_trades coverage collapses from 100% (event day) to under 5% at every flanking offset for the general 2025 population; only the 518 phase-1c-repaired events do meaningfully better at the outer offsets (36-40%).",
+    "26.7% of the 2025 in-scope slice fails a stored-vs-recomputed momentum_pct check, but magnitude is small (median 0.10pp) and concentrated among low-prev_close names - consistent with 2-decimal rounding amplification, not verified further."
+  ],
+  "output_files": {
+    "prompts": ["prompts/phase_2.md"],
+    "config": ["config/phase_2.json"],
+    "scripts": "research/phase_2/*.py (8 scripts: t1-t5 + build_chart_01/02/03)",
+    "artifacts": "results/phase_2/artifacts/*.json (committed) + *.parquet (gitignored, regenerable)",
+    "charts": ["results/phase_2/charts/01_window_coverage_by_offset.html", "results/phase_2/charts/02_2025_momentum_quality.html", "results/phase_2/charts/03_source_rowcount_comparison.html"],
+    "chart_04": "not triggered - high_momentum has no dates at all to facet by year",
+    "report": "results/phase_2/REPORT.md", "digest": "results/phase_2/digest.json"
+  },
+  "commits": 7,
+  "reproduce": ".venv/Scripts/python.exe -m research.phase_2.t1_population && .venv/Scripts/python.exe -m research.phase_2.t2_quality_screen && .venv/Scripts/python.exe -m research.phase_2.t3_high_momentum_inventory && .venv/Scripts/python.exe -m research.phase_2.t4_window_coverage && .venv/Scripts/python.exe -m research.phase_2.t5_source_comparison",
+  "approval_gate": "Do not begin Phase 3 or any follow-on work until Cooper reviews and gives explicit approval. Pending: 2025 inclusion vs. terminal-holdout status, and conditionally whether the dev sample is re-pinned to a 2025-inclusive eligibility pool."
+}
