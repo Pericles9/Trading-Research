@@ -1,0 +1,51 @@
+{
+  "phase": "2",
+  "baseline": "phase-1c-approved",
+  "seed": 42,
+  "session_calendar": {
+    "library": "pandas_market_calendars",
+    "library_version": "5.4.0",
+    "calendar_code": "XNYS",
+    "derivation_range": {
+      "start": "2019-12-01",
+      "end": "2026-01-15"
+    },
+    "note": "Same pin as config/phase_1b.json (Amendment 3) and config/phase_1c.json. Restated here per phase-config-is-self-contained convention. The legacy federal-holiday-calendar function (research/phase_1b/window_calendar_bug_quantification.py's legacy_window()) is not used anywhere in this phase - XNYS only, per prompt constraint."
+  },
+  "session_date_derivation": {
+    "note": "filtered_trades/filtered_quotes carry no per-row session-date column, only the event's anchor event_date. Session date per row is derived from sip_timestamp exactly as research/phase_1b/window_calendar_bug_quantification.py does it, for consistency with the established project convention.",
+    "expr": "CAST(TO_TIMESTAMP(sip_timestamp / 1e9) AS DATE)"
+  },
+  "quality_screen": {
+    "junk_momentum_sanity_bound": 10000,
+    "prev_close_floor": 0.01,
+    "recompute_mismatch_tolerance": 0.01
+  },
+  "escalation_thresholds": {
+    "canonical_in_scope_expected": 20951,
+    "high_momentum_filename_parse_rate_floor": 0.95,
+    "high_momentum_unreadable_file_ceiling_pct": 2.0,
+    "source_divergence_row_pct_max": 0.10,
+    "source_divergence_event_session_pct_max": 0.10
+  },
+  "2025_slice_definition": {
+    "note": "momentum_events raw table splits cleanly on date-column presence: file1 (date IS NOT NULL) spans 2020-01-03..2024-12-31, n=17357, zero 2025 rows. file2 (event_date IS NOT NULL, date IS NULL) spans 2025-01-03..2025-10-31, n=5911, zero pre-2025 rows. The prompt's 'source_file = scan_2025 (or equivalent canonical flag)' resolves to momentum_events_canonical.source_file = 'file2'. Confirmed via direct query against momentum_events, not assumed.",
+    "canonical_filter": "source_file = 'file2' AND in_scope = TRUE"
+  },
+  "paths": {
+    "momentum_events_db": "data/duckdb/main.duckdb",
+    "canonical_view_module": "src/data/canonical.py",
+    "canonical_view_note": "Phase 2 is a zero-DuckDB-write phase (no CREATE VIEW). Scripts replicate canonical.py's stage='t6' SQL as a read-only CTE against the read-only connection instead of calling create_view().",
+    "event_flags": "results/phase_1b/artifacts/event_flags.parquet",
+    "instrument_classification": "results/phase_1b/artifacts/instrument_classification.parquet",
+    "phase_1b_config": "config/phase_1b.json",
+    "high_momentum_dir": "data/trade_data/high_momentum",
+    "collection_list": "data/trade_data/momentum_events_for_collection.parquet",
+    "trade_data_logs": "data/trade_data/logs",
+    "trade_data_metadata": "data/trade_data/metadata",
+    "cleanup_provenance": "results/cleanup/"
+  },
+  "known_finding_pre_t1": {
+    "note": "high_momentum/ is absent from the current E: data root (0 files, no subfolder) - see prompts/phase_2.md Addendum. Migrated into filtered/ on D: on 2026-07-11 (results/cleanup/deletion_report.md, results/cleanup/emergency_unblock_report.md, both git-tracked), one day before the D:->E: hardware migration (2026-07-12). 5,902/5,949 unique 2025-gap (ticker,date) pairs migrated with a subtractive 3-column schema (sip_timestamp/price/size only, ms->ns converted, trades-only); 47 confirmed-lost/blocked kept back and now also absent on E:. Cooper instruction: proceed as literally scoped - T3a, T4 high_momentum column, and T5 execute as N/A/absent-source per the escalation table's 'high_momentum absent - not a stop' row."
+  }
+}
