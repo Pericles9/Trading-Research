@@ -1,0 +1,73 @@
+{
+  "phase": "4",
+  "title": "Quotes-Side Coverage Census & Root-Cause Classification",
+  "branch": "phase/4",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-21",
+  "baseline": "phase-3-approved",
+  "summary": "T0b: venv calendar pin corrected to 5.4.0/4.13.2, re-verified 1,539/1,539 sessions 0 diffs, register item closed. T1: spine guard 20,951 pass; cohort/overlap 287/386/259-28-127 all exact matches, fully reconciled. T2: filesystem census of filtered/ - 24,723 folders, presence_class both=23,003/trades_only=1,606/quotes_only=0/neither=114 (neither == exactly the 114 None-date orphan folders), 0 unreadable/zero-row files. T3: three-way reconciliation - every raw momentum_events row (23,268) has a disk folder; the 1,606-folder gap is 83.5% (1,341) unmatched to momentum_events entirely (reproduces CLAUDE.md's documented 1,341-orphan figure), 8.8% (142) in-scope/file1; 127 quotes-only cohort verified exactly (98 no-file + 29 partial); 386 cohort splits 142 no-file/244 partial-file; 0 hard-stop ingestion-gap events. T4: single full-table pass over filtered_quotes bitmapped all 386 cohort events (16 patterns, top=142 all-missing). T5: bitmap-first classification (changed precedence vs Phase 3, justified in report) - backward_missing 217/both_sides 150/forward_missing 19/archive_edge 0, 0% unclassified; label_p3_precedence crosswalk computed for comparability. T6: collection-log correlation, descriptive only - explicit_failure 142/mentioned_no_failure 244/not_mentioned 0. T7: 4 charts per the Chart Contract, visually verified via kaleido render before commit. No escalations triggered.",
+  "headline_metrics": [
+    {"name": "t0b_calendar_pin_diff", "value": "1,539/1,539 sessions, 0 diffs", "n": 1539,
+     "source": "research/phase_4/t0b_calendar_pin_correction.py:main",
+     "chart": null},
+    {"name": "spine_guard_and_cohorts", "value": "in_scope=20,951; trades=287; quotes=386; overlap both=259/trades_only=28/quotes_only=127", "n": 20951,
+     "source": "research/phase_4/t1_guard.py:main",
+     "chart": "results/phase_4/artifacts/t1_guard.json"},
+    {"name": "disk_census_presence_class", "value": "both=23,003; trades_only=1,606; quotes_only=0; neither=114 (== 114 None-date orphans exactly)", "n": 24723,
+     "source": "research/phase_4/t2_disk_census.py:main",
+     "chart": "results/phase_4/charts/01_gap_location_waterfall.html"},
+    {"name": "gap_location_trades_only_1606", "value": "unmatched_to_spine=1,341 (83.5%); in_scope/file1=142; out_of_scope/file2=74; in_scope/file2=37; out_of_scope/file1=12", "n": 1606,
+     "source": "research/phase_4/t3_reconciliation.py:main",
+     "chart": "results/phase_4/charts/01_gap_location_waterfall.html"},
+    {"name": "quotes_bitmap_386", "value": "16 distinct patterns; top pattern 0000000 (all missing) n=142", "n": 386,
+     "source": "research/phase_4/t4_quotes_bitmap.py:main",
+     "chart": "results/phase_4/charts/02_quotes_missing_pattern_by_class.html"},
+    {"name": "classification_labels_bitmap_first", "value": "backward_missing=217 (56.2%); both_sides=150 (38.9%); forward_missing=19 (4.9%); archive_edge=0; unclassified=0 (0%)", "n": 386,
+     "source": "research/phase_4/t5_classify.py:main",
+     "chart": "results/phase_4/charts/02_quotes_missing_pattern_by_class.html"},
+    {"name": "label_p3_precedence_crosswalk", "value": "34 calendar_residue (P3 rule) split under bitmap-first: 22 backward_missing + 11 both_sides + 1 forward_missing", "n": 386,
+     "source": "results/phase_4/artifacts/classification_summary.json",
+     "chart": "results/phase_4/charts/04_trades_quotes_label_matrix.html"},
+    {"name": "log_correlation", "value": "explicit_failure=142 (36.8%); mentioned_no_failure=244 (63.2%); not_mentioned=0", "n": 386,
+     "source": "research/phase_4/t6_log_correlation.py:main",
+     "chart": null}
+  ],
+  "escalations_triggered_and_resolved": [],
+  "escalations_checked_not_triggered": [
+    {"criterion": "quotes present+readable+in_scope, absent from filtered_quotes", "observed": 0},
+    {"criterion": "in_scope guard != 20,951", "observed": 20951},
+    {"criterion": "cohort/overlap mismatch (287/386/259-28-127)", "observed": "287/386/259-28-127 exact"},
+    {"criterion": "present-but-unreadable or zero-row quotes.parquet", "observed": 0},
+    {"criterion": "unclassified label share of 386 cohort > 30%", "observed": "0 (0%)"},
+    {"criterion": "T0b calendar diff check != 0", "observed": "0 diffs"},
+    {"criterion": "any write to data root, DB main tables, or canonical view", "observed": "none"}
+  ],
+  "decisions_log": [
+    {"decision": "T5 label precedence is bitmap-first (archive_edge intercepts, then pure missing-offset shape); flag_window_calendar_bug/repaired_1c carried as annotation columns only, not label-determining",
+     "reason": "Phase 3's calendar-flag intercept produced a label coarser than the true cause for 21/35 calendar_residue events (confirmed again this phase: 21 of 34 p3-rule calendar_residue events resolve to backward_missing/both_sides/forward_missing under bitmap-first). archive_edge is kept in its original intercept position since it is a structural date-range check, not a flag-based one, and was not implicated in the coarsening critique. label_p3_precedence computed alongside for cross-phase comparability."},
+    {"decision": "T2's disk census used DuckDB's parquet_file_metadata()/parquet_metadata() table functions (row-group footer statistics) instead of a per-file pyarrow loop",
+     "reason": "benchmarked both on a 500-folder sample: pyarrow per-file loop projected to ~61 minutes for the full 24,723-folder x 2-file census; DuckDB's batched metadata functions projected to ~8-9 minutes and delivered the same footer-only row_count/min-max guarantee (no data-page scan) T2 requires"},
+    {"decision": "T4 joined filtered_quotes to ALL 20,951 in-scope events (not just the 386 cohort), caching the full result for T5 to reuse",
+     "reason": "T5's weak listing/delisting signature needs each cohort ticker's session range across all of that ticker's own in-scope events, which can include events outside the 386 cohort; caching keeps the phase to a single full-table pass over filtered_quotes, per the Context section's explicit two-tier-deviation commitment"},
+    {"decision": "T6 matched log evidence to events via ticker+date window bounds (from the log's own 'Processing TICKER (event_date): Window start to end' records), not by ticker+date alone",
+     "reason": "the log's per-session lines ('Saved quotes for TICKER DATE', 'No quotes found for TICKER on DATE') are not uniquely attributable to one event when a ticker has overlapping event windows; anchoring to the per-event Processing/window record is the only unambiguous per-event correlation available, per the prompt's own no-causal-language instruction"}
+  ],
+  "surprises": [
+    "The 114 presence_class='neither' folders (no trades.parquet, no quotes.parquet at all) are exactly, set-for-set, the 114 'None'-date orphan folders - empty stubs from unresolvable-date/warrant tickers, not a data-loss case.",
+    "Every one of the 23,268 raw momentum_events rows has a corresponding disk folder - none of the trades/quotes gap traces to a missing folder for a known event; the entire 1,341-folder 'unmatched to spine' population is folders that exist on disk with no momentum_events row at all.",
+    "37 in-scope file2 (2025) events were found to have no quotes.parquet at all on disk (disk-level trades_only) - outside this phase's file1-scoped 386-cohort classification, so not characterized here. Flagged to the register as a new open item.",
+    "89.9% (195/217) of the quotes-side backward_missing cohort shows the weak listing signature, vs. 80.5% (173/215) on Phase 3's trades side - a notably higher rate, not explained by this phase (descriptive only)."
+  ],
+  "output_files": {
+    "prompts": ["prompts/phase_4.md"],
+    "config": ["config/phase_4.json"],
+    "scripts": "research/phase_4/*.py (12 scripts: t0b, t1-t6, t2b addendum, build_chart_01-04)",
+    "artifacts": "results/phase_4/artifacts/*.json (committed) + *.parquet (gitignored, regenerable)",
+    "charts": ["results/phase_4/charts/01_gap_location_waterfall.html", "results/phase_4/charts/02_quotes_missing_pattern_by_class.html", "results/phase_4/charts/03_cohort_temporal_distribution.html", "results/phase_4/charts/04_trades_quotes_label_matrix.html"],
+    "docs": ["docs/Open-Items-Register.md (T0b closed, new open item added)"],
+    "report": "results/phase_4/REPORT.md", "digest": "results/phase_4/digest.json"
+  },
+  "commits": 10,
+  "reproduce": ".venv/Scripts/python.exe -m research.phase_4.t1_guard && ... t2_disk_census/t3_reconciliation/t4_quotes_bitmap/t5_classify/t6_log_correlation && .venv/Scripts/python.exe -m research.phase_4.build_chart_01",
+  "approval_gate": "Do not begin any follow-on work - including any spine mutation, any quotes_full_window semantic change, or any recollection scoping - until Cooper has reviewed results and given explicit approval."
+}
