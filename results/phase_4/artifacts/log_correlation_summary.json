@@ -1,0 +1,99 @@
+{
+  "phase": "4",
+  "task": "T6",
+  "note": "Descriptive only. No causal language. Session-level log lines are not uniquely attributable when a ticker has overlapping event windows.",
+  "n_cohort": 386,
+  "log_stats": {
+    "n_lines": 113871,
+    "n_processing_records": 17745,
+    "n_no_quotes_window_records": 484,
+    "n_generic_error_lines": 12085,
+    "n_retry_lines": 30,
+    "n_skipping_invalid_date_lines": 5911
+  },
+  "log_evidence_counts": {
+    "mentioned_no_failure": 244,
+    "explicit_failure": 142
+  },
+  "log_evidence_counts_pct": {
+    "mentioned_no_failure": 63.21,
+    "explicit_failure": 36.79
+  },
+  "log_evidence_by_label": {
+    "backward_missing": {
+      "explicit_failure": 0,
+      "mentioned_no_failure": 217
+    },
+    "both_sides": {
+      "explicit_failure": 142,
+      "mentioned_no_failure": 8
+    },
+    "forward_missing": {
+      "explicit_failure": 0,
+      "mentioned_no_failure": 19
+    }
+  },
+  "examples": {
+    "explicit_failure": [
+      {
+        "ticker": "ACFN",
+        "event_day": "2023-08-10 00:00:00",
+        "matched_lines_sample": [
+          "2026-01-19 21:35:47,907 - INFO - Processing ACFN (2023-08-10): Window 2023-08-07 to 2023-08-15",
+          "2026-01-19 21:35:50,643 - WARNING - No quotes collected for ACFN in window ['2023-08-07', '2023-08-08', '2023-08-09', '2023-08-10', '2023-08-11', '2023-08-14', '2023-08-15']",
+          "2026-01-20 09:37:32,317 - WARNING - No quotes collected for ACFN in window ['2023-08-07', '2023-08-08', '2023-08-09', '2023-08-10', '2023-08-11', '2023-08-14', '2023-08-15']",
+          "2026-01-20 09:41:25,547 - WARNING - No quotes collected for ACFN in window ['2023-08-07', '2023-08-08', '2023-08-09', '2023-08-10', '2023-08-11', '2023-08-14', '2023-08-15']",
+          "2026-01-20 11:01:07,649 - WARNING - No quotes collected for ACFN in window ['2023-08-07', '2023-08-08', '2023-08-09', '2023-08-10', '2023-08-11', '2023-08-14', '2023-08-15']"
+        ]
+      },
+      {
+        "ticker": "ACFN",
+        "event_day": "2023-09-07 00:00:00",
+        "matched_lines_sample": [
+          "2026-01-19 21:35:50,748 - INFO - Processing ACFN (2023-09-07): Window 2023-09-01 to 2023-09-12",
+          "2026-01-19 21:35:53,858 - WARNING - No quotes collected for ACFN in window ['2023-09-01', '2023-09-05', '2023-09-06', '2023-09-07', '2023-09-08', '2023-09-11', '2023-09-12']",
+          "2026-01-20 09:37:27,252 - WARNING - No quotes collected for ACFN in window ['2023-09-01', '2023-09-05', '2023-09-06', '2023-09-07', '2023-09-08', '2023-09-11', '2023-09-12']",
+          "2026-01-20 09:41:25,697 - WARNING - No quotes collected for ACFN in window ['2023-09-01', '2023-09-05', '2023-09-06', '2023-09-07', '2023-09-08', '2023-09-11', '2023-09-12']",
+          "2026-01-20 11:01:24,007 - WARNING - No quotes collected for ACFN in window ['2023-09-01', '2023-09-05', '2023-09-06', '2023-09-07', '2023-09-08', '2023-09-11', '2023-09-12']"
+        ]
+      },
+      {
+        "ticker": "ACFN",
+        "event_day": "2024-05-06 00:00:00",
+        "matched_lines_sample": [
+          "2026-01-19 21:35:53,964 - INFO - Processing ACFN (2024-05-06): Window 2024-05-01 to 2024-05-09",
+          "2026-01-19 21:35:57,824 - WARNING - No quotes collected for ACFN in window ['2024-05-01', '2024-05-02', '2024-05-03', '2024-05-06', '2024-05-07', '2024-05-08', '2024-05-09']",
+          "2026-01-20 09:37:27,259 - WARNING - No quotes collected for ACFN in window ['2024-05-01', '2024-05-02', '2024-05-03', '2024-05-06', '2024-05-07', '2024-05-08', '2024-05-09']",
+          "2026-01-20 09:41:25,724 - WARNING - No quotes collected for ACFN in window ['2024-05-01', '2024-05-02', '2024-05-03', '2024-05-06', '2024-05-07', '2024-05-08', '2024-05-09']",
+          "2026-01-20 11:01:07,577 - WARNING - No quotes collected for ACFN in window ['2024-05-01', '2024-05-02', '2024-05-03', '2024-05-06', '2024-05-07', '2024-05-08', '2024-05-09']"
+        ]
+      }
+    ],
+    "mentioned_no_failure": [
+      {
+        "ticker": "ACET",
+        "event_day": "2020-09-18 00:00:00",
+        "matched_lines_sample": [
+          "2026-01-19 21:34:42,300 - INFO - Processing ACET (2020-09-18): Window 2020-09-15 to 2020-09-23"
+        ]
+      },
+      {
+        "ticker": "AEI",
+        "event_day": "2021-02-08 00:00:00",
+        "matched_lines_sample": [
+          "2026-01-19 21:51:01,576 - INFO - Processing AEI (2021-02-08): Window 2021-02-03 to 2021-02-11"
+        ]
+      },
+      {
+        "ticker": "AFRI",
+        "event_day": "2022-06-13 00:00:00",
+        "matched_lines_sample": [
+          "2026-01-19 21:55:41,095 - INFO - Processing AFRI (2022-06-13): Window 2022-06-08 to 2022-06-16"
+        ]
+      }
+    ],
+    "not_mentioned": []
+  },
+  "source": "research/phase_4/t6_log_correlation.py:main",
+  "artifact": "results/phase_4/artifacts/log_correlation.parquet"
+}
