@@ -1,0 +1,80 @@
+{
+  "phase": "5",
+  "task": "T1",
+  "spine_guard": {
+    "expected": 20951,
+    "observed": 20951,
+    "pass": true
+  },
+  "view_row_count": 23268,
+  "cohort_derivation": "in_scope=TRUE AND source_file='file1'; trades cohort = coverage_class='event_day_only'; quotes cohort = NOT quotes_full_window. Derived from the live momentum_events_canonical view, identical to Phase 4 T1.",
+  "live_view": {
+    "view_row_count": 23268,
+    "in_scope_n": 20951,
+    "file1_inscope_n": 15763,
+    "file2_inscope_n": 5188,
+    "trades_cohort_n": 287,
+    "trades_full_window_n": 15476,
+    "quotes_cohort_n": 386,
+    "quotes_full_window_n": 15377,
+    "overlap_both": 259,
+    "overlap_trades_only": 28,
+    "overlap_quotes_only": 127,
+    "file2_trades_event_day_only_n": 5188,
+    "file2_quotes_not_full_window_n": 5187
+  },
+  "coverage_class_parquet": {
+    "file1_inscope_n": 15763,
+    "trades_cohort_n": 287,
+    "trades_full_window_n": 15476,
+    "quotes_cohort_n": 386,
+    "quotes_full_window_n": 15377,
+    "overlap_both": 259,
+    "overlap_trades_only": 28,
+    "overlap_quotes_only": 127
+  },
+  "reconciliation": {
+    "trades_cohort_match": true,
+    "trades_full_window_match": true,
+    "quotes_cohort_match": true,
+    "quotes_full_window_match": true,
+    "file1_inscope_n_match": true,
+    "overlap_both_match": true,
+    "overlap_trades_only_match": true,
+    "overlap_quotes_only_match": true
+  },
+  "all_reconciled": true,
+  "sums_consistent": true,
+  "file2_preview": {
+    "file2_inscope_n": 5188,
+    "file2_trades_event_day_only_n": 5188,
+    "file2_quotes_not_full_window_n": 5187,
+    "file2_trades_event_day_only_pct": 100.0,
+    "file2_quotes_not_full_window_pct": 99.98,
+    "note": "coverage_class/quotes_full_window on the live view for source_file='file2', via Phase 2 T8's already-committed coverage_class.parquet join. Not yet a fresh T2/T3 bitmap recompute - see decisions_log if this preview and escalation row 4's 5%/260 threshold are in tension."
+  },
+  "escalation_checks": {
+    "spine_guard_expected": 20951,
+    "spine_guard_observed": 20951,
+    "spine_guard_pass": true,
+    "trades_cohort_expected": 287,
+    "trades_cohort_observed": 287,
+    "trades_cohort_pass": true,
+    "quotes_cohort_expected": 386,
+    "quotes_cohort_observed": 386,
+    "quotes_cohort_pass": true,
+    "overlap_expected": {
+      "both": 259,
+      "trades_only": 28,
+      "quotes_only": 127
+    },
+    "overlap_observed": {
+      "both": 259,
+      "trades_only": 28,
+      "quotes_only": 127
+    },
+    "overlap_pass": true
+  },
+  "view_ddl_pre_export": "results/phase_5/artifacts/view_ddl_pre.sql",
+  "source": "research/phase_5/t1_guard.py:main"
+}
