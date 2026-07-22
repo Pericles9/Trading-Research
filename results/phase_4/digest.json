@@ -2,7 +2,7 @@
   "phase": "4",
   "title": "Quotes-Side Coverage Census & Root-Cause Classification",
   "branch": "phase/4",
-  "status": "complete_awaiting_approval",
+  "status": "complete_approved",
   "generated_at": "2026-07-21",
   "baseline": "phase-3-approved",
   "summary": "T0b: venv calendar pin corrected to 5.4.0/4.13.2, re-verified 1,539/1,539 sessions 0 diffs, register item closed. T1: spine guard 20,951 pass; cohort/overlap 287/386/259-28-127 all exact matches, fully reconciled. T2: filesystem census of filtered/ - 24,723 folders, presence_class both=23,003/trades_only=1,606/quotes_only=0/neither=114 (neither == exactly the 114 None-date orphan folders), 0 unreadable/zero-row files. T3: three-way reconciliation - every raw momentum_events row (23,268) has a disk folder; the 1,606-folder gap is 83.5% (1,341) unmatched to momentum_events entirely (reproduces CLAUDE.md's documented 1,341-orphan figure), 8.8% (142) in-scope/file1; 127 quotes-only cohort verified exactly (98 no-file + 29 partial); 386 cohort splits 142 no-file/244 partial-file; 0 hard-stop ingestion-gap events. T4: single full-table pass over filtered_quotes bitmapped all 386 cohort events (16 patterns, top=142 all-missing). T5: bitmap-first classification (changed precedence vs Phase 3, justified in report) - backward_missing 217/both_sides 150/forward_missing 19/archive_edge 0, 0% unclassified; label_p3_precedence crosswalk computed for comparability. T6: collection-log correlation, descriptive only - explicit_failure 142/mentioned_no_failure 244/not_mentioned 0. T7: 4 charts per the Chart Contract, visually verified via kaleido render before commit. No escalations triggered.",
@@ -69,5 +69,5 @@
   },
   "commits": 10,
   "reproduce": ".venv/Scripts/python.exe -m research.phase_4.t1_guard && ... t2_disk_census/t3_reconciliation/t4_quotes_bitmap/t5_classify/t6_log_correlation && .venv/Scripts/python.exe -m research.phase_4.build_chart_01",
-  "approval_gate": "Do not begin any follow-on work - including any spine mutation, any quotes_full_window semantic change, or any recollection scoping - until Cooper has reviewed results and given explicit approval."
+  "approval_gate": "Cooper reviewed and approved (approval given in-session 2026-07-22; formally recorded in this digest). Merged to master, tagged phase-4-approved. Phase 5 may begin under separate authorization."
 }
