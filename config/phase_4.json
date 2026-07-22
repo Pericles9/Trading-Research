@@ -1,0 +1,51 @@
+{
+  "phase": "4",
+  "title": "Quotes-Side Coverage Census & Root-Cause Classification",
+  "baseline": "phase-3-approved",
+  "session_calendar": {
+    "library": "pandas_market_calendars",
+    "library_version_pinned_by_phase_1c": "5.4.0",
+    "underlying_engine_version_pinned_by_phase_1c": "4.13.2",
+    "library_version_installed_pre_t0b": "5.3.0",
+    "underlying_engine_version_installed_pre_t0b": "4.12",
+    "calendar_code": "XNYS",
+    "derivation_range": {"start": "2019-12-01", "end": "2026-01-15"},
+    "note": "T0b is the sanctioned correction (register item, approved at the Phase 3 gate): install 5.4.0/4.13.2 into the shared .venv (not an isolated check, per phase_3's calendar_pin_verification.py precedent). Re-run the XNYS session diff against results/phase_3/artifacts/calendar_pin_verification.json - expected 1,539/1,539 sessions, 0 diffs. T4's expected-session bitmap arithmetic runs post-T0b, against the pinned versions."
+  },
+  "escalation_thresholds": {
+    "canonical_in_scope_expected": 20951,
+    "trades_cohort_expected": 287,
+    "quotes_cohort_expected": 386,
+    "overlap_expected": {"both": 259, "trades_only": 28, "quotes_only": 127},
+    "unreadable_or_zero_row_quotes_max": 0,
+    "unclassified_remainder_max_pct": 0.30,
+    "t0b_diff_max": 0
+  },
+  "historical_reference": {
+    "note": "Schema.md snapshot, pre-Phase-1c re-collection. Treated as a historical reference point only, not an expected current value - T2's census measures current disk state and reports drift without attribution.",
+    "source": "data/Schema.md",
+    "snapshot_date": "2026-07-14",
+    "trades_files": 24200,
+    "quotes_files": 22660,
+    "implied_gap": 1540
+  },
+  "paths": {
+    "data_root": "E:/Trading Research/data",
+    "filtered_dir": "E:/Trading Research/data/filtered",
+    "momentum_events_db": "data/duckdb/main.duckdb",
+    "canonical_view_module": "src/data/canonical.py",
+    "canonical_view_note": "Read-only phase - no create_view() calls, no writes to the view. T2's disk census is filesystem-only (no DB connection); T3/T4/T5 join through the live canonical view with in_scope=TRUE per CLAUDE.md, except T2's deliberate out-of-universe count.",
+    "phase_3_classification": "results/phase_3/artifacts/classification.parquet",
+    "phase_3_t1_cohort": "results/phase_3/artifacts/t1_cohort.json",
+    "phase_3_calendar_pin_verification": "results/phase_3/artifacts/calendar_pin_verification.json",
+    "coverage_class_artifact": "results/phase_2/artifacts/coverage_class.parquet",
+    "event_flags": "results/phase_1b/artifacts/event_flags.parquet",
+    "classification_path": "results/phase_1b/artifacts/instrument_classification.parquet",
+    "collection_log": "data/collection_scripts/collection_log.txt",
+    "open_items_register": "docs/Open-Items-Register.md"
+  },
+  "two_tier_deviation": {
+    "applies": false,
+    "reason": "Census/metadata phase - unit of work is folders and event-sessions, not ticks. T4 is the only full-table pass (single grouped per-session presence query over filtered_quotes). No iterative development against tick data. Deviation authorized by the phase prompt's Context section, per Agent_Prompt_Standard.md's own provision for a documented deviation."
+  }
+}
