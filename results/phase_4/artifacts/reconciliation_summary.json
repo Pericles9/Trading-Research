@@ -1,0 +1,77 @@
+{
+  "phase": "4",
+  "task": "T3",
+  "join_key": "ticker + date_parsed(folder) == event_date_canonical(spine) + ROUND(momentum_pct,2)",
+  "n_disk_folders": 24723,
+  "n_spine_rows_all": 23268,
+  "n_spine_duplicate_join_keys": 0,
+  "n_matched_to_spine": 23268,
+  "n_unmatched_to_spine": 1455,
+  "none_date_orphans_unmatched_by_construction": 114,
+  "trades_only_breakdown": [
+    {
+      "matched_to_spine": false,
+      "in_scope": "unmatched",
+      "source_file": "unmatched",
+      "n": 1341
+    },
+    {
+      "matched_to_spine": true,
+      "in_scope": "in_scope",
+      "source_file": "file1",
+      "n": 142
+    },
+    {
+      "matched_to_spine": true,
+      "in_scope": "out_of_scope",
+      "source_file": "file2",
+      "n": 74
+    },
+    {
+      "matched_to_spine": true,
+      "in_scope": "in_scope",
+      "source_file": "file2",
+      "n": 37
+    },
+    {
+      "matched_to_spine": true,
+      "in_scope": "out_of_scope",
+      "source_file": "file1",
+      "n": 12
+    }
+  ],
+  "trades_only_total": 1606,
+  "quotes_only_127_verification": {
+    "n_quotes_only_cohort_observed": 127,
+    "expected_from_t1": 127,
+    "matches_t1": true,
+    "presence_class_split": {
+      "trades_only": 98,
+      "both": 29
+    },
+    "n_no_quotes_file_at_all": 98,
+    "n_quotes_file_present_but_partial": 29,
+    "other_presence_shapes": {},
+    "note": "no_quotes_file_at_all = disk presence_class trades_only (quotes.parquet absent); quotes_file_present_but_partial = presence_class both (quotes.parquet exists but is not full_window - T4 computes the exact missing sessions)."
+  },
+  "cohort_386_no_file_vs_partial": {
+    "n_cohort_386_observed": 386,
+    "expected_from_t1": 386,
+    "matches_t1": true,
+    "presence_class_split": {
+      "both": 244,
+      "trades_only": 142
+    },
+    "n_no_quotes_file_at_all": 142,
+    "n_quotes_file_present_but_partial": 244
+  },
+  "escalation_row1_hard_stop_check": {
+    "condition": "quotes data present+readable on disk, in-scope event, matched to spine, but absent from filtered_quotes (quotes_ingested=FALSE)",
+    "threshold": "0 events",
+    "observed_n": 0,
+    "triggered": false,
+    "events": []
+  },
+  "source": "research/phase_4/t3_reconciliation.py:main",
+  "artifact": "results/phase_4/artifacts/reconciliation.parquet"
+}
