@@ -1,0 +1,57 @@
+{
+  "phase": "5",
+  "title": "Window Flags & Canonical Spine Finalization",
+  "baseline": "phase-4-approved",
+  "session_calendar": {
+    "library": "pandas_market_calendars",
+    "library_version_pinned": "5.4.0",
+    "underlying_engine_version_pinned": "4.13.2",
+    "library_version_installed": "5.4.0",
+    "underlying_engine_version_installed": "4.13.2",
+    "calendar_code": "XNYS",
+    "derivation_range": {"start": "2019-12-01", "end": "2026-01-15"},
+    "note": "Verified installed == pinned at Phase 5 T0 (venv check). Any drift is escalation row 7."
+  },
+  "session_date_derivation": {
+    "expr": "CAST(TO_TIMESTAMP(sip_timestamp / 1e9) AS DATE)",
+    "note": "Identical to research/phase_2/t4_window_coverage.py, research/phase_3/t3_classify.py, research/phase_4/t4_quotes_bitmap.py."
+  },
+  "offsets": [-3, -2, -1, 0, 1, 2, 3],
+  "escalation_thresholds": {
+    "canonical_in_scope_expected": 20951,
+    "trades_cohort_expected": 287,
+    "quotes_cohort_expected": 386,
+    "file1_union_expected": 414,
+    "overlap_expected": {"both": 259, "trades_only": 28, "quotes_only": 127},
+    "file2_known_no_quotes_file_min": 37,
+    "file2_flagged_share_max_pct": 5.0,
+    "file2_flagged_share_max_n": 260,
+    "idempotence_diff_max": 0,
+    "t7_calendar_diff_max": 0
+  },
+  "full_table_pass_budget": {
+    "max_passes": 2,
+    "note": "One trades pass (T2), one quotes pass (T3) unless Phase 4's quotes cache (results/phase_4/artifacts/_actual_quotes_sessions_cache.parquet, all-20,951-event scope, per t4_quotes_bitmap.py) is hash-verifiable against this phase's calendar pin and config, in which case T3 reuses it and the budget drops to 1."
+  },
+  "paths": {
+    "data_root": "E:/Trading Research/data",
+    "filtered_dir": "E:/Trading Research/data/filtered",
+    "momentum_events_db": "data/duckdb/main.duckdb",
+    "canonical_view_module": "src/data/canonical.py",
+    "canonical_view_note": "This phase mutates the view definition (the only permitted mutation) - src/data/canonical.py gains a new stage that left-joins results/phase_5/artifacts/spine_window_flags.parquet on (ticker, event_date_canonical, ROUND(momentum_pct,2)), adding the six flag/label/bitmap columns additively. No base-table writes.",
+    "phase_1b_config": "config/phase_1b.json",
+    "classification_path": "results/phase_1b/artifacts/instrument_classification.parquet",
+    "event_flags": "results/phase_1b/artifacts/event_flags.parquet",
+    "coverage_class_artifact": "results/phase_2/artifacts/coverage_class.parquet",
+    "coverage_class_note": "Phase 2 T8 already computed n_offsets_covered_trades/quotes and the full_window boolean for ALL 20,951 in-scope events (both source files) using this exact derivation (research/phase_2/t8_coverage_class.py). It does not carry per-offset bitmap strings, so T2/T3 still perform their own full-table passes to produce results/phase_5/artifacts/*bitmaps*.parquet - but coverage_class.parquet is the reconciliation prior: T4a's file1 counts (287/386) are guaranteed to match it, and its file2 aggregate (coverage_class='event_day_only' for 5,188/5,188 file1... file2 events; quotes_full_window=True for only 1/5,188 file2 events) is a strong, already-committed prior for what T2/T3's file2 recompute will show.",
+    "phase_3_classification": "results/phase_3/artifacts/classification.parquet",
+    "phase_3_t1_cohort": "results/phase_3/artifacts/t1_cohort.json",
+    "phase_4_classification_summary": "results/phase_4/artifacts/classification_summary.json",
+    "phase_4_quotes_cache": "results/phase_4/artifacts/_actual_quotes_sessions_cache.parquet",
+    "open_items_register": "docs/Open-Items-Register.md"
+  },
+  "two_tier_deviation": {
+    "applies": false,
+    "reason": "Spine/metadata phase - unit of work is events and sessions, not ticks. Full-table pass budget capped at 2 (see above), developed on the dev tier first per the phase prompt's own instruction, one full run per source table after config freeze."
+  }
+}
