@@ -2,7 +2,7 @@
   "phase": "3",
   "title": "Phase 2b - Pre-2025 event_day_only Characterization + Dev Sample Verification",
   "branch": "phase/3",
-  "status": "complete_awaiting_approval",
+  "status": "complete_approved",
   "generated_at": "2026-07-21",
   "baseline": "phase-2-approved",
   "summary": "T1: spine guard 20,951 pass; cohort reconciliation 287 (trades)/386 (quotes) both pass and fully reconcile against coverage_class.parquet. T2: dev sample v2 membership check ESCALATED - 15/50 events (14 file2/2025 + PLBY_2021-02-16 file1) are event_day_only, not full_window - hard stop per the phase's own escalation table. Amendment 1 authorized and executed: A1-T1 prior-use safety scan clean (0 true hits across 7 candidates); A1-T2 v2 builder located unambiguously (research/phase_1b/build_dev_sample_v2.py); A1-T3 built dev sample v3 (eligibility = v2's rule + coverage_class='full_window' AND quotes_full_window=TRUE; 50/50 events pass, 0 mismatches) with 0/50 overlap vs v2 (descriptive, not a bug - explained in decisions_log); A1-T4 added weak_listing_signature to T3's classification; A1-T5 repointed CLAUDE.md's dev sample to v3, v2 retained as historical. T3 (resumed, refined): classified all 287 cohort events, 0% unclassified. T4: 3 charts.",
@@ -51,7 +51,7 @@
     "new_db_tables": ["filtered_trades_dev_v3", "filtered_quotes_dev_v3 (materialized from main tables only)"],
     "report": "results/phase_3/REPORT.md", "digest": "results/phase_3/digest.json"
   },
-  "commits": 12,
+  "commits": 16,
   "reproduce": ".venv/Scripts/python.exe -m research.phase_3.t1_cohort && ... t2/a1_t1/build_dev_sample_v3/a1_t3a/t3_classify && .venv/Scripts/python.exe -m research.phase_3.build_chart_01",
-  "approval_gate": "Do not begin any follow-on work - including coverage_class semantic changes, further dev-sample action, or recollection scoping - until Cooper reviews and gives explicit approval."
+  "approval_gate": "Cooper reviewed and approved (approval given out-of-band; formally recorded in this digest 2026-07-21). Pre-approval clarifying questions answered (commit a6f9e08). Merged to master, tagged phase-3-approved. Phase 4 may begin under separate authorization."
 }
