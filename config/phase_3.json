@@ -10,7 +10,7 @@
     "underlying_engine_version_actually_used": "4.12",
     "calendar_code": "XNYS",
     "derivation_range": {"start": "2019-12-01", "end": "2026-01-15"},
-    "note": "Same drift as config/phase_2.json - not corrected this phase either (logged to docs/Open-Items-Register.md, T6)."
+    "note": "Same drift as config/phase_2.json - not corrected this phase either (logged to docs/Open-Items-Register.md, T6). Verified harmless for this phase post-approval-review (Cooper's clarifying question 1): the XNYS session list for this exact derivation range is byte-for-byte identical (1,539/1,539 sessions) between 5.3.0/4.12 (installed) and 5.4.0/4.13.2 (pin) - see results/phase_3/artifacts/calendar_pin_verification.json. T3's expected-window arithmetic is unaffected. The venv itself remains uncorrected."
   },
   "session_date_derivation": {
     "expr": "CAST(TO_TIMESTAMP(sip_timestamp / 1e9) AS DATE)",

@@ -1,0 +1,18 @@
+{
+  "phase": "3",
+  "task": "post-approval-review-check-1",
+  "question": "Is the pandas_market_calendars/exchange_calendars venv-vs-pin drift provably harmless for this phase's derivation range?",
+  "derivation_range": {
+    "start": "2019-12-01",
+    "end": "2026-01-15"
+  },
+  "current_venv_version": "5.3.0",
+  "pinned_version": "5.4.0",
+  "current_n_sessions": 1539,
+  "pinned_n_sessions": 1539,
+  "identical": true,
+  "n_diffs": 0,
+  "diff_sample": [],
+  "conclusion": "IDENTICAL - the two version sets produce byte-for-byte the same 1,539-session XNYS calendar over the full derivation range. The drift is provably harmless for every expected-session/expected-window computation in Phase 2 and Phase 3, including T3's classification. The venv itself remains uncorrected (a separate, lower-priority item).",
+  "source": "research/phase_3/calendar_pin_verification.py:main"
+}

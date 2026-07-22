@@ -89,7 +89,24 @@ Precedence-ordered, one label per event, **0/287 unclassified** (well under the 
 
 **Filter waterfall (cohort derivation):** `momentum_events` (23,268 raw) → `momentum_events_canonical` `in_scope=TRUE` (20,951) → `source_file='file1'` (15,763) → `coverage_class='event_day_only'` (287, the trades cohort) / `quotes_full_window=FALSE` (386, the quotes cohort).
 
-**Environment note:** All Phase 3 scripts ran on the project `.venv` (duckdb 1.4.4, pandas 2.3.3, `pandas_market_calendars` 5.3.0, `exchange_calendars` 4.12) — same drift from the phase-1c pin (5.4.0/4.13.2) as Phase 2, still uncorrected, logged in `docs/Open-Items-Register.md`.
+**Environment note:** All Phase 3 scripts ran on the project `.venv` (duckdb 1.4.4, pandas 2.3.3, `pandas_market_calendars` 5.3.0, `exchange_calendars` 4.12) — same drift from the phase-1c pin (5.4.0/4.13.2) as Phase 2, still uncorrected, logged in `docs/Open-Items-Register.md`. **Verified harmless for this phase post-approval-review** — see §7 below.
+
+---
+
+## 7. Post-approval-review checks (Cooper's clarifying questions)
+
+**Question 1 — is the calendar-library drift load-bearing here?** T3's classification depends on `expected T-3 session`/`expected 7-session window` arithmetic from `pandas_market_calendars`/`exchange_calendars`, and the installed venv versions (5.3.0/4.12) drift from the phase-1c pin (5.4.0/4.13.2). Checked directly: installed the pinned versions into an isolated target directory (`pip install --target <tmpdir> pandas_market_calendars==5.4.0 exchange_calendars==4.13.2` — the shared `.venv` was never touched, confirmed after the fact by re-checking its import versions), generated the XNYS session list for the exact derivation range used throughout (2019-12-01..2026-01-15) under both version sets, and diffed. **Result: byte-for-byte identical — 1,539/1,539 sessions, 0 diffs.** The drift is provably harmless for every expected-session computation in Phase 2 and Phase 3, including T3's 287-event classification; no re-run is needed. The venv itself remains uncorrected (a separate, lower-priority item, unchanged in `docs/Open-Items-Register.md`). Source: `results/phase_3/artifacts/calendar_pin_verification.json`, `research/phase_3/calendar_pin_verification.py`.
+
+**Question 2 — what does `calendar_residue` mean after Phase 1c?** Checked the 35 `calendar_residue` events' `(flag_window_calendar_bug, repaired_1c)` breakdown directly against `classification.parquet` — the split is clean, no overlap:
+
+| Subset | n | Meaning |
+| --- | --- | --- |
+| `flag_window_calendar_bug=TRUE, repaired_1c=FALSE` | 14 | Genuinely still-unhealed calendar-bug residual. Reconciles exactly against Phase 1c's own documented spine-wide residual: 14 (file1) + 3 (file2, per Phase 2 T1) = **17**, matching Phase 1c's baseline exactly. Not a new finding — this is the already-accepted residual. |
+| `flag_window_calendar_bug=FALSE, repaired_1c=TRUE` | 21 | Phase 1c's calendar-bug-specific heal **succeeded** for these events (flag cleared) — but the event is still `event_day_only` because a *different, uncharacterized* offset remains missing. Their bitmap patterns (`0011111`, `0111111`, `1111011`, `1101111`) are the same patterns that dominate the plain `backward_missing`/`forward_missing` labels elsewhere in the cohort — nothing distinguishes their remaining gap's shape from an ordinary, non-calendar-bug flanking-session absence. |
+
+So: this is reading **(a)**, but with a specific mechanism, not a vague "definitional artifact." T3's fixed precedence rule (rule 1: `flag_window_calendar_bug=TRUE OR repaired_1c=TRUE` → `calendar_residue`, checked before the bitmap-based rules) means **any** event Phase 1c's heal manifest touched gets labeled `calendar_residue` regardless of whether an *additional*, unrelated gap remains — for 21 of the 35, that remaining gap is very likely the same `backward_missing`/`forward_missing` phenomenon as the rest of the cohort, just relabeled because the event happens to share a `repaired_1c=TRUE` flag from an orthogonal, already-successful fix. The healed spine's calendar-bug remediation is not incomplete for these 21 — the label is just coarser than the underlying cause. The 14 unhealed events are not new information; they are Phase 1c's known, accepted residual, counted from a different angle.
+
+Per the fixed-precedence-rule instruction ("do not adjust them in response to results"), this was not corrected in T3's output — flagged here as an interpretive note instead, since the underlying cause of the 21 events' remaining gap was never independently characterized in this phase (their `bitmap`/`missing_offsets` are in `classification.parquet` for anyone who wants to re-run rules 3-5 against them directly).
 
 ### Output files
 
