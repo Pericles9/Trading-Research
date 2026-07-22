@@ -1,0 +1,27 @@
+{
+  "phase": "4",
+  "task": "T0b - venv calendar pin correction",
+  "question": "Post-correction: does the now-pinned shared .venv (5.4.0/4.13.2) still produce the same XNYS session list as the pre-correction drifted versions (5.3.0/4.12) that Phase 3 shipped results under?",
+  "derivation_range": {
+    "start": "2019-12-01",
+    "end": "2026-01-15"
+  },
+  "venv_state": "corrected - pip install pandas_market_calendars==5.4.0 exchange_calendars==4.13.2 into the shared .venv",
+  "pinned_venv_version_pandas_market_calendars": "5.4.0",
+  "pinned_venv_version_exchange_calendars": "4.13.2",
+  "old_isolated_version_pandas_market_calendars": "5.3.0",
+  "pinned_venv_n_sessions": 1539,
+  "old_isolated_n_sessions": 1539,
+  "identical": true,
+  "n_diffs": 0,
+  "diff_sample": [],
+  "phase_3_reference": {
+    "path": "results/phase_3/artifacts/calendar_pin_verification.json",
+    "recorded_current_venv_version": "5.3.0",
+    "recorded_pinned_version": "5.4.0",
+    "recorded_identical": true,
+    "recorded_n_diffs": 0
+  },
+  "conclusion": "IDENTICAL - 1,539/1,539 XNYS sessions, 0 diffs, over the same derivation range used throughout Phase 2/3/4. Confirms Phase 3's isolated-install finding with fresh evidence from the now-corrected shared .venv. The venv correction is confirmed harmless; T4's expected-session bitmap arithmetic may proceed under the corrected .venv.",
+  "source": "research/phase_4/t0b_calendar_pin_correction.py:main"
+}
