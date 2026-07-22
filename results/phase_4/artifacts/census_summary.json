@@ -1,0 +1,48 @@
+{
+  "phase": "4",
+  "task": "T2",
+  "note": "Deliberately NOT spine-joined - counts all folders on disk including out-of-universe (e.g. 'None'-date orphan folders, non-common-instrument tickers).",
+  "n_event_folders": 24723,
+  "non_folder_top_level_files": [
+    "METADATA.md",
+    "filtered_events_power_law_q05.parquet",
+    "scanner_hit_catalog.json"
+  ],
+  "presence_class_counts": {
+    "both": 23003,
+    "trades_only": 1606,
+    "neither": 114
+  },
+  "unparsed_folder_names": [],
+  "historical_reference_comparison": {
+    "source": "data/Schema.md",
+    "snapshot_date": "2026-07-14",
+    "historical_trades_files": 24200,
+    "current_trades_files": 24609,
+    "trades_drift": 409,
+    "historical_quotes_files": 22660,
+    "current_quotes_files": 23003,
+    "quotes_drift": 343,
+    "note": "Historical reference is pre-Phase-1c re-collection, treated as informational only per config/phase_4.json - drift described, not attributed."
+  },
+  "unreadable_or_zero_row_count": 0,
+  "unreadable_or_zero_row_files": [],
+  "quotes_unreadable_or_zero_row_count": 0,
+  "escalation_check_row3": {
+    "condition": "present-but-unreadable or zero-row quotes.parquet",
+    "threshold": "0",
+    "observed": 0,
+    "triggered": false
+  },
+  "source": "research/phase_4/t2_disk_census.py:main",
+  "artifact": "results/phase_4/artifacts/disk_census.parquet",
+  "t2b_none_date_addendum": {
+    "n_none_date_orphan_folders": 114,
+    "n_neither_presence_class_folders": 114,
+    "none_date_exactly_equals_neither": true,
+    "n_none_date_with_any_data_file": 0,
+    "n_real_date_folders_with_neither_file": 0,
+    "note": "The 114 folders with no trades.parquet and no quotes.parquet at all are exactly the 114 'None'-date folders (unresolvable-date/orphan folders, e.g. ACHR.WS/AMPX.WS-style warrant tickers) - empty stub folders, not a data-loss case. Every real-dated folder has at least one of the two files.",
+    "source": "research/phase_4/t2b_none_date_addendum.py:main"
+  }
+}
