@@ -1,0 +1,66 @@
+{
+  "phase": "4",
+  "task": "T1",
+  "spine_guard": {
+    "expected": 20951,
+    "observed": 20951,
+    "pass": true
+  },
+  "cohort_derivation": "in_scope=TRUE AND source_file='file1'; trades cohort = coverage_class='event_day_only'; quotes cohort = NOT quotes_full_window. Derived from the live momentum_events_canonical view. coverage_class and quotes_full_window are independent per-row flags (Phase 2 T8), so overlap is a single FILTER pass, not a set join.",
+  "live_view": {
+    "in_scope_n": 20951,
+    "file1_inscope_n": 15763,
+    "trades_cohort_n": 287,
+    "trades_full_window_n": 15476,
+    "quotes_cohort_n": 386,
+    "quotes_full_window_n": 15377,
+    "overlap_both": 259,
+    "overlap_trades_only": 28,
+    "overlap_quotes_only": 127
+  },
+  "coverage_class_parquet": {
+    "file1_inscope_n": 15763,
+    "trades_cohort_n": 287,
+    "trades_full_window_n": 15476,
+    "quotes_cohort_n": 386,
+    "quotes_full_window_n": 15377,
+    "overlap_both": 259,
+    "overlap_trades_only": 28,
+    "overlap_quotes_only": 127
+  },
+  "reconciliation": {
+    "trades_cohort_match": true,
+    "trades_full_window_match": true,
+    "quotes_cohort_match": true,
+    "quotes_full_window_match": true,
+    "file1_inscope_n_match": true,
+    "overlap_both_match": true,
+    "overlap_trades_only_match": true,
+    "overlap_quotes_only_match": true
+  },
+  "all_reconciled": true,
+  "sums_consistent": true,
+  "escalation_checks": {
+    "spine_guard_expected": 20951,
+    "spine_guard_observed": 20951,
+    "spine_guard_pass": true,
+    "trades_cohort_expected": 287,
+    "trades_cohort_observed": 287,
+    "trades_cohort_pass": true,
+    "quotes_cohort_expected": 386,
+    "quotes_cohort_observed": 386,
+    "quotes_cohort_pass": true,
+    "overlap_expected": {
+      "both": 259,
+      "trades_only": 28,
+      "quotes_only": 127
+    },
+    "overlap_observed": {
+      "both": 259,
+      "trades_only": 28,
+      "quotes_only": 127
+    },
+    "overlap_pass": true
+  },
+  "source": "research/phase_4/t1_guard.py:main"
+}
