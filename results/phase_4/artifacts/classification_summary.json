@@ -1,0 +1,115 @@
+{
+  "phase": "4",
+  "task": "T5",
+  "n_cohort": 386,
+  "file1_observed_quotes_session_date_range": {
+    "min": "2019-12-30",
+    "max": "2025-01-06"
+  },
+  "label_counts": {
+    "backward_missing": 217,
+    "both_sides": 150,
+    "forward_missing": 19
+  },
+  "label_counts_pct_of_cohort": {
+    "backward_missing": 56.22,
+    "both_sides": 38.86,
+    "forward_missing": 4.92
+  },
+  "label_p3_precedence_counts": {
+    "backward_missing": 195,
+    "both_sides": 139,
+    "calendar_residue": 34,
+    "forward_missing": 18
+  },
+  "label_p3_precedence_counts_pct_of_cohort": {
+    "backward_missing": 50.52,
+    "both_sides": 36.01,
+    "calendar_residue": 8.81,
+    "forward_missing": 4.66
+  },
+  "label_vs_label_p3_precedence_crosswalk": {
+    "backward_missing": {
+      "backward_missing": 195,
+      "both_sides": 0,
+      "calendar_residue": 22,
+      "forward_missing": 0
+    },
+    "both_sides": {
+      "backward_missing": 0,
+      "both_sides": 139,
+      "calendar_residue": 11,
+      "forward_missing": 0
+    },
+    "forward_missing": {
+      "backward_missing": 0,
+      "both_sides": 0,
+      "calendar_residue": 1,
+      "forward_missing": 18
+    }
+  },
+  "bitmap_top3_by_label": {
+    "backward_missing": {
+      "0011111": 125,
+      "0111111": 65,
+      "0001111": 19
+    },
+    "both_sides": {
+      "0000000": 142,
+      "1110111": 3,
+      "0000001": 2
+    },
+    "forward_missing": {
+      "1111011": 6,
+      "1111101": 4,
+      "1111110": 3
+    }
+  },
+  "label_by_year": {
+    "2020": {
+      "backward_missing": 18,
+      "both_sides": 0,
+      "forward_missing": 7
+    },
+    "2021": {
+      "backward_missing": 42,
+      "both_sides": 2,
+      "forward_missing": 5
+    },
+    "2022": {
+      "backward_missing": 48,
+      "both_sides": 48,
+      "forward_missing": 3
+    },
+    "2023": {
+      "backward_missing": 50,
+      "both_sides": 48,
+      "forward_missing": 1
+    },
+    "2024": {
+      "backward_missing": 59,
+      "both_sides": 52,
+      "forward_missing": 3
+    }
+  },
+  "t5a_forward_missing_signature": {
+    "n_forward_missing": 19,
+    "n_is_last_seen_signature": 3,
+    "note": "weak within-archive delisting signature - same definition as Phase 3 T3a, applied quotes-side. Not proof of delisting; within-archive only."
+  },
+  "t5a_backward_missing_signature": {
+    "n_backward_missing": 217,
+    "n_weak_listing_signature": 195,
+    "note": "weak within-archive listing signature - same definition as Phase 3 A1-T4, applied quotes-side. Not proof of late listing; within-archive only, external reference data out of scope."
+  },
+  "precedence_design_note": "Bitmap-first: label intercepts only on archive_edge (structural, unaffected by the calendar_residue critique) then falls through to forward_missing/backward_missing/both_sides purely off the missing-offset pattern. flag_window_calendar_bug and repaired_1c are carried as annotation columns only and do not appear as a 'calendar_residue' label in the primary `label` column - see label_p3_precedence for the Phase-3-equivalent rule.",
+  "escalation_check_row4": {
+    "condition": "unclassified label count > 30% of 386",
+    "threshold_pct": 30.0,
+    "observed_n": 0,
+    "observed_pct": 0.0,
+    "triggered": false
+  },
+  "source": "research/phase_4/t5_classify.py:main",
+  "artifact": "results/phase_4/artifacts/classification.parquet"
+}
