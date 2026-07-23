@@ -1,0 +1,20 @@
+{
+  "phase": "6b",
+  "task": "T1",
+  "d1_reverify": {
+    "expected": 15763,
+    "observed": 15763,
+    "pass": true
+  },
+  "prev_close_guard": {
+    "n_eligible": 15763,
+    "n_missing": 0,
+    "n_nonpositive": 0,
+    "n_failures": 0,
+    "pct_failures": 0.0,
+    "pass": true
+  },
+  "escalation_row5_triggered": false,
+  "source": "research/phase_6b/t1_eligibility.py:main",
+  "artifact": "results/phase_6b/artifacts/t1_eligible_events.parquet"
+}
