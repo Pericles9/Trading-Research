@@ -1,0 +1,231 @@
+{
+  "phase": "6",
+  "task": "T3",
+  "config_frozen": true,
+  "eligible_events_input": 15763,
+  "spine_rows": 110341,
+  "spine_build_seconds": 1.07,
+  "pre_flight_filtered_trades_rows": 4951605544,
+  "full_pass_wall_time_seconds": 1322.64,
+  "full_pass_wall_time_minutes": 22.04,
+  "bars": {
+    "total_rows": 30309950,
+    "by_offset": [
+      {
+        "session_offset": -3,
+        "n_events": 15523,
+        "n_bar_rows": 3558983
+      },
+      {
+        "session_offset": -2,
+        "n_events": 15595,
+        "n_bar_rows": 3670917
+      },
+      {
+        "session_offset": -1,
+        "n_events": 15721,
+        "n_bar_rows": 3877265
+      },
+      {
+        "session_offset": 0,
+        "n_events": 15763,
+        "n_bar_rows": 5192383
+      },
+      {
+        "session_offset": 1,
+        "n_events": 15739,
+        "n_bar_rows": 4934647
+      },
+      {
+        "session_offset": 2,
+        "n_events": 15738,
+        "n_bar_rows": 4647781
+      },
+      {
+        "session_offset": 3,
+        "n_events": 15747,
+        "n_bar_rows": 4427974
+      }
+    ]
+  },
+  "verify_integrity": {
+    "duplicate_keys": 0,
+    "out_of_session_minute_indices": 0,
+    "pass": true
+  },
+  "t0_event_count_check": {
+    "t1_eligible_n": 15763,
+    "distinct_t0_events_in_bars": 15763,
+    "match": true
+  },
+  "excluded_row_share_t0": {
+    "n_events_over_50pct_excluded": 736,
+    "top_20_flagged_events": [
+      {
+        "ticker": "XRTX",
+        "event_date_canonical": "2023-10-19 00:00:00",
+        "n_in_session": 168.0,
+        "n_excluded": 21280.0,
+        "n_total": 21448.0,
+        "excluded_share": 0.9921671018276762
+      },
+      {
+        "ticker": "VERO",
+        "event_date_canonical": "2024-06-06 00:00:00",
+        "n_in_session": 376.0,
+        "n_excluded": 38776.0,
+        "n_total": 39152.0,
+        "excluded_share": 0.9903964037597057
+      },
+      {
+        "ticker": "RAYA",
+        "event_date_canonical": "2024-03-13 00:00:00",
+        "n_in_session": 190.0,
+        "n_excluded": 9627.0,
+        "n_total": 9817.0,
+        "excluded_share": 0.9806458184781501
+      },
+      {
+        "ticker": "SGBX",
+        "event_date_canonical": "2024-11-29 00:00:00",
+        "n_in_session": 829.0,
+        "n_excluded": 33165.0,
+        "n_total": 33994.0,
+        "excluded_share": 0.9756133435312114
+      },
+      {
+        "ticker": "PETZ",
+        "event_date_canonical": "2021-11-03 00:00:00",
+        "n_in_session": 2314.0,
+        "n_excluded": 74909.0,
+        "n_total": 77223.0,
+        "excluded_share": 0.9700348341815263
+      },
+      {
+        "ticker": "NCNA",
+        "event_date_canonical": "2024-03-12 00:00:00",
+        "n_in_session": 1052.0,
+        "n_excluded": 31128.0,
+        "n_total": 32180.0,
+        "excluded_share": 0.9673088875077688
+      },
+      {
+        "ticker": "CHNR",
+        "event_date_canonical": "2024-02-14 00:00:00",
+        "n_in_session": 908.0,
+        "n_excluded": 26294.0,
+        "n_total": 27202.0,
+        "excluded_share": 0.9666201014631277
+      },
+      {
+        "ticker": "CTOR",
+        "event_date_canonical": "2024-12-02 00:00:00",
+        "n_in_session": 1110.0,
+        "n_excluded": 26648.0,
+        "n_total": 27758.0,
+        "excluded_share": 0.9600115282080841
+      },
+      {
+        "ticker": "COCH",
+        "event_date_canonical": "2024-02-28 00:00:00",
+        "n_in_session": 1085.0,
+        "n_excluded": 23740.0,
+        "n_total": 24825.0,
+        "excluded_share": 0.9562940584088621
+      },
+      {
+        "ticker": "PETZ",
+        "event_date_canonical": "2021-02-16 00:00:00",
+        "n_in_session": 916.0,
+        "n_excluded": 19096.0,
+        "n_total": 20012.0,
+        "excluded_share": 0.9542274635218869
+      },
+      {
+        "ticker": "CURR",
+        "event_date_canonical": "2024-12-18 00:00:00",
+        "n_in_session": 2001.0,
+        "n_excluded": 38827.0,
+        "n_total": 40828.0,
+        "excluded_share": 0.9509895169981385
+      },
+      {
+        "ticker": "VVPR",
+        "event_date_canonical": "2024-11-14 00:00:00",
+        "n_in_session": 1018.0,
+        "n_excluded": 18569.0,
+        "n_total": 19587.0,
+        "excluded_share": 0.9480267524378414
+      },
+      {
+        "ticker": "AIRE",
+        "event_date_canonical": "2023-11-13 00:00:00",
+        "n_in_session": 3163.0,
+        "n_excluded": 46874.0,
+        "n_total": 50037.0,
+        "excluded_share": 0.9367867777844395
+      },
+      {
+        "ticker": "ROOT",
+        "event_date_canonical": "2023-06-21 00:00:00",
+        "n_in_session": 1748.0,
+        "n_excluded": 24905.0,
+        "n_total": 26653.0,
+        "excluded_share": 0.9344163883990545
+      },
+      {
+        "ticker": "NCI",
+        "event_date_canonical": "2024-08-20 00:00:00",
+        "n_in_session": 447.0,
+        "n_excluded": 5772.0,
+        "n_total": 6219.0,
+        "excluded_share": 0.9281234925229137
+      },
+      {
+        "ticker": "ONMD",
+        "event_date_canonical": "2024-11-12 00:00:00",
+        "n_in_session": 1524.0,
+        "n_excluded": 19292.0,
+        "n_total": 20816.0,
+        "excluded_share": 0.9267870868562644
+      },
+      {
+        "ticker": "JZ",
+        "event_date_canonical": "2024-09-26 00:00:00",
+        "n_in_session": 360.0,
+        "n_excluded": 3519.0,
+        "n_total": 3879.0,
+        "excluded_share": 0.9071925754060325
+      },
+      {
+        "ticker": "ACON",
+        "event_date_canonical": "2024-03-15 00:00:00",
+        "n_in_session": 1605.0,
+        "n_excluded": 15034.0,
+        "n_total": 16639.0,
+        "excluded_share": 0.9035398761944828
+      },
+      {
+        "ticker": "BAOS",
+        "event_date_canonical": "2021-06-11 00:00:00",
+        "n_in_session": 1229.0,
+        "n_excluded": 11404.0,
+        "n_total": 12633.0,
+        "excluded_share": 0.9027151112166548
+      },
+      {
+        "ticker": "NXL",
+        "event_date_canonical": "2024-06-18 00:00:00",
+        "n_in_session": 3574.0,
+        "n_excluded": 32123.0,
+        "n_total": 35697.0,
+        "excluded_share": 0.899879541698182
+      }
+    ],
+    "artifact": "results/phase_6/artifacts/t3_excluded_t0_rows.parquet"
+  },
+  "escalation_row3_triggered": false,
+  "escalation_row4_triggered": false,
+  "escalation_row7_note": "This script executes exactly one CREATE TABLE ... AS SELECT over filtered_trades per invocation; do not re-run against filtered_trades once this has completed successfully.",
+  "source": "research/phase_6/t3_full_pass.py:main"
+}
