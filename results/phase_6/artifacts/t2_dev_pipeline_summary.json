@@ -1,0 +1,95 @@
+{
+  "phase": "6",
+  "task": "T2",
+  "manifest_n": 56,
+  "spine_rows": 392,
+  "build": {
+    "elapsed_seconds": 0.639,
+    "max_seconds": 60,
+    "pass": true
+  },
+  "bars": {
+    "n_rows": 98952,
+    "n_distinct_events": 56,
+    "by_offset": [
+      {
+        "session_offset": -3,
+        "n_events": 51,
+        "n_bar_rows": 11218
+      },
+      {
+        "session_offset": -2,
+        "n_events": 53,
+        "n_bar_rows": 12212
+      },
+      {
+        "session_offset": -1,
+        "n_events": 55,
+        "n_bar_rows": 12533
+      },
+      {
+        "session_offset": 0,
+        "n_events": 56,
+        "n_bar_rows": 17370
+      },
+      {
+        "session_offset": 1,
+        "n_events": 56,
+        "n_bar_rows": 16321
+      },
+      {
+        "session_offset": 2,
+        "n_events": 56,
+        "n_bar_rows": 14888
+      },
+      {
+        "session_offset": 3,
+        "n_events": 56,
+        "n_bar_rows": 14410
+      }
+    ]
+  },
+  "verify_integrity": {
+    "duplicate_keys": 0,
+    "out_of_session_minute_indices": 0,
+    "pass": true
+  },
+  "sidecar_bitmap_check": {
+    "n_mismatches": 0,
+    "mismatches": [],
+    "pass": true
+  },
+  "excluded_row_share_t0": {
+    "max_share": 0.5940938962166941,
+    "n_events_over_50pct_excluded": 2,
+    "flagged_events": [
+      {
+        "ticker": "ZENA",
+        "event_date_canonical": "2024-10-11 00:00:00",
+        "n_in_session": 130388.0,
+        "n_excluded": 190839.0,
+        "n_total": 321227.0,
+        "excluded_share": 0.5940938962166941
+      },
+      {
+        "ticker": "SLXN",
+        "event_date_canonical": "2024-08-19 00:00:00",
+        "n_in_session": 4814.0,
+        "n_excluded": 5453.0,
+        "n_total": 10267.0,
+        "excluded_share": 0.5311191195091068
+      }
+    ]
+  },
+  "dev_measurements_preview": {
+    "concentration_curve_rows": 21840,
+    "min_window_events": 56,
+    "opportunity_decay_events": 56,
+    "pooled_median_crossing_minute_with_minute0": 39.0,
+    "pooled_median_crossing_minute_excl_minute0": 55.0,
+    "denom_zero_events": 0
+  },
+  "escalation_row3_triggered": false,
+  "escalation_row6_triggered": false,
+  "source": "research/phase_6/t2_dev_pipeline.py:main"
+}
