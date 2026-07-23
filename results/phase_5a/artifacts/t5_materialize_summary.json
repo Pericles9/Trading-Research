@@ -1,0 +1,83 @@
+{
+  "phase": "5a",
+  "task": "T5",
+  "manifest": {
+    "n_total": 56,
+    "n_primary": 50,
+    "n_sidecar": 6
+  },
+  "trades_dev_v4": {
+    "primary": {
+      "n_rows": 9545832,
+      "n_events": 50
+    },
+    "flagged_sidecar": {
+      "n_rows": 92529,
+      "n_events": 6
+    }
+  },
+  "quotes_dev_v4": {
+    "primary": {
+      "n_rows": 7142293,
+      "n_events": 50
+    },
+    "flagged_sidecar": {
+      "n_rows": 107057,
+      "n_events": 3
+    }
+  },
+  "t5a_primary_presence_check": {
+    "n_primary_missing_either_side": 0,
+    "missing_events": [],
+    "pass": true
+  },
+  "t5a_sidecar_presence": [
+    {
+      "ticker": "RBC",
+      "event_date_canonical": "2022-09-26",
+      "n_trades": 20923,
+      "n_quotes": 54577
+    },
+    {
+      "ticker": "SLXN",
+      "event_date_canonical": "2024-08-19",
+      "n_trades": 45075,
+      "n_quotes": 27736
+    },
+    {
+      "ticker": "PSIX",
+      "event_date_canonical": "2022-11-15",
+      "n_trades": 134,
+      "n_quotes": 0
+    },
+    {
+      "ticker": "ACET",
+      "event_date_canonical": "2020-09-18",
+      "n_trades": 25821,
+      "n_quotes": 24744
+    },
+    {
+      "ticker": "APLD",
+      "event_date_canonical": "2022-03-28",
+      "n_trades": 425,
+      "n_quotes": 0
+    },
+    {
+      "ticker": "NUKK",
+      "event_date_canonical": "2022-04-18",
+      "n_trades": 151,
+      "n_quotes": 0
+    }
+  ],
+  "representative_query": {
+    "description": "effective spread (ASOF join to prevailing quote) median by event, primary cohort",
+    "elapsed_seconds": 17.098,
+    "max_seconds": 60,
+    "n_events_covered": 50,
+    "pass": true
+  },
+  "escalation_row5_triggered": false,
+  "escalation_row6_triggered": false,
+  "escalation_row7_triggered": false,
+  "source": "research/phase_5a/t5_materialize_dev_v4.py:main"
+}
