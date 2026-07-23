@@ -1,0 +1,27 @@
+{
+  "phase": "6",
+  "task": "T1",
+  "d1_total": 15763,
+  "d1_freshness_check": {
+    "expected": 15763,
+    "observed": 15763,
+    "pass": true
+  },
+  "eligible": {
+    "n": 15763,
+    "clean_window_true": 15349,
+    "clean_window_false_event_day_only": 414
+  },
+  "ineligible": {
+    "n": 0,
+    "pct_of_d1": 0.0,
+    "bitmap_patterns": []
+  },
+  "escalation_row2_triggered": false,
+  "escalation_row2_threshold": {
+    "max_pct": 1.0,
+    "max_n": 157
+  },
+  "source": "research/phase_6/t1_eligibility.py:main",
+  "artifact": "results/phase_6/artifacts/t1_eligible_events.parquet"
+}
