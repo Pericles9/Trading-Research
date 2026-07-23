@@ -1,0 +1,59 @@
+{
+  "phase": "5a",
+  "task": "T4",
+  "n_flagged_population": 414,
+  "n_distinct_patterns": 54,
+  "top_patterns_by_frequency": {
+    "0011111|0011111": 121,
+    "1111111|0000000": 98,
+    "0111111|0111111": 63,
+    "0001111|0001111": 16,
+    "0111111|0000000": 8,
+    "0011111|0000000": 7
+  },
+  "n_sidecar": 6,
+  "sidecar_events": [
+    {
+      "ticker": "SLXN",
+      "event_date_canonical": "2024-08-19",
+      "momentum_pct": 31.79,
+      "pattern": "0011111|0011111"
+    },
+    {
+      "ticker": "APLD",
+      "event_date_canonical": "2022-03-28",
+      "momentum_pct": 45.24,
+      "pattern": "1111111|0000000"
+    },
+    {
+      "ticker": "ACET",
+      "event_date_canonical": "2020-09-18",
+      "momentum_pct": 32.84,
+      "pattern": "0111111|0111111"
+    },
+    {
+      "ticker": "RBC",
+      "event_date_canonical": "2022-09-26",
+      "momentum_pct": 44.21,
+      "pattern": "0001111|0001111"
+    },
+    {
+      "ticker": "NUKK",
+      "event_date_canonical": "2022-04-18",
+      "momentum_pct": 50.37,
+      "pattern": "0111111|0000000"
+    },
+    {
+      "ticker": "PSIX",
+      "event_date_canonical": "2022-11-15",
+      "momentum_pct": 74.86,
+      "pattern": "0011111|0000000"
+    }
+  ],
+  "reproducibility_check": {
+    "pass": true
+  },
+  "escalation_row3_triggered": false,
+  "source": "research/phase_5a/t4_draw_sidecar.py:main",
+  "artifact": "results/phase_5a/artifacts/dev_v4_sidecar_events.parquet"
+}
