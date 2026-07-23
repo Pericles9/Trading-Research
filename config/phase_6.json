@@ -1,0 +1,65 @@
+{
+  "phase": "6",
+  "title": "Measurement 1: Concentration Curves & the Detection Latency Budget",
+  "baseline": "phase-5a-approved",
+  "universe": {
+    "definition": "in_scope=TRUE AND source_file='file1' (Universe Decision D1)",
+    "expected_n": 15763,
+    "eligibility_rule": "substr(trades_bitmap, 4, 1) = '1'",
+    "eligibility_note": "bitmap positions are T-3..T+3 (offsets [-3,-2,-1,0,1,2,3]), 1-indexed position 4 = offset 0 (T+0). clean_window is NOT applied as a filter for this measurement (D2) - the 287 event-day-only events are fully eligible."
+  },
+  "session_calendar": {
+    "library": "pandas_market_calendars",
+    "library_version_pinned": "5.4.0",
+    "underlying_engine_version_pinned": "4.13.2",
+    "calendar_code": "XNYS",
+    "derivation_range": {"start": "2019-12-01", "end": "2026-01-15"},
+    "note": "Same pin and derivation range as config/phase_5.json. Regular session only (no half-day assumption - actual market_open/market_close pulled per session date from the mcal schedule)."
+  },
+  "session_date_derivation": {
+    "expr": "CAST(TO_TIMESTAMP(sip_timestamp / 1e9) AS DATE)",
+    "note": "Identical to research/phase_5/t2_trades_bitmap.py. Never crosses a UTC midnight boundary during XNYS regular hours, so this equals the NY session date."
+  },
+  "offsets": [-3, -2, -1, 0, 1, 2, 3],
+  "bar_grain_minutes": 1,
+  "min_window_thresholds_pct": [25, 50, 75],
+  "opportunity_decay": {
+    "evaluation_grain_minutes": 1,
+    "open_price_definition": "first in-session print (first trade at or after session open, before session close), per event per offset",
+    "headline_crossing_fraction": 0.5
+  },
+  "opening_print_sensitivity": {
+    "exclude_minute_index": 0,
+    "shift_escalation_multiple": 2.0,
+    "note": "Escalation row 5: pooled median minutes-to-50%-move must not shift by more than 2x (either direction, i.e. ratio outside [0.5, 2.0]) when minute 0 is excluded from T4b/T4c recompute."
+  },
+  "chart_overlay": {
+    "pooled_vs_overlay_threshold_n_events": 200,
+    "rule": "population > 200 events -> pooled curves + stratified per-event overlays; <=200 would get per-event charts per Agent_Prompt_Standard.md SS7 (not applicable this phase - D1 eligible population is far above 200)",
+    "overlay_seed": 42,
+    "overlay_random_n": 30,
+    "overlay_groups": ["top_decile", "bottom_decile", "seeded_random_30"],
+    "decile_source": "momentum_pct deciles computed over the T1-eligible population (pd.qcut, 10 deciles, labels=False, duplicates='drop') - same qcut convention as research/phase_3/build_dev_sample_v3.py and research/phase_5a/t3_draw_primary.py"
+  },
+  "escalation_thresholds": {
+    "dev_v4_manifest_join_expected": 56,
+    "d1_total_expected": 15763,
+    "ineligible_share_max_pct": 1.0,
+    "ineligible_share_max_n": 157,
+    "dev_tier_max_seconds_per_pass": 60,
+    "full_table_pass_budget": 1,
+    "calendar_pin_expected": {"pandas_market_calendars": "5.4.0", "exchange_calendars": "4.13.2"}
+  },
+  "paths": {
+    "momentum_events_db": "data/duckdb/main.duckdb",
+    "canonical_view_module": "src/data/canonical.py",
+    "dev_trades_table": "filtered_trades_dev_v4",
+    "dev_quotes_table": "filtered_quotes_dev_v4",
+    "full_trades_table": "filtered_trades",
+    "sampling_frame_artifact": "results/phase_5a/artifacts/sampling_frame.parquet",
+    "sampling_frame_note": "Phase 5a T2 already materialized momentum_events_canonical WHERE in_scope=TRUE AND source_file='file1' (D1, 15,763 rows, trades_bitmap/quotes_bitmap included). T1 reads this artifact rather than re-querying the canonical view, to avoid a redundant full-table-scan-cost VIEW hit (trades_ingested/quotes_ingested in the view are computed via DISTINCT scans over filtered_trades/filtered_quotes on every query). Row count cross-checked against the expected D1 total as a freshness guard.",
+    "dev_v4_primary_manifest": "results/phase_5a/artifacts/dev_v4_primary_events.parquet",
+    "dev_v4_sidecar_manifest": "results/phase_5a/artifacts/dev_v4_sidecar_events.parquet",
+    "output_table": "event_minute_bars_v1"
+  }
+}
