@@ -26,6 +26,9 @@
     "file2_known_no_quotes_file_min": 37,
     "file2_flagged_share_max_pct": 5.0,
     "file2_flagged_share_max_n": 260,
+    "file2_flagged_share_note": "SUPERSEDED by Amendment 4 (prompts/phase_5_amendment_4.md) - observed file2 flagged share (100.00% trades, 99.98% quotes) was accepted as structural, not a defect. Kept here for the historical record; row 4 is now evaluated file1-only, see file1_flagged_share_max_pct/n below.",
+    "file1_flagged_share_max_pct": 5.0,
+    "file1_flagged_share_max_n": 788,
     "idempotence_diff_max": 0,
     "t7_calendar_diff_max": 0
   },
