@@ -1,0 +1,44 @@
+{
+  "phase": "5a",
+  "title": "Dev Sample v4 Rebuild + Universe Decision Record",
+  "baseline": "phase-5-approved",
+  "seed": 42,
+  "primary_cohort": {
+    "n_events": 50,
+    "n_deciles": 10,
+    "per_decile": 5,
+    "decile_source_population": "in_scope=TRUE AND source_file='file1' AND clean_window=TRUE (n=15,349)",
+    "method_source": "research/phase_3/build_dev_sample_v3.py (lines 63-73) - pd.qcut(momentum_pct, n_deciles, labels=False, duplicates='drop') for deciles, then np.random.default_rng(seed).choice per decile pool iterated in sorted(decile) order, min(per_decile, pool_size) per decile, concat + sort by [decile, ticker, event_date_canonical]. v3's sampling logic is inline in main(), not factored into an importable function, so this phase's v4 builder replicates it verbatim (same qcut call, same rng calls in the same order) rather than reimplementing from memory, citing this exact source."
+  },
+  "flagged_sidecar": {
+    "n_events": 6,
+    "source_population": "in_scope=TRUE AND source_file='file1' AND clean_window=FALSE (n=414)",
+    "pattern_key": "trades_bitmap || '|' || quotes_bitmap",
+    "allocation_rule": "rank distinct combined-bitmap patterns by descending frequency; draw 1 event per pattern for the top 6 patterns (seed 42, one random draw within each pattern's pool); if fewer than 6 distinct patterns exist, allocate the remaining slots to the top (most frequent) pattern, one additional random draw per remaining slot without replacement from that pattern's pool",
+    "pooled_with_primary": false
+  },
+  "dev_table_naming": {
+    "trades": "filtered_trades_dev_v4",
+    "quotes": "filtered_quotes_dev_v4",
+    "dev_cohort_column": "dev_cohort",
+    "dev_cohort_values": ["primary", "flagged_sidecar"]
+  },
+  "v3_tables_untouched": ["filtered_trades_dev_v3", "filtered_quotes_dev_v3"],
+  "escalation_thresholds": {
+    "frame_total_expected": 15763,
+    "frame_clean_expected": 15349,
+    "frame_flagged_expected": 414,
+    "frame_flagged_reconciliation_expected": {"trades_cohort": 287, "quotes_cohort": 386, "overlap": {"both": 259, "trades_only": 28, "quotes_only": 127}},
+    "min_events_per_decile": 5,
+    "representative_query_max_seconds": 60
+  },
+  "paths": {
+    "momentum_events_db": "data/duckdb/main.duckdb",
+    "canonical_view_module": "src/data/canonical.py",
+    "spine_window_flags_artifact": "results/phase_5/artifacts/spine_window_flags.parquet",
+    "v3_manifest": "config/dev_sample_v3.json",
+    "v3_builder": "research/phase_3/build_dev_sample_v3.py",
+    "open_items_register": "docs/Open-Items-Register.md",
+    "universe_decisions": "docs/Universe-Decisions.md"
+  }
+}
