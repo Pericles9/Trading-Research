@@ -1,0 +1,71 @@
+{
+  "phase": "5",
+  "title": "Window Flags & Canonical Spine Finalization",
+  "branch": "phase/5",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-22",
+  "baseline": "phase-4-approved",
+  "summary": "T0: branch/prompt/config committed (phase-4-approved tag created and master fast-forwarded in the same session, since it did not yet exist). T1: pre-mutation guard reproduced Phase 4's T1 exactly (20,951/287/386/259-28-127, all reconciled) and exported view_ddl_pre.sql; also surfaced a file2 preview via the live view's existing coverage_class columns (~100%/99.98% not-full-window) that foreshadowed T4's escalation. T2: full-table trades-side bitmap over all 20,951 in-scope events (one budgeted pass over filtered_trades, 4.95B rows) - file1 not-full-window=287 exact, file2=5,188/5,188. T3: quotes-side bitmap reused Phase 4's cached full-population actual-sessions parquet (calendar pin/offsets/population all verified matching) instead of a second full-table pass - file1=386 exact, file2=5,187/5,188. T4: derived spine_window_flags (20,951 rows), carried Phase 3/4 labels, ran all reconciliation checks - T4a/b/c exact/clean, T4d triggered escalation row 4 (file2 flagged share ~100%/99.98%, ~20x over the >5%/>260 threshold). HARD STOP per the phase prompt's own instruction; committed and reported to Cooper. Amendment 4 (Cooper, in-session): accepted file2's flagged share as structural (matches Phase 2 T8's pre-existing coverage_class.parquet, computed via the identical derivation, plus the already-logged 2025 3-column-schema issue) - retroactively rescoped row 4 to file1 only (observed 1.82%/2.45%, passing), no re-derivation. T5 (resumed): rebuilt momentum_events_canonical additively (stage=\"t7\" in src/data/canonical.py) - row count/in_scope unchanged, 3,103-row/400-ticker sample byte-identical on pre-existing columns, idempotent on a second rebuild. Did not duplicate quotes_full_window (verified byte-identical to the pre-existing Phase 2 T8 column across all 20,951 events before writing the SQL). T6: 3 charts per contract, kaleido-verified before commit (fixed a footnote-overflow issue and an annotation-placement bug along the way). T7: register updated (37-event item closed, window-flags disposition closed, file2-share-structural item closed, no-signature-events item closed with precise counts, not the prompt's approximate figure), this digest, REPORT.md.",
+  "headline_metrics": [
+    {"name": "t1_pre_mutation_guard", "value": "in_scope=20,951; trades=287; quotes=386; overlap both=259/trades_only=28/quotes_only=127; all reconciled", "n": 20951,
+     "source": "research/phase_5/t1_guard.py:main", "chart": null},
+    {"name": "t2_trades_bitmap_all", "value": "file1 not-full-window=287 (exact); file2 not-full-window=5,188/5,188 (100.00%)", "n": 20951,
+     "source": "research/phase_5/t2_trades_bitmap.py:main", "chart": "results/phase_5/charts/01_clean_vs_flagged_by_year.html"},
+    {"name": "t3_quotes_bitmap_all", "value": "file1 not-full-window=386 (exact); file2 not-full-window=5,187/5,188 (99.98%); cache-reused, no second full-table pass", "n": 20951,
+     "source": "research/phase_5/t3_quotes_bitmap.py:main", "chart": "results/phase_5/charts/01_clean_vs_flagged_by_year.html"},
+    {"name": "t4_clean_vs_flagged", "value": "clean=15,349 (73.3%); flagged=5,602 (26.7%) of 20,951 in-scope", "n": 20951,
+     "source": "research/phase_5/t4_derive_flags.py:main", "chart": "results/phase_5/charts/01_clean_vs_flagged_by_year.html"},
+    {"name": "t4a_file1_reconciliation", "value": "trades=287, quotes=386, union=414, overlap 259/28/127 - all exact vs. Phase 3/4", "n": 15763,
+     "source": "results/phase_5/artifacts/reconciliation_summary.json", "chart": null},
+    {"name": "t4d_file2_flagged_share", "value": "trades 5,188/5,188 (100.00%); quotes 5,187/5,188 (99.98%) - escalation row 4 trigger, resolved by Amendment 4", "n": 5188,
+     "source": "results/phase_5/artifacts/reconciliation_summary.json", "chart": "results/phase_5/charts/03_flag_label_composition.html"},
+    {"name": "amendment_4_file1_rescoped_row4", "value": "trades flagged 1.82% (287/15,763); quotes flagged 2.45% (386/15,763) - both pass the retroactively file1-scoped >5%/>260 threshold", "n": 15763,
+     "source": "prompts/phase_5_amendment_4.md", "chart": "results/phase_5/charts/02_momentum_pct_clean_vs_flagged.html"},
+    {"name": "t5_mutation_safety", "value": "row count 23,268->23,268 unchanged; in_scope 20,951->20,951 unchanged; 3,103-row sample byte-identical (0 diffs); idempotent on second rebuild", "n": 23268,
+     "source": "research/phase_5/rebuild_canonical_view.py:main", "chart": null},
+    {"name": "label_composition", "value": "trades not_classified=5,188 (94.8% of 5,475 flagged); quotes not_classified=5,187 (93.1% of 5,573 flagged); 0 not_classified on file1 either side", "n": 20951,
+     "source": "results/phase_5/artifacts/spine_window_flags.parquet", "chart": "results/phase_5/charts/03_flag_label_composition.html"}
+  ],
+  "escalations_triggered_and_resolved": [
+    {"row": 4, "criterion": "file2 flagged share > 5% of file2 in-scope events (> 260)",
+     "observed": "trades 100.00% (5,188/5,188); quotes 99.98% (5,187/5,188)",
+     "resolution": "Amendment 4 (Cooper, 2026-07-22): accepted as structural (matches Phase 2 T8's pre-existing coverage_class.parquet computed via the identical derivation, and the already-logged 2025 3-column-schema data-quality issue), no re-derivation required. Row 4 retroactively rescoped to file1 only; file1 observed 1.82%/2.45%, passes. See prompts/phase_5_amendment_4.md."}
+  ],
+  "escalations_checked_not_triggered": [
+    {"criterion": "post-mutation in_scope or view row count changed", "observed": "23,268 / 20,951 unchanged both times"},
+    {"criterion": "T1 pre-mutation guard mismatch", "observed": "20,951/287/386/259-28-127 exact"},
+    {"criterion": "T4a/T4b file1 reconciliation mismatch or any of the 37 known file2 events unflagged", "observed": "all exact; 37/37 flagged"},
+    {"criterion": "label integrity violation (flagged+NULL or clean+non-NULL)", "observed": 0},
+    {"criterion": "idempotence failure on second view rebuild", "observed": "DDL and data both identical"},
+    {"criterion": "calendar pin drift", "observed": "5.4.0/4.13.2 installed == pinned"},
+    {"criterion": "any write to base tables or data root", "observed": "none - only the view definition changed"}
+  ],
+  "decisions_log": [
+    {"decision": "Reused Phase 4's cached full-population quotes actual-sessions parquet for T3 instead of a second full-table pass over filtered_quotes",
+     "reason": "calendar pin, OFFSETS, and in-scope population all verified matching (results/phase_5/artifacts/t3_cache_reuse_verification.json, reuse_authorized=true) - config/phase_5.json's full_table_pass_budget explicitly anticipated this path"},
+    {"decision": "Did not add a second quotes_full_window column when rebuilding the canonical view",
+     "reason": "the view already carries quotes_full_window from Phase 2 T8's coverage_class join (stage=\"t6\"); verified byte-identical to spine_window_flags' independently-recomputed value across all 20,951 in-scope events (0 mismatches) before writing the stage=\"t7\" SQL - adding a duplicate column name is invalid/ambiguous in a SQL view"},
+    {"decision": "Ran T2/T3's full derivation despite a strong prior (from the live view's existing coverage_class columns) that escalation row 4 would trigger, rather than stopping at the T1 preview",
+     "reason": "Cooper's direction: the granular per-offset bitmaps are structurally required regardless (T4's trades_bitmap/quotes_bitmap columns, chart 03's pattern breakdown, and the escalation row 4 report's own 'bitmap pattern table' requirement) - the T1 preview only had aggregate booleans"},
+    {"decision": "Amendment 4 rescoped escalation row 4 to file1 rather than deleting or renumbering it",
+     "reason": "preserves the historical record (config/phase_5.json keeps the superseded file2 threshold fields, marked superseded, alongside new file1-scoped ones) - matches the project's established amendment pattern (cf. Phase 3 Amendment 1, which superseded rather than deleted the original T2 escalation rows)"}
+  ],
+  "surprises": [
+    "The live view already carried the exact answer to T4's central question before T2/T3 ran: Phase 2 T8's coverage_class.parquet (computed with an identical full-table-pass derivation) showed file2 at ~100%/99.98% not-full-window. T1's file2_preview (a cheap live-view query) reproduced this and correctly anticipated T4's escalation before either budgeted full-table pass was spent.",
+    "quotes_full_window's fresh T3 recomputation (via independently-cached tick data, not coverage_class.parquet) matched the pre-existing view column with 0 mismatches across all 20,951 in-scope events - a strong independent confirmation of Phase 2 T8's original derivation, two phases and a different code path later.",
+    "phase-4-approved did not exist as a tag when this phase began (Phase 4's last commit was 'complete awaiting approval', master was still at phase-3-approved) - recorded in-session per explicit instruction before any Phase 5 work started."
+  ],
+  "output_files": {
+    "prompts": ["prompts/phase_5.md", "prompts/phase_5_amendment_4.md"],
+    "config": ["config/phase_5.json"],
+    "scripts": "research/phase_5/*.py (t1_guard, t2_trades_bitmap, t3_quotes_bitmap, t4_derive_flags, rebuild_canonical_view, build_chart_01-03; 8 scripts)",
+    "artifacts": "results/phase_5/artifacts/*.json + *.sql (committed) + *.parquet (gitignored, regenerable)",
+    "charts": ["results/phase_5/charts/01_clean_vs_flagged_by_year.html", "results/phase_5/charts/02_momentum_pct_clean_vs_flagged.html", "results/phase_5/charts/03_flag_label_composition.html"],
+    "docs": ["docs/Open-Items-Register.md (4 entries closed)"],
+    "src_changes": ["src/data/canonical.py (stage=\"t7\" added, additive)"],
+    "report": "results/phase_5/REPORT.md", "digest": "results/phase_5/digest.json"
+  },
+  "commits": 10,
+  "reproduce": ".venv/Scripts/python.exe -m research.phase_5.t1_guard && ... t2_trades_bitmap/t3_quotes_bitmap/t4_derive_flags/rebuild_canonical_view && .venv/Scripts/python.exe -m research.phase_5.build_chart_01",
+  "approval_gate": "Do not begin any follow-on work - including dev-sample rebuild, any Phase 6 scoping, or any use of clean_window as a filter in analysis - until Cooper has reviewed results and given explicit approval. On approval, tag phase-5-approved."
+}
