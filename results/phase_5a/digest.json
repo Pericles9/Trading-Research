@@ -1,0 +1,56 @@
+{
+  "phase": "5a",
+  "title": "Dev Sample v4 Rebuild + Universe Decision Record",
+  "branch": "phase/5a",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-23",
+  "baseline": "phase-5-approved",
+  "summary": "T0: branch/prompt/config committed. T1: D1 (analysis universe = in_scope=TRUE AND source_file='file1', 15,763 events) and D2 (clean_window is an eligibility flag for window-dependent measurements, not a universe filter - risk register #8) recorded verbatim to docs/Universe-Decisions.md; Open-Items-Register's implicit 2025-inclusion question formally closed referencing D1. T2: sampling frame built (15,763/15,349/414) and reconciled exactly against spine_window_flags.parquet's own file1 union/overlap (287/386/259-28-127). T3: located v3's sampling algorithm unambiguously (research/phase_3/build_dev_sample_v3.py, inline in main(), not an importable function) and replicated it verbatim for the v4 primary draw - 50 events, 10/10 deciles at 5 each, drawn twice within-process and confirmed byte-identical. T4: flagged sidecar drawn from 54 distinct bitmap patterns among the 414 flagged events - top 6 by frequency, one event each, also reproducible. T5: filtered_trades_dev_v4/filtered_quotes_dev_v4 materialized via spine join (not folder presence); v3 dev tables untouched; all 50 primary events have both trades and quotes rows; 3/6 sidecar events legitimately have 0 quotes rows (their picked pattern is quotes-side all-missing, the documented non-failing case); representative effective-spread query (ASOF join to prevailing quote, CLAUDE.md's cross-the-spread rule) ran in 17.1s, under the 60s ceiling. T6: representativeness chart built and kaleido-verified - primary cohort's ECDF tracks the frame closely, per-decile points span rather than cluster. T7: this digest and REPORT.md.",
+  "headline_metrics": [
+    {"name": "sampling_frame", "value": "15,763 total (D1 universe); 15,349 clean_window=TRUE; 414 flagged - all exact, fully reconciled vs. spine_window_flags", "n": 15763,
+     "source": "research/phase_5a/t2_sampling_frame.py:main", "chart": null},
+    {"name": "primary_cohort_draw", "value": "50 events, 10 deciles x 5, seed 42, method verbatim from research/phase_3/build_dev_sample_v3.py; reproducible (byte-identical on repeat draw)", "n": 50,
+     "source": "research/phase_5a/t3_draw_primary.py:main", "chart": "results/phase_5a/charts/01_dev_v4_representativeness.html"},
+    {"name": "flagged_sidecar_draw", "value": "6 events, top 6 of 54 distinct combined-bitmap patterns by frequency, seed 42, reproducible, never pooled with primary", "n": 6,
+     "source": "research/phase_5a/t4_draw_sidecar.py:main", "chart": null},
+    {"name": "dev_v4_row_counts", "value": "primary: 9,545,832 trades / 7,142,293 quotes rows (50/50 events both sides); sidecar: 92,529 trades / 107,057 quotes rows (6/3 events)", "n": 56,
+     "source": "research/phase_5a/t5_materialize_dev_v4.py:main", "chart": null},
+    {"name": "representative_query_timing", "value": "effective spread (ASOF join), median by event, primary cohort: 17.1s (ceiling 60s)", "n": 50,
+     "source": "results/phase_5a/artifacts/t5_materialize_summary.json", "chart": null}
+  ],
+  "escalations_triggered_and_resolved": [],
+  "escalations_checked_not_triggered": [
+    {"criterion": "frame counts != 15,763/15,349/414", "observed": "15,763/15,349/414 exact"},
+    {"criterion": "v3 sampling function not locatable", "observed": "located: research/phase_3/build_dev_sample_v3.py lines 63-73"},
+    {"criterion": "draw reproducibility (primary and sidecar)", "observed": "byte-identical on repeat draw, both cohorts"},
+    {"criterion": "any decile with < 5 clean events", "observed": "smallest pool 1,531 (decile 1), all >= 5"},
+    {"criterion": "primary event missing trades or quotes rows", "observed": "0/50"},
+    {"criterion": "dev-tier representative query > 60s", "observed": "17.1s"},
+    {"criterion": "any write to base tables, v3 dev tables, or data root", "observed": "none - only filtered_trades_dev_v4/filtered_quotes_dev_v4 created"}
+  ],
+  "decisions_log": [
+    {"decision": "Replicated v3's sampling algorithm verbatim in a new draw() function rather than importing/calling v3's main()",
+     "reason": "v3's sampling logic (pd.qcut + np.random.default_rng loop) is inline in build_dev_sample_v3.py:main(), not factored into an importable function, and main() has side effects (writes config/dev_sample_v3.json, drops/recreates the v3 dev tables) that must not be re-triggered - copying the exact code (cited to the specific line range) satisfies 'reuse, don't reimplement from memory' without invoking v3's own write path"},
+    {"decision": "Sidecar allocation used pandas value_counts() for pattern ranking (stable sort) rather than a custom tie-break rule",
+     "reason": "54 distinct patterns existed among the 414 flagged events, well above the 6 needed, so no tie-breaking or top-pattern-duplication fallback was actually exercised this run - value_counts()'s default descending-frequency order was sufficient"},
+    {"decision": "Representative query used effective spread (ASOF join to the prevailing quote), not quoted spread",
+     "reason": "CLAUDE.md's standing methodology: 'Effective spread, not quoted. Always cross the spread' - applied even though this is a runtime smoke test, not an analysis deliverable, since it is the query shape future window-dependent phases will actually run"}
+  ],
+  "surprises": [
+    "3 of the 6 flagged-sidecar events (APLD, NUKK, PSIX) have 0 quotes rows in filtered_quotes_dev_v4 - not a bug: their drawn pattern is quotes-side all-missing (e.g. 1111111|0000000), so 0 rows is the exact expected shape for that pattern, and T5a's presence check correctly does not fail on it (only primary-cohort absence is a failure condition).",
+    "The v4 primary cohort's momentum_pct range (decile 9: 110.45-259.85) sits entirely below the frame's and Phase 5's full-population max (918.26, from source_file='file2' - excluded under D1) - the clean file1 frame's own top decile tops out well short of that, a fact of the D1-scoped population, not a sampling artifact."
+  ],
+  "output_files": {
+    "prompts": ["prompts/phase_5a.md"],
+    "config": ["config/phase_5a.json"],
+    "scripts": "research/phase_5a/*.py (t2_sampling_frame, t3_draw_primary, t4_draw_sidecar, t5_materialize_dev_v4, build_chart_01; 5 scripts)",
+    "artifacts": "results/phase_5a/artifacts/*.json (committed) + *.parquet (gitignored, regenerable)",
+    "charts": ["results/phase_5a/charts/01_dev_v4_representativeness.html"],
+    "docs": ["docs/Universe-Decisions.md (new)", "docs/Open-Items-Register.md (2025 inclusion item closed)"],
+    "new_db_tables": ["filtered_trades_dev_v4", "filtered_quotes_dev_v4 (materialized from main tables only, spine join)"],
+    "report": "results/phase_5a/REPORT.md", "digest": "results/phase_5a/digest.json"
+  },
+  "commits": 8,
+  "reproduce": ".venv/Scripts/python.exe -m research.phase_5a.t2_sampling_frame && ... t3_draw_primary/t4_draw_sidecar/t5_materialize_dev_v4 && .venv/Scripts/python.exe -m research.phase_5a.build_chart_01",
+  "approval_gate": "Do not begin Phase 6 scoping or any analysis work until Cooper has reviewed results and given explicit approval. On approval, tag phase-5a-approved. Dev sample v4 is then pinned - it does not change for the remainder of the program."
+}
