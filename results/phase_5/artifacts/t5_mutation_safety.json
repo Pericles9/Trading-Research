@@ -1,0 +1,42 @@
+{
+  "phase": "5",
+  "task": "T5",
+  "pre_ddl_char_len": 2730,
+  "post_ddl_char_len": 3220,
+  "row_count": {
+    "pre": 23268,
+    "post": 23268,
+    "unchanged": true
+  },
+  "in_scope": {
+    "pre": 20951,
+    "post": 20951,
+    "expected": 20951,
+    "unchanged": true
+  },
+  "sample_diff": {
+    "seed": 42,
+    "n_seed_tickers": 400,
+    "n_sample_rows": 3103,
+    "shapes_match": true,
+    "byte_identical": true,
+    "n_diffs": 0
+  },
+  "new_columns_present": true,
+  "new_columns": [
+    "trades_full_window",
+    "clean_window",
+    "trades_gap_label",
+    "quotes_gap_label",
+    "trades_bitmap",
+    "quotes_bitmap"
+  ],
+  "idempotence": {
+    "ddl_identical": true,
+    "data_identical": true,
+    "pass": true
+  },
+  "escalation_row1_triggered": false,
+  "escalation_row6_triggered": false,
+  "source": "research/phase_5/rebuild_canonical_view.py:main"
+}

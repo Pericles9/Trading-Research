@@ -62,6 +62,23 @@ Path convention: all artifact paths are resolved absolute from
 PROJECT_ROOT (src/data/paths.py) and embedded literally into the view's
 SQL text, so the view resolves correctly regardless of the caller's
 working directory.
+
+stage="t7" (Phase 5, T5): additive window-flag finalization. Left-joins
+results/phase_5/artifacts/spine_window_flags.parquet (one row per
+in_scope event, both source files - see research/phase_5/t4_derive_flags.py)
+on (ticker, event_date_canonical, ROUND(momentum_pct,2)), adding
+trades_full_window, clean_window, trades_gap_label, quotes_gap_label,
+trades_bitmap, quotes_bitmap. Does NOT re-add quotes_full_window - that
+column already exists on the view from stage="t6"'s coverage_class join
+(Phase 2 T8) and was verified byte-identical to spine_window_flags'
+independently-recomputed quotes_full_window across all 20,951 in-scope
+events (0 mismatches, Phase 5 T5 decisions log) before this stage was
+written, so adding a second column of the same name was skipped rather
+than creating an ambiguous duplicate. trades_full_window is genuinely
+new (stage="t6" only carries the trades side as the coverage_class
+string, not a same-shaped boolean). Escalation row 4's file2-flagged-
+share finding (Phase 5 Amendment 4) does not change this stage's SQL -
+flag-and-carry applies uniformly to both source files.
 """
 from __future__ import annotations
 
@@ -76,6 +93,7 @@ CLASSIFICATION_PATH = PROJECT_ROOT / "results" / "phase_1b" / "artifacts" / "ins
 EVENT_FLAGS_PATH = PROJECT_ROOT / "results" / "phase_1b" / "artifacts" / "event_flags.parquet"
 CONFIG_PATH = PROJECT_ROOT / "config" / "phase_1b.json"
 COVERAGE_CLASS_PATH = PROJECT_ROOT / "results" / "phase_2" / "artifacts" / "coverage_class.parquet"
+SPINE_WINDOW_FLAGS_PATH = PROJECT_ROOT / "results" / "phase_5" / "artifacts" / "spine_window_flags.parquet"
 
 IN_SCOPE_CLASSES = ("common", "common_adr")
 
@@ -107,6 +125,7 @@ def create_view(
     classification = _p(CLASSIFICATION_PATH)
     event_flags = _p(EVENT_FLAGS_PATH)
     coverage_class = _p(COVERAGE_CLASS_PATH)
+    spine_window_flags = _p(SPINE_WINDOW_FLAGS_PATH)
 
     if stage == "t2":
         flag_trades_mom_outlier_expr = "CAST(NULL AS BOOLEAN)"
@@ -115,7 +134,7 @@ def create_view(
         repaired_1c_expr = "CAST(NULL AS BOOLEAN)"
         flag_zero_trades_join = ""
         in_scope_expr = "CAST(NULL AS BOOLEAN)"
-    elif stage in ("t5", "t6"):
+    elif stage in ("t5", "t6", "t7"):
         flag_trades_mom_outlier_expr = "ef.flag_trades_mom_outlier"
         flag_missing_event_day_expr = "COALESCE(ef.flag_missing_event_day, FALSE)"
         flag_window_calendar_bug_expr = "COALESCE(ef.flag_window_calendar_bug, FALSE)"
@@ -128,7 +147,7 @@ def create_view(
         """
         if stage == "t5":
             in_scope_expr = "CAST(NULL AS BOOLEAN)"
-        else:  # t6
+        else:  # t6, t7 - final in_scope formula unchanged by t7
             in_scope_expr = f"""(
                 ic.class IN {IN_SCOPE_CLASSES}
                 AND NOT COALESCE(flag_bad_denominator, FALSE)
@@ -137,6 +156,24 @@ def create_view(
             )"""
     else:
         raise ValueError(f"unknown stage: {stage!r}")
+
+    if stage == "t7":
+        window_flags_join = f"""
+    LEFT JOIN read_parquet('{spine_window_flags}') swf
+      ON me.ticker = swf.ticker
+     AND COALESCE(me.date, me.event_date) = swf.event_date_canonical
+     AND ROUND(me.momentum_pct, 2) = swf.momentum_pct
+        """
+        window_flags_cols = """,
+        swf.trades_full_window AS trades_full_window,
+        swf.clean_window AS clean_window,
+        swf.trades_gap_label AS trades_gap_label,
+        swf.quotes_gap_label AS quotes_gap_label,
+        swf.trades_bitmap AS trades_bitmap,
+        swf.quotes_bitmap AS quotes_bitmap"""
+    else:
+        window_flags_join = ""
+        window_flags_cols = ""
 
     sql = f"""
     CREATE OR REPLACE VIEW momentum_events_canonical AS
@@ -166,7 +203,7 @@ def create_view(
         (fq_distinct.ticker IS NOT NULL) AS quotes_ingested,
         {in_scope_expr} AS in_scope,
         cc.coverage_class AS coverage_class,
-        cc.quotes_full_window AS quotes_full_window
+        cc.quotes_full_window AS quotes_full_window{window_flags_cols}
     FROM momentum_events me
     LEFT JOIN read_parquet('{classification}') ic ON me.ticker = ic.ticker
     LEFT JOIN (
@@ -188,5 +225,6 @@ def create_view(
      AND COALESCE(me.date, me.event_date) = cc.event_date_canonical
      AND ROUND(me.momentum_pct, 2) = ROUND(cc.momentum_pct, 2)
     {flag_zero_trades_join}
+    {window_flags_join}
     """
     con.execute(sql)
