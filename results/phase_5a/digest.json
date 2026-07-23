@@ -2,7 +2,7 @@
   "phase": "5a",
   "title": "Dev Sample v4 Rebuild + Universe Decision Record",
   "branch": "phase/5a",
-  "status": "complete_awaiting_approval",
+  "status": "complete_approved",
   "generated_at": "2026-07-23",
   "baseline": "phase-5-approved",
   "summary": "T0: branch/prompt/config committed. T1: D1 (analysis universe = in_scope=TRUE AND source_file='file1', 15,763 events) and D2 (clean_window is an eligibility flag for window-dependent measurements, not a universe filter - risk register #8) recorded verbatim to docs/Universe-Decisions.md; Open-Items-Register's implicit 2025-inclusion question formally closed referencing D1. T2: sampling frame built (15,763/15,349/414) and reconciled exactly against spine_window_flags.parquet's own file1 union/overlap (287/386/259-28-127). T3: located v3's sampling algorithm unambiguously (research/phase_3/build_dev_sample_v3.py, inline in main(), not an importable function) and replicated it verbatim for the v4 primary draw - 50 events, 10/10 deciles at 5 each, drawn twice within-process and confirmed byte-identical. T4: flagged sidecar drawn from 54 distinct bitmap patterns among the 414 flagged events - top 6 by frequency, one event each, also reproducible. T5: filtered_trades_dev_v4/filtered_quotes_dev_v4 materialized via spine join (not folder presence); v3 dev tables untouched; all 50 primary events have both trades and quotes rows; 3/6 sidecar events legitimately have 0 quotes rows (their picked pattern is quotes-side all-missing, the documented non-failing case); representative effective-spread query (ASOF join to prevailing quote, CLAUDE.md's cross-the-spread rule) ran in 17.1s, under the 60s ceiling. T6: representativeness chart built and kaleido-verified - primary cohort's ECDF tracks the frame closely, per-decile points span rather than cluster. T7: this digest and REPORT.md.",
@@ -52,5 +52,5 @@
   },
   "commits": 8,
   "reproduce": ".venv/Scripts/python.exe -m research.phase_5a.t2_sampling_frame && ... t3_draw_primary/t4_draw_sidecar/t5_materialize_dev_v4 && .venv/Scripts/python.exe -m research.phase_5a.build_chart_01",
-  "approval_gate": "Do not begin Phase 6 scoping or any analysis work until Cooper has reviewed results and given explicit approval. On approval, tag phase-5a-approved. Dev sample v4 is then pinned - it does not change for the remainder of the program."
+  "approval_gate": "Cooper reviewed and approved (approval given in-session 2026-07-23; formally recorded in this digest). Merged to master, tagged phase-5a-approved. Dev sample v4 is now pinned - it does not change for the remainder of the program."
 }
