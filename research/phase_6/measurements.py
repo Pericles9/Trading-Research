@@ -170,8 +170,13 @@ def compute_opportunity_decay(grid: pd.DataFrame, min_minute_included: int = 0) 
         rec["event_id"] = event_id
         rec["open_price"] = sub["open_price"].iloc[0]
         rec["close_price"] = sub["close_price"].iloc[0]
-        rec["open_close_abs_move"] = abs(sub["open_close_move"].iloc[0])
-        rec["denom_is_zero"] = bool(sub["open_close_move"].iloc[0] == 0)
+        ocm = sub["open_close_move"].iloc[0]
+        rec["open_close_abs_move"] = abs(ocm)
+        # covers both a genuine open==close day and the (vanishingly rare) case
+        # where this variant's cutoff leaves an event with no post-cutoff price
+        # at all (e.g. a single lonely print in minute 0 only) - either way
+        # realized_move_fraction is undefined for this event in this variant.
+        rec["denom_is_zero"] = bool(pd.isna(ocm) or ocm == 0)
         frac_indexed = sub.set_index("minute_index")["realized_move_fraction"]
         rec["minutes_to_50pct"] = _first_crossing(frac_indexed)
         summary_rows.append(rec)

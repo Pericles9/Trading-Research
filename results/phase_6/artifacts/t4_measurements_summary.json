@@ -1,0 +1,34 @@
+{
+  "phase": "6",
+  "task": "T4",
+  "n_events": 15763,
+  "grid_rows": 6128310,
+  "headline": {
+    "pooled_median_minutes_to_50pct_move_with_minute0": 52.0,
+    "pooled_median_minutes_to_50pct_move_excl_minute0": 57.0,
+    "sensitivity_ratio_excl_over_with": 1.0961538461538463,
+    "min_window_median_minutes": {
+      "25pct": 20.0,
+      "50pct": 72.0,
+      "75pct": 183.0
+    }
+  },
+  "denom_zero_events": 47,
+  "min_never_crossed_50pct": {
+    "with_minute0": 47,
+    "excl_minute0": 48
+  },
+  "escalation_row5_triggered": false,
+  "escalation_row5_threshold": 2.0,
+  "source": "research/phase_6/t4_measurements.py:main",
+  "artifacts": {
+    "concentration_curves": "results/phase_6/artifacts/concentration_curves.parquet",
+    "min_window_stats": "results/phase_6/artifacts/min_window_stats.parquet",
+    "min_window_stats_sens": "results/phase_6/artifacts/min_window_stats_sens.parquet",
+    "opportunity_decay": "results/phase_6/artifacts/opportunity_decay.parquet",
+    "opportunity_decay_sens": "results/phase_6/artifacts/opportunity_decay_sens.parquet",
+    "pooled_decay": "results/phase_6/artifacts/pooled_decay.parquet",
+    "pooled_decay_sens": "results/phase_6/artifacts/pooled_decay_sens.parquet",
+    "event_index": "results/phase_6/artifacts/event_index.parquet"
+  }
+}
