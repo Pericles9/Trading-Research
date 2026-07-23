@@ -1,0 +1,161 @@
+{
+  "phase": "6b",
+  "task": "T2",
+  "finding": "prev_close vs day_high_ext anomaly",
+  "n_bad": 20,
+  "n_total_dev": 56,
+  "pct_bad": 35.71,
+  "cross_check_example": {
+    "ticker": "SOS",
+    "event_date": "2021-02-17",
+    "momentum_events_prev_close": 8880.0,
+    "raw_trade_data_min_max_price": [
+      3.99,
+      16.46
+    ],
+    "raw_trade_data_source": "filtered_trades_dev_v4 direct query, independent of the phase 6b pipeline",
+    "note": "momentum_pct is ratio-based (scale-invariant to a uniform OHLC scaling error), so this discrepancy was invisible to every prior phase check (in_scope flag_bad_denominator only floors prev_close at 0.01) until this phase compared prev_close/momentum_events.high directly against real trade tick prices for the first time in the project."
+  },
+  "events": [
+    {
+      "ticker": "SOS",
+      "event_date_canonical": "2021-02-17",
+      "prev_close": 8880.0,
+      "day_high_ext": 16.46,
+      "ratio_prev_close_over_day_high": 539.4896719319562
+    },
+    {
+      "ticker": "AEHL",
+      "event_date_canonical": "2021-02-19",
+      "prev_close": 1600.0,
+      "day_high_ext": 5.5,
+      "ratio_prev_close_over_day_high": 290.90909090909093
+    },
+    {
+      "ticker": "OST",
+      "event_date_canonical": "2024-06-13",
+      "prev_close": 100.92,
+      "day_high_ext": 0.571,
+      "ratio_prev_close_over_day_high": 176.7425569176883
+    },
+    {
+      "ticker": "SPCB",
+      "event_date_canonical": "2021-10-25",
+      "prev_close": 169.6,
+      "day_high_ext": 1.3,
+      "ratio_prev_close_over_day_high": 130.46153846153845
+    },
+    {
+      "ticker": "SLXN",
+      "event_date_canonical": "2024-08-19",
+      "prev_close": 263.25,
+      "day_high_ext": 2.79,
+      "ratio_prev_close_over_day_high": 94.35483870967742
+    },
+    {
+      "ticker": "UCAR",
+      "event_date_canonical": "2024-03-28",
+      "prev_close": 5.05,
+      "day_high_ext": 0.069,
+      "ratio_prev_close_over_day_high": 73.18840579710144
+    },
+    {
+      "ticker": "SCLX",
+      "event_date_canonical": "2022-11-23",
+      "prev_close": 158.9,
+      "day_high_ext": 5.98,
+      "ratio_prev_close_over_day_high": 26.57190635451505
+    },
+    {
+      "ticker": "SLNH",
+      "event_date_canonical": "2022-12-21",
+      "prev_close": 7.75,
+      "day_high_ext": 0.457999,
+      "ratio_prev_close_over_day_high": 16.921434326275822
+    },
+    {
+      "ticker": "MRSN",
+      "event_date_canonical": "2023-05-03",
+      "prev_close": 109.5,
+      "day_high_ext": 6.74,
+      "ratio_prev_close_over_day_high": 16.246290801186944
+    },
+    {
+      "ticker": "AQB",
+      "event_date_canonical": "2022-03-10",
+      "prev_close": 28.0,
+      "day_high_ext": 2.06,
+      "ratio_prev_close_over_day_high": 13.592233009708737
+    },
+    {
+      "ticker": "SWVL",
+      "event_date_canonical": "2022-04-21",
+      "prev_close": 106.5,
+      "day_high_ext": 9.84,
+      "ratio_prev_close_over_day_high": 10.823170731707318
+    },
+    {
+      "ticker": "VEEE",
+      "event_date_canonical": "2024-06-25",
+      "prev_close": 5.6,
+      "day_high_ext": 0.738,
+      "ratio_prev_close_over_day_high": 7.588075880758807
+    },
+    {
+      "ticker": "IMTE",
+      "event_date_canonical": "2022-09-16",
+      "prev_close": 14.6,
+      "day_high_ext": 2.08,
+      "ratio_prev_close_over_day_high": 7.019230769230769
+    },
+    {
+      "ticker": "SLGL",
+      "event_date_canonical": "2024-11-22",
+      "prev_close": 4.75,
+      "day_high_ext": 0.6769,
+      "ratio_prev_close_over_day_high": 7.017284680159552
+    },
+    {
+      "ticker": "NUKK",
+      "event_date_canonical": "2022-04-18",
+      "prev_close": 1.08,
+      "day_high_ext": 0.203,
+      "ratio_prev_close_over_day_high": 5.320197044334975
+    },
+    {
+      "ticker": "AMC",
+      "event_date_canonical": "2020-11-09",
+      "prev_close": 24.9,
+      "day_high_ext": 4.75,
+      "ratio_prev_close_over_day_high": 5.242105263157894
+    },
+    {
+      "ticker": "SIFY",
+      "event_date_canonical": "2023-06-22",
+      "prev_close": 8.25,
+      "day_high_ext": 1.88,
+      "ratio_prev_close_over_day_high": 4.388297872340425
+    },
+    {
+      "ticker": "APLD",
+      "event_date_canonical": "2022-03-28",
+      "prev_close": 12.6,
+      "day_high_ext": 3.05,
+      "ratio_prev_close_over_day_high": 4.131147540983607
+    },
+    {
+      "ticker": "CREX",
+      "event_date_canonical": "2022-02-01",
+      "prev_close": 4.05,
+      "day_high_ext": 1.91,
+      "ratio_prev_close_over_day_high": 2.1204188481675392
+    },
+    {
+      "ticker": "EDSA",
+      "event_date_canonical": "2020-06-15",
+      "prev_close": 20.3,
+      "day_high_ext": 10.0,
+      "ratio_prev_close_over_day_high": 2.0300000000000002
+    }
+  ]
+}
