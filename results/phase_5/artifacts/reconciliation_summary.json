@@ -1,0 +1,80 @@
+{
+  "phase": "5",
+  "task": "T4",
+  "n_spine_rows": 20951,
+  "t4a_file1_reconciliation": {
+    "trades_flagged_expected": 287,
+    "trades_flagged_observed": 287,
+    "quotes_flagged_expected": 386,
+    "quotes_flagged_observed": 386,
+    "union_expected": 414,
+    "union_observed": 414,
+    "overlap_expected": {
+      "both": 259,
+      "trades_only": 28,
+      "quotes_only": 127
+    },
+    "overlap_observed": {
+      "both": 259,
+      "trades_only": 28,
+      "quotes_only": 127
+    },
+    "exact_match": true
+  },
+  "t4b_known37_check": {
+    "n_known_no_quotes_file_events": 37,
+    "threshold_min": 37,
+    "meets_min_threshold": true,
+    "n_matched_to_spine_window_flags": 37,
+    "n_all_flagged_on_quotes_side": 37,
+    "all_37_flagged": true
+  },
+  "t4c_label_integrity": {
+    "n_clean_trades_with_nonnull_label": 0,
+    "n_flagged_trades_with_null_label": 0,
+    "n_clean_quotes_with_nonnull_label": 0,
+    "n_flagged_quotes_with_null_label": 0,
+    "label_integrity_pass": true
+  },
+  "t4d_file2_first_measurement": {
+    "n_file2_inscope": 5188,
+    "n_file2_trades_flagged": 5188,
+    "file2_trades_flagged_pct": 100.0,
+    "n_file2_quotes_flagged": 5187,
+    "file2_quotes_flagged_pct": 99.98,
+    "trades_bitmap_pattern_top15": {
+      "0001000": 4670,
+      "0001001": 208,
+      "1001000": 188,
+      "0101000": 38,
+      "0011000": 36,
+      "0001100": 24,
+      "0001010": 24
+    },
+    "quotes_bitmap_pattern_top15": {
+      "0001000": 4559,
+      "0001001": 206,
+      "1001000": 186,
+      "0011000": 71,
+      "0000000": 37,
+      "0111000": 37,
+      "0101000": 36,
+      "0001100": 22,
+      "0001010": 22,
+      "1111000": 5,
+      "0011100": 2,
+      "0011111": 1,
+      "0111001": 1,
+      "0111010": 1,
+      "0011010": 1
+    },
+    "escalation_row4_threshold_pct": 5.0,
+    "escalation_row4_threshold_n": 260,
+    "escalation_row4_triggered": true
+  },
+  "escalation_row3_triggered": false,
+  "escalation_row4_triggered": true,
+  "escalation_row5_triggered": false,
+  "source": "research/phase_5/t4_derive_flags.py:main",
+  "artifact": "results/phase_5/artifacts/spine_window_flags.parquet"
+}
