@@ -1,0 +1,69 @@
+{
+  "phase": "6",
+  "title": "Measurement 1: Concentration Curves & the Detection Latency Budget",
+  "branch": "phase/6",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-23",
+  "baseline": "phase-5a-approved",
+  "summary": "T0: branch cut, dev v4 manifest (56 events) verified 56/56 against momentum_events_canonical (5m09s), resolving phase_5a REPORT.md's event_date wording ambiguity. T1: eligibility waterfall from Phase 5a's materialized D1 frame (avoids a redundant multi-billion-row canonical-view scan) - 15,763/15,763 eligible, 0 ineligible (non-binding: in_scope already requires event-day trades). T2: dev-tier minute-bar builder + measurement pipeline verified against filtered_trades_dev_v4 (0.68s, 0 integrity violations, 0 sidecar bitmap mismatches). T3: single budgeted full pass over filtered_trades (4,951,605,544 rows, 22.04 min) materialized event_minute_bars_v1 - 30,309,950 bar rows, T=0 events exactly match T1 (15,763). T4: concentration curves, min-window stats, opportunity decay + opening-print sensitivity computed from the cache, no further full-table passes. T5: 5 charts + sortable index, kaleido-verified (two rendering bugs found and fixed during verification).",
+  "headline_metrics": [
+    {"name": "eligibility_waterfall", "value": "15,763/15,763 D1 events T=0-trades-eligible; 0 ineligible", "n": 15763,
+     "source": "research/phase_6/t1_eligibility.py:main", "chart": null},
+    {"name": "bar_cache", "value": "event_minute_bars_v1: 30,309,950 rows, all 7 offsets, 22.04 min single pass", "n": 15763,
+     "source": "research/phase_6/t3_full_pass.py:main", "chart": null},
+    {"name": "min_window_medians", "value": "25%=20min, 50%=72min, 75%=183min (of T=0 session volume)", "n": 15763,
+     "source": "research/phase_6/measurements.py:compute_min_window_stats", "chart": "results/phase_6/charts/03_min_window_cdf.html"},
+    {"name": "minutes_to_50pct_move_with_minute0", "value": 52, "n": 15763,
+     "source": "research/phase_6/measurements.py:pooled_median_crossing_minute", "chart": "results/phase_6/charts/04_opportunity_decay.html"},
+    {"name": "minutes_to_50pct_move_excl_minute0", "value": 57, "n": 15763,
+     "source": "research/phase_6/measurements.py:pooled_median_crossing_minute", "chart": "results/phase_6/charts/04_opportunity_decay.html"},
+    {"name": "opening_print_sensitivity_ratio", "value": "1.10x (escalation threshold 2x) - not triggered", "n": 15763,
+     "source": "results/phase_6/artifacts/t4_measurements_summary.json", "chart": "results/phase_6/charts/04_opportunity_decay.html"},
+    {"name": "volume_move_concentration", "value": "pooled median above diagonal in all 10 momentum_pct deciles, no t=0 step artifact", "n": 15763,
+     "source": "research/phase_6/measurements.py:compute_concentration_curves", "chart": "results/phase_6/charts/01_volume_concentration.html"}
+  ],
+  "escalations_triggered_and_resolved": [],
+  "escalations_checked_not_triggered": [
+    {"criterion": "dev v4 manifest join != 56/56", "observed": "56/56 exact"},
+    {"criterion": "ineligible share of D1 > 1%", "observed": "0%"},
+    {"criterion": "bar integrity: dup keys / out-of-session minutes", "observed": "0 / 0 (dev and full)"},
+    {"criterion": "distinct T=0 events in bars != T1 eligible count", "observed": "15,763 == 15,763"},
+    {"criterion": "sensitivity ratio > 2x either direction", "observed": "1.10x"},
+    {"criterion": "dev-tier runtime > 60s", "observed": "0.68s"},
+    {"criterion": "more than one full pass over filtered_trades", "observed": "exactly 1 (22.04 min)"},
+    {"criterion": "write to base/dev tables or data root", "observed": "none - only event_minute_bars_v1 created"},
+    {"criterion": "calendar pin drift", "observed": "5.4.0 / 4.13.2, matches pin"}
+  ],
+  "decisions_log": [
+    {"decision": "T1 reads Phase 5a's sampling_frame.parquet instead of re-querying momentum_events_canonical",
+     "reason": "the view's trades_ingested/quotes_ingested columns force a fresh DISTINCT scan of filtered_trades+filtered_quotes on every query; the frozen artifact is the identical query result and was freshness-checked by row count"},
+    {"decision": "bars carry first_price (arg_min) alongside the prompt's named last_price (arg_max)",
+     "reason": "open price (first in-session print) must be readable from minute 0 without a second full-table pass"},
+    {"decision": "single GROUP BY including in_session produces both in-session bars and excluded-row-share stats from one scan",
+     "reason": "escalation row 7 allows exactly one full pass over filtered_trades"},
+    {"decision": "sensitivity variant re-derives its own open_price at the first post-cutoff print rather than masking minute 0",
+     "reason": "answers what the curve would look like if the opening print hadn't happened, not just hides one data point"},
+    {"decision": "chart 05 overlay groups capped at seeded n=30 per group (top/bottom decile + random), not full ~1,580-event deciles",
+     "reason": "found via kaleido verification - full deciles rendered as unreadable spaghetti and hid the pooled band; the sortable index remains the only complete-population artifact"}
+  ],
+  "surprises": [
+    "T1's eligibility filter is non-binding: 0/15,763 ineligible, because in_scope already excludes zero-event-day-trades events (flag_missing_event_day)",
+    "736/15,763 events (4.7%) have >50% of T=0 trade rows outside the regular session (heavy pre/post-market activity) - consistent in rate with the dev-tier finding (2/56, 3.6%)",
+    "realized-move-fraction has an extreme tail (population max 2,306, 99th pct 12.1) - large intraday round-trips relative to a small close-to-open net move, visible in chart 05's per-event traces"
+  ],
+  "output_files": {
+    "prompt": "prompts/phase_6.md", "config": "config/phase_6.json",
+    "scripts": "research/phase_6/*.py (11 scripts: t1_eligibility, build_minute_bars, measurements, t2_dev_pipeline, t3_full_pass, t4_measurements, chart_common, build_chart_01..05, build_index)",
+    "artifacts_committed_json": ["results/phase_6/artifacts/t1_eligibility.json", "results/phase_6/artifacts/t2_dev_pipeline_summary.json",
+                                  "results/phase_6/artifacts/t3_full_pass_summary.json", "results/phase_6/artifacts/t4_measurements_summary.json"],
+    "artifacts_gitignored_parquet": "results/phase_6/artifacts/*.parquet (regenerable from committed config+code)",
+    "new_db_table": "event_minute_bars_v1 (30,309,950 rows, all 7 offsets)",
+    "charts": ["results/phase_6/charts/01_volume_concentration.html", "results/phase_6/charts/02_move_concentration.html",
+               "results/phase_6/charts/03_min_window_cdf.html", "results/phase_6/charts/04_opportunity_decay.html",
+               "results/phase_6/charts/05_per_event_overlay.html", "results/phase_6/charts/index.html"],
+    "report": "results/phase_6/REPORT.md", "digest": "results/phase_6/digest.json"
+  },
+  "commits": 8,
+  "reproduce": ".venv/Scripts/python.exe -m research.phase_6.t1_eligibility && ... t2_dev_pipeline / t3_full_pass / t4_measurements / build_chart_01..05 / build_index",
+  "approval_gate": "Awaiting Cooper's review of the charts. Do not begin Measurement 2 scoping or use these numbers in labeling/detector work until approved. On approval, tag phase-6-approved. The latency budget number is Cooper's to set from chart 04, not the agent's."
+}
