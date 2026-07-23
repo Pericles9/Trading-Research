@@ -1,0 +1,35 @@
+{
+  "phase": "5",
+  "task": "T2",
+  "table_scanned": "filtered_trades",
+  "dev_mode": false,
+  "n_events": 20951,
+  "n_full_window": 15476,
+  "n_flagged_not_full_window": 5475,
+  "by_source_file": {
+    "file1": {
+      "full_window": 15476,
+      "not_full_window": 287,
+      "total": 15763
+    },
+    "file2": {
+      "full_window": 0,
+      "not_full_window": 5188,
+      "total": 5188
+    }
+  },
+  "bitmap_top10": {
+    "1111111": 15476,
+    "0001000": 4670,
+    "0001001": 208,
+    "1001000": 188,
+    "0011111": 131,
+    "0111111": 75,
+    "0101000": 38,
+    "0011000": 36,
+    "0001100": 24,
+    "0001010": 24
+  },
+  "source": "research/phase_5/t2_trades_bitmap.py:main",
+  "artifact": "results/phase_5/artifacts/trades_bitmaps.parquet"
+}
