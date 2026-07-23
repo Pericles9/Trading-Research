@@ -2,7 +2,8 @@
   "phase": "6",
   "title": "Measurement 1: Concentration Curves & the Detection Latency Budget",
   "branch": "phase/6",
-  "status": "complete_awaiting_approval",
+  "status": "superseded_rth_only",
+  "superseded_by": "phase_6b (D3, docs/Universe-Decisions.md): RTH-only was not wrong, but answered an RTH-conditional question when the universe (momentum_pct off high, which may occur premarket) needed the full extended trading day. This directory was renamed from results/phase_6/ (git mv, no content changes) - all paths below still say results/phase_6/... as a historical record of where they were generated.",
   "generated_at": "2026-07-23",
   "baseline": "phase-5a-approved",
   "summary": "T0: branch cut, dev v4 manifest (56 events) verified 56/56 against momentum_events_canonical (5m09s), resolving phase_5a REPORT.md's event_date wording ambiguity. T1: eligibility waterfall from Phase 5a's materialized D1 frame (avoids a redundant multi-billion-row canonical-view scan) - 15,763/15,763 eligible, 0 ineligible (non-binding: in_scope already requires event-day trades). T2: dev-tier minute-bar builder + measurement pipeline verified against filtered_trades_dev_v4 (0.68s, 0 integrity violations, 0 sidecar bitmap mismatches). T3: single budgeted full pass over filtered_trades (4,951,605,544 rows, 22.04 min) materialized event_minute_bars_v1 - 30,309,950 bar rows, T=0 events exactly match T1 (15,763). T4: concentration curves, min-window stats, opportunity decay + opening-print sensitivity computed from the cache, no further full-table passes. T5: 5 charts + sortable index, kaleido-verified (two rendering bugs found and fixed during verification).",
@@ -65,5 +66,5 @@
   },
   "commits": 8,
   "reproduce": ".venv/Scripts/python.exe -m research.phase_6.t1_eligibility && ... t2_dev_pipeline / t3_full_pass / t4_measurements / build_chart_01..05 / build_index",
-  "approval_gate": "Awaiting Cooper's review of the charts. Do not begin Measurement 2 scoping or use these numbers in labeling/detector work until approved. On approval, tag phase-6-approved. The latency budget number is Cooper's to set from chart 04, not the agent's."
+  "approval_gate": "Never approved - superseded by phase_6b before review. No phase-6-approved tag was ever created. event_minute_bars_v1 and these artifacts/charts are retained untouched as a valid RTH-conditional cache/comparability baseline (see rth_legacy variant in phase_6b)."
 }

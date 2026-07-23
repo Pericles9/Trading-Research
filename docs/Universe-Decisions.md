@@ -83,9 +83,44 @@ full 15,763-event frame unless a specific window-dependent step requires narrowi
 
 ---
 
+## D3 — Analysis clock for intraday measurements is the full extended trading day
+
+**Date:** 2026-07-23
+**Deciding phase gate:** Phase 6b (pre-approval — recorded at phase start per Cooper's determination
+in the phase 6b prompt, not at its approval gate)
+
+**Decision:** The analysis clock for intraday measurements is the full extended trading day —
+premarket, regular session, and post-market — per the XNYS schedule with extended-hours bounds,
+with every bar tagged by session segment. RTH-only variants may be produced as labeled
+comparability views but are never the primary measurement.
+
+**Reasoning on record:** Phase 6 measured RTH only. 736/15,763 events (4.7%) had >50% of their
+event-day prints outside the regular session (top of list 95–99%), and the archive's universe was
+selected on `momentum_pct = (high − prev_close)/prev_close`, where the high may occur premarket.
+Extended hours are structurally important to these names and cannot be excluded. Phase 6's numbers
+are not wrong — they are RTH-conditional answers to a question that needed the full day.
+
+**Supersession:** Phase 6 was never approved (no `phase-6-approved` tag was ever created). Its
+outputs are retained, relabeled (not deleted) from `results/phase_6/` to `results/phase_6_rth_only/`
+(`git mv`, no content changes), with `digest.json` status set to `superseded_rth_only`. The
+`event_minute_bars_v1` DuckDB table (RTH-only cache) is retained untouched — a valid RTH-conditional
+cache and the source of phase_6b's `rth_legacy` comparability variant.
+
+**Standing rule for all future phases:** Any phase computing intraday minute-level measurements
+uses the extended-day clock (`event_minute_bars_v2` or its successor) as the primary population.
+An RTH-only cut is permitted only as an explicitly labeled comparability view, never presented as
+the headline result. Session-date and segment-boundary computation must be timezone-aware
+(`America/New_York`, DST-aware) — casting the UTC `sip_timestamp` to a date (the convention used
+through Phase 6) misassigns EST-winter post-market prints after 19:00 ET to the next calendar day
+and must not be reused for extended-day work.
+
+---
+
 ## Related
 
 - [[Open-Items-Register]] — the "2025 inclusion decision" item is closed there, referencing D1.
 - `results/phase_5/REPORT.md` — the measurements (file2 flagged share, bitmap patterns) that
   motivated both decisions.
 - `docs/Mom-DB-Strategy-Research-Program.md` §8 — risk register item #8, cited by D2.
+- `results/phase_6_rth_only/` (formerly `results/phase_6/`) — the superseded RTH-only measurement
+  that motivated D3; `results/phase_6b/` — the extended-day redo.

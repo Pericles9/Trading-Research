@@ -1,0 +1,78 @@
+{
+  "phase": "6b",
+  "title": "Measurement 1 Redo: Concentration & Latency Budget over the Full Extended Day",
+  "baseline": "tip of phase/6 (unapproved); master remains phase-5a-approved",
+  "supersedes": "phase_6 (results/phase_6_rth_only/, digest status superseded_rth_only, no phase-6-approved tag ever created)",
+  "universe": {
+    "definition": "in_scope=TRUE AND source_file='file1' (D1)",
+    "expected_n": 15763,
+    "eligibility_rule": "substr(trades_bitmap, 4, 1) = '1' (unchanged from Phase 6 - re-verified, not re-derived)",
+    "prev_close_guard": "prev_close (from momentum_events) present and > 0 for all eligible events - expected non-binding since in_scope already requires prev_close >= prev_close_floor (config/phase_1b.json, 0.01)"
+  },
+  "session_calendar": {
+    "library": "pandas_market_calendars",
+    "library_version_pinned": "5.4.0",
+    "underlying_engine_version_pinned": "4.13.2",
+    "calendar_code": "XNYS",
+    "derivation_range": {"start": "2019-12-01", "end": "2026-01-15"},
+    "pre_post_availability_check": "installed pandas_market_calendars 5.4.0's XNYS calendar exposes market_times=['market_open','market_close'] only (verified via Calendar.market_times and schedule(market_times='all') at phase start) - no pre/post columns available. Escalation row 2 condition (schedule lacks pre/post) is therefore TRUE by measured fact; the fallback below is in effect for the whole phase, logged in the report, not an error."
+  },
+  "extended_hours_fallback": {
+    "premarket_start_et": "04:00:00",
+    "normal_post_end_et": "20:00:00",
+    "early_close_post_end_et": "17:00:00",
+    "early_close_rule": "a session date is 'early close' if its XNYS market_close (converted to America/New_York) has a wall-clock time before 16:00:00 ET",
+    "rth_open_close_source": "XNYS schedule market_open/market_close, converted from UTC to America/New_York (tz-aware) and then stripped to naive ET wall-clock for all downstream arithmetic"
+  },
+  "timezone": {
+    "zone": "America/New_York",
+    "dst_aware": true,
+    "engine": "DuckDB ICU extension (INSTALL icu; LOAD icu;), AT TIME ZONE 'America/New_York' applied to TO_TIMESTAMP(sip_timestamp/1e9)",
+    "note": "Session-date and segment assignment use this ET-local wall-clock timestamp directly (CAST ... AS DATE, CAST ... AS TIME) - never the UTC-cast-to-date convention used through Phase 6, which misassigns EST-winter post-market prints after 19:00 ET to the next calendar day."
+  },
+  "segments": ["premarket", "rth", "post"],
+  "offsets": [-3, -2, -1, 0, 1, 2, 3],
+  "bar_grain_minutes": 1,
+  "minute_index_origin": "04:00:00 ET on the session's own date (index 0), same origin for every offset's session",
+  "min_window_thresholds_pct": [25, 50, 75],
+  "opportunity_decay": {
+    "primary": {
+      "anchor": "realized(t) = log(last_price_t / prev_close) / log(day_high_ext / prev_close)",
+      "prev_close_source": "momentum_events.prev_close, joined by (ticker, COALESCE(date,event_date), ROUND(momentum_pct,2))",
+      "day_high_ext_source": "MAX(bar.high) across all T=0 segments (premarket+rth+post) from event_minute_bars_v2 - computed from our own trade data, not momentum_events.high",
+      "headline_a": "minute since 04:00 ET at which pooled median realized(t) crosses 0.5",
+      "headline_b": "distribution of realized(t) evaluated at each event's own RTH-open minute (09:30 ET)",
+      "headline_c": "distribution of the ET clock time-of-day at which day_high_ext occurs"
+    },
+    "rth_legacy": {
+      "definition": "Phase 6's original: realized(t) = |log(last_price_t/open_price)| / |log(close_price/open_price)|, open_price = first RTH print, close_price = last RTH print",
+      "computed_from": "event_minute_bars_v2 rows with segment='rth' only",
+      "purpose": "direct comparability to Phase 6's 52/57-minute crossings - labeled rth_legacy everywhere it appears"
+    }
+  },
+  "chart_overlay": {
+    "pooled_vs_overlay_threshold_n_events": 200,
+    "overlay_seed": 42,
+    "overlay_random_n": 30,
+    "overlay_groups": ["top_decile", "bottom_decile", "seeded_random_30"],
+    "decile_source": "momentum_pct deciles over the T1-eligible population (pd.qcut, 10 deciles, labels=False, duplicates='drop') - same convention as Phase 6"
+  },
+  "escalation_thresholds": {
+    "d1_total_expected": 15763,
+    "relabel_integrity": "file count and byte size of results/phase_6_rth_only/ must match pre-move results/phase_6/ exactly; event_minute_bars_v1 row count unchanged",
+    "prev_close_or_day_high_failure_max_pct": 0.1,
+    "dev_tier_max_seconds_per_pass": 60,
+    "full_table_pass_budget": 1,
+    "calendar_pin_expected": {"pandas_market_calendars": "5.4.0", "exchange_calendars": "4.13.2"}
+  },
+  "paths": {
+    "momentum_events_db": "data/duckdb/main.duckdb",
+    "canonical_view_module": "src/data/canonical.py",
+    "dev_trades_table": "filtered_trades_dev_v4",
+    "full_trades_table": "filtered_trades",
+    "v1_bars_table": "event_minute_bars_v1",
+    "v2_bars_table": "event_minute_bars_v2",
+    "phase6_rth_only_eligible_events": "results/phase_6_rth_only/artifacts/t1_eligible_events.parquet",
+    "output_table": "event_minute_bars_v2"
+  }
+}
