@@ -1,0 +1,63 @@
+{
+  "phase": "5a",
+  "task": "T2",
+  "frame_counts": {
+    "total": 15763,
+    "clean": 15349,
+    "flagged": 414
+  },
+  "checks": {
+    "frame_total": {
+      "expected": 15763,
+      "observed": 15763,
+      "pass": true
+    },
+    "frame_clean": {
+      "expected": 15349,
+      "observed": 15349,
+      "pass": true
+    },
+    "frame_flagged": {
+      "expected": 414,
+      "observed": 414,
+      "pass": true
+    }
+  },
+  "reconciliation_vs_spine_window_flags": {
+    "trades_cohort": {
+      "expected": 287,
+      "observed": 287,
+      "match": true
+    },
+    "quotes_cohort": {
+      "expected": 386,
+      "observed": 386,
+      "match": true
+    },
+    "overlap_both": {
+      "expected": 259,
+      "observed": 259,
+      "match": true
+    },
+    "overlap_trades_only": {
+      "expected": 28,
+      "observed": 28,
+      "match": true
+    },
+    "overlap_quotes_only": {
+      "expected": 127,
+      "observed": 127,
+      "match": true
+    },
+    "union_vs_frame_flagged": {
+      "union_from_swf": 414,
+      "frame_flagged": 414,
+      "match": true
+    }
+  },
+  "all_reconciled": true,
+  "all_pass": true,
+  "escalation_row1_triggered": false,
+  "source": "research/phase_5a/t2_sampling_frame.py:main",
+  "artifact": "results/phase_5a/artifacts/sampling_frame.parquet"
+}
