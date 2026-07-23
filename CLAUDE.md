@@ -37,6 +37,10 @@
 - Charts: Plotly, standalone HTML, one per file. n per bucket, always. No smoothing unless asked.
   Log axes where data is multiplicative (here, it usually is). Distributions, not just centers.
   Outliers shown, never clipped.
+- Every phase's `REPORT.md` must exist in both locations: the canonical `results/phase_{x}/REPORT.md`
+  (the original, written as part of that phase's own commits) and a copy at
+  `results/reports/phase_{x}_report.md` (cross-phase browsing folder, flat namespace). Copy, never
+  move — the phase-folder copy stays the source of truth. Added 2026-07-23.
 
 ## Escalation
 - Hard stop means stop. Do not fix. Do not tune. Do not proceed. Commit state, post the criterion
