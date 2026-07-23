@@ -1,0 +1,35 @@
+{
+  "phase": "5",
+  "task": "T3",
+  "table_scanned": null,
+  "used_phase4_cache": true,
+  "n_events": 20951,
+  "n_full_window": 15378,
+  "n_flagged_not_full_window": 5573,
+  "by_source_file": {
+    "file1": {
+      "full_window": 15377,
+      "not_full_window": 386,
+      "total": 15763
+    },
+    "file2": {
+      "full_window": 1,
+      "not_full_window": 5187,
+      "total": 5188
+    }
+  },
+  "bitmap_top10": {
+    "1111111": 15378,
+    "0001000": 4559,
+    "0001001": 206,
+    "1001000": 186,
+    "0000000": 179,
+    "0011111": 126,
+    "0011000": 71,
+    "0111111": 65,
+    "0111000": 37,
+    "0101000": 36
+  },
+  "source": "research/phase_5/t3_quotes_bitmap.py:main",
+  "artifact": "results/phase_5/artifacts/quotes_bitmaps_all.parquet"
+}

@@ -1,0 +1,9 @@
+{
+  "calendar_fields_match": true,
+  "offsets_match": true,
+  "n_distinct_events_in_cache": 20772,
+  "n_current_inscope_events": 20951,
+  "n_cache_keys_not_in_current_scope": 0,
+  "population_match": true,
+  "reuse_authorized": true
+}
