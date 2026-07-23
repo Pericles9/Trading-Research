@@ -1,0 +1,42 @@
+{
+  "phase": "5a",
+  "task": "T3",
+  "n_eligible_population": 15349,
+  "n_deciles_configured": 10,
+  "n_deciles_realized": 10,
+  "decile_pool_sizes": {
+    "0": 1539,
+    "1": 1531,
+    "2": 1537,
+    "3": 1536,
+    "4": 1534,
+    "5": 1533,
+    "6": 1537,
+    "7": 1533,
+    "8": 1535,
+    "9": 1534
+  },
+  "n_sample": 50,
+  "decile_sample_counts": {
+    "0": 5,
+    "1": 5,
+    "2": 5,
+    "3": 5,
+    "4": 5,
+    "5": 5,
+    "6": 5,
+    "7": 5,
+    "8": 5,
+    "9": 5
+  },
+  "reproducibility_check": {
+    "pass": true,
+    "n_diff_rows": 0
+  },
+  "escalation_row3_triggered": false,
+  "escalation_row4_triggered": false,
+  "escalation_row4_min_pool_size": 1531,
+  "method_source": "research/phase_3/build_dev_sample_v3.py:main (lines 63-73), replicated verbatim in research/phase_5a/t3_draw_primary.py:draw",
+  "source": "research/phase_5a/t3_draw_primary.py:main",
+  "artifact": "results/phase_5a/artifacts/dev_v4_primary_events.parquet"
+}
