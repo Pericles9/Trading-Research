@@ -1,0 +1,105 @@
+{
+  "phase": "6c",
+  "task": "T1",
+  "band_width_pct": 2.0,
+  "threshold_pct": 90.0,
+  "primary": {
+    "n_events": 50,
+    "criterion_1": {
+      "n_both_defined": 50,
+      "n_agree": 46,
+      "pct_agree": 92.0,
+      "pass": true
+    },
+    "criterion_2": {
+      "dup_tickers_in_stratum": [
+        "OCUL",
+        "MDIA"
+      ],
+      "detail": [
+        {
+          "ticker": "OCUL",
+          "stable_within_10pct": true
+        },
+        {
+          "ticker": "MDIA",
+          "stable_within_10pct": true
+        }
+      ],
+      "pass": true
+    },
+    "criterion_3": {
+      "n_flagged": 17,
+      "pct_flagged_gt1_05": 100.0,
+      "pass": true
+    },
+    "n_undefined_ratio_events": 0,
+    "undefined_ratio_events": []
+  },
+  "sidecar": {
+    "n_events": 6,
+    "criterion_1": {
+      "n_both_defined": 5,
+      "n_agree": 2,
+      "pct_agree": 40.0,
+      "pass": false
+    },
+    "criterion_2": {
+      "dup_tickers_in_stratum": [],
+      "detail": [],
+      "pass": null
+    },
+    "criterion_3": {
+      "n_flagged": 3,
+      "pct_flagged_gt1_05": 100.0,
+      "pass": true
+    },
+    "n_undefined_ratio_events": 1,
+    "undefined_ratio_events": [
+      {
+        "ticker": "RBC",
+        "event_date_canonical": "2022-09-26"
+      }
+    ]
+  },
+  "pooled": {
+    "n_events": 56,
+    "criterion_1": {
+      "n_both_defined": 55,
+      "n_agree": 48,
+      "pct_agree": 87.27,
+      "pass": false
+    },
+    "criterion_2": {
+      "dup_tickers_in_stratum": [
+        "OCUL",
+        "MDIA"
+      ],
+      "detail": [
+        {
+          "ticker": "OCUL",
+          "stable_within_10pct": true
+        },
+        {
+          "ticker": "MDIA",
+          "stable_within_10pct": true
+        }
+      ],
+      "pass": true
+    },
+    "criterion_3": {
+      "n_flagged": 20,
+      "pct_flagged_gt1_05": 100.0,
+      "pass": true
+    },
+    "n_undefined_ratio_events": 1,
+    "undefined_ratio_events": [
+      {
+        "ticker": "RBC",
+        "event_date_canonical": "2022-09-26"
+      }
+    ]
+  },
+  "escalation_row2_triggered": false,
+  "source": "research/phase_6c/t1_stratified.py:main"
+}
