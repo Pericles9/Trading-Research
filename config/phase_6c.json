@@ -1,0 +1,46 @@
+{
+  "phase": "6c",
+  "title": "Defect #4 Confirmation: Cohort-Stratified Verdict & Residual Diagnosis",
+  "baseline": "tip of phase/6b (A6.1 full stop); master remains phase-5a-approved",
+  "scope": "diagnosis only - no fix code, no changes to phase_6b's pipeline/artifacts, no full-table passes over filtered_trades. Read-only queries against the already-materialized event_minute_bars_dev_v2 (dev-tier table) are permitted for diagnostic evidence-gathering (not a full-table pass).",
+  "source_artifact": "results/phase_6b/artifacts/a61_basis_confirmation_rerun.json (read-only - same r1'/r2' numbers, no re-measurement)",
+  "cohorts": {
+    "primary": {"n": 50, "source": "results/phase_5a/artifacts/dev_v4_primary_events.parquet"},
+    "sidecar": {"n": 6, "tickers": ["SLXN", "APLD", "ACET", "RBC", "NUKK", "PSIX"],
+                "source": "results/phase_5a/artifacts/dev_v4_sidecar_events.parquet",
+                "note": "drawn because their archives are degraded, per 5a report SS4 - never pooled with primary in any population-level statistic (same standing rule as Phase 5a)"}
+  },
+  "criteria": {
+    "band_width_pct": 2.0,
+    "stratified_threshold_pct": 90.0,
+    "note": "identical band and threshold as A6.1 - stratification changes the denominator (primary-only vs sidecar-only vs pooled), not the criteria themselves"
+  },
+  "classification_rules": {
+    "order_applied": ["band_margin", "coverage_gap", "unexplained"],
+    "band_margin": {
+      "condition": "0.02 <= rel_diff <= 0.07 (within 5 percentage points outside the 2% band) AND internal agreement: |r2' - r1'| / r1' <= 0.10 (r1' and r2' track each other, not one another's noise) AND no coverage anomaly (see coverage_gap condition below is false)",
+      "interpretation": "ordinary cross-definition noise around the same underlying factor (or around 1 for unaffected events) - ordinary population-level noise, not a distinguishable data defect"
+    },
+    "coverage_gap": {
+      "condition": "(r2' - r1') / r1' > 0.10 (our tick-derived RTH high undershoots what the split-implied factor from r1' alone would predict) AND spine_high_coalesced > day_high_rth AND at least one supporting gap-evidence signal present (RTH bar count materially below the primary-cohort median, OR longest intra-RTH gap materially above the primary-cohort median, OR ETH-vs-RTH row share materially elevated vs. the primary-cohort median)",
+      "interpretation": "our own tape is thin/missing at the peak - a per-event tick-coverage gap, not a basis-mechanism failure"
+    },
+    "unexplained": {
+      "condition": "fits neither band_margin nor coverage_gap",
+      "interpretation": "genuinely undiagnosed - triggers escalation row 1"
+    },
+    "materiality_threshold_for_gap_evidence": 0.25,
+    "materiality_note": "'materially below/above the primary-cohort median' = more than 25% below (bar count) or above (gap minutes, ETH share) the primary-cohort median value"
+  },
+  "verdict_boolean": {
+    "name": "mechanism_confirmed_on_primary",
+    "formula": "(primary criterion_1_pct >= 90.0) AND (primary criterion_2_pass) AND (primary criterion_3_pass) AND (unexplained_count == 0)"
+  },
+  "paths": {
+    "a61_artifact": "results/phase_6b/artifacts/a61_basis_confirmation_rerun.json",
+    "dev_v2_bars_table": "event_minute_bars_dev_v2",
+    "primary_manifest": "results/phase_5a/artifacts/dev_v4_primary_events.parquet",
+    "sidecar_manifest": "results/phase_5a/artifacts/dev_v4_sidecar_events.parquet",
+    "phase_5a_report": "results/phase_5a/REPORT.md"
+  }
+}
