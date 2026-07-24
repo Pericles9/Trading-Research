@@ -116,11 +116,68 @@ and must not be reused for extended-day work.
 
 ---
 
+## D4 — All measured quantities are tick-only; the spine's numeric columns are permanently quarantined
+
+**Date:** 2026-07-24
+**Deciding phase gate:** Phase 6c Amendment 8 (pre-approval — recorded at disposition, ahead of
+the `phase-6c-approved` tag, per the same pattern as D3)
+
+**Decision:** *All measured quantities in every analysis phase are derived exclusively from
+`filtered_trades` / `filtered_quotes`. The `momentum_events` spine provides event identity,
+universe membership (`in_scope`, `source_file`, window flags), and stratification metadata only.
+Every numeric OHLC and volume column on the spine (`prev_close`, `open`, `high`, `low`, `close`,
+`event_open`, `event_high`, `event_close`, `event_volume`, and any later-discovered price/size
+column) is permanently quarantined from analysis — diagnostic display only, never combined with
+tick data in any computed quantity. Caveat, permanent: `momentum_pct` is itself spine-derived and
+remains the universe-selection and stratification variable; it is scale-invariant per row, but
+event selection therefore inherits the vendor's RTH-scoped, adjusted-basis high forever. Every
+premarket or extended-hours finding is conditional on that selection boundary.*
+
+**Reasoning on record:** Phase 6b discovered defect #4 (spine-tick price disagreement, ratios
+2x–539x on 20/56 dev v4 events) and Phase 6c's A6.1 retest, cohort stratification, and residual
+classification (T1/T2) narrowed it to 7 residuals against a passing primary cohort (92.0% ≥ 90%
+threshold). Amendment 7's diagnostic chart pack (`results/phase_6c/charts/`) tested three
+pre-registered predictions against the two remaining `unexplained` residuals (SCLX, VEEE) using
+an independent, price-free signal — T+0 tick volume vs. the spine's `event_volume`. The
+volume cross-check falsified the thinness mechanism for SCLX/VEEE by direction: their tick volume
+*exceeds* spine `event_volume` by 35.1x and 13.8x — a coverage gap can only produce a deficit, not
+a surplus. It also showed AMC (a control that *passes* the price-ratio check) has an incoherent
+price factor (5.24) vs. volume factor (10.06) — proving the defect is not confined to
+price-ratio-failing events and cannot be screened out by any per-event price-agreement test.
+Conclusion: the spine's numeric columns cannot be certified even on events that pass price-ratio
+checks. Per-ticker factor characterization is not pursued; the dependency on the spine's numeric
+columns is severed instead. See `results/phase_6c/artifacts/closure.json` for the full evidence
+table (stratified criteria, 7-way classification, 9-row volume cross-check).
+
+**Supersession:** This supersedes the price-only framing of Phase 6b Amendment 5's original
+tick-anchor authorization — that amendment addressed price columns only; D4 extends the same
+quarantine to every spine numeric column, including `event_volume`, and makes it permanent rather
+than provisional pending a mechanism confirmation. The full-population basis audit contemplated
+under Amendment 7 disposition (b) is superseded by D4 — a source that is never read requires no
+characterization.
+
+**Standing rule for all future phases:** No query computes a measured quantity (a ratio, a level,
+a return, a volume share, a spread, anything reported as a finding) from any spine numeric column.
+Spine numeric columns may appear in diagnostic output (a chart annotation, a cross-check table)
+labeled as such, but never as an input to a computed statistic. `momentum_pct` remains the sole
+exception per the caveat above — it selects and stratifies the universe, it does not measure
+anything within a phase.
+
+**How to apply:** any phase touching `momentum_events`' price/volume columns cites this decision
+and confirms (per Amendment 8's A8.2 sweep requirement) that every reference is diagnostic-display
+only, never computation. SCLX and VEEE remain classified `unexplained` in the permanent record —
+closed by severance, not by explanation.
+
+---
+
 ## Related
 
-- [[Open-Items-Register]] — the "2025 inclusion decision" item is closed there, referencing D1.
+- [[Open-Items-Register]] — the "2025 inclusion decision" item is closed there, referencing D1;
+  defect #4 is closed there, referencing D4.
 - `results/phase_5/REPORT.md` — the measurements (file2 flagged share, bitmap patterns) that
   motivated both decisions.
 - `docs/Mom-DB-Strategy-Research-Program.md` §8 — risk register item #8, cited by D2.
 - `results/phase_6_rth_only/` (formerly `results/phase_6/`) — the superseded RTH-only measurement
   that motivated D3; `results/phase_6b/` — the extended-day redo.
+- `results/phase_6c/` — defect #4 diagnosis, cohort stratification, residual classification, and
+  the Amendment 7 chart pack that produced D4's falsifying evidence.
