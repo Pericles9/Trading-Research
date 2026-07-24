@@ -1,6 +1,7 @@
 {
   "phase": "6c",
-  "status": "complete_awaiting_approval",
+  "status": "complete_approved",
+  "approval": "Cooper reviewed and approved in-session 2026-07-24; formally recorded here, tagged phase-6c-approved. Per Amendment 8, Phase 6b now resumes under the A8.2 terms; master fast-forwards at phase-6b-approved (phase_6b.md's own approval gate), not at this tag - 6b itself remains incomplete pending T3-T6.",
   "summary": "Diagnosed the Phase 6b defect #4 (spine-tick basis mismatch) via cohort stratification and per-residual classification, then closed it by severance per Cooper's Amendment 8: primary-cohort criterion 1 passes at 92.0% (pooling with the deliberately-degraded 6-event sidecar was the earlier failure's cause, not a real defect); 5/7 residuals classified band_margin/coverage_gap; the diagnostic chart pack (Amendment 7) falsified the thinness mechanism for the remaining 2 (SCLX, VEEE) via an independent volume cross-check, and showed the defect isn't screenable by price-ratio checks at all (control AMC passes price but fails volume 10.06x). D4 permanently quarantines every spine numeric column from computation; SCLX/VEEE remain classified unexplained, closed by severance not explanation. Dev-tier tick-integrity spot-check: 0.0% true duplicate prints (strict key) across all 56 dev events.",
   "headline_metrics": [
     {"name": "primary_cohort_criterion_1_pct_agree", "value": 92.0, "threshold": 90.0, "pass": true, "chart": "results/phase_6c/charts/01_r_agreement_by_cohort.html"},
@@ -36,7 +37,7 @@
     {"path": "docs/Universe-Decisions.md", "status": "committed - D4 appended"},
     {"path": "CLAUDE.md", "status": "committed - D4 constraint added"},
     {"path": "docs/Open-Items-Register.md", "status": "committed - defect #4 closed"},
-    {"path": "results/phase_6c/REPORT.md", "status": "pending this task"},
-    {"path": "results/reports/phase_6c_report.md", "status": "pending this task"}
+    {"path": "results/phase_6c/REPORT.md", "status": "committed"},
+    {"path": "results/reports/phase_6c_report.md", "status": "committed"}
   ]
 }
