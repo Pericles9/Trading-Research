@@ -1,0 +1,42 @@
+{
+  "phase": "6c",
+  "status": "complete_awaiting_approval",
+  "summary": "Diagnosed the Phase 6b defect #4 (spine-tick basis mismatch) via cohort stratification and per-residual classification, then closed it by severance per Cooper's Amendment 8: primary-cohort criterion 1 passes at 92.0% (pooling with the deliberately-degraded 6-event sidecar was the earlier failure's cause, not a real defect); 5/7 residuals classified band_margin/coverage_gap; the diagnostic chart pack (Amendment 7) falsified the thinness mechanism for the remaining 2 (SCLX, VEEE) via an independent volume cross-check, and showed the defect isn't screenable by price-ratio checks at all (control AMC passes price but fails volume 10.06x). D4 permanently quarantines every spine numeric column from computation; SCLX/VEEE remain classified unexplained, closed by severance not explanation. Dev-tier tick-integrity spot-check: 0.0% true duplicate prints (strict key) across all 56 dev events.",
+  "headline_metrics": [
+    {"name": "primary_cohort_criterion_1_pct_agree", "value": 92.0, "threshold": 90.0, "pass": true, "chart": "results/phase_6c/charts/01_r_agreement_by_cohort.html"},
+    {"name": "sidecar_criterion_1_pct_agree", "value": 40.0, "threshold": 90.0, "pass": false, "note": "expected - deliberately degraded cohort, never pooled with primary", "chart": "results/phase_6c/charts/01_r_agreement_by_cohort.html"},
+    {"name": "residual_classification_counts", "value": {"band_margin": 3, "coverage_gap": 2, "unexplained": 2}, "chart": "results/phase_6c/charts/03_leg_direction.html"},
+    {"name": "sclx_veee_volume_ratio_ours_vs_spine", "value": {"SCLX": 35.06, "VEEE": 13.83}, "note": "falsifies thinness mechanism by direction - a coverage gap can only produce a volume deficit", "chart": "results/phase_6c/charts/residual_raw/index.html"},
+    {"name": "amc_control_price_vs_volume_factor_incoherence", "value": {"price_factor": 5.24, "volume_factor": 10.06}, "note": "price-ratio-passing control still fails on volume - defect not screenable by price checks alone", "chart": "results/phase_6c/charts/residual_raw/AMC_2020-11-09.html"},
+    {"name": "dev_tier_duplicate_print_rate_strict_key_pct", "value": 0.0, "threshold": 0.1, "pass": true, "chart": null}
+  ],
+  "decisions_log": [
+    "T1: recompute A6.1's 3 criteria stratified by dev cohort (primary/sidecar/pooled), no threshold changes - resolved the pooling artifact.",
+    "T2: applied phase_6c.json's fixed classification rules literally to all 7 residuals; did not invent categories for SCLX/VEEE when they fit neither - escalated per protocol instead.",
+    "Amendment 7 (Cooper): upheld the T2 stop as correct; authorized a descriptive-only chart pack (no reclassification) to test 3 pre-registered predictions against SCLX/VEEE.",
+    "Amendment 8 (Cooper): gate outcome (b) - thinness mechanism falsified by the volume cross-check's direction. Recorded D4 (all spine numeric columns permanently quarantined from computation, superseding Amendment 5's price-only scope). Closed defect #4 by severance rather than continuing characterization.",
+    "T3'' escalation key: used the strict (event key + ts + price + size + sequence_number) duplicate definition, not the loose 4-tuple, since sequence_number exists in this table and same-tick/price/size prints with distinct sequence_number are ordinary distinct trades, not duplicates."
+  ],
+  "surprises": [
+    "AMC - a control that PASSES the price-ratio check (rel_diff ~0) - still shows an incoherent volume factor (10.06x) against its price factor (5.24x), proving defect #4 cannot be screened out by any per-event price-agreement test, confirmed or residual.",
+    "SCLX/VEEE's volume ratios (35.1x, 13.8x) run in the OPPOSITE direction predicted by the coverage-gap hypothesis (which predicts a deficit, not a surplus) - a clean falsification rather than an ambiguous result.",
+    "The loose duplicate-print key (ts, price, size) alone would have flagged 8/56 dev events at >0.1%, but 100% of those collisions resolve to distinct sequence_number - a false-positive rate worth noting for any future phase reusing this check."
+  ],
+  "output_files": [
+    {"path": "results/phase_6c/artifacts/t1_stratified_criteria.json", "status": "committed"},
+    {"path": "results/phase_6c/artifacts/t2_residual_classification.json", "status": "committed"},
+    {"path": "results/phase_6c/artifacts/a71_chartpack_summary.json", "status": "committed"},
+    {"path": "results/phase_6c/artifacts/a71_chart04_summary.json", "status": "committed"},
+    {"path": "results/phase_6c/artifacts/closure.json", "status": "committed"},
+    {"path": "results/phase_6c/artifacts/t3_dev_duplicate_print_check.json", "status": "committed"},
+    {"path": "results/phase_6c/charts/01_r_agreement_by_cohort.html", "status": "committed"},
+    {"path": "results/phase_6c/charts/02_deviation_vs_thinness.html", "status": "committed"},
+    {"path": "results/phase_6c/charts/03_leg_direction.html", "status": "committed"},
+    {"path": "results/phase_6c/charts/residual_raw/ (9 files + index.html)", "status": "committed"},
+    {"path": "docs/Universe-Decisions.md", "status": "committed - D4 appended"},
+    {"path": "CLAUDE.md", "status": "committed - D4 constraint added"},
+    {"path": "docs/Open-Items-Register.md", "status": "committed - defect #4 closed"},
+    {"path": "results/phase_6c/REPORT.md", "status": "pending this task"},
+    {"path": "results/reports/phase_6c_report.md", "status": "pending this task"}
+  ]
+}
