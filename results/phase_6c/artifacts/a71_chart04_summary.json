@@ -1,0 +1,162 @@
+{
+  "phase": "6c",
+  "task": "A7.1_chart04",
+  "events": [
+    {
+      "ticker": "SCLX",
+      "event_date": "2022-11-23",
+      "momentum_pct": 31.06,
+      "cohort": "primary",
+      "t2_class": "unexplained",
+      "file": "SCLX_2022-11-23.html",
+      "t0_volume_ours": 195644,
+      "spine_event_volume": "5580",
+      "volume_ratio": 35.06164874551971
+    },
+    {
+      "ticker": "AMCX",
+      "event_date": "2021-02-26",
+      "momentum_pct": 33.24,
+      "cohort": "control",
+      "t2_class": "control",
+      "file": "AMCX_2021-02-26.html",
+      "t0_volume_ours": 3446031,
+      "spine_event_volume": "3359235",
+      "volume_ratio": 1.025838025621905
+    },
+    {
+      "ticker": "VEEE",
+      "event_date": "2024-06-25",
+      "momentum_pct": 31.79,
+      "cohort": "primary",
+      "t2_class": "unexplained",
+      "file": "VEEE_2024-06-25.html",
+      "t0_volume_ours": 185604,
+      "spine_event_volume": "13425",
+      "volume_ratio": 13.825251396648044
+    },
+    {
+      "ticker": "NEPH",
+      "event_date": "2023-06-01",
+      "momentum_pct": 56.25,
+      "cohort": "primary",
+      "t2_class": "band_margin",
+      "file": "NEPH_2023-06-01.html",
+      "t0_volume_ours": 823295,
+      "spine_event_volume": "821695",
+      "volume_ratio": 1.0019471945186473
+    },
+    {
+      "ticker": "AMC",
+      "event_date": "2020-11-09",
+      "momentum_pct": 76.31,
+      "cohort": "control",
+      "t2_class": "control",
+      "file": "AMC_2020-11-09.html",
+      "t0_volume_ours": 135501142,
+      "spine_event_volume": "13474947",
+      "volume_ratio": 10.055782928125803
+    },
+    {
+      "ticker": "ZENA",
+      "event_date": "2024-10-11",
+      "momentum_pct": 76.27,
+      "cohort": "primary",
+      "t2_class": "band_margin",
+      "file": "ZENA_2024-10-11.html",
+      "t0_volume_ours": 47423604,
+      "spine_event_volume": "47353548",
+      "volume_ratio": 1.0014794245195735
+    },
+    {
+      "ticker": "ACET",
+      "event_date": "2020-09-18",
+      "momentum_pct": 32.84,
+      "cohort": "sidecar",
+      "t2_class": "coverage_gap",
+      "file": "ACET_2020-09-18.html",
+      "t0_volume_ours": 610089,
+      "spine_event_volume": "378899",
+      "volume_ratio": 1.6101626026988722
+    },
+    {
+      "ticker": "NUKK",
+      "event_date": "2022-04-18",
+      "momentum_pct": 50.37,
+      "cohort": "sidecar",
+      "t2_class": "coverage_gap",
+      "file": "NUKK_2022-04-18.html",
+      "t0_volume_ours": 58261,
+      "spine_event_volume": "7282",
+      "volume_ratio": 8.000686624553694
+    },
+    {
+      "ticker": "PSIX",
+      "event_date": "2022-11-15",
+      "momentum_pct": 74.86,
+      "cohort": "sidecar",
+      "t2_class": "band_margin",
+      "file": "PSIX_2022-11-15.html",
+      "t0_volume_ours": 63728,
+      "spine_event_volume": "63728",
+      "volume_ratio": 1.0
+    }
+  ],
+  "file_sizes": [
+    {
+      "ticker": "SCLX",
+      "file": "results/phase_6c/charts/residual_raw/SCLX_2022-11-23.html",
+      "size_mb": 5.03,
+      "n_trades": 2005
+    },
+    {
+      "ticker": "AMCX",
+      "file": "results/phase_6c/charts/residual_raw/AMCX_2021-02-26.html",
+      "size_mb": 7.66,
+      "n_trades": 52920
+    },
+    {
+      "ticker": "VEEE",
+      "file": "results/phase_6c/charts/residual_raw/VEEE_2024-06-25.html",
+      "size_mb": 4.94,
+      "n_trades": 698
+    },
+    {
+      "ticker": "NEPH",
+      "file": "results/phase_6c/charts/residual_raw/NEPH_2023-06-01.html",
+      "size_mb": 5.91,
+      "n_trades": 17394
+    },
+    {
+      "ticker": "AMC",
+      "file": "results/phase_6c/charts/residual_raw/AMC_2020-11-09.html",
+      "size_mb": 23.68,
+      "n_trades": 363921
+    },
+    {
+      "ticker": "ZENA",
+      "file": "results/phase_6c/charts/residual_raw/ZENA_2024-10-11.html",
+      "size_mb": 21.49,
+      "n_trades": 322197
+    },
+    {
+      "ticker": "ACET",
+      "file": "results/phase_6c/charts/residual_raw/ACET_2020-09-18.html",
+      "size_mb": 5.09,
+      "n_trades": 2622
+    },
+    {
+      "ticker": "NUKK",
+      "file": "results/phase_6c/charts/residual_raw/NUKK_2022-04-18.html",
+      "size_mb": 4.87,
+      "n_trades": 83
+    },
+    {
+      "ticker": "PSIX",
+      "file": "results/phase_6c/charts/residual_raw/PSIX_2022-11-15.html",
+      "size_mb": 4.87,
+      "n_trades": 88
+    }
+  ],
+  "source": "research/phase_6c/a71_chart_04_raw.py:main"
+}
