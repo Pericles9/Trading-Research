@@ -1,0 +1,379 @@
+{
+  "phase": "6c",
+  "task": "T3'",
+  "title": "Closure artifact - Amendment 8 disposition",
+  "disposition": "b_superseded_by_D4",
+  "amendment7_gate_outcome": "b",
+  "amendment7_gate_reasoning": "The pre-registered thinness mechanism (P1/P2/P3) is falsified for SCLX/VEEE by the volume cross-check's direction: their tick volume exceeds the spine's event_volume by 35.1x (SCLX) and 13.8x (VEEE); a coverage gap can only produce a volume deficit, not a surplus. No coverage_thin_symmetric category is created.",
+  "final_mechanism_statement": "momentum_events' numeric columns carry inconsistent adjustment bases - per ticker, and per column within the same row. Evidence: NUKK price factor 7.98 with volume factor 8.001 (one coherent 1:8 reverse split); AMC (a band-passing control) price factor 5.24 with volume factor 10.06 (incoherent across columns); SCLX/VEEE volume factors 35.1x/13.8x against near-1 price ratios; NEPH/ZENA/PSIX/AMCX at 1.000-1.026 tick-vs-spine volume parity. The tick archive is the trustworthy layer; the spine's numeric columns cannot be certified even on events that pass price-ratio checks. Per-ticker factor characterization is not pursued - the dependency is severed instead (D4, docs/Universe-Decisions.md).",
+  "final_classification": {
+    "band_margin": [
+      "NEPH",
+      "ZENA",
+      "PSIX"
+    ],
+    "coverage_gap": [
+      "ACET",
+      "NUKK"
+    ],
+    "unexplained": [
+      "SCLX",
+      "VEEE"
+    ]
+  },
+  "final_classification_unchanged_from_t2": true,
+  "stratified_criteria": {
+    "phase": "6c",
+    "task": "T1",
+    "band_width_pct": 2.0,
+    "threshold_pct": 90.0,
+    "primary": {
+      "n_events": 50,
+      "criterion_1": {
+        "n_both_defined": 50,
+        "n_agree": 46,
+        "pct_agree": 92.0,
+        "pass": true
+      },
+      "criterion_2": {
+        "dup_tickers_in_stratum": [
+          "OCUL",
+          "MDIA"
+        ],
+        "detail": [
+          {
+            "ticker": "OCUL",
+            "stable_within_10pct": true
+          },
+          {
+            "ticker": "MDIA",
+            "stable_within_10pct": true
+          }
+        ],
+        "pass": true
+      },
+      "criterion_3": {
+        "n_flagged": 17,
+        "pct_flagged_gt1_05": 100.0,
+        "pass": true
+      },
+      "n_undefined_ratio_events": 0,
+      "undefined_ratio_events": []
+    },
+    "sidecar": {
+      "n_events": 6,
+      "criterion_1": {
+        "n_both_defined": 5,
+        "n_agree": 2,
+        "pct_agree": 40.0,
+        "pass": false
+      },
+      "criterion_2": {
+        "dup_tickers_in_stratum": [],
+        "detail": [],
+        "pass": null
+      },
+      "criterion_3": {
+        "n_flagged": 3,
+        "pct_flagged_gt1_05": 100.0,
+        "pass": true
+      },
+      "n_undefined_ratio_events": 1,
+      "undefined_ratio_events": [
+        {
+          "ticker": "RBC",
+          "event_date_canonical": "2022-09-26"
+        }
+      ]
+    },
+    "pooled": {
+      "n_events": 56,
+      "criterion_1": {
+        "n_both_defined": 55,
+        "n_agree": 48,
+        "pct_agree": 87.27,
+        "pass": false
+      },
+      "criterion_2": {
+        "dup_tickers_in_stratum": [
+          "OCUL",
+          "MDIA"
+        ],
+        "detail": [
+          {
+            "ticker": "OCUL",
+            "stable_within_10pct": true
+          },
+          {
+            "ticker": "MDIA",
+            "stable_within_10pct": true
+          }
+        ],
+        "pass": true
+      },
+      "criterion_3": {
+        "n_flagged": 20,
+        "pct_flagged_gt1_05": 100.0,
+        "pass": true
+      },
+      "n_undefined_ratio_events": 1,
+      "undefined_ratio_events": [
+        {
+          "ticker": "RBC",
+          "event_date_canonical": "2022-09-26"
+        }
+      ]
+    },
+    "escalation_row2_triggered": false,
+    "source": "research/phase_6c/t1_stratified.py:main"
+  },
+  "residual_classifications": [
+    {
+      "ticker": "SCLX",
+      "cohort": "primary",
+      "sidecar_pattern": null,
+      "r1p": 36.03174603174603,
+      "r2p": 34.82441471571906,
+      "spine_high_coalesced": 208.25,
+      "day_high_rth": 5.98,
+      "rth_bar_count": 218,
+      "longest_intra_rth_gap_minutes": 13.0,
+      "eth_vs_rth_row_share": 0.01648028251912892,
+      "first_print_minute": 0,
+      "last_print_minute": 909,
+      "classification": "unexplained",
+      "evidence": {
+        "rel_diff": 0.03466910573753326,
+        "internal_rel_r2_vs_r1": -0.03350743299986755,
+        "vendor_high_exceeds_our_high": "True",
+        "gap_evidence": [
+          "rth_bar_count 218 < 75% of primary median 382",
+          "longest_intra_rth_gap 13m > 125% of primary median 2.0m"
+        ]
+      }
+    },
+    {
+      "ticker": "VEEE",
+      "cohort": "primary",
+      "sidecar_pattern": null,
+      "r1p": 9.53191489361702,
+      "r2p": 10.0,
+      "spine_high_coalesced": 7.38,
+      "day_high_rth": 0.738,
+      "rth_bar_count": 166,
+      "longest_intra_rth_gap_minutes": 15.0,
+      "eth_vs_rth_row_share": 0.018656716417910446,
+      "first_print_minute": 156,
+      "last_print_minute": 735,
+      "classification": "unexplained",
+      "evidence": {
+        "rel_diff": 0.04680851063829792,
+        "internal_rel_r2_vs_r1": 0.049107142857142905,
+        "vendor_high_exceeds_our_high": "True",
+        "gap_evidence": [
+          "rth_bar_count 166 < 75% of primary median 382",
+          "longest_intra_rth_gap 15m > 125% of primary median 2.0m"
+        ]
+      }
+    },
+    {
+      "ticker": "NEPH",
+      "cohort": "primary",
+      "sidecar_pattern": null,
+      "r1p": 0.9696969696969698,
+      "r2p": 1.0,
+      "spine_high_coalesced": 2.5,
+      "day_high_rth": 2.5,
+      "rth_bar_count": 344,
+      "longest_intra_rth_gap_minutes": 2.0,
+      "eth_vs_rth_row_share": 0.03677709152161712,
+      "first_print_minute": 2,
+      "last_print_minute": 958,
+      "classification": "band_margin",
+      "evidence": {
+        "rel_diff": 0.030303030303030165,
+        "internal_rel_r2_vs_r1": 0.031249999999999854,
+        "vendor_high_exceeds_our_high": "False",
+        "gap_evidence": []
+      }
+    },
+    {
+      "ticker": "ZENA",
+      "cohort": "primary",
+      "sidecar_pattern": null,
+      "r1p": 1.0,
+      "r2p": 0.9719626168224299,
+      "spine_high_coalesced": 3.12,
+      "day_high_rth": 3.21,
+      "rth_bar_count": 390,
+      "longest_intra_rth_gap_minutes": 0.0,
+      "eth_vs_rth_row_share": 0.5940938962166942,
+      "first_print_minute": 11,
+      "last_print_minute": 959,
+      "classification": "band_margin",
+      "evidence": {
+        "rel_diff": 0.028846153846153848,
+        "internal_rel_r2_vs_r1": -0.028037383177570097,
+        "vendor_high_exceeds_our_high": "False",
+        "gap_evidence": [
+          "eth_vs_rth_row_share 0.594 > 125% of primary median 0.031"
+        ]
+      }
+    },
+    {
+      "ticker": "ACET",
+      "cohort": "sidecar",
+      "sidecar_pattern": "0111111|0111111",
+      "r1p": 0.9956736711990111,
+      "r2p": 1.158008658008658,
+      "spine_high_coalesced": 21.4,
+      "day_high_rth": 18.48,
+      "rth_bar_count": 228,
+      "longest_intra_rth_gap_minutes": 6.0,
+      "eth_vs_rth_row_share": 0.2147395171537484,
+      "first_print_minute": 240,
+      "last_print_minute": 959,
+      "classification": "coverage_gap",
+      "evidence": {
+        "rel_diff": 0.14018460543188196,
+        "internal_rel_r2_vs_r1": 0.16304035298448705,
+        "vendor_high_exceeds_our_high": "True",
+        "gap_evidence": [
+          "rth_bar_count 228 < 75% of primary median 382",
+          "longest_intra_rth_gap 6m > 125% of primary median 2.0m",
+          "eth_vs_rth_row_share 0.215 > 125% of primary median 0.031"
+        ]
+      }
+    },
+    {
+      "ticker": "NUKK",
+      "cohort": "sidecar",
+      "sidecar_pattern": "0111111|0000000",
+      "r1p": 5.980066445182724,
+      "r2p": 7.980295566502463,
+      "spine_high_coalesced": 1.62,
+      "day_high_rth": 0.203,
+      "rth_bar_count": 23,
+      "longest_intra_rth_gap_minutes": 79.0,
+      "eth_vs_rth_row_share": 0.0,
+      "first_print_minute": 334,
+      "last_print_minute": 711,
+      "classification": "coverage_gap",
+      "evidence": {
+        "rel_diff": 0.2506459948320413,
+        "internal_rel_r2_vs_r1": 0.33448275862068955,
+        "vendor_high_exceeds_our_high": "True",
+        "gap_evidence": [
+          "rth_bar_count 23 < 75% of primary median 382",
+          "longest_intra_rth_gap 79m > 125% of primary median 2.0m"
+        ]
+      }
+    },
+    {
+      "ticker": "PSIX",
+      "cohort": "sidecar",
+      "sidecar_pattern": "0011111|0000000",
+      "r1p": 0.9408602150537634,
+      "r2p": 1.0,
+      "spine_high_coalesced": 3.06,
+      "day_high_rth": 3.06,
+      "rth_bar_count": 25,
+      "longest_intra_rth_gap_minutes": 56.0,
+      "eth_vs_rth_row_share": 0.046511627906976716,
+      "first_print_minute": 326,
+      "last_print_minute": 731,
+      "classification": "band_margin",
+      "evidence": {
+        "rel_diff": 0.05913978494623662,
+        "internal_rel_r2_vs_r1": 0.06285714285714292,
+        "vendor_high_exceeds_our_high": "False",
+        "gap_evidence": [
+          "rth_bar_count 25 < 75% of primary median 382",
+          "longest_intra_rth_gap 56m > 125% of primary median 2.0m",
+          "eth_vs_rth_row_share 0.047 > 125% of primary median 0.031"
+        ]
+      }
+    }
+  ],
+  "residual_classification_medians": {
+    "rth_bar_count": 382.0,
+    "longest_intra_rth_gap_minutes": 2.0,
+    "eth_vs_rth_row_share": 0.03140506590756037
+  },
+  "volume_cross_check": [
+    {
+      "ticker": "SCLX",
+      "cohort": "primary",
+      "t2_class": "unexplained",
+      "t0_volume_ours": 195644,
+      "spine_event_volume": "5580",
+      "volume_ratio": 35.06164874551971
+    },
+    {
+      "ticker": "AMCX",
+      "cohort": "control",
+      "t2_class": "control",
+      "t0_volume_ours": 3446031,
+      "spine_event_volume": "3359235",
+      "volume_ratio": 1.025838025621905
+    },
+    {
+      "ticker": "VEEE",
+      "cohort": "primary",
+      "t2_class": "unexplained",
+      "t0_volume_ours": 185604,
+      "spine_event_volume": "13425",
+      "volume_ratio": 13.825251396648044
+    },
+    {
+      "ticker": "NEPH",
+      "cohort": "primary",
+      "t2_class": "band_margin",
+      "t0_volume_ours": 823295,
+      "spine_event_volume": "821695",
+      "volume_ratio": 1.0019471945186473
+    },
+    {
+      "ticker": "AMC",
+      "cohort": "control",
+      "t2_class": "control",
+      "t0_volume_ours": 135501142,
+      "spine_event_volume": "13474947",
+      "volume_ratio": 10.055782928125803
+    },
+    {
+      "ticker": "ZENA",
+      "cohort": "primary",
+      "t2_class": "band_margin",
+      "t0_volume_ours": 47423604,
+      "spine_event_volume": "47353548",
+      "volume_ratio": 1.0014794245195735
+    },
+    {
+      "ticker": "ACET",
+      "cohort": "sidecar",
+      "t2_class": "coverage_gap",
+      "t0_volume_ours": 610089,
+      "spine_event_volume": "378899",
+      "volume_ratio": 1.6101626026988722
+    },
+    {
+      "ticker": "NUKK",
+      "cohort": "sidecar",
+      "t2_class": "coverage_gap",
+      "t0_volume_ours": 58261,
+      "spine_event_volume": "7282",
+      "volume_ratio": 8.000686624553694
+    },
+    {
+      "ticker": "PSIX",
+      "cohort": "sidecar",
+      "t2_class": "band_margin",
+      "t0_volume_ours": 63728,
+      "spine_event_volume": "63728",
+      "volume_ratio": 1.0
+    }
+  ],
+  "d4_reference": "docs/Universe-Decisions.md#d4",
+  "source": "research/phase_6c/t3_closure.py:main"
+}
