@@ -1,0 +1,145 @@
+{
+  "manifest": "analysis_ready_manifest_v1",
+  "phase": "7",
+  "task": "T4",
+  "generated": "2026-07-24",
+  "note": "Three-surface pin ahead of measurement work. flag_eth_dominant_t0 / t0_eth_row_share are annotations (flag-don't-delete); no measurement excludes flagged events by default (per-phase Cooper decision). Spine tallies + D1 key hash computed scan-free (view flag logic replicated on base+parquets, T2-proven equivalent); the view itself is never materialized (trades_ingested/quotes_ingested would scan filtered_trades/quotes).",
+  "surface_spine": {
+    "total_rows": 23268,
+    "in_scope": {
+      "observed": 20951,
+      "expected": 20951,
+      "pass": true
+    },
+    "d1": {
+      "observed": 15763,
+      "expected": 15763,
+      "pass": true
+    },
+    "flag_tallies_over_in_scope_20951": {
+      "flag_bad_denominator": 0,
+      "flag_trades_mom_outlier": 0,
+      "flag_missing_event_day": 0,
+      "flag_window_calendar_bug": 17,
+      "repaired_1c": 1948,
+      "clean_window": 15349,
+      "trades_full_window": 15476,
+      "quotes_full_window": 15378,
+      "flag_eth_dominant_t0": 736,
+      "t0_eth_row_share_non_null": 736
+    },
+    "flag_tallies_over_d1_15763": {
+      "flag_bad_denominator": 0,
+      "flag_trades_mom_outlier": 0,
+      "flag_missing_event_day": 0,
+      "flag_window_calendar_bug": 14,
+      "repaired_1c": 1430,
+      "clean_window": 15349,
+      "trades_full_window": 15476,
+      "quotes_full_window": 15377,
+      "flag_eth_dominant_t0": 736,
+      "t0_eth_row_share_non_null": 736
+    },
+    "flag_eth_dominant_t0_note": "TRUE=736 over the full spine; the same 736 all fall inside D1 (every flagged event is a file1 in_scope event, by construction from event_minute_bars_v1). t0_eth_row_share non-null count == flag TRUE count (only flagged events carry a share).",
+    "trades_ingested_quotes_ingested_omitted": "coverage indicators, not flags; their only definition scans filtered_trades/quotes (prohibited). D1 values are in results/phase_5a/artifacts/sampling_frame.parquet.",
+    "view_defining_sql_sha256": "a788e8b17acfc9698a3bbd9b2e3321657ce5fa29679ec7089de03e358c1ca32c",
+    "view_defining_sql_note": "SHA256 of the stage=t8 view DDL from duckdb_views(); embeds absolute read_parquet paths, so it pins THIS environment's view text.",
+    "d1_event_key_sha256": "d68a1895c239054797843eb6c788b5c1c69fd4dc803adef1949d7a1634b08eee",
+    "d1_event_key_serialization": "each key = f'{ticker}|{event_date_canonical}|{momentum_pct:.2f}' (event_date_canonical as YYYY-MM-DD, momentum_pct rounded to 2dp then formatted %.2f); keys sorted ascending as strings; joined by '\\n'; UTF-8; SHA256.",
+    "d1_event_key_count": 15763
+  },
+  "surface_dev_v4": {
+    "manifest_join_vs_canonical_spine": {
+      "observed": 56,
+      "expected": 56,
+      "pass": true
+    },
+    "per_cohort_counts": {
+      "primary": 50,
+      "sidecar": 6,
+      "total": 56
+    },
+    "dev_table_row_counts": {
+      "filtered_trades_dev_v4": 9638361,
+      "filtered_quotes_dev_v4": 7249350
+    },
+    "dev_events_flag_eth_dominant_t0": [
+      {
+        "ticker": "SLXN",
+        "event_date": "2024-08-19",
+        "momentum_pct": 31.79
+      },
+      {
+        "ticker": "ZENA",
+        "event_date": "2024-10-11",
+        "momentum_pct": 76.27
+      }
+    ]
+  },
+  "surface_bar_cache": {
+    "table": "event_minute_bars_v1",
+    "total_rows": {
+      "observed": 30309950,
+      "expected": 30309950,
+      "pass": true
+    },
+    "distinct_t0_events": {
+      "observed": 15763,
+      "expected": 15763,
+      "pass": true
+    },
+    "duplicate_event_offset_minute_keys": {
+      "observed": 0,
+      "pass": true
+    },
+    "minute_index_range": {
+      "min": 0,
+      "max": 389,
+      "rth_max_bound": 390,
+      "in_bounds": true
+    },
+    "per_offset": [
+      {
+        "session_offset": -3,
+        "n_events": 15523,
+        "n_bar_rows": 3558983
+      },
+      {
+        "session_offset": -2,
+        "n_events": 15595,
+        "n_bar_rows": 3670917
+      },
+      {
+        "session_offset": -1,
+        "n_events": 15721,
+        "n_bar_rows": 3877265
+      },
+      {
+        "session_offset": 0,
+        "n_events": 15763,
+        "n_bar_rows": 5192383
+      },
+      {
+        "session_offset": 1,
+        "n_events": 15739,
+        "n_bar_rows": 4934647
+      },
+      {
+        "session_offset": 2,
+        "n_events": 15738,
+        "n_bar_rows": 4647781
+      },
+      {
+        "session_offset": 3,
+        "n_events": 15747,
+        "n_bar_rows": 4427974
+      }
+    ],
+    "per_offset_matches_phase6_t3": true,
+    "per_offset_diffs": [],
+    "out_of_session_note": "RTH-only cache: all minute_index in [0,389], max 389 < 390-min RTH bound. Byte-identical to Phase 6 T3's materialization (total rows + all 7 per-offset counts match), inheriting verify_bars' original 0 duplicate / 0 out-of-session result."
+  },
+  "escalation_row9_dev_join_ne_56": false,
+  "escalation_row10_bar_cache_deviation": false,
+  "source": "research/phase_7/t4_manifest.py:main"
+}
