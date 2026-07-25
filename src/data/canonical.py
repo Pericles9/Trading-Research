@@ -79,6 +79,25 @@ new (stage="t6" only carries the trades side as the coverage_class
 string, not a same-shaped boolean). Escalation row 4's file2-flagged-
 share finding (Phase 5 Amendment 4) does not change this stage's SQL -
 flag-and-carry applies uniformly to both source files.
+
+stage="t8" (Phase 7, T2): additive ETH-dominant annotation. Includes
+everything t7 has, plus two columns from the Phase 6 T=0 excluded-row-
+share artifact (results/phase_6_rth_only/artifacts/t3_excluded_t0_rows.parquet,
+one row per D1 event; the RTH-only cache retained per D3 as a valid
+RTH-conditional source): flag_eth_dominant_t0 (BOOLEAN, TRUE for the 736
+events whose T=0 tick rows are >50% outside the regular session,
+excluded_share > ETH_DOMINANT_THRESHOLD; FALSE for every other spine row)
+and t0_eth_row_share (DOUBLE, that share for the 736, NULL for all other
+rows - only the flagged events carry a value, a deliberate consequence of
+Phase 7's zero-full-table-pass budget: shares for the sub-threshold
+population were never recomputed). The threshold is embedded as the fixed
+literal 0.5, inherited from Phase 6 T3 (research/phase_6/t3_full_pass.py:
+excluded_share > 0.5), not a tunable. flag_eth_dominant_t0 is an
+annotation, not a universe filter: it does NOT enter in_scope and no
+measurement excludes flagged events by default - per-phase specs decide
+exclusion (flag-don't-delete). t0_eth_row_share is tick-derived (from
+filtered_trades row counts), not a spine OHLC/volume column, so it is NOT
+D4-quarantined. The join key and additive-only discipline match t7.
 """
 from __future__ import annotations
 
@@ -94,6 +113,10 @@ EVENT_FLAGS_PATH = PROJECT_ROOT / "results" / "phase_1b" / "artifacts" / "event_
 CONFIG_PATH = PROJECT_ROOT / "config" / "phase_1b.json"
 COVERAGE_CLASS_PATH = PROJECT_ROOT / "results" / "phase_2" / "artifacts" / "coverage_class.parquet"
 SPINE_WINDOW_FLAGS_PATH = PROJECT_ROOT / "results" / "phase_5" / "artifacts" / "spine_window_flags.parquet"
+# Phase 6's RTH-only T=0 excluded-row-share artifact (results/phase_6 was git mv'd
+# to results/phase_6_rth_only under D3; the table is retained as a valid RTH cache).
+ETH_DOMINANT_SOURCE_PATH = PROJECT_ROOT / "results" / "phase_6_rth_only" / "artifacts" / "t3_excluded_t0_rows.parquet"
+ETH_DOMINANT_THRESHOLD = 0.5  # inherited from Phase 6 T3, not re-derived (config/phase_7.json)
 
 IN_SCOPE_CLASSES = ("common", "common_adr")
 
@@ -126,6 +149,7 @@ def create_view(
     event_flags = _p(EVENT_FLAGS_PATH)
     coverage_class = _p(COVERAGE_CLASS_PATH)
     spine_window_flags = _p(SPINE_WINDOW_FLAGS_PATH)
+    eth_dominant_source = _p(ETH_DOMINANT_SOURCE_PATH)
 
     if stage == "t2":
         flag_trades_mom_outlier_expr = "CAST(NULL AS BOOLEAN)"
@@ -134,7 +158,7 @@ def create_view(
         repaired_1c_expr = "CAST(NULL AS BOOLEAN)"
         flag_zero_trades_join = ""
         in_scope_expr = "CAST(NULL AS BOOLEAN)"
-    elif stage in ("t5", "t6", "t7"):
+    elif stage in ("t5", "t6", "t7", "t8"):
         flag_trades_mom_outlier_expr = "ef.flag_trades_mom_outlier"
         flag_missing_event_day_expr = "COALESCE(ef.flag_missing_event_day, FALSE)"
         flag_window_calendar_bug_expr = "COALESCE(ef.flag_window_calendar_bug, FALSE)"
@@ -147,7 +171,7 @@ def create_view(
         """
         if stage == "t5":
             in_scope_expr = "CAST(NULL AS BOOLEAN)"
-        else:  # t6, t7 - final in_scope formula unchanged by t7
+        else:  # t6, t7, t8 - final in_scope formula unchanged by t7/t8
             in_scope_expr = f"""(
                 ic.class IN {IN_SCOPE_CLASSES}
                 AND NOT COALESCE(flag_bad_denominator, FALSE)
@@ -157,7 +181,7 @@ def create_view(
     else:
         raise ValueError(f"unknown stage: {stage!r}")
 
-    if stage == "t7":
+    if stage in ("t7", "t8"):
         window_flags_join = f"""
     LEFT JOIN read_parquet('{spine_window_flags}') swf
       ON me.ticker = swf.ticker
@@ -174,6 +198,31 @@ def create_view(
     else:
         window_flags_join = ""
         window_flags_cols = ""
+
+    if stage == "t8":
+        # Additive ETH-dominant annotation. The subquery pre-filters the Phase 6
+        # artifact to the 736 events above threshold and normalizes the TIMESTAMP
+        # event_date_canonical to the spine's 'YYYY-MM-DD' VARCHAR form and the
+        # momentum_pct to 2dp, so the join key is identical to every other stage.
+        eth_join = f"""
+    LEFT JOIN (
+        SELECT ticker,
+               CAST(CAST(event_date_canonical AS DATE) AS VARCHAR) AS event_date_canonical,
+               ROUND(momentum_pct, 2) AS momentum_pct,
+               excluded_share AS t0_eth_row_share
+        FROM read_parquet('{eth_dominant_source}')
+        WHERE excluded_share > {ETH_DOMINANT_THRESHOLD}
+    ) ethd
+      ON me.ticker = ethd.ticker
+     AND COALESCE(me.date, me.event_date) = ethd.event_date_canonical
+     AND ROUND(me.momentum_pct, 2) = ethd.momentum_pct
+        """
+        eth_cols = """,
+        (ethd.ticker IS NOT NULL) AS flag_eth_dominant_t0,
+        ethd.t0_eth_row_share AS t0_eth_row_share"""
+    else:
+        eth_join = ""
+        eth_cols = ""
 
     sql = f"""
     CREATE OR REPLACE VIEW momentum_events_canonical AS
@@ -203,7 +252,7 @@ def create_view(
         (fq_distinct.ticker IS NOT NULL) AS quotes_ingested,
         {in_scope_expr} AS in_scope,
         cc.coverage_class AS coverage_class,
-        cc.quotes_full_window AS quotes_full_window{window_flags_cols}
+        cc.quotes_full_window AS quotes_full_window{window_flags_cols}{eth_cols}
     FROM momentum_events me
     LEFT JOIN read_parquet('{classification}') ic ON me.ticker = ic.ticker
     LEFT JOIN (
@@ -226,5 +275,6 @@ def create_view(
      AND ROUND(me.momentum_pct, 2) = ROUND(cc.momentum_pct, 2)
     {flag_zero_trades_join}
     {window_flags_join}
+    {eth_join}
     """
     con.execute(sql)

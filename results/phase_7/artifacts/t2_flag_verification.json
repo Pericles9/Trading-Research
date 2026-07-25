@@ -1,0 +1,53 @@
+{
+  "phase": "7",
+  "task": "T2",
+  "view_stage": "t8",
+  "view_recreated": true,
+  "new_columns_present": {
+    "flag_eth_dominant_t0": true,
+    "t0_eth_row_share": true
+  },
+  "eth_dominant_definition": {
+    "source_artifact": "E:/Trading Research/results/phase_6_rth_only/artifacts/t3_excluded_t0_rows.parquet",
+    "threshold": 0.5,
+    "rule": "excluded_share > 0.5 (strict, matches Phase 6 T3 research/phase_6/t3_full_pass.py)",
+    "flag_true_means": "event's T=0 tick rows are >50% outside the XNYS regular session",
+    "join_key": "(ticker, COALESCE(date,event_date), ROUND(momentum_pct,2))"
+  },
+  "verification_method": "scan-free - replicates the view's flag-join and in_scope formula against momentum_events + committed parquets; the view itself is never SELECTed (would trigger the trades_ingested/quotes_ingested full-table scan, escalation row 11).",
+  "flag_true_count": {
+    "observed": 736,
+    "expected": 736,
+    "pass": true
+  },
+  "eth_artifact_subset_rows": 736,
+  "eth_artifact_subset_distinct_keys": 736,
+  "flag_true_distinct_keys": 736,
+  "flagged_share_range": {
+    "min": 0.5000056070783757,
+    "max": 0.9921671018276762
+  },
+  "duplicate_join_keys": {
+    "spine_rows_multi_matched": 0,
+    "artifact_keys_multi_matched": 0,
+    "total": 0,
+    "pass": true
+  },
+  "in_scope": {
+    "observed": 20951,
+    "expected": 20951,
+    "pass": true
+  },
+  "d1": {
+    "observed": 15763,
+    "expected": 15763,
+    "pass": true
+  },
+  "d1_sampling_frame_crosscheck": {
+    "observed": 15763,
+    "expected": 15763,
+    "pass": true
+  },
+  "escalation_row4_triggered": false,
+  "source": "research/phase_7/t2_eth_flag.py:main"
+}
