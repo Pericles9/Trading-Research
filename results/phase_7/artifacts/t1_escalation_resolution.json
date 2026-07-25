@@ -1,0 +1,38 @@
+{
+  "phase": "7",
+  "task": "T1 escalation resolution",
+  "date": "2026-07-24",
+  "decided_by": "Cooper",
+  "context": "Phase 7 T1's D4 retroactive sweep triggered escalation rows 2 (5 computation-class hits) and 3 (18 universe_selection-class hits on prev_close). Per the escalation table the agent hard-stopped with no fix/reclassification. Cooper resolved via A9.1-A9.4 below. These decisions produce ZERO code changes; d4_retro_sweep.json stands exactly as committed at 6e29a4d.",
+  "decisions": {
+    "A9.1": {
+      "summary": "D4's momentum_pct exception is extended to cover flag_bad_denominator as currently defined in src/data/canonical.py (prev_close < floor OR momentum_pct >= cap).",
+      "grounds": "It is a reliability guard on the exempted column's (momentum_pct's) denominator - prev_close is the denominator of momentum_pct = (high - prev_close)/prev_close, so a floor check on prev_close is part of guarding the exempted selection variable, not an independent measurement.",
+      "remediation": "None.",
+      "resolves": "Escalation row 3 (all 18 universe_selection-class hits are this one formula and its re-derivations).",
+      "register_item_opened": "Characterize false-negative exposure via near-threshold prev_close vs. tick-derived prior-session close, dev-tier or targeted. Unscheduled."
+    },
+    "A9.2": {
+      "summary": "D4's quarantine extends to pre-ingestion candidate_scan_inputs files for all future computation.",
+      "grandfathered": "Phase 1's forensic reads (research/phase_1/refit_boundary.py, research/phase_1/orphan_drift.py) and Phase 2's momentum_pct_recomputed statistic (research/phase_2/t2_quality_screen.py) are grandfathered as selection-mechanism audits.",
+      "action": "Register annotations only. No deletions, no recomputation.",
+      "resolves": "Escalation row 2 (all 5 computation-class hits: the 2 candidate_scan_inputs event_volume reads + the 3 t2_quality_screen.py prev_close/event_high reads)."
+    },
+    "A9.3": {
+      "summary": "Standards addition (prospective): universe-flag formulas are defined once in src/data/canonical.py; research scripts must read flag columns from the canonical view, never re-derive them.",
+      "historical_disposition": "The 15 historical re-derivations are enumerated in d4_retro_sweep.json (the universe_selection-class hits outside src/data/canonical.py) and left as-is.",
+      "recorded_in": "CLAUDE.md standing constraints."
+    },
+    "A9.4": {
+      "summary": "T1's escalation rows 2/3 are resolved by A9.1-A9.3 with zero code changes. Sweep artifact stands as committed. Resume at T2.",
+      "t3_framing_amendment": "T3 proceeds as written, with its REPORT.md framing amended: sensitivity results are DESCRIPTIVE CONTEXT on the superseded RTH-only measurement (event_minute_bars_v1 is Phase 6's RTH-only cache, superseded by D3), NOT latency-budget confirmation. The extended-day latency budget is Phase 6b's to establish on resumption, not this phase's."
+    }
+  },
+  "escalation_rows_resolved": {
+    "row_2_computation_hits": {"observed": 5, "resolution": "A9.2 grandfathers all 5 as selection-mechanism audits / pre-ingestion forensic reads"},
+    "row_3_universe_selection_hits": {"observed": 18, "resolution": "A9.1 extends the momentum_pct exception to flag_bad_denominator; A9.3 sets the prospective standard, leaves the 15 historical re-derivations as-is"}
+  },
+  "code_changes": "none",
+  "sweep_artifact_status": "stands as committed at 6e29a4d, unmodified",
+  "source": "Cooper decisions A9.1-A9.4, in-session 2026-07-24"
+}

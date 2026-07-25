@@ -30,6 +30,10 @@
 - hawkes-ofi-impact/ and scanner-epg-momentum/ are independent repos: read-only, never modified from here.
 - research/ is a live Obsidian vault; archive/ is immutable run output. Do not restructure either.
 - Any phase that adds, moves, or removes repo files updates docs/Research-Library-Map.md in the same phase.
+- Universe-flag formulas are defined once in `src/data/canonical.py`; research scripts read flag columns
+  off `momentum_events_canonical`, never re-derive them locally (D4 Amendment A9.3, 2026-07-24). The 15
+  pre-A9 historical re-derivations of `flag_bad_denominator` are enumerated in
+  `results/phase_7/artifacts/d4_retro_sweep.json` and left as-is; the rule is prospective.
 
 ## Reporting
 - Never post a number without n. Never post a metric without the code path that produced it.

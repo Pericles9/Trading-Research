@@ -168,6 +168,48 @@ and confirms (per Amendment 8's A8.2 sweep requirement) that every reference is 
 only, never computation. SCLX and VEEE remain classified `unexplained` in the permanent record —
 closed by severance, not by explanation.
 
+### D4 Amendment A9 — scope clarifications from the Phase 7 retroactive sweep
+
+**Date:** 2026-07-24
+**Deciding phase gate:** Phase 7 T1 (pre-approval — recorded at disposition, same pattern as D3/D4)
+
+Phase 7 T1's retroactive D4 sweep (`results/phase_7/artifacts/d4_retro_sweep.json`) swept `src/` and
+the approved-phase lineage for reads of the spine's 16 non-`momentum_pct` numeric columns and found
+26 genuine hits: 18 `universe_selection`-class (all the `flag_bad_denominator` formula and its
+re-derivations, one of them live in `src/data/canonical.py`) and 5 `computation`-class (Phase 2's
+`momentum_pct_recomputed` junk statistic; Phase 1's `event_volume` reads from pre-ingestion
+candidate files). Both triggered the sweep's escalation rows 2/3. Cooper's resolution, **zero code
+changes** (full text: `results/phase_7/artifacts/t1_escalation_resolution.json`):
+
+- **A9.1 — `flag_bad_denominator` is inside the `momentum_pct` exception.** D4's sole exception is
+  extended to cover `flag_bad_denominator` as currently defined in `src/data/canonical.py`
+  (`prev_close < prev_close_floor OR momentum_pct >= mom_sanity_cap`), on the grounds that it is a
+  **reliability guard on the exempted column's denominator** — `prev_close` is the denominator of
+  `momentum_pct = (high − prev_close)/prev_close`, so a floor check on it is part of guarding the
+  exempted selection variable, not an independent measurement. No remediation. A register item is
+  opened (`docs/Open-Items-Register.md`) to characterize the false-negative exposure of this guard —
+  near-threshold `prev_close` vs. a tick-derived prior-session close — dev-tier or targeted,
+  unscheduled.
+
+- **A9.2 — the quarantine reaches pre-ingestion source files, prospectively.** D4's quarantine
+  extends to the pre-ingestion `candidate_scan_inputs` parquet files (the spine's own construction
+  inputs, same semantic columns at a different physical location) for **all future computation**.
+  Phase 1's forensic reads (`research/phase_1/refit_boundary.py`, `research/phase_1/orphan_drift.py`)
+  and Phase 2's `momentum_pct_recomputed` statistic (`research/phase_2/t2_quality_screen.py`) are
+  **grandfathered as selection-mechanism audits** — register annotations only, no deletions, no
+  recomputation.
+
+- **A9.3 — universe-flag formulas are defined once (prospective standard).** Universe-flag formulas
+  live once in `src/data/canonical.py`; research scripts read flag columns off the canonical view and
+  never re-derive them. Recorded in `CLAUDE.md`. The 15 historical re-derivations enumerated in the
+  sweep artifact are left as-is.
+
+**How to apply:** `flag_bad_denominator` reads (via the view or the raw `prev_close`/`momentum_pct`
+guard formula) are D4-compliant and need no diagnostic-display justification — they are inside the
+exception per A9.1. Every *other* spine numeric column remains fully quarantined per D4 above. New
+code derives no universe flag locally (A9.3). The sweep artifact is the enumerated, frozen record of
+the pre-A9 state.
+
 ---
 
 ## Related
