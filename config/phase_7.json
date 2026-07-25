@@ -1,0 +1,84 @@
+{
+  "phase": "7",
+  "title": "Analysis-Readiness Closure: D4 Retro-Sweep, ETH-Dominant Flag & Sample Pin",
+  "baseline": "phase-6c-approved",
+  "t0_tag_resolution": {
+    "phase_6_approved_status": "does not exist by design - see prompts/phase_7.md context note and docs/Universe-Decisions.md D3 (Phase 6 RTH-only was superseded by Phase 6b, never approved, relabeled results/phase_6_rth_only/ with digest status superseded_rth_only)",
+    "t0_precondition_satisfied_by": "phase-6c-approved alone",
+    "note": "a first pass at this task retroactively tagged phase-6-approved before D3 was surfaced; Cooper reverted it (tag deleted, phase/6 branch reset to 6cd453b) rather than amend D3's record"
+  },
+  "pass_budget": {
+    "full_table_passes_allowed": 0,
+    "note": "everything computed from committed artifacts (results/phase_6_rth_only/artifacts/*), event_minute_bars_v1, dev v4 tables, and code - no scan of filtered_trades/filtered_quotes outside dev tier",
+    "calendar_arithmetic_allowed": false,
+    "calendar_arithmetic_note": "no pandas_market_calendars/exchange_calendars calls this phase - reproduction and sensitivity work reuse Phase 6's already-materialized per-event/per-minute artifacts (pooled_decay*.parquet, opportunity_decay_per_minute*.parquet, min_window_stats*.parquet), filtered/re-pooled by event membership, never rebuilding the session spine"
+  },
+  "eth_dominant_threshold": 0.5,
+  "eth_dominant_threshold_note": "inherited from Phase 6 T3 (research/phase_6/t3_full_pass.py: excluded_t0[excluded_share] > 0.5), not re-derived this phase",
+  "decay_shift_escalation_min": 5,
+  "reproduction_targets": {
+    "crossing_with_min0": 52,
+    "crossing_excl_min0": 57,
+    "source": "results/phase_6_rth_only/digest.json headline_metrics; results/phase_6_rth_only/artifacts/pooled_decay.parquet + pooled_decay_sens.parquet via research.phase_6.measurements.pooled_median_crossing_minute"
+  },
+  "sensitivity_expected_n_excl_flagged": 15027,
+  "d4_sweep": {
+    "spine_numeric_columns_excl_momentum_pct": [
+      "prev_close", "high", "open", "close", "event_volume", "price_move", "id",
+      "event_high", "event_open", "event_close", "market_cap_est", "sector",
+      "has_minute_data", "has_trade_data", "min_volume_threshold", "__index_level_0__"
+    ],
+    "ohlc_volume_core_subset": ["prev_close", "high", "open", "close", "event_volume", "event_high", "event_open", "event_close"],
+    "ohlc_volume_core_note": "the columns docs/Universe-Decisions.md D4 names explicitly; the remaining columns above (price_move, id, market_cap_est, sector, has_minute_data, has_trade_data, min_volume_threshold, __index_level_0__) are swept per T1's broader literal instruction ('every numeric column except momentum_pct') even though D4's prose framing is OHLC/volume-specific",
+    "schema_source": "DESCRIBE momentum_events (live, data/duckdb/main.duckdb)",
+    "scope_dirs": [
+      "src/",
+      "research/phase_0a/", "research/phase_0b/", "research/phase_0c/",
+      "research/phase_1/", "research/phase_1b/", "research/phase_1c/",
+      "research/phase_2/", "research/phase_3/", "research/phase_4/",
+      "research/phase_5/", "research/phase_5a/",
+      "research/phase_6/", "research/phase_6c/"
+    ],
+    "scope_dirs_excluded_note": "research/phase_1_context/, research/phase_1_ext_hours/, research/phase_2_signal_forge/, research/phase_3_alpha_hunter/, research/phase_4_campaign/ excluded - never part of any phase-N-approved commit range (verified via git diff --stat between consecutive approval tags), CLAUDE.md quarantines them as unexecutable D:\\ legacy code, not approved-phase code. research/phase_6b/ excluded per this phase's own explicit prohibition.",
+    "config_scope": [
+      "config/phase_0b.json", "config/phase_0c.json", "config/phase_1.json",
+      "config/phase_1b.json", "config/phase_1c.json", "config/phase_2.json",
+      "config/phase_3.json", "config/phase_4.json", "config/phase_5.json",
+      "config/phase_5a.json", "config/phase_6.json", "config/phase_6c.json",
+      "config/dev_sample_v2.json", "config/dev_sample_v3.json"
+    ],
+    "config_scope_excluded_note": "config/phase_6b.json excluded per this phase's explicit prohibition on research/phase_6b/ and config/phase_6b.json; no config/phase_0a.json exists (phase 0a predates the config-driven convention)",
+    "class_priority_on_ambiguity": ["computation", "universe_selection", "display_only"]
+  },
+  "paths": {
+    "momentum_events_db": "data/duckdb/main.duckdb",
+    "canonical_view_module": "src/data/canonical.py",
+    "canonical_view_stage": "t8",
+    "eth_dominant_source_artifact": "results/phase_6_rth_only/artifacts/t3_excluded_t0_rows.parquet",
+    "event_minute_bars_table": "event_minute_bars_v1",
+    "phase6_pooled_decay": "results/phase_6_rth_only/artifacts/pooled_decay.parquet",
+    "phase6_pooled_decay_sens": "results/phase_6_rth_only/artifacts/pooled_decay_sens.parquet",
+    "phase6_per_minute_decay": "results/phase_6_rth_only/artifacts/opportunity_decay_per_minute.parquet",
+    "phase6_per_minute_decay_sens": "results/phase_6_rth_only/artifacts/opportunity_decay_per_minute_sens.parquet",
+    "phase6_min_window_stats": "results/phase_6_rth_only/artifacts/min_window_stats.parquet",
+    "phase6_min_window_stats_sens": "results/phase_6_rth_only/artifacts/min_window_stats_sens.parquet",
+    "phase6_t3_full_pass_summary": "results/phase_6_rth_only/artifacts/t3_full_pass_summary.json",
+    "phase6_t2_dev_pipeline_summary": "results/phase_6_rth_only/artifacts/t2_dev_pipeline_summary.json",
+    "dev_v4_primary_manifest": "results/phase_5a/artifacts/dev_v4_primary_events.parquet",
+    "dev_v4_sidecar_manifest": "results/phase_5a/artifacts/dev_v4_sidecar_events.parquet",
+    "dev_v4_trades_table": "filtered_trades_dev_v4",
+    "dev_v4_quotes_table": "filtered_quotes_dev_v4",
+    "event_key": ["ticker", "event_date_canonical", "momentum_pct (ROUND 2dp for join)"]
+  },
+  "min_window_thresholds_pct": [25, 50, 75],
+  "escalation_thresholds": {
+    "eth_dominant_true_count_expected": 736,
+    "in_scope_expected": 20951,
+    "d1_expected": 15763,
+    "dev_v4_manifest_join_expected": 56,
+    "dev_tier_max_seconds": 60,
+    "d1_excl_flagged_expected": 15027,
+    "bar_cache_total_rows_expected": 30309950,
+    "bar_cache_t0_distinct_events_expected": 15763
+  }
+}
