@@ -1,0 +1,101 @@
+{
+  "phase": "7",
+  "task": "T3",
+  "method": "re-pool Phase 6's per-minute realized-move-fraction artifacts (bar-cache-derived) by event membership; flag membership = 736-key set == view flag_eth_dominant_t0 (T2-verified, scan-free)",
+  "flagged_n": 736,
+  "t3a_dev_tier": {
+    "n_dev_events": 56,
+    "n_dev_in_per_minute": 56,
+    "runtime_seconds": 15.12,
+    "runtime_ceiling": 60,
+    "bar_cache_duplicate_keys_dev": 0,
+    "dev_flagged_events": [
+      [
+        "SLXN",
+        "2024-08-19",
+        31.79
+      ],
+      [
+        "ZENA",
+        "2024-10-11",
+        76.27
+      ]
+    ],
+    "phase6_dev_over50_ticker_date": [
+      [
+        "SLXN",
+        "2024-08-19"
+      ],
+      [
+        "ZENA",
+        "2024-10-11"
+      ]
+    ],
+    "flag_consistency_ok": true,
+    "dev_crossing_with_min0": 39.0,
+    "dev_crossing_excl_min0": 55.0,
+    "escalation_row5_runtime_gt_60s": false,
+    "escalation_row6_flag_inconsistency": false
+  },
+  "t3b_reproduction": {
+    "n": 15763,
+    "crossing_with_min0": {
+      "observed": 52.0,
+      "target": 52,
+      "match": true
+    },
+    "crossing_excl_min0": {
+      "observed": 57.0,
+      "target": 57,
+      "match": true
+    },
+    "escalation_row7_reproduction_fail": false
+  },
+  "t3c_sensitivity": {
+    "n_full": 15763,
+    "n_flagged_excluded": 736,
+    "n_excl_flagged": 15027,
+    "n_excl_flagged_expected": 15027,
+    "crossings": {
+      "with_min0": {
+        "full": 52.0,
+        "excl_flagged": 54.0,
+        "delta": 2.0
+      },
+      "excl_min0": {
+        "full": 57.0,
+        "excl_flagged": 58.0,
+        "delta": 1.0
+      }
+    },
+    "min_window_medians": {
+      "with_min0": {
+        "full": {
+          "25pct": 20.0,
+          "50pct": 72.0,
+          "75pct": 183.0
+        },
+        "excl_flagged": {
+          "25pct": 20.0,
+          "50pct": 74.0,
+          "75pct": 186.0
+        }
+      },
+      "excl_min0": {
+        "full": {
+          "25pct": 20.0,
+          "50pct": 73.0,
+          "75pct": 183.0
+        },
+        "excl_flagged": {
+          "25pct": 21.0,
+          "50pct": 75.0,
+          "75pct": 185.0
+        }
+      }
+    },
+    "decay_shift_escalation_min": 5,
+    "escalation_row8_shift_gt_threshold": false
+  },
+  "source": "research/phase_7/t3_sensitivity.py:main"
+}
