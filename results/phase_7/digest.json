@@ -1,0 +1,60 @@
+{
+  "phase": "7",
+  "title": "Analysis-Readiness Closure: D4 Retro-Sweep, ETH-Dominant Flag & Sample Pin",
+  "branch": "phase/7",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-24",
+  "baseline": "phase-6c-approved",
+  "summary": "T0: cut phase/7 from phase-6c-approved; phase-6-approved found absent - investigation surfaced docs/Universe-Decisions.md D3 (Phase 6 RTH-only was superseded, never approved), so T0's precondition is satisfied by phase-6c-approved alone (a first-attempt retroactive tag was reverted by Cooper). T1: D4 retroactive sweep of src/ + phases 0a-6c found 26 spine-numeric hits (5 computation, 18 universe_selection, 3 display_only); both sweep escalation rows triggered; Cooper's D4 Amendment A9 resolved them with ZERO code changes (A9.1 flag_bad_denominator inside the momentum_pct exception; A9.2 grandfathers Phase 1/2 forensic reads + extends quarantine to pre-ingestion files; A9.3 prospective define-flags-once standard). T2: added stage=t8 to canonical.py - flag_eth_dominant_t0 (736) + t0_eth_row_share (NULL off-flag), verified scan-free (in_scope=20,951, D1=15,763 unchanged, 0 dup keys). T3: dev-tier consistent (SLXN/ZENA), reproduction 52/57 exact, sensitivity excl-736 (n=15,027) shifts crossing +2/+1 min - insensitive. T4: three-surface manifest pinned (spine hashes, dev 56/56, bar cache byte-identical to Phase 6 T3). Every measurement scan-free (0 full-table passes).",
+  "headline_metrics": [
+    {"name": "d4_retro_sweep_hits", "value": "26 total (5 computation, 18 universe_selection, 3 display_only) - resolved by A9, zero code changes", "n": 26, "source": "results/phase_7/artifacts/d4_retro_sweep.json", "chart": "results/phase_7/charts/04_d4_sweep_hits.html"},
+    {"name": "t1a_bivariate_outlier_fit_quarantined_inputs", "value": "none - the fit consumes momentum_pct (exempt) + n_trades_event_day (tick-derived), no quarantined column", "n": 0, "source": "results/phase_7/artifacts/d4_retro_sweep.json", "chart": null},
+    {"name": "eth_dominant_flag_true", "value": 736, "n": 736, "expected": 736, "source": "results/phase_7/artifacts/t2_flag_verification.json", "chart": "results/phase_7/charts/01_t0_eth_share_flagged.html"},
+    {"name": "universe_counts_unchanged", "value": "in_scope=20,951; D1=15,763 (both unchanged after additive t8 columns)", "n": 20951, "source": "results/phase_7/artifacts/t2_flag_verification.json", "chart": null},
+    {"name": "reproduction_crossings", "value": "52 (with min0) / 57 (excl min0) - reproduced exactly from re-pooled per-event data", "n": 15763, "source": "results/phase_7/artifacts/t3_sensitivity_summary.json", "chart": "results/phase_7/charts/02_decay_sensitivity.html"},
+    {"name": "sensitivity_crossings_excl_flagged", "value": "54 (with min0, delta +2) / 58 (excl min0, delta +1) - both < 5-min escalation", "n": 15027, "source": "results/phase_7/artifacts/t3_sensitivity_summary.json", "chart": "results/phase_7/charts/02_decay_sensitivity.html"},
+    {"name": "min_window_median_shift", "value": "full 20/72/183 -> excl-flagged 20/74/186 (with min0); <=3 min move", "n": 15763, "source": "results/phase_7/artifacts/t3_sensitivity_summary.json", "chart": "results/phase_7/charts/03_min_window_cdf_sensitivity.html"},
+    {"name": "three_surface_pin", "value": "spine (hashes + tallies), dev v4 56/56, bar cache 30,309,950 rows byte-identical to Phase 6 T3", "n": 15763, "source": "results/phase_7/artifacts/analysis_ready_manifest_v1.json", "chart": null}
+  ],
+  "escalations_triggered_and_resolved": [
+    {"row": 2, "criterion": "D4 sweep computation-class hits > 0", "observed": 5, "resolution": "Cooper A9.2 - grandfathered as selection-mechanism audits / pre-ingestion forensic reads; zero code changes"},
+    {"row": 3, "criterion": "D4 sweep universe_selection hits on non-momentum_pct > 0", "observed": 18, "resolution": "Cooper A9.1 - flag_bad_denominator placed inside D4's momentum_pct exception (denominator guard); A9.3 sets prospective standard; zero code changes"}
+  ],
+  "escalations_checked_not_triggered": [
+    {"row": 1, "criterion": "phase-6-approved or phase-6c-approved tag missing", "observed": "phase-6c-approved present; phase-6-approved absent BY DESIGN per D3 - resolved, not a stop"},
+    {"row": 4, "criterion": "flag TRUE != 736 / universe counts changed / dup join keys", "observed": "736 / 20,951 / 15,763 / 0 dup - clear"},
+    {"row": 5, "criterion": "dev-tier runtime > 60s", "observed": "15.12s"},
+    {"row": 6, "criterion": "dev flag inconsistency vs Phase 6 dev artifact", "observed": "0 - {SLXN,ZENA} match exactly"},
+    {"row": 7, "criterion": "reproduction crossings != 52/57", "observed": "52/57 exact"},
+    {"row": 8, "criterion": "sensitivity crossing shift > 5 min", "observed": "+2 / +1 min"},
+    {"row": 9, "criterion": "dev v4 manifest join != 56/56", "observed": "56/56"},
+    {"row": 10, "criterion": "bar-cache deviation / dup keys / distinct T=0 != 15,763", "observed": "0 deviation, 0 dup, 15,763"},
+    {"row": 11, "criterion": "any full-table pass over filtered_trades/quotes", "observed": "0 - all work scan-free or dev-tier / bar-cache only"},
+    {"row": 12, "criterion": "write outside allowed scope / touch phase_6b", "observed": "none"}
+  ],
+  "decisions_log": [
+    {"decision": "phase-6-approved is NOT created this phase; T0 proceeds on phase-6c-approved alone", "reason": "D3 documents Phase 6 (RTH-only) as superseded and never approved; a first-attempt retroactive tag was reverted by Cooper rather than amend D3"},
+    {"decision": "the view is never SELECTed for verification; all spine checks replicate its flag/in_scope logic on base+parquets", "reason": "the view's trades_ingested/quotes_ingested columns scan filtered_trades/quotes (~8.7B rows); EXPLAIN confirmed DuckDB does not prune them - a flag SELECT would trigger the prohibited full-table pass (row 11). T2 proved the replication equals the view exactly"},
+    {"decision": "T3 re-pools Phase 6's per-event decay artifacts rather than rebuilding the grid", "reason": "the grid needs the XNYS session spine (calendar arithmetic, banned this phase); the per-minute realized-move-fraction is the bar-cache computation frozen, and re-aggregating 6.1M rows reproduces 52/57 as a genuine re-pooling"},
+    {"decision": "flag membership taken from the 736-key artifact subset, documented == view flag_eth_dominant_t0", "reason": "operationally identical (T2-verified) and scan-free; honors 'join to the view' without materializing the view's scans"},
+    {"decision": "eth threshold embedded as literal 0.5 in canonical.py t8, not read from a phase config", "reason": "it is a fixed universe-level constant inherited from Phase 6 T3, not a tunable; keeps the production view self-contained"}
+  ],
+  "surprises": [
+    "The 736 excluded-share distribution is a declining shoulder from ~0.55, not a mass piled on 0.5 - the threshold separates a genuine tail, not a mode (chart 01)",
+    "Excluding the 736 barely moves anything: pooled decay crossing +2/+1 min, min-window medians <=3 min - the latency budget is insensitive to the most extreme-ETH events (charts 02/03)",
+    "The D4 sweep's 18 universe_selection hits are all ONE formula (flag_bad_denominator) re-derived 15 times across research scripts plus the live canonical.py - motivating A9.3's define-flags-once standard",
+    "All 736 flagged events fall inside D1 (every one is a file1 in_scope event) - the flag TRUE count is identical over the full spine and over D1"
+  ],
+  "output_files": {
+    "prompt": "prompts/phase_7.md", "config": "config/phase_7.json",
+    "scripts": "research/phase_7/*.py (t1_d4_sweep, t2_eth_flag, t3_sensitivity, t4_manifest, build_chart_04, build_charts_01_03)",
+    "canonical_view_change": "src/data/canonical.py stage=t8 (additive flag_eth_dominant_t0, t0_eth_row_share)",
+    "artifacts": ["results/phase_7/artifacts/d4_retro_sweep.json", "results/phase_7/artifacts/t1_escalation_resolution.json", "results/phase_7/artifacts/t2_flag_verification.json", "results/phase_7/artifacts/t3_sensitivity_summary.json", "results/phase_7/artifacts/analysis_ready_manifest_v1.json"],
+    "charts": ["results/phase_7/charts/01_t0_eth_share_flagged.html", "results/phase_7/charts/02_decay_sensitivity.html", "results/phase_7/charts/03_min_window_cdf_sensitivity.html", "results/phase_7/charts/04_d4_sweep_hits.html"],
+    "docs": ["docs/Universe-Decisions.md (D4 Amendment A9)", "docs/Open-Items-Register.md (sweep closed, ETH closed, false-negative opened)", "CLAUDE.md (A9 + two-column note)"],
+    "report": "results/phase_7/REPORT.md", "digest": "results/phase_7/digest.json"
+  },
+  "commits": 9,
+  "reproduce": ".venv/Scripts/python.exe -m research.phase_7.t1_d4_sweep && ... t2_eth_flag / t3_sensitivity / t4_manifest / build_chart_04 / build_charts_01_03",
+  "approval_gate": "Awaiting Cooper's review of the charts and manifest. On approval, tag phase-7-approved; Phase 6b then resumes per A8.2 (its spine-numeric sweep treats the two new columns as flag/annotation columns, not quarantined numerics). The sensitivity numbers are descriptive context on the superseded RTH-only measurement (A9.4), not latency-budget confirmation - that is Cooper's call."
+}
