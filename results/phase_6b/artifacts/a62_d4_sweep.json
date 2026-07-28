@@ -374,47 +374,47 @@
     {
       "column": "prev_close",
       "line": 10,
-      "text": "\"prev_close_guard\": \"prev_close (from momentum_events) present and > 0 for all eligible events - expected non-binding since in_scope already requires prev_close >= prev_close_floor (config/phase_1b.json, 0.01)\""
+      "text": "\"change\": \"the primary opportunity-decay anchor is re-frozen from the D4-quarantined spine prev_close to the tick-derived tick_close_t_minus_1_rth; a strict-key duplicate-print counter is added to the full pass; chart 08 is dropped; the two t8 columns (flag_eth_dominant_t0, t0_eth_row_share) are flag/annotation, not quarantined.\""
     },
     {
       "column": "prev_close",
-      "line": 10,
-      "text": "\"prev_close_guard\": \"prev_close (from momentum_events) present and > 0 for all eligible events - expected non-binding since in_scope already requires prev_close >= prev_close_floor (config/phase_1b.json, 0.01)\""
+      "line": 16,
+      "text": "\"primary_anchor_eligibility\": \"has_t_minus_1_rth = the event has >=1 T-1 trade in segment {premarket, rth} (so tick_close_t_minus_1_rth is defined). Determined at T4 from event_minute_bars_v2 (not at T1 - it needs the bars). Flag-and-report: events without it are excluded from the primary decay population only, retained for concentration / min-window / segment / rth_legacy. The pre-D4 prev_close guard is removed (D4 quarantines prev_close).\""
     },
     {
       "column": "prev_close",
-      "line": 40,
-      "text": "\"anchor\": \"realized(t) = log(last_price_t / prev_close) / log(day_high_ext / prev_close)\","
-    },
-    {
-      "column": "prev_close",
-      "line": 40,
-      "text": "\"anchor\": \"realized(t) = log(last_price_t / prev_close) / log(day_high_ext / prev_close)\","
-    },
-    {
-      "column": "prev_close",
-      "line": 41,
-      "text": "\"prev_close_source\": \"momentum_events.prev_close, joined by (ticker, COALESCE(date,event_date), ROUND(momentum_pct,2))\","
+      "line": 16,
+      "text": "\"primary_anchor_eligibility\": \"has_t_minus_1_rth = the event has >=1 T-1 trade in segment {premarket, rth} (so tick_close_t_minus_1_rth is defined). Determined at T4 from event_minute_bars_v2 (not at T1 - it needs the bars). Flag-and-report: events without it are excluded from the primary decay population only, retained for concentration / min-window / segment / rth_legacy. The pre-D4 prev_close guard is removed (D4 quarantines prev_close).\""
     },
     {
       "column": "high",
-      "line": 42,
-      "text": "\"day_high_ext_source\": \"MAX(bar.high) across all T=0 segments (premarket+rth+post) from event_minute_bars_v2 - computed from our own trade data, not momentum_events.high\","
+      "line": 49,
+      "text": "\"day_high_ext_source\": \"MAX(bar.high) across all T=0 segments (premarket+rth+post) from event_minute_bars_v2 - our own trade data, tick-derived (never momentum_events.high)\","
     },
     {
       "column": "high",
-      "line": 42,
-      "text": "\"day_high_ext_source\": \"MAX(bar.high) across all T=0 segments (premarket+rth+post) from event_minute_bars_v2 - computed from our own trade data, not momentum_events.high\","
+      "line": 49,
+      "text": "\"day_high_ext_source\": \"MAX(bar.high) across all T=0 segments (premarket+rth+post) from event_minute_bars_v2 - our own trade data, tick-derived (never momentum_events.high)\","
     },
     {
       "column": "open",
-      "line": 44,
+      "line": 51,
       "text": "\"headline_b\": \"distribution of realized(t) evaluated at each event's own RTH-open minute (09:30 ET)\","
     },
     {
       "column": "close",
-      "line": 24,
+      "line": 30,
       "text": "\"early_close_rule\": \"a session date is 'early close' if its XNYS market_close (converted to America/New_York) has a wall-clock time before 16:00:00 ET\","
+    },
+    {
+      "column": "close",
+      "line": 48,
+      "text": "\"tick_close_t_minus_1_rth_source\": \"last_price of the max-minute_index bar at session_offset=-1 within segment IN ('premarket','rth') from event_minute_bars_v2 - the tick-derived last trade at/before the T-1 RTH close (a61 derivation, now the anchor). NULL -> has_t_minus_1_rth=FALSE.\","
+    },
+    {
+      "column": "id",
+      "line": 7,
+      "text": "\"id\": \"A8.2 (Amendment 8)\","
     }
   ],
   "measurement_path_spine_code_hits": [],

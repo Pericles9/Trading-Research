@@ -1,13 +1,19 @@
 {
   "phase": "6b",
   "title": "Measurement 1 Redo: Concentration & Latency Budget over the Full Extended Day",
-  "baseline": "tip of phase/6 (unapproved); master remains phase-5a-approved",
+  "baseline_original": "tip of phase/6 (unapproved); master remains phase-5a-approved",
   "supersedes": "phase_6 (results/phase_6_rth_only/, digest status superseded_rth_only, no phase-6-approved tag ever created)",
+  "amendment": {
+    "id": "A8.2 (Amendment 8)",
+    "spec": "prompts/phase_6b_amendment_8.md (Cooper-approved 2026-07-28)",
+    "resumption_baseline": "phase-7-approved (phase/6b fast-forwarded to it - D4, the t8 canonical view, and the approved 6c/7 docs must be present)",
+    "change": "the primary opportunity-decay anchor is re-frozen from the D4-quarantined spine prev_close to the tick-derived tick_close_t_minus_1_rth; a strict-key duplicate-print counter is added to the full pass; chart 08 is dropped; the two t8 columns (flag_eth_dominant_t0, t0_eth_row_share) are flag/annotation, not quarantined."
+  },
   "universe": {
     "definition": "in_scope=TRUE AND source_file='file1' (D1)",
     "expected_n": 15763,
     "eligibility_rule": "substr(trades_bitmap, 4, 1) = '1' (unchanged from Phase 6 - re-verified, not re-derived)",
-    "prev_close_guard": "prev_close (from momentum_events) present and > 0 for all eligible events - expected non-binding since in_scope already requires prev_close >= prev_close_floor (config/phase_1b.json, 0.01)"
+    "primary_anchor_eligibility": "has_t_minus_1_rth = the event has >=1 T-1 trade in segment {premarket, rth} (so tick_close_t_minus_1_rth is defined). Determined at T4 from event_minute_bars_v2 (not at T1 - it needs the bars). Flag-and-report: events without it are excluded from the primary decay population only, retained for concentration / min-window / segment / rth_legacy. The pre-D4 prev_close guard is removed (D4 quarantines prev_close)."
   },
   "session_calendar": {
     "library": "pandas_market_calendars",
@@ -37,9 +43,10 @@
   "min_window_thresholds_pct": [25, 50, 75],
   "opportunity_decay": {
     "primary": {
-      "anchor": "realized(t) = log(last_price_t / prev_close) / log(day_high_ext / prev_close)",
-      "prev_close_source": "momentum_events.prev_close, joined by (ticker, COALESCE(date,event_date), ROUND(momentum_pct,2))",
-      "day_high_ext_source": "MAX(bar.high) across all T=0 segments (premarket+rth+post) from event_minute_bars_v2 - computed from our own trade data, not momentum_events.high",
+      "anchor": "realized(t) = log(last_price_t / tick_close_t_minus_1_rth) / log(day_high_ext / tick_close_t_minus_1_rth)",
+      "anchor_note": "A8.2/D4 tick anchor. Both inputs tick-only - no spine numeric column read (a62_d4_sweep.json: 0 measurement-path spine hits).",
+      "tick_close_t_minus_1_rth_source": "last_price of the max-minute_index bar at session_offset=-1 within segment IN ('premarket','rth') from event_minute_bars_v2 - the tick-derived last trade at/before the T-1 RTH close (a61 derivation, now the anchor). NULL -> has_t_minus_1_rth=FALSE.",
+      "day_high_ext_source": "MAX(bar.high) across all T=0 segments (premarket+rth+post) from event_minute_bars_v2 - our own trade data, tick-derived (never momentum_events.high)",
       "headline_a": "minute since 04:00 ET at which pooled median realized(t) crosses 0.5",
       "headline_b": "distribution of realized(t) evaluated at each event's own RTH-open minute (09:30 ET)",
       "headline_c": "distribution of the ET clock time-of-day at which day_high_ext occurs"
@@ -60,11 +67,21 @@
   "escalation_thresholds": {
     "d1_total_expected": 15763,
     "relabel_integrity": "file count and byte size of results/phase_6_rth_only/ must match pre-move results/phase_6/ exactly; event_minute_bars_v1 row count unchanged",
-    "prev_close_or_day_high_failure_max_pct": 0.1,
+    "measurement_path_spine_code_hits_max": 0,
+    "denom_nonpositive_max_pct": 1.0,
+    "has_t_minus_1_rth_false": "report-only, not an escalation (flag-and-report)",
+    "duplicate_print_strict_key_max_pct_per_event": 0.1,
     "dev_tier_max_seconds_per_pass": 60,
     "full_table_pass_budget": 1,
     "calendar_pin_expected": {"pandas_market_calendars": "5.4.0", "exchange_calendars": "4.13.2"}
   },
+  "duplicate_print_check": {
+    "strict_key": "(event key, sip_timestamp, price, size, sequence_number) - identical to the Phase 6c A8/T3'' strict key (0.0% on the dev tier). sequence_number always exists in filtered_trades, so it is part of the duplicate-detection key: same ts/price/size with different sequence_number are ordinary distinct prints on a busy tape, not duplicate ingestion.",
+    "looser_key_reported": "(event key, sip_timestamp, price, size) - the looser collision rate reported alongside, not the escalation key",
+    "escalation_key": "strict_key; per-event duplicate-print rate; row 7 threshold 0.1% per event",
+    "note": "A8.2 requirement - computed within the single budgeted full pass, no extra pass over filtered_trades"
+  },
+  "chart_08": "dropped (A8.2) - the basis-diagnostic chart is moot under D4's severance; the contract runs to 07",
   "paths": {
     "momentum_events_db": "data/duckdb/main.duckdb",
     "canonical_view_module": "src/data/canonical.py",
