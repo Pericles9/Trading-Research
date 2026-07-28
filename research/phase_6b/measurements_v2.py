@@ -3,11 +3,22 @@ Phase 6b T4 - measurements from event_minute_bars_v2 (T=0 only). Reuses
 research.phase_6.measurements' grid/concentration/min-window machinery
 unchanged (the grid shape is identical whether it spans an RTH day or an
 extended day - only session_total_minutes and what's fed in differs).
-New here: segment volume shares, the primary prev_close/day_high_ext
-opportunity-decay anchor, the day-high time-of-day distribution, and the
-rth_legacy comparability variant (built by re-indexing v2's own rth-segment
-bars to an RTH-relative clock and running Phase 6's *original* decay
-function on them unchanged - not a reimplementation).
+New here: segment volume shares, the primary opportunity-decay anchor, the
+day-high time-of-day distribution, and the rth_legacy comparability variant
+(built by re-indexing v2's own rth-segment bars to an RTH-relative clock and
+running Phase 6's *original* decay function on them unchanged - not a
+reimplementation).
+
+A8.2 / D4 rework (Amendment 8, 2026-07-28): the primary decay anchor was
+`prev_close` (a spine numeric column, quarantined by D4). It is replaced by
+`tick_close_t_minus_1_rth` - the tick-derived last trade at or before the
+T-1 RTH close (last_price of the max-minute T-1 bar within segment in
+{premarket, rth}, from event_minute_bars_v2 itself). Both the anchor and
+`day_high_ext` (MAX bar.high over the T+0 extended day) are now tick-only, so
+the measurement reads no spine numeric column. Events with no T-1 pre/rth
+trades have a NULL anchor (`has_t_minus_1_rth = FALSE`) and are excluded from
+the primary decay population only (flag-and-report, per the approved
+amendment), retained for concentration / min-window / segment / rth_legacy.
 """
 from __future__ import annotations
 
@@ -23,7 +34,8 @@ __all__ = [
     "EVENT_KEYS", "build_full_grid", "compute_concentration_curves", "compute_min_window_stats",
     "compute_opportunity_decay", "pooled_per_minute_quantiles", "pooled_median_crossing_minute",
     "session_bounds_from_spine", "compute_day_high_ext", "compute_segment_shares",
-    "compute_primary_opportunity_decay", "compute_rth_legacy_decay", "high_time_of_day",
+    "compute_tick_close_t_minus_1_rth", "compute_primary_opportunity_decay",
+    "compute_rth_legacy_decay", "high_time_of_day",
 ]
 
 
@@ -58,24 +70,44 @@ def compute_segment_shares(bars_t0: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def compute_primary_opportunity_decay(grid: pd.DataFrame, prev_close: pd.Series, day_high_ext: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """realized(t) = log(last_price_t / prev_close) / log(day_high_ext / prev_close).
-    prev_close, day_high_ext: Series indexed by event_id (from grid's own event_id space)."""
+def compute_tick_close_t_minus_1_rth(bars: pd.DataFrame) -> pd.DataFrame:
+    """Per event: the tick-derived last trade at or before the T-1 RTH close -
+    last_price of the max-minute_index bar at session_offset = -1 within
+    segment in {premarket, rth} (everything up to and including RTH, excluding
+    post). D4-compliant (tick data only, no spine column). NULL for events with
+    no such bar (no T-1 premarket/rth trades) -> has_t_minus_1_rth = FALSE.
+    `bars` must carry all offsets (not just T=0); same derivation as
+    a61_basis_confirmation_rerun.py:49-55, now the measurement anchor."""
+    tm1 = bars[(bars["session_offset"] == -1) & (bars["segment"].isin(["premarket", "rth"]))]
+    if len(tm1) == 0:
+        return pd.DataFrame(columns=EVENT_KEYS + ["tick_close_t_minus_1_rth"])
+    idx = tm1.groupby(EVENT_KEYS)["minute_index"].idxmax()
+    out = tm1.loc[idx, EVENT_KEYS + ["last_price"]].rename(columns={"last_price": "tick_close_t_minus_1_rth"})
+    return out.reset_index(drop=True)
+
+
+def compute_primary_opportunity_decay(grid: pd.DataFrame, tick_anchor: pd.Series, day_high_ext: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """realized(t) = log(last_price_t / tick_close_T-1_RTH) / log(day_high_ext / tick_close_T-1_RTH).
+    tick_anchor (tick_close_t_minus_1_rth), day_high_ext: Series indexed by event_id
+    (from grid's own event_id space). Both tick-derived (D4-compliant). Events with a
+    NULL/non-positive anchor (has_t_minus_1_rth = FALSE) get realized = NaN throughout and
+    minutes_to_50pct = NaN - excluded from the primary decay population, flag-and-report."""
     g = grid.sort_values(["event_id", "minute_index"]).copy()
 
     price_ffill = g.groupby("event_id")["last_price"].ffill()
     g["price_ffill"] = price_ffill
-    g["prev_close"] = g["event_id"].map(prev_close)
+    g["anchor"] = g["event_id"].map(tick_anchor)
     g["day_high_ext"] = g["event_id"].map(day_high_ext)
+    g["has_anchor"] = g["anchor"].notna() & (g["anchor"] > 0)
 
-    has_started = g["price_ffill"].notna()
-    g["cum_move"] = np.where(has_started, np.log(g["price_ffill"] / g["prev_close"]), 0.0)
+    has_started = g["price_ffill"].notna() & g["has_anchor"]
+    g["cum_move"] = np.where(has_started, np.log(g["price_ffill"] / g["anchor"]), 0.0)
 
-    denom = np.log(g["day_high_ext"] / g["prev_close"])
+    denom = np.log(g["day_high_ext"] / g["anchor"])
     g["denom"] = denom
-    g["realized_move_fraction"] = np.where(denom > 0, g["cum_move"] / denom, np.nan)
-    # negative cum_move (price currently below prev_close) can make realized<0 - keep signed,
-    # per the fixed formula (no abs() in the prompt's primary-anchor definition, unlike rth_legacy)
+    g["realized_move_fraction"] = np.where((denom > 0) & g["has_anchor"], g["cum_move"] / denom, np.nan)
+    # negative cum_move (price currently below the anchor) can make realized<0 - keep signed,
+    # per the fixed formula (no abs() in the primary-anchor definition, unlike rth_legacy)
 
     per_minute = g[EVENT_KEYS + ["minute_index", "cum_move", "realized_move_fraction"]].copy()
 
@@ -88,9 +120,10 @@ def compute_primary_opportunity_decay(grid: pd.DataFrame, prev_close: pd.Series,
         keys = sub.iloc[0][EVENT_KEYS]
         rec = {k: keys[k] for k in EVENT_KEYS}
         rec["event_id"] = event_id
-        rec["prev_close"] = sub["prev_close"].iloc[0]
+        rec["tick_close_t_minus_1_rth"] = sub["anchor"].iloc[0]
         rec["day_high_ext"] = sub["day_high_ext"].iloc[0]
-        rec["denom_nonpositive"] = bool(sub["denom"].iloc[0] <= 0)
+        rec["has_t_minus_1_rth"] = bool(sub["has_anchor"].iloc[0])
+        rec["denom_nonpositive"] = bool(sub["has_anchor"].iloc[0] and sub["denom"].iloc[0] <= 0)
         frac_indexed = sub.set_index("minute_index")["realized_move_fraction"]
         rec["minutes_to_50pct"] = _first_crossing(frac_indexed)
         rows.append(rec)

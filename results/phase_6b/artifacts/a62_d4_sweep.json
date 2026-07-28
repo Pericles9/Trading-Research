@@ -272,198 +272,58 @@
     },
     "measurements_v2.py": {
       "role": "measurement_path",
-      "n_code_hits": 9,
+      "n_code_hits": 4,
       "code_hits": [
         {
           "column": "high",
-          "line": 44,
+          "line": 56,
           "text": "out = bars_t0.groupby(EVENT_KEYS, as_index=False)[\"high\"].max().rename(columns={\"high\": \"day_high_ext\"})",
           "is_code": true
         },
         {
-          "column": "prev_close",
-          "line": 61,
-          "text": "def compute_primary_opportunity_decay(grid: pd.DataFrame, prev_close: pd.Series, day_high_ext: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame]:",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 68,
-          "text": "g[\"prev_close\"] = g[\"event_id\"].map(prev_close)",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 72,
-          "text": "g[\"cum_move\"] = np.where(has_started, np.log(g[\"price_ffill\"] / g[\"prev_close\"]), 0.0)",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 74,
-          "text": "denom = np.log(g[\"day_high_ext\"] / g[\"prev_close\"])",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 91,
-          "text": "rec[\"prev_close\"] = sub[\"prev_close\"].iloc[0]",
-          "is_code": true
-        },
-        {
           "column": "high",
-          "line": 135,
+          "line": 168,
           "text": "max_high = bars_t0.groupby(EVENT_KEYS)[\"high\"].transform(\"max\")",
           "is_code": true
         },
         {
           "column": "high",
-          "line": 136,
+          "line": 169,
           "text": "at_max = bars_t0[bars_t0[\"high\"] == max_high].sort_values(EVENT_KEYS + [\"minute_index\"])",
           "is_code": true
         },
         {
           "column": "high",
-          "line": 148,
+          "line": 181,
           "text": "return first_at_max[EVENT_KEYS + [\"minute_index\", \"high\", \"high_time_of_day\", \"high_hour_decimal\"]].rename(columns={\"minute_index\": \"high_minute_index\"})",
           "is_code": true
         }
       ],
-      "spine_code_hits_excl_bar_derived": [
-        {
-          "column": "prev_close",
-          "line": 61,
-          "text": "def compute_primary_opportunity_decay(grid: pd.DataFrame, prev_close: pd.Series, day_high_ext: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame]:",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 68,
-          "text": "g[\"prev_close\"] = g[\"event_id\"].map(prev_close)",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 72,
-          "text": "g[\"cum_move\"] = np.where(has_started, np.log(g[\"price_ffill\"] / g[\"prev_close\"]), 0.0)",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 74,
-          "text": "denom = np.log(g[\"day_high_ext\"] / g[\"prev_close\"])",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 91,
-          "text": "rec[\"prev_close\"] = sub[\"prev_close\"].iloc[0]",
-          "is_code": true
-        }
-      ]
+      "spine_code_hits_excl_bar_derived": []
     },
     "t1_eligibility.py": {
       "role": "measurement_path",
-      "n_code_hits": 8,
+      "n_code_hits": 2,
       "code_hits": [
         {
           "column": "open",
-          "line": 24,
+          "line": 29,
           "text": "with open(PHASE_6B_CONFIG) as f:",
           "is_code": true
         },
         {
-          "column": "prev_close",
-          "line": 34,
-          "text": "pc = con.execute(\"\"\"",
-          "is_code": true
-        },
-        {
-          "column": "close",
-          "line": 38,
-          "text": "con.close()",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 46,
-          "text": "n_missing_prev_close = int(merged[\"prev_close\"].isna().sum())",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 47,
-          "text": "n_nonpositive_prev_close = int((merged[\"prev_close\"] <= 0).sum())",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 51,
-          "text": "merged[[\"ticker\", \"event_date_canonical\", \"momentum_pct\", \"source_file\", \"trades_bitmap\", \"quotes_bitmap\", \"prev_close\"]].to_parquet(OUT_EVENTS, index=False)",
-          "is_code": true
-        },
-        {
           "column": "open",
-          "line": 69,
+          "line": 56,
           "text": "with open(OUT_SUMMARY, \"w\") as f:",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 76,
-          "text": "print(f\"\\n*** ESCALATION row 5: {n_prev_close_failures} prev_close failure(s) ({pct_failures:.4f}%) - HARD STOP ***\")",
           "is_code": true
         }
       ],
-      "spine_code_hits_excl_bar_derived": [
-        {
-          "column": "prev_close",
-          "line": 34,
-          "text": "pc = con.execute(\"\"\"",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 46,
-          "text": "n_missing_prev_close = int(merged[\"prev_close\"].isna().sum())",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 47,
-          "text": "n_nonpositive_prev_close = int((merged[\"prev_close\"] <= 0).sum())",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 51,
-          "text": "merged[[\"ticker\", \"event_date_canonical\", \"momentum_pct\", \"source_file\", \"trades_bitmap\", \"quotes_bitmap\", \"prev_close\"]].to_parquet(OUT_EVENTS, index=False)",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 76,
-          "text": "print(f\"\\n*** ESCALATION row 5: {n_prev_close_failures} prev_close failure(s) ({pct_failures:.4f}%) - HARD STOP ***\")",
-          "is_code": true
-        }
-      ]
+      "spine_code_hits_excl_bar_derived": []
     },
     "t2_dev_pipeline.py": {
       "role": "measurement_path",
-      "n_code_hits": 9,
+      "n_code_hits": 7,
       "code_hits": [
-        {
-          "column": "prev_close",
-          "line": 33,
-          "text": "pc = con.execute(\"\"\"",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 42,
-          "text": "return merged[[\"ticker\", \"event_date_canonical\", \"momentum_pct\", \"prev_close\"]]",
-          "is_code": true
-        },
         {
           "column": "open",
           "line": 68,
@@ -489,44 +349,25 @@
           "is_code": true
         },
         {
-          "column": "prev_close",
-          "line": 139,
-          "text": "pc_by_id = id_map.merge(prev_close_df, on=M2.EVENT_KEYS, how=\"left\").set_index(\"event_id\")[\"prev_close\"]",
-          "is_code": true
-        },
-        {
           "column": "open",
-          "line": 150,
+          "line": 152,
           "text": "print(f\"dev-tier rth_legacy pooled median crossing minute (since RTH open): {crossing_rth}\")",
           "is_code": true
         },
         {
+          "column": "close",
+          "line": 181,
+          "text": "\"primary_anchor\": \"tick_close_t_minus_1_rth (A8.2/D4 - tick-only, replaces the quarantined spine close anchor)\",",
+          "is_code": true
+        },
+        {
           "column": "open",
-          "line": 187,
+          "line": 191,
           "text": "with open(OUT_SUMMARY, \"w\") as f:",
           "is_code": true
         }
       ],
-      "spine_code_hits_excl_bar_derived": [
-        {
-          "column": "prev_close",
-          "line": 33,
-          "text": "pc = con.execute(\"\"\"",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 42,
-          "text": "return merged[[\"ticker\", \"event_date_canonical\", \"momentum_pct\", \"prev_close\"]]",
-          "is_code": true
-        },
-        {
-          "column": "prev_close",
-          "line": 139,
-          "text": "pc_by_id = id_map.merge(prev_close_df, on=M2.EVENT_KEYS, how=\"left\").set_index(\"event_id\")[\"prev_close\"]",
-          "is_code": true
-        }
-      ]
+      "spine_code_hits_excl_bar_derived": []
     }
   },
   "config_spine_numeric_references": [
@@ -576,101 +417,10 @@
       "text": "\"early_close_rule\": \"a session date is 'early close' if its XNYS market_close (converted to America/New_York) has a wall-clock time before 16:00:00 ET\","
     }
   ],
-  "measurement_path_spine_code_hits": [
-    {
-      "file": "measurements_v2.py",
-      "column": "prev_close",
-      "line": 61,
-      "text": "def compute_primary_opportunity_decay(grid: pd.DataFrame, prev_close: pd.Series, day_high_ext: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame]:",
-      "is_code": true
-    },
-    {
-      "file": "measurements_v2.py",
-      "column": "prev_close",
-      "line": 68,
-      "text": "g[\"prev_close\"] = g[\"event_id\"].map(prev_close)",
-      "is_code": true
-    },
-    {
-      "file": "measurements_v2.py",
-      "column": "prev_close",
-      "line": 72,
-      "text": "g[\"cum_move\"] = np.where(has_started, np.log(g[\"price_ffill\"] / g[\"prev_close\"]), 0.0)",
-      "is_code": true
-    },
-    {
-      "file": "measurements_v2.py",
-      "column": "prev_close",
-      "line": 74,
-      "text": "denom = np.log(g[\"day_high_ext\"] / g[\"prev_close\"])",
-      "is_code": true
-    },
-    {
-      "file": "measurements_v2.py",
-      "column": "prev_close",
-      "line": 91,
-      "text": "rec[\"prev_close\"] = sub[\"prev_close\"].iloc[0]",
-      "is_code": true
-    },
-    {
-      "file": "t1_eligibility.py",
-      "column": "prev_close",
-      "line": 34,
-      "text": "pc = con.execute(\"\"\"",
-      "is_code": true
-    },
-    {
-      "file": "t1_eligibility.py",
-      "column": "prev_close",
-      "line": 46,
-      "text": "n_missing_prev_close = int(merged[\"prev_close\"].isna().sum())",
-      "is_code": true
-    },
-    {
-      "file": "t1_eligibility.py",
-      "column": "prev_close",
-      "line": 47,
-      "text": "n_nonpositive_prev_close = int((merged[\"prev_close\"] <= 0).sum())",
-      "is_code": true
-    },
-    {
-      "file": "t1_eligibility.py",
-      "column": "prev_close",
-      "line": 51,
-      "text": "merged[[\"ticker\", \"event_date_canonical\", \"momentum_pct\", \"source_file\", \"trades_bitmap\", \"quotes_bitmap\", \"prev_close\"]].to_parquet(OUT_EVENTS, index=False)",
-      "is_code": true
-    },
-    {
-      "file": "t1_eligibility.py",
-      "column": "prev_close",
-      "line": 76,
-      "text": "print(f\"\\n*** ESCALATION row 5: {n_prev_close_failures} prev_close failure(s) ({pct_failures:.4f}%) - HARD STOP ***\")",
-      "is_code": true
-    },
-    {
-      "file": "t2_dev_pipeline.py",
-      "column": "prev_close",
-      "line": 33,
-      "text": "pc = con.execute(\"\"\"",
-      "is_code": true
-    },
-    {
-      "file": "t2_dev_pipeline.py",
-      "column": "prev_close",
-      "line": 42,
-      "text": "return merged[[\"ticker\", \"event_date_canonical\", \"momentum_pct\", \"prev_close\"]]",
-      "is_code": true
-    },
-    {
-      "file": "t2_dev_pipeline.py",
-      "column": "prev_close",
-      "line": 139,
-      "text": "pc_by_id = id_map.merge(prev_close_df, on=M2.EVENT_KEYS, how=\"left\").set_index(\"event_id\")[\"prev_close\"]",
-      "is_code": true
-    }
-  ],
-  "n_measurement_path_spine_code_hits": 13,
+  "measurement_path_spine_code_hits": [],
+  "n_measurement_path_spine_code_hits": 0,
+  "escalation_row1_clear": true,
+  "escalation_row1_note": "row 1 fires if any spine numeric is used as a computation input in a measurement-path file. This artifact reflects the CURRENT tree state - after the A6.2b rework it reads 0 (clear); the pre-rework state (13 hits) is in commit f6cb559.",
   "classification_note": "All measurement-path spine hits are prev_close (the pre-D4 opportunity-decay anchor): measurements_v2.compute_primary_opportunity_decay + t2_dev_pipeline.load_prev_close/pass (computation) and t1_eligibility's prev_close guard (universe_selection). day_high_ext and bar 'high' are tick-derived from event_minute_bars_v2, not spine columns. a51_/a61_ are retired basis-confirmation diagnostics (read prev_close/spine high by design), out of the measurement path. A6.2b replaces every prev_close computation hit with tick_close_t_minus_1_rth and removes the prev_close guard; the config re-freeze (A6.2d) rewrites the anchor strings.",
-  "escalation_row1_triggered_post_rework": null,
   "source": "research/phase_6b/a62_d4_sweep.py:main"
 }

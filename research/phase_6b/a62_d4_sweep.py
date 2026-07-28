@@ -139,6 +139,8 @@ def main():
         "config_spine_numeric_references": cfg_hits,
         "measurement_path_spine_code_hits": measurement_path_computation_hits,
         "n_measurement_path_spine_code_hits": len(measurement_path_computation_hits),
+        "escalation_row1_clear": len(measurement_path_computation_hits) == 0,
+        "escalation_row1_note": "row 1 fires if any spine numeric is used as a computation input in a measurement-path file. This artifact reflects the CURRENT tree state - after the A6.2b rework it reads 0 (clear); the pre-rework state (13 hits) is in commit f6cb559.",
         "classification_note": (
             "All measurement-path spine hits are prev_close (the pre-D4 opportunity-decay anchor): "
             "measurements_v2.compute_primary_opportunity_decay + t2_dev_pipeline.load_prev_close/pass "
@@ -148,7 +150,6 @@ def main():
             "measurement path. A6.2b replaces every prev_close computation hit with tick_close_t_minus_1_rth "
             "and removes the prev_close guard; the config re-freeze (A6.2d) rewrites the anchor strings."
         ),
-        "escalation_row1_triggered_post_rework": None,  # set to n>0 only when re-run AFTER A6.2b
         "source": "research/phase_6b/a62_d4_sweep.py:main",
     }
     Path("results/phase_6b/artifacts").mkdir(parents=True, exist_ok=True)

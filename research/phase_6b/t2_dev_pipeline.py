@@ -29,17 +29,17 @@ def load_dev_manifest():
     return pd.concat([primary[cols], sidecar[cols]], ignore_index=True)
 
 
-def load_prev_close(con, manifest):
-    pc = con.execute("""
-        SELECT ticker, COALESCE(date, event_date) AS event_date_canonical, ROUND(momentum_pct, 2) AS mom_2dp, prev_close
-        FROM momentum_events
+def load_tick_anchor(con, bars_table):
+    """A8.2/D4: tick_close_t_minus_1_rth per event, from the bar cache (offset -1,
+    segment in {premarket, rth}) - the tick-derived last trade at/before the T-1 RTH
+    close. Replaces the pre-D4 spine prev_close anchor. No spine column read."""
+    tm1 = con.execute(f"""
+        SELECT ticker, event_date_canonical, momentum_pct, session_offset, segment, minute_index, last_price
+        FROM {bars_table} WHERE session_offset = -1 AND segment IN ('premarket', 'rth')
     """).fetchdf()
-    pc["event_date_canonical"] = pd.to_datetime(pc["event_date_canonical"])
-    m = manifest.copy()
-    m["event_date_canonical"] = pd.to_datetime(m["event_date_canonical"])
-    m["mom_2dp"] = m["momentum_pct"].round(2)
-    merged = m.merge(pc, on=["ticker", "event_date_canonical", "mom_2dp"], how="left")
-    return merged[["ticker", "event_date_canonical", "momentum_pct", "prev_close"]]
+    anchor = M2.compute_tick_close_t_minus_1_rth(tm1)
+    anchor["event_date_canonical"] = pd.to_datetime(anchor["event_date_canonical"])
+    return anchor
 
 
 def sidecar_bitmap_check(con, bars_table, manifest, offsets):
@@ -122,7 +122,7 @@ def main():
                high, low, first_price, last_price
         FROM {DEV_BARS_TABLE} WHERE session_offset = 0
     """).fetchdf()
-    prev_close_df = load_prev_close(con, manifest)
+    tick_anchor_df = load_tick_anchor(con, DEV_BARS_TABLE)  # A8.2/D4: tick anchor, not spine prev_close
     con.close()
 
     session_bounds = M2.session_bounds_from_spine(spine, offset=0)
@@ -134,15 +134,17 @@ def main():
     segment_shares = M2.compute_segment_shares(bars_t0)
 
     id_map = grid[M2.EVENT_KEYS + ["event_id"]].drop_duplicates()
-    prev_close_df["event_date_canonical"] = pd.to_datetime(prev_close_df["event_date_canonical"])
     id_map["event_date_canonical"] = pd.to_datetime(id_map["event_date_canonical"])
-    pc_by_id = id_map.merge(prev_close_df, on=M2.EVENT_KEYS, how="left").set_index("event_id")["prev_close"]
+    anchor_by_id = id_map.merge(tick_anchor_df, on=M2.EVENT_KEYS, how="left").set_index("event_id")["tick_close_t_minus_1_rth"]
     dh_by_id = id_map.merge(day_high_ext, on=M2.EVENT_KEYS, how="left").set_index("event_id")["day_high_ext"]
 
-    per_minute, per_event_summary = M2.compute_primary_opportunity_decay(grid, pc_by_id, dh_by_id)
+    per_minute, per_event_summary = M2.compute_primary_opportunity_decay(grid, anchor_by_id, dh_by_id)
     pooled = M2.pooled_per_minute_quantiles(per_minute)
     crossing = M2.pooled_median_crossing_minute(pooled)
+    n_no_anchor = int((~per_event_summary["has_t_minus_1_rth"]).sum())
+    n_denom_nonpos = int(per_event_summary["denom_nonpositive"].sum())
     print(f"dev-tier primary pooled median crossing minute (since 04:00 ET): {crossing}")
+    print(f"dev-tier has_t_minus_1_rth=FALSE: {n_no_anchor}/{len(per_event_summary)} | denom_nonpositive: {n_denom_nonpos}")
 
     per_minute_rth, per_event_summary_rth = M2.compute_rth_legacy_decay(bars_t0, session_bounds)
     pooled_rth = M2.pooled_per_minute_quantiles(per_minute_rth)
@@ -176,9 +178,11 @@ def main():
         "dev_measurements_preview": {
             "concentration_curve_rows": len(concentration), "min_window_events": len(min_window),
             "segment_shares_events": len(segment_shares),
+            "primary_anchor": "tick_close_t_minus_1_rth (A8.2/D4 - tick-only, replaces the quarantined spine close anchor)",
             "primary_pooled_median_crossing_minute_since_0400et": crossing,
             "rth_legacy_pooled_median_crossing_minute_since_open": crossing_rth,
-            "denom_nonpositive_events": int(per_event_summary["denom_nonpositive"].sum()),
+            "has_t_minus_1_rth_false_events": n_no_anchor,
+            "denom_nonpositive_events": n_denom_nonpos,
         },
         "escalation_row2_triggered": False,
         "escalation_row6_triggered": not runtime_ok,
