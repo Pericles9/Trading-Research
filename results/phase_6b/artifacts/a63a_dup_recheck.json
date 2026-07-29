@@ -1,0 +1,28 @@
+{
+  "phase": "6b",
+  "task": "A6.3a dup recheck (row 7 follow-up)",
+  "trigger": "HLL approx dup counter flagged 9 events > 5% (row 7 coarse tripwire) on the full pass",
+  "method": "exact strict-key COUNT(*)-COUNT(DISTINCT) scoped to the 9 flagged events (one extra filtered_trades scan, run once). Strict key = (ticker, event_date, ROUND(momentum_pct,2), sip_timestamp, price, size, sequence_number) - identical to the pass key and Phase 6c A8/T3''. Reproduced by research/phase_6b/a63a_dup_recheck.py.",
+  "n_events_exact_checked": 9,
+  "n_events_real_duplication": 7,
+  "n_events_hll_artifact_zero_exact": 2,
+  "total_exact_strict_dup_rows": 453,
+  "real_duplication_events": [
+    {"ticker": "SCWO", "event_date": "2022-01-06", "m": 45.16, "n_prints": 616, "n_exact_strict_dups": 121, "exact_strict_dup_rate": 0.196429},
+    {"ticker": "SCWO", "event_date": "2022-01-07", "m": 93.62, "n_prints": 634, "n_exact_strict_dups": 121, "exact_strict_dup_rate": 0.190852},
+    {"ticker": "CETY", "event_date": "2022-01-05", "m": 33.33, "n_prints": 485, "n_exact_strict_dups": 58, "exact_strict_dup_rate": 0.119588},
+    {"ticker": "CETY", "event_date": "2022-01-24", "m": 35.14, "n_prints": 473, "n_exact_strict_dups": 55, "exact_strict_dup_rate": 0.116279},
+    {"ticker": "NUKK", "event_date": "2022-01-21", "m": 43.88, "n_prints": 211, "n_exact_strict_dups": 20, "exact_strict_dup_rate": 0.094787},
+    {"ticker": "NUKK", "event_date": "2022-01-14", "m": 31.03, "n_prints": 235, "n_exact_strict_dups": 20, "exact_strict_dup_rate": 0.085106},
+    {"ticker": "CETY", "event_date": "2022-01-12", "m": 39.95, "n_prints": 865, "n_exact_strict_dups": 58, "exact_strict_dup_rate": 0.067052}
+  ],
+  "hll_artifact_events": [
+    {"ticker": "SMTK", "event_date": "2024-02-21", "m": 62.50, "n_prints": 60, "n_exact_strict_dups": 0, "note": "0 exact dups - HLL small-cardinality artifact"},
+    {"ticker": "SOWG", "event_date": "2023-10-03", "m": 38.46, "n_prints": 19, "n_exact_strict_dups": 0, "note": "0 exact dups - HLL small-cardinality artifact"}
+  ],
+  "finding": "Genuine exact-duplicate prints exist in filtered_trades for 7 events - identical rows on (ticker, event_date, momentum_pct, sip_timestamp, price, size, sequence_number). These are ingestion duplicates, 6.7-19.6% of each event's prints. All 7 are 2022-01 events (SCWO, CETY, NUKK); NUKK is a known degraded/sidecar ticker. Duplicate prints inflate volume and n_trades for these events but do NOT alter the price path (a duplicate has the same price at the same timestamp), so the opportunity-decay (price-anchored) measurement is unaffected for them; volume-based measures (concentration, min-window, segment shares) are inflated for these 7 events only. Previously undetected: Phase 6c's exact dup check was dev-tier only (56 events, none of these) - A8.2's full-pass dup-print requirement is exactly what surfaced it.",
+  "impact_on_measurement": "Negligible on pooled/population results (7 of 15,763 events). Price-path decay unaffected. The 7 events' own volume-based stats are inflated by their dup rate.",
+  "scope_caveat": "Only the 9 events above the 5% coarse flag were exact-checked. Real duplication BELOW 5% sits under the HLL per-event noise floor (~2% on the clean dev tier) and cannot be distinguished from noise without a broader exact audit, which would cost additional full filtered_trades scans (no index). So 7 is a LOWER BOUND on the number of affected events. A broader >2% audit was attempted and abandoned for scan cost.",
+  "escalation": "Row 7 (dup-print) tripped and is CONFIRMED as real duplication, not HLL noise. This is a data-quality finding requiring Cooper's disposition (flag-and-proceed / dedup / exclude / investigate ingestion source) - a hard stop per the escalation table.",
+  "source": "research/phase_6b/a63a_dup_recheck.py:main (exact numbers captured from the run-once scoped scan)"
+}

@@ -1,0 +1,110 @@
+{
+  "phase": "6b",
+  "task": "A6.3a (T3)",
+  "config_frozen": true,
+  "eligible_events_input": 15763,
+  "spine_rows": 110341,
+  "spine_build_seconds": 2.47,
+  "pre_flight_filtered_trades_rows": 4951605544,
+  "full_pass_wall_time_seconds": 1484.88,
+  "full_pass_wall_time_minutes": 24.75,
+  "bars": {
+    "total_rows": 45925350,
+    "by_offset": [
+      {
+        "session_offset": -3,
+        "n_events": 15527,
+        "n_bar_rows": 4846371
+      },
+      {
+        "session_offset": -2,
+        "n_events": 15598,
+        "n_bar_rows": 5090571
+      },
+      {
+        "session_offset": -1,
+        "n_events": 15729,
+        "n_bar_rows": 5712058
+      },
+      {
+        "session_offset": 0,
+        "n_events": 15763,
+        "n_bar_rows": 8519526
+      },
+      {
+        "session_offset": 1,
+        "n_events": 15741,
+        "n_bar_rows": 8153038
+      },
+      {
+        "session_offset": 2,
+        "n_events": 15744,
+        "n_bar_rows": 7073605
+      },
+      {
+        "session_offset": 3,
+        "n_events": 15747,
+        "n_bar_rows": 6530181
+      }
+    ],
+    "t0_by_segment": [
+      {
+        "segment": "post",
+        "n_bar_rows": 1701006,
+        "total_volume": 18181288128.0
+      },
+      {
+        "segment": "premarket",
+        "n_bar_rows": 1626137,
+        "total_volume": 51618680690.0
+      },
+      {
+        "segment": "rth",
+        "n_bar_rows": 5192383,
+        "total_volume": 406041580791.0
+      }
+    ]
+  },
+  "verify_integrity": {
+    "duplicate_keys": 0,
+    "out_of_window_minute_indices": 0,
+    "bad_segment_labels": 0,
+    "pass": true
+  },
+  "t0_event_count_check": {
+    "expected": 15763,
+    "distinct_t0_events_in_v2": 15763,
+    "match": true
+  },
+  "v1_subset_check": {
+    "v1_t0_events_missing_from_v2": 0,
+    "pass": true
+  },
+  "duplicate_print_check": {
+    "method": "APPROX (HyperLogLog approx_count_distinct on hash of the strict key) - exact COUNT(DISTINCT) infeasible at full scale (Cooper 2026-07-28). Coarse population diagnostic; exact 0.0% record stands from Phase 6c dev tier.",
+    "strict_key": "(event, sip_timestamp, price, size, sequence_number)",
+    "total_strict_dup_rows_approx": 273442,
+    "total_loose_dup_rows_approx": 3271968,
+    "total_prints": 4041077893,
+    "max_event_strict_rate_approx": 0.20454545454545456,
+    "coarse_flag_threshold": 0.05,
+    "n_events_over_coarse_flag_5pct": 9,
+    "n_events_over_exact_0.1pct_note": "2096 (within HLL noise, not an exact gate)",
+    "artifact": "results/phase_6b/artifacts/t3_dup_prints_v2.parquet"
+  },
+  "excluded_row_share_t0": {
+    "n_events_over_50pct_excluded": 0,
+    "artifact": "results/phase_6b/artifacts/t3_excluded_t0_v2.parquet"
+  },
+  "tz_et_vs_utc_date_mismatch": {
+    "n_mismatch": 0,
+    "n_total_rows": 4041077893
+  },
+  "escalation": {
+    "row3_t0_count": false,
+    "row4_v1_subset": false,
+    "row7_dup_prints": true,
+    "integrity": false
+  },
+  "source": "research/phase_6b/t3_full_pass_v2.py:main"
+}
