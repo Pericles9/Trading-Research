@@ -113,8 +113,20 @@ def main():
     pooled_rth.to_parquet(f"{A}/pooled_decay_rth_legacy.parquet", index=False)
     high_tod.to_parquet(f"{A}/high_time_of_day.parquet", index=False)
 
+    # flag_has_dup_prints (A6.3a row-7 disposition, Cooper flag-and-proceed): the 7 events
+    # exact-confirmed to carry duplicate prints in filtered_trades (a63a_dup_recheck.json).
+    # Annotation only - not dropped; volume-based measures for these events are inflated by
+    # their dup rate, price-path decay is unaffected.
+    with open(f"{A}/a63a_dup_recheck.json") as f:
+        recheck = json.load(f)
+    dup_keys = {(e["ticker"], pd.Timestamp(e["event_date"]), round(float(e["m"]), 2))
+                for e in recheck["real_duplication_events"]}
+    events["flag_has_dup_prints"] = events.apply(
+        lambda r: (r["ticker"], pd.Timestamp(r["event_date_canonical"]), round(float(r["momentum_pct"]), 2)) in dup_keys, axis=1)
+    n_flagged_dup = int(events["flag_has_dup_prints"].sum())
+
     # T4f sortable full-population index
-    idx = events[["ticker", "event_date_canonical", "momentum_pct", "decile"]].copy()
+    idx = events[["ticker", "event_date_canonical", "momentum_pct", "decile", "flag_has_dup_prints"]].copy()
     idx = idx.merge(segment_shares[M2.EVENT_KEYS + ["premarket_share", "rth_share", "post_share"]], on=M2.EVENT_KEYS, how="left")
     idx = idx.merge(min_window, on=M2.EVENT_KEYS, how="left")
     idx = idx.merge(per_event[M2.EVENT_KEYS + ["has_t_minus_1_rth", "denom_nonpositive", "minutes_to_50pct"]]
@@ -122,7 +134,7 @@ def main():
     idx = idx.merge(per_event_rth[M2.EVENT_KEYS + ["minutes_to_50pct"]]
                     .rename(columns={"minutes_to_50pct": "minutes_to_50pct_rth_legacy"}), on=M2.EVENT_KEYS, how="left")
     idx = idx.merge(high_tod[M2.EVENT_KEYS + ["high_hour_decimal"]], on=M2.EVENT_KEYS, how="left")
-    ra = per_event.merge(id_map, on=M2.EVENT_KEYS, how="left")
+    ra = per_event.copy()  # per_event already carries event_id from compute_primary_opportunity_decay
     ra["realized_at_rth_open"] = ra["event_id"].map(realized_at_open)
     idx = idx.merge(ra[M2.EVENT_KEYS + ["realized_at_rth_open"]], on=M2.EVENT_KEYS, how="left")
     idx.to_parquet(f"{A}/event_index_v2.parquet", index=False)
@@ -148,6 +160,8 @@ def main():
         },
         "primary_minutes_to_50pct_median_over_anchored": float(prim_pop["minutes_to_50pct"].median()),
         "n_never_crossed_primary": int(prim_pop["minutes_to_50pct"].isna().sum()),
+        "flag_has_dup_prints_n": n_flagged_dup,
+        "flag_has_dup_prints_note": "7 events exact-confirmed with duplicate prints (a63a_dup_recheck.json); annotation only (Cooper flag-and-proceed), volume-based measures inflated for these, price-path decay unaffected",
         "source": "research/phase_6b/t4_measurements_v2.py:main",
     }
     with open(OUT_SUMMARY, "w") as f:

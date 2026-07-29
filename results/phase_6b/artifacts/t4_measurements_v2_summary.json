@@ -1,0 +1,35 @@
+{
+  "phase": "6b",
+  "task": "A6.3b (T4)",
+  "n_events": 15763,
+  "grid_rows": 15113220,
+  "primary_anchor": "tick_close_t_minus_1_rth (A8.2/D4, tick-only)",
+  "primary_population": {
+    "n_has_t_minus_1_rth": 15727,
+    "n_no_anchor_excluded": 36,
+    "n_denom_nonpositive": 5,
+    "pct_no_anchor": 0.2284,
+    "pct_denom_nonpositive": 0.0318
+  },
+  "headlines": {
+    "a_primary_pooled_median_crossing_minute_since_0400et": 516.0,
+    "b_realized_at_rth_open_median": 0.17332719975687483,
+    "c_high_time_of_day_median_hour_et": 12.216666666666667,
+    "rth_legacy_pooled_median_crossing_minute_since_open": 52.0,
+    "min_window_median_minutes": {
+      "25pct": 23.0,
+      "50pct": 89.0,
+      "75pct": 222.0
+    },
+    "segment_volume_share_medians": {
+      "premarket": 0.009351268834412545,
+      "rth": 0.9431963547824113,
+      "post": 0.01844413358768192
+    }
+  },
+  "primary_minutes_to_50pct_median_over_anchored": 355.0,
+  "n_never_crossed_primary": 36,
+  "flag_has_dup_prints_n": 7,
+  "flag_has_dup_prints_note": "7 events exact-confirmed with duplicate prints (a63a_dup_recheck.json); annotation only (Cooper flag-and-proceed), volume-based measures inflated for these, price-path decay unaffected",
+  "source": "research/phase_6b/t4_measurements_v2.py:main"
+}
