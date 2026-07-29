@@ -101,7 +101,13 @@ SELECT ticker, event_date_canonical, momentum_pct, session_offset, in_window, se
        arg_max(price, sip_timestamp) AS last_price,
        MIN(sip_timestamp) AS first_trade_ts,
        MAX(sip_timestamp) AS last_trade_ts,
-       SUM(CASE WHEN et_date != utc_date THEN 1 ELSE 0 END) AS n_et_vs_utc_date_mismatch
+       SUM(CASE WHEN et_date != utc_date THEN 1 ELSE 0 END) AS n_et_vs_utc_date_mismatch,
+       -- A8.2 duplicate-print counters, computed in this same pass (no extra scan).
+       -- A duplicate print shares an identical sip_timestamp, so it always falls in the
+       -- same (event,offset,minute) bar - a per-bar strict/loose distinct-count captures
+       -- every collision with no cross-minute leakage. n_dup = extra rows beyond distinct.
+       COUNT(*) - COUNT(DISTINCT (sip_timestamp, price, size, sequence_number)) AS n_dup_strict,
+       COUNT(*) - COUNT(DISTINCT (sip_timestamp, price, size)) AS n_dup_loose
 FROM (
     SELECT t.ticker, t.event_date AS event_date_canonical, ROUND(t.momentum_pct, 2) AS momentum_pct,
            ss.session_offset,
@@ -110,7 +116,7 @@ FROM (
                 WHEN et_ts < ss.rth_close_et THEN 'rth'
                 ELSE 'post' END AS segment,
            CAST(FLOOR(EPOCH(et_ts - ss.premarket_start_et) / 60) AS INTEGER) AS minute_index,
-           t.price, t.size, t.sip_timestamp, et_date, utc_date
+           t.price, t.size, t.sip_timestamp, t.sequence_number, et_date, utc_date
     FROM (
         SELECT *,
                TO_TIMESTAMP(sip_timestamp / 1e9) AT TIME ZONE 'America/New_York' AS et_ts,
@@ -174,10 +180,23 @@ def build_minute_bars_v2(con, trades_table: str, spine: pd.DataFrame, out_table:
         FROM _t6b_minute_agg_all
     """).fetchdf()
 
+    # A8.2 per-event duplicate-print rate (strict key), over ALL offsets/segments in the
+    # scan - computed from the same temp table, no extra pass over the trades table.
+    dup_prints = con.execute("""
+        SELECT ticker, event_date_canonical, momentum_pct,
+               COALESCE(SUM(n_dup_strict), 0) AS n_dup_strict,
+               COALESCE(SUM(n_dup_loose), 0) AS n_dup_loose,
+               SUM(n_trades) AS n_prints,
+               COALESCE(SUM(n_dup_strict), 0)::DOUBLE / NULLIF(SUM(n_trades), 0) AS dup_strict_rate
+        FROM _t6b_minute_agg_all
+        GROUP BY 1, 2, 3
+    """).fetchdf()
+
     con.execute("DROP TABLE IF EXISTS _t6b_minute_agg_all")
     con.execute("DROP TABLE IF EXISTS _t6b_session_spine")
 
-    return {"elapsed_seconds": elapsed, "excluded_t0": excluded_t0, "tz_mismatch": tz_mismatch}
+    return {"elapsed_seconds": elapsed, "excluded_t0": excluded_t0, "tz_mismatch": tz_mismatch,
+            "dup_prints": dup_prints}
 
 
 def verify_bars_v2(con, bars_table: str, spine: pd.DataFrame) -> dict:

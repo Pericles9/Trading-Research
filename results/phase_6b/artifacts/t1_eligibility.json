@@ -6,15 +6,8 @@
     "observed": 15763,
     "pass": true
   },
-  "prev_close_guard": {
-    "n_eligible": 15763,
-    "n_missing": 0,
-    "n_nonpositive": 0,
-    "n_failures": 0,
-    "pct_failures": 0.0,
-    "pass": true
-  },
-  "escalation_row5_triggered": false,
+  "primary_anchor_eligibility_note": "has_t_minus_1_rth (a T-1 premarket/rth session with >=1 trade, needed for the tick_close_t_minus_1_rth anchor) is determined at T4 from event_minute_bars_v2, not here - it needs the T-1 bars. Flag-and-report: events without it are excluded from the primary decay population only (approved Amendment 8).",
+  "spine_numeric_reads": 0,
   "source": "research/phase_6b/t1_eligibility.py:main",
   "artifact": "results/phase_6b/artifacts/t1_eligible_events.parquet"
 }
