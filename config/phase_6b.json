@@ -71,14 +71,17 @@
     "denom_nonpositive_max_pct": 1.0,
     "has_t_minus_1_rth_false": "report-only, not an escalation (flag-and-report)",
     "duplicate_print_strict_key_max_pct_per_event": 0.1,
+    "duplicate_print_approx_coarse_flag_pct": 5.0,
+    "duplicate_print_note": "0.1% is the pre-D4 exact threshold, retained as a reference; the full-pass counter is APPROX (HLL), so row 7 gates on the 5% coarse flag (above HLL noise), not the exact 0.1%. Exact 0.0% stands from 6c dev tier.",
     "dev_tier_max_seconds_per_pass": 60,
     "full_table_pass_budget": 1,
     "calendar_pin_expected": {"pandas_market_calendars": "5.4.0", "exchange_calendars": "4.13.2"}
   },
   "duplicate_print_check": {
-    "strict_key": "(event key, sip_timestamp, price, size, sequence_number) - identical to the Phase 6c A8/T3'' strict key (0.0% on the dev tier). sequence_number always exists in filtered_trades, so it is part of the duplicate-detection key: same ts/price/size with different sequence_number are ordinary distinct prints on a busy tape, not duplicate ingestion.",
-    "looser_key_reported": "(event key, sip_timestamp, price, size) - the looser collision rate reported alongside, not the escalation key",
-    "escalation_key": "strict_key; per-event duplicate-print rate; row 7 threshold 0.1% per event",
+    "method": "APPROX (HyperLogLog: approx_count_distinct on hash of the strict key), per bar, summed per event. Cooper 2026-07-28: exact COUNT(DISTINCT) over ~billions of near-unique composite keys is computationally infeasible in one pass (a first attempt spilled 350GB / ran 2.5h and was killed before it filled the disk). HLL uses fixed small per-group state (bounded, fast). The exact 0.0% strict-dup record stands from Phase 6c's dev-tier A8/T3'' check (56 events).",
+    "strict_key": "(event key, sip_timestamp, price, size, sequence_number) - same key as 6c A8/T3''. sequence_number always exists in filtered_trades; same ts/price/size with different sequence_number are ordinary distinct prints, not duplicate ingestion.",
+    "looser_key_reported": "(event key, sip_timestamp, price, size) - reported alongside",
+    "diagnostic_role": "coarse population dup tripwire, NOT an exact gate. Row 7 flags any event whose APPROX strict rate exceeds 5% (well above HLL per-event noise, measured ~2% max on the clean dev tier) - a gross-duplication signal for a targeted exact recheck, not an automatic hard stop at 0.1%.",
     "note": "A8.2 requirement - computed within the single budgeted full pass, no extra pass over filtered_trades"
   },
   "chart_08": "dropped (A8.2) - the basis-diagnostic chart is moot under D4's severance; the contract runs to 07",

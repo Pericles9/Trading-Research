@@ -80,12 +80,16 @@ def main():
         WHERE v2.ticker IS NULL
     """).fetchone()[0]
 
-    # dup-print stats (from the same-pass counters)
+    # dup-print stats (APPROX/HLL, from the same-pass counters). Coarse diagnostic:
+    # row 7 flags events materially above HLL noise (~2%), not the exact 0.1% - the exact
+    # 0.0% record stands from 6c's dev tier. dup_coarse_flag_pct from config.
     dup = res["dup_prints"]
     dup.to_parquet(OUT_DUP, index=False)
-    n_events_over_dup = int((dup["dup_strict_rate"] > dup_thresh).sum())
-    total_dup_strict = int(dup["n_dup_strict"].sum())
-    total_dup_loose = int(dup["n_dup_loose"].sum())
+    coarse_flag = cfg["escalation_thresholds"]["duplicate_print_approx_coarse_flag_pct"] / 100.0
+    n_events_over_dup = int((dup["dup_strict_rate_approx"] > coarse_flag).sum())
+    n_events_over_exact_thresh = int((dup["dup_strict_rate_approx"] > dup_thresh).sum())
+    total_dup_strict = int(dup["n_dup_strict_approx"].sum())
+    total_dup_loose = int(dup["n_dup_loose_approx"].sum())
     total_prints = int(dup["n_prints"].sum())
 
     excluded = res["excluded_t0"]
@@ -113,12 +117,15 @@ def main():
         "t0_event_count_check": {"expected": d1_expected, "distinct_t0_events_in_v2": n_t0, "match": not row3},
         "v1_subset_check": {"v1_t0_events_missing_from_v2": int(v1_missing), "pass": not row4},
         "duplicate_print_check": {
+            "method": "APPROX (HyperLogLog approx_count_distinct on hash of the strict key) - exact COUNT(DISTINCT) infeasible at full scale (Cooper 2026-07-28). Coarse population diagnostic; exact 0.0% record stands from Phase 6c dev tier.",
             "strict_key": "(event, sip_timestamp, price, size, sequence_number)",
-            "total_strict_dup_rows": total_dup_strict, "total_loose_dup_rows": total_dup_loose,
+            "total_strict_dup_rows_approx": total_dup_strict, "total_loose_dup_rows_approx": total_dup_loose,
             "total_prints": total_prints,
-            "max_event_strict_rate": float(dup["dup_strict_rate"].max()),
-            "n_events_over_0.1pct_strict": n_events_over_dup,
-            "threshold": dup_thresh, "artifact": OUT_DUP,
+            "max_event_strict_rate_approx": float(dup["dup_strict_rate_approx"].max()),
+            "coarse_flag_threshold": coarse_flag,
+            "n_events_over_coarse_flag_5pct": n_events_over_dup,
+            "n_events_over_exact_0.1pct_note": f"{n_events_over_exact_thresh} (within HLL noise, not an exact gate)",
+            "artifact": OUT_DUP,
         },
         "excluded_row_share_t0": {
             "n_events_over_50pct_excluded": int((excluded["excluded_share"] > 0.5).sum()),
@@ -136,7 +143,7 @@ def main():
 
     for cond, msg in [(row3, f"row3: distinct T=0 {n_t0} != {d1_expected}"),
                       (row4, f"row4: {v1_missing} v1 T=0 events missing from v2"),
-                      (row7, f"row7: {n_events_over_dup} events over 0.1% strict dup rate"),
+                      (row7, f"row7 (coarse): {n_events_over_dup} events over 5% approx strict dup rate - gross-duplication tripwire"),
                       (integrity_bad, f"integrity: {verify}")]:
         if cond:
             print(f"\n*** ESCALATION {msg} - HARD STOP ***")

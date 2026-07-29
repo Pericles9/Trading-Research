@@ -251,6 +251,115 @@
         }
       ]
     },
+    "build_charts_v2.py": {
+      "role": "measurement_path",
+      "n_code_hits": 17,
+      "code_hits": [
+        {
+          "column": "open",
+          "line": 28,
+          "text": "with open(CFG, \"rb\") as f:",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 57,
+          "text": "with open(CFG) as f:",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 82,
+          "text": "for xr, lab in [(rth_open_ts, \"RTH open\"), (rth_close_ts, \"RTH close\")]:",
+          "is_code": true
+        },
+        {
+          "column": "close",
+          "line": 82,
+          "text": "for xr, lab in [(rth_open_ts, \"RTH open\"), (rth_close_ts, \"RTH close\")]:",
+          "is_code": true
+        },
+        {
+          "column": "close",
+          "line": 87,
+          "text": "fig.update_xaxes(title=\"extended-day time share (04:00 ET \u2192 close)\", range=[0, 1], gridcolor=GRID)",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 120,
+          "text": "summ = json.load(open(f\"{A}/t4_measurements_v2_summary.json\"))",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 134,
+          "text": "with open(CFG) as f:",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 141,
+          "text": "name=\"rth_legacy (RTH-open anchor), shifted to 04:00 axis\",",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 145,
+          "text": "(cross_rth + rth_open_min_med if cross_rth == cross_rth else np.nan, ORANGE, f\"rth_legacy {int(cross_rth) if cross_rth==cross_rth else 'n/a'} (since open)\", 30)]:",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 149,
+          "text": "fig.add_vline(x=rth_open_min_med, line=dict(color=INK, dash=\"dash\", width=1), annotation_text=\"RTH open\", annotation_font=dict(size=9))",
+          "is_code": true
+        },
+        {
+          "column": "close",
+          "line": 150,
+          "text": "fig.add_vline(x=float(sb[\"rth_close_min\"].median()), line=dict(color=INK, dash=\"dash\", width=1), annotation_text=\"RTH close\", annotation_font=dict(size=9))",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 165,
+          "text": "with open(CFG) as f:",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 180,
+          "text": "fig.add_vline(x=rth_open_med, line=dict(color=INK, dash=\"dash\", width=1), annotation_text=\"RTH open\", annotation_font=dict(size=9))",
+          "is_code": true
+        },
+        {
+          "column": "close",
+          "line": 181,
+          "text": "fig.add_vline(x=rth_close_med, line=dict(color=INK, dash=\"dash\", width=1), annotation_text=\"RTH close\", annotation_font=dict(size=9))",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 211,
+          "text": "for xr, lab in [(9.5, \"09:30 RTH open\"), (16.0, \"16:00 RTH close\")]:",
+          "is_code": true
+        },
+        {
+          "column": "close",
+          "line": 211,
+          "text": "for xr, lab in [(9.5, \"09:30 RTH open\"), (16.0, \"16:00 RTH close\")]:",
+          "is_code": true
+        },
+        {
+          "column": "high",
+          "line": 213,
+          "text": "fig.update_layout(title=f\"ET clock time-of-day of the extended-day high (n={len(ht)})\",",
+          "is_code": true
+        }
+      ],
+      "spine_code_hits_excl_bar_derived": []
+    },
     "build_minute_bars_v2.py": {
       "role": "measurement_path",
       "n_code_hits": 2,
@@ -263,7 +372,7 @@
         },
         {
           "column": "high",
-          "line": 149,
+          "line": 160,
           "text": "con.execute(f\"\"\"",
           "is_code": true
         }
@@ -363,6 +472,62 @@
         {
           "column": "open",
           "line": 191,
+          "text": "with open(OUT_SUMMARY, \"w\") as f:",
+          "is_code": true
+        }
+      ],
+      "spine_code_hits_excl_bar_derived": []
+    },
+    "t3_full_pass_v2.py": {
+      "role": "measurement_path",
+      "n_code_hits": 3,
+      "code_hits": [
+        {
+          "column": "open",
+          "line": 33,
+          "text": "with open(PHASE_6B_CONFIG) as f:",
+          "is_code": true
+        },
+        {
+          "column": "close",
+          "line": 100,
+          "text": "con.close()",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 138,
+          "text": "with open(OUT_SUMMARY, \"w\") as f:",
+          "is_code": true
+        }
+      ],
+      "spine_code_hits_excl_bar_derived": []
+    },
+    "t4_measurements_v2.py": {
+      "role": "measurement_path",
+      "n_code_hits": 4,
+      "code_hits": [
+        {
+          "column": "open",
+          "line": 32,
+          "text": "with open(PHASE_6B_CONFIG) as f:",
+          "is_code": true
+        },
+        {
+          "column": "high",
+          "line": 46,
+          "text": "bars_t0 = con.execute(f\"\"\"",
+          "is_code": true
+        },
+        {
+          "column": "close",
+          "line": 55,
+          "text": "con.close()",
+          "is_code": true
+        },
+        {
+          "column": "open",
+          "line": 147,
           "text": "with open(OUT_SUMMARY, \"w\") as f:",
           "is_code": true
         }

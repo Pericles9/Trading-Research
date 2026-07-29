@@ -102,12 +102,17 @@ SELECT ticker, event_date_canonical, momentum_pct, session_offset, in_window, se
        MIN(sip_timestamp) AS first_trade_ts,
        MAX(sip_timestamp) AS last_trade_ts,
        SUM(CASE WHEN et_date != utc_date THEN 1 ELSE 0 END) AS n_et_vs_utc_date_mismatch,
-       -- A8.2 duplicate-print counters, computed in this same pass (no extra scan).
-       -- A duplicate print shares an identical sip_timestamp, so it always falls in the
-       -- same (event,offset,minute) bar - a per-bar strict/loose distinct-count captures
-       -- every collision with no cross-minute leakage. n_dup = extra rows beyond distinct.
-       COUNT(*) - COUNT(DISTINCT (sip_timestamp, price, size, sequence_number)) AS n_dup_strict,
-       COUNT(*) - COUNT(DISTINCT (sip_timestamp, price, size)) AS n_dup_loose
+       -- A8.2 duplicate-print counters, APPROXIMATE (HyperLogLog), computed in this same
+       -- pass (no extra scan). Cooper 2026-07-28: an EXACT COUNT(DISTINCT) over ~billions
+       -- of near-unique composite keys is infeasible here (it spilled 350GB / 2.5h and was
+       -- killed); approx_count_distinct uses fixed small per-group state (bounded, no
+       -- blowup). A duplicate print shares its sip_timestamp, so it always falls in the
+       -- same (event,offset,minute) bar. n_dup ~= extra rows beyond the approx distinct
+       -- count; hash() collapses the composite key to one 64-bit value (collisions
+       -- negligible). This is a coarse population dup DIAGNOSTIC (row 7 is a sanity flag,
+       -- not an exact gate) - the exact 0.0% record stands from Phase 6c's dev tier.
+       COUNT(*) - approx_count_distinct(hash(sip_timestamp, price, size, sequence_number)) AS n_dup_strict_approx,
+       COUNT(*) - approx_count_distinct(hash(sip_timestamp, price, size)) AS n_dup_loose_approx
 FROM (
     SELECT t.ticker, t.event_date AS event_date_canonical, ROUND(t.momentum_pct, 2) AS momentum_pct,
            ss.session_offset,
@@ -180,14 +185,17 @@ def build_minute_bars_v2(con, trades_table: str, spine: pd.DataFrame, out_table:
         FROM _t6b_minute_agg_all
     """).fetchdf()
 
-    # A8.2 per-event duplicate-print rate (strict key), over ALL offsets/segments in the
-    # scan - computed from the same temp table, no extra pass over the trades table.
+    # A8.2 per-event APPROX duplicate-print rate (strict key), over ALL offsets/segments
+    # in the scan - summed from the same temp table, no extra pass. Per-bar approx counts
+    # can be slightly negative (HLL can overestimate distinct); GREATEST(...,0) clamps the
+    # per-event sum so a coarse diagnostic isn't dominated by cancelling HLL noise.
     dup_prints = con.execute("""
         SELECT ticker, event_date_canonical, momentum_pct,
-               COALESCE(SUM(n_dup_strict), 0) AS n_dup_strict,
-               COALESCE(SUM(n_dup_loose), 0) AS n_dup_loose,
+               SUM(n_dup_strict_approx) AS n_dup_strict_approx_signed,
+               GREATEST(SUM(n_dup_strict_approx), 0) AS n_dup_strict_approx,
+               GREATEST(SUM(n_dup_loose_approx), 0) AS n_dup_loose_approx,
                SUM(n_trades) AS n_prints,
-               COALESCE(SUM(n_dup_strict), 0)::DOUBLE / NULLIF(SUM(n_trades), 0) AS dup_strict_rate
+               GREATEST(SUM(n_dup_strict_approx), 0)::DOUBLE / NULLIF(SUM(n_trades), 0) AS dup_strict_rate_approx
         FROM _t6b_minute_agg_all
         GROUP BY 1, 2, 3
     """).fetchdf()
