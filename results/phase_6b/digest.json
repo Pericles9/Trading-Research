@@ -1,0 +1,79 @@
+{
+  "phase": "6b",
+  "title": "Measurement 1 Redo: Concentration & Latency Budget over the Full Extended Day (A8.2 tick-anchor resumption)",
+  "branch": "phase/6b",
+  "status": "complete_awaiting_approval",
+  "generated_at": "2026-07-29",
+  "baseline": "phase-7-approved (phase/6b fast-forwarded onto it - the A8.2 resumption requires D4, the t8 canonical view, and the approved 6c/7 docs, none of which existed at the A6.1 stop)",
+  "summary": "Resumed Phase 6b under Amendment 8 (A8.2, prompts/phase_6b_amendment_8.md, Cooper-approved 2026-07-28). A6.2: swept research/phase_6b/ + config for spine numerics (13 prev_close hits, all measurement-path), reworked the opportunity-decay anchor from the D4-quarantined spine prev_close to the tick-derived tick_close_t_minus_1_rth (sweep 13->0), re-validated on the dev tier, re-froze the config. A6.3a: the single budgeted full pass over filtered_trades (4.95B rows, 24.75 min, 0 spill) materialized event_minute_bars_v2 (45,925,350 rows, extended-day, tz-aware) - distinct T=0 = 15,763, v1 subset of v2, integrity clean, tz ET-vs-UTC mismatch 0/4.04B. A8.2's dup-print counter (reworked to HLL approx after an exact COUNT(DISTINCT) blew up 350GB/2.5h and was killed) flagged 9 events >5%; an exact recheck confirmed 7 real duplicate-print events (2022-01 SCWO/CETY/NUKK) + 2 HLL artifacts - a genuine, previously-undetected data-quality finding, disposed flag-and-proceed by Cooper (2026-07-29). A6.3b/c: extended-day measurements + charts 01-07.",
+  "headline_metrics": [
+    {"name": "primary_pooled_median_crossing_minute_since_0400et", "value": 516, "n": 15727,
+     "note": "tick_close_t_minus_1_rth anchor (D4, tick-only); gap-inclusive move on the extended-day clock (~12:36 ET)",
+     "source": "research/phase_6b/measurements_v2.py:compute_primary_opportunity_decay", "chart": "results/phase_6b/charts/04_opportunity_decay_ext.html"},
+    {"name": "rth_legacy_crossing_minute_since_open", "value": 52, "n": 15763,
+     "note": "reproduces Phase 6's RTH-only 52 exactly - comparability variant validated",
+     "source": "research/phase_6b/measurements_v2.py:compute_rth_legacy_decay", "chart": "results/phase_6b/charts/04_opportunity_decay_ext.html"},
+    {"name": "realized_at_rth_open_median", "value": 0.173, "n": 15727,
+     "note": "median event has realized ~17% of its anchor->high move by 09:30 (premarket contribution)",
+     "source": "research/phase_6b/measurements_v2.py:realized_at_minute", "chart": "results/phase_6b/charts/04_opportunity_decay_ext.html"},
+    {"name": "high_time_of_day_median_hour_et", "value": 12.22, "n": 15763,
+     "note": "extended-day high made ~12:13 ET median; clear 09:30-open and 16:00-close spikes",
+     "source": "research/phase_6b/measurements_v2.py:high_time_of_day", "chart": "results/phase_6b/charts/07_high_time_of_day.html"},
+    {"name": "segment_volume_share_medians", "value": "premarket 0.9%, rth 94.3%, post 1.8%", "n": 15763,
+     "note": "median event RTH-heavy; RTH histogram bimodal (secondary mass near 0 = the ETH-dominant tail). Premarket is a real distribution, not a 0-spike - ETH data present, not a collection gap",
+     "source": "research/phase_6b/measurements_v2.py:compute_segment_shares", "chart": "results/phase_6b/charts/06_segment_volume_shares.html"},
+    {"name": "min_window_median_minutes_ext", "value": "25%=23, 50%=89, 75%=222 (of T=0 extended-day volume)", "n": 15763,
+     "source": "research/phase_6b/measurements_v2.py:compute_min_window_stats", "chart": "results/phase_6b/charts/03_min_window_cdf_ext.html"},
+    {"name": "bar_cache_event_minute_bars_v2", "value": "45,925,350 rows, extended-day all offsets, 24.75 min single pass, 0 spill", "n": 15763,
+     "source": "research/phase_6b/t3_full_pass_v2.py:main", "chart": null},
+    {"name": "d4_measurement_path_spine_hits", "value": "0 (13 prev_close hits reworked to the tick anchor)", "n": null,
+     "source": "results/phase_6b/artifacts/a62_d4_sweep.json", "chart": null},
+    {"name": "flag_has_dup_prints_events", "value": 7, "n": 15763,
+     "note": "exact-confirmed duplicate-print events (annotation, flag-and-proceed); price-path decay unaffected, volume measures inflated for these 7 only",
+     "source": "results/phase_6b/artifacts/a63a_dup_recheck.json", "chart": null}
+  ],
+  "escalations_triggered_and_resolved": [
+    {"criterion": "A6.3a exact COUNT(DISTINCT) dup counter blew up (350GB spill, 2.5h)", "resolution": "killed before disk-fill; disk reclaimed (327GB), DB intact, v2 never partially committed; Cooper -> HLL approx dup counter (bounded); re-ran 24.75 min / 0 spill"},
+    {"criterion": "row 7 dup-print coarse flag (>5% approx): 9 events", "resolution": "exact recheck -> 7 real duplicate-print events + 2 HLL artifacts; Cooper flag-and-proceed (annotate 7, defer remediation to a future phase; Open-Items-Register logged)"}
+  ],
+  "escalations_checked_not_triggered": [
+    {"criterion": "row 1: measurement-path computation spine hits after rework", "observed": "0"},
+    {"criterion": "row 2: universe_selection spine hits outside momentum_pct/flag_bad_denominator", "observed": "0"},
+    {"criterion": "row 3: distinct T=0 in v2 != 15,763", "observed": "15,763 == 15,763"},
+    {"criterion": "row 4: any v1 T=0 event absent from v2 T=0", "observed": "0 missing"},
+    {"criterion": "row 5: has_t_minus_1_rth=FALSE (report-only)", "observed": "36 (0.23%) - excluded from primary decay, flag-and-report"},
+    {"criterion": "row 6: denom_nonpositive > 1%", "observed": "0.03% (5 events)"},
+    {"criterion": "row 8: dev-tier runtime > 60s", "observed": "36.7s"},
+    {"criterion": "row 9: full passes over filtered_trades > 1 for the measurement", "observed": "1 (24.75 min); dup rechecks were diagnostic follow-ups to the row-7 escalation, documented"},
+    {"criterion": "row 10: write to base/dev/v1 tables or data root", "observed": "none - only event_minute_bars_v2 created"},
+    {"criterion": "row 11: calendar pin drift", "observed": "5.4.0 / 4.13.2, matches pin"},
+    {"criterion": "bar integrity: dup keys / out-of-window / bad segments", "observed": "0 / 0 / 0"},
+    {"criterion": "tz ET-vs-UTC date mismatch", "observed": "0 / 4,041,077,893 rows"}
+  ],
+  "decisions_log": [
+    {"decision": "phase/6b fast-forwarded onto phase-7-approved before resuming", "reason": "the A6.1 stop predated D4, the t8 view, and the approved 6c/7 docs; the resumption depends on all of them"},
+    {"decision": "opportunity-decay anchor: spine prev_close -> tick_close_t_minus_1_rth (last pre/rth bar last_price at offset -1)", "reason": "D4 quarantines prev_close; the tick-derived prior-RTH-close is the direct tick analog (a61 derivation), both anchor and day_high_ext now tick-only"},
+    {"decision": "dup-print counter: exact COUNT(DISTINCT) -> HLL approx_count_distinct", "reason": "exact distinct over ~billions of near-unique composite keys is infeasible (350GB spill); HLL is bounded per-group; the exact 0.0% record stands from 6c dev tier; row 7 becomes a 5% coarse tripwire with targeted exact recheck of flags"},
+    {"decision": "has_t_minus_1_rth eligibility determined at T4 (not T1)", "reason": "the tick anchor needs the T-1 bars, which don't exist until the T3 full pass; flag-and-report, exclude from primary decay only"},
+    {"decision": "7 duplicate-print events flag-and-proceed (annotation, not dropped)", "reason": "Cooper 2026-07-29; pooled results robust, price-path unaffected; root-cause/dedup deferred to a remediation phase (Open-Items-Register)"}
+  ],
+  "surprises": [
+    "rth_legacy crossing = 52 min reproduces Phase 6's RTH-only 52 EXACTLY - the tick-anchor rework didn't disturb the RTH-comparable measurement",
+    "primary (gap-inclusive) crossing 516 min (~12:36 ET) is far later than rth_legacy 52 - the prior-close anchor puts the overnight gap in the denominator, so the intraday move is a smaller fraction of the total",
+    "A8.2's dup-print requirement found a real, previously-undetected data-quality issue (7 events with exact-duplicate prints in filtered_trades) - the requirement did exactly its job",
+    "high time-of-day is strongly structured (09:30-open + 16:00-close spikes), and premarket volume is a real distribution (not a collection 0-spike)"
+  ],
+  "output_files": {
+    "prompt": "prompts/phase_6b_amendment_8.md", "config": "config/phase_6b.json",
+    "scripts": "research/phase_6b/*.py (a62_d4_sweep, build_minute_bars_v2, measurements_v2, t1_eligibility, t2_dev_pipeline, t3_full_pass_v2, a63a_dup_recheck, t4_measurements_v2, build_charts_v2)",
+    "new_db_table": "event_minute_bars_v2 (45,925,350 rows, extended-day, all offsets, segment-tagged)",
+    "artifacts_committed_json": ["a62_d4_sweep.json", "t1_eligibility.json", "t2_dev_pipeline_summary.json", "t3_full_pass_v2_summary.json", "a63a_dup_recheck.json", "t4_measurements_v2_summary.json"],
+    "artifacts_gitignored_parquet": "results/phase_6b/artifacts/*.parquet (regenerable from config+code+cache)",
+    "charts": ["results/phase_6b/charts/01_volume_concentration_ext.html", "02_move_concentration_ext.html", "03_min_window_cdf_ext.html", "04_opportunity_decay_ext.html", "05_per_event_overlay_ext.html", "06_segment_volume_shares.html", "07_high_time_of_day.html"],
+    "docs": ["docs/Open-Items-Register.md (ingestion-duplicate finding logged)"],
+    "report": "results/phase_6b/REPORT.md", "digest": "results/phase_6b/digest.json"
+  },
+  "commits": 12,
+  "reproduce": ".venv/Scripts/python.exe -m research.phase_6b.a62_d4_sweep && ... t1_eligibility / t2_dev_pipeline / t3_full_pass_v2 (budgeted) / a63a_dup_recheck (1 extra scan) / t4_measurements_v2 / build_charts_v2",
+  "approval_gate": "Awaiting Cooper's review of the charts and the tick-anchor measurement. On approval, tag phase-6b-approved and master fast-forwards (first landing since phase-5a-approved). The latency-budget reading - and whether the operative clock is the gap-inclusive primary (516 min) or the RTH-intraday rth_legacy (52 min) - is Cooper's from chart 04, not the agent's."
+}
