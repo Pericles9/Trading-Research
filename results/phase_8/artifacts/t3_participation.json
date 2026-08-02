@@ -1,0 +1,207 @@
+{
+  "phase": "8",
+  "task": "T3",
+  "source": "research/phase_8/t3_participation.py:main",
+  "scan_free": true,
+  "spine_numeric_reads": 0,
+  "n_d1": 15763,
+  "no_baseline_n": 20,
+  "no_baseline_share": 0.0012687940112922668,
+  "escalation_row_5_threshold": 0.05,
+  "escalation_row_5_triggered": false,
+  "base_offsets": [
+    -1,
+    -2,
+    -3
+  ],
+  "undefined_threshold": 0.2,
+  "n_quintiles": 5,
+  "decisions_log": {
+    "0900": {
+      "anchor_minute_index": 300,
+      "bclock_undefined_or_zero_rate": 0.1874008754678678,
+      "form_selected": "logrv_clock",
+      "reason": "undefined_or_zero rate 0.1874 <= 0.2",
+      "quintile_bounds_selected_logrv": [
+        -16.545244035134303,
+        -0.27273276170901034,
+        1.0067692329084406,
+        3.3521724475020642,
+        6.71635256945666,
+        17.230177318883978
+      ],
+      "per_quintile_n": {
+        "1": 3149,
+        "2": 3148,
+        "3": 3149,
+        "4": 3148,
+        "5": 3149
+      },
+      "quintile_method": "rank-based (method='first' ties), 5 balanced buckets",
+      "largest_tied_logrv_mass": 1171
+    },
+    "rth_open": {
+      "anchor_minute_index": 330,
+      "bclock_undefined_or_zero_rate": 0.015859925141153332,
+      "form_selected": "logrv_clock",
+      "reason": "undefined_or_zero rate 0.0159 <= 0.2",
+      "quintile_bounds_selected_logrv": [
+        -17.36212813371542,
+        -0.24486388358131417,
+        0.9147458734822927,
+        2.294886122540444,
+        4.618063887837611,
+        15.7184871096344
+      ],
+      "per_quintile_n": {
+        "1": 3149,
+        "2": 3148,
+        "3": 3149,
+        "4": 3148,
+        "5": 3149
+      },
+      "quintile_method": "rank-based (method='first' ties), 5 balanced buckets",
+      "largest_tied_logrv_mass": 68
+    },
+    "open+5": {
+      "anchor_minute_index": 335,
+      "bclock_undefined_or_zero_rate": 0.013639535621391866,
+      "form_selected": "logrv_clock",
+      "reason": "undefined_or_zero rate 0.0136 <= 0.2",
+      "quintile_bounds_selected_logrv": [
+        -17.692805318375804,
+        -0.13886053540448753,
+        1.0099337854974366,
+        2.388483580750872,
+        4.536763345137442,
+        17.04416454044884
+      ],
+      "per_quintile_n": {
+        "1": 3149,
+        "2": 3148,
+        "3": 3149,
+        "4": 3148,
+        "5": 3149
+      },
+      "quintile_method": "rank-based (method='first' ties), 5 balanced buckets",
+      "largest_tied_logrv_mass": 45
+    },
+    "open+15": {
+      "anchor_minute_index": 345,
+      "bclock_undefined_or_zero_rate": 0.010911628497113494,
+      "form_selected": "logrv_clock",
+      "reason": "undefined_or_zero rate 0.0109 <= 0.2",
+      "quintile_bounds_selected_logrv": [
+        -17.947242326569867,
+        0.0,
+        1.1272471214078277,
+        2.484005529248651,
+        4.513904350516611,
+        17.631794721725726
+      ],
+      "per_quintile_n": {
+        "1": 3149,
+        "2": 3148,
+        "3": 3149,
+        "4": 3148,
+        "5": 3149
+      },
+      "quintile_method": "rank-based (method='first' ties), 5 balanced buckets",
+      "largest_tied_logrv_mass": 26
+    },
+    "open+30": {
+      "anchor_minute_index": 360,
+      "bclock_undefined_or_zero_rate": 0.009008437480175093,
+      "form_selected": "logrv_clock",
+      "reason": "undefined_or_zero rate 0.0090 <= 0.2",
+      "quintile_bounds_selected_logrv": [
+        -18.382799462959188,
+        0.10698933462994903,
+        1.2203227886248638,
+        2.554806925145645,
+        4.476106268729437,
+        18.14667049145731
+      ],
+      "per_quintile_n": {
+        "1": 3149,
+        "2": 3148,
+        "3": 3149,
+        "4": 3148,
+        "5": 3149
+      },
+      "quintile_method": "rank-based (method='first' ties), 5 balanced buckets",
+      "largest_tied_logrv_mass": 18
+    },
+    "open+60": {
+      "anchor_minute_index": 390,
+      "bclock_undefined_or_zero_rate": 0.006343970056461334,
+      "form_selected": "logrv_clock",
+      "reason": "undefined_or_zero rate 0.0063 <= 0.2",
+      "quintile_bounds_selected_logrv": [
+        -18.762646080125045,
+        0.2902716487165753,
+        1.3635019740883902,
+        2.6189198310999453,
+        4.470598311872445,
+        18.57300768463504
+      ],
+      "per_quintile_n": {
+        "1": 3149,
+        "2": 3148,
+        "3": 3149,
+        "4": 3148,
+        "5": 3149
+      },
+      "quintile_method": "rank-based (method='first' ties), 5 balanced buckets",
+      "largest_tied_logrv_mass": 7
+    },
+    "open+120": {
+      "anchor_minute_index": 450,
+      "bclock_undefined_or_zero_rate": 0.00399670113557064,
+      "form_selected": "logrv_clock",
+      "reason": "undefined_or_zero rate 0.0040 <= 0.2",
+      "quintile_bounds_selected_logrv": [
+        -19.239290163908986,
+        0.47164642073021046,
+        1.5272989376818829,
+        2.69960162889848,
+        4.396839683118861,
+        18.501128440376117
+      ],
+      "per_quintile_n": {
+        "1": 3149,
+        "2": 3148,
+        "3": 3149,
+        "4": 3148,
+        "5": 3149
+      },
+      "quintile_method": "rank-based (method='first' ties), 5 balanced buckets",
+      "largest_tied_logrv_mass": 4
+    },
+    "t0_close": {
+      "anchor_minute_index": 959,
+      "bclock_undefined_or_zero_rate": 0.0012687940112922668,
+      "form_selected": "logrv_clock",
+      "reason": "undefined_or_zero rate 0.0013 <= 0.2",
+      "quintile_bounds_selected_logrv": [
+        -4.12903690081125,
+        0.9293009024125298,
+        1.7852780611664616,
+        2.6552202905629434,
+        4.074623482510527,
+        10.476466652998168
+      ],
+      "per_quintile_n": {
+        "1": 3149,
+        "2": 3148,
+        "3": 3149,
+        "4": 3148,
+        "5": 3149
+      },
+      "quintile_method": "rank-based (method='first' ties), 5 balanced buckets",
+      "largest_tied_logrv_mass": 1
+    }
+  },
+  "artifact": "results/phase_8/artifacts/t3_participation.parquet",
+  "t0_close_note": "t0_close cumulative window = full extended day (mi<=959); b_clock==b_session there."
+}
