@@ -181,8 +181,99 @@ ARBB lands on exactly 100,000 and exactly 50,000 on two different events. Flagsh
 
 Escalation row 7 fired at **11.04%** on the 09:00 anchor (T4) and the phase hard-stopped without a fix. Cooper approved Amendment A10.1: 09:00 retained with the population guard (own n=14,023; `has_premarket_print` label; free `rth_open` comparison; chart 04 marking), row 7 raised **10% → 15%**, `flag_possible_row_cap` added to the carried-flag set. Both conditions of the raise (A10.1a-i explicit denominator, A10.1a-iv chart marking) implemented.
 
+---
+
+# Amendment A10.2 / A10.3 — Detection-anchored markouts, contamination test, false-positive question
+
+The Phase 8 clock anchors assume the event is known to exist at the anchor timestamp; a live scanner surfaces a candidate only once price crosses **+30% from prior close**. A10.2 adds the tradeable detection anchor and the test that separates a forward edge from selection arithmetic. Charts 01–09 and §1–§14 above stand unchanged.
+
+## 15. Detection coverage block (A10.2a-i, A10.3)
+
+`det_anchor` = first T0 extended-day minute whose crossing print (bar high) reaches 1.30 × `tick_close_t_minus_1_rth` (D4-clean; multiplier frozen, row 14 live).
+
+- **Detection universe: n = 15,369** (97.50%). Every detection-anchored figure uses this n, never 15,763.
+- `det_undefined` = **394 (2.50%)** — carried, never imputed (A10.3 term a).
+- **Escalation row 13** (>2% never reach 1.30× on tick) fired at 2.50% → **Cooper A10.3 override: proceed**; multiplier stays 1.30. Breakdown: 36 no anchor (`has_t_minus_1_rth`=FALSE) + 358 anchor-present with `day_high_ext/anchor` < 1.30 despite `momentum_pct` 30–293% (D4 corporate-action adjustment-basis mismatch; e.g. NVDA 2024-06-10 10:1 split, ratio 1.0006; ZJYL reverse split, 0.273).
+- **A10.3(d) diagnostic** [chart 10b](charts/10b_det_undefined_maxmove.html): the 358 anchor-present are **clustered just below the threshold** (median ratio 1.285; 92.2% in [1.20,1.30)); split-adjacent proxy (ratio<1.0) n=5. Per the registered condition (clustered near → do not reopen), the `momentum_pct` adjustment-basis question is **not** reopened.
+
+## 16. Detection-time table (A10.2a-ii) — [chart 10](charts/10_detection_time_distribution.html)
+
+| segment | median det time (ET) | IQR (minute-index) | n |
+|---|---|---|---|
+| premarket | 07:00 | [3, 251] | 4,630 |
+| rth | 11:47 | [378, 597] | 10,660 |
+| post | 16:02 | [720, 737] | 79 |
+
+30% of detections land in premarket, 69% in RTH, 0.5% post.
+
+## 17. Runway table (A10.2a-iii) — [chart 11](charts/11_detection_to_high_runway.html)
+
+Minutes and log distance from `det_anchor` to `day_high_ext` (the ceiling on any detection-anchored capture):
+
+| metric | median | IQR | n |
+|---|---|---|---|
+| minutes det→high (overall) | 30 | [3, 170] | 15,369 |
+| minutes det→high (2020-21) | 29 | [3, 169] | 5,286 |
+| minutes det→high (2022-24) | 30 | [3, 170] | 10,083 |
+| log distance det→high | 0.111 | [0.047, 0.257] | 15,369 |
+
+~20% of events have the day-high essentially at detection (runway ≈ 0).
+
+## 18. Contamination-test table (A10.2b) — [chart 12](charts/12_contamination_test.html)
+
+`t0_close → t1_close` markout by pre-open participation quintile (`pq_rth_open`, the headline gradient's bucket); no T0 move is in this return.
+
+| quintile | 2020-21 median (n) | 2022-24 median (n) |
+|---|---|---|
+| Q1 | −0.0285 (1,025) | −0.0304 (2,108) |
+| Q2 | −0.0297 (1,239) | −0.0233 (1,888) |
+| Q3 | −0.0315 (1,182) | −0.0179 (1,961) |
+| Q4 | −0.0349 (1,086) | −0.0197 (2,059) |
+| Q5 | −0.0497 (826) | −0.0325 (2,314) |
+
+Pooled median by quintile [−0.030, −0.026, −0.023, −0.024, −0.038]; Q1−Q5 spread 0.008 (headline `rth_open→t0_close` spread ≈ 0.25).
+
+**Chart 12 matches the second row of the A10.2 §3 reading rule: the gradient is flat/non-monotonic at `t0_close → t1_close` — the `rth_open` gradient is consistent with selection arithmetic, and Phase 8's headline is not established as a forward edge.** (Statement of the matched row only, per escalation row 16.)
+
+## 19. Detection markout table (A10.2c) — [chart 13](charts/13_detection_markout_heatmap.html), [chart 14](charts/14_detection_markout_distributions.html)
+
+Flagship `det+5 → t0_close` median markout by detection time-of-day bin:
+
+| detection bin | 2020-21 median (n) | 2022-24 median (n) |
+|---|---|---|
+| premarket | −0.0567 (1,479) | −0.0321 (3,151) |
+| 0930–1000 | −0.0356 (695) | −0.0266 (1,190) |
+| 1000–1100 | −0.0354 (807) | −0.0228 (1,349) |
+| 1100–1300 | −0.0318 (957) | −0.0240 (1,907) |
+| after 13:00 | −0.0132 (1,340) | −0.0156 (2,469) |
+
+The heatmap is negative across latency × detection-time × horizon, deepening with horizon length and for earlier detections; latency 0→30 min barely changes a cell.
+
+## 20. Premarket-detection row (A10.2c-vi)
+
+Premarket detections (n=4,630) are reported as their own bin in §16, §19, and charts 10/13/14. `det+5 → t0_close` median −0.0567 (2020-21) / −0.0321 (2022-24). **No claim is made about whether a premarket fill is achievable in these names** — the archive has not answered that liquidity question.
+
+## 21. False-positive block (A10.2d)
+
+- `filtered_events_power_law_q05.parquet`: 23,268 rows — power-law **accepted** output, no accept/reject flag.
+- `scanner_hit_catalog.json`: 6,395 scanner-hit records (1,784 tickers), timing/threshold only, no accept/reject flag, smaller than the accepted set → not the full pre-filter candidate universe.
+- **Rejected candidates are not recoverable** from this archive. Registered limitation (verbatim; the `docs/Open-Items-Register.md` entry is row-9-blocked and flagged for the gate):
+
+  > *All Phase 8 markouts are conditional on power-law filter membership. The filter was fitted on the full 2020–2024 panel and its output is not knowable at detection time. The rejected-candidate population is not present in this archive; the live false-positive rate is therefore unmeasured, and no markout in this phase can be read as a live expected value.*
+
+## Escalation additions (rows 13–16)
+
+| # | condition | threshold | observed | result |
+|---|---|---|---|---|
+| 13 | tick T0 extended max never reaches 1.30× | >2% | 2.50% | fired → A10.3 override (proceed; 394 carried; n=15,369) |
+| 14 | detection rule smoothing/qualifier/multiplier≠1.30 | any | none (1.30, high-crossing) | pass |
+| 15 | new collection/fetch/write during A10.2d | any | none (read-only) | pass |
+| 16 | REPORT characterises contamination beyond matched row | any | matched-row statement only | pass |
+
+Row 3 (zero passes over `filtered_trades`/`filtered_quotes`) held throughout; A10.2d read two small files.
+
 ## Commits
 
-T0 preconditions · T1 decomposition · T2 ETH-split + row-cap · T3 participation · T4 (hard stop) · A10.1-T0 amendment · A10.1-T1 backfill · A10.1-T2 rung attrition · A10.1-T3 markout grid · A10.1-T4 survivorship · A10.1-T5 digest/report.
+T0 preconditions · T1 decomposition · T2 ETH-split + row-cap · T3 participation · T4 (hard stop) · A10.1-T0 amendment · A10.1-T1 backfill · A10.1-T2 rung attrition · A10.1-T3 markout grid · A10.1-T4 survivorship · A10.1-T5 digest/report · A10.2-T0 amendment · A10.2a (hard stop row 13) · A10.2a+A10.3 override · A10.2b contamination · A10.2c detection grid · A10.2d recoverability · A10.2-T7 digest/report.
 
 **No recommendations. No characterisation of any result as good, promising, weak, or disappointing.** The read on a forward edge is Cooper's, from charts 04, 05, and 06.

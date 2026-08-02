@@ -5,7 +5,7 @@
   "status": "complete_awaiting_approval",
   "generated_at": "2026-08-01",
   "baseline": "phase-6b-approved (master == tag == 295a0e1); event_minute_bars_v2 (45,925,350 rows); D1 = 15,763 events",
-  "summary": "First forward-return measurement in the program. Scan-free: every quantity derives from event_minute_bars_v2 (0 passes over filtered_trades/filtered_quotes) + frozen 6b tick-anchor artifacts. Markouts are signed log returns from anchors knowable in real time. T1 decomposed realized(09:30). T2 ran the deferred ETH-split decay and the ARBB row-cap detector. T3 built participation baselines + quintiles. T4 constructed clock+rung anchors (ASOF last-trade-at/before); the 09:00 clock anchor tripped escalation row 7 at 11.04% anchor_undefined -> HARD STOP. Cooper approved Amendment A10.1 (2026-08-01): retain 09:00 with a population guard, raise row 7 to 15%, add flag_possible_row_cap. Resumed T4c-T7. T5 produced the markout grid; T6 the survivorship census.",
+  "summary": "First forward-return measurement in the program. Scan-free: every quantity derives from event_minute_bars_v2 (0 passes over filtered_trades/filtered_quotes) + frozen 6b tick-anchor artifacts. Markouts are signed log returns from anchors knowable in real time. T1 decomposed realized(09:30). T2 ran the deferred ETH-split decay and the ARBB row-cap detector. T3 built participation baselines + quintiles. T4 constructed clock+rung anchors (ASOF last-trade-at/before); the 09:00 clock anchor tripped escalation row 7 at 11.04% anchor_undefined -> HARD STOP. Cooper approved Amendment A10.1: retain 09:00 with a population guard, raise row 7 to 15%, add flag_possible_row_cap. T5 produced the markout grid; T6 the survivorship census. Amendment A10.2 (Cooper 2026-08-01) added the tradeable detection anchor (+30% crossing) and the contamination test that separates a forward edge from selection arithmetic: A10.2a tripped row 13 (2.50% of D1 never cross 1.30x on tick, D4 basis mismatch) -> A10.3 override (proceed, n=15,369, multiplier stays 1.30); A10.2b (the gate) found the participation gradient does NOT survive at t0_close->t1_close; A10.2c built the detection grid (negative markouts from the tradeable anchor); A10.2d found the rejected-candidate population unrecoverable.",
   "headline_metrics": [
     {"name": "realized_0930_component_share_medians", "value": "T0-premarket 0.642, T-1-post 0.171, overnight 0.017", "n": 12938,
      "note": "share of realized(09:30) per log-space component; decomp_undefined=223, share_undefined=2602 (numerator<=0) carried as own rows",
@@ -33,11 +33,28 @@
      "source": "research/phase_8/t5_markout_grid.py:main", "chart": "results/phase_8/charts/09_rth_open_by_premarket_print.html"},
     {"name": "survivorship_missing_next_session_rates", "value": "missing T+1 0.14% (22) / T+2 0.12% (19) / T+3 0.10% (16)", "n": 15763,
      "note": "sessions-to-ticker-last-seen median 236 (most D1 tickers recur). Event-windowed archive -> lower bound, not delisting. Diagnostic only",
-     "source": "research/phase_8/t6_survivorship.py:main", "chart": "results/phase_8/charts/08_survivorship_census.html"}
+     "source": "research/phase_8/t6_survivorship.py:main", "chart": "results/phase_8/charts/08_survivorship_census.html"},
+    {"name": "detection_coverage_130x_tick", "value": "15,369 detect (97.50%); det_undefined 394 (2.50%)", "n": 15763,
+     "note": "det = first T0 minute crossing print reaches 1.30x tick_close_t_minus_1_rth. Row 13 fired at 2.50% -> A10.3 override. The 394 clustered near threshold (median ratio 1.285, 92.2% in [1.20,1.30)); basis question not reopened",
+     "source": "research/phase_8/a102_detection.py:main", "chart": "results/phase_8/charts/10b_det_undefined_maxmove.html"},
+    {"name": "detection_to_high_runway", "value": "minutes median 30 (IQR 3-170); log distance median 0.111 (IQR 0.047-0.257)", "n": 15369,
+     "note": "the ceiling on any detection-anchored capture; ~20% have the high at detection",
+     "source": "research/phase_8/a102_detection.py:main", "chart": "results/phase_8/charts/11_detection_to_high_runway.html"},
+    {"name": "contamination_test_t0close_to_t1close_by_pq_rth_open", "value": "pooled median by quintile [-0.030,-0.026,-0.023,-0.024,-0.038]; Q1-Q5 spread 0.008 (headline 0.25)", "n": 15688,
+     "note": "THE GATE. Non-monotonic/flat -> chart 12 matches A10.2 §3 second row: the rth_open gradient is consistent with selection arithmetic; Phase 8's headline is not established as a forward edge",
+     "source": "research/phase_8/a102_contamination.py:main", "chart": "results/phase_8/charts/12_contamination_test.html"},
+    {"name": "detection_markout_det5_to_t0close_by_detbin", "value": "negative in every bin: premarket -0.043, 0930-1000 -0.031, 1000-1100 -0.030, 1100-1300 -0.027, after_1300 -0.014", "n": 15344,
+     "note": "tradeable anchor det+5; heatmap negative across latency x detection-time x horizon, deepening with horizon; latency 0-30min barely matters",
+     "source": "research/phase_8/a102c_grid.py:main", "chart": "results/phase_8/charts/13_detection_markout_heatmap.html"},
+    {"name": "false_positive_recoverable", "value": "FALSE", "n": null,
+     "note": "filtered_events_power_law_q05 (23,268 accepted, no reject flag) + scanner_hit_catalog (6,395 hits, no reject flag) do not carry the rejected-candidate population; live false-positive rate unmeasured",
+     "source": "research/phase_8/a102d_recoverability.py:main", "chart": null}
   ],
   "escalations_triggered_and_resolved": [
     {"criterion": "row 7 (original): anchor_undefined at a clock anchor > 10%", "observed": "0900 at 11.04% (1740/15763)",
-     "resolution": "HARD STOP at T4; posted per-anchor rates; Cooper Amendment A10.1 (2026-08-01): retain 09:00 with population guard (own n=14,023; has_premarket_print label dropped from 0900 column only; free rth_open comparison; chart 04 hatched 0900 column) and raise row 7 to 15%. 0900 now passes; no other anchor above 1.31%"}
+     "resolution": "HARD STOP at T4; posted per-anchor rates; Cooper Amendment A10.1 (2026-08-01): retain 09:00 with population guard (own n=14,023; has_premarket_print label dropped from 0900 column only; free rth_open comparison; chart 04 hatched 0900 column) and raise row 7 to 15%. 0900 now passes; no other anchor above 1.31%"},
+    {"criterion": "row 13: tick T0 extended max never reaches 1.30x anchor > 2%", "observed": "2.50% (394/15763)",
+     "resolution": "HARD STOP at A10.2a; posted count + sample; Cooper A10.3 override (2026-08-01): proceed - a live scanner evaluates tick prices, so events that never cross 1.30x on tick fall outside the tradeable universe by construction. The 394 carry det_undefined=TRUE; every detection figure n=15,369; multiplier stays 1.30 (row 14 live). Diagnostic (chart 10b): the 394 clustered near threshold (median 1.285) -> momentum_pct basis question NOT reopened"}
   ],
   "escalations_checked_not_triggered": [
     {"criterion": "row 1: tag phase-6b-approved absent", "observed": "present, master at it (295a0e1)"},
@@ -60,28 +77,36 @@
     {"decision": "rth_open chosen as the flagship reference anchor", "reason": "neutral, universally-defined session-start decision point (98.7% defined); a reporting convention, not a markout-based selection (row 10)"},
     {"decision": "participation quintiles are rank-based (method='first')", "reason": "a point mass in the selected logrv (many zero-premarket events at 0900) would collapse value-based qcut bins and drop events; rank guarantees 5 balanced buckets with full assignment ('only the rank is used')"},
     {"decision": "T3 cumulative-volume filters COALESCEd to 0", "reason": "a present baseline session with no premarket bars has a genuine 0 cumulative premarket volume, not undefined; undefined reserved for sessions with no bars (no_baseline)"},
-    {"decision": "T6 trading-session calendar derived from v2's own trade timestamps", "reason": "neither calendar lib importable in this Python; the within-archive ET-date calendar is more defensible and keeps the banned federal-holiday calendar out of market logic"}
+    {"decision": "T6 trading-session calendar derived from v2's own trade timestamps", "reason": "neither calendar lib importable in this Python; the within-archive ET-date calendar is more defensible and keeps the banned federal-holiday calendar out of market logic"},
+    {"decision": "A10.3 override of escalation row 13 (2.50% > 2%): proceed", "reason": "Cooper 2026-08-01; a live scanner evaluates tick prices, so the 394 that never cross 1.30x on tick fall outside the tradeable universe by construction. Terms: 394 carried det_undefined, detection figures n=15,369, multiplier stays 1.30, report-only diagnostic + chart 10b"},
+    {"decision": "detection crossing detected on bar high (not last_price)", "reason": "A10.3 reconciliation: A10.2-T0 wording said last_price (which gives det_undefined 1256/n 14,507), but A10.3 fixes n=15,369 (= the 394 day_high_ext non-reachers), requiring the crossing on the minute high so the 862 touch-but-not-close events still get an anchor. bar.high is v2 tick-derived, not spine -> D4-clean; not a row-14 rule change"},
+    {"decision": "contamination test bucketed by pq_rth_open (not pq_t0_close)", "reason": "the test asks whether the specific headline gradient (chart 05's pre-open participation bucket) survives with no T0 hindsight; using the pre-open quintile is the direct test"},
+    {"decision": "flag_possible_row_cap / results-reports copy / docs registrations left row-9-blocked", "reason": "A10.1c-i (canonical.py), the results/reports/ REPORT copy, docs/Research-Library-Map.md, and A10.2d-iii's docs/Open-Items-Register.md entry all fall outside the sanctioned write dirs (row 9); recorded here and flagged for Cooper at the gate rather than written"}
   ],
   "surprises": [
     "flagship rth_open->t0_close median markout DECLINES monotonically with rising pre-open participation quintile, in BOTH eras, with Q5 negative - the strongest structure in the grid, along participation not entry-timing",
     "ETH-dominant events' median realized fraction never reaches 0.5 on the extended-day clock and actually falls after RTH open, while non-ETH climbs - a clean native split in the extended frame",
     "ARBB lands on EXACTLY 100,000 and EXACTLY 50,000 T=0 prints on two different events; 8 D1 events total sit on {50k,100k,200k} - a near-confirmed collector row cap",
     "the 1,740 no-premarket-print events are a distinct population at RTH open (higher, tighter markout to close) - the population guard was warranted",
-    "removing the 8 row-cap and 7 dup events barely moves the flagship median (<0.0002) - aggregate contamination is nil at n=8/7"
+    "removing the 8 row-cap and 7 dup events barely moves the flagship median (<0.0002) - aggregate contamination is nil at n=8/7",
+    "THE GATE: the participation gradient does NOT survive at t0_close->t1_close (pooled spread 0.008 vs headline 0.25, non-monotonic) - chart 12 matches the selection-arithmetic reading, not a forward-edge reading",
+    "the tradeable detection anchor (det+5) markout to t0_close is NEGATIVE in every detection-time bin and both eras (-0.013 to -0.057); latency 0-30min barely matters",
+    "runway from +30% detection to the day-high is short: median 30 min / 0.111 log, and ~20% have the high already in at detection",
+    "row 13 caught a real D4 disagreement: 2.50% of D1 (incl. NVDA's 10:1 split) show momentum_pct +30..+293% but a tick move < +30% - the events cluster right at the threshold, not scattered",
+    "the rejected-candidate (false-positive) population is absent from the archive - every Phase 8 markout is conditional on power-law membership, unmeasurable as a live expected value"
   ],
   "output_files": {
-    "prompts": ["prompts/phase_8.md", "prompts/phase_8_amendment_10.md"],
+    "prompts": ["prompts/phase_8.md", "prompts/phase_8_amendment_10.md", "prompts/phase_8_amendment_10_2.md"],
     "config": "config/phase_8.json",
-    "scripts": "research/phase_8/*.py (t0_preconditions, t1_decomposition, t2a_eth_split, t2b_row_cap, t3_participation, t4_anchors, a101_backfill, t5_markout_grid, t6_survivorship, chart_01..09, chart_common)",
-    "artifacts_committed_json": ["t0_preconditions.json", "t1_decomposition.json", "t2_eth_split.json", "t2_row_cap_scan.json", "t3_participation.json", "t4_anchors_summary.json", "a101_label_backfill.json", "t5_markout_summary.json", "t6_survivorship.json"],
-    "artifacts_gitignored_parquet": "results/phase_8/artifacts/*.parquet (t4_anchors, t5_markout_grid, and intermediates - regenerable from config+code+v2)",
-    "charts": ["01_realized_open_decomposition.html", "02_decay_by_eth_flag.html", "03_t0_print_count_distribution.html", "04_markout_heatmap.html", "05_markout_distributions_flagship.html", "06_rung_markouts_by_crossing_time.html", "07_rung_attrition.html", "08_survivorship_census.html", "09_rth_open_by_premarket_print.html"],
+    "scripts": "research/phase_8/*.py (t0_preconditions, t1_decomposition, t2a_eth_split, t2b_row_cap, t3_participation, t4_anchors, a101_backfill, t5_markout_grid, t6_survivorship, a102_detection, a102_contamination, a102c_grid, a102d_recoverability, chart_01..14, chart_common)",
+    "artifacts_committed_json": ["t0_preconditions.json", "t1_decomposition.json", "t2_eth_split.json", "t2_row_cap_scan.json", "t3_participation.json", "t4_anchors_summary.json", "a101_label_backfill.json", "t5_markout_summary.json", "t6_survivorship.json", "a102_detection_summary.json", "a102_contamination_test.json", "a102_detection_markout_summary.json", "a102_falsepositive_recoverability.json"],
+    "artifacts_gitignored_parquet": "results/phase_8/artifacts/*.parquet (t4_anchors, t5_markout_grid, a102_detection_anchors, a102_contamination, a102_detection_markout_grid, intermediates - regenerable from config+code+v2)",
+    "charts": ["01_realized_open_decomposition.html", "02_decay_by_eth_flag.html", "03_t0_print_count_distribution.html", "04_markout_heatmap.html", "05_markout_distributions_flagship.html", "06_rung_markouts_by_crossing_time.html", "07_rung_attrition.html", "08_survivorship_census.html", "09_rth_open_by_premarket_print.html", "10_detection_time_distribution.html", "10b_det_undefined_maxmove.html", "11_detection_to_high_runway.html", "12_contamination_test.html", "13_detection_markout_heatmap.html", "14_detection_markout_distributions.html"],
     "report": "results/phase_8/REPORT.md",
-    "report_cross_phase_copy": "results/reports/phase_8_report.md - PENDING: blocked by escalation row 9 (results/reports/ outside sanctioned dirs); flagged for Cooper at the gate",
     "digest": "results/phase_8/digest.json",
-    "open_items": "flag_possible_row_cap canonical.py definition + root cause (needs filtered/ read) -> remediation phase"
+    "row_9_blocked_pending_gate": ["results/reports/phase_8_report.md (cross-phase REPORT copy)", "docs/Research-Library-Map.md (phase-8 files added)", "docs/Open-Items-Register.md (A10.2d false-positive limitation + flag_possible_row_cap canonical.py + row-cap root cause)"]
   },
-  "commits": 10,
-  "reproduce": "python -m research.phase_8.t0_preconditions && ...t1_decomposition && ...t2a_eth_split && ...t2b_row_cap && ...t3_participation && ...t4_anchors && ...a101_backfill && ...t5_markout_grid && ...t6_survivorship && ...chart_01..09 (all scan-free over event_minute_bars_v2)",
-  "approval_gate": "Awaiting Cooper's review of the charts. On approval, tag phase-8-approved. The read on whether this archive contains a forward edge is Cooper's, from charts 04, 05, and 06 - not the agent's."
+  "commits": 18,
+  "reproduce": "python -m research.phase_8.{t0_preconditions,t1_decomposition,t2a_eth_split,t2b_row_cap,t3_participation,t4_anchors,a101_backfill,t5_markout_grid,t6_survivorship,a102_detection,a102_contamination,a102c_grid,a102d_recoverability,chart_01..14} (all scan-free over event_minute_bars_v2; a102d reads two small data/filtered files read-only)",
+  "approval_gate": "Awaiting Cooper's review. phase-8-approved is NOT tagged until Cooper has reviewed charts 11, 12, 13, 14 (A10.2). Chart 12 is the gate (forward edge vs selection arithmetic); chart 11 sets the ceiling. The read is Cooper's, not the agent's."
 }
