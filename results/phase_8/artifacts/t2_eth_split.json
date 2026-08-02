@@ -1,0 +1,25 @@
+{
+  "phase": "8",
+  "task": "T2a",
+  "source": "research/phase_8/t2a_eth_split.py:main",
+  "scan_free": true,
+  "spine_numeric_reads": 0,
+  "flag_source": "momentum_events_canonical (stage t8) flag_eth_dominant_t0",
+  "flag_counts_d1": {
+    "true": 736,
+    "false": 15027,
+    "total": 15763
+  },
+  "decay_population_events": {
+    "eth_true": 734,
+    "eth_false": 14988
+  },
+  "population_note": "primary decay population = defined realized_move_fraction (has_t_minus_1_rth=TRUE, denom>0), matches 6b chart 04",
+  "median_crossing_0p5_minute_since_0400": {
+    "eth_true": null,
+    "eth_false": 495.0,
+    "pooled_all_6b_reference": 516
+  },
+  "curves_artifact": "results/phase_8/artifacts/t2_eth_split_curves.parquet",
+  "role_note": "chart split only (chart 02); flag_eth_dominant_t0 is NEVER a markout bucket (T5c)"
+}

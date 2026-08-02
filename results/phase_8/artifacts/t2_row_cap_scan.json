@@ -1,0 +1,281 @@
+{
+  "phase": "8",
+  "task": "T2b",
+  "source": "research/phase_8/t2b_row_cap.py:main",
+  "scan_free": true,
+  "spine_numeric_reads": 0,
+  "metric": "per-event T=0 total print count = SUM(n_trades) over all T0 segments",
+  "distribution": {
+    "n": 15763,
+    "min": 4,
+    "max": 4856965,
+    "median": 21585.0,
+    "q01": 135.0,
+    "q25": 4749.0,
+    "q75": 89914.0,
+    "q99": 834612.1599999956
+  },
+  "round_number_exact_hits": {
+    "50000": 2,
+    "100000": 5,
+    "200000": 1
+  },
+  "shared_exact_count_ge3_events": {
+    "n_distinct_values": 339,
+    "values": [
+      {
+        "count_value": 1670,
+        "n_events": 6
+      },
+      {
+        "count_value": 100000,
+        "n_events": 5
+      },
+      {
+        "count_value": 7049,
+        "n_events": 5
+      },
+      {
+        "count_value": 2060,
+        "n_events": 5
+      },
+      {
+        "count_value": 2036,
+        "n_events": 5
+      },
+      {
+        "count_value": 1893,
+        "n_events": 5
+      },
+      {
+        "count_value": 1838,
+        "n_events": 5
+      },
+      {
+        "count_value": 1647,
+        "n_events": 5
+      },
+      {
+        "count_value": 1172,
+        "n_events": 5
+      },
+      {
+        "count_value": 1111,
+        "n_events": 5
+      },
+      {
+        "count_value": 900,
+        "n_events": 5
+      },
+      {
+        "count_value": 841,
+        "n_events": 5
+      },
+      {
+        "count_value": 813,
+        "n_events": 5
+      },
+      {
+        "count_value": 778,
+        "n_events": 5
+      },
+      {
+        "count_value": 765,
+        "n_events": 5
+      },
+      {
+        "count_value": 645,
+        "n_events": 5
+      },
+      {
+        "count_value": 582,
+        "n_events": 5
+      },
+      {
+        "count_value": 11,
+        "n_events": 5
+      },
+      {
+        "count_value": 4805,
+        "n_events": 4
+      },
+      {
+        "count_value": 4646,
+        "n_events": 4
+      },
+      {
+        "count_value": 4555,
+        "n_events": 4
+      },
+      {
+        "count_value": 3675,
+        "n_events": 4
+      },
+      {
+        "count_value": 3637,
+        "n_events": 4
+      },
+      {
+        "count_value": 3521,
+        "n_events": 4
+      },
+      {
+        "count_value": 3436,
+        "n_events": 4
+      },
+      {
+        "count_value": 3211,
+        "n_events": 4
+      },
+      {
+        "count_value": 2865,
+        "n_events": 4
+      },
+      {
+        "count_value": 2606,
+        "n_events": 4
+      },
+      {
+        "count_value": 2599,
+        "n_events": 4
+      },
+      {
+        "count_value": 2044,
+        "n_events": 4
+      },
+      {
+        "count_value": 2042,
+        "n_events": 4
+      },
+      {
+        "count_value": 1977,
+        "n_events": 4
+      },
+      {
+        "count_value": 1950,
+        "n_events": 4
+      },
+      {
+        "count_value": 1886,
+        "n_events": 4
+      },
+      {
+        "count_value": 1856,
+        "n_events": 4
+      },
+      {
+        "count_value": 1798,
+        "n_events": 4
+      },
+      {
+        "count_value": 1793,
+        "n_events": 4
+      },
+      {
+        "count_value": 1788,
+        "n_events": 4
+      },
+      {
+        "count_value": 1688,
+        "n_events": 4
+      },
+      {
+        "count_value": 1546,
+        "n_events": 4
+      },
+      {
+        "count_value": 1459,
+        "n_events": 4
+      },
+      {
+        "count_value": 1434,
+        "n_events": 4
+      },
+      {
+        "count_value": 1356,
+        "n_events": 4
+      },
+      {
+        "count_value": 1337,
+        "n_events": 4
+      },
+      {
+        "count_value": 1229,
+        "n_events": 4
+      },
+      {
+        "count_value": 1149,
+        "n_events": 4
+      },
+      {
+        "count_value": 1140,
+        "n_events": 4
+      },
+      {
+        "count_value": 1130,
+        "n_events": 4
+      },
+      {
+        "count_value": 1069,
+        "n_events": 4
+      },
+      {
+        "count_value": 1017,
+        "n_events": 4
+      }
+    ],
+    "note": "an exact print-count shared by >=3 distinct events is a silent-cap signature. Low integer counts (e.g. very thin events with a handful of prints) can share values naturally; inspect the high-value entries."
+  },
+  "arbb": [
+    {
+      "ticker": "ARBB",
+      "event_date": "2024-10-25 00:00:00",
+      "momentum_pct": 172.41,
+      "t0_print_count": 393195
+    },
+    {
+      "ticker": "ARBB",
+      "event_date": "2024-02-06 00:00:00",
+      "momentum_pct": 31.3,
+      "t0_print_count": 212
+    },
+    {
+      "ticker": "ARBB",
+      "event_date": "2023-07-14 00:00:00",
+      "momentum_pct": 47.24,
+      "t0_print_count": 81875
+    },
+    {
+      "ticker": "ARBB",
+      "event_date": "2023-12-26 00:00:00",
+      "momentum_pct": 377.89,
+      "t0_print_count": 100000
+    },
+    {
+      "ticker": "ARBB",
+      "event_date": "2024-02-13 00:00:00",
+      "momentum_pct": 195.45,
+      "t0_print_count": 50000
+    },
+    {
+      "ticker": "ARBB",
+      "event_date": "2024-09-16 00:00:00",
+      "momentum_pct": 39.99,
+      "t0_print_count": 1240
+    },
+    {
+      "ticker": "ARBB",
+      "event_date": "2024-11-06 00:00:00",
+      "momentum_pct": 98.41,
+      "t0_print_count": 279683
+    },
+    {
+      "ticker": "ARBB",
+      "event_date": "2024-04-19 00:00:00",
+      "momentum_pct": 38.54,
+      "t0_print_count": 1321
+    }
+  ],
+  "no_root_cause_note": "root cause requires filtered/ parquet reads (out of scope). This is a detector only.",
+  "counts_artifact": "results/phase_8/artifacts/t2_row_cap_counts.parquet"
+}

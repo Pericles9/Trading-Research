@@ -53,10 +53,10 @@ def base_layout(fig, title: str, cap: str, height: int = 640):
         title=dict(text=title, x=0.01, xanchor="left", font=dict(size=17, color=INK)),
         paper_bgcolor="white", plot_bgcolor=SURFACE,
         font=dict(color=INK, size=12),
-        margin=dict(l=70, r=40, t=70, b=90),
+        margin=dict(l=70, r=40, t=70, b=120),
         height=height,
         annotations=list(fig.layout.annotations) + [dict(
-            text=cap, xref="paper", yref="paper", x=0.0, y=-0.14,
+            text=cap, xref="paper", yref="paper", x=0.0, y=-0.18,
             showarrow=False, font=dict(size=10, color=INK2), xanchor="left",
         )],
     )
