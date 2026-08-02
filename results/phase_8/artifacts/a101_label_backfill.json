@@ -1,0 +1,73 @@
+{
+  "phase": "8",
+  "task": "A10.1-T1",
+  "source": "research/phase_8/a101_backfill.py:main",
+  "scan_free": true,
+  "price_recomputation": false,
+  "has_premarket_print": {
+    "definition": "T0 print at/before 09:00 ET (minute_index<=300); FALSE = 09:00 anchor undefined",
+    "true_n": 14023,
+    "false_n": 1740,
+    "expected_false_n": 1740,
+    "provenance": "t4_anchors.parquet '0900' anchor row presence"
+  },
+  "flag_possible_row_cap": {
+    "definition": "T0 print count exactly in {50000,100000,200000}",
+    "home": "phase-8 artifact (a101_labels.parquet), parallel to flag_has_dup_prints; canonical.py addition = remediation open item (Cooper 2026-08-01)",
+    "true_n": 8,
+    "expected_n": 8,
+    "events": [
+      {
+        "ticker": "ANY",
+        "event_date": "2021-09-02",
+        "momentum_pct": 80.69,
+        "t0_print_count": 200000
+      },
+      {
+        "ticker": "AMIX",
+        "event_date": "2024-07-19",
+        "momentum_pct": 57.04,
+        "t0_print_count": 100000
+      },
+      {
+        "ticker": "APLD",
+        "event_date": "2024-09-05",
+        "momentum_pct": 76.23,
+        "t0_print_count": 100000
+      },
+      {
+        "ticker": "BBBY",
+        "event_date": "2022-08-08",
+        "momentum_pct": 63.48,
+        "t0_print_count": 100000
+      },
+      {
+        "ticker": "ARBB",
+        "event_date": "2023-12-26",
+        "momentum_pct": 377.89,
+        "t0_print_count": 100000
+      },
+      {
+        "ticker": "APRE",
+        "event_date": "2021-06-16",
+        "momentum_pct": 60.82,
+        "t0_print_count": 100000
+      },
+      {
+        "ticker": "ARBB",
+        "event_date": "2024-02-13",
+        "momentum_pct": 195.45,
+        "t0_print_count": 50000
+      },
+      {
+        "ticker": "BCAB",
+        "event_date": "2022-08-10",
+        "momentum_pct": 104.16,
+        "t0_print_count": 50000
+      }
+    ],
+    "provenance": "t2_row_cap_counts.parquet"
+  },
+  "escalation_row_12_triggered": false,
+  "artifact": "results/phase_8/artifacts/a101_labels.parquet"
+}
