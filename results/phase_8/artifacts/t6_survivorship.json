@@ -1,0 +1,48 @@
+{
+  "phase": "8",
+  "task": "T6 (A10.1-T4)",
+  "source": "research/phase_8/t6_survivorship.py:main",
+  "scan_free": true,
+  "spine_numeric_reads": 0,
+  "diagnostic_only": "no exclusions/reweighting/modelling; no external base rate; no causal or bias-magnitude claim",
+  "event_windowed_caveat": "v2 is event-windowed (T-3..T+3); last-seen is a lower bound on trading life, not a delisting date",
+  "overall": {
+    "n": 15763,
+    "missing_t1": 22,
+    "missing_t1_rate": 0.0013956734124214933,
+    "missing_t2": 19,
+    "missing_t2_rate": 0.0012053543107276533,
+    "missing_t3": 16,
+    "missing_t3_rate": 0.0010150352090338133
+  },
+  "by_era": {
+    "era_2020_2021": {
+      "n": 5371,
+      "missing_t1": 4,
+      "missing_t1_rate": 0.0007447402718301992,
+      "missing_t2": 4,
+      "missing_t2_rate": 0.0007447402718301992,
+      "missing_t3": 6,
+      "missing_t3_rate": 0.0011171104077452988
+    },
+    "era_2022_2024": {
+      "n": 10392,
+      "missing_t1": 18,
+      "missing_t1_rate": 0.0017321016166281756,
+      "missing_t2": 15,
+      "missing_t2_rate": 0.001443418013856813,
+      "missing_t3": 10,
+      "missing_t3_rate": 0.000962278675904542
+    }
+  },
+  "sessions_to_lastseen": {
+    "n": 15763,
+    "median": 236.0,
+    "q25": 35.5,
+    "q75": 591.0,
+    "min": 0.0,
+    "max": 1257.0,
+    "note": "median 236 sessions: most D1 tickers recur (repeat spikers), so a ticker's last archive appearance is typically well after a given event; small values (near 0-3) are events that ARE the ticker's final window in the archive. Bounded by the event-windowed archive, not a delisting date."
+  },
+  "artifact": "results/phase_8/artifacts/t6_survivorship.parquet"
+}
