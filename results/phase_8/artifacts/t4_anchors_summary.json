@@ -1,0 +1,77 @@
+{
+  "phase": "8",
+  "task": "T4",
+  "source": "research/phase_8/t4_anchors.py:main",
+  "scan_free": true,
+  "spine_numeric_reads": 0,
+  "n_d1": 15763,
+  "rung_attrition": {
+    "rung_1x": {
+      "n_reaching": 14926,
+      "frac_of_d1": 0.9469009706274186,
+      "median_crossing_minute_index": 367.0,
+      "median_crossing_et": "10:07"
+    },
+    "rung_2x": {
+      "n_reaching": 13261,
+      "frac_of_d1": 0.8412738691873375,
+      "median_crossing_minute_index": 385.0,
+      "median_crossing_et": "10:25"
+    },
+    "rung_5x": {
+      "n_reaching": 10119,
+      "frac_of_d1": 0.6419463300133224,
+      "median_crossing_minute_index": 406.0,
+      "median_crossing_et": "10:46"
+    },
+    "rung_10x": {
+      "n_reaching": 7487,
+      "frac_of_d1": 0.47497303812726005,
+      "median_crossing_minute_index": 398.0,
+      "median_crossing_et": "10:38"
+    }
+  },
+  "clock_anchor_undefined": {
+    "0900": {
+      "anchor_undefined_n": 1740,
+      "anchor_undefined_frac": 0.1103850789824272
+    },
+    "rth_open": {
+      "anchor_undefined_n": 207,
+      "anchor_undefined_frac": 0.01313201801687496
+    },
+    "open+5": {
+      "anchor_undefined_n": 158,
+      "anchor_undefined_frac": 0.010023472689208907
+    },
+    "open+15": {
+      "anchor_undefined_n": 106,
+      "anchor_undefined_frac": 0.006724608259849014
+    },
+    "open+30": {
+      "anchor_undefined_n": 88,
+      "anchor_undefined_frac": 0.005582693649685973
+    },
+    "open+60": {
+      "anchor_undefined_n": 57,
+      "anchor_undefined_frac": 0.00361606293218296
+    },
+    "open+120": {
+      "anchor_undefined_n": 38,
+      "anchor_undefined_frac": 0.0024107086214553066
+    },
+    "t0_close": {
+      "anchor_undefined_n": 0,
+      "anchor_undefined_frac": 0.0
+    }
+  },
+  "escalation_row_7_threshold": 0.1,
+  "escalation_row_7_fail_anchors": {
+    "0900": {
+      "anchor_undefined_n": 1740,
+      "anchor_undefined_frac": 0.1103850789824272
+    }
+  },
+  "escalation_row_7_triggered": true,
+  "artifact": "results/phase_8/artifacts/t4_anchors.parquet"
+}
