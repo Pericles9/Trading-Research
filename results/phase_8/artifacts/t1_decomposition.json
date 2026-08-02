@@ -1,0 +1,90 @@
+{
+  "phase": "8",
+  "task": "T1",
+  "source": "research/phase_8/t1_decomposition.py:main",
+  "scan_free": true,
+  "spine_numeric_reads": 0,
+  "n_d1": 15763,
+  "n_decomp_undefined": 223,
+  "n_decomp_undefined_reason": "no T-1 extended-day bars or missing anchor/prices (chiefly the 36 has_t_minus_1_rth=FALSE)",
+  "n_share_undefined": 2602,
+  "n_share_undefined_reason": "numerator log(p_0930/anchor) <= 0 (09:30 price at/below the T-1 RTH close); no positive realized move to share. Carried; enters the absolute-move panel, not the share violins.",
+  "n_share_defined": 12938,
+  "absolute_log_move": {
+    "seg_t1_post": {
+      "n": 15540,
+      "median": 0.011173300598125255,
+      "iqr": [
+        -0.0036306356708177947,
+        0.04957274206926507
+      ],
+      "min": -0.33243997309327455,
+      "max": 1.7036695373972173
+    },
+    "seg_overnight": {
+      "n": 15540,
+      "median": 0.0007750326951355759,
+      "iqr": [
+        -0.015259257408911448,
+        0.03023988518971839
+      ],
+      "min": -2.570222537038754,
+      "max": 5.213093939256954
+    },
+    "seg_t0_pre": {
+      "n": 15540,
+      "median": 0.03193304710300901,
+      "iqr": [
+        -0.004185319421756788,
+        0.11256970624370961
+      ],
+      "min": -0.7759928997603686,
+      "max": 1.9712993830601329
+    },
+    "numerator_total": {
+      "n": 15540,
+      "median": 0.06831382141462806,
+      "iqr": [
+        0.013133842941180687,
+        0.19615180788325018
+      ],
+      "min": -2.7393027446063147,
+      "max": 5.545067660936006
+    }
+  },
+  "share_of_realized_0930": {
+    "seg_t1_post": {
+      "n": 12938,
+      "median": 0.1713952253654885,
+      "iqr": [
+        0.0,
+        0.7507793681872674
+      ],
+      "min": -5.354771991903983e+17,
+      "max": 1.4229190135057716e+16
+    },
+    "seg_overnight": {
+      "n": 12938,
+      "median": 0.016615876693414716,
+      "iqr": [
+        -0.11246539581659323,
+        0.34632747650614665
+      ],
+      "min": -6867822244021961.0,
+      "max": 5.347392925315026e+17
+    },
+    "seg_t0_pre": {
+      "n": 12938,
+      "median": 0.6419869396721252,
+      "iqr": [
+        0.049362315167678625,
+        0.9760851079118138
+      ],
+      "min": -7934950144146716.0,
+      "max": 2826150226277166.5
+    }
+  },
+  "crosscheck_6b_realized_at_rth_open_median_recomputed": 0.17750724791709366,
+  "crosscheck_6b_note": "6b reported median realized_at_rth_open = 0.173; recomputed here from the same tick anchor as a consistency check.",
+  "artifact": "results/phase_8/artifacts/t1_decomposition.parquet"
+}
