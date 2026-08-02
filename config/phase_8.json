@@ -1,0 +1,166 @@
+{
+  "phase": "8",
+  "title": "Event-Study Grid: Forward Markouts from Tradeable Anchors",
+  "branch": "phase/8",
+  "baseline": "phase-6b-approved (master == tag == 295a0e1)",
+  "objective": "First forward-return measurement in the program - markouts from anchor points knowable in real time, bucketed by participation, with survivorship and coverage reported alongside. Zero full-table passes over filtered_trades/filtered_quotes; every measurement derives from event_minute_bars_v2.",
+  "universe": {
+    "definition": "D1 = in_scope=TRUE AND source_file='file1'",
+    "expected_n": 15763,
+    "frozen_event_list": "results/phase_6b/artifacts/t1_eligible_events.parquet",
+    "join_key": "(ticker, event_date_canonical, ROUND(momentum_pct,2))",
+    "note": "Reuses the frozen 6b D1 list (identity + bitmap columns only, no D4 spine numerics). Not re-derived."
+  },
+  "data_source": {
+    "bars_table": "event_minute_bars_v2",
+    "row_count_pin": 45925350,
+    "grain_minutes": 1,
+    "minute_index_origin": "04:00:00 ET on the session's own date (index 0), same origin every offset",
+    "offsets": [-3, -2, -1, 0, 1, 2, 3],
+    "segments": ["premarket", "rth", "post"],
+    "scan_free": true,
+    "hard_stop_if_scan": "escalation row 3 - no pass over filtered_trades/filtered_quotes is authorized"
+  },
+  "d4": {
+    "rule": "All computed quantities are tick-derived from event_minute_bars_v2. No spine numeric column (OHLC/volume) may enter any computation. momentum_pct is exempt for universe selection ONLY and is PROHIBITED as a bucketing variable this phase.",
+    "reused_tick_anchor_artifact": "results/phase_6b/artifacts/opportunity_decay_primary.parquet",
+    "reused_columns": ["tick_close_t_minus_1_rth", "day_high_ext", "has_t_minus_1_rth", "denom_nonpositive"],
+    "reused_columns_note": "Both tick_close_t_minus_1_rth and day_high_ext are tick-derived (a61/6b, D4-clean: a62_d4_sweep 0 measurement-path spine hits). Reused frozen, not recomputed."
+  },
+  "primary_clock": {
+    "id": "D-a (Cooper, 2026-08-01): gap-inclusive primary, 516-min reference",
+    "anchor": "tick_close_t_minus_1_rth",
+    "realized_of_t": "log(last_price_t / tick_close_t_minus_1_rth) / log(day_high_ext / tick_close_t_minus_1_rth)",
+    "x_axis": "minutes since 04:00 ET on T0 (extended-day clock, 0..959)",
+    "governs": ["T1", "T2"],
+    "markouts_note": "T5-T6 markouts are signed log returns and carry NO fraction-of-move denominator; the primary clock does not apply to them",
+    "median_crossing_reference_6b": 516
+  },
+  "t1_decomposition": {
+    "target": "realized_at_rth_open (6b median 0.173) decomposed into three components, each as a share of realized(09:30) and as an absolute log move",
+    "components": {
+      "seg_t1_post": "log move over T-1 16:00->20:00 (observable path): last_price of T-1 max-minute_index post/rth bar minus tick_close_t_minus_1_rth, in log space vs the anchor",
+      "seg_overnight": "T-1 last extended print -> T0 first extended print (a jump, no path)",
+      "seg_t0_pre": "T0 first extended print -> 09:30 (last T0 print at/before minute_index 330)"
+    },
+    "decomposition_definition": "Additive in log space vs the anchor: realized(09:30) numerator = log(p(09:30)/tick_close_t_minus_1_rth). seg_t1_post = log(p_last_Tm1_ext / tick_close_t_minus_1_rth); seg_overnight = log(p_first_T0_ext / p_last_Tm1_ext); seg_t0_pre = log(p(09:30) / p_first_T0_ext). Sum == numerator by construction. Each reported as share of the numerator and as its absolute log value.",
+    "undefined": "Events with no T-1 extended-day bars carry decomp_undefined=TRUE, reported as own row, never imputed."
+  },
+  "clock_anchors": {
+    "convention": "Anchor price = last trade at or before the anchor timestamp = last_price of the T0 bar with MAX(minute_index) among minute_index <= anchor_mi (any segment). Events with no T0 print at/before an anchor are labelled anchor_undefined at that anchor, carried, reported.",
+    "anchors": [
+      {"name": "0900",     "minute_index": 300, "desc": "09:00 ET"},
+      {"name": "rth_open", "minute_index": 330, "desc": "RTH open 09:30 ET"},
+      {"name": "open+5",   "minute_index": 335, "desc": "RTH open + 5 min"},
+      {"name": "open+15",  "minute_index": 345, "desc": "RTH open + 15 min"},
+      {"name": "open+30",  "minute_index": 360, "desc": "RTH open + 30 min"},
+      {"name": "open+60",  "minute_index": 390, "desc": "RTH open + 60 min"},
+      {"name": "open+120", "minute_index": 450, "desc": "RTH open + 120 min"},
+      {"name": "t0_close", "minute_index": null, "desc": "T0 last extended-session print (max minute_index bar on T0)"}
+    ]
+  },
+  "participation_baseline": {
+    "baseline_offsets": [-1, -2, -3],
+    "aggregator": "median",
+    "v0_tau": "cumulative T0 extended-day volume, minute_index 0 -> tau_mi (inclusive)",
+    "b_clock_tau": "median over baseline_offsets of cumulative volume (minute_index 0 -> tau_mi) on that session",
+    "b_session": "median over baseline_offsets of full extended-session volume on that session",
+    "logrv_clock": "log((v0(tau)+1) / (b_clock(tau)+1))",
+    "logrv_session": "log((v0(tau)+1) / (b_session+1))",
+    "selection_rule": {
+      "description": "Pre-registered, frozen. Applied per clock anchor independently BEFORE any markout is computed. If b_clock(tau) is zero or undefined for >20% of D1 events, that anchor uses logrv_session; otherwise logrv_clock. Choice made on the undefined rate alone.",
+      "undefined_rate_threshold": 0.20,
+      "recorded_in": "decisions_log in t3_participation.json"
+    },
+    "no_baseline_class": "Events with NO T-1/T-2/T-3 trades in v2 get participation_class='no_baseline'. Carried, labelled, never pooled into quintiles. (Escalation row 5: if no_baseline share of D1 > 5%, hard stop.)",
+    "quintiles": {
+      "count": 5,
+      "method": "cross-sectional quintile of the selected logrv at each anchor, computed across D1 at that anchor (pd.qcut, labels 1..5, duplicates='drop'). Only the rank is used; the level is never a headline.",
+      "labels": [1, 2, 3, 4, 5]
+    },
+    "rung_baseline": {
+      "which": "b_session",
+      "note": "Rungs are event-relative and not tied to a clock anchor tau, so the rung multiple applies to the per-event full-session baseline scalar b_session (median full extended-session volume over T-1/T-2/T-3) - the 'session' form of the T3 baseline. Frozen here before any markout."
+    }
+  },
+  "rung_ladder": {
+    "multiples": [1, 2, 5, 10],
+    "definition": "First T0 minute (minute_index) at which cumulative T0 extended-day volume reaches multiple * b_session. Anchor price by the clock-anchor convention (last_price at that minute_index). Events never reaching a rung are anchor_undefined at that rung.",
+    "reporting": "Every rung reported. No rung may be selected, recommended, or described as preferable (escalation row 10). Attrition (count/fraction reaching each rung + crossing time-of-day distribution) is a first-class output (chart 07)."
+  },
+  "markout_grid": {
+    "return_definition": "Forward SIGNED log return from anchor price to horizon price: log(p_horizon / p_anchor). Long convention; sign reported as computed; NO absolute values (a negative markout is a finding).",
+    "horizons": [
+      {"name": "anchor+30", "desc": "last T0 print at/before anchor_mi+30"},
+      {"name": "anchor+60", "desc": "last T0 print at/before anchor_mi+60"},
+      {"name": "t0_close",  "desc": "T0 last extended-session print"},
+      {"name": "t1_close",  "desc": "T+1 last extended-session print"},
+      {"name": "t3_close",  "desc": "T+3 last extended-session print"}
+    ],
+    "horizon_undefined": "Horizons past the available session end (e.g. anchor+30/+60 for a late anchor, or a missing T+1/T+3 session) are labelled horizon_undefined for that (event,anchor,horizon) cell, carried, never imputed.",
+    "clock_grid": "anchor x participation_quintile x horizon, faceted by era. Per cell: n, median, IQR, full within-cell distribution retained.",
+    "rung_grid": "rung x crossing_time_of_day_bin x horizon, faceted by era. Participation is constant by construction at a rung and is NOT a bucketing variable here.",
+    "crossing_time_bins": {
+      "definition": "ET clock time-of-day of the rung crossing minute",
+      "bins_et": ["premarket (04:00-09:30)", "open-10:30", "10:30-12:00", "12:00-14:00", "14:00-16:00", "post (16:00-20:00)"]
+    },
+    "prohibited_bucketing": [
+      "momentum_pct or any decile of it",
+      "realized-fraction-at-anchor",
+      "any day-high-derived quantity",
+      "flag_eth_dominant_t0 as a bucket (it is a chart split in T2a only)"
+    ],
+    "prohibited_reason": "All are hindsight-contaminated - the bucket assignment would already know how the day resolved (escalation rows 10, 11)."
+  },
+  "flagged_populations": {
+    "note": "Carried as their own labelled rows, never merged into quintiles. Counts from 6b frozen artifacts.",
+    "source_event_index": "results/phase_6b/artifacts/event_index_v2.parquet",
+    "source_tick_anchor": "results/phase_6b/artifacts/opportunity_decay_primary.parquet",
+    "populations": {
+      "no_baseline": "computed in T3 (no T-1/T-2/T-3 trades in v2)",
+      "anchor_undefined": "computed per anchor in T4",
+      "has_t_minus_1_rth_false": {"count_6b": 36, "column": "has_t_minus_1_rth", "source": "opportunity_decay_primary.parquet"},
+      "denom_nonpositive": {"count_6b": 5, "column": "denom_nonpositive", "source": "opportunity_decay_primary.parquet"},
+      "flag_has_dup_prints": {"count_6b": 7, "column": "flag_has_dup_prints", "source": "event_index_v2.parquet"}
+    },
+    "dup_sensitivity": "Report the flagship cell with and without the 7 dup-print events as a one-line sensitivity."
+  },
+  "era": {
+    "boundary_date": "2022-01-01",
+    "labels": {"before_boundary": "era_2020_2021", "on_or_after_boundary": "era_2022_2024"},
+    "rule": "era = 'era_2020_2021' if event_date_canonical < 2022-01-01 else 'era_2022_2024'"
+  },
+  "t2a_eth_split": {
+    "flag_source": "momentum_events_canonical stage t8, column flag_eth_dominant_t0 (TRUE n=736)",
+    "flag_source_fallback": "if the view is not materialized, recompute via src/data/canonical.py create_view(stage='t8'); flag is tick-derived, not D4-quarantined",
+    "curve": "pooled opportunity-decay curve (primary, 516 clock) recomputed separately for flag TRUE (736) and FALSE, with per-group n",
+    "note": "This is a CHART SPLIT only (chart 02), never a markout bucket."
+  },
+  "t2b_row_cap": {
+    "metric": "per-event T=0 total print count (SUM n_trades over all T0 segments) from v2",
+    "flags": "any value at exactly 50000/100000/200000, and any count appearing across >=3 distinct events at the same exact value",
+    "arbb": "report ARBB's own count explicitly",
+    "no_root_cause": "do not read filtered/ parquet - out of scope"
+  },
+  "survivorship": {
+    "presence": "per-event presence of T+1/T+2/T+3 sessions in v2",
+    "last_seen": "per-ticker last-seen session anywhere in v2 vs event date",
+    "report": "implied post-event disappearance rate for D1, by era, with n. No external base rate, no causal language, no bias-magnitude claim."
+  },
+  "charts": {
+    "engine": "plotly, standalone HTML, one per file, kaleido-verified",
+    "thin_cell_n": 100,
+    "thin_cell_rule": "cells with n<100 hatched/marked thin; no claim stated from them (escalation row 8, not a stop)"
+  },
+  "config_hash_note": "This file is committed before any measurement. Outputs key on its content hash.",
+  "paths": {
+    "duckdb": "data/duckdb/main.duckdb",
+    "bars_table": "event_minute_bars_v2",
+    "canonical_view_module": "src/data/canonical.py",
+    "d1_events": "results/phase_6b/artifacts/t1_eligible_events.parquet",
+    "tick_anchor": "results/phase_6b/artifacts/opportunity_decay_primary.parquet",
+    "event_index": "results/phase_6b/artifacts/event_index_v2.parquet",
+    "out_artifacts": "results/phase_8/artifacts/",
+    "out_charts": "results/phase_8/charts/"
+  }
+}

@@ -1,0 +1,256 @@
+{
+  "phase": "8",
+  "task": "T0",
+  "source": "research/phase_8/t0_preconditions.py:main",
+  "scan_free": true,
+  "d1_source": "results/phase_6b/artifacts/t1_eligible_events.parquet",
+  "d1_n": 15763,
+  "v2_row_count": 45925350,
+  "v2_row_count_expected": 45925350,
+  "v2_row_count_pass": true,
+  "v2_ddl": "CREATE TABLE event_minute_bars_v2(ticker VARCHAR, event_date_canonical DATE, momentum_pct DOUBLE, session_offset BIGINT, segment VARCHAR, minute_index INTEGER, n_trades BIGINT, volume HUGEINT, vwap DOUBLE, high DOUBLE, low DOUBLE, first_price DOUBLE, last_price DOUBLE, first_trade_ts BIGINT, last_trade_ts BIGINT);",
+  "v2_ddl_sha256": "219bc01a479544b4f537fbd7e086402e8256201d5f1665af7ff5b306854dda30",
+  "offsets_expected": [
+    -3,
+    -2,
+    -1,
+    0,
+    1,
+    2,
+    3
+  ],
+  "offsets_observed": [
+    -3,
+    -2,
+    -1,
+    0,
+    1,
+    2,
+    3
+  ],
+  "all_offsets_present": true,
+  "all_segments_present_every_offset": true,
+  "escalation_row_2_triggered": false,
+  "per_offset": [
+    {
+      "session_offset": -3,
+      "rows": 4846371,
+      "distinct_events": 15527,
+      "min_minute_index": 0,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": -2,
+      "rows": 5090571,
+      "distinct_events": 15598,
+      "min_minute_index": 0,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": -1,
+      "rows": 5712058,
+      "distinct_events": 15729,
+      "min_minute_index": 0,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": 0,
+      "rows": 8519526,
+      "distinct_events": 15763,
+      "min_minute_index": 0,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": 1,
+      "rows": 8153038,
+      "distinct_events": 15741,
+      "min_minute_index": 0,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": 2,
+      "rows": 7073605,
+      "distinct_events": 15744,
+      "min_minute_index": 0,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": 3,
+      "rows": 6530181,
+      "distinct_events": 15747,
+      "min_minute_index": 0,
+      "max_minute_index": 959
+    }
+  ],
+  "per_offset_segment": [
+    {
+      "session_offset": -3,
+      "segment": "post",
+      "rows": 595837,
+      "distinct_events": 15402,
+      "min_minute_index": 540,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": -3,
+      "segment": "premarket",
+      "rows": 691551,
+      "distinct_events": 13060,
+      "min_minute_index": 0,
+      "max_minute_index": 329
+    },
+    {
+      "session_offset": -3,
+      "segment": "rth",
+      "rows": 3558983,
+      "distinct_events": 15523,
+      "min_minute_index": 330,
+      "max_minute_index": 719
+    },
+    {
+      "session_offset": -2,
+      "segment": "post",
+      "rows": 661055,
+      "distinct_events": 15465,
+      "min_minute_index": 540,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": -2,
+      "segment": "premarket",
+      "rows": 758599,
+      "distinct_events": 13298,
+      "min_minute_index": 0,
+      "max_minute_index": 329
+    },
+    {
+      "session_offset": -2,
+      "segment": "rth",
+      "rows": 3670917,
+      "distinct_events": 15595,
+      "min_minute_index": 330,
+      "max_minute_index": 719
+    },
+    {
+      "session_offset": -1,
+      "segment": "post",
+      "rows": 987126,
+      "distinct_events": 15594,
+      "min_minute_index": 540,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": -1,
+      "segment": "premarket",
+      "rows": 847667,
+      "distinct_events": 13568,
+      "min_minute_index": 0,
+      "max_minute_index": 329
+    },
+    {
+      "session_offset": -1,
+      "segment": "rth",
+      "rows": 3877265,
+      "distinct_events": 15721,
+      "min_minute_index": 330,
+      "max_minute_index": 719
+    },
+    {
+      "session_offset": 0,
+      "segment": "post",
+      "rows": 1701006,
+      "distinct_events": 15632,
+      "min_minute_index": 540,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": 0,
+      "segment": "premarket",
+      "rows": 1626137,
+      "distinct_events": 14550,
+      "min_minute_index": 0,
+      "max_minute_index": 329
+    },
+    {
+      "session_offset": 0,
+      "segment": "rth",
+      "rows": 5192383,
+      "distinct_events": 15763,
+      "min_minute_index": 330,
+      "max_minute_index": 719
+    },
+    {
+      "session_offset": 1,
+      "segment": "post",
+      "rows": 1128683,
+      "distinct_events": 15615,
+      "min_minute_index": 540,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": 1,
+      "segment": "premarket",
+      "rows": 2089708,
+      "distinct_events": 15314,
+      "min_minute_index": 0,
+      "max_minute_index": 329
+    },
+    {
+      "session_offset": 1,
+      "segment": "rth",
+      "rows": 4934647,
+      "distinct_events": 15739,
+      "min_minute_index": 330,
+      "max_minute_index": 719
+    },
+    {
+      "session_offset": 2,
+      "segment": "post",
+      "rows": 960845,
+      "distinct_events": 15614,
+      "min_minute_index": 540,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": 2,
+      "segment": "premarket",
+      "rows": 1464979,
+      "distinct_events": 14980,
+      "min_minute_index": 0,
+      "max_minute_index": 329
+    },
+    {
+      "session_offset": 2,
+      "segment": "rth",
+      "rows": 4647781,
+      "distinct_events": 15738,
+      "min_minute_index": 330,
+      "max_minute_index": 719
+    },
+    {
+      "session_offset": 3,
+      "segment": "post",
+      "rows": 867073,
+      "distinct_events": 15619,
+      "min_minute_index": 540,
+      "max_minute_index": 959
+    },
+    {
+      "session_offset": 3,
+      "segment": "premarket",
+      "rows": 1235134,
+      "distinct_events": 14769,
+      "min_minute_index": 0,
+      "max_minute_index": 329
+    },
+    {
+      "session_offset": 3,
+      "segment": "rth",
+      "rows": 4427974,
+      "distinct_events": 15747,
+      "min_minute_index": 330,
+      "max_minute_index": 719
+    }
+  ],
+  "coverage_note": "minute_index origin 04:00 ET (index 0). premarket 0-329 (04:00-09:30), rth 330-719 (09:30-16:00 on normal days), post 540-959 (post floor 540 = 13:00 ET from early-close half-days; 720=16:00 on normal days). Per-event distinct counts below 15763 on flanking offsets and in premarket reflect genuine absence of trades that session, not table incompleteness - carried downstream as no_baseline / anchor_undefined, never as an escalation."
+}
