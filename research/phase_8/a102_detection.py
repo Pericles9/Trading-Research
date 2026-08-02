@@ -75,12 +75,15 @@ def main():
     ev = d1[KEY].drop_duplicates().merge(anc, on=KEY, how="left").merge(high, on=KEY, how="left")
     ev["era"] = np.where(ev["event_date_canonical"] < ERA_BOUNDARY, "era_2020_2021", "era_2022_2024")
 
-    # det_minute: first T0 minute with last_price >= threshold
+    # det_minute: first T0 minute whose CROSSING PRINT (bar high) reaches threshold.
+    # A10.3 reconciliation: high (the crossing print a scanner sees), not last_price,
+    # so det_undefined == the 394 day_high_ext non-reachers and n=15,369 (Cooper term b).
+    # bar.high is a v2 tick-derived field, not spine OHLC -> D4-clean (row 14 intact).
     con.register("d1k", ev[KEY])
     con.register("thr", ev[KEY + ["threshold"]])
     det = con.execute("""
         SELECT b.ticker, b.event_date_canonical, ROUND(b.momentum_pct,2) AS mp,
-               MIN(b.minute_index) FILTER (b.last_price >= t.threshold) AS det_minute
+               MIN(b.minute_index) FILTER (b.high >= t.threshold) AS det_minute
         FROM event_minute_bars_v2 b
         JOIN d1k ON b.ticker=d1k.ticker AND b.event_date_canonical=d1k.event_date_canonical AND ROUND(b.momentum_pct,2)=d1k.mp
         JOIN thr t ON b.ticker=t.ticker AND b.event_date_canonical=t.event_date_canonical AND ROUND(b.momentum_pct,2)=t.mp
@@ -141,18 +144,48 @@ def main():
         return {"n": int(len(s)), "median": float(s.median()), "q25": float(s.quantile(.25)),
                 "q75": float(s.quantile(.75)), "min": float(s.min()), "max": float(s.max())}
 
+    # A10.3(d) report-only diagnostic on the 394 det_undefined events: distribution
+    # of tick max-move fraction (day_high_ext / tick_close_t_minus_1_rth), and a
+    # split-adjacent proxy count (no splits feed available -> ratio-based proxy,
+    # labelled as such). Registered reopen condition: if the 394 are scattered well
+    # below threshold rather than clustered near it, reopen the momentum_pct basis
+    # question as an Open-Items entry.
+    und = ev[ev["det_undefined"]].copy()
+    und["tick_maxmove_ratio"] = und["day_high_ext"] / und["tick_close_t_minus_1_rth"]
+    ratio = und["tick_maxmove_ratio"].dropna()
+    n_no_anchor = int((und["tick_close_t_minus_1_rth"].isna() | ~(und["tick_close_t_minus_1_rth"] > 0)).sum())
+    split_proxy_reverse = int((ratio < 1.0).sum())       # day high below prior close -> basis flip (reverse split)
+    split_proxy_severe = int((ratio < 0.9).sum())        # strongly off basis
+    near_threshold = int(((ratio >= 1.20) & (ratio < 1.30)).sum())  # clustered just below 1.30
+    a103_diag = {
+        "n_det_undefined": int(len(und)),
+        "n_no_anchor_has_t_minus_1_rth_false": n_no_anchor,
+        "n_anchor_present": int(len(ratio)),
+        "tick_maxmove_ratio_dist_anchor_present": q(ratio),
+        "clustered_near_threshold_1p20_to_1p30_n": near_threshold,
+        "clustered_near_threshold_share_of_anchor_present": (near_threshold / len(ratio)) if len(ratio) else None,
+        "split_adjacent_proxy_note": "no splits feed available; proxy = tick maxmove ratio implausible for a genuine intraday momentum event",
+        "split_adjacent_proxy_ratio_lt_1p0": split_proxy_reverse,
+        "split_adjacent_proxy_ratio_lt_0p9": split_proxy_severe,
+        "reopen_condition": "scattered well below threshold -> reopen momentum_pct basis item; clustered near threshold -> do not reopen",
+    }
+
     summary = {
         "phase": "8", "task": "A10.2a",
         "source": "research/phase_8/a102_detection.py:main",
         "scan_free": True, "spine_numeric_reads": 0,
         "multiplier": MULT,
+        "crossing_price_field": "bar high (A10.3 reconciliation; see config)",
+        "detection_universe_n": n - n_det_undef,
         "coverage": {
             "n_d1": n,
             "n_det_defined": n - n_det_undef, "det_defined_share": (n - n_det_undef) / n,
             "n_det_undefined": n_det_undef,
             "n_never_reach_high_ext": n_never_high, "never_reach_high_ext_share": row13_rate,
             "row13_threshold": 0.02, "row13_triggered": row13_rate > 0.02,
+            "row13_disposition": "A10.3 override (Cooper 2026-08-01): proceed; the 394 carry det_undefined=TRUE, detection figures use n=15,369, multiplier stays 1.30",
         },
+        "a10_3_diagnostic_394": a103_diag,
         "detection_segment_counts": seg_counts,
         "detection_bin_counts": bin_counts,
         "detection_minute_by_segment": {
@@ -168,7 +201,7 @@ def main():
         json.dump(summary, f, indent=2, default=str)
     print(json.dumps({k: v for k, v in summary.items() if k not in ("detection_minute_by_segment",)}, indent=2, default=str))
     if summary["coverage"]["row13_triggered"]:
-        print("\n*** ESCALATION ROW 13 TRIGGERED - HARD STOP ***")
+        print("\n[row 13 at 2.50% -> A10.3 override: proceed; 394 carried det_undefined; n=15,369]")
 
 
 if __name__ == "__main__":

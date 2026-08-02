@@ -5,188 +5,107 @@
   "scan_free": true,
   "spine_numeric_reads": 0,
   "multiplier": 1.3,
+  "crossing_price_field": "bar high (A10.3 reconciliation; see config)",
+  "detection_universe_n": 15369,
   "coverage": {
     "n_d1": 15763,
-    "n_det_defined": 14507,
-    "det_defined_share": 0.9203197360908456,
-    "n_det_undefined": 1256,
+    "n_det_defined": 15369,
+    "det_defined_share": 0.9750047579775424,
+    "n_det_undefined": 394,
     "n_never_reach_high_ext": 394,
     "never_reach_high_ext_share": 0.024995242022457655,
     "row13_threshold": 0.02,
     "row13_triggered": true,
-    "row13_breakdown": {
-      "no_anchor": 36,
-      "anchor_present_ratio_lt_130": 358
+    "row13_disposition": "A10.3 override (Cooper 2026-08-01): proceed; the 394 carry det_undefined=TRUE, detection figures use n=15,369, multiplier stays 1.30"
+  },
+  "a10_3_diagnostic_394": {
+    "n_det_undefined": 394,
+    "n_no_anchor_has_t_minus_1_rth_false": 36,
+    "n_anchor_present": 358,
+    "tick_maxmove_ratio_dist_anchor_present": {
+      "n": 358,
+      "median": 1.2846905184309088,
+      "q25": 1.26010160000385,
+      "q75": 1.293918296931529,
+      "min": 0.2724645658456034,
+      "max": 1.2997779422649889
     },
-    "row13_sample_top_momentum": [
-      {
-        "ticker": "IXHL",
-        "event_date": "2022-03-15",
-        "momentum_pct": 293.01,
-        "tick_close_t_minus_1_rth": 86.46,
-        "day_high_ext": 96.0,
-        "tick_ratio": 1.1103
-      },
-      {
-        "ticker": "BTCS",
-        "event_date": "2023-05-11",
-        "momentum_pct": 108.35,
-        "tick_close_t_minus_1_rth": 1.45,
-        "day_high_ext": 1.55,
-        "tick_ratio": 1.069
-      },
-      {
-        "ticker": "SQFT",
-        "event_date": "2022-01-24",
-        "momentum_pct": 97.89,
-        "tick_close_t_minus_1_rth": 3.79,
-        "day_high_ext": 3.8,
-        "tick_ratio": 1.0026
-      },
-      {
-        "ticker": "GREE",
-        "event_date": "2022-12-19",
-        "momentum_pct": 80.0,
-        "tick_close_t_minus_1_rth": 0.3583,
-        "day_high_ext": 0.45,
-        "tick_ratio": 1.2559
-      },
-      {
-        "ticker": "RNAC",
-        "event_date": "2023-12-01",
-        "momentum_pct": 77.78,
-        "tick_close_t_minus_1_rth": 1.35,
-        "day_high_ext": 1.3,
-        "tick_ratio": 0.963
-      },
-      {
-        "ticker": "CAPS",
-        "event_date": "2024-12-16",
-        "momentum_pct": 65.94,
-        "tick_close_t_minus_1_rth": 3.11,
-        "day_high_ext": 3.8,
-        "tick_ratio": 1.2219
-      },
-      {
-        "ticker": "NVDA",
-        "event_date": "2024-06-10",
-        "momentum_pct": 62.09,
-        "tick_close_t_minus_1_rth": 1208.45,
-        "day_high_ext": 1209.21,
-        "tick_ratio": 1.0006
-      },
-      {
-        "ticker": "BTBD",
-        "event_date": "2022-03-21",
-        "momentum_pct": 58.06,
-        "tick_close_t_minus_1_rth": 2.07,
-        "day_high_ext": 2.45,
-        "tick_ratio": 1.1836
-      },
-      {
-        "ticker": "FORTY",
-        "event_date": "2020-03-27",
-        "momentum_pct": 53.56,
-        "tick_close_t_minus_1_rth": 53.0,
-        "day_high_ext": 60.07,
-        "tick_ratio": 1.1334
-      },
-      {
-        "ticker": "ZJYL",
-        "event_date": "2024-02-08",
-        "momentum_pct": 52.99,
-        "tick_close_t_minus_1_rth": 218.01,
-        "day_high_ext": 59.4,
-        "tick_ratio": 0.2725
-      },
-      {
-        "ticker": "CRBP",
-        "event_date": "2022-03-21",
-        "momentum_pct": 52.92,
-        "tick_close_t_minus_1_rth": 0.4,
-        "day_high_ext": 0.5048,
-        "tick_ratio": 1.262
-      },
-      {
-        "ticker": "NUKK",
-        "event_date": "2022-04-18",
-        "momentum_pct": 50.37,
-        "tick_close_t_minus_1_rth": 0.1806,
-        "day_high_ext": 0.203,
-        "tick_ratio": 1.124
-      }
-    ],
-    "row13_note": "D4 basis disagreement: momentum_pct (spine prev_close->adjusted RTH high) reports +30..+293% but tick day_high_ext/tick_close_t_minus_1_rth < 1.30 - corporate-action adjustment-basis mismatch between spine and raw tick data. Do not adjust multiplier (row 13)."
+    "clustered_near_threshold_1p20_to_1p30_n": 330,
+    "clustered_near_threshold_share_of_anchor_present": 0.9217877094972067,
+    "split_adjacent_proxy_note": "no splits feed available; proxy = tick maxmove ratio implausible for a genuine intraday momentum event",
+    "split_adjacent_proxy_ratio_lt_1p0": 5,
+    "split_adjacent_proxy_ratio_lt_0p9": 1,
+    "reopen_condition": "scattered well below threshold -> reopen momentum_pct basis item; clustered near threshold -> do not reopen"
   },
   "detection_segment_counts": {
-    "rth": 9976,
-    "premarket": 4345,
-    "post": 186
+    "rth": 10660,
+    "premarket": 4630,
+    "post": 79
   },
   "detection_bin_counts": {
-    "premarket": 4345,
-    "after_1300": 3774,
-    "1100-1300": 2695,
-    "1000-1100": 2044,
-    "0930-1000": 1649
+    "premarket": 4630,
+    "after_1300": 3825,
+    "1100-1300": 2868,
+    "1000-1100": 2158,
+    "0930-1000": 1888
   },
   "detection_minute_by_segment": {
     "premarket": {
-      "n": 4345,
-      "median": 179.0,
-      "q25": 4.0,
-      "q75": 250.0,
+      "n": 4630,
+      "median": 180.0,
+      "q25": 3.0,
+      "q75": 250.75,
       "min": 0.0,
       "max": 329.0
     },
     "rth": {
-      "n": 9976,
-      "median": 470.0,
-      "q25": 381.0,
-      "q75": 601.0,
+      "n": 10660,
+      "median": 467.0,
+      "q25": 378.0,
+      "q75": 597.0,
       "min": 330.0,
       "max": 719.0
     },
     "post": {
-      "n": 186,
-      "median": 733.0,
-      "q25": 721.0,
-      "q75": 801.5,
+      "n": 79,
+      "median": 722.0,
+      "q25": 720.0,
+      "q75": 737.0,
       "min": 720.0,
-      "max": 959.0
+      "max": 936.0
     }
   },
   "runway_minutes": {
-    "n": 14507,
-    "median": 29.0,
+    "n": 15369,
+    "median": 30.0,
     "q25": 3.0,
-    "q75": 166.0,
-    "min": -836.0,
+    "q75": 170.0,
+    "min": 0.0,
     "max": 959.0
   },
   "runway_minutes_by_era": {
     "era_2020_2021": {
-      "n": 4977,
+      "n": 5286,
       "median": 29.0,
       "q25": 3.0,
-      "q75": 172.0,
-      "min": -606.0,
+      "q75": 169.0,
+      "min": 0.0,
       "max": 959.0
     },
     "era_2022_2024": {
-      "n": 9530,
-      "median": 29.0,
+      "n": 10083,
+      "median": 30.0,
       "q25": 3.0,
-      "q75": 163.0,
-      "min": -836.0,
+      "q75": 170.0,
+      "min": 0.0,
       "max": 958.0
     }
   },
   "runway_log_distance": {
-    "n": 14507,
-    "median": 0.10483583701145338,
-    "q25": 0.04019088058324528,
-    "q75": 0.2495476276618713,
+    "n": 15369,
+    "median": 0.11093156070728162,
+    "q25": 0.04683317621053593,
+    "q75": 0.256550042334851,
     "min": 0.0,
     "max": 3.3679114040286886
   },

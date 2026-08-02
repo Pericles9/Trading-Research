@@ -173,13 +173,26 @@
     "prompt": "prompts/phase_8_amendment_10_2.md",
     "scope": "additive only; no prior Phase 8 result retracted/recomputed/modified. Gates phase-8-approved on the detection grid + contamination test.",
     "detection_anchor": {
-      "definition": "det_anchor = first T0 extended-day minute at which last_price >= multiplier * tick_close_t_minus_1_rth",
+      "definition": "det_anchor = first T0 extended-day minute at which the crossing print reaches multiplier * tick_close_t_minus_1_rth",
+      "crossing_price_field": "bar high (max tick trade price in the minute = the crossing print a scanner sees). A10.3 reconciliation (Cooper 2026-08-01): the A10.2-T0 wording said last_price, but A10.3 fixes n=15,369 (= 15,763 - 394 day_high_ext non-reachers), which requires the crossing detected on the minute high so the 862 events that touch 1.30x intraminute but never close a minute >= it still receive a det_anchor. bar.high is a v2 tick-derived field (NOT a spine OHLC column) so D4-clean; not a smoothing/volume/multiplier change (row 14 intact).",
+      "anchor_price_convention": "anchor price = last trade at/before the crossing minute (+ latency offset), i.e. last_price via ASOF - unchanged",
       "multiplier": 1.30,
       "anchor_denominator": "tick_close_t_minus_1_rth (tick-derived, D4-clean; reused from opportunity_decay_primary.parquet)",
       "extended_day": true,
       "price_threshold_only": "no smoothing, no confirmation bar, no volume qualifier, no multiplier other than 1.30 (escalation row 14)",
-      "det_undefined": "event whose T0 extended max never reaches the threshold -> det_undefined=TRUE, own row",
+      "det_undefined": "event whose T0 extended max (day_high_ext) never reaches the threshold -> det_undefined=TRUE, own row (the 394). n_detection_universe = 15,369.",
       "coverage_metric_for_row13": "share of D1 with day_high_ext >= multiplier*tick_close_t_minus_1_rth (does the tick move ever reach +30%); compared against Phase 1 momentum_pct definition"
+    },
+    "a10_3_override": {
+      "date": "2026-08-01", "approved_by": "Cooper",
+      "disposition": "row 13 fired at 394/15763 (2.50%) > 2%; proceed. A live scanner evaluates tick prices, so events that never cross 1.30x on tick fall outside the tradeable universe by construction - their absence from the detection grid is correct, not lossy.",
+      "terms": {
+        "a": "the 394 carry det_undefined=TRUE, labelled, never imputed or dropped silently",
+        "b": "every detection-anchored figure reports n=15,369, never inherits 15,763",
+        "c": "multiplier stays 1.30; row 14 live; threshold not tuned",
+        "d": "report-only diagnostic: distribution of tick max move (day_high_ext/tick_close_t_minus_1_rth) for the 394 + count of split-adjacent dates -> a102_detection_summary.json + chart 10b. No gate, no stop."
+      },
+      "registered_open_item": "if the 394 are scattered well below threshold (not clustered near it), reopen the spine momentum_pct adjustment-basis question as a standalone docs/Open-Items-Register.md item (not Phase 8 scope)."
     },
     "latency_offsets_minutes": [0, 1, 5, 15, 30],
     "latency_offset_note": "det+0 is a physical impossibility, included only as the upper bound of the ladder; labelled as such on every chart",
