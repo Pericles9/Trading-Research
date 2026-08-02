@@ -121,9 +121,24 @@
       "anchor_undefined": "computed per anchor in T4",
       "has_t_minus_1_rth_false": {"count_6b": 36, "column": "has_t_minus_1_rth", "source": "opportunity_decay_primary.parquet"},
       "denom_nonpositive": {"count_6b": 5, "column": "denom_nonpositive", "source": "opportunity_decay_primary.parquet"},
-      "flag_has_dup_prints": {"count_6b": 7, "column": "flag_has_dup_prints", "source": "event_index_v2.parquet"}
+      "flag_has_dup_prints": {"count_6b": 7, "column": "flag_has_dup_prints", "source": "event_index_v2.parquet"},
+      "flag_possible_row_cap": {"count_expected": 8, "definition": "T=0 print count exactly in {50000,100000,200000}", "source": "t2_row_cap_scan.json (A10.1c)", "frozen": "exact match, no fuzzy/tolerance"}
     },
-    "dup_sensitivity": "Report the flagship cell with and without the 7 dup-print events as a one-line sensitivity."
+    "dup_sensitivity": "Report the flagship cell with and without the 7 dup-print events as a one-line sensitivity.",
+    "row_cap_sensitivity": "Report the flagship cell (t0_close horizon) with and without the 8 flag_possible_row_cap events as a one-line sensitivity (A10.1c-iii)."
+  },
+  "amendment_a10_1": {
+    "date": "2026-08-01",
+    "approved_by": "Cooper",
+    "prompt": "prompts/phase_8_amendment_10.md",
+    "escalation_row_7_condition_observed": "0900 anchor_undefined 11.04% (1740/15763)",
+    "escalation_row_7_threshold_clock_anchor": 0.15,
+    "escalation_row_7_threshold_prev": 0.10,
+    "flag_possible_row_cap_round_numbers": [50000, 100000, 200000],
+    "has_premarket_print_enabled": true,
+    "anchor_0900_disposition": "retained with population guard: reports own n=14023 everywhere; 1740 has_premarket_print=FALSE dropped ONLY from the 0900 column, present at every other anchor, never dropped from the grid; free rth_open comparison split by has_premarket_print (A10.1a-iii); chart 04 0900 column hatched + header annotation (A10.1a-iv, no chart 04b).",
+    "flag_possible_row_cap_definition_location": "PENDING Cooper resolution: A10.1c-i names src/data/canonical.py, but escalation row 9 + 'nothing in src/ changes mid-phase' forbid src/ writes this phase. Surfaced 2026-08-01.",
+    "escalation_row_12": "has_premarket_print=FALSE != 1740 OR flag_possible_row_cap != 8 -> hard stop (artifacts disagree with reported run)."
   },
   "era": {
     "boundary_date": "2022-01-01",

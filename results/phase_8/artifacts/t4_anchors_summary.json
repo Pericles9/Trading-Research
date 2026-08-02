@@ -65,13 +65,9 @@
       "anchor_undefined_frac": 0.0
     }
   },
-  "escalation_row_7_threshold": 0.1,
-  "escalation_row_7_fail_anchors": {
-    "0900": {
-      "anchor_undefined_n": 1740,
-      "anchor_undefined_frac": 0.1103850789824272
-    }
-  },
-  "escalation_row_7_triggered": true,
+  "escalation_row_7_threshold": 0.15,
+  "escalation_row_7_threshold_note": "A10.1b raised 10% -> 15% for clock anchors (Cooper 2026-08-01); 0900 at 11.04% now passes",
+  "escalation_row_7_fail_anchors": {},
+  "escalation_row_7_triggered": false,
   "artifact": "results/phase_8/artifacts/t4_anchors.parquet"
 }

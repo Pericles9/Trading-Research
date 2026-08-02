@@ -219,13 +219,15 @@ def main():
             "median_crossing_et": (et_time(cm.median()) if len(cm) else None),
         }
 
-    # anchor_undefined rates per clock anchor (escalation row 7: >10% -> hard stop)
+    # anchor_undefined rates per clock anchor (escalation row 7). Threshold from
+    # config: A10.1b raised it 10% -> 15% for clock anchors (Cooper 2026-08-01).
+    row7_threshold = cfg.get("amendment_a10_1", {}).get("escalation_row_7_threshold_clock_anchor", 0.10)
     anc_undef = {}
     for name in clock:
         sub = A[A.anchor_name == name]
         anc_undef[name] = {"anchor_undefined_n": int(sub["anchor_undefined"].sum()),
                            "anchor_undefined_frac": float(sub["anchor_undefined"].mean())}
-    row7_fail = {n: v for n, v in anc_undef.items() if v["anchor_undefined_frac"] > 0.10}
+    row7_fail = {n: v for n, v in anc_undef.items() if v["anchor_undefined_frac"] > row7_threshold}
 
     summary = {
         "phase": "8", "task": "T4",
@@ -234,7 +236,8 @@ def main():
         "n_d1": n_d1,
         "rung_attrition": attr,
         "clock_anchor_undefined": anc_undef,
-        "escalation_row_7_threshold": 0.10,
+        "escalation_row_7_threshold": row7_threshold,
+        "escalation_row_7_threshold_note": "A10.1b raised 10% -> 15% for clock anchors (Cooper 2026-08-01); 0900 at 11.04% now passes",
         "escalation_row_7_fail_anchors": row7_fail,
         "escalation_row_7_triggered": len(row7_fail) > 0,
         "artifact": OUT_PARQUET,
