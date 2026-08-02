@@ -167,6 +167,43 @@
     "thin_cell_n": 100,
     "thin_cell_rule": "cells with n<100 hatched/marked thin; no claim stated from them (escalation row 8, not a stop)"
   },
+  "amendment_a10_2": {
+    "date": "2026-08-01",
+    "approved_by": "Cooper",
+    "prompt": "prompts/phase_8_amendment_10_2.md",
+    "scope": "additive only; no prior Phase 8 result retracted/recomputed/modified. Gates phase-8-approved on the detection grid + contamination test.",
+    "detection_anchor": {
+      "definition": "det_anchor = first T0 extended-day minute at which last_price >= multiplier * tick_close_t_minus_1_rth",
+      "multiplier": 1.30,
+      "anchor_denominator": "tick_close_t_minus_1_rth (tick-derived, D4-clean; reused from opportunity_decay_primary.parquet)",
+      "extended_day": true,
+      "price_threshold_only": "no smoothing, no confirmation bar, no volume qualifier, no multiplier other than 1.30 (escalation row 14)",
+      "det_undefined": "event whose T0 extended max never reaches the threshold -> det_undefined=TRUE, own row",
+      "coverage_metric_for_row13": "share of D1 with day_high_ext >= multiplier*tick_close_t_minus_1_rth (does the tick move ever reach +30%); compared against Phase 1 momentum_pct definition"
+    },
+    "latency_offsets_minutes": [0, 1, 5, 15, 30],
+    "latency_offset_note": "det+0 is a physical impossibility, included only as the upper bound of the ladder; labelled as such on every chart",
+    "detection_horizons": ["det+5", "det+15", "det+30", "det+60", "t0_close", "t1_close", "t3_close"],
+    "detection_time_bins": ["premarket", "0930-1000", "1000-1100", "1100-1300", "after_1300"],
+    "detection_time_bin_edges_minute_index": {"premarket": "0-329", "0930-1000": "330-359", "1000-1100": "360-419", "1100-1300": "420-539", "after_1300": "540-959"},
+    "contamination_test": {
+      "clean_anchor": "t0_close (entire T0 move including the membership-defining high is in the past)",
+      "grids": ["t0_close->t1_close", "t0_close->t3_close"],
+      "bucket": "participation_quintile x era",
+      "reading_rule": "gradient present+monotonic at t0_close->t1_close => participation carries info beyond selection; flat/non-monotonic => rth_open gradient consistent with selection arithmetic, headline not established as forward edge. Agent states which row the chart matches, nothing more (escalation row 16)."
+    },
+    "falsepositive_recoverability": {
+      "candidate_files": ["data/filtered/scanner_hit_catalog.json", "data/filtered/filtered_events_power_law_q05.parquet"],
+      "read_only": "no new collection/fetch/write against the data root (escalation row 15)",
+      "limitation_text": "All Phase 8 markouts are conditional on power-law filter membership. The filter was fitted on the full 2020-2024 panel and its output is not knowable at detection time. The rejected-candidate population is not present in this archive; the live false-positive rate is therefore unmeasured, and no markout in this phase can be read as a live expected value."
+    },
+    "escalation_rows_added": {
+      "13": "D1 events whose tick T0 extended max never reaches 1.30x anchor > 2% -> hard stop (tick threshold vs momentum_pct disagree; do not adjust multiplier)",
+      "14": "any smoothing/confirmation/volume qualifier/multiplier!=1.30 in detection rule -> hard stop",
+      "15": "any new collection/fetch/write against data root during A10.2d -> hard stop",
+      "16": "any REPORT.md statement characterising the contamination result beyond which reading-rule row the chart matches -> hard stop before posting"
+    }
+  },
   "config_hash_note": "This file is committed before any measurement. Outputs key on its content hash.",
   "paths": {
     "duckdb": "data/duckdb/main.duckdb",
