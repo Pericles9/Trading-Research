@@ -1,0 +1,61 @@
+{
+  "phase": "8",
+  "task": "A10.2d",
+  "source": "research/phase_8/a102d_recoverability.py:main",
+  "read_only": true,
+  "wrote_to_data_root": false,
+  "scanner_hit_catalog": {
+    "path": "data/filtered/scanner_hit_catalog.json",
+    "n_entries": 6395,
+    "n_distinct_tickers": 1784,
+    "fields": [
+      "date",
+      "notes",
+      "prev_close",
+      "scanner_hit_idx",
+      "scanner_hit_price",
+      "scanner_hit_tod_sec",
+      "scanner_hit_ts_ns",
+      "scanner_threshold",
+      "ticker"
+    ],
+    "carries_accept_reject_flag": false,
+    "content": "scanner-hit timing/threshold per (ticker:date); some entries null ('prev_close unavailable - skipped'). Fewer entries than the accepted power-law set, so NOT the full pre-filter candidate universe."
+  },
+  "filtered_events_power_law_q05": {
+    "path": "data/filtered/filtered_events_power_law_q05.parquet",
+    "n_rows": 23268,
+    "columns": [
+      "ticker",
+      "date",
+      "prev_close",
+      "high",
+      "open",
+      "close",
+      "event_volume",
+      "momentum_pct",
+      "price_move",
+      "id",
+      "event_date",
+      "event_high",
+      "event_open",
+      "event_close",
+      "market_cap_est",
+      "sector",
+      "has_minute_data",
+      "has_trade_data",
+      "created_at",
+      "min_volume_threshold"
+    ],
+    "carries_accept_reject_flag": false,
+    "content": "power-law-ACCEPTED events (post-filter output, q05 threshold); 23,268 > D1's 15,763 because Phase 1b common-stock/in_scope restrictions further reduce to D1. No rejected candidates, no reject flag."
+  },
+  "rejected_candidates_recoverable": false,
+  "finding": "Neither file carries the rejected-candidate (false-positive) population. filtered_events_power_law_q05 is the accepted output; scanner_hit_catalog is a partial scanner-hit timing catalog without an accept/reject flag and smaller than the accepted set. The rejected population is not present in this archive.",
+  "limitation_text": "All Phase 8 markouts are conditional on power-law filter membership. The filter was fitted on the full 2020-2024 panel and its output is not knowable at detection time. The rejected-candidate population is not present in this archive; the live false-positive rate is therefore unmeasured, and no markout in this phase can be read as a live expected value.",
+  "open_items_registration": {
+    "target": "docs/Open-Items-Register.md",
+    "status": "PENDING - docs/ is outside the sanctioned write dirs (escalation row 9); flagged for Cooper at the gate. Reproduced verbatim in REPORT.md (A10.2d-iii).",
+    "text": "All Phase 8 markouts are conditional on power-law filter membership. The filter was fitted on the full 2020-2024 panel and its output is not knowable at detection time. The rejected-candidate population is not present in this archive; the live false-positive rate is therefore unmeasured, and no markout in this phase can be read as a live expected value."
+  }
+}
