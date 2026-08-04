@@ -348,17 +348,25 @@ In this universe **the cost model matters more than the alpha model.** Non-negot
 
 ## 9. Sequenced Execution Plan
 
-**Week 1 — Audit only.** Read the two Confirmed scripts (`filter_events_power_law.py`, `collect_massive_data.py`). Run §2.1–2.6. Produce the audit report (§2.7). No alpha work. Boring by design — everything else stands on it, and the schema doc's own gap list is the previous owner saying the foundation was never fully verified.
+Sequenced under D5. Phase numbers are the phase map in `docs/Claude-Code-Operating-Plan.md` §6, which from row 8 onward are prompt filenames (`prompts/phase_{n}.md`).
 
-**Weeks 2–3 — Foundational measurements + feature layer.** The four measurements (§4.3) per event, pooled and bucketed. Precompute the event-level feature tables (§7.1 layer 2). First pass of the event-study grid (§6) for the T+1 family — it is the cleanest surface and the fastest path to knowing whether the archive contains a tradeable edge at all.
+**Done — Phases 0–7, audit and analysis-readiness.** The §2 audit chain (filter forensics, universe stats, coverage and integrity, quote quality, window flags, canonical spine), closed out by the D4 tick-only quarantine and the Phase 7 readiness pass. The §2.7 deliverable exists. Everything below stands on it.
 
-**Weeks 3–4 — Regime labeling.** Offline labels, perturbation stability test, labeled-regime characterization (§5.1 steps 1–2, §5.3 steps 1–2). Baseline construction from flanking days.
+**Done — Phases 8–9, first forward measurement.** Phase 8 produced the markout grid from anchors knowable in real time, and established that the rejected-candidate population is absent from the archive, so the live false-positive rate is not measurable from what is on disk (§8 item #3). Phase 9 repaired the cross-session price basis, separated the detection-time / holding-period / latency axes, and produced the first retracement measurement. Both are session- and day-anchored, and D5 reads them accordingly: they are archive, not the operative latency budget.
 
-**Weeks 4–6 — Detector development.** Threshold+hysteresis baseline, then CUSUM/BOCPD and intensity-based challengers; operating point by expected PnL; flanking-day FP estimation; regime-death detector (§5.1 steps 3–6).
+**Next — Phases 10–13, the tape as it actually behaves.** Burst decomposition first (10): the burst timescale is the number every horizon downstream is expressed in, and the burst-relative latency budget replaces the session-anchored one from Phase 6/6b (D5 consequence (b), D5 Amendment A11). Then spread and impact by participation (11), which finally tests the §4.1 compression claim and prices a false positive; halts and LULD (12), which produces the sizing constraint; and the noise floor (13), which is the null distribution any detector is measured against. None of these need a model. All four are §4.3 measurements, re-anchored.
 
-**Weeks 6–8 — Direction signal.** Feature event-studies within true-positive regimes against the always-long null; orthogonalized linear model; ticker-blocked out-of-sample (§5.2).
+**Then — Phases 14–15, features and the exit prior.** The feature layer (14) precomputes signed flow and impact efficiency once, cached and lag-baked, per §7.1 layer 2 — never recomputed inside a research loop. The burst hazard function (15) turns burst durations into P(death | age): under a long-only strategy on a bull-to-bear flip, this is the exit prior, and D5 budgets it at least equally with entry work.
 
-**Weeks 8+ — Joint walk-forward and engine realism.** Detector + direction + exit stack under the full cost model with halts as forced holds (§5.3 step 5); vectorized first, Nautilus for the short list (§7.1 layers 4–5). In parallel: scope the unconditional universe scan (§5.4) — it gates capital, so it cannot start last.
+**Then — Phases 16–18, labels and signals.** Regime labeling with the §5.1.1 perturbation stability test (16) — if labels are unstable, everything after it is built on sand and the sequence stops there. The detector and end-detector together (17), both first-class, with the operating point chosen by expected PnL and false positives estimated on flanking days. Direction signal last (18), measured against the always-long-while-on null, because "detector plus market order" is the hypothesis to beat.
+
+**Last — Phase 19, joint walk-forward.** The full stack under the §7.2 cost model with halts as forced holds; vectorized first, Nautilus for the short list (§7.1 layers 4–5).
+
+**Not in the line — two items that do not wait their turn.**
+- *Unconditional universe scan (Parallel).* Upgraded by D5 consequence (c) from "before capital" to a near-front blocker: it gates the operating-point selection in Phase 17, not just capital, so it cannot be sequenced last. §5.4, §8 items #3 and #4.
+- *T+1 markout grid (Opt-A).* The single day-2 edge-existence pass retained under D5, long-only. It runs when Cooper calls for it and gates nothing.
+
+**Two decisions owed before Phase 17 can be specified.** Whether the entry signal is onset prediction or fast detection and ride (left open by D5; §4.2 condition 4 constrains it). And the archive-vs-live universe mismatch (§8 item #9) — Phase 17's operating point is otherwise chosen on a population the live screen does not reproduce.
 
 Dates are ordinal, not promises. The gates between phases are the artifacts, not the calendar.
 
@@ -386,10 +394,3 @@ Dates are ordinal, not promises. The gates between phases are the artifacts, not
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------------------- |
 | 2.0     | 2026-08-03 | D5 redirect: §3.3 re-ranked, §6 re-anchored, §8 risk items #3/#4 upgraded, §9 rewritten. Short-side variants removed. |
 | 1.x     | 2026-07-13 | Initial spec. No version history was recorded before the 2.0 bump; "1.x" is the retroactive designation used by §3.3's note on the prior ranking. |
-
-**Status of the 2.0 row, 2026-08-03 (agent note, not Cooper text).** §3.3, §6 and §8 landed as
-described. **§9 was not rewritten** — `prompts/redirect_d5.md` T3d specifies §9 as "sequenced from the
-phase map in T4", and T4 hard-stopped: `docs/Claude-Code-Operating-Plan.md` does not exist in this
-checkout and the T4 map's rows 8 and 9 conflict with the already-approved Phase 8 and the in-flight
-Phase 9. §9 therefore still carries the v1.x week-numbered plan and is stale with respect to D5.
-Remove this note when T3d lands. See `results/redirect_d5/REPORT.md`.
