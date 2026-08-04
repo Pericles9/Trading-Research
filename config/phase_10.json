@@ -83,6 +83,14 @@
       ],
       "eligibility_note": "clean_window is required because Arm B's baseline needs T-3..T-1 trade coverage. Events failing it are still measurable by Arm A but would enter the cross-arm comparison with a structurally undefined Arm B, confounding chart 05.",
       "reproducibility_check": "Redraw with the same seed and assert 0 differing rows."
+    },
+    "row_cap_census": {
+      "label": "row_cap_census",
+      "n": 8,
+      "membership": "CENSUS, not a sample: every D1 event with flag_possible_row_cap = TRUE in results/phase_8/artifacts/a101_labels.parquet.",
+      "pooling_rule": "NEVER pooled into cohort-level statistics. Reported as its own row everywhere, exactly like dev_v4_sidecar.",
+      "why_added": "Added at T1 after the seeded extension draw returned 0 of the 8 row-cap events (expected: 8/15,763 in the D1 pool, so a 100-event draw catches one ~5% of the time). The prompt makes row-cap contamination load-bearing for this phase specifically -- a collector row cap truncates the session tail, which is where burst termination lives -- and requires flagged events be 'carried, labeled, and reported as their own row throughout'. With none drawn there was nothing to report on. This is a census of a known 8-event population added BEFORE any measurement ran, not a post-hoc adjustment: it cannot move a headline number because it is never pooled, and it is the same construction the dev v4 sidecar already uses (a deliberately-degraded population carried separately to exercise a specific data pathology). The seeded extension draw is UNCHANGED -- all 50 drawn events and the seed are exactly as first drawn.",
+      "overlap_rule": "An event already in dev_v4_primary / activity_extension / dev_v4_sidecar is not duplicated; observed overlap is 0."
     }
   },
 
@@ -234,7 +242,7 @@
       "extreme_side": "high",
       "extreme_side_reason": "D5 is long-only. The relevant extreme within a burst is the high. The low is not measured and no fade/short quantity is produced."
     },
-    "carried_populations": ["dev_v4_primary", "activity_extension", "dev_v4_sidecar", "flag_possible_row_cap", "arm_a_undefined", "baseline_partial", "baseline_undefined", "session_move_undefined"],
+    "carried_populations": ["dev_v4_primary", "activity_extension", "dev_v4_sidecar", "row_cap_census", "arm_a_undefined", "baseline_partial", "baseline_undefined", "session_move_undefined"],
     "carried_population_rule": "Every measurement table breaks out flag_possible_row_cap events as their own row and dev_v4_sidecar as its own row. Neither is pooled into the headline cohort figure."
   },
 
@@ -264,13 +272,13 @@
     "chart_07": {
       "dir": "results/phase_10/charts/07_tape_review/",
       "gitignore_rule": "A .gitignore containing '*' is written INSIDE results/phase_10/charts/07_tape_review/ rather than editing the repo-root .gitignore. This achieves the §12 outcome (thousands of multi-MB HTML files stay untracked) while keeping every write inside the escalation-row-7 allowlist. The index and the per-event charts are regenerable from committed config + code.",
-      "selection_rule": ["all dev_v4_primary events", "all dev_v4_sidecar events, labeled", "stratified draw over activity_extension by Arm A burst count: the top burst_count_edge_n, the bottom burst_count_edge_n, and a seeded random middle_n"],
+      "selection_rule": ["all dev_v4_primary events", "all dev_v4_sidecar events, labeled", "all row_cap_census events, labeled", "stratified draw over activity_extension by Arm A burst count: the top burst_count_edge_n, the bottom burst_count_edge_n, and a seeded random middle_n"],
       "burst_count_edge_n": 5,
       "middle_n": 6,
       "middle_seed": 42,
-      "max_charts": 72,
-      "max_charts_desc": "Hard cap. Escalation row 6 fires if the selection exceeds it. 50 primary + 6 sidecar + 16 extension = 72 at the cap by construction.",
-      "index": "results/phase_10/charts/07_tape_review/index.html — sortable, covers the FULL cohort (all 106 events) including events with no chart, per Agent_Prompt_Standard §7 ('index coverage may not be sampled').",
+      "max_charts": 80,
+      "max_charts_desc": "Hard cap. Escalation row 6 fires if the selection exceeds it. 50 primary + 6 sidecar + 8 row-cap census + 16 extension = 80 at the cap by construction.",
+      "index": "results/phase_10/charts/07_tape_review/index.html — sortable, covers the FULL cohort (all 114 events) including events with no chart, per Agent_Prompt_Standard §7 ('index coverage may not be sampled').",
       "max_scatter_points": 150000,
       "over_cap_rule": "Above max_scatter_points the top panel plots a seeded uniform-random subsample (rate stated in the title and caption) — uniform sampling preserves relative density, which is what the tape read depends on. The bottom panel switches from per-print markers to a per-10s min/median/max envelope computed from ALL prints, so no print is removed from any computation and the outlier envelope is still shown. Both arms' burst intervals are always drawn from the full-resolution segmentation.",
       "over_cap_seed": 42

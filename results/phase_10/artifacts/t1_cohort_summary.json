@@ -1,0 +1,163 @@
+{
+  "phase": "10",
+  "task": "T1",
+  "config_hash": "1705e5c3",
+  "cohort_n_total": 114,
+  "cohort_by_group": {
+    "dev_v4_primary": 50,
+    "activity_extension": 50,
+    "row_cap_census": 8,
+    "dev_v4_sidecar": 6
+  },
+  "analysis_cohort_n": 100,
+  "analysis_cohort_note": "dev_v4_primary + activity_extension. dev_v4_sidecar and row_cap_census are carried and labeled but NEVER pooled.",
+  "stratification": {
+    "variable": "t0_print_count_decile",
+    "n_strata": 10,
+    "eligible_pool_n": 15299,
+    "stratum_pool_sizes": {
+      "0": 1411,
+      "1": 1543,
+      "2": 1542,
+      "3": 1542,
+      "4": 1552,
+      "5": 1550,
+      "6": 1536,
+      "7": 1534,
+      "8": 1536,
+      "9": 1553
+    },
+    "stratum_draw_counts": {
+      "0": 5,
+      "1": 5,
+      "2": 5,
+      "3": 5,
+      "4": 5,
+      "5": 5,
+      "6": 5,
+      "7": 5,
+      "8": 5,
+      "9": 5
+    },
+    "seed": 42
+  },
+  "reproducibility_check": {
+    "pass": true,
+    "method": "redraw with same seed, compare key columns"
+  },
+  "row_cap_census": {
+    "n_flagged_in_d1": 8,
+    "n_in_d1_pool": 8,
+    "n_added": 8,
+    "n_already_drawn": 0,
+    "membership": "census of every D1 flag_possible_row_cap event; never pooled"
+  },
+  "canonical_join": {
+    "rule": "inner join to momentum_events_canonical WHERE in_scope = TRUE",
+    "n_cohort": 114,
+    "n_matched": 114,
+    "shortfall": 0,
+    "unmatched": [],
+    "escalation_row_2_triggered": false
+  },
+  "t0_print_count_by_group": {
+    "activity_extension": {
+      "n": 50,
+      "min": 296,
+      "q25": 5228.5,
+      "median": 22208.0,
+      "q75": 92923.5,
+      "max": 687554
+    },
+    "dev_v4_primary": {
+      "n": 50,
+      "min": 518,
+      "q25": 1753.5,
+      "median": 26163.0,
+      "q75": 63831.25,
+      "max": 831614
+    },
+    "dev_v4_sidecar": {
+      "n": 6,
+      "min": 43,
+      "q25": 74.75,
+      "median": 830.0,
+      "q75": 5399.0,
+      "max": 10267
+    },
+    "row_cap_census": {
+      "n": 8,
+      "min": 50000,
+      "q25": 87500.0,
+      "median": 100000.0,
+      "q75": 100000.0,
+      "max": 200000
+    }
+  },
+  "flags_in_cohort": {
+    "flag_possible_row_cap": 8,
+    "flag_possible_row_cap_events": [
+      {
+        "ticker": "ANY",
+        "event_date_canonical": "2021-09-02",
+        "momentum_pct": 80.69,
+        "cohort_group": "row_cap_census",
+        "t0_print_count": 200000
+      },
+      {
+        "ticker": "AMIX",
+        "event_date_canonical": "2024-07-19",
+        "momentum_pct": 57.04,
+        "cohort_group": "row_cap_census",
+        "t0_print_count": 100000
+      },
+      {
+        "ticker": "APLD",
+        "event_date_canonical": "2024-09-05",
+        "momentum_pct": 76.23,
+        "cohort_group": "row_cap_census",
+        "t0_print_count": 100000
+      },
+      {
+        "ticker": "BBBY",
+        "event_date_canonical": "2022-08-08",
+        "momentum_pct": 63.48,
+        "cohort_group": "row_cap_census",
+        "t0_print_count": 100000
+      },
+      {
+        "ticker": "ARBB",
+        "event_date_canonical": "2023-12-26",
+        "momentum_pct": 377.89,
+        "cohort_group": "row_cap_census",
+        "t0_print_count": 100000
+      },
+      {
+        "ticker": "ARBB",
+        "event_date_canonical": "2024-02-13",
+        "momentum_pct": 195.45,
+        "cohort_group": "row_cap_census",
+        "t0_print_count": 50000
+      },
+      {
+        "ticker": "BCAB",
+        "event_date_canonical": "2022-08-10",
+        "momentum_pct": 104.16,
+        "cohort_group": "row_cap_census",
+        "t0_print_count": 50000
+      },
+      {
+        "ticker": "APRE",
+        "event_date_canonical": "2021-06-16",
+        "momentum_pct": 60.82,
+        "cohort_group": "row_cap_census",
+        "t0_print_count": 100000
+      }
+    ],
+    "flag_has_dup_prints": 0,
+    "flag_eth_dominant_t0": 4,
+    "clean_window_false": 6
+  },
+  "artifact": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+  "source": "research/phase_10/t1_cohort.py:main"
+}
