@@ -229,7 +229,8 @@
     },
     "burst_move_numerator": "last print price in the burst minus first print price in the burst",
     "concentration_curve": {
-      "grid_seconds": [0, 5, 10, 15, 20, 30, 45, 60, 90, 120, 180, 240, 300, 420, 600, 900, 1200, 1800, 2700, 3600],
+      "grid_seconds": [0, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2, 3, 5, 10, 15, 20, 30, 45, 60, 90, 120, 180, 240, 300, 420, 600, 900, 1200, 1800, 2700, 3600],
+      "grid_seconds_amendment": "Sub-second points (0.01 .. 3 s) added at T6a after the first render. The original grid began at 5 s, but Arm A's reference burst duration median is 2.39 s, so every Arm A burst was already terminal at the first grid point and its curve was pinned at 1.0 across the whole axis -- chart 06 could not display the arm it is meant to describe. This is a RESOLUTION change to the display grid only: it adds sample points to an existing curve, changes no threshold, no parameter, no segmentation, and no pre-registered failure criterion (none of rows 1-4 reads the concentration curve). Recorded rather than silently applied.",
       "anchor": "burst start (== burst confirmation; see anchor_note)",
       "anchor_note": "For Arm B, confirmation is the first grid point at or above the on-threshold, which IS the burst start under this phase's definition. For Arm A the burst start is the first print of the state-1 run. The two are the same object — the moment the rule first calls the burst — so 'burst confirmation' and 'burst start' are used interchangeably and no separate confirmation lag is modelled.",
       "quantity_move": "cumulative signed price change from the burst's first print, as a share of that burst's total signed price change",

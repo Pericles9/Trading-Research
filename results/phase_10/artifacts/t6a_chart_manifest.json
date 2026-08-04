@@ -1,0 +1,60 @@
+{
+  "phase": "10",
+  "task": "T6a",
+  "config_hash": "6753cbe9",
+  "n_charts": 6,
+  "n_kaleido_verified": 6,
+  "all_verified": true,
+  "palette": {
+    "arm_a": "#2a78d6",
+    "arm_b": "#eb6834",
+    "row_cap_census": "#4a3aa7",
+    "dev_v4_sidecar": "#1baf7a",
+    "validation": "data-viz validator, light mode, --pairs all: lightness band PASS, chroma floor PASS, CVD separation PASS (worst all-pairs \u0394E 9.2 deutan), normal-vision floor PASS (worst \u0394E 16.3). Aqua carries a sub-3:1 contrast WARN; relief is the mandatory per-series n label."
+  },
+  "charts": [
+    {
+      "chart": "01_burst_count.html",
+      "png": "01_burst_count.png",
+      "kaleido_verified": true,
+      "html_bytes": 17047,
+      "png_bytes": 322425
+    },
+    {
+      "chart": "02_burst_duration.html",
+      "png": "02_burst_duration.png",
+      "kaleido_verified": true,
+      "html_bytes": 651763,
+      "png_bytes": 269012
+    },
+    {
+      "chart": "03_burst_spacing.html",
+      "png": "03_burst_spacing.png",
+      "kaleido_verified": true,
+      "html_bytes": 621707,
+      "png_bytes": 282586
+    },
+    {
+      "chart": "04_burst_move_share.html",
+      "png": "04_burst_move_share.png",
+      "kaleido_verified": true,
+      "html_bytes": 697808,
+      "png_bytes": 340819
+    },
+    {
+      "chart": "05_arm_agreement.html",
+      "png": "05_arm_agreement.png",
+      "kaleido_verified": true,
+      "html_bytes": 21183,
+      "png_bytes": 344280
+    },
+    {
+      "chart": "06_burst_relative_concentration.html",
+      "png": "06_burst_relative_concentration.png",
+      "kaleido_verified": true,
+      "html_bytes": 665304,
+      "png_bytes": 433959
+    }
+  ],
+  "source": "research/phase_10/t6a_charts.py:main"
+}
