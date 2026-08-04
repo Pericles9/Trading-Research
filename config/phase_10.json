@@ -1,0 +1,323 @@
+{
+  "phase": "10",
+  "title": "Burst Decomposition",
+  "branch": "phase/10",
+  "baseline": {
+    "tag": "phase-9-approved",
+    "tag_sha": "7909d66199c2adfde597eb8a263e7dbb730cc1fb",
+    "trunk": "master",
+    "trunk_at_tag": true,
+    "trunk_note": "master == phase-9-approved == 7909d66 at T0a. Escalation row 1 clear; no repeat of the Phase 9 trunk-lag condition. phase/10 cut directly from master."
+  },
+  "objective": "Per-event segmentation of the T=0 session into bursts; burst timescale = count, duration, spacing, and the fraction of the session move each burst carries.",
+
+  "cooper_decision_points": {
+    "1_baseline_differs_by_arm": "PROCEEDING AS DRAFTED. Arm A self-normalizing within-session; Arm B time-of-day-matched flanking-day. Not reconciled, by design.",
+    "2_two_state_only": "PROCEEDING AS DRAFTED. Kleinberg infinite-state / hierarchical variant NOT run this phase.",
+    "note": "The prompt flags both for confirm-or-override before commit. No override was issued; the drafted defaults stand and are recorded here so the run is reproducible against a stated choice."
+  },
+
+  "read_path": {
+    "rule": "ZERO passes over filtered_trades / filtered_quotes. Every tick read is a targeted per-event parquet read.",
+    "source": "data/filtered/{TICKER}_{YYYY-MM-DD}_{MOMENTUM_PCT:.2f}/trades.parquet",
+    "repair_siblings_glob": "data/filtered/{folder}/trades_repair_1c.parquet",
+    "repair_siblings_rule": "Phase 1c heal writes live as *_repair_1c.parquet siblings inside the event folder and MUST be unioned with the base file (CLAUDE.md: 'Any future full re-ingest of filtered/ must include repair siblings').",
+    "equivalence_check": "Per-event union(trades.parquet, trades_repair_1c.parquet) row count must equal filtered_trades_dev_v4 row count for every dev v4 event. Verified 4/4 on spot check at T0 (ALXO 6744, OCUL 90244, OST 2592, PAR 52197); run over all 56 at T0d.",
+    "folder_presence_is_not_universe": "Folder presence never establishes membership. Membership is the inner join to momentum_events_canonical WHERE in_scope = TRUE (CLAUDE.md universe rules; 1,341 orphan folders exist)."
+  },
+
+  "universe": {
+    "d1_definition": "in_scope = TRUE AND source_file = 'file1'",
+    "d1_expected_n": 15763,
+    "join_key": ["ticker", "event_date_canonical", "round(momentum_pct,2)"],
+    "canonical_view": "momentum_events_canonical",
+    "canonical_date_column": "event_date_canonical"
+  },
+
+  "analysis_clock": {
+    "decision": "D3 — extended-day analysis clock, America/New_York, DST-aware",
+    "session_calendar": "exchange_calendars / pandas_market_calendars XNYS, pinned 4.13.2 / 5.4.0",
+    "premarket_start_et": "04:00:00",
+    "post_end_et_normal": "20:00:00",
+    "post_end_et_early_close": "17:00:00",
+    "early_close_rule": "rth_close < 16:00 ET => early close => post end 17:00 ET",
+    "timezone_rule": "session-date and segment assignment computed in America/New_York, never by casting the UTC sip_timestamp to a date (Phase 6b convention).",
+    "t0_window": "[premarket_start_et, post_end_et) on event_date_canonical. Prints outside the window are excluded from segmentation and their count is reported.",
+    "offsets_used": [-3, -2, -1, 0],
+    "offsets_note": "T-3..T-1 are read for Arm B's baseline only. T+1..T+3 are not read this phase."
+  },
+
+  "d4": {
+    "status": "in force",
+    "rule": "No spine numeric column (any OHLC or volume field on momentum_events) on any computation path. Every computed quantity is tick-derived from filtered/ trade prints.",
+    "momentum_pct_use": "cohort description and manifest carry-through ONLY. It is not a stratification variable this phase (see stratification.variable) and measures nothing.",
+    "a12_applicability": "D4 Amendment A12 covers ratios/level-changes/returns spanning a session boundary. Every Phase 10 measured quantity (burst move share, concentration, time-to-extreme) is computed WITHIN the T=0 session from T=0 prints only, numerator and denominator both. No cross-session ratio is computed, so flag_cross_session_extreme does not enter any Phase 10 statistic. Arm B's baseline uses flanking-session COUNTS (prints per minute), never flanking-session prices, so no price basis crosses a boundary there either."
+  },
+
+  "cohort": {
+    "seed": 42,
+    "primary_spine": {
+      "source": "results/phase_5a/artifacts/dev_v4_primary_events.parquet",
+      "n": 50,
+      "label": "dev_v4_primary",
+      "note": "Dev v4 primary cohort, seed 42, momentum_pct-decile stratified, pinned at Phase 5a. Reused frozen, never redrawn."
+    },
+    "sidecar": {
+      "source": "results/phase_5a/artifacts/dev_v4_sidecar_events.parquet",
+      "n": 6,
+      "label": "dev_v4_sidecar",
+      "pooling_rule": "NEVER pooled into cohort-level statistics. Reported as its own row everywhere. Deliberately degraded-archive events that exist to exercise broken-data code paths."
+    },
+    "extension": {
+      "label": "activity_extension",
+      "n": 50,
+      "per_stratum": 5,
+      "seed": 42,
+      "draw_method": "Within each stratum, sort the eligible pool by (ticker, event_date_canonical, momentum_pct) for determinism, then numpy.random.default_rng(seed + stratum_index).choice without replacement.",
+      "eligibility": [
+        "in_scope = TRUE",
+        "source_file = 'file1'",
+        "clean_window = TRUE",
+        "trades_ingested = TRUE",
+        "not already in dev_v4_primary or dev_v4_sidecar"
+      ],
+      "eligibility_note": "clean_window is required because Arm B's baseline needs T-3..T-1 trade coverage. Events failing it are still measurable by Arm A but would enter the cross-arm comparison with a structurally undefined Arm B, confounding chart 05.",
+      "reproducibility_check": "Redraw with the same seed and assert 0 differing rows."
+    }
+  },
+
+  "stratification": {
+    "variable": "t0_print_count_decile",
+    "definition": "Decile of SUM(n_trades) over event_minute_bars_v2 WHERE session_offset = 0, computed over the D1 eligibility pool.",
+    "source_table": "event_minute_bars_v2",
+    "n_strata": 10,
+    "why_not_momentum_pct": "momentum_pct is a completed-day PRICE-move stratifier and is the axis dev v4 primary was already drawn on, so re-using it would re-sample the same axis twice and leave session activity uncontrolled. The prompt's T1 requirement is that the cohort 'spans the range of session activity'. T=0 print count IS session activity, is tick-derived (D4-clean, event_minute_bars_v2 is built from filtered_trades), and spans four orders of magnitude across D1 (p01 135, median 21,585, p99 834,612, max 4,856,965) — a range over which a burst segmentation has no reason to behave uniformly.",
+    "d1_t0_print_count_reference": {
+      "n": 15763,
+      "min": 4, "p01": 135, "p05": 681, "p10": 1385, "p25": 4749,
+      "p50": 21585, "p75": 89914, "p90": 257469, "p95": 411047, "p99": 834612,
+      "max": 4856965,
+      "measured_at": "T0 sizing pass over event_minute_bars_v2, session_offset = 0, D1 join"
+    }
+  },
+
+  "arm_a": {
+    "name": "Kleinberg continuous two-state",
+    "reference": "J. Kleinberg, 'Bursty and Hierarchical Structure in Streams', KDD 2002, §2 (continuous-time / infinite-state automaton), restricted to k = 2 states.",
+    "implementation": "direct",
+    "implementation_reason": "pybursts is not installed in the project .venv and installing an unpinned package mid-phase is worse than a 40-line auditable implementation of a fully specified algorithm. The R `bursts` package was not considered (no R toolchain here). Implemented in research/phase_10/kleinberg.py with an exactness test against a hand-computed 3-gap example.",
+    "n_states": 2,
+    "s": 2.0,
+    "s_desc": "Multiplicative rate distance between states. State i rate alpha_i = (n / T) * s^i, i in {0,1}. s = 2.0 is Kleinberg's stated default.",
+    "gamma": 1.0,
+    "gamma_desc": "State-transition cost coefficient. Cost of moving from state i to state j > i is (j - i) * gamma * ln(n). Kleinberg's stated default. gamma is doing the work a minimum-dwell floor does in Arm B: it is the ONLY thing preventing single-gap state flips, and Arm A therefore has NO explicit duration floor.",
+    "baseline": "self-normalizing within-session: alpha_0 = n / T where n = number of in-window T=0 prints and T = span in seconds from first to last in-window T=0 print. No flanking session enters Arm A.",
+    "gap_definition": "x_i = t_{i+1} - t_i in seconds, over in-window T=0 prints sorted by sip_timestamp, ties broken by sequence_number.",
+    "zero_gap_floor_seconds": 1e-09,
+    "zero_gap_floor_desc": "Simultaneous prints give x = 0, at which the exponential density is finite but ln alpha dominates and the two states become indistinguishable in the limit. Gaps are floored at 1 ns (the sip_timestamp resolution) so a zero gap is treated as one tick of time rather than a degenerate point. Count of floored gaps reported per event.",
+    "burst_resolution": "Maximal runs of state 1 in the Viterbi path. Burst start = timestamp of the print opening the first gap in the run; burst end = timestamp of the print closing the last gap in the run.",
+    "min_prints_for_arm_a": 20,
+    "min_prints_desc": "Below this the self-normalizing baseline is not meaningful. Events below are labeled arm_a_undefined and carried, never dropped."
+  },
+
+  "arm_b": {
+    "name": "threshold + hysteresis on a time-of-day-matched flanking baseline",
+    "grid_seconds": 10,
+    "grid_seconds_desc": "Evaluation grid over the T=0 in-window session. Sets the time resolution of an Arm B burst boundary. 10 s chosen so the boundary resolution is well under the 60 s minimum dwell and does not itself generate the duration distribution.",
+    "rate_window_seconds": 60,
+    "rate_window_desc": "Centred window; T=0 rate at grid point g = (count of in-window T=0 prints in [g-30s, g+30s)) / 1 minute. Centred rather than trailing because this is offline segmentation, not detection — a trailing window would impose a causal lag the phase is explicitly not modelling.",
+    "baseline_window_minutes": 15,
+    "baseline_window_desc": "Baseline at minute-of-session m = (total prints in minutes [m-15, m+15] pooled across offsets -3, -2, -1) / (number of contributing minute slots). Time-of-day-matched, NOT a whole-day average: a whole-day denominator saturates on names that trade thin for weeks then enormously on the event day, and degenerates the segmentation into a session flag. The +/-15 min window exists because a single (minute, 3 sessions) cell is mostly zero on these names; it widens support without leaving the time-of-day neighbourhood.",
+    "baseline_floor_per_min": 0.05,
+    "baseline_floor_desc": "Lower floor on the baseline rate in prints/min, so the log ratio is defined where the flanking neighbourhood is empty. 0.05/min = 3 prints/hour, below any plausible real quote-driven print rate. Events whose ENTIRE flanking window is empty are labeled baseline_undefined and carried.",
+    "ratio_space": "log",
+    "ratio_definition": "z(g) = ln( max(rate_t0(g), 0) + eps ) - ln( max(baseline(m(g)), baseline_floor_per_min) + eps ), eps = 1e-09",
+    "on_multiplier": 4.0,
+    "off_multiplier": 2.0,
+    "multiplier_desc": "Burst turns ON when z >= ln(on_multiplier), OFF when z < ln(off_multiplier). off < on strictly, giving hysteresis. 4x/2x chosen as a round separation with a 2x hysteresis band; both are on the sensitivity grid.",
+    "min_dwell_seconds": 60,
+    "min_dwell_desc": "A candidate burst shorter than this is discarded. Drawn as a vertical rule on chart 02 (failure row 2 is exactly the condition that the median duration sits on this line).",
+    "merge_gap_seconds": 120,
+    "merge_gap_desc": "Two candidate bursts separated by less than this are merged into one. Chart 03's failure appearance is a spacing distribution indistinguishable from this value.",
+    "order_of_operations": ["threshold with hysteresis", "merge gaps < merge_gap_seconds", "drop bursts shorter than min_dwell_seconds"],
+    "order_of_operations_desc": "Merge BEFORE the dwell drop, so a real burst broken by one sub-threshold grid point is not destroyed by the floor.",
+    "baseline_definedness_labels": ["defined", "baseline_partial", "baseline_undefined"],
+    "baseline_definedness_rule": "defined = every in-window minute-of-session has >= 1 contributing flanking print in its +/-15 min neighbourhood; baseline_partial = some but not all; baseline_undefined = none. Partial and undefined are carried with the label, never dropped."
+  },
+
+  "sensitivity_grid": {
+    "arm_a": {
+      "s": [1.5, 2.0, 3.0],
+      "gamma": [0.5, 1.0, 2.0],
+      "reference_point": {"s": 2.0, "gamma": 1.0}
+    },
+    "arm_b": {
+      "on_multiplier": [3.0, 4.0, 6.0],
+      "off_multiplier": [1.5, 2.0, 3.0],
+      "min_dwell_seconds": [30, 60, 120],
+      "reference_point": {"on_multiplier": 4.0, "off_multiplier": 2.0, "min_dwell_seconds": 60},
+      "constraint": "off_multiplier < on_multiplier strictly; combinations violating it are skipped and the skipped count reported."
+    },
+    "perturbation_rule": "Each grid cell is compared against its arm's reference point on the SAME event. Overlap is summarised over the cohort per cell and pooled over all non-reference cells for failure row 3."
+  },
+
+  "overlap_measure": {
+    "primary": "interval_jaccard",
+    "interval_jaccard_definition": "For two burst sets on the same event, J = (total seconds covered by the intersection of their unions) / (total seconds covered by the union of their unions). Empty-vs-empty is defined as J = 1.0; empty-vs-nonempty is J = 0.0. Both counts reported.",
+    "secondary": "burst_count_agreement",
+    "burst_count_agreement_definition": "|k_1 - k_2| and the indicator k_1 == k_2, per event.",
+    "why_primary": "The downstream use of this phase is burst-relative ANCHORING — every later horizon is measured from a burst boundary. What matters is therefore whether the same regions of the session get labeled, which is what interval overlap measures. Burst-count agreement can be perfect while the intervals sit in entirely different places, and can be poor while the same region is labeled with one extra split. Count agreement is reported alongside because it is the quantity a reader of chart 01 will compare, but it is not the failure-row-3 statistic."
+  },
+
+  "failure_criteria": {
+    "row_0": {
+      "mode": "Cooper rejects the segmentation on visual review of chart 07 against the tape",
+      "threshold": null,
+      "note": "Cooper's judgment. No numeric threshold. Overrides rows 1-4 in either direction. A pass on rows 1-4 does not constitute acceptance."
+    },
+    "row_1": {
+      "mode": "Degenerate to session flag",
+      "observable": "share of cohort events whose segmentation yields exactly 1 burst AND that burst covers >= majority_span_share of the in-window T=0 session span",
+      "majority_span_share": 0.5,
+      "threshold_share": 0.20,
+      "direction": "FAIL if observed share > threshold_share",
+      "applies_to": ["arm_a", "arm_b"]
+    },
+    "row_2": {
+      "mode": "Fragmentation at the floor",
+      "observable": "median burst duration in seconds, per arm",
+      "floor_reference_seconds": 60,
+      "threshold_multiple": 1.25,
+      "direction": "FAIL if median duration <= threshold_multiple * floor_reference_seconds",
+      "applies_to": ["arm_b"],
+      "reported_for": ["arm_a", "arm_b"],
+      "note": "Arm A has no explicit dwell floor (gamma plays that role), so the row is evaluated against the same reference for comparability and reported, but it is Arm B's criterion. Stated per the prompt: 'Arm B primarily; report for both'."
+    },
+    "row_3": {
+      "mode": "Parameter instability",
+      "observable": "median interval_jaccard between each non-reference sensitivity cell and the arm's reference point, pooled over cohort and cells",
+      "threshold_median_jaccard": 0.50,
+      "direction": "FAIL if observed median < threshold_median_jaccard",
+      "applies_to": ["arm_a", "arm_b"],
+      "note": "Prompt: if small parameter changes reshuffle the burst set, that is the §5.1.1 'foundation is sand' condition arriving several phases ahead of Phase 16 and must be on the record loudly."
+    },
+    "row_4": {
+      "mode": "No structure",
+      "observable": "burst count distribution across the cohort, per arm",
+      "threshold_modal_share": 0.60,
+      "threshold_min_iqr": 1.0,
+      "direction": "FAIL if share of cohort at the modal burst count > threshold_modal_share OR burst-count IQR < threshold_min_iqr",
+      "applies_to": ["arm_a", "arm_b"]
+    },
+    "on_fire": "Hard stop. Commit, post observed values and relevant charts. Do NOT adjust parameters to make a criterion pass. Do NOT introduce offline changepoint detection — authorized only by numbered amendment, only as a challenger, only after a pre-registered failure is on the record."
+  },
+
+  "measurements": {
+    "session_move_denominator": {
+      "definition": "last in-window T=0 print price minus first in-window T=0 print price, both tick-derived from filtered/ trades",
+      "d5_anchor_declaration": "This is a SESSION-scale anchor. D5 requires any session/day-relative anchor to be named and justified in the phase prompt before use. The prompt names it at T4b ('Fraction of the T=0 session move ... state the denominator definition explicitly'). It is used ONLY as the denominator of the per-burst share and is not an anchor for any horizon measurement. Every horizon quantity in this phase (T4c, T4d) is burst-relative.",
+      "undefined_rule": "undefined where the denominator is 0 (first and last in-window print at the same price). Counted and reported; never imputed.",
+      "sign_rule": "Shares are reported signed and unclipped. A share > 1 or < 0 is a real feature of a session that overshoots and retraces, not an error."
+    },
+    "burst_move_numerator": "last print price in the burst minus first print price in the burst",
+    "concentration_curve": {
+      "grid_seconds": [0, 5, 10, 15, 20, 30, 45, 60, 90, 120, 180, 240, 300, 420, 600, 900, 1200, 1800, 2700, 3600],
+      "anchor": "burst start (== burst confirmation; see anchor_note)",
+      "anchor_note": "For Arm B, confirmation is the first grid point at or above the on-threshold, which IS the burst start under this phase's definition. For Arm A the burst start is the first print of the state-1 run. The two are the same object — the moment the rule first calls the burst — so 'burst confirmation' and 'burst start' are used interchangeably and no separate confirmation lag is modelled.",
+      "quantity_move": "cumulative signed price change from the burst's first print, as a share of that burst's total signed price change",
+      "quantity_volume": "cumulative share count from the burst's first print, as a share of that burst's total share count",
+      "past_end_rule": "A burst shorter than grid point t contributes its terminal value (share 1.0) at every t beyond its end. n contributing bursts is reported per grid point alongside n still-open bursts.",
+      "bands": ["p25", "p50", "p75"]
+    },
+    "time_to_burst_extreme": {
+      "definition": "seconds from burst start to the timestamp of the maximum print price within the burst; ties resolved to the earliest such print",
+      "extreme_side": "high",
+      "extreme_side_reason": "D5 is long-only. The relevant extreme within a burst is the high. The low is not measured and no fade/short quantity is produced."
+    },
+    "carried_populations": ["dev_v4_primary", "activity_extension", "dev_v4_sidecar", "flag_possible_row_cap", "arm_a_undefined", "baseline_partial", "baseline_undefined", "session_move_undefined"],
+    "carried_population_rule": "Every measurement table breaks out flag_possible_row_cap events as their own row and dev_v4_sidecar as its own row. Neither is pooled into the headline cohort figure."
+  },
+
+  "flags": {
+    "flag_possible_row_cap": {
+      "home": "results/phase_8/artifacts/a101_labels.parquet",
+      "rule": "Join, never re-derive. One of the three standing exceptions to A9.3 (with flag_has_dup_prints in 6b event_index_v2 and flag_cross_session_extreme in 9's t1_cross_session_flags).",
+      "why_load_bearing_here": "A collector row cap truncates the tail of the session, which is exactly where burst termination and the bull-to-bear flip live. Carried, labeled and reported separately throughout — never pooled."
+    },
+    "flag_has_dup_prints": {
+      "home": "results/phase_6b/artifacts/event_index_v2.parquet",
+      "rule": "Joined and reported for cohort membership. Duplicate prints inflate arrival counts and therefore both arms' rate measures, so cohort membership is stated even though no Phase 10 statistic excludes them."
+    },
+    "flag_eth_dominant_t0": {
+      "home": "momentum_events_canonical",
+      "rule": "Annotation only. Reported for cohort composition. No Phase 10 measurement excludes flagged events — exclusion is a per-phase Cooper decision and none was taken."
+    }
+  },
+
+  "charts": {
+    "engine": "plotly",
+    "format": "standalone HTML, one chart per file",
+    "kaleido_verify": true,
+    "kaleido_verify_rule": "Every chart 01-06 writes a .png sibling via kaleido. A chart whose png does not render is not shipped.",
+    "caption_requires": ["sample", "n", "filters applied", "config hash"],
+    "rules": "distribution not just centre; n per bucket always; no smoothing; log axes where multiplicative; outliers shown, never clipped",
+    "chart_07": {
+      "dir": "results/phase_10/charts/07_tape_review/",
+      "gitignore_rule": "A .gitignore containing '*' is written INSIDE results/phase_10/charts/07_tape_review/ rather than editing the repo-root .gitignore. This achieves the §12 outcome (thousands of multi-MB HTML files stay untracked) while keeping every write inside the escalation-row-7 allowlist. The index and the per-event charts are regenerable from committed config + code.",
+      "selection_rule": ["all dev_v4_primary events", "all dev_v4_sidecar events, labeled", "stratified draw over activity_extension by Arm A burst count: the top burst_count_edge_n, the bottom burst_count_edge_n, and a seeded random middle_n"],
+      "burst_count_edge_n": 5,
+      "middle_n": 6,
+      "middle_seed": 42,
+      "max_charts": 72,
+      "max_charts_desc": "Hard cap. Escalation row 6 fires if the selection exceeds it. 50 primary + 6 sidecar + 16 extension = 72 at the cap by construction.",
+      "index": "results/phase_10/charts/07_tape_review/index.html — sortable, covers the FULL cohort (all 106 events) including events with no chart, per Agent_Prompt_Standard §7 ('index coverage may not be sampled').",
+      "max_scatter_points": 150000,
+      "over_cap_rule": "Above max_scatter_points the top panel plots a seeded uniform-random subsample (rate stated in the title and caption) — uniform sampling preserves relative density, which is what the tape read depends on. The bottom panel switches from per-print markers to a per-10s min/median/max envelope computed from ALL prints, so no print is removed from any computation and the outlier envelope is still shown. Both arms' burst intervals are always drawn from the full-resolution segmentation.",
+      "over_cap_seed": 42
+    }
+  },
+
+  "runtime_ceilings": {
+    "arm_a_seconds_per_event": 120,
+    "arm_a_seconds_aggregate": 3600,
+    "arm_b_seconds_per_event": 120,
+    "arm_b_seconds_aggregate": 3600,
+    "tick_read_seconds_per_event": 180,
+    "on_breach": "Escalation row 5 — hard stop, post per-event and aggregate timings. Do NOT silently reduce the cohort."
+  },
+
+  "paths": {
+    "duckdb": "data/duckdb/main.duckdb",
+    "filtered_root": "data/filtered",
+    "bars_table": "event_minute_bars_v2",
+    "dev_v4_primary": "results/phase_5a/artifacts/dev_v4_primary_events.parquet",
+    "dev_v4_sidecar": "results/phase_5a/artifacts/dev_v4_sidecar_events.parquet",
+    "row_cap_labels": "results/phase_8/artifacts/a101_labels.parquet",
+    "event_index_v2": "results/phase_6b/artifacts/event_index_v2.parquet",
+    "out_artifacts": "results/phase_10/artifacts/",
+    "out_charts": "results/phase_10/charts/"
+  },
+
+  "write_allowlist": ["prompts/", "config/", "research/phase_10/", "results/phase_10/"],
+  "write_allowlist_note": "Escalation row 7 — any write outside these is a hard stop. Note the chart-07 gitignore is handled by a nested .gitignore inside results/phase_10/charts/07_tape_review/ specifically to stay inside this list.",
+
+  "environment": {
+    "python": ".venv/Scripts/python.exe, 3.11.0",
+    "duckdb": "1.4.4",
+    "pandas": "2.3.3",
+    "numpy": "2.4.2",
+    "plotly": "6.5.2",
+    "pyarrow": "23.0.0",
+    "pandas_market_calendars": "5.4.0",
+    "exchange_calendars": "4.13.2",
+    "pybursts": "NOT INSTALLED — Arm A implemented directly, see arm_a.implementation_reason"
+  },
+
+  "reporting": {
+    "description_only": "Escalation rows 9 and 10. No output described as a detector, entry signal, operating point or latency budget. No arm, parameter set or burst definition selected, recommended or described as preferable. No result characterized as good, promising, weak or disappointing.",
+    "phase_13_boundary": "Escalation row 8. Inter-trade time is a DIAGNOSTIC DISPLAY AXIS on chart 07 and an input to Arm A's likelihood. No inter-trade interval distribution is produced as a reported finding, no noise floor is characterized, no burst-vs-quiet interval regime is defined. Those are Phase 13's deliverable.",
+    "n_rule": "Every statistic carries n. Every claim cites its chart file."
+  },
+
+  "config_hash_note": "This file is committed before any measurement run. Outputs key on its content hash."
+}
