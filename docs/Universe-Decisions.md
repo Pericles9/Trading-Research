@@ -212,6 +212,35 @@ the pre-A9 state.
 
 ---
 
+## D5 — Strategy surface and horizon class
+
+**Date:** 2026-08-03
+**Deciding phase gate:** `phase-7-approved` (documentation redirect, `prompts/redirect_d5.md` — not a phase)
+
+**Selected surface:** intraday post-trigger (§3.3 surface #2), long-only, burst-scale horizons.
+
+**Definitions.**
+- *Burst* — a contiguous high-intensity trade-arrival cluster within a T=0 session.
+- *Burst-relative anchor* — a measurement origin located at a burst confirmation timestamp, as opposed to session open, session close, previous close, or session high.
+
+**What D5 selects.** §4 (trading intraday during high-participation windows) and §5 (regime detection, direction signal, end-detector) of `docs/Mom-DB-Strategy-Research-Program.md` become the program spine. The operating premise is: a strong bull impulse that flips sharply to a strong bear impulse, traded as a sequence of short-horizon long entries gated on regime, with minimized time exposure — not held to a fixed horizon.
+
+**What D5 demotes.** §3.3's ranking of T+1 (day-2) as surface #1. T+1 is reduced to one optional measurement pass for the "does this archive contain any edge at all" read. It is no longer a program pillar and no longer precedes detector work.
+
+**What D5 kills.** All short-side variants, including T+1 fade. The SSR and borrow-availability modeling requirement in §7.2 is void for as long as D5 stands. Long-only, for execution-logistics and risk-control reasons.
+
+**What D5 does not change.** §7.2 cost model (always cross the spread, effective spread as cost basis, slippage scaled to observed spread and participation, halts modeled as forced holds through the reopen). §7.3 validation discipline (time-based splits, ticker-blocked splits, universe-boundary and cost sensitivity). D1, D2, D4. Flag-never-delete. Two-tier dev/full discipline. The chart contract and the Evidence Standard.
+
+**Recorded consequences.**
+- (a) Session-anchored opportunity-decay measurements — Phase 6 RTH-only, and Phase 6b as currently scoped — measure a quantity outside D5's horizon class. They are retained as archive. They are **not** the operative latency budget.
+- (b) The latency budget under D5 must be re-derived burst-relative.
+- (c) Risk-register items #3 (missing counterfactuals) and #4 (circularity of regime frequency) are upgraded from "must happen before capital" to near-front blockers. Under D5 the false-positive rate of a live screen is a direct PnL term, not a caveat.
+- (d) The archive universe (q05 power-law filter applied to completed daily moves) and the intended live universe (real-time ≥30% from previous close, pre- and post-market inclusive) are different populations. This mismatch becomes a first-class open item.
+
+**Left open by D5, to be decided before any detector phase is specified.** Whether the entry signal is *onset prediction* (firing ahead of the cluster) or *fast detection and ride* (confirmation inside the cluster). §4.2 condition 4 bears directly on this. D5 does not decide it.
+
+---
+
 ## Related
 
 - [[Open-Items-Register]] — the "2025 inclusion decision" item is closed there, referencing D1;
