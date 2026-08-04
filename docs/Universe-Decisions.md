@@ -239,6 +239,40 @@ the pre-A9 state.
 
 **Left open by D5, to be decided before any detector phase is specified.** Whether the entry signal is *onset prediction* (firing ahead of the cluster) or *fast detection and ride* (confirmation inside the cluster). §4.2 condition 4 bears directly on this. D5 does not decide it.
 
+### D5 Amendment A11 — Phase 6b disposition: archive-only, no new run
+
+**Date:** 2026-08-03
+**Deciding phase gate:** Cooper decision at the D5 redirect (`prompts/redirect_d5.md` T6)
+
+**Correction of the T6 premise.** T6 as written states that `prompts/phase_6b.md` and
+`config/phase_6b.json` "are currently queued to resume the moment `phase-7-approved` exists, per
+Amendment A8.2." That premise is stale. Phase 6b has already run and been approved — tag
+`phase-6b-approved` exists, `prompts/phase_6b_amendment_8.md` is committed, and `results/phase_6b/`
+is the declared baseline of Phase 8 (`event_minute_bars_v2`, 45,925,350 rows). The live question is
+therefore not whether to resume 6b, but what standing its completed output has under D5.
+
+**Decision: archive-only, no new run.**
+
+- **6b's session-anchored extended-day decay output is archive.** It stays committed and citable. It
+  is **not** the operative latency budget, exactly as D5 consequence (a) states. Any phase citing a
+  6b or Phase 6 decay figure labels it as the session-anchored quantity and does not present it as a
+  budget under D5.
+- **No re-run, no re-scope, no successor phase is authorized by this amendment.** The burst-relative
+  latency budget required by D5 consequence (b) will be derived by a phase specified on its own
+  terms.
+- **`event_minute_bars_v2` is unaffected as a data artifact.** A11 demotes 6b's *conclusions*, not
+  its tables. Phases 8 and 9 both build on `event_minute_bars_v2` and remain valid; the D4 rule that
+  every measured quantity is tick-derived is what makes that table load-bearing, and nothing in D5
+  touches it.
+- **A8.2's terms are not modified.** Its sweep requirement (every spine numeric reference confirmed
+  diagnostic-display only) stands unchanged. A11 adds a disposition; it does not amend A8.2.
+- **`prompts/phase_6b.md` and `config/phase_6b.json` are left exactly as committed** — the historical
+  record of what ran, not a queue entry.
+
+**How to apply:** cite A11 when reusing any `results/phase_6/` or `results/phase_6b/` decay
+statistic, and state that it is session-anchored and superseded as a budget. Reuse of
+`event_minute_bars_v2` itself needs no citation.
+
 ---
 
 ## Related
