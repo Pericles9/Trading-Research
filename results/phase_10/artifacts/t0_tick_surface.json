@@ -1,0 +1,356 @@
+{
+  "phase": "10",
+  "task": "T0d",
+  "config_hash": "1705e5c3",
+  "ordering_note": "T0d depends on the T1 cohort and therefore runs after T1.",
+  "read_path": {
+    "source": "data/filtered/{TICKER}_{YYYY-MM-DD}_{MOMENTUM_PCT:.2f}/trades.parquet",
+    "repair_siblings_included": true,
+    "filtered_trades_scans": 0,
+    "filtered_quotes_scans": 0,
+    "equivalence_proof": {
+      "n_events_checked": 56,
+      "n_agree": 56,
+      "n_disagree": 0,
+      "disagreements": [],
+      "total_rows_disk": 9638361,
+      "total_rows_table": 9638361,
+      "pass": true,
+      "meaning": "union(trades.parquet, trades_repair_1c.parquet) read directly off disk reproduces filtered_trades_dev_v4 row-for-row. filtered_trades_dev_v4 was materialized from filtered_trades by an inner join on the 3-part key (research/phase_5a/t5_materialize_dev_v4.py), so agreement here means the folder read IS the filtered_trades content for that event. This is what licenses reading folders instead of scanning the 4.95B-row table.",
+      "elapsed_seconds": 7.1
+    }
+  },
+  "cohort_n": 114,
+  "by_group": {
+    "activity_extension": {
+      "n_events": 50,
+      "t0_prints": {
+        "n": 50,
+        "q0": 296.0,
+        "q25": 5228.5,
+        "q50": 22208.0,
+        "q75": 92923.5,
+        "q100": 687554.0,
+        "mean": 76006.5
+      },
+      "flanking_prints_total": {
+        "n": 50,
+        "q0": 45.0,
+        "q25": 1389.25,
+        "q50": 10651.0,
+        "q75": 34596.75,
+        "q100": 1475592.0,
+        "mean": 87904.88
+      },
+      "n_events_with_zero_t0_prints": 0,
+      "n_events_with_zero_flanking_prints": 0,
+      "n_events_all_3_flanking_sessions_present": 50,
+      "n_events_with_repair_sibling": 4,
+      "n_events_quotes_ingested": 50,
+      "n_events_trades_ingested": 50,
+      "n_events_clean_window": 50,
+      "n_events_flag_possible_row_cap": 0,
+      "n_events_flag_eth_dominant_t0": 2,
+      "n_events_early_close_t0": 0,
+      "out_of_window_prints_total": 3560762
+    },
+    "dev_v4_primary": {
+      "n_events": 50,
+      "t0_prints": {
+        "n": 50,
+        "q0": 518.0,
+        "q25": 1753.5,
+        "q50": 26163.0,
+        "q75": 63831.25,
+        "q100": 831614.0,
+        "mean": 75122.94
+      },
+      "flanking_prints_total": {
+        "n": 50,
+        "q0": 57.0,
+        "q25": 1174.5,
+        "q50": 5206.0,
+        "q75": 27689.5,
+        "q100": 1459957.0,
+        "mean": 64134.12
+      },
+      "n_events_with_zero_t0_prints": 0,
+      "n_events_with_zero_flanking_prints": 0,
+      "n_events_all_3_flanking_sessions_present": 50,
+      "n_events_with_repair_sibling": 7,
+      "n_events_quotes_ingested": 50,
+      "n_events_trades_ingested": 50,
+      "n_events_clean_window": 50,
+      "n_events_flag_possible_row_cap": 0,
+      "n_events_flag_eth_dominant_t0": 1,
+      "n_events_early_close_t0": 0,
+      "out_of_window_prints_total": 2582979
+    },
+    "dev_v4_sidecar": {
+      "n_events": 6,
+      "t0_prints": {
+        "n": 6,
+        "q0": 43.0,
+        "q25": 74.75,
+        "q50": 830.0,
+        "q75": 5399.0,
+        "q100": 10267.0,
+        "mean": 3119.1666666666665
+      },
+      "flanking_prints_total": {
+        "n": 6,
+        "q0": 0.0,
+        "q25": 14.0,
+        "q50": 64.5,
+        "q75": 1447.75,
+        "q100": 23639.0,
+        "mean": 4279.0
+      },
+      "n_events_with_zero_t0_prints": 0,
+      "n_events_with_zero_flanking_prints": 1,
+      "n_events_all_3_flanking_sessions_present": 1,
+      "n_events_with_repair_sibling": 0,
+      "n_events_quotes_ingested": 3,
+      "n_events_trades_ingested": 6,
+      "n_events_clean_window": 0,
+      "n_events_flag_possible_row_cap": 0,
+      "n_events_flag_eth_dominant_t0": 1,
+      "n_events_early_close_t0": 0,
+      "out_of_window_prints_total": 48140
+    },
+    "row_cap_census": {
+      "n_events": 8,
+      "t0_prints": {
+        "n": 8,
+        "q0": 50000.0,
+        "q25": 87500.0,
+        "q50": 100000.0,
+        "q75": 100000.0,
+        "q100": 200000.0,
+        "mean": 100000.0
+      },
+      "flanking_prints_total": {
+        "n": 8,
+        "q0": 371.0,
+        "q25": 7226.0,
+        "q50": 54288.0,
+        "q75": 186170.75,
+        "q100": 416929.0,
+        "mean": 127245.875
+      },
+      "n_events_with_zero_t0_prints": 0,
+      "n_events_with_zero_flanking_prints": 0,
+      "n_events_all_3_flanking_sessions_present": 8,
+      "n_events_with_repair_sibling": 1,
+      "n_events_quotes_ingested": 8,
+      "n_events_trades_ingested": 8,
+      "n_events_clean_window": 8,
+      "n_events_flag_possible_row_cap": 8,
+      "n_events_flag_eth_dominant_t0": 0,
+      "n_events_early_close_t0": 0,
+      "out_of_window_prints_total": 2006067
+    }
+  },
+  "all_cohort": {
+    "n_events": 114,
+    "t0_prints": {
+      "n": 114,
+      "q0": 43.0,
+      "q25": 3106.75,
+      "q50": 26604.5,
+      "q75": 97900.25,
+      "q100": 831614.0,
+      "mean": 73466.55263157895
+    },
+    "flanking_prints_total": {
+      "n": 114,
+      "q0": 0.0,
+      "q25": 1126.75,
+      "q50": 7678.0,
+      "q75": 30687.25,
+      "q100": 1475592.0,
+      "mean": 75838.51754385965
+    },
+    "n_events_with_zero_t0_prints": 0,
+    "n_events_with_zero_flanking_prints": 1,
+    "n_events_all_3_flanking_sessions_present": 109,
+    "n_events_with_repair_sibling": 12,
+    "n_events_quotes_ingested": 111,
+    "n_events_trades_ingested": 114,
+    "n_events_clean_window": 108,
+    "n_events_flag_possible_row_cap": 8,
+    "n_events_flag_eth_dominant_t0": 4,
+    "n_events_early_close_t0": 0,
+    "out_of_window_prints_total": 8197948
+  },
+  "analysis_cohort_only": {
+    "n_events": 100,
+    "t0_prints": {
+      "n": 100,
+      "q0": 296.0,
+      "q25": 3410.25,
+      "q50": 25203.5,
+      "q75": 78241.0,
+      "q100": 831614.0,
+      "mean": 75564.72
+    },
+    "flanking_prints_total": {
+      "n": 100,
+      "q0": 45.0,
+      "q25": 1250.5,
+      "q50": 8060.5,
+      "q75": 29473.75,
+      "q100": 1475592.0,
+      "mean": 76019.5
+    },
+    "n_events_with_zero_t0_prints": 0,
+    "n_events_with_zero_flanking_prints": 0,
+    "n_events_all_3_flanking_sessions_present": 100,
+    "n_events_with_repair_sibling": 11,
+    "n_events_quotes_ingested": 100,
+    "n_events_trades_ingested": 100,
+    "n_events_clean_window": 100,
+    "n_events_flag_possible_row_cap": 0,
+    "n_events_flag_eth_dominant_t0": 3,
+    "n_events_early_close_t0": 0,
+    "out_of_window_prints_total": 6143741
+  },
+  "t0_count_crosscheck_vs_minute_bars": {
+    "n_events": 114,
+    "n_mismatched": 0,
+    "max_abs_diff": 0,
+    "note": "event_minute_bars_v2 T=0 in-window print count vs this phase's folder read over the same extended-day window. A zero diff confirms the clock implementation here matches Phase 6b's.",
+    "mismatches": []
+  },
+  "row_cap_events": [
+    {
+      "ticker": "ANY",
+      "event_date_canonical": "2021-09-02",
+      "momentum_pct": 80.69,
+      "cohort_group": "row_cap_census",
+      "n_prints_off0": 200000,
+      "n_flanking_prints": 416929
+    },
+    {
+      "ticker": "AMIX",
+      "event_date_canonical": "2024-07-19",
+      "momentum_pct": 57.04,
+      "cohort_group": "row_cap_census",
+      "n_prints_off0": 100000,
+      "n_flanking_prints": 132427
+    },
+    {
+      "ticker": "APLD",
+      "event_date_canonical": "2024-09-05",
+      "momentum_pct": 76.23,
+      "cohort_group": "row_cap_census",
+      "n_prints_off0": 100000,
+      "n_flanking_prints": 96569
+    },
+    {
+      "ticker": "BBBY",
+      "event_date_canonical": "2022-08-08",
+      "momentum_pct": 63.48,
+      "cohort_group": "row_cap_census",
+      "n_prints_off0": 100000,
+      "n_flanking_prints": 347402
+    },
+    {
+      "ticker": "ARBB",
+      "event_date_canonical": "2023-12-26",
+      "momentum_pct": 377.89,
+      "cohort_group": "row_cap_census",
+      "n_prints_off0": 100000,
+      "n_flanking_prints": 371
+    },
+    {
+      "ticker": "ARBB",
+      "event_date_canonical": "2024-02-13",
+      "momentum_pct": 195.45,
+      "cohort_group": "row_cap_census",
+      "n_prints_off0": 50000,
+      "n_flanking_prints": 3941
+    },
+    {
+      "ticker": "BCAB",
+      "event_date_canonical": "2022-08-10",
+      "momentum_pct": 104.16,
+      "cohort_group": "row_cap_census",
+      "n_prints_off0": 50000,
+      "n_flanking_prints": 8321
+    },
+    {
+      "ticker": "APRE",
+      "event_date_canonical": "2021-06-16",
+      "momentum_pct": 60.82,
+      "cohort_group": "row_cap_census",
+      "n_prints_off0": 100000,
+      "n_flanking_prints": 12007
+    }
+  ],
+  "residual_coverage_flags": {
+    "n_not_clean_window": 6,
+    "events_not_clean_window": [
+      {
+        "ticker": "SLXN",
+        "event_date_canonical": "2024-08-19",
+        "momentum_pct": 31.79,
+        "cohort_group": "dev_v4_sidecar",
+        "coverage_class": "event_day_only",
+        "trades_bitmap": null
+      },
+      {
+        "ticker": "APLD",
+        "event_date_canonical": "2022-03-28",
+        "momentum_pct": 45.24,
+        "cohort_group": "dev_v4_sidecar",
+        "coverage_class": "full_window",
+        "trades_bitmap": null
+      },
+      {
+        "ticker": "ACET",
+        "event_date_canonical": "2020-09-18",
+        "momentum_pct": 32.84,
+        "cohort_group": "dev_v4_sidecar",
+        "coverage_class": "event_day_only",
+        "trades_bitmap": null
+      },
+      {
+        "ticker": "RBC",
+        "event_date_canonical": "2022-09-26",
+        "momentum_pct": 44.21,
+        "cohort_group": "dev_v4_sidecar",
+        "coverage_class": "event_day_only",
+        "trades_bitmap": null
+      },
+      {
+        "ticker": "NUKK",
+        "event_date_canonical": "2022-04-18",
+        "momentum_pct": 50.37,
+        "cohort_group": "dev_v4_sidecar",
+        "coverage_class": "event_day_only",
+        "trades_bitmap": null
+      },
+      {
+        "ticker": "PSIX",
+        "event_date_canonical": "2022-11-15",
+        "momentum_pct": 74.86,
+        "cohort_group": "dev_v4_sidecar",
+        "coverage_class": "event_day_only",
+        "trades_bitmap": null
+      }
+    ],
+    "n_flag_window_calendar_bug": 2,
+    "n_repaired_1c": 12,
+    "n_no_folder": 0
+  },
+  "timing": {
+    "total_seconds": 17.8,
+    "max_seconds_per_event": 1.1,
+    "median_seconds_per_event": 0.11,
+    "ceiling_seconds_per_event": 180,
+    "escalation_row_5_triggered": false
+  },
+  "source": "research/phase_10/t0d_tick_surface.py:main",
+  "artifact": "results/phase_10/artifacts/t0_tick_surface.parquet"
+}
