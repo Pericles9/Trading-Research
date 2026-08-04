@@ -212,6 +212,65 @@ the pre-A9 state.
 
 ---
 
+### D4 Amendment A12 — the quarantine extends to cross-session tick price ratios
+
+**Date:** 2026-08-03
+**Deciding phase gate:** Phase 9 approval (`phase-9-approved`)
+
+**The gap A12 closes.** D4 severed the dependency on the spine's numeric columns because their
+adjustment basis is inconsistent per ticker and per column. The same inconsistency exists in the
+**raw tick archive across a session boundary**: `filtered_trades` prices are stored as collected, so
+a corporate action between two sessions changes the basis between them exactly as it does on the
+spine. D4 as written is silent on this, because it was framed around *which table* a number comes
+from. Phase 8 §18/§19 applied D4's within-day guard correctly and then computed
+`t0_close → t1_close` and `t0_close → t3_close` ratios across that boundary anyway — tick-sourced
+throughout, and still basis-mismatched.
+
+**Decision:** *A price ratio spanning a session boundary is not certified by being tick-derived. Any
+phase computing a cross-session ratio, level change, or return from tick data carries a
+magnitude-based cross-session flag and reports the statistic with and without the flagged set. D4
+governs the source; A12 governs the boundary.*
+
+**Measured basis (Phase 9 T1/T2, n = 15,763 D1 events).** `flag_cross_session_extreme` =
+`|log(p_later_close / p_earlier_close)| ≥ ln 1.8`, magnitude only — the detector encodes no
+corporate-action judgment. Flag rates: (T−1,T0) 890/15,729 = 5.66%; (T0,T+1) 251/15,741 = 1.59%;
+(T0,T+2) 450/15,744 = 2.86%; (T0,T+3) 623/15,747 = 3.96%. 1,484 events (9.41%) flagged on at least
+one pair.
+
+**Why the flag is mandatory rather than advisory.** On the pooled `t0_close → t1_close` statistic the
+**median is robust** (−0.02782 → −0.02844) but the **mean simple return flips sign, +3.7308% →
+−1.5253%**, and it flips in 10 of the 12 headline cells (every quintile and the 2022–2024 era at
+both horizons; the two that do not flip were already negative). A phase reporting a cross-session
+mean without the flag reports the wrong sign. This is a boundary problem, not a pricing-path
+problem: Phase 9's session closes reproduce Phase 8's ASOF markouts exactly, `max|diff| = 0.000e+00`
+over 31,380 pairs.
+
+**What A12 does not claim.** The flag is **not** a corporate-action classifier. Phase 9's
+integer-clustering diagnostic found the aggregate within-tolerance share (22.7–24.2% per pair) sits
+*at or below* the rate expected by chance (24.7–28.4%), because the 3% bands are not measure-zero
+(constant log-width 0.0600 for every `k`) and they touch at `k = 17`, above which membership is
+automatic. Against a local background the excess is confined to `k = 2` (298 observed vs 210.07
+expected, 1.42×), with `k = 3,4,5` at or below background. The flagged set is a **magnitude**
+population that demonstrably contains reverse splits — not a certified corporate-action list. Do not
+read it as one, and do not read the raw within-tolerance share without its chance baseline.
+
+**Standing rule for all future phases:** any cross-session tick quantity carries the flag, ships
+untrimmed as the primary, and reports the flagged set as its own row (never silently dropped — the
+flag-never-delete rule is unchanged). **Denominators count:** a ratio whose *denominator* spans the
+boundary is covered even when the numerator does not. Phase 9 T3's `retrace_excursion` denominator
+`H − A` spans (T−1,T0) because `A` is a T−1 price and `H` is a T0 price, so the flag applies at every
+horizon including same-day `t0_close`, not only at T+1…T+3.
+
+**Home of the flag:** `results/phase_9/artifacts/t1_cross_session_flags.parquet`, per (event,
+session-pair) — parallel to `flag_possible_row_cap` (Phase 8) and `flag_has_dup_prints` (6b).
+**Not** in `src/data/canonical.py`; promoting it there is a separate Cooper decision, open in
+[[Open-Items-Register]].
+
+**How to apply:** any phase computing a quantity across a session boundary cites A12, states which
+pairs it spans, and reports the with/without-flag pair. Within-day quantities are unaffected.
+
+---
+
 ## D5 — Strategy surface and horizon class
 
 **Date:** 2026-08-03
