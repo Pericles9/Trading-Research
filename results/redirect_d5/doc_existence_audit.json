@@ -1,0 +1,82 @@
+{
+  "artifact": "doc_existence_audit",
+  "task": "T0d",
+  "prompt": "prompts/redirect_d5.md",
+  "date": "2026-08-03",
+  "branch": "docs/d5-redirect",
+  "branch_cut_from": {
+    "requested": "main",
+    "actual": "master",
+    "note": "No branch named 'main' exists in this repository. The trunk branch is 'master' (git branch -a lists only master plus phase/* branches). Cut from master @ 6dd52cf ('phase-8 post-approval: cross-phase REPORT copy, open-items, library map'). Recorded as a naming discrepancy, not a resolution."
+  },
+  "preconditions": {
+    "phase_7_approved_tag": {
+      "present": true,
+      "commit": "b402dcab6583d173448ccef76dcc288634d75019"
+    }
+  },
+  "audit": [
+    { "path": "CLAUDE.md", "exists": true, "lines": 70 },
+    { "path": "docs/Universe-Decisions.md", "exists": true, "lines": 225 },
+    { "path": "docs/Open-Items-Register.md", "exists": true, "lines": 47 },
+    { "path": "docs/Mom-DB-Strategy-Research-Program.md", "exists": true, "lines": 375 },
+    { "path": "docs/Agent_Prompt_Standard.md", "exists": true, "lines": 572 },
+    { "path": "docs/Claude-Code-Operating-Plan.md", "exists": false, "lines": null },
+    { "path": "prompts/phase_6b.md", "exists": true, "lines": 125 },
+    { "path": "config/phase_6b.json", "exists": true, "lines": 98 }
+  ],
+  "escalation_row_2_status": "NOT triggered. Both documents named in escalation row 2 (docs/Mom-DB-Strategy-Research-Program.md, docs/Agent_Prompt_Standard.md) are present. The Phase 0b-era gap on the Strategy Program has since been closed; CLAUDE.md's Pointers section records no missing-document gap.",
+  "absent_document": {
+    "path": "docs/Claude-Code-Operating-Plan.md",
+    "required_by": "T4 (edit §6 Phase Map) and, transitively, T3d (§9 rewrite is specified as 'sequenced from the phase map in T4')",
+    "search_method": [
+      "find . -not -path './.git/*' -iname '*operating*' -o -iname '*claude-code*'  — full checkout traversal including data/, archive/, research/, notebooks/, hawkes-ofi-impact/, scanner-epg-momentum/. Zero filename matches.",
+      "ripgrep content search for /Operating.?Plan/i across the checkout excluding data/ — 4 references found, all citing the document, none being it.",
+      "git log --all -- '*Operating*' — empty. git log --all --diff-filter=D --name-only | grep -i operat — empty. The file has never existed in any commit on any branch."
+    ],
+    "references_to_it_in_repo": [
+      "prompts/phase_0a.md:4 — 'Precedes Phase 0 (harness setup) from the Operating Plan §6.'",
+      "prompts/phase_0a.md:38 — 'Target layout is the directory contract from the Operating Plan §2.2'",
+      "prompts/phase_0b.md:5 — 'Complete Phase 0 of the Operating Plan'",
+      "docs/Research-Library-Map.md:518 — \"the Operating Plan's results/phase_{x}/ convention\""
+    ],
+    "conclusion": "The Operating Plan is an external document held outside this checkout. It is cited by executed phase prompts but has never been version-controlled here. Per T0d's instruction ('do not create it, do not reconstruct it from memory or from quotations in phase reports, do not draft a replacement'), nothing was created. Escalation row 8 applies to T4."
+  },
+  "conflicts_found": [
+    {
+      "id": "C1",
+      "severity": "blocking",
+      "task": "T4 (and T3d)",
+      "statement": "docs/Claude-Code-Operating-Plan.md does not exist and has never existed in this repository. T4's instruction to leave rows 0-7 as they are and replace rows 8 onward cannot be executed against a file with no rows.",
+      "escalation_row": 8,
+      "action_taken": "none — T4 and T3d not executed"
+    },
+    {
+      "id": "C2",
+      "severity": "blocking",
+      "task": "T4",
+      "statement": "Phases 8 and 9 already exist and do not match the T4 phase map. Tag phase-8-approved exists; prompts/phase_8.md is 'Phase 8 - Event-Study Grid: Forward Markouts from Tradeable Anchors' (merged to master, 2026-08-01). Branch phase/9 carries 9 unmerged commits of 'Phase 9 - Path Shape, Cross-Session Integrity, and Clustered Inference' (2026-08-03), with prompts/phase_9.md and config/phase_9.json. The T4 map assigns row 8 = 'Burst decomposition' and row 9 = 'Spread & impact by participation'. Transcribing it verbatim would overwrite the record of a tagged, approved phase with a different, unexecuted plan.",
+      "escalation_row": 8,
+      "action_taken": "none — T4 not executed"
+    },
+    {
+      "id": "C3",
+      "severity": "informational",
+      "task": "T6",
+      "statement": "T6's premise is stale. It states prompts/phase_6b.md and config/phase_6b.json 'are currently queued to resume the moment phase-7-approved exists'. Phase 6b has already run and been approved: tag phase-6b-approved exists, branch phase/6b exists, prompts/phase_6b_amendment_8.md is committed, and results/phase_6b/ artifacts are cited throughout the Open Items Register and by Phase 8's baseline ('phase-6b-approved - event_minute_bars_v2, 45,925,350 rows').",
+      "escalation_row": null,
+      "action_taken": "none — T6 hard-stopped on escalation row 3 regardless (disposition block unfilled)"
+    },
+    {
+      "id": "C4",
+      "severity": "informational",
+      "task": "T0b, Approval Gate",
+      "statement": "No 'main' branch exists; trunk is 'master'. The Approval Gate's 'do not begin Phase 8 scoping' is moot - Phase 8 is complete and approved.",
+      "escalation_row": null,
+      "action_taken": "branch cut from master; noted"
+    }
+  ],
+  "tasks_executed": ["T0a", "T0b", "T0c", "T0d", "T1", "T2", "T3-version", "T3a", "T3b", "T3c", "T5"],
+  "tasks_hard_stopped": ["T3d", "T4", "T6"],
+  "data_access": "none — no DuckDB connection opened, no read under data/ (the T0d filename traversal stat'd paths under data/ but opened no file)"
+}
