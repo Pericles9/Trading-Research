@@ -1,0 +1,830 @@
+{
+  "phase": "10",
+  "task": "T5",
+  "config_hash": "1705e5c3",
+  "overlap_measure": {
+    "primary": "interval_jaccard",
+    "interval_jaccard_definition": "For two burst sets on the same event, J = (total seconds covered by the intersection of their unions) / (total seconds covered by the union of their unions). Empty-vs-empty is defined as J = 1.0; empty-vs-nonempty is J = 0.0. Both counts reported.",
+    "secondary": "burst_count_agreement",
+    "burst_count_agreement_definition": "|k_1 - k_2| and the indicator k_1 == k_2, per event.",
+    "why_primary": "The downstream use of this phase is burst-relative ANCHORING \u2014 every later horizon is measured from a burst boundary. What matters is therefore whether the same regions of the session get labeled, which is what interval overlap measures. Burst-count agreement can be perfect while the intervals sit in entirely different places, and can be poor while the same region is labeled with one extra split. Count agreement is reported alongside because it is the quantity a reader of chart 01 will compare, but it is not the failure-row-3 statistic."
+  },
+  "population": "pooled analysis cohort (dev_v4_primary + activity_extension), n=100. row_cap_census and dev_v4_sidecar are excluded from every T5 statistic, per the never-pooled rule.",
+  "t5a_sensitivity": {
+    "A": {
+      "n_non_reference_cells": 8,
+      "n_comparisons": 800,
+      "pooled_jaccard_vs_reference": {
+        "n": 800,
+        "q0": 0.2134289163552308,
+        "q25": 0.6759308024425572,
+        "q50": 0.77411348409687,
+        "q75": 0.8461269466921368,
+        "q100": 1.0,
+        "mean": 0.7507066050605882
+      },
+      "per_cell": {
+        "s1.5_g0.5": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.47610481310610364,
+            "q25": 0.857541367149232,
+            "q50": 0.887939652642975,
+            "q75": 0.9170943271060124,
+            "q100": 1.0,
+            "mean": 0.8797362589373088
+          },
+          "count_equal_share": 0.11,
+          "median_count_delta": 4.0,
+          "n_one_empty": 0,
+          "n_both_empty": 0
+        },
+        "s1.5_g1.0": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.3133951837767392,
+            "q25": 0.7011863130693866,
+            "q50": 0.7625467650190094,
+            "q75": 0.8019952330535662,
+            "q100": 1.0,
+            "mean": 0.7560805479029109
+          },
+          "count_equal_share": 0.02,
+          "median_count_delta": -54.5,
+          "n_one_empty": 0,
+          "n_both_empty": 0
+        },
+        "s1.5_g2.0": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.2134289163552308,
+            "q25": 0.5883489660833008,
+            "q50": 0.6644736577497814,
+            "q75": 0.7294318883891384,
+            "q100": 1.0,
+            "mean": 0.6561450201575175
+          },
+          "count_equal_share": 0.02,
+          "median_count_delta": -85.0,
+          "n_one_empty": 0,
+          "n_both_empty": 0
+        },
+        "s2.0_g0.5": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.6398669995400915,
+            "q25": 0.7619384767149198,
+            "q50": 0.8072424758571763,
+            "q75": 0.8472005185912117,
+            "q100": 1.0,
+            "mean": 0.8021731403490832
+          },
+          "count_equal_share": 0.01,
+          "median_count_delta": 115.0,
+          "n_one_empty": 0,
+          "n_both_empty": 0
+        },
+        "s2.0_g2.0": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.43854524253821187,
+            "q25": 0.7847931806882074,
+            "q50": 0.829296831134907,
+            "q75": 0.8624783844357955,
+            "q100": 1.0,
+            "mean": 0.820616278440494
+          },
+          "count_equal_share": 0.02,
+          "median_count_delta": -59.5,
+          "n_one_empty": 0,
+          "n_both_empty": 0
+        },
+        "s3.0_g0.5": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.34837807734977455,
+            "q25": 0.4928519089926843,
+            "q50": 0.5632981979975,
+            "q75": 0.636782261439873,
+            "q100": 0.9173549691224762,
+            "mean": 0.567993838632498
+          },
+          "count_equal_share": 0.0,
+          "median_count_delta": 300.5,
+          "n_one_empty": 0,
+          "n_both_empty": 0
+        },
+        "s3.0_g1.0": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.46994466075750857,
+            "q25": 0.6523270325518472,
+            "q50": 0.7057426877871891,
+            "q75": 0.7616516573091919,
+            "q100": 1.0,
+            "mean": 0.7045073756955758
+          },
+          "count_equal_share": 0.01,
+          "median_count_delta": 106.0,
+          "n_one_empty": 0,
+          "n_both_empty": 0
+        },
+        "s3.0_g2.0": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.5389688773160944,
+            "q25": 0.7884250476008567,
+            "q50": 0.821897183207664,
+            "q75": 0.8522349140546747,
+            "q100": 1.0,
+            "mean": 0.8184003803693165
+          },
+          "count_equal_share": 0.09,
+          "median_count_delta": -8.0,
+          "n_one_empty": 0,
+          "n_both_empty": 0
+        }
+      }
+    },
+    "B": {
+      "n_non_reference_cells": 23,
+      "n_comparisons": 2300,
+      "pooled_jaccard_vs_reference": {
+        "n": 2300,
+        "q0": 0.0,
+        "q25": 0.8384926618644412,
+        "q50": 0.9305735614070316,
+        "q75": 0.9856792635653678,
+        "q100": 1.0,
+        "mean": 0.8785308864740204
+      },
+      "per_cell": {
+        "on3.0_off1.5_dw120": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.27323420094423234,
+            "q25": 0.8140645369150513,
+            "q50": 0.9092307441297091,
+            "q75": 0.968377003139048,
+            "q100": 1.0,
+            "mean": 0.865830561197016
+          },
+          "count_equal_share": 0.06,
+          "median_count_delta": -4.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on3.0_off1.5_dw30": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.2419467315559667,
+            "q25": 0.8205053817428345,
+            "q50": 0.9072309800779557,
+            "q75": 0.9690271778048745,
+            "q100": 1.0,
+            "mean": 0.8622499476299388
+          },
+          "count_equal_share": 0.03,
+          "median_count_delta": 15.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on3.0_off1.5_dw60": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.250415598296382,
+            "q25": 0.8259660080017046,
+            "q50": 0.9110142256817433,
+            "q75": 0.9695929543712085,
+            "q100": 1.0,
+            "mean": 0.8697292870902089
+          },
+          "count_equal_share": 0.2,
+          "median_count_delta": 0.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on3.0_off2.0_dw120": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.2832214737407471,
+            "q25": 0.8573333750716474,
+            "q50": 0.9259557118564161,
+            "q75": 0.9720620779612635,
+            "q100": 1.0,
+            "mean": 0.890923368783942
+          },
+          "count_equal_share": 0.08,
+          "median_count_delta": -4.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on3.0_off2.0_dw30": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.2538353054063658,
+            "q25": 0.8579448124293447,
+            "q50": 0.9300925728446952,
+            "q75": 0.974303062027625,
+            "q100": 1.0,
+            "mean": 0.8880129921432275
+          },
+          "count_equal_share": 0.04,
+          "median_count_delta": 16.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on3.0_off2.0_dw60": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.2701911389359017,
+            "q25": 0.8681945102711792,
+            "q50": 0.9342160286167877,
+            "q75": 0.9780648898265951,
+            "q100": 1.0,
+            "mean": 0.8985130312366807
+          },
+          "count_equal_share": 0.22,
+          "median_count_delta": 0.5,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on4.0_off1.5_dw120": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.42679861310571426,
+            "q25": 0.915929653422282,
+            "q50": 0.9651994138199264,
+            "q75": 0.9863429642437056,
+            "q100": 1.0,
+            "mean": 0.9346938841954262
+          },
+          "count_equal_share": 0.04,
+          "median_count_delta": -6.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on4.0_off1.5_dw30": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.5337408320593923,
+            "q25": 0.9258931294074852,
+            "q50": 0.9715485219003389,
+            "q75": 0.9957075459174056,
+            "q100": 1.0,
+            "mean": 0.942518740435319
+          },
+          "count_equal_share": 0.04,
+          "median_count_delta": 13.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on4.0_off1.5_dw60": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.6175311834877207,
+            "q25": 0.9422004180193879,
+            "q50": 0.976081927913808,
+            "q75": 0.9991979365605844,
+            "q100": 1.0,
+            "mean": 0.9531058077727944
+          },
+          "count_equal_share": 0.42,
+          "median_count_delta": 0.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on4.0_off2.0_dw120": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.6911369409642143,
+            "q25": 0.965845020339237,
+            "q50": 0.9834545761591429,
+            "q75": 0.9937355143169057,
+            "q100": 1.0,
+            "mean": 0.9658833395894709
+          },
+          "count_equal_share": 0.05,
+          "median_count_delta": -5.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on4.0_off2.0_dw30": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.720201182761104,
+            "q25": 0.9874543696360985,
+            "q50": 0.9955789597845872,
+            "q75": 0.9992337629245045,
+            "q100": 1.0,
+            "mean": 0.9822242241914576
+          },
+          "count_equal_share": 0.05,
+          "median_count_delta": 14.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on4.0_off3.0_dw120": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.0,
+            "q25": 0.8931233907643601,
+            "q50": 0.9503010727187697,
+            "q75": 0.9836329851724682,
+            "q100": 1.0,
+            "mean": 0.8998306407336125
+          },
+          "count_equal_share": 0.05,
+          "median_count_delta": -5.0,
+          "n_one_empty": 1,
+          "n_both_empty": 1
+        },
+        "on4.0_off3.0_dw30": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.3772333204916217,
+            "q25": 0.9230367880975563,
+            "q50": 0.9676430367640503,
+            "q75": 0.9926969836354429,
+            "q100": 1.0,
+            "mean": 0.9274171314180343
+          },
+          "count_equal_share": 0.04,
+          "median_count_delta": 15.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on4.0_off3.0_dw60": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.28783869841693066,
+            "q25": 0.9285823286971103,
+            "q50": 0.9704909252906344,
+            "q75": 0.9941751790380077,
+            "q100": 1.0,
+            "mean": 0.9300319870312772
+          },
+          "count_equal_share": 0.31,
+          "median_count_delta": 0.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on6.0_off1.5_dw120": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.0,
+            "q25": 0.7615271556665147,
+            "q50": 0.8711340071592905,
+            "q75": 0.9590246484176127,
+            "q100": 1.0,
+            "mean": 0.8270232770769972
+          },
+          "count_equal_share": 0.04,
+          "median_count_delta": -6.0,
+          "n_one_empty": 1,
+          "n_both_empty": 1
+        },
+        "on6.0_off1.5_dw30": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.0,
+            "q25": 0.8138236274020265,
+            "q50": 0.8841366962934587,
+            "q75": 0.9635531516765807,
+            "q100": 1.0,
+            "mean": 0.8464582203444198
+          },
+          "count_equal_share": 0.02,
+          "median_count_delta": 10.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on6.0_off1.5_dw60": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.0,
+            "q25": 0.815269472173725,
+            "q50": 0.8843709248531977,
+            "q75": 0.9628944109130924,
+            "q100": 1.0,
+            "mean": 0.8460328725680238
+          },
+          "count_equal_share": 0.22,
+          "median_count_delta": -2.0,
+          "n_one_empty": 1,
+          "n_both_empty": 1
+        },
+        "on6.0_off2.0_dw120": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.0,
+            "q25": 0.7650645124608911,
+            "q50": 0.8691593273841707,
+            "q75": 0.9504275396758964,
+            "q100": 1.0,
+            "mean": 0.8223502485017647
+          },
+          "count_equal_share": 0.04,
+          "median_count_delta": -6.0,
+          "n_one_empty": 1,
+          "n_both_empty": 1
+        },
+        "on6.0_off2.0_dw30": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.0,
+            "q25": 0.8137354125844933,
+            "q50": 0.8884870901939484,
+            "q75": 0.9632025041381709,
+            "q100": 1.0,
+            "mean": 0.8483176140244431
+          },
+          "count_equal_share": 0.03,
+          "median_count_delta": 11.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on6.0_off2.0_dw60": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.0,
+            "q25": 0.8042962048188516,
+            "q50": 0.887854032628461,
+            "q75": 0.963180168501314,
+            "q100": 1.0,
+            "mean": 0.8469016907493558
+          },
+          "count_equal_share": 0.19,
+          "median_count_delta": -1.0,
+          "n_one_empty": 1,
+          "n_both_empty": 1
+        },
+        "on6.0_off3.0_dw120": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.0,
+            "q25": 0.6848508393601705,
+            "q50": 0.8279055635273906,
+            "q75": 0.9291377475030272,
+            "q100": 1.0,
+            "mean": 0.7685954104802275
+          },
+          "count_equal_share": 0.1,
+          "median_count_delta": -6.0,
+          "n_one_empty": 1,
+          "n_both_empty": 1
+        },
+        "on6.0_off3.0_dw30": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.0,
+            "q25": 0.7182175949500098,
+            "q50": 0.8507129215050164,
+            "q75": 0.9404973042766889,
+            "q100": 1.0,
+            "mean": 0.7977771594479717
+          },
+          "count_equal_share": 0.02,
+          "median_count_delta": 13.0,
+          "n_one_empty": 0,
+          "n_both_empty": 1
+        },
+        "on6.0_off3.0_dw60": {
+          "n_events": 100,
+          "jaccard": {
+            "n": 100,
+            "q0": 0.0,
+            "q25": 0.7177215883824926,
+            "q50": 0.8449912825394786,
+            "q75": 0.940598207088132,
+            "q100": 1.0,
+            "mean": 0.7917889522608603
+          },
+          "count_equal_share": 0.13,
+          "median_count_delta": 0.0,
+          "n_one_empty": 1,
+          "n_both_empty": 1
+        }
+      }
+    }
+  },
+  "t5b_cross_arm": {
+    "n_events": 100,
+    "measure": "interval_jaccard (same measure as T5a)",
+    "jaccard": {
+      "n": 100,
+      "q0": 0.0,
+      "q25": 0.21259922046101243,
+      "q50": 0.3068838123073325,
+      "q75": 0.4028612024682078,
+      "q100": 0.7635753582170761,
+      "mean": 0.31979810535841546
+    },
+    "count_equal_share": 0.0,
+    "burst_count_arm_a": {
+      "n": 100,
+      "q0": 1.0,
+      "q25": 15.0,
+      "q50": 98.5,
+      "q75": 264.5,
+      "q100": 1912.0,
+      "mean": 224.38
+    },
+    "burst_count_arm_b": {
+      "n": 100,
+      "q0": 0.0,
+      "q25": 15.75,
+      "q50": 25.0,
+      "q75": 32.0,
+      "q100": 60.0,
+      "mean": 24.08
+    },
+    "spearman_burst_count": -0.21647375404828237,
+    "n_events_arm_a_more_bursts": 67,
+    "n_events_arm_b_more_bursts": 33,
+    "n_events_equal_burst_count": 0,
+    "n_one_empty": 1,
+    "burst_covered_seconds_arm_a": {
+      "n": 100,
+      "q0": 2526.355579186,
+      "q25": 5715.226769933501,
+      "q50": 6864.042006177506,
+      "q75": 8489.11052026675,
+      "q100": 18221.479574586003,
+      "mean": 7066.781950119589
+    },
+    "burst_covered_seconds_arm_b": {
+      "n": 100,
+      "q0": 0.0,
+      "q25": 7108.878248552499,
+      "q50": 16431.644454122998,
+      "q75": 26810.01879711374,
+      "q100": 56165.263436716,
+      "mean": 18668.23747161829
+    },
+    "highest_agreement_events": [
+      {
+        "ticker": "INR",
+        "event_date_canonical": "2020-01-07",
+        "momentum_pct": 56.99,
+        "jaccard": 0.7635753582170761,
+        "n_bursts_arm_a": 1,
+        "n_bursts_arm_b": 10
+      },
+      {
+        "ticker": "OST",
+        "event_date_canonical": "2024-06-13",
+        "momentum_pct": 31.16,
+        "jaccard": 0.7259627984384377,
+        "n_bursts_arm_a": 5,
+        "n_bursts_arm_b": 16
+      },
+      {
+        "ticker": "SLGL",
+        "event_date_canonical": "2024-11-22",
+        "momentum_pct": 42.48,
+        "jaccard": 0.7239350614900727,
+        "n_bursts_arm_a": 2,
+        "n_bursts_arm_b": 9
+      },
+      {
+        "ticker": "OCG",
+        "event_date_canonical": "2024-12-17",
+        "momentum_pct": 45.45,
+        "jaccard": 0.7108697029303543,
+        "n_bursts_arm_a": 2,
+        "n_bursts_arm_b": 13
+      },
+      {
+        "ticker": "SLNH",
+        "event_date_canonical": "2022-12-21",
+        "momentum_pct": 47.66,
+        "jaccard": 0.698206501738909,
+        "n_bursts_arm_a": 14,
+        "n_bursts_arm_b": 18
+      }
+    ],
+    "lowest_agreement_events": [
+      {
+        "ticker": "AMTD",
+        "event_date_canonical": "2022-08-05",
+        "momentum_pct": 32.56,
+        "jaccard": 0.0,
+        "n_bursts_arm_a": 272,
+        "n_bursts_arm_b": 0
+      },
+      {
+        "ticker": "CVNA",
+        "event_date_canonical": "2020-03-24",
+        "momentum_pct": 58.3,
+        "jaccard": 0.02284904206275974,
+        "n_bursts_arm_a": 336,
+        "n_bursts_arm_b": 22
+      },
+      {
+        "ticker": "RLJ",
+        "event_date_canonical": "2020-03-24",
+        "momentum_pct": 30.56,
+        "jaccard": 0.04001591623517128,
+        "n_bursts_arm_a": 279,
+        "n_bursts_arm_b": 3
+      },
+      {
+        "ticker": "PRTH",
+        "event_date_canonical": "2020-09-15",
+        "momentum_pct": 32.53,
+        "jaccard": 0.09235846276093951,
+        "n_bursts_arm_a": 8,
+        "n_bursts_arm_b": 9
+      },
+      {
+        "ticker": "MESA",
+        "event_date_canonical": "2020-03-20",
+        "momentum_pct": 37.04,
+        "jaccard": 0.09786869517671254,
+        "n_bursts_arm_a": 54,
+        "n_bursts_arm_b": 6
+      }
+    ]
+  },
+  "t5c_failure_criteria": {
+    "row_0": {
+      "mode": "Cooper rejects the segmentation on visual review of chart 07 against the tape",
+      "threshold": null,
+      "observed": null,
+      "pass": null,
+      "note": "Cooper's judgment off chart 07. No numeric threshold. Overrides rows 1-4 in either direction. A pass on rows 1-4 does not constitute acceptance."
+    },
+    "rows": [
+      {
+        "row": 1,
+        "arm": "A",
+        "mode": "Degenerate to session flag",
+        "observable": "share of cohort events whose segmentation yields exactly 1 burst AND that burst covers >= majority_span_share of the in-window T=0 session span",
+        "observed": 0.0,
+        "threshold": 0.2,
+        "direction": "FAIL if observed share > threshold_share",
+        "applies": true,
+        "pass": true,
+        "detail": {
+          "n_events": 100,
+          "n_degenerate": 0
+        }
+      },
+      {
+        "row": 2,
+        "arm": "A",
+        "mode": "Fragmentation at the floor",
+        "observable": "median burst duration in seconds, per arm",
+        "observed": 2.3900296615,
+        "threshold": 75.0,
+        "direction": "FAIL if median duration <= threshold_multiple * floor_reference_seconds",
+        "applies": false,
+        "pass": null,
+        "detail": {
+          "n_bursts": 22438,
+          "floor_reference_seconds": 60,
+          "note": "Reported, not evaluated. The criterion is 'the rule re-emitting its own parameter'; Arm A has no minimum-dwell parameter to re-emit (gamma plays that role and is not a duration floor). config.failure_criteria.row_2 pre-registers applies_to = [arm_b], reported_for = [arm_a, arm_b]."
+        }
+      },
+      {
+        "row": 3,
+        "arm": "A",
+        "mode": "Parameter instability",
+        "observable": "median interval_jaccard between each non-reference sensitivity cell and the arm's reference point, pooled over cohort and cells",
+        "observed": 0.77411348409687,
+        "threshold": 0.5,
+        "direction": "FAIL if observed median < threshold_median_jaccard",
+        "applies": true,
+        "pass": true,
+        "detail": {
+          "n_comparisons": 800,
+          "n_cells": 8
+        }
+      },
+      {
+        "row": 4,
+        "arm": "A",
+        "mode": "No structure",
+        "observable": "burst count distribution across the cohort, per arm",
+        "observed": {
+          "modal_share": 0.04,
+          "iqr": 249.5,
+          "modal_value": 5
+        },
+        "threshold": {
+          "max_modal_share": 0.6,
+          "min_iqr": 1.0
+        },
+        "direction": "FAIL if share of cohort at the modal burst count > threshold_modal_share OR burst-count IQR < threshold_min_iqr",
+        "applies": true,
+        "pass": true,
+        "detail": {
+          "n_events": 100,
+          "n_distinct_burst_counts": 83
+        }
+      },
+      {
+        "row": 1,
+        "arm": "B",
+        "mode": "Degenerate to session flag",
+        "observable": "share of cohort events whose segmentation yields exactly 1 burst AND that burst covers >= majority_span_share of the in-window T=0 session span",
+        "observed": 0.0,
+        "threshold": 0.2,
+        "direction": "FAIL if observed share > threshold_share",
+        "applies": true,
+        "pass": true,
+        "detail": {
+          "n_events": 100,
+          "n_degenerate": 0
+        }
+      },
+      {
+        "row": 2,
+        "arm": "B",
+        "mode": "Fragmentation at the floor",
+        "observable": "median burst duration in seconds, per arm",
+        "observed": 176.0931055335,
+        "threshold": 75.0,
+        "direction": "FAIL if median duration <= threshold_multiple * floor_reference_seconds",
+        "applies": true,
+        "pass": true,
+        "detail": {
+          "n_bursts": 2408,
+          "floor_reference_seconds": 60,
+          "note": null
+        }
+      },
+      {
+        "row": 3,
+        "arm": "B",
+        "mode": "Parameter instability",
+        "observable": "median interval_jaccard between each non-reference sensitivity cell and the arm's reference point, pooled over cohort and cells",
+        "observed": 0.9305735614070316,
+        "threshold": 0.5,
+        "direction": "FAIL if observed median < threshold_median_jaccard",
+        "applies": true,
+        "pass": true,
+        "detail": {
+          "n_comparisons": 2300,
+          "n_cells": 23
+        }
+      },
+      {
+        "row": 4,
+        "arm": "B",
+        "mode": "No structure",
+        "observable": "burst count distribution across the cohort, per arm",
+        "observed": {
+          "modal_share": 0.05,
+          "iqr": 16.25,
+          "modal_value": 31
+        },
+        "threshold": {
+          "max_modal_share": 0.6,
+          "min_iqr": 1.0
+        },
+        "direction": "FAIL if share of cohort at the modal burst count > threshold_modal_share OR burst-count IQR < threshold_min_iqr",
+        "applies": true,
+        "pass": true,
+        "detail": {
+          "n_events": 100,
+          "n_distinct_burst_counts": 43
+        }
+      }
+    ],
+    "any_failed": false
+  },
+  "source": "research/phase_10/t5_sensitivity.py:main",
+  "artifact": "results/phase_10/artifacts/t5_overlap_pairs.parquet"
+}
