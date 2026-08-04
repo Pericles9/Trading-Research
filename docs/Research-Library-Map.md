@@ -11,6 +11,18 @@ This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `resea
 
 ---
 
+## D5 redirect additions (documentation-only; branch `docs/d5-redirect`, 2026-08-03)
+
+Not a phase — no data read, no measurement, no code run. Records `docs/Universe-Decisions.md` D5 (intraday post-trigger, long-only, burst-scale horizons) and re-sequences the program around it. Files added:
+
+- `prompts/redirect_d5.md` — the Cooper-approved redirect prompt, committed before any edit.
+- `docs/Claude-Code-Operating-Plan.md` — **newly tracked, Cooper-supplied 2026-08-03.** Cited by `prompts/phase_0a.md`, `prompts/phase_0b.md` and this file since Phase 0a, but had never existed in any commit on any branch; the gap was confirmed by the T0d audit and closed the same day. Committed unmodified first, then edited (§6 phase map).
+- `results/redirect_d5/doc_existence_audit.json` — T0d eight-path existence audit, the search method that established the Operating Plan's absence, and the four recorded conflicts (C1–C4).
+- `results/redirect_d5/verbatim_checks.json` — machine output of the T7 character-exact transcription checks.
+- `results/redirect_d5/REPORT.md` — verification block, diffstat, commit list, and every agent-authored passage quoted in full. **No cross-phase copy at `results/reports/`** — that rule is scoped to phases, and `results/reports/` sat outside this prompt's allowed write set.
+
+Files modified: `CLAUDE.md` (new `## Strategy surface (D5)` block, Pointers), `docs/Universe-Decisions.md` (D5 + D5 Amendment A11 — Phase 6b archive-only), `docs/Mom-DB-Strategy-Research-Program.md` (v2.0: §3.3, §6, §8, §9), `docs/Claude-Code-Operating-Plan.md` (§6 map rows 8+ replaced, D5 rows renumbered 10–19), `docs/Open-Items-Register.md` (three items opened, ARBB row-cap priority raised), this file. No deletions.
+
 ## Phase 8 additions (folder-level; `phase-8-approved`, 2026-08-01)
 
 Phase 8 = "Event-Study Grid: Forward Markouts from Tradeable Anchors" (first forward-return measurement; scan-free over `event_minute_bars_v2`, D4-clean). Files added:
@@ -250,6 +262,7 @@ All `src/*` producer paths above are as recorded in the pre-existing `archive/IN
 - `docs/Agent_Prompt_Standard (1).md` — **No longer present on disk.** The v1.1/v1.2 copy found during Phase 0c was still there and untracked immediately after T0's docs-housekeeping commit (verified, flagged as a deletion candidate). By T7 it was gone — removed or absorbed by Cooper's own fix rather than by any action taken in this phase, since this phase's write scope never touched `docs/`. Noted here so the discrepancy between T0's and T7's observations is on record rather than silently smoothed over.
 - `docs/Mom-DB-Strategy-Research-Program.md` — **Tracked, committed Phase 1 T0.** Same appearance circumstances as the prompt standard (found untracked during Phase 0c). A detailed research-program spec (data audit → structural constraints → two-signal regime architecture → development process) whose §2.3 explicitly calls for the join reconciliation Phase 0c performed and the filter forensics Phase 1 performs.
 - `docs/Open-Items-Register.md` — **Added Phase 2 T8.** Standing, append-only log of items surfaced but not resolved in the phase that found them (the 47 untraced `high_momentum` files, unread `enhanced/`/`rebuild_validation_sample/`, stale `Schema.md` `trade_data/` structure, uncorrected `.venv` calendar-library drift). No pre-existing register was found anywhere in the repo before this.
+- `docs/Claude-Code-Operating-Plan.md` — **Tracked from 2026-08-03 (D5 redirect).** The harness/process plan whose §2.2 directory contract, §3 standard additions and §6 phase map are cited by `prompts/phase_0a.md`, `prompts/phase_0b.md` and line 518 of this file. Despite those citations it had never been committed on any branch — Cooper held it externally, and it was supplied and tracked when the D5 redirect's T4 needed to edit it. Its §6 map rows 8 and up are prompt filenames from 2026-08-03 onward; rows 0–7 remain the original plan slots and never tracked filenames.
 
 ## `src/` (recovered Phase 0b T2 — see `results/phase_0b/artifacts/data_layer_search_d_drive.json` for full provenance)
 

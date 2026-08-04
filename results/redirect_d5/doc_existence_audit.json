@@ -16,14 +16,47 @@
     }
   },
   "audit": [
-    { "path": "CLAUDE.md", "exists": true, "lines": 70 },
-    { "path": "docs/Universe-Decisions.md", "exists": true, "lines": 225 },
-    { "path": "docs/Open-Items-Register.md", "exists": true, "lines": 47 },
-    { "path": "docs/Mom-DB-Strategy-Research-Program.md", "exists": true, "lines": 375 },
-    { "path": "docs/Agent_Prompt_Standard.md", "exists": true, "lines": 572 },
-    { "path": "docs/Claude-Code-Operating-Plan.md", "exists": false, "lines": null },
-    { "path": "prompts/phase_6b.md", "exists": true, "lines": 125 },
-    { "path": "config/phase_6b.json", "exists": true, "lines": 98 }
+    {
+      "path": "CLAUDE.md",
+      "exists": true,
+      "lines": 70
+    },
+    {
+      "path": "docs/Universe-Decisions.md",
+      "exists": true,
+      "lines": 225
+    },
+    {
+      "path": "docs/Open-Items-Register.md",
+      "exists": true,
+      "lines": 47
+    },
+    {
+      "path": "docs/Mom-DB-Strategy-Research-Program.md",
+      "exists": true,
+      "lines": 375
+    },
+    {
+      "path": "docs/Agent_Prompt_Standard.md",
+      "exists": true,
+      "lines": 572
+    },
+    {
+      "path": "docs/Claude-Code-Operating-Plan.md",
+      "exists": false,
+      "lines": null,
+      "resolved": "Supplied by Cooper 2026-08-03 after the audit ran; committed unmodified at 572deb9, then edited by T4. 261 lines as received."
+    },
+    {
+      "path": "prompts/phase_6b.md",
+      "exists": true,
+      "lines": 125
+    },
+    {
+      "path": "config/phase_6b.json",
+      "exists": true,
+      "lines": 98
+    }
   ],
   "escalation_row_2_status": "NOT triggered. Both documents named in escalation row 2 (docs/Mom-DB-Strategy-Research-Program.md, docs/Agent_Prompt_Standard.md) are present. The Phase 0b-era gap on the Strategy Program has since been closed; CLAUDE.md's Pointers section records no missing-document gap.",
   "absent_document": {
@@ -49,7 +82,8 @@
       "task": "T4 (and T3d)",
       "statement": "docs/Claude-Code-Operating-Plan.md does not exist and has never existed in this repository. T4's instruction to leave rows 0-7 as they are and replace rows 8 onward cannot be executed against a file with no rows.",
       "escalation_row": 8,
-      "action_taken": "none — T4 and T3d not executed"
+      "action_taken": "Cooper supplied the canonical copy. Committed unmodified (572deb9) before any edit, then T4 applied. T3d unblocked and executed.",
+      "status": "RESOLVED 2026-08-03"
     },
     {
       "id": "C2",
@@ -57,7 +91,9 @@
       "task": "T4",
       "statement": "Phases 8 and 9 already exist and do not match the T4 phase map. Tag phase-8-approved exists; prompts/phase_8.md is 'Phase 8 - Event-Study Grid: Forward Markouts from Tradeable Anchors' (merged to master, 2026-08-01). Branch phase/9 carries 9 unmerged commits of 'Phase 9 - Path Shape, Cross-Session Integrity, and Clustered Inference' (2026-08-03), with prompts/phase_9.md and config/phase_9.json. The T4 map assigns row 8 = 'Burst decomposition' and row 9 = 'Spread & impact by participation'. Transcribing it verbatim would overwrite the record of a tagged, approved phase with a different, unexecuted plan.",
       "escalation_row": 8,
-      "action_taken": "none — T4 not executed"
+      "action_taken": "T4 executed; T3d sequenced from the renumbered map.",
+      "status": "RESOLVED 2026-08-03 by Cooper decision",
+      "resolution": "Cooper chose: map numbers are prompt filenames from row 8 onward. Rows 0-7 left untouched as legacy plan slots. Two executed-record rows added (8 = event-study grid, phase-8-approved; 9 = path shape, branch phase/9), and T4's twelve rows shifted 8-17 -> 10-19 (Opt-A and Parallel unshifted), all verbatim modulo the phase number. Crosswalk recorded in the map: old row 8 ran as Phase 6, old row 12 ran as Phase 8. Note the T4 premise 'rows 0-7 describe completed work' was itself inaccurate -- they are plan slots, and the executed program inserted 0a/0b/0c/1b/1c/2b/5a and re-scoped several phases."
     },
     {
       "id": "C3",
@@ -65,7 +101,9 @@
       "task": "T6",
       "statement": "T6's premise is stale. It states prompts/phase_6b.md and config/phase_6b.json 'are currently queued to resume the moment phase-7-approved exists'. Phase 6b has already run and been approved: tag phase-6b-approved exists, branch phase/6b exists, prompts/phase_6b_amendment_8.md is committed, and results/phase_6b/ artifacts are cited throughout the Open Items Register and by Phase 8's baseline ('phase-6b-approved - event_minute_bars_v2, 45,925,350 rows').",
       "escalation_row": null,
-      "action_taken": "none — T6 hard-stopped on escalation row 3 regardless (disposition block unfilled)"
+      "action_taken": "T6 executed as A11.",
+      "status": "RESOLVED 2026-08-03 by Cooper decision",
+      "resolution": "Disposition: archive-only, no new run. Recorded as D5 Amendment A11 in docs/Universe-Decisions.md (A11 = next free number in the global amendment sequence; A10 = Phase 8 was the highest previously used, Phase 9 consumed none). 6b's session-anchored decay output stays committed and citable but is not the operative latency budget; event_minute_bars_v2 is unaffected as a data artifact, so Phases 8 and 9 stand; A8.2's sweep requirement is unchanged. prompts/phase_6b.md and config/phase_6b.json were not modified."
     },
     {
       "id": "C4",
@@ -73,10 +111,28 @@
       "task": "T0b, Approval Gate",
       "statement": "No 'main' branch exists; trunk is 'master'. The Approval Gate's 'do not begin Phase 8 scoping' is moot - Phase 8 is complete and approved.",
       "escalation_row": null,
-      "action_taken": "branch cut from master; noted"
+      "action_taken": "branch cut from master; noted",
+      "status": "Recorded, no action needed"
     }
   ],
-  "tasks_executed": ["T0a", "T0b", "T0c", "T0d", "T1", "T2", "T3-version", "T3a", "T3b", "T3c", "T5"],
-  "tasks_hard_stopped": ["T3d", "T4", "T6"],
-  "data_access": "none — no DuckDB connection opened, no read under data/ (the T0d filename traversal stat'd paths under data/ but opened no file)"
+  "tasks_executed": [
+    "T0a",
+    "T0b",
+    "T0c",
+    "T0d",
+    "T1",
+    "T2",
+    "T3-version",
+    "T3a",
+    "T3b",
+    "T3c",
+    "T3d",
+    "T4",
+    "T5",
+    "T6",
+    "T7"
+  ],
+  "tasks_hard_stopped": [],
+  "data_access": "none — no DuckDB connection opened, no read under data/ (the T0d filename traversal stat'd paths under data/ but opened no file)",
+  "final_status": "COMPLETE 2026-08-03. All T0-T7 executed. Three initial hard stops (T3d, T4, T6) cleared by Cooper on the same day."
 }
