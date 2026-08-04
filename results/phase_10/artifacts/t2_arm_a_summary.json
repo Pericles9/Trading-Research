@@ -1,0 +1,93 @@
+{
+  "phase": "10",
+  "task": "T2",
+  "arm": "A",
+  "config_hash": "1705e5c3",
+  "method": "Kleinberg 2002 continuous two-state automaton, k=2, implemented directly",
+  "implementation": "research/phase_10/kleinberg.py",
+  "verification": "brute-force enumeration of all 2^5 state paths on 200 randomized quiet-burst-quiet trials matched the Viterbi result exactly; burst index-resolution cases asserted. Run: python research/phase_10/kleinberg.py",
+  "reference_point": {
+    "s": 2.0,
+    "gamma": 1.0
+  },
+  "gamma_note": "gamma is doing the work a minimum-dwell floor does in Arm B. Arm A has NO explicit duration floor: the transition cost gamma*ln(n) is the only thing preventing single-gap state flips.",
+  "baseline": "self-normalizing within-session: alpha_0 = n / T where n = number of in-window T=0 prints and T = span in seconds from first to last in-window T=0 print. No flanking session enters Arm A.",
+  "n_param_sets": 9,
+  "param_sets": [
+    "s1.5_g0.5",
+    "s1.5_g1.0",
+    "s1.5_g2.0",
+    "s2.0_g0.5",
+    "ref",
+    "s2.0_g2.0",
+    "s3.0_g0.5",
+    "s3.0_g1.0",
+    "s3.0_g2.0"
+  ],
+  "n_events": 114,
+  "n_events_arm_a_undefined": 0,
+  "arm_a_undefined_events": [],
+  "n_bursts_all_param_sets": 311590,
+  "n_bursts_reference": 25230,
+  "reference_burst_count_pooled": {
+    "n": 100,
+    "q0": 1.0,
+    "q25": 15.0,
+    "q50": 98.5,
+    "q75": 264.5,
+    "q100": 1912.0,
+    "mean": 224.38
+  },
+  "reference_burst_count_by_group": {
+    "dev_v4_primary": {
+      "n": 50,
+      "q0": 2.0,
+      "q25": 13.0,
+      "q50": 105.0,
+      "q75": 257.5,
+      "q100": 1912.0,
+      "mean": 215.8
+    },
+    "activity_extension": {
+      "n": 50,
+      "q0": 1.0,
+      "q25": 19.25,
+      "q50": 78.5,
+      "q75": 261.25,
+      "q100": 1598.0,
+      "mean": 232.96
+    },
+    "dev_v4_sidecar": {
+      "n": 6,
+      "q0": 1.0,
+      "q25": 1.5,
+      "q50": 8.0,
+      "q75": 27.25,
+      "q100": 54.0,
+      "mean": 17.333333333333332
+    },
+    "row_cap_census": {
+      "n": 8,
+      "q0": 123.0,
+      "q25": 163.25,
+      "q50": 395.0,
+      "q75": 464.25,
+      "q100": 527.0,
+      "mean": 336.0
+    }
+  },
+  "gaps_floored_total": 370525,
+  "timing": {
+    "total_seconds": 81.1,
+    "max_seconds_per_event_all_param_sets": 7.67,
+    "median_seconds_per_event": 0.246,
+    "ceiling_per_event": 120,
+    "ceiling_aggregate": 3600,
+    "escalation_row_5_triggered": false
+  },
+  "source": "research/phase_10/t2_arm_a.py:main",
+  "artifacts": [
+    "results/phase_10/artifacts/t2_bursts_arm_a.parquet",
+    "results/phase_10/artifacts/t2_arm_a_events.parquet"
+  ]
+}
