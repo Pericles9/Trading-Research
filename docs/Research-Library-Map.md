@@ -3,11 +3,32 @@
 **Generated:** 2026-07-15 (Phase 0a), updated 2026-07-15 (Phase 0b — added `config/`, `.claude/`, `src/`, `CLAUDE.md`, and both phases' `research/phase_0b/`/`results/phase_0b/` content), updated 2026-07-16 (Phase 0c — added `config/phase_0c.json`, `prompts/phase_0c.md`, two untracked `docs/` entries, and `research/phase_0c/`/`results/phase_0c/` content), updated 2026-07-16 (Phase 1 — added `config/phase_1.json`, `prompts/phase_1.md`, `docs/Agent_Prompt_Standard.md` now tracked at v1.3, `docs/Mom-DB-Strategy-Research-Program.md` now tracked, and `research/phase_1/`/`results/phase_1/` content), updated 2026-07-18 (Phase 1b — added `config/phase_1b.json`, `config/dev_sample_v2.json`, four `prompts/phase_1b*.md` (base + 3 amendments), `src/data/canonical.py`, `.secrets/` gitignore entry, and `research/phase_1b/`/`results/phase_1b/` content), updated 2026-07-20 (Phase 1c — added `config/phase_1c.json`, three `prompts/phase_1c*.md` (base + 2 amendments), `src/data/canonical.py` extended (`repaired_1c` column), and `research/phase_1c/`/`results/phase_1c/` content; `filtered/{event}/*_repair_1c.parquet` sibling files noted as a new data/ pattern, not individually catalogued per data/'s standing exclusion)
 **Phase 8 catch-up (2026-08-01):** the per-file catalog below reflects the repo through end of Phase 1c and was **not maintained per-phase for Phases 2–7** (a pre-existing lapse in the standing rule, not created by Phase 8). Phase 8's own additions are recorded at folder level in the "Phase 8 additions" section immediately below; Phases 3–7 additions remain un-backfilled and are a known gap.
 
-**Reflects commit:** per-file catalog = end of Phase 1c (branch `phase/1c`), post-`phase-1b-approved`; folder-level Phase 8 addendum = `phase-8-approved`
+**Reflects commit:** per-file catalog = end of Phase 1c (branch `phase/1c`), post-`phase-1b-approved`; folder-level Phase 8 addendum = `phase-8-approved`; folder-level D5-redirect and Phase 9 addenda = `phase-9-approved` (2026-08-03), the commit at which both lines were integrated onto `master`
 **File count covered:** ~1132 files — ~417 individual per-file entries below + 9 folder-level entries covering `archive/runs/`'s other 685 files, plus `results/phase_1c/staging/`'s thousands of gitignored fetch-output files (folder-level, not catalogued individually), per the coverage rules established in Phase 0a.
 **Standing rule:** Any phase that adds, moves, or removes repo files must update this map in the same phase.
 
 This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `research/`, `results/`, `src/`, `.claude/`, and repo-root loose files. `data/` is excluded per standing rule (documented separately in `data/Schema.md`). `hawkes-ofi-impact/` and `scanner-epg-momentum/` are independent, already-git-tracked sibling projects — not walked file-by-file, but each gets a summary section below so this map isn't blind to a third of the workspace.
+
+---
+
+## Phase 9 additions (folder-level; `phase-9-approved`, 2026-08-03)
+
+Phase 9 = "Path Shape, Cross-Session Integrity, and Clustered Inference" (repairs the cross-session price-basis defect in Phase 8's markouts, separates the detection-time / holding-period / latency axes, and adds the first retracement measurement). Read-only: zero passes over `filtered_trades`/`filtered_quotes`; every quantity derives from `event_minute_bars_v2` and frozen Phase 6b/8 artifacts. Files added:
+
+- `prompts/phase_9.md` — the phase prompt, plus an appendix recording the T0 escalation-row-1 stop (no `main` branch; trunk `master` stale at `295a0e1` with 0 Phase 8 files) and Cooper's resolution (fast-forward `master` to `6dd52cf`, then cut `phase/9` from it).
+- `config/phase_9.json` — CA flag threshold (`ln 1.8`), integer tolerance/range, trim bounds, bootstrap reps/seed, horizons, latencies, holds, write allowlist, baseline SHAs.
+- `research/phase_9/*.py` — `common` (loaders, v2 row-pin guard, session-close convention, cell statistics), `t1_ca_detector`, `t2_sensitivity`, `t3_retracement`, `t4_axis_grid`, `t5_clustered`, `t6_runway_split`, `chart_common`, `chart_01`–`chart_08`.
+- `results/phase_9/artifacts/*.json` — committed summaries (`t1_ca_detector`, `t2_cross_session_sensitivity`, `t3_retracement_summary`, `t4_axis_summary`, `t5_clustered_inference`, `t6_runway_split`); `*.parquet` (`t1_cross_session_flags`, `t3_retracement`, `t4_axis_grid`) gitignored/regenerable per Agent_Prompt_Standard §12.
+- `results/phase_9/charts/01–08*.html` (+ `.png`) — kaleido-verified per the Chart Contract.
+- `results/phase_9/{REPORT.md, digest.json}`; cross-phase copy `results/reports/phase_9_report.md`.
+
+Files modified at approval: `docs/Universe-Decisions.md` (**D4 Amendment A12** — the tick-only quarantine extends to cross-session tick price ratios), `docs/Open-Items-Register.md` (four Phase 9 items opened), `CLAUDE.md` (cross-session basis rule + flag home), this file.
+
+New flag, homed in the phase artifact and **not** in `src/data/canonical.py`: `flag_cross_session_extreme`, per (event, session-pair), in `results/phase_9/artifacts/t1_cross_session_flags.parquet` — parallel to Phase 8's `flag_possible_row_cap` and 6b's `flag_has_dup_prints`. Promoting it to the canonical view is a separate Cooper decision, open in `docs/Open-Items-Register.md`.
+
+New DB objects: none.
+
+**Branch integration note.** `phase/9` was cut from `master` at `6dd52cf` before the `docs/d5-redirect` line existed, so Phase 9 ran on a tree without D5, A11, or the Strategy Program v2.0. No measurement depends on D5 — Phase 9 cites D4 and reads `event_minute_bars_v2` plus frozen 6b/8 artifacts. At approval both lines were brought onto `master`: `docs/d5-redirect` fast-forwarded first (`6dd52cf` → `60494b9`), then `phase/9` merged in, with this file the only conflict (both lines appended a section here). `phase-9-approved` tags the integrated result.
 
 ---
 

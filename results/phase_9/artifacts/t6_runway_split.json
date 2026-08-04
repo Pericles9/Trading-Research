@@ -1,0 +1,1185 @@
+{
+  "phase": "9",
+  "task": "T6",
+  "source": "research/phase_9/t6_runway_split.py:main",
+  "repro": "python -m research.phase_9.t6_runway_split",
+  "config_hash": "ba858a71171a",
+  "scan_free": true,
+  "tables_touched": [
+    "event_minute_bars_v2"
+  ],
+  "spine_numeric_reads": 0,
+  "n_detection_universe": 15369,
+  "t6c_prohibition": "runway_minutes is NOT anchor-knowable - it is measured from the T0 high, which is not known until the session resolves. It must never be used as a markout bucket (Phase 8 escalation row 11; Phase 9 escalation row 12). This task computes no markout of any kind; the split is diagnostic only.",
+  "markouts_computed_here": 0,
+  "runway_zero_atom": {
+    "n_runway_zero": 2013,
+    "share_of_detection_universe": 0.1309779426117509,
+    "note": "a point mass, not a mode of a density; reported separately from the log histogram"
+  },
+  "cumulative_shares": {
+    "share_le_0": 0.1309779426117509,
+    "share_le_1": 0.19923222070401458,
+    "share_le_5": 0.30574533151148414,
+    "share_le_15": 0.4203916975730366,
+    "share_le_30": 0.5028954388704535,
+    "share_le_60": 0.59320710521179,
+    "share_le_120": 0.6952306591190058,
+    "share_le_240": 0.8129351291560935,
+    "share_le_480": 0.9551044309974625
+  },
+  "quantiles": {
+    "n": 15369,
+    "mean": 112.95965905393975,
+    "median": 30.0,
+    "q10": 0.0,
+    "q25": 3.0,
+    "q75": 170.0,
+    "q90": 353.0
+  },
+  "trough": {
+    "method": "Gaussian KDE on log10(runway_minutes) over runway >= 1, bandwidth 0.15 log10 units; modes = two highest interior local maxima, trough = lowest local minimum between them. A raw-count argmin is not usable here: runway is integer-valued, so log bins below ~10 min are narrower than the integer lattice and produce empty bins adjacent to the first mode. Smoothing locates the trough ONLY - reported counts and chart 07 are raw.",
+    "kde_bandwidth_log10": 0.15,
+    "bimodal": true,
+    "mode_1_minutes": 1.078531509246386,
+    "mode_2_minutes": 276.41982638033346,
+    "trough_minutes": 1.7569276580162718,
+    "density_mode_1": 0.2285429022264447,
+    "density_mode_2": 0.5162337263116019,
+    "density_trough": 0.19242106822648042,
+    "mode_1_over_trough": 1.1877228638885255,
+    "mode_2_over_trough": 2.682833699395082,
+    "n_interior_local_maxima": 2
+  },
+  "measure_dependence": {
+    "question": "is runway one population or two?",
+    "note": "counts per LOG bin rise mechanically with bin width, so the hump in the hours on a log axis is not by itself a second mode; density per MINUTE is the measure-invariant object",
+    "linear_density_per_minute_bin20": [
+      {
+        "lo_minutes": 0,
+        "hi_minutes": 20,
+        "count": 6853,
+        "per_minute": 342.65
+      },
+      {
+        "lo_minutes": 20,
+        "hi_minutes": 40,
+        "count": 1376,
+        "per_minute": 68.8
+      },
+      {
+        "lo_minutes": 40,
+        "hi_minutes": 60,
+        "count": 850,
+        "per_minute": 42.5
+      },
+      {
+        "lo_minutes": 60,
+        "hi_minutes": 80,
+        "count": 646,
+        "per_minute": 32.3
+      },
+      {
+        "lo_minutes": 80,
+        "hi_minutes": 100,
+        "count": 544,
+        "per_minute": 27.2
+      },
+      {
+        "lo_minutes": 100,
+        "hi_minutes": 120,
+        "count": 399,
+        "per_minute": 19.95
+      },
+      {
+        "lo_minutes": 120,
+        "hi_minutes": 140,
+        "count": 370,
+        "per_minute": 18.5
+      },
+      {
+        "lo_minutes": 140,
+        "hi_minutes": 160,
+        "count": 329,
+        "per_minute": 16.45
+      },
+      {
+        "lo_minutes": 160,
+        "hi_minutes": 180,
+        "count": 324,
+        "per_minute": 16.2
+      },
+      {
+        "lo_minutes": 180,
+        "hi_minutes": 200,
+        "count": 283,
+        "per_minute": 14.15
+      },
+      {
+        "lo_minutes": 200,
+        "hi_minutes": 220,
+        "count": 267,
+        "per_minute": 13.35
+      },
+      {
+        "lo_minutes": 220,
+        "hi_minutes": 240,
+        "count": 230,
+        "per_minute": 11.5
+      },
+      {
+        "lo_minutes": 240,
+        "hi_minutes": 260,
+        "count": 265,
+        "per_minute": 13.25
+      },
+      {
+        "lo_minutes": 260,
+        "hi_minutes": 280,
+        "count": 247,
+        "per_minute": 12.35
+      },
+      {
+        "lo_minutes": 280,
+        "hi_minutes": 300,
+        "count": 199,
+        "per_minute": 9.95
+      },
+      {
+        "lo_minutes": 300,
+        "hi_minutes": 320,
+        "count": 207,
+        "per_minute": 10.35
+      },
+      {
+        "lo_minutes": 320,
+        "hi_minutes": 340,
+        "count": 271,
+        "per_minute": 13.55
+      },
+      {
+        "lo_minutes": 340,
+        "hi_minutes": 360,
+        "count": 255,
+        "per_minute": 12.75
+      },
+      {
+        "lo_minutes": 360,
+        "hi_minutes": 380,
+        "count": 185,
+        "per_minute": 9.25
+      },
+      {
+        "lo_minutes": 380,
+        "hi_minutes": 400,
+        "count": 162,
+        "per_minute": 8.1
+      },
+      {
+        "lo_minutes": 400,
+        "hi_minutes": 420,
+        "count": 120,
+        "per_minute": 6.0
+      },
+      {
+        "lo_minutes": 420,
+        "hi_minutes": 440,
+        "count": 111,
+        "per_minute": 5.55
+      },
+      {
+        "lo_minutes": 440,
+        "hi_minutes": 460,
+        "count": 84,
+        "per_minute": 4.2
+      },
+      {
+        "lo_minutes": 460,
+        "hi_minutes": 480,
+        "count": 93,
+        "per_minute": 4.65
+      },
+      {
+        "lo_minutes": 480,
+        "hi_minutes": 500,
+        "count": 79,
+        "per_minute": 3.95
+      },
+      {
+        "lo_minutes": 500,
+        "hi_minutes": 520,
+        "count": 73,
+        "per_minute": 3.65
+      },
+      {
+        "lo_minutes": 520,
+        "hi_minutes": 540,
+        "count": 73,
+        "per_minute": 3.65
+      },
+      {
+        "lo_minutes": 540,
+        "hi_minutes": 560,
+        "count": 68,
+        "per_minute": 3.4
+      },
+      {
+        "lo_minutes": 560,
+        "hi_minutes": 580,
+        "count": 52,
+        "per_minute": 2.6
+      },
+      {
+        "lo_minutes": 580,
+        "hi_minutes": 600,
+        "count": 43,
+        "per_minute": 2.15
+      },
+      {
+        "lo_minutes": 600,
+        "hi_minutes": 620,
+        "count": 31,
+        "per_minute": 1.55
+      },
+      {
+        "lo_minutes": 620,
+        "hi_minutes": 640,
+        "count": 38,
+        "per_minute": 1.9
+      },
+      {
+        "lo_minutes": 640,
+        "hi_minutes": 660,
+        "count": 26,
+        "per_minute": 1.3
+      },
+      {
+        "lo_minutes": 660,
+        "hi_minutes": 680,
+        "count": 24,
+        "per_minute": 1.2
+      },
+      {
+        "lo_minutes": 680,
+        "hi_minutes": 700,
+        "count": 28,
+        "per_minute": 1.4
+      },
+      {
+        "lo_minutes": 700,
+        "hi_minutes": 720,
+        "count": 28,
+        "per_minute": 1.4
+      },
+      {
+        "lo_minutes": 720,
+        "hi_minutes": 740,
+        "count": 25,
+        "per_minute": 1.25
+      },
+      {
+        "lo_minutes": 740,
+        "hi_minutes": 760,
+        "count": 25,
+        "per_minute": 1.25
+      },
+      {
+        "lo_minutes": 760,
+        "hi_minutes": 780,
+        "count": 12,
+        "per_minute": 0.6
+      },
+      {
+        "lo_minutes": 780,
+        "hi_minutes": 800,
+        "count": 8,
+        "per_minute": 0.4
+      },
+      {
+        "lo_minutes": 800,
+        "hi_minutes": 820,
+        "count": 13,
+        "per_minute": 0.65
+      },
+      {
+        "lo_minutes": 820,
+        "hi_minutes": 840,
+        "count": 5,
+        "per_minute": 0.25
+      },
+      {
+        "lo_minutes": 840,
+        "hi_minutes": 860,
+        "count": 13,
+        "per_minute": 0.65
+      },
+      {
+        "lo_minutes": 860,
+        "hi_minutes": 880,
+        "count": 6,
+        "per_minute": 0.3
+      },
+      {
+        "lo_minutes": 880,
+        "hi_minutes": 900,
+        "count": 6,
+        "per_minute": 0.3
+      },
+      {
+        "lo_minutes": 900,
+        "hi_minutes": 920,
+        "count": 5,
+        "per_minute": 0.25
+      },
+      {
+        "lo_minutes": 920,
+        "hi_minutes": 940,
+        "count": 8,
+        "per_minute": 0.4
+      },
+      {
+        "lo_minutes": 940,
+        "hi_minutes": 960,
+        "count": 10,
+        "per_minute": 0.5
+      },
+      {
+        "lo_minutes": 960,
+        "hi_minutes": 980,
+        "count": 0,
+        "per_minute": 0.0
+      }
+    ],
+    "linear_density_monotone_decreasing": false,
+    "linear_density_interior_local_maxima_bins": [
+      {
+        "lo_minutes": 240,
+        "hi_minutes": 260,
+        "per_minute": 13.25
+      },
+      {
+        "lo_minutes": 320,
+        "hi_minutes": 340,
+        "per_minute": 13.55
+      },
+      {
+        "lo_minutes": 460,
+        "hi_minutes": 480,
+        "per_minute": 4.65
+      },
+      {
+        "lo_minutes": 620,
+        "hi_minutes": 640,
+        "per_minute": 1.9
+      },
+      {
+        "lo_minutes": 680,
+        "hi_minutes": 700,
+        "per_minute": 1.4
+      },
+      {
+        "lo_minutes": 800,
+        "hi_minutes": 820,
+        "per_minute": 0.65
+      },
+      {
+        "lo_minutes": 840,
+        "hi_minutes": 860,
+        "per_minute": 0.65
+      },
+      {
+        "lo_minutes": 940,
+        "hi_minutes": 960,
+        "per_minute": 0.5
+      }
+    ],
+    "log_scale_trough_depth_mode1_over_trough": 1.1877228638885255,
+    "log_scale_trough_depth_mode2_over_trough": 2.682833699395082,
+    "reading": "Per minute, the density falls from 342.65/min over 0-20 min to ~10/min by 300 min and keeps falling; the largest interior local maximum is 13.55/min at 320-340 min, 25x below the first bin. The interior local maxima are ripples on a decaying curve, not a second mass. On a log axis the same data shows a broad hump around 276 min, but that hump is counts-per-log-bin: the 4,011 events at 120-480 min occupy 360 minutes (11/min) against 4,699 events in the first 6 minutes (~780/min). The only genuine discontinuity is the atom at exactly 0. The log-scale trough at ~1.8 min is 1.19x deep against mode 1, i.e. a shallow dip immediately adjacent to the first mode rather than a separation between two masses."
+  },
+  "log_histogram_raw_counts": [
+    {
+      "bin_lo_minutes": 1.0,
+      "bin_hi_minutes": 1.16887643912113,
+      "count": 1049
+    },
+    {
+      "bin_lo_minutes": 1.16887643912113,
+      "bin_hi_minutes": 1.3662721299324925,
+      "count": 0
+    },
+    {
+      "bin_lo_minutes": 1.3662721299324925,
+      "bin_hi_minutes": 1.5970033021059336,
+      "count": 0
+    },
+    {
+      "bin_lo_minutes": 1.5970033021059336,
+      "bin_hi_minutes": 1.8666995330302696,
+      "count": 0
+    },
+    {
+      "bin_lo_minutes": 1.8666995330302696,
+      "bin_hi_minutes": 2.181941103077498,
+      "count": 585
+    },
+    {
+      "bin_lo_minutes": 2.181941103077498,
+      "bin_hi_minutes": 2.5504195469372557,
+      "count": 0
+    },
+    {
+      "bin_lo_minutes": 2.5504195469372557,
+      "bin_hi_minutes": 2.981125318288945,
+      "count": 0
+    },
+    {
+      "bin_lo_minutes": 2.981125318288945,
+      "bin_hi_minutes": 3.484567146615427,
+      "count": 398
+    },
+    {
+      "bin_lo_minutes": 3.484567146615427,
+      "bin_hi_minutes": 4.073028438214316,
+      "count": 346
+    },
+    {
+      "bin_lo_minutes": 4.073028438214316,
+      "bin_hi_minutes": 4.760866977299047,
+      "count": 0
+    },
+    {
+      "bin_lo_minutes": 4.760866977299047,
+      "bin_hi_minutes": 5.564865239554687,
+      "count": 308
+    },
+    {
+      "bin_lo_minutes": 5.564865239554687,
+      "bin_hi_minutes": 6.504639865399637,
+      "count": 308
+    },
+    {
+      "bin_lo_minutes": 6.504639865399637,
+      "bin_hi_minutes": 7.6031202836336735,
+      "count": 217
+    },
+    {
+      "bin_lo_minutes": 7.6031202836336735,
+      "bin_hi_minutes": 8.887108163343363,
+      "count": 218
+    },
+    {
+      "bin_lo_minutes": 8.887108163343363,
+      "bin_hi_minutes": 10.387931344053113,
+      "count": 339
+    },
+    {
+      "bin_lo_minutes": 10.387931344053113,
+      "bin_hi_minutes": 12.142208199271579,
+      "count": 330
+    },
+    {
+      "bin_lo_minutes": 12.142208199271579,
+      "bin_hi_minutes": 14.192741083031953,
+      "count": 240
+    },
+    {
+      "bin_lo_minutes": 14.192741083031953,
+      "bin_hi_minutes": 16.589560658502553,
+      "count": 204
+    },
+    {
+      "bin_lo_minutes": 16.589560658502553,
+      "bin_hi_minutes": 19.391146589094454,
+      "count": 298
+    },
+    {
+      "bin_lo_minutes": 19.391146589094454,
+      "bin_hi_minutes": 22.665854375536565,
+      "count": 288
+    },
+    {
+      "bin_lo_minutes": 22.665854375536565,
+      "bin_hi_minutes": 26.493583152115267,
+      "count": 308
+    },
+    {
+      "bin_lo_minutes": 26.493583152115267,
+      "bin_hi_minutes": 30.967725134404045,
+      "count": 280
+    },
+    {
+      "bin_lo_minutes": 30.967725134404045,
+      "bin_hi_minutes": 36.19744428278412,
+      "count": 369
+    },
+    {
+      "bin_lo_minutes": 36.19744428278412,
+      "bin_hi_minutes": 42.310339778546215,
+      "count": 287
+    },
+    {
+      "bin_lo_minutes": 42.310339778546215,
+      "bin_hi_minutes": 49.455559298352185,
+      "count": 305
+    },
+    {
+      "bin_lo_minutes": 49.455559298352185,
+      "bin_hi_minutes": 57.807438047401796,
+      "count": 306
+    },
+    {
+      "bin_lo_minutes": 57.807438047401796,
+      "bin_hi_minutes": 67.56975233956231,
+      "count": 344
+    },
+    {
+      "bin_lo_minutes": 67.56975233956231,
+      "bin_hi_minutes": 78.98069150696426,
+      "count": 347
+    },
+    {
+      "bin_lo_minutes": 78.98069150696426,
+      "bin_hi_minutes": 92.31866944798482,
+      "count": 376
+    },
+    {
+      "bin_lo_minutes": 92.31866944798482,
+      "bin_hi_minutes": 107.90911760876111,
+      "count": 379
+    },
+    {
+      "bin_lo_minutes": 107.90911760876111,
+      "bin_hi_minutes": 126.13242513923194,
+      "count": 349
+    },
+    {
+      "bin_lo_minutes": 126.13242513923194,
+      "bin_hi_minutes": 147.43321995445794,
+      "count": 377
+    },
+    {
+      "bin_lo_minutes": 147.43321995445794,
+      "bin_hi_minutes": 172.33121714852916,
+      "count": 397
+    },
+    {
+      "bin_lo_minutes": 172.33121714852916,
+      "bin_hi_minutes": 201.43389944998302,
+      "count": 438
+    },
+    {
+      "bin_lo_minutes": 201.43389944998302,
+      "bin_hi_minutes": 235.45133910737968,
+      "count": 406
+    },
+    {
+      "bin_lo_minutes": 235.45133910737968,
+      "bin_hi_minutes": 275.21352284213566,
+      "count": 527
+    },
+    {
+      "bin_lo_minutes": 275.21352284213566,
+      "bin_hi_minutes": 321.69060257769735,
+      "count": 480
+    },
+    {
+      "bin_lo_minutes": 321.69060257769735,
+      "bin_hi_minutes": 376.01656603974953,
+      "count": 664
+    },
+    {
+      "bin_lo_minutes": 376.01656603974953,
+      "bin_hi_minutes": 439.5169047630973,
+      "count": 413
+    },
+    {
+      "bin_lo_minutes": 439.5169047630973,
+      "bin_hi_minutes": 513.74095457303,
+      "count": 305
+    },
+    {
+      "bin_lo_minutes": 513.74095457303,
+      "bin_hi_minutes": 600.4996976120136,
+      "count": 260
+    },
+    {
+      "bin_lo_minutes": 600.4996976120136,
+      "bin_hi_minutes": 701.9099482380459,
+      "count": 151
+    },
+    {
+      "bin_lo_minutes": 701.9099482380459,
+      "bin_hi_minutes": 820.4460008801839,
+      "count": 107
+    },
+    {
+      "bin_lo_minutes": 820.4460008801839,
+      "bin_hi_minutes": 959.0,
+      "count": 53
+    }
+  ],
+  "kde_curve": [
+    {
+      "minutes": 1.0,
+      "density": 0.22496695603937958
+    },
+    {
+      "minutes": 1.071144430790849,
+      "density": 0.22850404094215424
+    },
+    {
+      "minutes": 1.147350391614252,
+      "density": 0.22667345348006682
+    },
+    {
+      "minutes": 1.2289779821433058,
+      "density": 0.22094657345555388
+    },
+    {
+      "minutes": 1.3164129211373776,
+      "density": 0.21317970244587742
+    },
+    {
+      "minutes": 1.4100683690974154,
+      "density": 0.20523057737655076
+    },
+    {
+      "minutes": 1.5103868805930318,
+      "density": 0.19861063359966288
+    },
+    {
+      "minutes": 1.6178424954867892,
+      "density": 0.19425880208532814
+    },
+    {
+      "minutes": 1.7329429789374435,
+      "density": 0.19248076780147894
+    },
+    {
+      "minutes": 1.8562322207669464,
+      "density": 0.19304546162746059
+    },
+    {
+      "minutes": 1.9882928055290447,
+      "density": 0.1953866749079549
+    },
+    {
+      "minutes": 2.129748765423949,
+      "density": 0.19883597561402527
+    },
+    {
+      "minutes": 2.2812685290675496,
+      "density": 0.2028178873599861
+    },
+    {
+      "minutes": 2.443568080049138,
+      "density": 0.20696375333447423
+    },
+    {
+      "minutes": 2.6174143402029215,
+      "density": 0.2111345144199806
+    },
+    {
+      "minutes": 2.8036287935804642,
+      "density": 0.21537169533423228
+    },
+    {
+      "minutes": 3.0030913682485814,
+      "density": 0.2198115340758708
+    },
+    {
+      "minutes": 3.2167445942555393,
+      "density": 0.22459758448230668
+    },
+    {
+      "minutes": 3.4455980574133895,
+      "density": 0.22981644504548296
+    },
+    {
+      "minutes": 3.690733169942121,
+      "density": 0.23546654503761413
+    },
+    {
+      "minutes": 3.9533082805185598,
+      "density": 0.24145746371849475
+    },
+    {
+      "minutes": 4.234564147876802,
+      "density": 0.24763037338569793
+    },
+    {
+      "minutes": 4.535829803824835,
+      "density": 0.25378885198644274
+    },
+    {
+      "minutes": 4.858528833382121,
+      "density": 0.25973137843670835
+    },
+    {
+      "minutes": 5.20418610171402,
+      "density": 0.2652798296048357
+    },
+    {
+      "minutes": 5.5744349596501115,
+      "density": 0.2703006917416782
+    },
+    {
+      "minutes": 5.971024961835029,
+      "density": 0.27471718821016816
+    },
+    {
+      "minutes": 6.395830133982734,
+      "density": 0.278511624663755
+    },
+    {
+      "minutes": 6.850857828299896,
+      "density": 0.28171854968576343
+    },
+    {
+      "minutes": 7.338258208923325,
+      "density": 0.2844109485445657
+    },
+    {
+      "minutes": 7.860334412193449,
+      "density": 0.28668319768546796
+    },
+    {
+      "minutes": 8.419553429774677,
+      "density": 0.28863521061518993
+    },
+    {
+      "minutes": 9.018557766049137,
+      "density": 0.2903615887469794
+    },
+    {
+      "minutes": 9.660177924869094,
+      "density": 0.29194766801463456
+    },
+    {
+      "minutes": 10.347445784672233,
+      "density": 0.2934717346104985
+    },
+    {
+      "minutes": 11.083608925161911,
+      "density": 0.295010349716084
+    },
+    {
+      "minutes": 11.872145973250925,
+      "density": 0.2966426059455503
+    },
+    {
+      "minutes": 12.716783040783735,
+      "density": 0.298449713932733
+    },
+    {
+      "minutes": 13.621511331711018,
+      "density": 0.3005083854703272
+    },
+    {
+      "minutes": 14.5906060019167,
+      "density": 0.30287922952802787
+    },
+    {
+      "minutes": 15.628646360816612,
+      "density": 0.3055937187543295
+    },
+    {
+      "minutes": 16.74053751018838,
+      "density": 0.3086442947245069
+    },
+    {
+      "minutes": 17.93153352248359,
+      "density": 0.3119814796817286
+    },
+    {
+      "minutes": 19.207262268147716,
+      "density": 0.31551974894958995
+    },
+    {
+      "minutes": 20.573752009265643,
+      "density": 0.3191512189448922
+    },
+    {
+      "minutes": 22.037459885196938,
+      "density": 0.3227639187396593
+    },
+    {
+      "minutes": 23.605302424805434,
+      "density": 0.3262603040827086
+    },
+    {
+      "minutes": 25.28468822946407,
+      "density": 0.32957200048015123
+    },
+    {
+      "minutes": 27.083552981273375,
+      "density": 0.3326682339080757
+    },
+    {
+      "minutes": 29.010396941919876,
+      "density": 0.33555735954108773
+    },
+    {
+      "minutes": 31.07432511936934,
+      "density": 0.33828259691068147
+    },
+    {
+      "minutes": 33.285090292196664,
+      "density": 0.3409140097695541
+    },
+    {
+      "minutes": 35.65313909485701,
+      "density": 0.34353879701005785
+    },
+    {
+      "minutes": 38.18966138166759,
+      "density": 0.34625132476343906
+    },
+    {
+      "minutes": 40.906643102761606,
+      "density": 0.34914348695798075
+    },
+    {
+      "minutes": 43.81692294187197,
+      "density": 0.3522953965794611
+    },
+    {
+      "minutes": 46.934252983577956,
+      "density": 0.35576636621517826
+    },
+    {
+      "minutes": 50.27336369668833,
+      "density": 0.3595866383915666
+    },
+    {
+      "minutes": 53.850033540830566,
+      "density": 0.3637511113648441
+    },
+    {
+      "minutes": 57.68116352516109,
+      "density": 0.36821695251956604
+    },
+    {
+      "minutes": 61.78485707151254,
+      "density": 0.37290707801206546
+    },
+    {
+      "minutes": 66.18050555935928,
+      "density": 0.3777207461214461
+    },
+    {
+      "minutes": 70.88887995683052,
+      "density": 0.3825509884487763
+    },
+    {
+      "minutes": 75.93222897076006,
+      "density": 0.3873066336113488
+    },
+    {
+      "minutes": 81.33438417956518,
+      "density": 0.39193486007427364
+    },
+    {
+      "minutes": 87.1208726457446,
+      "density": 0.39643922325983405
+    },
+    {
+      "minutes": 93.31903754012816,
+      "density": 0.40088844700507537
+    },
+    {
+      "minutes": 99.95816734787047,
+      "density": 0.40541306283594186
+    },
+    {
+      "minutes": 107.06963426673116,
+      "density": 0.41018981359952367
+    },
+    {
+      "minutes": 114.68704245162209,
+      "density": 0.41541674962643216
+    },
+    {
+      "minutes": 122.84638680592877,
+      "density": 0.4212840966671269
+    },
+    {
+      "minutes": 131.586223069949,
+      "density": 0.4279464483248972
+    },
+    {
+      "minutes": 140.94785001017814,
+      "density": 0.4355004056832697
+    },
+    {
+      "minutes": 150.97550457034635,
+      "density": 0.44396898637254245
+    },
+    {
+      "minutes": 161.7165709063648,
+      "density": 0.453291110286567
+    },
+    {
+      "minutes": 173.22180429294622,
+      "density": 0.4633125991265024
+    },
+    {
+      "minutes": 185.54557095993167,
+      "density": 0.47377540994940887
+    },
+    {
+      "minutes": 198.74610499163902,
+      "density": 0.484304441045885
+    },
+    {
+      "minutes": 212.88578350316766,
+      "density": 0.494395366265224
+    },
+    {
+      "minutes": 228.03142139396434,
+      "density": 0.503410917241542
+    },
+    {
+      "minutes": 244.25458707146635,
+      "density": 0.51059492786675
+    },
+    {
+      "minutes": 261.6319406367196,
+      "density": 0.5151118563137107
+    },
+    {
+      "minutes": 280.2455961300241,
+      "density": 0.5161141410792219
+    },
+    {
+      "minutes": 300.18350954833704,
+      "density": 0.5128318338842193
+    },
+    {
+      "minutes": 321.53989446795276,
+      "density": 0.5046709195718677
+    },
+    {
+      "minutes": 344.4156672364252,
+      "density": 0.4913014602671681
+    },
+    {
+      "minutes": 368.918923837411,
+      "density": 0.47271642182432905
+    },
+    {
+      "minutes": 395.1654506817961,
+      "density": 0.44924738573900713
+    },
+    {
+      "minutes": 423.279271738762,
+      "density": 0.42153296009379077
+    },
+    {
+      "minutes": 453.3932345921812,
+      "density": 0.39044664372740695
+    },
+    {
+      "minutes": 485.64963819166417,
+      "density": 0.3569997433879295
+    },
+    {
+      "minutes": 520.2009052645917,
+      "density": 0.3222390775191453
+    },
+    {
+      "minutes": 557.2103025665252,
+      "density": 0.28715775490482925
+    },
+    {
+      "minutes": 596.8527123734178,
+      "density": 0.2526313582665609
+    },
+    {
+      "minutes": 639.3154588611989,
+      "density": 0.2193837977788114
+    },
+    {
+      "minutes": 684.799193277669,
+      "density": 0.18797963202535378
+    },
+    {
+      "minutes": 733.5188420894419,
+      "density": 0.15883479770563194
+    },
+    {
+      "minutes": 785.7046225842577,
+      "density": 0.13223622006604097
+    },
+    {
+      "minutes": 841.6031307277541,
+      "density": 0.10836225200142248
+    },
+    {
+      "minutes": 901.4785064151763,
+      "density": 0.08729909556391176
+    }
+  ],
+  "population_split": {
+    "cut_minutes": 1.7569276580162718,
+    "rule": "runway <= trough -> short_runway, else long_runway",
+    "n": {
+      "short_runway": 3062,
+      "long_runway": 12307
+    },
+    "caveat": "the cut is the log-scale KDE trough (~1.8 min), which in practice separates runway <= 1 from the rest; per the measure_dependence block the per-minute density is a single decaying population, so this split partitions one population rather than separating two"
+  },
+  "anchor_knowable_characterisation": {
+    "det_minute": {
+      "description": "detection minute (anchor-knowable)",
+      "short_runway": {
+        "n": 3062,
+        "mean": 443.0114304376225,
+        "median": 435.0,
+        "q10": 222.10000000000002,
+        "q25": 341.0,
+        "q75": 595.0,
+        "q90": 691.0
+      },
+      "long_runway": {
+        "n": 12307,
+        "mean": 373.4440562281628,
+        "median": 378.0,
+        "q10": 12.0,
+        "q25": 249.0,
+        "q75": 523.0,
+        "q90": 648.0
+      },
+      "median_difference": -57.0,
+      "distribution_overlap": 0.8320242997339404
+    },
+    "price_at_detection": {
+      "description": "last trade at the detection minute",
+      "short_runway": {
+        "n": 3062,
+        "mean": 7.954147042129327,
+        "median": 2.855,
+        "q10": 0.6269191,
+        "q25": 1.31,
+        "q75": 6.6274999999999995,
+        "q90": 15.391000000000009
+      },
+      "long_runway": {
+        "n": 12307,
+        "mean": 9.462840350369706,
+        "median": 3.22,
+        "q10": 0.6429800000000001,
+        "q25": 1.45,
+        "q75": 8.0425,
+        "q90": 18.96
+      },
+      "median_difference": 0.3650000000000002,
+      "distribution_overlap": 0.9769133792841818
+    },
+    "logrv_det": {
+      "description": "log((cum T0 volume at det + 1)/(b_session + 1))",
+      "short_runway": {
+        "n": 3062,
+        "mean": 0.12485556464659993,
+        "median": 0.42831703944137883,
+        "q10": -2.2618782909416937,
+        "q25": -0.70952832466671,
+        "q75": 1.4073963109234187,
+        "q90": 2.207209976882188
+      },
+      "long_runway": {
+        "n": 12307,
+        "mean": -0.5059037451671174,
+        "median": -0.01533757750890477,
+        "q10": -3.805683389429249,
+        "q25": -1.4806297737667948,
+        "q75": 1.0588577492801878,
+        "q90": 1.950046110874028
+      },
+      "median_difference": -0.44365461695028363,
+      "distribution_overlap": 0.886118083854823
+    },
+    "pq_rth_open": {
+      "description": "pre-open participation quintile",
+      "short_runway": {
+        "n": 3062,
+        "mean": 2.7220770738079687,
+        "median": 3.0,
+        "q10": 1.0,
+        "q25": 2.0,
+        "q75": 4.0,
+        "q90": 5.0
+      },
+      "long_runway": {
+        "n": 12307,
+        "mean": 3.0840172259689607,
+        "median": 3.0,
+        "q10": 1.0,
+        "q25": 2.0,
+        "q75": 4.0,
+        "q90": 5.0
+      },
+      "median_difference": 0.0,
+      "distribution_overlap": 0.8823650355479459
+    }
+  },
+  "categorical_characterisation": {
+    "det_segment": {
+      "post": {
+        "n_short": 52,
+        "n_long": 27,
+        "share_long": 0.34177215189873417
+      },
+      "premarket": {
+        "n_short": 535,
+        "n_long": 4095,
+        "share_long": 0.8844492440604752
+      },
+      "rth": {
+        "n_short": 2475,
+        "n_long": 8185,
+        "share_long": 0.7678236397748592
+      }
+    },
+    "det_bin": {
+      "0930-1000": {
+        "n_short": 444,
+        "n_long": 1444,
+        "share_long": 0.7648305084745762
+      },
+      "1000-1100": {
+        "n_short": 459,
+        "n_long": 1699,
+        "share_long": 0.7873030583873958
+      },
+      "1100-1300": {
+        "n_short": 623,
+        "n_long": 2245,
+        "share_long": 0.7827754532775453
+      },
+      "after_1300": {
+        "n_short": 1001,
+        "n_long": 2824,
+        "share_long": 0.7383006535947713
+      },
+      "premarket": {
+        "n_short": 535,
+        "n_long": 4095,
+        "share_long": 0.8844492440604752
+      }
+    },
+    "era": {
+      "era_2020_2021": {
+        "n_short": 1070,
+        "n_long": 4216,
+        "share_long": 0.7975785092697693
+      },
+      "era_2022_2024": {
+        "n_short": 1992,
+        "n_long": 8091,
+        "share_long": 0.8024397500743826
+      }
+    }
+  }
+}

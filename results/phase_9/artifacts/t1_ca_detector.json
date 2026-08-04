@@ -1,0 +1,1473 @@
+{
+  "phase": "9",
+  "task": "T1",
+  "source": "research/phase_9/t1_ca_detector.py:main",
+  "repro": "python -m research.phase_9.t1_ca_detector",
+  "config_hash": "ba858a71171a",
+  "scan_free": true,
+  "tables_touched": [
+    "event_minute_bars_v2"
+  ],
+  "spine_numeric_reads": 0,
+  "detector": {
+    "definition": "r = log(p_later_close / p_earlier_close), event_minute_bars_v2 last-trade prices only",
+    "close_convention": "last_price of the max-minute_index bar on that session offset (extended day, any segment)",
+    "flag": "flag_cross_session_extreme = |r| >= ca_flag_log_threshold",
+    "ca_flag_log_threshold": 0.5877866649021191,
+    "ca_flag_ratio_threshold": [
+      0.555556,
+      1.8
+    ],
+    "magnitude_only": "T1a - the flag encodes no corporate-action judgment",
+    "flag_home": "results/phase_9/artifacts/t1_cross_session_flags.parquet",
+    "flag_home_note": "T1d - parallel to flag_possible_row_cap; NOT added to src/data/canonical.py"
+  },
+  "integer_diagnostic": {
+    "note": "T1b - evidence about what the flagged set is, NOT part of the flag",
+    "ca_integer_tolerance": 0.03,
+    "integer_ratio_range": [
+      2,
+      20
+    ],
+    "band_counts_within_tolerance": {
+      "2": 203,
+      "1/2": 95,
+      "3": 38,
+      "1/3": 18,
+      "12": 14,
+      "4": 14,
+      "9": 11,
+      "5": 10,
+      "10": 10,
+      "6": 8,
+      "16": 8,
+      "19": 7,
+      "17": 7,
+      "1/4": 7,
+      "8": 6,
+      "20": 6,
+      "7": 6,
+      "1/9": 6,
+      "18": 5,
+      "15": 5,
+      "14": 5,
+      "11": 4,
+      "1/7": 4,
+      "1/6": 3,
+      "1/8": 3,
+      "1/12": 2,
+      "1/10": 2,
+      "1/18": 2,
+      "13": 2,
+      "1/5": 2,
+      "1/17": 2,
+      "1/20": 2,
+      "1/19": 2,
+      "1/15": 1,
+      "1/11": 1
+    },
+    "null_coverage": {
+      "definition": "share of the flagged log-ratio support covered by the integer bands; the rate the diagnostic would report by chance",
+      "why": "a band [k(1-tol), k(1+tol)] has constant log-width ln((1+tol)/(1-tol)) for every k, so the bands are not measure-zero and the raw share is unreadable without this",
+      "per_pair": {
+        "tm1_t0": {
+          "expected_share_by_chance": 0.24717789352974753,
+          "observed_share": 0.23820224719101124,
+          "excess": -0.008975646338736293,
+          "ratio_observed_to_chance": 0.9636875037222692
+        },
+        "t0_t1": {
+          "expected_share_by_chance": 0.28423551509330336,
+          "observed_share": 0.22709163346613545,
+          "excess": -0.05714388162716791,
+          "ratio_observed_to_chance": 0.7989558707735386
+        },
+        "t0_t2": {
+          "expected_share_by_chance": 0.2520574603204172,
+          "observed_share": 0.24222222222222223,
+          "excess": -0.009835238098194976,
+          "ratio_observed_to_chance": 0.9609801745772875
+        },
+        "t0_t3": {
+          "expected_share_by_chance": 0.27619061459516453,
+          "observed_share": 0.22953451043338685,
+          "excess": -0.04665610416177768,
+          "ratio_observed_to_chance": 0.8310728109636695
+        }
+      }
+    },
+    "band_resolution_limit": {
+      "band_log_width": 0.06001800972625295,
+      "first_k_where_bands_touch": 17,
+      "informative_k_range": [
+        2,
+        16
+      ],
+      "note": "at k >= first_k_where_bands_touch the bands tile the axis; membership there is uninformative by construction"
+    },
+    "per_k_local_null": {
+      "definition": "observed count in each integer band vs the count implied by the off-band density in a local window around ln k",
+      "why": "the flagged |log r| distribution decays steeply, so the flat null above understates the background at low k and overstates it at high k; the per-k local comparison is the one that can see a reverse-split spike",
+      "window_log_halfwidth": 0.18,
+      "per_pair": {
+        "tm1_t0": [
+          {
+            "k": 2,
+            "observed": 123,
+            "expected_local_background": 84.23,
+            "excess": 38.769999999999996,
+            "ratio_obs_to_exp": 1.46,
+            "n_offband_in_window": 421
+          },
+          {
+            "k": 3,
+            "observed": 28,
+            "expected_local_background": 25.41,
+            "excess": 2.59,
+            "ratio_obs_to_exp": 1.1,
+            "n_offband_in_window": 127
+          },
+          {
+            "k": 4,
+            "observed": 8,
+            "expected_local_background": 13.4,
+            "excess": -5.4,
+            "ratio_obs_to_exp": 0.6,
+            "n_offband_in_window": 67
+          },
+          {
+            "k": 5,
+            "observed": 6,
+            "expected_local_background": 7.94,
+            "excess": -1.9400000000000004,
+            "ratio_obs_to_exp": 0.76,
+            "n_offband_in_window": 36
+          },
+          {
+            "k": 6,
+            "observed": 6,
+            "expected_local_background": 3.61,
+            "excess": 2.39,
+            "ratio_obs_to_exp": 1.66,
+            "n_offband_in_window": 13
+          },
+          {
+            "k": 7,
+            "observed": 1,
+            "expected_local_background": 1.63,
+            "excess": -0.6299999999999999,
+            "ratio_obs_to_exp": 0.61,
+            "n_offband_in_window": 5
+          },
+          {
+            "k": 8,
+            "observed": 3,
+            "expected_local_background": 1.33,
+            "excess": 1.67,
+            "ratio_obs_to_exp": 2.25,
+            "n_offband_in_window": 4
+          },
+          {
+            "k": 9,
+            "observed": 3,
+            "expected_local_background": 2.46,
+            "excess": 0.54,
+            "ratio_obs_to_exp": 1.22,
+            "n_offband_in_window": 7
+          },
+          {
+            "k": 10,
+            "observed": 5,
+            "expected_local_background": 1.97,
+            "excess": 3.0300000000000002,
+            "ratio_obs_to_exp": 2.54,
+            "n_offband_in_window": 5
+          },
+          {
+            "k": 11,
+            "observed": 2,
+            "expected_local_background": 2.82,
+            "excess": -0.8199999999999998,
+            "ratio_obs_to_exp": 0.71,
+            "n_offband_in_window": 6
+          },
+          {
+            "k": 12,
+            "observed": 9,
+            "expected_local_background": 2.49,
+            "excess": 6.51,
+            "ratio_obs_to_exp": 3.61,
+            "n_offband_in_window": 4
+          },
+          {
+            "k": 13,
+            "observed": 1,
+            "expected_local_background": 0.81,
+            "excess": 0.18999999999999995,
+            "ratio_obs_to_exp": 1.24,
+            "n_offband_in_window": 1
+          },
+          {
+            "k": 14,
+            "observed": 1,
+            "expected_local_background": 1.25,
+            "excess": -0.25,
+            "ratio_obs_to_exp": 0.8,
+            "n_offband_in_window": 1
+          },
+          {
+            "k": 15,
+            "observed": 2,
+            "expected_local_background": 0.0,
+            "excess": 2.0,
+            "ratio_obs_to_exp": null,
+            "n_offband_in_window": 0
+          },
+          {
+            "k": 16,
+            "observed": 4,
+            "expected_local_background": 0.0,
+            "excess": 4.0,
+            "ratio_obs_to_exp": null,
+            "n_offband_in_window": 0
+          }
+        ],
+        "t0_t1": [
+          {
+            "k": 2,
+            "observed": 29,
+            "expected_local_background": 25.41,
+            "excess": 3.59,
+            "ratio_obs_to_exp": 1.14,
+            "n_offband_in_window": 127
+          },
+          {
+            "k": 3,
+            "observed": 4,
+            "expected_local_background": 5.6,
+            "excess": -1.5999999999999996,
+            "ratio_obs_to_exp": 0.71,
+            "n_offband_in_window": 28
+          },
+          {
+            "k": 4,
+            "observed": 4,
+            "expected_local_background": 2.6,
+            "excess": 1.4,
+            "ratio_obs_to_exp": 1.54,
+            "n_offband_in_window": 13
+          },
+          {
+            "k": 5,
+            "observed": 2,
+            "expected_local_background": 1.54,
+            "excess": 0.45999999999999996,
+            "ratio_obs_to_exp": 1.3,
+            "n_offband_in_window": 7
+          },
+          {
+            "k": 6,
+            "observed": 0,
+            "expected_local_background": 1.39,
+            "excess": -1.39,
+            "ratio_obs_to_exp": 0.0,
+            "n_offband_in_window": 5
+          },
+          {
+            "k": 7,
+            "observed": 1,
+            "expected_local_background": 1.63,
+            "excess": -0.6299999999999999,
+            "ratio_obs_to_exp": 0.61,
+            "n_offband_in_window": 5
+          },
+          {
+            "k": 8,
+            "observed": 2,
+            "expected_local_background": 2.0,
+            "excess": 0.0,
+            "ratio_obs_to_exp": 1.0,
+            "n_offband_in_window": 6
+          },
+          {
+            "k": 9,
+            "observed": 1,
+            "expected_local_background": 1.41,
+            "excess": -0.4099999999999999,
+            "ratio_obs_to_exp": 0.71,
+            "n_offband_in_window": 4
+          },
+          {
+            "k": 10,
+            "observed": 2,
+            "expected_local_background": 1.18,
+            "excess": 0.8200000000000001,
+            "ratio_obs_to_exp": 1.69,
+            "n_offband_in_window": 3
+          },
+          {
+            "k": 11,
+            "observed": 0,
+            "expected_local_background": 0.94,
+            "excess": -0.94,
+            "ratio_obs_to_exp": 0.0,
+            "n_offband_in_window": 2
+          },
+          {
+            "k": 12,
+            "observed": 5,
+            "expected_local_background": 0.62,
+            "excess": 4.38,
+            "ratio_obs_to_exp": 8.03,
+            "n_offband_in_window": 1
+          },
+          {
+            "k": 13,
+            "observed": 1,
+            "expected_local_background": 0.81,
+            "excess": 0.18999999999999995,
+            "ratio_obs_to_exp": 1.24,
+            "n_offband_in_window": 1
+          },
+          {
+            "k": 14,
+            "observed": 1,
+            "expected_local_background": 1.25,
+            "excess": -0.25,
+            "ratio_obs_to_exp": 0.8,
+            "n_offband_in_window": 1
+          },
+          {
+            "k": 15,
+            "observed": 0,
+            "expected_local_background": 0.0,
+            "excess": 0.0,
+            "ratio_obs_to_exp": null,
+            "n_offband_in_window": 0
+          },
+          {
+            "k": 16,
+            "observed": 3,
+            "expected_local_background": 0.0,
+            "excess": 3.0,
+            "ratio_obs_to_exp": null,
+            "n_offband_in_window": 0
+          }
+        ],
+        "t0_t2": [
+          {
+            "k": 2,
+            "observed": 62,
+            "expected_local_background": 43.82,
+            "excess": 18.18,
+            "ratio_obs_to_exp": 1.42,
+            "n_offband_in_window": 219
+          },
+          {
+            "k": 3,
+            "observed": 9,
+            "expected_local_background": 11.0,
+            "excess": -2.0,
+            "ratio_obs_to_exp": 0.82,
+            "n_offband_in_window": 55
+          },
+          {
+            "k": 4,
+            "observed": 7,
+            "expected_local_background": 5.0,
+            "excess": 2.0,
+            "ratio_obs_to_exp": 1.4,
+            "n_offband_in_window": 25
+          },
+          {
+            "k": 5,
+            "observed": 2,
+            "expected_local_background": 3.97,
+            "excess": -1.9700000000000002,
+            "ratio_obs_to_exp": 0.5,
+            "n_offband_in_window": 18
+          },
+          {
+            "k": 6,
+            "observed": 3,
+            "expected_local_background": 3.61,
+            "excess": -0.6099999999999999,
+            "ratio_obs_to_exp": 0.83,
+            "n_offband_in_window": 13
+          },
+          {
+            "k": 7,
+            "observed": 2,
+            "expected_local_background": 2.93,
+            "excess": -0.9300000000000002,
+            "ratio_obs_to_exp": 0.68,
+            "n_offband_in_window": 9
+          },
+          {
+            "k": 8,
+            "observed": 0,
+            "expected_local_background": 3.0,
+            "excess": -3.0,
+            "ratio_obs_to_exp": 0.0,
+            "n_offband_in_window": 9
+          },
+          {
+            "k": 9,
+            "observed": 9,
+            "expected_local_background": 2.11,
+            "excess": 6.890000000000001,
+            "ratio_obs_to_exp": 4.26,
+            "n_offband_in_window": 6
+          },
+          {
+            "k": 10,
+            "observed": 1,
+            "expected_local_background": 1.58,
+            "excess": -0.5800000000000001,
+            "ratio_obs_to_exp": 0.63,
+            "n_offband_in_window": 4
+          },
+          {
+            "k": 11,
+            "observed": 2,
+            "expected_local_background": 0.94,
+            "excess": 1.06,
+            "ratio_obs_to_exp": 2.13,
+            "n_offband_in_window": 2
+          },
+          {
+            "k": 12,
+            "observed": 2,
+            "expected_local_background": 0.62,
+            "excess": 1.38,
+            "ratio_obs_to_exp": 3.21,
+            "n_offband_in_window": 1
+          },
+          {
+            "k": 13,
+            "observed": 0,
+            "expected_local_background": 0.0,
+            "excess": 0.0,
+            "ratio_obs_to_exp": null,
+            "n_offband_in_window": 0
+          },
+          {
+            "k": 14,
+            "observed": 1,
+            "expected_local_background": 0.0,
+            "excess": 1.0,
+            "ratio_obs_to_exp": null,
+            "n_offband_in_window": 0
+          },
+          {
+            "k": 15,
+            "observed": 1,
+            "expected_local_background": 0.0,
+            "excess": 1.0,
+            "ratio_obs_to_exp": null,
+            "n_offband_in_window": 0
+          },
+          {
+            "k": 16,
+            "observed": 1,
+            "expected_local_background": 0.0,
+            "excess": 1.0,
+            "ratio_obs_to_exp": null,
+            "n_offband_in_window": 0
+          }
+        ],
+        "t0_t3": [
+          {
+            "k": 2,
+            "observed": 84,
+            "expected_local_background": 56.62,
+            "excess": 27.380000000000003,
+            "ratio_obs_to_exp": 1.48,
+            "n_offband_in_window": 283
+          },
+          {
+            "k": 3,
+            "observed": 15,
+            "expected_local_background": 19.01,
+            "excess": -4.010000000000002,
+            "ratio_obs_to_exp": 0.79,
+            "n_offband_in_window": 95
+          },
+          {
+            "k": 4,
+            "observed": 2,
+            "expected_local_background": 7.8,
+            "excess": -5.8,
+            "ratio_obs_to_exp": 0.26,
+            "n_offband_in_window": 39
+          },
+          {
+            "k": 5,
+            "observed": 2,
+            "expected_local_background": 7.05,
+            "excess": -5.05,
+            "ratio_obs_to_exp": 0.28,
+            "n_offband_in_window": 32
+          },
+          {
+            "k": 6,
+            "observed": 2,
+            "expected_local_background": 4.99,
+            "excess": -2.99,
+            "ratio_obs_to_exp": 0.4,
+            "n_offband_in_window": 18
+          },
+          {
+            "k": 7,
+            "observed": 6,
+            "expected_local_background": 3.26,
+            "excess": 2.74,
+            "ratio_obs_to_exp": 1.84,
+            "n_offband_in_window": 10
+          },
+          {
+            "k": 8,
+            "observed": 4,
+            "expected_local_background": 4.0,
+            "excess": 0.0,
+            "ratio_obs_to_exp": 1.0,
+            "n_offband_in_window": 12
+          },
+          {
+            "k": 9,
+            "observed": 5,
+            "expected_local_background": 2.81,
+            "excess": 2.19,
+            "ratio_obs_to_exp": 1.78,
+            "n_offband_in_window": 8
+          },
+          {
+            "k": 10,
+            "observed": 4,
+            "expected_local_background": 3.94,
+            "excess": 0.06000000000000005,
+            "ratio_obs_to_exp": 1.01,
+            "n_offband_in_window": 10
+          },
+          {
+            "k": 11,
+            "observed": 1,
+            "expected_local_background": 2.82,
+            "excess": -1.8199999999999998,
+            "ratio_obs_to_exp": 0.35,
+            "n_offband_in_window": 6
+          },
+          {
+            "k": 12,
+            "observed": 2,
+            "expected_local_background": 3.74,
+            "excess": -1.7400000000000002,
+            "ratio_obs_to_exp": 0.54,
+            "n_offband_in_window": 6
+          },
+          {
+            "k": 13,
+            "observed": 0,
+            "expected_local_background": 4.03,
+            "excess": -4.03,
+            "ratio_obs_to_exp": 0.0,
+            "n_offband_in_window": 5
+          },
+          {
+            "k": 14,
+            "observed": 2,
+            "expected_local_background": 1.25,
+            "excess": 0.75,
+            "ratio_obs_to_exp": 1.6,
+            "n_offband_in_window": 1
+          },
+          {
+            "k": 15,
+            "observed": 3,
+            "expected_local_background": 1.71,
+            "excess": 1.29,
+            "ratio_obs_to_exp": 1.75,
+            "n_offband_in_window": 1
+          },
+          {
+            "k": 16,
+            "observed": 0,
+            "expected_local_background": 2.13,
+            "excess": -2.13,
+            "ratio_obs_to_exp": 0.0,
+            "n_offband_in_window": 1
+          }
+        ],
+        "ALL_PAIRS": [
+          {
+            "k": 2,
+            "observed": 298,
+            "expected_local_background": 210.07,
+            "excess": 87.93,
+            "ratio_obs_to_exp": 1.42,
+            "n_offband_in_window": 1050
+          },
+          {
+            "k": 3,
+            "observed": 56,
+            "expected_local_background": 61.02,
+            "excess": -5.020000000000003,
+            "ratio_obs_to_exp": 0.92,
+            "n_offband_in_window": 305
+          },
+          {
+            "k": 4,
+            "observed": 21,
+            "expected_local_background": 28.81,
+            "excess": -7.809999999999999,
+            "ratio_obs_to_exp": 0.73,
+            "n_offband_in_window": 144
+          },
+          {
+            "k": 5,
+            "observed": 12,
+            "expected_local_background": 20.5,
+            "excess": -8.5,
+            "ratio_obs_to_exp": 0.59,
+            "n_offband_in_window": 93
+          },
+          {
+            "k": 6,
+            "observed": 11,
+            "expected_local_background": 13.59,
+            "excess": -2.59,
+            "ratio_obs_to_exp": 0.81,
+            "n_offband_in_window": 49
+          },
+          {
+            "k": 7,
+            "observed": 10,
+            "expected_local_background": 9.45,
+            "excess": 0.5500000000000007,
+            "ratio_obs_to_exp": 1.06,
+            "n_offband_in_window": 29
+          },
+          {
+            "k": 8,
+            "observed": 9,
+            "expected_local_background": 10.34,
+            "excess": -1.3399999999999999,
+            "ratio_obs_to_exp": 0.87,
+            "n_offband_in_window": 31
+          },
+          {
+            "k": 9,
+            "observed": 18,
+            "expected_local_background": 8.8,
+            "excess": 9.2,
+            "ratio_obs_to_exp": 2.05,
+            "n_offband_in_window": 25
+          },
+          {
+            "k": 10,
+            "observed": 12,
+            "expected_local_background": 8.67,
+            "excess": 3.33,
+            "ratio_obs_to_exp": 1.38,
+            "n_offband_in_window": 22
+          },
+          {
+            "k": 11,
+            "observed": 5,
+            "expected_local_background": 7.53,
+            "excess": -2.5300000000000002,
+            "ratio_obs_to_exp": 0.66,
+            "n_offband_in_window": 16
+          },
+          {
+            "k": 12,
+            "observed": 18,
+            "expected_local_background": 7.47,
+            "excess": 10.530000000000001,
+            "ratio_obs_to_exp": 2.41,
+            "n_offband_in_window": 12
+          },
+          {
+            "k": 13,
+            "observed": 2,
+            "expected_local_background": 5.64,
+            "excess": -3.6399999999999997,
+            "ratio_obs_to_exp": 0.35,
+            "n_offband_in_window": 7
+          },
+          {
+            "k": 14,
+            "observed": 5,
+            "expected_local_background": 3.74,
+            "excess": 1.2599999999999998,
+            "ratio_obs_to_exp": 1.34,
+            "n_offband_in_window": 3
+          },
+          {
+            "k": 15,
+            "observed": 6,
+            "expected_local_background": 1.71,
+            "excess": 4.29,
+            "ratio_obs_to_exp": 3.51,
+            "n_offband_in_window": 1
+          },
+          {
+            "k": 16,
+            "observed": 8,
+            "expected_local_background": 2.13,
+            "excess": 5.87,
+            "ratio_obs_to_exp": 3.75,
+            "n_offband_in_window": 1
+          }
+        ]
+      }
+    }
+  },
+  "per_pair": {
+    "tm1_t0": {
+      "n_events_d1": 15763,
+      "n_pairs_defined": 15729,
+      "n_pairs_undefined": 34,
+      "n_flagged": 890,
+      "flagged_share_of_defined": 0.056583381015957786,
+      "n_flagged_within_integer_tolerance": 212,
+      "integer_band_share_of_flagged": 0.23820224719101124,
+      "ratio_q01": 0.6736526315789474,
+      "ratio_q99": 3.408470588235286,
+      "ratio_min": 0.0553519851704962,
+      "ratio_max": 181.49606299212607
+    },
+    "t0_t1": {
+      "n_events_d1": 15763,
+      "n_pairs_defined": 15741,
+      "n_pairs_undefined": 22,
+      "n_flagged": 251,
+      "flagged_share_of_defined": 0.015945619719204624,
+      "n_flagged_within_integer_tolerance": 57,
+      "integer_band_share_of_flagged": 0.22709163346613545,
+      "ratio_q01": 0.6090975157582499,
+      "ratio_q99": 1.7995321637426904,
+      "ratio_min": 0.045822475570032564,
+      "ratio_max": 99.45934959349592
+    },
+    "t0_t2": {
+      "n_events_d1": 15763,
+      "n_pairs_defined": 15744,
+      "n_pairs_undefined": 19,
+      "n_flagged": 450,
+      "flagged_share_of_defined": 0.028582317073170733,
+      "n_flagged_within_integer_tolerance": 109,
+      "integer_band_share_of_flagged": 0.24222222222222223,
+      "ratio_q01": 0.5187252618801421,
+      "ratio_q99": 2.039413636363636,
+      "ratio_min": 0.050466145833333344,
+      "ratio_max": 165.98915989159894
+    },
+    "t0_t3": {
+      "n_events_d1": 15763,
+      "n_pairs_defined": 15747,
+      "n_pairs_undefined": 16,
+      "n_flagged": 623,
+      "flagged_share_of_defined": 0.03956309138248555,
+      "n_flagged_within_integer_tolerance": 143,
+      "integer_band_share_of_flagged": 0.22953451043338685,
+      "ratio_q01": 0.47099977633639006,
+      "ratio_q99": 2.3634576189905183,
+      "ratio_min": 0.04885993485342019,
+      "ratio_max": 111.7886178861789
+    }
+  },
+  "n_events_flagged_on_any_pair": 1484,
+  "share_of_d1_flagged_on_any_pair": 0.09414451563788619,
+  "filter_waterfall": [
+    {
+      "step": "tm1_t0: D1 events -> pairs with both closes present and > 0",
+      "rows_in": 15763,
+      "rows_out": 15729,
+      "dropped": 34,
+      "why": "session absent from event_minute_bars_v2 (offsets -3..+3 only) or non-positive close; carried as undefined, never imputed"
+    },
+    {
+      "step": "t0_t1: D1 events -> pairs with both closes present and > 0",
+      "rows_in": 15763,
+      "rows_out": 15741,
+      "dropped": 22,
+      "why": "session absent from event_minute_bars_v2 (offsets -3..+3 only) or non-positive close; carried as undefined, never imputed"
+    },
+    {
+      "step": "t0_t2: D1 events -> pairs with both closes present and > 0",
+      "rows_in": 15763,
+      "rows_out": 15744,
+      "dropped": 19,
+      "why": "session absent from event_minute_bars_v2 (offsets -3..+3 only) or non-positive close; carried as undefined, never imputed"
+    },
+    {
+      "step": "t0_t3: D1 events -> pairs with both closes present and > 0",
+      "rows_in": 15763,
+      "rows_out": 15747,
+      "dropped": 16,
+      "why": "session absent from event_minute_bars_v2 (offsets -3..+3 only) or non-positive close; carried as undefined, never imputed"
+    }
+  ],
+  "escalation_row_5": {
+    "condition": "flag_cross_session_extreme share of (T0,T+1) pairs > 5%",
+    "observed": 0.015945619719204624,
+    "threshold": 0.05,
+    "triggered": false
+  },
+  "top_50_by_abs_r": [
+    {
+      "ticker": "ASTI",
+      "event_date": "2023-09-12",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.0508,
+      "price_later": 9.22,
+      "ratio": 181.496063,
+      "log_r": 5.201234,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 161.496063,
+      "rel_dev_from_integer_ratio": 8.074803,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "SINT",
+      "event_date": "2022-12-19",
+      "session_pair": "t0_t2",
+      "price_earlier": 0.0738,
+      "price_later": 12.25,
+      "ratio": 165.98916,
+      "log_r": 5.111922,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 145.98916,
+      "rel_dev_from_integer_ratio": 7.299458,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "SINT",
+      "event_date": "2022-12-19",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.0738,
+      "price_later": 8.25,
+      "ratio": 111.788618,
+      "log_r": 4.71661,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 91.788618,
+      "rel_dev_from_integer_ratio": 4.589431,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "IVP",
+      "event_date": "2024-05-08",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.035,
+      "price_later": 3.64,
+      "ratio": 104.0,
+      "log_r": 4.644391,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 84.0,
+      "rel_dev_from_integer_ratio": 4.2,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "XPON",
+      "event_date": "2024-10-08",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.0299,
+      "price_later": 3.09,
+      "ratio": 103.344482,
+      "log_r": 4.638068,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 83.344482,
+      "rel_dev_from_integer_ratio": 4.167224,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "SINT",
+      "event_date": "2022-12-19",
+      "session_pair": "t0_t1",
+      "price_earlier": 0.0738,
+      "price_later": 7.3401,
+      "ratio": 99.45935,
+      "log_r": 4.599749,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 79.45935,
+      "rel_dev_from_integer_ratio": 3.972967,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "XPON",
+      "event_date": "2024-10-08",
+      "session_pair": "t0_t1",
+      "price_earlier": 0.0299,
+      "price_later": 2.86,
+      "ratio": 95.652174,
+      "log_r": 4.560718,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 75.652174,
+      "rel_dev_from_integer_ratio": 3.782609,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "UCAR",
+      "event_date": "2024-03-28",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.0592,
+      "price_later": 5.62,
+      "ratio": 94.932432,
+      "log_r": 4.553165,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 74.932432,
+      "rel_dev_from_integer_ratio": 3.746622,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "XPON",
+      "event_date": "2024-10-08",
+      "session_pair": "t0_t2",
+      "price_earlier": 0.0299,
+      "price_later": 2.321,
+      "ratio": 77.625418,
+      "log_r": 4.351895,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 57.625418,
+      "rel_dev_from_integer_ratio": 2.881271,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "HSCS",
+      "event_date": "2024-05-16",
+      "session_pair": "t0_t1",
+      "price_earlier": 0.1122,
+      "price_later": 7.2,
+      "ratio": 64.171123,
+      "log_r": 4.161553,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 44.171123,
+      "rel_dev_from_integer_ratio": 2.208556,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "SBFM",
+      "event_date": "2024-04-16",
+      "session_pair": "t0_t1",
+      "price_earlier": 0.0669,
+      "price_later": 3.95,
+      "ratio": 59.043348,
+      "log_r": 4.078272,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 39.043348,
+      "rel_dev_from_integer_ratio": 1.952167,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "HSCS",
+      "event_date": "2024-05-16",
+      "session_pair": "t0_t2",
+      "price_earlier": 0.1122,
+      "price_later": 6.0199,
+      "ratio": 53.653298,
+      "log_r": 3.982543,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 33.653298,
+      "rel_dev_from_integer_ratio": 1.682665,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "ONCO",
+      "event_date": "2024-09-24",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.0757,
+      "price_later": 4.04,
+      "ratio": 53.36856,
+      "log_r": 3.977222,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 33.36856,
+      "rel_dev_from_integer_ratio": 1.668428,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "EZGO",
+      "event_date": "2024-04-12",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.038,
+      "price_later": 1.96,
+      "ratio": 51.578947,
+      "log_r": 3.943114,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 31.578947,
+      "rel_dev_from_integer_ratio": 1.578947,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "HSCS",
+      "event_date": "2024-05-16",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.1122,
+      "price_later": 5.61,
+      "ratio": 50.0,
+      "log_r": 3.912023,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 30.0,
+      "rel_dev_from_integer_ratio": 1.5,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "SBFM",
+      "event_date": "2024-04-16",
+      "session_pair": "t0_t2",
+      "price_earlier": 0.0669,
+      "price_later": 3.22,
+      "ratio": 48.13154,
+      "log_r": 3.873938,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 28.13154,
+      "rel_dev_from_integer_ratio": 1.406577,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "COEP",
+      "event_date": "2024-12-31",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.1545,
+      "price_later": 7.0,
+      "ratio": 45.307443,
+      "log_r": 3.813471,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 25.307443,
+      "rel_dev_from_integer_ratio": 1.265372,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "PALI",
+      "event_date": "2022-11-15",
+      "session_pair": "t0_t2",
+      "price_earlier": 0.0649,
+      "price_later": 2.7,
+      "ratio": 41.602465,
+      "log_r": 3.728159,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 21.602465,
+      "rel_dev_from_integer_ratio": 1.080123,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "PALI",
+      "event_date": "2022-11-15",
+      "session_pair": "t0_t1",
+      "price_earlier": 0.0649,
+      "price_later": 2.66,
+      "ratio": 40.986133,
+      "log_r": 3.713234,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 20.986133,
+      "rel_dev_from_integer_ratio": 1.049307,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "NUWE",
+      "event_date": "2024-06-28",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.1227,
+      "price_later": 4.9,
+      "ratio": 39.9348,
+      "log_r": 3.687248,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 19.9348,
+      "rel_dev_from_integer_ratio": 0.99674,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "PALI",
+      "event_date": "2022-11-15",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.0649,
+      "price_later": 2.56,
+      "ratio": 39.4453,
+      "log_r": 3.674915,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 19.4453,
+      "rel_dev_from_integer_ratio": 0.972265,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "KSCP",
+      "event_date": "2024-09-16",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.2074,
+      "price_later": 8.05,
+      "ratio": 38.813886,
+      "log_r": 3.658778,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 18.813886,
+      "rel_dev_from_integer_ratio": 0.940694,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "COEP",
+      "event_date": "2024-12-26",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.1986,
+      "price_later": 7.0,
+      "ratio": 35.246727,
+      "log_r": 3.562373,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 15.246727,
+      "rel_dev_from_integer_ratio": 0.762336,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "TOP",
+      "event_date": "2023-04-27",
+      "session_pair": "tm1_t0",
+      "price_earlier": 6.71,
+      "price_later": 230.0,
+      "ratio": 34.277198,
+      "log_r": 3.53448,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 14.277198,
+      "rel_dev_from_integer_ratio": 0.71386,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "KITT",
+      "event_date": "2024-07-18",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.0994,
+      "price_later": 3.29,
+      "ratio": 33.098592,
+      "log_r": 3.499491,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 13.098592,
+      "rel_dev_from_integer_ratio": 0.65493,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "COSM",
+      "event_date": "2022-12-16",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.2173,
+      "price_later": 7.15,
+      "ratio": 32.90382,
+      "log_r": 3.493589,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 12.90382,
+      "rel_dev_from_integer_ratio": 0.645191,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "CNEY",
+      "event_date": "2024-01-17",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.0546,
+      "price_later": 1.78,
+      "ratio": 32.600733,
+      "log_r": 3.484335,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 12.600733,
+      "rel_dev_from_integer_ratio": 0.630037,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "BTOG",
+      "event_date": "2023-05-30",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.067,
+      "price_later": 2.06,
+      "ratio": 30.746269,
+      "log_r": 3.425769,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 10.746269,
+      "rel_dev_from_integer_ratio": 0.537313,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "OBLG",
+      "event_date": "2022-12-30",
+      "session_pair": "t0_t2",
+      "price_earlier": 0.1102,
+      "price_later": 3.34,
+      "ratio": 30.30853,
+      "log_r": 3.411429,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 10.30853,
+      "rel_dev_from_integer_ratio": 0.515426,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "AREB",
+      "event_date": "2023-06-27",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.174,
+      "price_later": 5.24,
+      "ratio": 30.114943,
+      "log_r": 3.405021,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 10.114943,
+      "rel_dev_from_integer_ratio": 0.505747,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "CMND",
+      "event_date": "2023-11-28",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.109,
+      "price_later": 3.28,
+      "ratio": 30.091743,
+      "log_r": 3.404251,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 10.091743,
+      "rel_dev_from_integer_ratio": 0.504587,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "CTXR",
+      "event_date": "2024-11-25",
+      "session_pair": "t0_t1",
+      "price_earlier": 0.137,
+      "price_later": 4.0213,
+      "ratio": 29.352555,
+      "log_r": 3.37938,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 9.352555,
+      "rel_dev_from_integer_ratio": 0.467628,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "REVB",
+      "event_date": "2024-01-24",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.4299,
+      "price_later": 12.48,
+      "ratio": 29.030007,
+      "log_r": 3.36833,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 9.030007,
+      "rel_dev_from_integer_ratio": 0.4515,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "ATPC",
+      "event_date": "2024-08-30",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.0818,
+      "price_later": 2.36,
+      "ratio": 28.850856,
+      "log_r": 3.36214,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 8.850856,
+      "rel_dev_from_integer_ratio": 0.442543,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "CNEY",
+      "event_date": "2024-01-17",
+      "session_pair": "t0_t2",
+      "price_earlier": 0.0546,
+      "price_later": 1.51,
+      "ratio": 27.655678,
+      "log_r": 3.319831,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 7.655678,
+      "rel_dev_from_integer_ratio": 0.382784,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "GFAI",
+      "event_date": "2023-02-08",
+      "session_pair": "t0_t2",
+      "price_earlier": 0.645,
+      "price_later": 17.7,
+      "ratio": 27.44186,
+      "log_r": 3.31207,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 7.44186,
+      "rel_dev_from_integer_ratio": 0.372093,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "FRGT",
+      "event_date": "2024-09-25",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.0835,
+      "price_later": 2.22,
+      "ratio": 26.586826,
+      "log_r": 3.280416,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 6.586826,
+      "rel_dev_from_integer_ratio": 0.329341,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "BJDX",
+      "event_date": "2023-07-24",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.31,
+      "price_later": 8.14,
+      "ratio": 26.258065,
+      "log_r": 3.267973,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 6.258065,
+      "rel_dev_from_integer_ratio": 0.312903,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "EDBL",
+      "event_date": "2023-01-26",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.375,
+      "price_later": 9.8,
+      "ratio": 26.133333,
+      "log_r": 3.263212,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 6.133333,
+      "rel_dev_from_integer_ratio": 0.306667,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "SGBX",
+      "event_date": "2024-05-02",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.1128,
+      "price_later": 2.91,
+      "ratio": 25.797872,
+      "log_r": 3.250292,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 5.797872,
+      "rel_dev_from_integer_ratio": 0.289894,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "CYCN",
+      "event_date": "2023-05-16",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.1903,
+      "price_later": 4.9,
+      "ratio": 25.748818,
+      "log_r": 3.248389,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 5.748818,
+      "rel_dev_from_integer_ratio": 0.287441,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "INM",
+      "event_date": "2022-09-01",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.35,
+      "price_later": 9.0,
+      "ratio": 25.714286,
+      "log_r": 3.247047,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 5.714286,
+      "rel_dev_from_integer_ratio": 0.285714,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "LIDR",
+      "event_date": "2023-12-27",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.1041,
+      "price_later": 2.61,
+      "ratio": 25.072046,
+      "log_r": 3.221754,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 5.072046,
+      "rel_dev_from_integer_ratio": 0.253602,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "HOLO",
+      "event_date": "2024-10-09",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.26,
+      "price_later": 6.4604,
+      "ratio": 24.847692,
+      "log_r": 3.212765,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 4.847692,
+      "rel_dev_from_integer_ratio": 0.242385,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "CTXR",
+      "event_date": "2024-11-25",
+      "session_pair": "t0_t2",
+      "price_earlier": 0.137,
+      "price_later": 3.3904,
+      "ratio": 24.747445,
+      "log_r": 3.208722,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 4.747445,
+      "rel_dev_from_integer_ratio": 0.237372,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "AMWL",
+      "event_date": "2024-07-11",
+      "session_pair": "tm1_t0",
+      "price_earlier": 0.3399,
+      "price_later": 8.4,
+      "ratio": 24.713151,
+      "log_r": 3.207336,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 4.713151,
+      "rel_dev_from_integer_ratio": 0.235658,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "SBFM",
+      "event_date": "2024-04-16",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.0669,
+      "price_later": 1.64,
+      "ratio": 24.5142,
+      "log_r": 3.199253,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 4.5142,
+      "rel_dev_from_integer_ratio": 0.22571,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "CTXR",
+      "event_date": "2024-11-25",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.137,
+      "price_later": 3.3,
+      "ratio": 24.087591,
+      "log_r": 3.181697,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 4.087591,
+      "rel_dev_from_integer_ratio": 0.20438,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "REVB",
+      "event_date": "2024-01-24",
+      "session_pair": "t0_t2",
+      "price_earlier": 0.4299,
+      "price_later": 10.3,
+      "ratio": 23.95906,
+      "log_r": 3.176347,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 3.95906,
+      "rel_dev_from_integer_ratio": 0.197953,
+      "within_integer_tolerance": false
+    },
+    {
+      "ticker": "OBLG",
+      "event_date": "2022-12-30",
+      "session_pair": "t0_t3",
+      "price_earlier": 0.1102,
+      "price_later": 2.61,
+      "ratio": 23.684211,
+      "log_r": 3.164809,
+      "nearest_integer_ratio": "20",
+      "abs_dev_from_integer_ratio": 3.684211,
+      "rel_dev_from_integer_ratio": 0.184211,
+      "within_integer_tolerance": false
+    }
+  ],
+  "artifacts": [
+    "results/phase_9/artifacts/t1_cross_session_flags.parquet"
+  ]
+}
