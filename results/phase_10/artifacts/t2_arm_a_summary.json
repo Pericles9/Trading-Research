@@ -2,7 +2,7 @@
   "phase": "10",
   "task": "T2",
   "arm": "A",
-  "config_hash": "1705e5c3",
+  "config_hash": "6753cbe9",
   "method": "Kleinberg 2002 continuous two-state automaton, k=2, implemented directly",
   "implementation": "research/phase_10/kleinberg.py",
   "verification": "brute-force enumeration of all 2^5 state paths on 200 randomized quiet-burst-quiet trials matched the Viterbi result exactly; burst index-resolution cases asserted. Run: python research/phase_10/kleinberg.py",
@@ -78,9 +78,9 @@
   },
   "gaps_floored_total": 370525,
   "timing": {
-    "total_seconds": 81.1,
-    "max_seconds_per_event_all_param_sets": 7.67,
-    "median_seconds_per_event": 0.246,
+    "total_seconds": 81.6,
+    "max_seconds_per_event_all_param_sets": 7.58,
+    "median_seconds_per_event": 0.263,
     "ceiling_per_event": 120,
     "ceiling_aggregate": 3600,
     "escalation_row_5_triggered": false

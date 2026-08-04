@@ -1,7 +1,7 @@
 {
   "phase": "10",
   "task": "T1",
-  "config_hash": "1705e5c3",
+  "config_hash": "6753cbe9",
   "cohort_n_total": 114,
   "cohort_by_group": {
     "dev_v4_primary": 50,
@@ -43,7 +43,7 @@
   },
   "reproducibility_check": {
     "pass": true,
-    "method": "redraw with same seed, compare key columns"
+    "method": "rebuild the decile from a row-shuffled canonical + bars, redraw with the same seed, require zero differing rows -- tests order-independence, not just repeatability"
   },
   "row_cap_census": {
     "n_flagged_in_d1": 8,

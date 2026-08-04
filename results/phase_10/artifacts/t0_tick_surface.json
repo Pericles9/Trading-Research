@@ -1,7 +1,7 @@
 {
   "phase": "10",
   "task": "T0d",
-  "config_hash": "1705e5c3",
+  "config_hash": "6753cbe9",
   "ordering_note": "T0d depends on the T1 cohort and therefore runs after T1.",
   "read_path": {
     "source": "data/filtered/{TICKER}_{YYYY-MM-DD}_{MOMENTUM_PCT:.2f}/trades.parquet",
@@ -17,7 +17,7 @@
       "total_rows_table": 9638361,
       "pass": true,
       "meaning": "union(trades.parquet, trades_repair_1c.parquet) read directly off disk reproduces filtered_trades_dev_v4 row-for-row. filtered_trades_dev_v4 was materialized from filtered_trades by an inner join on the 3-part key (research/phase_5a/t5_materialize_dev_v4.py), so agreement here means the folder read IS the filtered_trades content for that event. This is what licenses reading folders instead of scanning the 4.95B-row table.",
-      "elapsed_seconds": 7.1
+      "elapsed_seconds": 2.8
     }
   },
   "cohort_n": 114,
@@ -297,7 +297,7 @@
         "momentum_pct": 31.79,
         "cohort_group": "dev_v4_sidecar",
         "coverage_class": "event_day_only",
-        "trades_bitmap": null
+        "trades_bitmap": "0011111"
       },
       {
         "ticker": "APLD",
@@ -305,7 +305,7 @@
         "momentum_pct": 45.24,
         "cohort_group": "dev_v4_sidecar",
         "coverage_class": "full_window",
-        "trades_bitmap": null
+        "trades_bitmap": "1111111"
       },
       {
         "ticker": "ACET",
@@ -313,7 +313,7 @@
         "momentum_pct": 32.84,
         "cohort_group": "dev_v4_sidecar",
         "coverage_class": "event_day_only",
-        "trades_bitmap": null
+        "trades_bitmap": "0111111"
       },
       {
         "ticker": "RBC",
@@ -321,7 +321,7 @@
         "momentum_pct": 44.21,
         "cohort_group": "dev_v4_sidecar",
         "coverage_class": "event_day_only",
-        "trades_bitmap": null
+        "trades_bitmap": "0001111"
       },
       {
         "ticker": "NUKK",
@@ -329,7 +329,7 @@
         "momentum_pct": 50.37,
         "cohort_group": "dev_v4_sidecar",
         "coverage_class": "event_day_only",
-        "trades_bitmap": null
+        "trades_bitmap": "0111111"
       },
       {
         "ticker": "PSIX",
@@ -337,7 +337,7 @@
         "momentum_pct": 74.86,
         "cohort_group": "dev_v4_sidecar",
         "coverage_class": "event_day_only",
-        "trades_bitmap": null
+        "trades_bitmap": "0011111"
       }
     ],
     "n_flag_window_calendar_bug": 2,
@@ -345,9 +345,9 @@
     "n_no_folder": 0
   },
   "timing": {
-    "total_seconds": 17.8,
-    "max_seconds_per_event": 1.1,
-    "median_seconds_per_event": 0.11,
+    "total_seconds": 12.0,
+    "max_seconds_per_event": 1.0,
+    "median_seconds_per_event": 0.07,
     "ceiling_seconds_per_event": 180,
     "escalation_row_5_triggered": false
   },

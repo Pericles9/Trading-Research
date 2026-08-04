@@ -1,7 +1,7 @@
 {
   "phase": "10",
   "task": "T5",
-  "config_hash": "1705e5c3",
+  "config_hash": "6753cbe9",
   "overlap_measure": {
     "primary": "interval_jaccard",
     "interval_jaccard_definition": "For two burst sets on the same event, J = (total seconds covered by the intersection of their unions) / (total seconds covered by the union of their unions). Empty-vs-empty is defined as J = 1.0; empty-vs-nonempty is J = 0.0. Both counts reported.",

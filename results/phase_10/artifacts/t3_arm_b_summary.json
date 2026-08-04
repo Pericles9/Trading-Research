@@ -2,7 +2,7 @@
   "phase": "10",
   "task": "T3",
   "arm": "B",
-  "config_hash": "1705e5c3",
+  "config_hash": "6753cbe9",
   "method": "trade-arrival rate vs time-of-day-matched flanking baseline (T-3..T-1), log space, on/off hysteresis, merge-then-dwell",
   "implementation": "research/phase_10/arm_b.py",
   "verification": "synthetic quiet-burst-quiet session: the dense region is recovered as exactly one burst with boundaries inside +/-2 min of truth carrying >90% of its prints; baseline label transitions asserted; hysteresis shown to widen the interval vs a single-threshold rule. Run: python research/phase_10/arm_b.py",
@@ -42,7 +42,7 @@
       }
     },
     "source_used": {
-      "print_presence_fallback": 114
+      "trades_bitmap": 114
     },
     "non_defined_events": [
       {
@@ -1007,9 +1007,9 @@
     "final": 2544
   },
   "timing": {
-    "total_seconds": 13.1,
+    "total_seconds": 14.3,
     "max_seconds_per_event_all_param_sets": 0.08,
-    "median_seconds_per_event": 0.054,
+    "median_seconds_per_event": 0.066,
     "ceiling_per_event": 120,
     "ceiling_aggregate": 3600,
     "escalation_row_5_triggered": false
