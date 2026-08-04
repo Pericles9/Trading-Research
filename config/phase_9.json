@@ -1,0 +1,187 @@
+{
+  "phase": "9",
+  "title": "Path Shape, Cross-Session Integrity, and Clustered Inference",
+  "branch": "phase/9",
+  "baseline": {
+    "tag": "phase-8-approved",
+    "tag_sha": "2b0d6235cdfb1c74bf6957ea4704f0f705fafec3",
+    "branch_base_sha": "6dd52cf9aa94dbf168b655b2f1c4f1cfec5ac015",
+    "branch_base_desc": "phase-8 post-approval: cross-phase REPORT copy, open-items, library map",
+    "trunk": "master",
+    "trunk_note": "Escalation row 1 fired at T0: no `main` branch exists in this repo and the trunk `master` sat at 295a0e1 (phase-6b approved), containing zero Phase 8 files. Cooper's resolution (2026-08-03): fast-forward master to phase/8 HEAD (a clean FF, master was a strict ancestor, 0 divergence), then cut phase/9 from master. master and the phase/9 base are therefore both 6dd52cf. The one commit between the tag and the base adds results/reports/phase_8_report.md, docs/Open-Items-Register.md and docs/Research-Library-Map.md - no measurement code, no artifact."
+  },
+  "objective": "Repair the cross-session price-basis defect found in Phase 8's markouts, separate the three confounded axes (detection time-of-day / holding period / latency), and produce the first retracement measurement of the excursion itself.",
+  "read_only": {
+    "rule": "Zero passes over filtered_trades / filtered_quotes. Every quantity derives from event_minute_bars_v2 and frozen Phase 6b/8 artifacts.",
+    "hard_stop_if_scan": "escalation row 2"
+  },
+  "universe": {
+    "d1_definition": "D1 = in_scope=TRUE AND source_file='file1'",
+    "d1_expected_n": 15763,
+    "detection_universe_expected_n": 15369,
+    "detection_universe_definition": "D1 minus the 394 det_undefined events (tick T0 extended max never reaches 1.30x tick_close_t_minus_1_rth), per Phase 8 A10.3",
+    "frozen_event_list": "results/phase_6b/artifacts/t1_eligible_events.parquet",
+    "join_key": ["ticker", "event_date_canonical"],
+    "note": "Reused frozen. Not re-derived."
+  },
+  "data_source": {
+    "bars_table": "event_minute_bars_v2",
+    "row_count_pin": 45925350,
+    "grain_minutes": 1,
+    "minute_index_origin": "04:00:00 ET on the session's own date (index 0), same origin every offset",
+    "offsets": [-3, -2, -1, 0, 1, 2, 3],
+    "horizon_ceiling": "T+3",
+    "horizon_ceiling_rule": "event_minute_bars_v2 carries session offsets -3..+3 only. T+3 is the hard horizon ceiling; no extrapolation beyond it. Stated in the report wherever a retracement figure appears."
+  },
+  "d4": {
+    "status": "in force, extended by this phase",
+    "rule": "No spine numeric column (OHLC/volume on momentum_events) on any computation path. momentum_pct is diagnostic-display-only this phase and is NOT a bucketing variable.",
+    "extension": "The adjustment-basis mismatch D4 quarantined on the spine also exists in raw tick prices ACROSS a session boundary. Phase 8 applied the within-day guard and then computed cross-day ratios anyway. T1 closes that gap with a magnitude-only detector.",
+    "reused_tick_anchor_artifact": "results/phase_6b/artifacts/opportunity_decay_primary.parquet",
+    "reused_columns": ["tick_close_t_minus_1_rth", "day_high_ext", "has_t_minus_1_rth", "denom_nonpositive"],
+    "reused_columns_note": "Both tick_close_t_minus_1_rth and day_high_ext are tick-derived (a61/6b, D4-clean: a62_d4_sweep 0 measurement-path spine hits). Reused frozen, never recomputed."
+  },
+  "flag_never_delete": {
+    "rule": "No event is dropped from any population. Suspect events are flagged, carried, and reported as their own row.",
+    "primary_statistic": "untrimmed",
+    "sensitivity_rule": "Trimmed and flag-excluded variants ship ALONGSIDE the untrimmed primary, never instead of it."
+  },
+
+  "ca_flag_log_threshold": 0.5877866649021191,
+  "ca_flag_log_threshold_desc": "ln(1.8). |r| >= this marks flag_cross_session_extreme. MAGNITUDE ONLY - the detector encodes no corporate-action judgment.",
+  "ca_integer_tolerance": 0.03,
+  "ca_integer_tolerance_desc": "relative tolerance around k or 1/k for the integer-clustering DIAGNOSTIC (T1b). Evidence about what the flagged set is; not part of the flag.",
+  "integer_ratio_range": [2, 20],
+  "trim_ratio_bounds": [0.55, 1.80],
+  "trim_ratio_bounds_desc": "variant (iv) keeps pairs whose price ratio exp(r) lies inside these bounds",
+  "bootstrap_reps": 2000,
+  "bootstrap_seed": 42,
+
+  "horizons": ["t0_close", "t1_close", "t2_close", "t3_close"],
+  "horizon_definition": "last extended-session print (max minute_index bar) on the named session offset",
+  "latencies": [0, 1, 5, 15, 30],
+  "latency_note": "det+0 is a physical impossibility, included only as the upper bound of the ladder; labelled as such on every chart",
+  "hold_minutes": [5, 15, 30, 60, 120],
+
+  "t1_cross_session_detector": {
+    "session_pairs": [["t0", "t1"], ["t0", "t2"], ["t0", "t3"], ["tm1", "t0"]],
+    "session_pairs_desc": "every ordered session pair used anywhere in Phase 8 or Phase 9",
+    "ratio_definition": "r = log(p_later_close / p_earlier_close), from event_minute_bars_v2 last-trade prices only",
+    "price_field": "last_price of the max-minute_index bar on that session offset (extended day, any segment)",
+    "flag_name": "flag_cross_session_extreme",
+    "flag_home": "results/phase_9/artifacts/t1_cross_session_flags.parquet",
+    "flag_home_rule": "Homed in the phase-9 artifact, parallel to flag_possible_row_cap. NOT added to src/data/canonical.py without Cooper's instruction (T1d; also 'nothing in src/ changes mid-phase').",
+    "grain": "per (event, session-pair)"
+  },
+
+  "t2_variants": {
+    "i_untrimmed_all": "every pair, no exclusion - the PRIMARY",
+    "ii_flagged_separate": "flagged carried but reported as their own row alongside the unflagged",
+    "iii_flagged_excluded": "flag_cross_session_extreme = TRUE removed",
+    "iv_trimmed": "ratio trimmed to trim_ratio_bounds"
+  },
+  "t2_cells": {
+    "markouts": ["t0_close->t1_close", "t0_close->t3_close"],
+    "buckets": ["pooled", "pq_rth_open quintile", "era"],
+    "statistics": ["n", "median", "mean_log", "mean_simple", "iqr", "q01", "q05", "q95", "q99", "share_gt_0"],
+    "mean_simple_definition": "mean of (exp(r) - 1), the simple return - this is the statistic that sign-flipped in the Phase 8 inspection"
+  },
+
+  "t3_retracement": {
+    "population": "detection universe, n = 15,369",
+    "A": "tick_close_t_minus_1_rth (D4-clean, frozen from 6b)",
+    "H": "day_high_ext (D4-clean, frozen from 6b)",
+    "p_det": "det_price_lat0 (results/phase_8/artifacts/a102_detection_anchors.parquet)",
+    "retrace_excursion": "(H - p_h) / (H - A), defined only where H - A > 0",
+    "retrace_excursion_undefined": "reuse 6b denom_nonpositive (n=5), carried as its own row",
+    "retrace_detection": "(H - p_h) / (H - p_det), defined only where H - p_det > 0; the rest carried as retrace_det_undefined with its own n",
+    "reading": "0 = still at the high. 1.0 = fully back to the T-1 RTH close. >1.0 = below it.",
+    "level_crossing_census": {
+      "below_A": "share of events where p_h < A (fully round-tripped)",
+      "below_det": "share of events where p_h < p_det (below the detection level)",
+      "breakdowns": ["era", "detection segment (premarket / rth / post)"]
+    },
+    "ca_variant": "T3a-T3c recomputed with flag_cross_session_extreme events carried separately. All T+1/T+2/T+3 figures ship in both variants."
+  },
+
+  "t4_axis_separation": {
+    "motivation": "Phase 8 §19 confounded detection time-of-day with holding period, and §19's latency claim confounded latency with holding period. Holding period becomes an explicit independent axis here.",
+    "fixed_horizon_grid": {
+      "entry": "det + latency",
+      "exit": "entry + hold",
+      "axes": ["latency", "hold", "det_bin", "era"],
+      "statistics": ["median", "trimmed_mean_simple", "n"]
+    },
+    "fixed_exit_grid": {
+      "entry": "det + latency",
+      "exit": "t0_close",
+      "note": "the only axis where latency is unconfounded by hold length",
+      "report": "full distribution per latency, not just the median"
+    },
+    "attrition": "n attrition reported per cell across the latency axis, so it is visible that changes are not sample composition",
+    "det_bins": ["premarket", "0930-1000", "1000-1100", "1100-1300", "after_1300"],
+    "det_bin_edges_minute_index": {"premarket": "0-329", "0930-1000": "330-359", "1000-1100": "360-419", "1100-1300": "420-539", "after_1300": "540-959"},
+    "thin_cell_n": 100,
+    "thin_cell_rule": "cells with n < 100 are hatched and carry no claim (escalation row 11 - presenting one unhatched is a hard stop)"
+  },
+
+  "t5_clustered_inference": {
+    "motivation": "D1 contains 15,763 events across ~2,576 distinct tickers (mean 6.1/ticker, max 57; 59% of events sit in tickers with >=10 events). Nominal n materially overstates independent observations.",
+    "cluster_unit": "ticker",
+    "method": "ticker-block bootstrap - resample TICKERS with replacement, take all events of each drawn ticker",
+    "reps": 2000,
+    "seed": 42,
+    "ci_level": 0.95,
+    "ci_method": "percentile",
+    "applied_to": [
+      "t0_close->t1_close pooled and per pq_rth_open quintile",
+      "det+5 -> t0_close pooled and per det_bin",
+      "every retracement median"
+    ],
+    "companion_statistics": ["median of per-ticker medians", "share of tickers with negative median"],
+    "naive_ci": "reported side by side with the block CI on chart 08"
+  },
+
+  "t6_runway_split": {
+    "variable": "runway_minutes (results/phase_8/artifacts/a102_detection_anchors.parquet)",
+    "known_shape": "not unimodal: 2,013 events (12.8%) runway exactly 0, 19.9% <=1 min, 30.6% <=5 min, then a second mass at 120-480 min",
+    "trough": "located EMPIRICALLY. Do not assume a cut point.",
+    "characterisation_variables": ["det_segment", "det_minute", "pq_rth_open", "price level at detection", "logrv at detection"],
+    "characterisation_rule": "anchor-knowable variables ONLY",
+    "prohibition": "runway_minutes is NOT anchor-knowable and must never be used as a markout bucket (Phase 8 escalation row 11 applies; Phase 9 escalation row 12). It is a diagnostic split only. Stated in the report."
+  },
+
+  "era": {
+    "boundary_date": "2022-01-01",
+    "labels": {"before_boundary": "era_2020_2021", "on_or_after_boundary": "era_2022_2024"},
+    "rule": "era = 'era_2020_2021' if event_date_canonical < 2022-01-01 else 'era_2022_2024'"
+  },
+
+  "charts": {
+    "engine": "plotly, standalone HTML, one per file, kaleido-verified (.png sibling)",
+    "caption_requires": ["sample", "filters applied", "config hash"],
+    "rules": "distribution not just center; n per bucket always; no smoothing; log axes where multiplicative; outliers shown never clipped"
+  },
+
+  "reporting": {
+    "no_recommendations": "escalation row 14 - no recommendation, no characterisation of any result as good/weak/promising/disappointing",
+    "horizon_ceiling_statement": "T+3 ceiling stated explicitly wherever a retracement figure is reported",
+    "n_rule": "every statistic carries n; every claim cites its chart file"
+  },
+
+  "config_hash_note": "This file is committed before any measurement. Outputs key on its content hash.",
+  "paths": {
+    "duckdb": "data/duckdb/main.duckdb",
+    "bars_table": "event_minute_bars_v2",
+    "d1_events": "results/phase_6b/artifacts/t1_eligible_events.parquet",
+    "tick_anchor": "results/phase_6b/artifacts/opportunity_decay_primary.parquet",
+    "event_index": "results/phase_6b/artifacts/event_index_v2.parquet",
+    "detection_anchors": "results/phase_8/artifacts/a102_detection_anchors.parquet",
+    "phase8_contamination": "results/phase_8/artifacts/a102_contamination.parquet",
+    "phase8_markout_grid": "results/phase_8/artifacts/a102_detection_markout_grid.parquet",
+    "out_artifacts": "results/phase_9/artifacts/",
+    "out_charts": "results/phase_9/charts/"
+  },
+  "write_allowlist": ["results/phase_9/", "prompts/", "config/", "research/phase_9/"],
+  "write_allowlist_note": "escalation row 13 - any write outside these is a hard stop"
+}
