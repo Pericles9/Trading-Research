@@ -450,6 +450,35 @@ charted or not, per Agent_Prompt_Standard §7.
 
 ---
 
+## 13. Held for Cooper — one standing rule this phase's allowlist blocks
+
+`CLAUDE.md` requires: *"Any phase that adds, moves, or removes repo files updates
+`docs/Research-Library-Map.md` in the same phase."* Phase 10 adds 11 files under `research/phase_10/`,
+`config/phase_10.json`, `prompts/phase_10.md`, and the `results/phase_10/` tree, so the rule applies.
+
+**It was not done, deliberately.** `docs/` is outside this prompt's write allowlist, and escalation
+row 7 makes any write outside `prompts/`, `config/`, `research/phase_10/`, `results/phase_10/` a hard
+stop. The standing rule and the phase prompt's allowlist are in direct conflict here. Rather than
+pick one silently, the write is held: the library-map entry for Phase 10 is **outstanding** and needs
+either a one-line authorization to write `docs/Research-Library-Map.md`, or folding into the merge
+commit at the approval gate. The same tension will recur in every future phase whose prompt carries a
+`results/`-scoped allowlist.
+
+### Working-tree items not authored by this phase
+
+`git status` is not empty at phase end. Three items, none written by Phase 10, all left untouched
+because they sit outside the allowlist:
+
+| Item | State | Note |
+|---|---|---|
+| `.gitignore` | modified | Trailing-newline removal only; present in the working tree before `phase/10` was cut |
+| `prompts/phase_9` | untracked | Stray extensionless duplicate of `prompts/phase_9.md`, missing that file's T0 escalation appendix. Present before this phase |
+| `.claude/skills/reuse-before-build/` | untracked | Not authored by this phase |
+
+All Phase 10 commits used explicit-path `git add`, so none of these were swept into the branch.
+
+---
+
 ## Approval gate
 
 Not tagged, not merged. Phase 11 scoping not begun.
