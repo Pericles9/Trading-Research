@@ -169,10 +169,27 @@ def chart_04(bs, chash, out):
             ), row=1, col=2)
     fig.add_hline(y=0, line=dict(color=C.GRID, width=1), row=1, col=2)
     fig.add_vline(x=0, line=dict(color=C.GRID, width=1), row=1, col=1)
-    fig.update_xaxes(title_text="burst share of session move (signed)", row=1, col=1)
+
+    # Outliers are shown, never clipped (chart contract). The extremes run to
+    # -34.9 / +63.2, which compresses the bulk to a vertical line if the initial
+    # view is the full range. So: open on a readable window, keep EVERY point in
+    # the figure, and give the left panel a range slider spanning the full extent.
+    # Nothing is deleted -- zooming out reaches every observation.
+    allv = bs[bs["cohort_group"].isin(POOLED)]["move_share"].dropna()
+    lo_f, hi_f = float(allv.min()), float(allv.max())
+    view = [-2.0, 2.0]
+    n_out = int(((allv < view[0]) | (allv > view[1])).sum())
+    fig.update_xaxes(title_text="burst share of session move (signed)", range=view,
+                     rangeslider=dict(visible=True, thickness=0.06,
+                                      range=[lo_f * 1.02, hi_f * 1.02]),
+                     row=1, col=1)
     fig.update_yaxes(title_text="cumulative share of bursts", range=[0, 1.02], row=1, col=1)
     fig.update_xaxes(title_text="burst rank within event (Arm A left / Arm B right)", row=1, col=2)
-    fig.update_yaxes(title_text="share of session move (signed)", row=1, col=2)
+    fig.update_yaxes(title_text="share of session move (signed)", range=view, row=1, col=2)
+    outlier_note = (
+        f"<b>View:</b> panels open at ±2. Full extent is {lo_f:,.1f} to {hi_f:,.1f}; "
+        f"{n_out:,} of {len(allv):,} burst shares sit outside ±2. Every one is in the figure — "
+        "drag the range slider under the left panel, or zoom out. Nothing is clipped or deleted.")
     C.finish(
         fig, "04 — How much of the session move does a burst carry?",
         "Session move = last in-window T=0 print price minus first in-window T=0 print price, "
@@ -183,8 +200,10 @@ def chart_04(bs, chash, out):
                   chash,
                   f"<b>Undefined denominator:</b> Arm A {n_undef['A']} bursts, Arm B {n_undef['B']} "
                   "bursts (session move exactly 0). Carried as undefined, never imputed."
+                  f"<br>{outlier_note}"
                   "<br><b>Reads:</b> uniformly small shares would contradict the premise this "
-                  "phase is built on."))
+                  "phase is built on."),
+        height=940)
     return C.write(fig, out, "04_burst_move_share")
 
 
@@ -197,9 +216,10 @@ def chart_05(pairs, chash, out):
     fig.add_trace(C.ecdf_trace(cross["jaccard"], "Arm A vs Arm B", C.ARM_COLOR["B"]),
                   row=1, col=1)
     med = float(cross["jaccard"].median())
-    fig.add_vline(x=med, line=dict(color=C.INK2, width=1.5, dash="dot"),
-                  annotation_text=f"median {med:.3f}", annotation_position="top",
-                  annotation_font=dict(size=10.5, color=C.INK2), row=1, col=1)
+    fig.add_vline(x=med, line=dict(color=C.INK2, width=1.5, dash="dot"), row=1, col=1)
+    fig.add_annotation(x=med, y=0.06, xref="x", yref="y", text=f"median {med:.3f}",
+                       showarrow=False, xanchor="left", xshift=6,
+                       font=dict(size=10.5, color=C.INK2), row=1, col=1)
     a = cross["n_bursts_ref"].to_numpy(dtype=float)
     b = cross["n_bursts_cell"].to_numpy(dtype=float)
     lim = [0.5, max(a.max(), b.max()) * 1.4]
