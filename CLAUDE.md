@@ -63,8 +63,23 @@
 - **D4 (Phase 6c Amendment 8, 2026-07-24) — spine numeric columns permanently quarantined from computation.** Defect #4: `momentum_events`' numeric columns carry inconsistent adjustment bases, per ticker AND per column within the same row (confirmed via an independent price-free volume cross-check — AMC, a price-ratio-*passing* control, has price factor 5.24 vs. volume factor 10.06). Every numeric OHLC/volume column on the spine (`prev_close`, `open`, `high`, `low`, `close`, `event_open`, `event_high`, `event_close`, `event_volume`, any later-discovered price/size column) is diagnostic-display only — never an input to a computed quantity, in any phase, regardless of whether that event passes a price-ratio check. All measured quantities come from `filtered_trades`/`filtered_quotes` exclusively. Sole exception: `momentum_pct` remains the universe-selection/stratification variable (scale-invariant per row) — but it inherits the vendor's RTH-scoped, adjusted-basis high forever, so every premarket/extended-hours finding is conditional on that selection boundary. This supersedes Amendment 5's price-only tick-anchor authorization — D4 covers every spine numeric column, permanently, not just price. Full text: `docs/Universe-Decisions.md` D4. **D4 Amendment A9 (Phase 7, 2026-07-24):** `flag_bad_denominator` (`prev_close < floor OR momentum_pct >= cap`, `src/data/canonical.py`) is inside D4's `momentum_pct` exception (A9.1, denominator-reliability guard); the quarantine also reaches pre-ingestion `candidate_scan_inputs` files prospectively (A9.2); universe-flag formulas are defined once in `canonical.py` and never re-derived in research scripts (A9.3, also under Code & repo layout).
 - **ETH-dominant flag (Phase 7 T2, 2026-07-24) — two additive canonical-view columns.** `momentum_events_canonical` (stage `t8`) carries `flag_eth_dominant_t0` (BOOLEAN, TRUE for the 736 D1 events whose T=0 tick rows are >50% outside the XNYS regular session, `excluded_share > 0.5`; FALSE otherwise) and `t0_eth_row_share` (DOUBLE, that share — **populated only for the 736 flagged events, NULL for every other row**, a deliberate zero-full-table-pass consequence). Both are tick-derived (not spine OHLC/volume) so **not** D4-quarantined. The flag is an annotation, not a universe filter: it does not enter `in_scope`, and no measurement excludes flagged events by default — exclusion is a per-phase Cooper decision. Verification/sensitivity: `results/phase_7/`.
 
+## Strategy surface (D5)
+
+- Selected surface: **intraday post-trigger, long-only, burst-scale horizons.**
+- **Long-only.** Do not specify, implement, or measure short-side or fade variants. Do not implement SSR or borrow logic.
+- **Measurement anchors are burst-relative by default.** Any session-relative or day-relative anchor — session open, previous close, session high, session close — must be named and justified in the phase prompt *before* it is used. An unjustified day-scale anchor is an escalation, not a style choice.
+- **Every feature is computed as of decision time minus realistic pipeline latency.** Lag is baked into research, not added later in production.
+- **The end-detector is a first-class deliverable.** Exit research is budgeted at least equally with entry research. Under a long-only strategy on a bull-to-bear flip, exit timing dominates variance and ruin risk.
+- The Phase 6 / 6b session-anchored decay figures are archive. They are not the operative latency budget.
+- Full text and scope: `docs/Universe-Decisions.md`, D5.
+
 ## Pointers
 - All phase prompts follow docs/Agent_Prompt_Standard.md (v1.3, 2026-07-14) — defines the Evidence
   Standard, §9 Chart Contract, §10 Verification Block, §11 Digest Contract, §12 Git Discipline.
-- Strategy context: docs/Mom-DB-Strategy-Research-Program.md.
+- Strategy context: docs/Mom-DB-Strategy-Research-Program.md (v2.0, 2026-08-03 — re-ranked under D5).
+- Standing decisions: docs/Universe-Decisions.md — D1 analysis universe, D2 `clean_window`, D3 analysis
+  clock, D4 tick-only measurement, **D5 strategy surface and horizon class** (2026-08-03).
 - Repo map: docs/Research-Library-Map.md. Data layout: data/Schema.md.
+- `docs/Claude-Code-Operating-Plan.md` is cited by prompts/phase_0a.md, prompts/phase_0b.md and
+  docs/Research-Library-Map.md but has never existed in this checkout — Cooper holds it externally.
+  Gap confirmed 2026-08-03, `results/redirect_d5/doc_existence_audit.json`.
