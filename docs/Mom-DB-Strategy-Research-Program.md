@@ -10,6 +10,9 @@ created: 2026-07-13
 
 # Mom_db Strategy Research Program
 
+**Version:** 2.0\
+**Project:** Momentum Event Research — Mom_db
+
 **Data Audit → Structural Constraints → High-Participation Trading → Two-Signal Regime Architecture → Development Process**
 
 ---
@@ -150,13 +153,13 @@ Partial mitigations, in order of availability:
 - **Flanking days as pseudo-controls** (§5.1, step 5): T-3…T-1 and T+2…T+3 are quieter sessions *on the same names*, usable for false-positive estimation — with the honest caveat that they are event-adjacent, not independent.
 - **Eventually, an unconditional universe scan** must happen before capital does (§5.4, §8). This is a known hole to flag, not paper over.
 
-### 3.3 Credible strategy surfaces, ranked
+### 3.3 Credible strategy surfaces, ranked (revised under D5)
 
-Direct output of §3.1–3.2, ordered by how clean the ex-ante definition is:
+1. **Intraday post-trigger, long-only** — the program spine. Requires ex-ante trigger reconstruction per §3.1 escape #1, with all outcomes measured strictly post-trigger. Carries the counterfactual gap on trigger precision (§3.2), which D5 upgrades from a caveat to a near-front blocker: under a gate-then-trade design, the live false-positive rate is a direct PnL term.
+2. **T+1 (day-2) continuation** — the cleanest ex-ante surface the archive offers, retained as a **single optional measurement pass** answering "does this archive contain any edge at all." Not a pillar, and it no longer gates detector work. Long-only under D5; the fade variant is dropped.
+3. **Pre-event detection (T-3…T-1)** — unchanged. One measurement pass, most likely a respectful burial.
 
-1. **T+1 (day-2) continuation/fade** — event day fully known at entry; selection bias largely neutralized; lowest data-integrity risk (modulo delisting handling, §2.3).
-2. **Intraday post-trigger** — requires explicit ex-ante trigger reconstruction and post-trigger-only measurement; higher opportunity frequency; carries the counterfactual gap on trigger precision.
-3. **Pre-event detection (T-3…T-1)** — probably weak; worth exactly one measurement pass because the data is already collected; not a program pillar.
+**Note on the prior ranking.** v1.x ranked T+1 first on ex-ante cleanliness, and the Operating Plan ordered the T+1 markout grid ahead of detector development on the reasoning that a flat grid saves six weeks. D5 overrides that ordering deliberately, accepting the cost: the cheapest edge-existence check is now optional rather than gating. Recorded here so the override is visible, not inferred.
 
 ---
 
@@ -281,7 +284,7 @@ Named explicitly because it will otherwise bite silently: the events were select
 
 Standing methodology: **event-study first, backtest second.** Conditional forward-return analysis is cheap in DuckDB and tells you where the meat is before a single line of order-management logic exists.
 
-- **Markout grid:** forward returns at 1min / 5min / 30min / close / T+1 / T+3 from candidate anchor points (open, trigger time, regime confirmation).
+- **Markout grid (burst-relative under D5):** cost-adjusted forward returns at horizons matched to measured burst timescales, anchored on burst confirmation. Day-scale anchors (open, close, T+1, T+3) are retained only for the optional T+1 pass and are not the primary grid.
 - **Conditioning features (event level):** gap size, first-5-minute range, relative volume, spread regime, trade imbalance, prior-day behavior from T-3…T-1, `momentum_pct` itself.
 - **Output:** conditional markout tables with bucketed means, monotonicity checks, and sample counts per bucket. Hypotheses that show nothing here do not graduate to backtesting.
 
@@ -333,12 +336,13 @@ In this universe **the cost model matters more than the alpha model.** Non-negot
 |---|---|---|---|
 | 1 | Provenance reconciliation for Inferred/Unknown datasets (§2.6) | Open — external archive not located | Silent data corruption enters baseline construction and reconciliation |
 | 2 | Exact mechanics of the q05 filter (§2.1) | Open — script unread | Universe definition misunderstood; sensitivity sweeps mis-specified |
-| 3 | Missing counterfactual / near-miss set (§3.2) | Structural — partially mitigated by flanking days | Live trigger precision unknown; live PnL diverges from backtest |
-| 4 | Circularity of regime frequency (§5.4) | Structural — requires unconditional universe scan before capital | Detector fire-rate in the wild unknown; FP cost underestimated |
+| 3 | Missing counterfactual / near-miss set (§3.2) | Structural — **near-front blocker under D5** (was: partially mitigated by flanking days). Hardened by Phase 8 A10.2d: the rejected-candidate population is confirmed absent from the archive, so the live FP rate is unmeasurable from what is on disk | Under D5's gate-then-trade design the live false-positive rate is a **direct PnL term, not a caveat** — every markout is conditional on power-law-filter membership, which is not knowable at detection time |
+| 4 | Circularity of regime frequency (§5.4) | Structural — **near-front blocker under D5** (was: requires unconditional universe scan before capital). The scan cannot be sequenced last | Detector fire-rate in the wild unknown, so the cost of every false fire is unpriced; under a long-only burst strategy that cost is paid in round-trip effective spread on every wrong gate |
 | 5 | `daily/` universe breadth for control-set construction (§3.2) | Open — audit item | Determines whether a partial counterfactual set is even buildable in-house |
 | 6 | Halt/reopen model fidelity (§4.3.4, §7.2) | Open — measurement pass required | Tail risk mis-sized; the one scenario that ends the strategy is unpriced |
 | 7 | Regime label stability (§5.1.1) | Open — perturbation test pending | All detector evaluation is built on sand |
 | 8 | Delisting/halt handling in T+1 results (§2.3) | Open — coverage audit item | Day-2 strategy results inflated by silent survivor filtering |
+| 9 | Archive universe (q05 on completed daily moves) vs. intended live universe (real-time ≥30% from previous close, pre/post-market inclusive) are different populations | Open — first-class under D5 | Every conditional result is measured on a population the live screen does not reproduce; live PnL diverges by an unquantified amount |
 
 ---
 
@@ -373,3 +377,19 @@ Dates are ordinal, not promises. The gates between phases are the artifacts, not
 - **Hazard function** — P(regime death in the next instant | regime age); turns duration distributions into an age-conditional exit prior.
 - **Pseudo-controls (flanking days)** — T-3…T-1 and T+2…T+3 sessions used to estimate detector false positives on the same names outside the event day.
 - **Quantile regression (q=0.05, log-space)** — the power-law tail filter that defined the event universe; the archive's selection mechanism and a standing sensitivity axis.
+
+---
+
+## Version History
+
+| Version | Date       | Change                                                                                                              |
+| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------- |
+| 2.0     | 2026-08-03 | D5 redirect: §3.3 re-ranked, §6 re-anchored, §8 risk items #3/#4 upgraded, §9 rewritten. Short-side variants removed. |
+| 1.x     | 2026-07-13 | Initial spec. No version history was recorded before the 2.0 bump; "1.x" is the retroactive designation used by §3.3's note on the prior ranking. |
+
+**Status of the 2.0 row, 2026-08-03 (agent note, not Cooper text).** §3.3, §6 and §8 landed as
+described. **§9 was not rewritten** — `prompts/redirect_d5.md` T3d specifies §9 as "sequenced from the
+phase map in T4", and T4 hard-stopped: `docs/Claude-Code-Operating-Plan.md` does not exist in this
+checkout and the T4 map's rows 8 and 9 conflict with the already-approved Phase 8 and the in-flight
+Phase 9. §9 therefore still carries the v1.x week-numbered plan and is stale with respect to D5.
+Remove this note when T3d lands. See `results/redirect_d5/REPORT.md`.
