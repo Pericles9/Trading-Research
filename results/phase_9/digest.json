@@ -3,7 +3,8 @@
   "title": "Path Shape, Cross-Session Integrity, and Clustered Inference",
   "branch": "phase/9",
   "config_hash": "ba858a71171a",
-  "status": "complete",
+  "status": "complete_approved",
+  "approval": "Cooper reviewed and approved in-session 2026-08-03; formally recorded here, tagged phase-9-approved, master fast-forwarded (cf. phase-6b-approved 295a0e1, phase-7-approved 5d9eb1c). Approval carries D4 Amendment A12 (docs/Universe-Decisions.md): the tick-only quarantine extends to CROSS-SESSION tick price ratios, which inherit the same adjustment-basis mismatch D4 quarantined on the spine. flag_cross_session_extreme stays homed in results/phase_9/artifacts/t1_cross_session_flags.parquet and is NOT promoted to src/data/canonical.py by this approval - that remains a separate Cooper decision, logged open.",
   "generated_at": "2026-08-03",
   "baseline": {
     "tag": "phase-8-approved",
