@@ -1,0 +1,1022 @@
+{
+  "phase": "10",
+  "task": "T3",
+  "arm": "B",
+  "config_hash": "1705e5c3",
+  "method": "trade-arrival rate vs time-of-day-matched flanking baseline (T-3..T-1), log space, on/off hysteresis, merge-then-dwell",
+  "implementation": "research/phase_10/arm_b.py",
+  "verification": "synthetic quiet-burst-quiet session: the dense region is recovered as exactly one burst with boundaries inside +/-2 min of truth carrying >90% of its prints; baseline label transitions asserted; hysteresis shown to widen the interval vs a single-threshold rule. Run: python research/phase_10/arm_b.py",
+  "reference_point": {
+    "on_multiplier": 4.0,
+    "off_multiplier": 2.0,
+    "min_dwell_seconds": 60
+  },
+  "baseline_rule": "Baseline at minute-of-session m = (total prints in minutes [m-15, m+15] pooled across offsets -3, -2, -1) / (number of contributing minute slots). Time-of-day-matched, NOT a whole-day average: a whole-day denominator saturates on names that trade thin for weeks then enormously on the event day, and degenerates the segmentation into a session flag. The +/-15 min window exists because a single (minute, 3 sessions) cell is mostly zero on these names; it widens support without leaving the time-of-day neighbourhood.",
+  "baseline_denominator_rule": "collected flanking sessions only, from canonical trades_bitmap where present (fallback: print presence). A collected session with zero prints contributes zero-count minute slots; an uncollected session contributes nothing.",
+  "n_param_sets": 24,
+  "n_param_combinations_skipped_off_ge_on": 3,
+  "n_events": 114,
+  "baseline_definedness": {
+    "counts": {
+      "baseline_partial": 81,
+      "defined": 32,
+      "baseline_undefined": 1
+    },
+    "by_group": {
+      "activity_extension": {
+        "baseline_partial": 34,
+        "defined": 16
+      },
+      "dev_v4_primary": {
+        "baseline_partial": 39,
+        "defined": 11
+      },
+      "dev_v4_sidecar": {
+        "baseline_partial": 4,
+        "defined": 1,
+        "baseline_undefined": 1
+      },
+      "row_cap_census": {
+        "defined": 4,
+        "baseline_partial": 4
+      }
+    },
+    "source_used": {
+      "print_presence_fallback": 114
+    },
+    "non_defined_events": [
+      {
+        "ticker": "ALXO",
+        "event_date_canonical": "2020-08-05",
+        "momentum_pct": 31.58,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 2821,
+        "baseline_minutes_with_prints": 578,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "OCUL",
+        "event_date_canonical": "2020-10-07",
+        "momentum_pct": 30.2,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 11007,
+        "baseline_minutes_with_prints": 591,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "OST",
+        "event_date_canonical": "2024-06-13",
+        "momentum_pct": 31.16,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 185,
+        "baseline_minutes_with_prints": 741,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "PAR",
+        "event_date_canonical": "2021-04-08",
+        "momentum_pct": 31.58,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 9086,
+        "baseline_minutes_with_prints": 659,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "SCLX",
+        "event_date_canonical": "2022-11-23",
+        "momentum_pct": 31.06,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 2368,
+        "baseline_minutes_with_prints": 943,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "AMCX",
+        "event_date_canonical": "2021-02-26",
+        "momentum_pct": 33.24,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 28867,
+        "baseline_minutes_with_prints": 829,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "OCUL",
+        "event_date_canonical": "2023-12-04",
+        "momentum_pct": 32.46,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 18093,
+        "baseline_minutes_with_prints": 758,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "PRTH",
+        "event_date_canonical": "2020-09-15",
+        "momentum_pct": 32.53,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 5762,
+        "baseline_minutes_with_prints": 668,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "VEEE",
+        "event_date_canonical": "2024-06-25",
+        "momentum_pct": 31.79,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 465,
+        "baseline_minutes_with_prints": 616,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "ASPI",
+        "event_date_canonical": "2023-08-01",
+        "momentum_pct": 35.14,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 4634,
+        "baseline_minutes_with_prints": 877,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "CELH",
+        "event_date_canonical": "2020-08-06",
+        "momentum_pct": 34.18,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 24157,
+        "baseline_minutes_with_prints": 801,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "EDUC",
+        "event_date_canonical": "2024-04-03",
+        "momentum_pct": 33.48,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 519,
+        "baseline_minutes_with_prints": 507,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "EWTX",
+        "event_date_canonical": "2022-01-05",
+        "momentum_pct": 33.7,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 12753,
+        "baseline_minutes_with_prints": 557,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "NE",
+        "event_date_canonical": "2020-02-12",
+        "momentum_pct": 37.5,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 35610,
+        "baseline_minutes_with_prints": 708,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "SIFY",
+        "event_date_canonical": "2023-06-22",
+        "momentum_pct": 36.73,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 886,
+        "baseline_minutes_with_prints": 680,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "USEG",
+        "event_date_canonical": "2020-05-15",
+        "momentum_pct": 37.9,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 706,
+        "baseline_minutes_with_prints": 421,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "AACG",
+        "event_date_canonical": "2023-12-27",
+        "momentum_pct": 41.81,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 268,
+        "baseline_minutes_with_prints": 589,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "ABSI",
+        "event_date_canonical": "2023-12-04",
+        "momentum_pct": 39.66,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 7035,
+        "baseline_minutes_with_prints": 903,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "CREX",
+        "event_date_canonical": "2022-02-01",
+        "momentum_pct": 41.48,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 745,
+        "baseline_minutes_with_prints": 730,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "EGHT",
+        "event_date_canonical": "2020-12-10",
+        "momentum_pct": 40.62,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 31294,
+        "baseline_minutes_with_prints": 802,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "ALGS",
+        "event_date_canonical": "2024-10-24",
+        "momentum_pct": 43.55,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 1098,
+        "baseline_minutes_with_prints": 633,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "AQB",
+        "event_date_canonical": "2022-03-10",
+        "momentum_pct": 46.43,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 14268,
+        "baseline_minutes_with_prints": 870,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "IMTE",
+        "event_date_canonical": "2022-09-16",
+        "momentum_pct": 42.47,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 4194,
+        "baseline_minutes_with_prints": 869,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "SLGL",
+        "event_date_canonical": "2024-11-22",
+        "momentum_pct": 42.48,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 540,
+        "baseline_minutes_with_prints": 693,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "WGS",
+        "event_date_canonical": "2024-01-08",
+        "momentum_pct": 42.59,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 4135,
+        "baseline_minutes_with_prints": 740,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "AHG",
+        "event_date_canonical": "2022-08-03",
+        "momentum_pct": 52.27,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 398,
+        "baseline_minutes_with_prints": 576,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "FATBB",
+        "event_date_canonical": "2022-03-29",
+        "momentum_pct": 52.6,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 248,
+        "baseline_minutes_with_prints": 465,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "MRSN",
+        "event_date_canonical": "2023-05-03",
+        "momentum_pct": 53.2,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 42642,
+        "baseline_minutes_with_prints": 784,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "SLNH",
+        "event_date_canonical": "2022-12-21",
+        "momentum_pct": 47.66,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 1822,
+        "baseline_minutes_with_prints": 614,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "SPCB",
+        "event_date_canonical": "2021-10-25",
+        "momentum_pct": 53.3,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 1803,
+        "baseline_minutes_with_prints": 897,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "ACRE",
+        "event_date_canonical": "2020-04-07",
+        "momentum_pct": 55.53,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 21192,
+        "baseline_minutes_with_prints": 558,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "CVNA",
+        "event_date_canonical": "2020-03-24",
+        "momentum_pct": 58.3,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 159745,
+        "baseline_minutes_with_prints": 821,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "NEPH",
+        "event_date_canonical": "2023-06-01",
+        "momentum_pct": 56.25,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 13919,
+        "baseline_minutes_with_prints": 676,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "CPSH",
+        "event_date_canonical": "2020-05-06",
+        "momentum_pct": 100.46,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 1404,
+        "baseline_minutes_with_prints": 645,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "DRUG",
+        "event_date_canonical": "2023-08-08",
+        "momentum_pct": 100.0,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 1498,
+        "baseline_minutes_with_prints": 654,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "BLBX",
+        "event_date_canonical": "2023-04-17",
+        "momentum_pct": 259.85,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 4419,
+        "baseline_minutes_with_prints": 842,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "EDSA",
+        "event_date_canonical": "2020-06-15",
+        "momentum_pct": 244.83,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 640,
+        "baseline_minutes_with_prints": 606,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "EEIQ",
+        "event_date_canonical": "2023-05-01",
+        "momentum_pct": 115.95,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 57,
+        "baseline_minutes_with_prints": 460,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "SWVL",
+        "event_date_canonical": "2022-04-21",
+        "momentum_pct": 130.05,
+        "cohort_group": "dev_v4_primary",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 4255,
+        "baseline_minutes_with_prints": 863,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "AUID",
+        "event_date_canonical": "2023-02-27",
+        "momentum_pct": 31.64,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 744,
+        "baseline_minutes_with_prints": 793,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "INR",
+        "event_date_canonical": "2020-01-07",
+        "momentum_pct": 56.99,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 45,
+        "baseline_minutes_with_prints": 272,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "IOBT",
+        "event_date_canonical": "2022-04-04",
+        "momentum_pct": 36.74,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 355,
+        "baseline_minutes_with_prints": 514,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "OCG",
+        "event_date_canonical": "2024-12-17",
+        "momentum_pct": 45.45,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 100,
+        "baseline_minutes_with_prints": 505,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "SGD",
+        "event_date_canonical": "2023-12-13",
+        "momentum_pct": 30.43,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 3129,
+        "baseline_minutes_with_prints": 954,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "IMTE",
+        "event_date_canonical": "2023-10-27",
+        "momentum_pct": 44.92,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 844,
+        "baseline_minutes_with_prints": 773,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "LOCL",
+        "event_date_canonical": "2023-08-02",
+        "momentum_pct": 42.57,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 1052,
+        "baseline_minutes_with_prints": 737,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "MSGM",
+        "event_date_canonical": "2022-09-13",
+        "momentum_pct": 47.62,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 1213,
+        "baseline_minutes_with_prints": 745,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "OPTX",
+        "event_date_canonical": "2024-08-14",
+        "momentum_pct": 37.04,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 712,
+        "baseline_minutes_with_prints": 884,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "BNTC",
+        "event_date_canonical": "2020-06-19",
+        "momentum_pct": 59.49,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 451,
+        "baseline_minutes_with_prints": 584,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "ONIT",
+        "event_date_canonical": "2024-09-27",
+        "momentum_pct": 30.01,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 1860,
+        "baseline_minutes_with_prints": 492,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "ONMD",
+        "event_date_canonical": "2024-02-29",
+        "momentum_pct": 52.17,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 1943,
+        "baseline_minutes_with_prints": 930,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "SOBR",
+        "event_date_canonical": "2022-08-04",
+        "momentum_pct": 35.63,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 635,
+        "baseline_minutes_with_prints": 841,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "MESA",
+        "event_date_canonical": "2020-03-20",
+        "momentum_pct": 37.04,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 19446,
+        "baseline_minutes_with_prints": 537,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "MGRX",
+        "event_date_canonical": "2023-10-19",
+        "momentum_pct": 43.94,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 295,
+        "baseline_minutes_with_prints": 713,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "NA",
+        "event_date_canonical": "2024-09-26",
+        "momentum_pct": 49.67,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 11073,
+        "baseline_minutes_with_prints": 938,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "RDHL",
+        "event_date_canonical": "2023-07-12",
+        "momentum_pct": 45.16,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 1768,
+        "baseline_minutes_with_prints": 933,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "VMD",
+        "event_date_canonical": "2020-03-20",
+        "momentum_pct": 34.77,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 10264,
+        "baseline_minutes_with_prints": 723,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "ARTL",
+        "event_date_canonical": "2020-10-01",
+        "momentum_pct": 51.12,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 16183,
+        "baseline_minutes_with_prints": 948,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "CNF",
+        "event_date_canonical": "2024-10-02",
+        "momentum_pct": 45.93,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 6228,
+        "baseline_minutes_with_prints": 858,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "LCFY",
+        "event_date_canonical": "2022-04-27",
+        "momentum_pct": 76.27,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 2229,
+        "baseline_minutes_with_prints": 751,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "MGNX",
+        "event_date_canonical": "2023-11-07",
+        "momentum_pct": 34.93,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 15401,
+        "baseline_minutes_with_prints": 699,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "TRVI",
+        "event_date_canonical": "2020-08-11",
+        "momentum_pct": 74.9,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 482,
+        "baseline_minutes_with_prints": 671,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "BBW",
+        "event_date_canonical": "2021-12-01",
+        "momentum_pct": 36.81,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 11038,
+        "baseline_minutes_with_prints": 827,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "RLJ",
+        "event_date_canonical": "2020-03-24",
+        "momentum_pct": 30.56,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 110931,
+        "baseline_minutes_with_prints": 682,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "HCTI",
+        "event_date_canonical": "2024-09-17",
+        "momentum_pct": 79.37,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 3484,
+        "baseline_minutes_with_prints": 954,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "KURA",
+        "event_date_canonical": "2020-04-28",
+        "momentum_pct": 55.85,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 6675,
+        "baseline_minutes_with_prints": 548,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "PERI",
+        "event_date_canonical": "2021-10-26",
+        "momentum_pct": 36.31,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 18135,
+        "baseline_minutes_with_prints": 928,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "NCNO",
+        "event_date_canonical": "2023-06-16",
+        "momentum_pct": 32.09,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 39106,
+        "baseline_minutes_with_prints": 635,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "TANH",
+        "event_date_canonical": "2020-11-23",
+        "momentum_pct": 80.0,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 83859,
+        "baseline_minutes_with_prints": 951,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "RDHL",
+        "event_date_canonical": "2022-10-19",
+        "momentum_pct": 106.9,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 11123,
+        "baseline_minutes_with_prints": 848,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "SPRC",
+        "event_date_canonical": "2023-11-15",
+        "momentum_pct": 70.87,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 1263,
+        "baseline_minutes_with_prints": 927,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "FULC",
+        "event_date_canonical": "2023-08-22",
+        "momentum_pct": 62.5,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 9979,
+        "baseline_minutes_with_prints": 545,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "VKTX",
+        "event_date_canonical": "2023-03-28",
+        "momentum_pct": 69.85,
+        "cohort_group": "activity_extension",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 65760,
+        "baseline_minutes_with_prints": 795,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "APLD",
+        "event_date_canonical": "2022-03-28",
+        "momentum_pct": 45.24,
+        "cohort_group": "dev_v4_sidecar",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 50,
+        "baseline_minutes_with_prints": 356,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "ACET",
+        "event_date_canonical": "2020-09-18",
+        "momentum_pct": 32.84,
+        "cohort_group": "dev_v4_sidecar",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 2,
+        "n_flanking_prints": 1904,
+        "baseline_minutes_with_prints": 732,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "RBC",
+        "event_date_canonical": "2022-09-26",
+        "momentum_pct": 44.21,
+        "cohort_group": "dev_v4_sidecar",
+        "baseline_label": "baseline_undefined",
+        "n_collected_flanking": 0,
+        "n_flanking_prints": 0,
+        "baseline_minutes_with_prints": 0,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "NUKK",
+        "event_date_canonical": "2022-04-18",
+        "momentum_pct": 50.37,
+        "cohort_group": "dev_v4_sidecar",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 2,
+        "n_flanking_prints": 79,
+        "baseline_minutes_with_prints": 348,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "PSIX",
+        "event_date_canonical": "2022-11-15",
+        "momentum_pct": 74.86,
+        "cohort_group": "dev_v4_sidecar",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 1,
+        "n_flanking_prints": 2,
+        "baseline_minutes_with_prints": 31,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "ARBB",
+        "event_date_canonical": "2023-12-26",
+        "momentum_pct": 377.89,
+        "cohort_group": "row_cap_census",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 371,
+        "baseline_minutes_with_prints": 722,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "ARBB",
+        "event_date_canonical": "2024-02-13",
+        "momentum_pct": 195.45,
+        "cohort_group": "row_cap_census",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 3941,
+        "baseline_minutes_with_prints": 923,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "BCAB",
+        "event_date_canonical": "2022-08-10",
+        "momentum_pct": 104.16,
+        "cohort_group": "row_cap_census",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 8321,
+        "baseline_minutes_with_prints": 540,
+        "baseline_minutes_total": 960
+      },
+      {
+        "ticker": "APRE",
+        "event_date_canonical": "2021-06-16",
+        "momentum_pct": 60.82,
+        "cohort_group": "row_cap_census",
+        "baseline_label": "baseline_partial",
+        "n_collected_flanking": 3,
+        "n_flanking_prints": 12007,
+        "baseline_minutes_with_prints": 927,
+        "baseline_minutes_total": 960
+      }
+    ],
+    "carried_not_dropped": true
+  },
+  "n_bursts_all_param_sets": 66833,
+  "n_bursts_reference": 2544,
+  "reference_burst_count_pooled": {
+    "n": 100,
+    "q0": 0.0,
+    "q25": 15.75,
+    "q50": 25.0,
+    "q75": 32.0,
+    "q100": 60.0,
+    "mean": 24.08
+  },
+  "reference_burst_count_by_group": {
+    "dev_v4_primary": {
+      "n": 50,
+      "q0": 4.0,
+      "q25": 16.0,
+      "q50": 26.0,
+      "q75": 31.75,
+      "q100": 60.0,
+      "mean": 25.14
+    },
+    "activity_extension": {
+      "n": 50,
+      "q0": 0.0,
+      "q25": 13.0,
+      "q50": 25.0,
+      "q75": 31.75,
+      "q100": 52.0,
+      "mean": 23.02
+    },
+    "dev_v4_sidecar": {
+      "n": 6,
+      "q0": 1.0,
+      "q25": 5.25,
+      "q50": 12.5,
+      "q75": 17.5,
+      "q100": 37.0,
+      "mean": 14.166666666666666
+    },
+    "row_cap_census": {
+      "n": 8,
+      "q0": 1.0,
+      "q25": 3.5,
+      "q50": 5.5,
+      "q75": 8.25,
+      "q100": 16.0,
+      "mean": 6.375
+    }
+  },
+  "candidate_funnel_reference": {
+    "raw_candidates": 8085,
+    "after_merge": 4146,
+    "dropped_below_dwell": 1602,
+    "dropped_no_prints": 0,
+    "final": 2544
+  },
+  "timing": {
+    "total_seconds": 13.1,
+    "max_seconds_per_event_all_param_sets": 0.08,
+    "median_seconds_per_event": 0.054,
+    "ceiling_per_event": 120,
+    "ceiling_aggregate": 3600,
+    "escalation_row_5_triggered": false
+  },
+  "source": "research/phase_10/t3_arm_b.py:main",
+  "artifacts": [
+    "results/phase_10/artifacts/t3_bursts_arm_b.parquet",
+    "results/phase_10/artifacts/t3_arm_b_events.parquet"
+  ]
+}
