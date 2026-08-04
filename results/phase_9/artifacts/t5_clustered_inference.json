@@ -1,0 +1,619 @@
+{
+  "phase": "9",
+  "task": "T5",
+  "source": "research/phase_9/t5_clustered.py:main",
+  "repro": "python -m research.phase_9.t5_clustered",
+  "config_hash": "ba858a71171a",
+  "scan_free": true,
+  "tables_touched": [
+    "event_minute_bars_v2"
+  ],
+  "spine_numeric_reads": 0,
+  "bootstrap": {
+    "method": "ticker-block, resample tickers with replacement, percentile CI",
+    "reps": 2000,
+    "seed": 42,
+    "ci_level": 0.95,
+    "naive_comparison": "event-level iid bootstrap, same reps and seed"
+  },
+  "events_per_ticker": {
+    "n_events": 15763,
+    "n_tickers": 2576,
+    "events_per_ticker_median": 3.0,
+    "events_per_ticker_mean": 6.119177018633541,
+    "events_per_ticker_max": 57,
+    "events_per_ticker_min": 1,
+    "share_events_in_tickers_ge_5": 0.8101249762101123,
+    "share_events_in_tickers_ge_10": 0.588847300640741,
+    "n_tickers_ge_5": 1089,
+    "n_tickers_ge_10": 559,
+    "top_20_tickers": [
+      {
+        "ticker": "MTC",
+        "n_events": 57
+      },
+      {
+        "ticker": "WORX",
+        "n_events": 46
+      },
+      {
+        "ticker": "VVPR",
+        "n_events": 38
+      },
+      {
+        "ticker": "BAOS",
+        "n_events": 38
+      },
+      {
+        "ticker": "GFAI",
+        "n_events": 36
+      },
+      {
+        "ticker": "PHUN",
+        "n_events": 35
+      },
+      {
+        "ticker": "AEMD",
+        "n_events": 35
+      },
+      {
+        "ticker": "MDIA",
+        "n_events": 34
+      },
+      {
+        "ticker": "KXIN",
+        "n_events": 34
+      },
+      {
+        "ticker": "OBLG",
+        "n_events": 33
+      },
+      {
+        "ticker": "ENSC",
+        "n_events": 33
+      },
+      {
+        "ticker": "COSM",
+        "n_events": 32
+      },
+      {
+        "ticker": "INM",
+        "n_events": 32
+      },
+      {
+        "ticker": "XCUR",
+        "n_events": 32
+      },
+      {
+        "ticker": "CDIO",
+        "n_events": 31
+      },
+      {
+        "ticker": "DUO",
+        "n_events": 31
+      },
+      {
+        "ticker": "NCTY",
+        "n_events": 31
+      },
+      {
+        "ticker": "MYSZ",
+        "n_events": 31
+      },
+      {
+        "ticker": "MLGO",
+        "n_events": 31
+      },
+      {
+        "ticker": "TIRX",
+        "n_events": 30
+      }
+    ],
+    "histogram": {
+      "1": 638,
+      "2": 384,
+      "3": 273,
+      "4": 192,
+      "5": 159,
+      "6": 129,
+      "7": 89,
+      "8": 81,
+      "9": 72,
+      "10": 63,
+      "11": 68,
+      "12": 61,
+      "13": 43,
+      "14": 35,
+      "15": 35,
+      "16": 30,
+      "17": 33,
+      "18": 22,
+      "19": 22,
+      "20": 22,
+      "21": 15,
+      "22": 9,
+      "23": 18,
+      "24": 14,
+      "25": 11,
+      "26": 7,
+      "27": 12,
+      "28": 4,
+      "29": 3,
+      "30": 13,
+      "31": 5,
+      "32": 3,
+      "33": 2,
+      "34": 2,
+      "35": 2,
+      "36": 1,
+      "38": 2,
+      "46": 1,
+      "57": 1
+    }
+  },
+  "headline_medians": [
+    {
+      "name": "t0_close->t1_close | pooled | untrimmed (PRIMARY)",
+      "n": 15688,
+      "n_tickers": 2561,
+      "median": -0.02782474358816045,
+      "block_ci95": [
+        -0.03015929877996261,
+        -0.025838234128723676
+      ],
+      "naive_ci95": [
+        -0.02999071368368252,
+        -0.025989635291959898
+      ],
+      "block_ci_width": 0.004321064651238934,
+      "naive_ci_width": 0.004001078391722621,
+      "width_ratio_block_over_naive": 1.0799750037835538,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.01904888691936423,
+      "share_tickers_negative": 0.6224131198750488,
+      "n_tickers_negative": 1594
+    },
+    {
+      "name": "t0_close->t1_close | pooled | flag-excluded",
+      "n": 15439,
+      "n_tickers": 2560,
+      "median": -0.0284379353205334,
+      "block_ci95": [
+        -0.030771658666753545,
+        -0.026351830335142098
+      ],
+      "naive_ci95": [
+        -0.030623668492462813,
+        -0.026653650562512916
+      ],
+      "block_ci_width": 0.004419828331611447,
+      "naive_ci_width": 0.003970017929949898,
+      "width_ratio_block_over_naive": 1.1133018564647204,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.019680841854123804,
+      "share_tickers_negative": 0.625,
+      "n_tickers_negative": 1600
+    },
+    {
+      "name": "t0_close->t1_close | pq_rth_open Q1 | untrimmed",
+      "n": 3133,
+      "n_tickers": 1344,
+      "median": -0.02985296314968116,
+      "block_ci95": [
+        -0.03459172601803707,
+        -0.025451605464641584
+      ],
+      "naive_ci95": [
+        -0.034306123340954967,
+        -0.02539819060561046
+      ],
+      "block_ci_width": 0.009140120553395484,
+      "naive_ci_width": 0.008907932735344508,
+      "width_ratio_block_over_naive": 1.0260652864081148,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.030042124566863875,
+      "share_tickers_negative": 0.6123511904761905,
+      "n_tickers_negative": 823
+    },
+    {
+      "name": "t0_close->t1_close | pq_rth_open Q2 | untrimmed",
+      "n": 3127,
+      "n_tickers": 1440,
+      "median": -0.025644827548137406,
+      "block_ci95": [
+        -0.029651718534109715,
+        -0.021174404002576454
+      ],
+      "naive_ci95": [
+        -0.02974196919873753,
+        -0.021622464013165657
+      ],
+      "block_ci_width": 0.008477314531533262,
+      "naive_ci_width": 0.008119505185571873,
+      "width_ratio_block_over_naive": 1.0440678757859785,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.02180742095626271,
+      "share_tickers_negative": 0.5902777777777778,
+      "n_tickers_negative": 850
+    },
+    {
+      "name": "t0_close->t1_close | pq_rth_open Q3 | untrimmed",
+      "n": 3143,
+      "n_tickers": 1493,
+      "median": -0.023347363996991177,
+      "block_ci95": [
+        -0.027779564107075706,
+        -0.018347129978290577
+      ],
+      "naive_ci95": [
+        -0.028438548554114214,
+        -0.018018505502678365
+      ],
+      "block_ci_width": 0.009432434128785128,
+      "naive_ci_width": 0.010420043051435849,
+      "width_ratio_block_over_naive": 0.9052202646595946,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.01992132717525321,
+      "share_tickers_negative": 0.5887474882786337,
+      "n_tickers_negative": 879
+    },
+    {
+      "name": "t0_close->t1_close | pq_rth_open Q4 | untrimmed",
+      "n": 3145,
+      "n_tickers": 1503,
+      "median": -0.024412720669885177,
+      "block_ci95": [
+        -0.028170876966696335,
+        -0.019802627296179754
+      ],
+      "naive_ci95": [
+        -0.028491955794306273,
+        -0.019802627296179754
+      ],
+      "block_ci_width": 0.008368249670516581,
+      "naive_ci_width": 0.008689328498126519,
+      "width_ratio_block_over_naive": 0.9630490632643057,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.019283796574629218,
+      "share_tickers_negative": 0.5934797072521624,
+      "n_tickers_negative": 892
+    },
+    {
+      "name": "t0_close->t1_close | pq_rth_open Q5 | untrimmed",
+      "n": 3140,
+      "n_tickers": 1156,
+      "median": -0.03780748908323875,
+      "block_ci95": [
+        -0.0423555119586528,
+        -0.03266973893712269
+      ],
+      "naive_ci95": [
+        -0.04221776992259812,
+        -0.03299360235129038
+      ],
+      "block_ci_width": 0.009685773021530113,
+      "naive_ci_width": 0.009224167571307736,
+      "width_ratio_block_over_naive": 1.0500430468824336,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.031463797237071656,
+      "share_tickers_negative": 0.6332179930795848,
+      "n_tickers_negative": 732
+    },
+    {
+      "name": "det+5->t0_close | pooled",
+      "n": 15358,
+      "n_tickers": 2543,
+      "median": -0.024956731973867507,
+      "block_ci95": [
+        -0.028144240354915855,
+        -0.02236468320077784
+      ],
+      "naive_ci95": [
+        -0.027927295853370903,
+        -0.022916281545937944
+      ],
+      "block_ci_width": 0.005779557154138016,
+      "naive_ci_width": 0.005011014307432959,
+      "width_ratio_block_over_naive": 1.1533707148999872,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.01788167127712893,
+      "share_tickers_negative": 0.6185607550137633,
+      "n_tickers_negative": 1573
+    },
+    {
+      "name": "det+5->t0_close | det_bin premarket",
+      "n": 4630,
+      "n_tickers": 1424,
+      "median": -0.04297757141165483,
+      "block_ci95": [
+        -0.05129329438755058,
+        -0.03287671045120235
+      ],
+      "naive_ci95": [
+        -0.0507838242632679,
+        -0.0339015516756814
+      ],
+      "block_ci_width": 0.01841658393634823,
+      "naive_ci_width": 0.016882272587586497,
+      "width_ratio_block_over_naive": 1.0908829863279135,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.020767071063955388,
+      "share_tickers_negative": 0.5547752808988764,
+      "n_tickers_negative": 790
+    },
+    {
+      "name": "det+5->t0_close | det_bin 0930-1000",
+      "n": 1888,
+      "n_tickers": 1181,
+      "median": -0.030726999575089967,
+      "block_ci95": [
+        -0.037523246260972636,
+        -0.023895515549929747
+      ],
+      "naive_ci95": [
+        -0.03752243932308968,
+        -0.023981964686485325
+      ],
+      "block_ci_width": 0.013627730711042889,
+      "naive_ci_width": 0.013540474636604353,
+      "width_ratio_block_over_naive": 1.0064440927500913,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.02625237114406573,
+      "share_tickers_negative": 0.5969517358171041,
+      "n_tickers_negative": 705
+    },
+    {
+      "name": "det+5->t0_close | det_bin 1000-1100",
+      "n": 2158,
+      "n_tickers": 1192,
+      "median": -0.029604714199137308,
+      "block_ci95": [
+        -0.03526715268257943,
+        -0.021393799222359285
+      ],
+      "naive_ci95": [
+        -0.03516071666588549,
+        -0.021339316034995493
+      ],
+      "block_ci_width": 0.013873353460220141,
+      "naive_ci_width": 0.013821400630889994,
+      "width_ratio_block_over_naive": 1.003758868635501,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.0235733328260751,
+      "share_tickers_negative": 0.5889261744966443,
+      "n_tickers_negative": 702
+    },
+    {
+      "name": "det+5->t0_close | det_bin 1100-1300",
+      "n": 2868,
+      "n_tickers": 1387,
+      "median": -0.027010232786807243,
+      "block_ci95": [
+        -0.03303443694543421,
+        -0.021718811901408095
+      ],
+      "naive_ci95": [
+        -0.03262163387501307,
+        -0.0216782139666745
+      ],
+      "block_ci_width": 0.011315625044026115,
+      "naive_ci_width": 0.010943419908338574,
+      "width_ratio_block_over_naive": 1.0340117750031625,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.021766797426806133,
+      "share_tickers_negative": 0.6207642393655372,
+      "n_tickers_negative": 861
+    },
+    {
+      "name": "det+5->t0_close | det_bin after_1300",
+      "n": 3814,
+      "n_tickers": 1597,
+      "median": -0.01418676896958622,
+      "block_ci95": [
+        -0.017415077672475982,
+        -0.011430794824008004
+      ],
+      "naive_ci95": [
+        -0.01741652050439038,
+        -0.011727093872769021
+      ],
+      "block_ci_width": 0.005984282848467979,
+      "naive_ci_width": 0.00568942663162136,
+      "width_ratio_block_over_naive": 1.051825295576857,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": -0.013059887114609042,
+      "share_tickers_negative": 0.5973700688791485,
+      "n_tickers_negative": 954
+    },
+    {
+      "name": "retrace_excursion | t0_close",
+      "n": 15369,
+      "n_tickers": 2547,
+      "median": 0.44999999999999996,
+      "block_ci95": [
+        0.4387066241685143,
+        0.4622872074306389
+      ],
+      "naive_ci95": [
+        0.4431818181818183,
+        0.4582777528325428
+      ],
+      "block_ci_width": 0.023580583262124588,
+      "naive_ci_width": 0.015095934650724507,
+      "width_ratio_block_over_naive": 1.5620485784888365,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": 0.3694851727098607,
+      "share_tickers_negative": 0.0,
+      "n_tickers_negative": 0
+    },
+    {
+      "name": "retrace_excursion | t1_close",
+      "n": 15352,
+      "n_tickers": 2543,
+      "median": 0.5611192053503429,
+      "block_ci95": [
+        0.5481481481481482,
+        0.5740740740740742
+      ],
+      "naive_ci95": [
+        0.5531410509679968,
+        0.5699488341968912
+      ],
+      "block_ci_width": 0.02592592592592602,
+      "naive_ci_width": 0.016807783228894424,
+      "width_ratio_block_over_naive": 1.5424952578729423,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": 0.44583333333333336,
+      "share_tickers_negative": 0.07786079433739677,
+      "n_tickers_negative": 198
+    },
+    {
+      "name": "retrace_excursion | t2_close",
+      "n": 15353,
+      "n_tickers": 2544,
+      "median": 0.5967078189300409,
+      "block_ci95": [
+        0.5802376283611299,
+        0.6096595161574359
+      ],
+      "naive_ci95": [
+        0.5858983362694059,
+        0.605263157894737
+      ],
+      "block_ci_width": 0.029421887796305946,
+      "naive_ci_width": 0.01936482162533104,
+      "width_ratio_block_over_naive": 1.5193472145294278,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": 0.4698260799176919,
+      "share_tickers_negative": 0.09984276729559749,
+      "n_tickers_negative": 254
+    },
+    {
+      "name": "retrace_excursion | t3_close",
+      "n": 15355,
+      "n_tickers": 2543,
+      "median": 0.6198830409356726,
+      "block_ci95": [
+        0.604913981035429,
+        0.6346627455628446
+      ],
+      "naive_ci95": [
+        0.6096298829690298,
+        0.6304224594337252
+      ],
+      "block_ci_width": 0.029748764527415594,
+      "naive_ci_width": 0.020792576464695456,
+      "width_ratio_block_over_naive": 1.4307396958682446,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": 0.48647654118546063,
+      "share_tickers_negative": 0.10892646480534801,
+      "n_tickers_negative": 277
+    },
+    {
+      "name": "retrace_detection | t0_close",
+      "n": 15041,
+      "n_tickers": 2528,
+      "median": 1.2608695652173891,
+      "block_ci95": [
+        1.2365102468252076,
+        1.283950617283951
+      ],
+      "naive_ci95": [
+        1.2371676757041328,
+        1.2832699619771855
+      ],
+      "block_ci_width": 0.047440370458743386,
+      "naive_ci_width": 0.046102286273052684,
+      "width_ratio_block_over_naive": 1.029024247903142,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": 1.2817541613316263,
+      "share_tickers_negative": 0.0,
+      "n_tickers_negative": 0
+    },
+    {
+      "name": "retrace_detection | t1_close",
+      "n": 15027,
+      "n_tickers": 2524,
+      "median": 1.3809523809523814,
+      "block_ci95": [
+        1.3508890428876568,
+        1.4114641428697667
+      ],
+      "naive_ci95": [
+        1.3541975855847819,
+        1.4090909090909094
+      ],
+      "block_ci_width": 0.06057509998210997,
+      "naive_ci_width": 0.05489332350612752,
+      "width_ratio_block_over_naive": 1.1035057838199251,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": 1.375241849397323,
+      "share_tickers_negative": 0.08518225039619651,
+      "n_tickers_negative": 215
+    },
+    {
+      "name": "retrace_detection | t2_close",
+      "n": 15027,
+      "n_tickers": 2524,
+      "median": 1.437066402378593,
+      "block_ci95": [
+        1.4035087719298245,
+        1.4665461121157324
+      ],
+      "naive_ci95": [
+        1.408350484161182,
+        1.466333333333333
+      ],
+      "block_ci_width": 0.0630373401859079,
+      "naive_ci_width": 0.05798284917215102,
+      "width_ratio_block_over_naive": 1.0871721739431965,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": 1.419389811306738,
+      "share_tickers_negative": 0.11172741679873217,
+      "n_tickers_negative": 282
+    },
+    {
+      "name": "retrace_detection | t3_close",
+      "n": 15028,
+      "n_tickers": 2524,
+      "median": 1.4826673877629526,
+      "block_ci95": [
+        1.450035563903038,
+        1.5147420255183413
+      ],
+      "naive_ci95": [
+        1.451761190965666,
+        1.512389621679825
+      ],
+      "block_ci_width": 0.06470646161530325,
+      "naive_ci_width": 0.06062843071415891,
+      "width_ratio_block_over_naive": 1.0672626827563916,
+      "block_ci_contains_zero": false,
+      "median_of_ticker_medians": 1.4838517427847744,
+      "share_tickers_negative": 0.11925515055467512,
+      "n_tickers_negative": 301
+    }
+  ],
+  "ci_width_ratio_summary": {
+    "median_block_over_naive": 1.0672626827563916,
+    "min": 0.9052202646595946,
+    "max": 1.5620485784888365,
+    "n_statistics": 21
+  },
+  "escalation_row_10": {
+    "condition": "ticker-block bootstrap 95% CI on pooled t0_close->t1_close median contains 0",
+    "statistic": "t0_close->t1_close | pooled | untrimmed (PRIMARY)",
+    "median": -0.02782474358816045,
+    "block_ci95": [
+      -0.03015929877996261,
+      -0.025838234128723676
+    ],
+    "naive_ci95": [
+      -0.02999071368368252,
+      -0.025989635291959898
+    ],
+    "n": 15688,
+    "n_tickers": 2561,
+    "triggered": false
+  }
+}
