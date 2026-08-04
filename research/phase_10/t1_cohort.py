@@ -45,7 +45,8 @@ def load_spine(con, cfg) -> tuple[pd.DataFrame, pd.DataFrame]:
                source_file, in_scope, clean_window, trades_ingested, quotes_ingested,
                coverage_class, trades_full_window, quotes_full_window,
                flag_eth_dominant_t0, t0_eth_row_share, repaired_1c,
-               flag_window_calendar_bug, flag_missing_event_day
+               flag_window_calendar_bug, flag_missing_event_day,
+               trades_bitmap, quotes_bitmap
         FROM momentum_events_canonical
         """
     ).fetchdf()
@@ -71,6 +72,15 @@ def build_pool(canon: pd.DataFrame, bars: pd.DataFrame, cfg) -> pd.DataFrame:
     d1 = canon[(canon["in_scope"]) & (canon["source_file"] == "file1")]
     pool = d1.merge(t0, on=COHORT_KEY, how="left")
     pool["t0_print_count"] = pool["t0_print_count"].fillna(0).astype("int64")
+
+    # Deterministic order BEFORE ranking. rank(method="first") breaks ties by row
+    # position, and the row order of a SELECT with no ORDER BY is not stable across
+    # runs -- so without this sort, tied t0_print_count values land in different
+    # deciles on different runs, the per-decile eligible pools differ, and the
+    # "seeded" draw silently returns a different cohort. That happened: an earlier
+    # run drew DPRO 2024-04-01 and IMTE 2023-10-27, a later one did not.
+    pool = pool.sort_values(COHORT_KEY, kind="mergesort").reset_index(drop=True)
+
     n_str = cfg["stratification"]["n_strata"]
     pool["t0_print_decile"] = pd.qcut(
         pool["t0_print_count"].rank(method="first"), n_str, labels=False
@@ -153,9 +163,18 @@ def main() -> int:
     ext = draw_extension(pool, dev_all, cfg)
     stratum_sizes = ext.attrs["stratum_sizes"]
 
-    # reproducibility: redraw and require zero differing rows
-    ext2 = draw_extension(pool, dev_all, cfg)
-    repro_ok = bool(ext[COHORT_KEY].equals(ext2[COHORT_KEY]))
+    # Reproducibility: the draw must be invariant to the ROW ORDER the pool arrives
+    # in, not merely repeatable against one in-memory pool object. Rebuilding the
+    # decile from a shuffled copy is the test that actually catches an unordered-SQL
+    # dependency; comparing two draws off the same object does not.
+    shuffled = build_pool(
+        canon.sample(frac=1.0, random_state=7).reset_index(drop=True),
+        bars.sample(frac=1.0, random_state=8).reset_index(drop=True), cfg,
+    )
+    ext2 = draw_extension(shuffled, dev_all, cfg)
+    repro_ok = bool(
+        ext[COHORT_KEY].reset_index(drop=True).equals(ext2[COHORT_KEY].reset_index(drop=True))
+    )
 
     # row-cap census: every D1 event carrying flag_possible_row_cap, carried and
     # never pooled. See config.cohort.row_cap_census.why_added.
@@ -207,7 +226,7 @@ def main() -> int:
             "stratum_draw_counts": ext_full["t0_print_decile"].value_counts().sort_index().to_dict(),
             "seed": cfg["cohort"]["extension"]["seed"],
         },
-        "reproducibility_check": {"pass": repro_ok, "method": "redraw with same seed, compare key columns"},
+        "reproducibility_check": {"pass": repro_ok, "method": "rebuild the decile from a row-shuffled canonical + bars, redraw with the same seed, require zero differing rows -- tests order-independence, not just repeatability"},
         "row_cap_census": {
             "n_flagged_in_d1": int(cap["flag_possible_row_cap"].sum()),
             "n_in_d1_pool": int(len(cap_ids)),

@@ -63,7 +63,16 @@ def collected_offsets(row, per_offset_counts: dict) -> tuple[dict, str]:
     UNCOLLECTED session must contribute nothing rather than silently pulling
     the baseline toward zero.
     """
-    bm = getattr(row, "trades_bitmap", None)
+    if not hasattr(row, "trades_bitmap"):
+        # A missing COLUMN is a schema gap, not a per-event NULL. Silently falling
+        # back would degrade every event's baseline to the fallback rule while the
+        # config still claimed the bitmap rule -- which is exactly what happened on
+        # the first T3 run. Fail loudly instead.
+        raise KeyError(
+            "cohort manifest has no `trades_bitmap` column; Arm B's baseline denominator "
+            "rule (config.arm_b) requires it. Re-run research/phase_10/t1_cohort.py."
+        )
+    bm = row.trades_bitmap
     if isinstance(bm, str) and len(bm) == 7:
         return {o: bm[o + 3] == "1" for o in FLANK_OFFSETS}, "trades_bitmap"
     return {o: per_offset_counts.get(o, 0) > 0 for o in FLANK_OFFSETS}, "print_presence_fallback"
