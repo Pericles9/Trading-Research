@@ -1,0 +1,232 @@
+{
+  "phase": "10",
+  "version": "v3",
+  "title": "Sub-Burst Decomposition",
+  "branch": "phase/10",
+  "spec": "prompts/phase_10_v3.md",
+  "governing_decisions": [
+    "D8",
+    "D7",
+    "D6 (diagnosis retained)",
+    "D5",
+    "D4",
+    "D3",
+    "D1"
+  ],
+  "baseline": {
+    "tag": "phase-9-approved",
+    "tag_sha": "7909d66199c2adfde597eb8a263e7dbb730cc1fb"
+  },
+  "cohort": {
+    "rule": "FROZEN. v1 manifest, reused, never redrawn. Hash asserted on every run.",
+    "manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+    "content_hash": "e1a0ac73a79aa573",
+    "n_total": 114,
+    "analysis_cohort_n": 100,
+    "analysis_cohort": [
+      "dev_v4_primary",
+      "activity_extension"
+    ],
+    "never_pooled": [
+      "row_cap_census",
+      "dev_v4_sidecar"
+    ]
+  },
+  "detection_anchor": {
+    "rule": "REUSED, NOT RE-DERIVED. D7's rule and the R1 artifacts are validated and stand.",
+    "artifact": "results/phase_10/artifacts/v2_r13_detection.parquet",
+    "threshold": 1.3,
+    "poll_interval_seconds": 1,
+    "validation_carried_forward": "110/110 exact vs Phase 8 det_minute; reference-price deviation 0.000e+00"
+  },
+  "segments": {
+    "values": [
+      "premarket",
+      "rth",
+      "post"
+    ],
+    "source": "v2_r13_detection.parquet det_segment_poll1",
+    "rule": "STRATIFICATION VARIABLE FROM T1 ONWARD (D8 consequence (d)), not a discovery. Pooled figures may be reported alongside, never instead.",
+    "observed_v2_counts": {
+      "rth": 70,
+      "premarket": 28,
+      "post": 0
+    }
+  },
+  "observables": {
+    "values": [
+      "print_rate",
+      "volume_rate"
+    ],
+    "rule": "co-equal, reported side by side; neither is a check on the other",
+    "gate_observable_note": "The Allan/Fano gate is a POINT-PROCESS statistic. The print observable is the arrival process itself. The volume observable is the same arrival process with counts weighted by share size, so its Allan/Fano factors are the size-weighted analogues. Both are computed."
+  },
+  "gate": {
+    "statistics": [
+      "allan_factor",
+      "fano_factor"
+    ],
+    "primary": "allan_factor",
+    "primary_why": "The Allan factor tolerates a slowly-varying underlying rate - which is exactly the envelope being separated out. Fano is reported alongside and WILL be inflated by the trend; that inflation is expected and is not itself evidence of clustering.",
+    "definitions": {
+      "fano": "F(T) = Var(N_i(T)) / E(N_i(T)) over NON-OVERLAPPING windows of duration T. Homogeneous Poisson gives F(T) = 1 flat.",
+      "allan": "A(T) = E[(N_{i+1}(T) - N_i(T))^2] / (2 * E[N_i(T)]). Homogeneous Poisson gives A(T) = 1 flat.",
+      "independence": "Both are computed DIRECTLY on the point process - no intensity estimation, no smoothing bandwidth, no threshold. The gate must not inherit the machinery it gates."
+    },
+    "ladder": {
+      "type": "dyadic",
+      "min_exponent": -6,
+      "max_exponent": 13,
+      "base_seconds": 1.0,
+      "min_seconds": 0.015625,
+      "max_seconds": 8192.0,
+      "n_rungs": 20,
+      "orders_of_magnitude": 5.72,
+      "justification": "The prompt requires at least four orders of magnitude; this spans 5.7. Lower end 2^-6 s = 15.6 ms is far above the observed timestamp resolution (smallest non-zero gap 49 ns, median 80 ns) and below any plausible clustering scale, so it anchors the Poisson limit A(T)->1. Upper end 2^13 s = 8192 s is ~14% of the 57,600 s extended session, the widest window that still leaves 8 non-overlapping windows for a variance."
+    },
+    "min_windows_for_a_rung": 8,
+    "min_windows_note": "A rung with fewer than this many non-overlapping windows in the event's session has too few counts for a variance and is dropped for that event, with the n reported per rung.",
+    "window_origin": "the session's own premarket start (04:00 ET); windows tile the full in-window extended session so empty stretches are real zeros, not omissions",
+    "knee_detection": {
+      "method": "two-segment continuous piecewise-linear (broken-stick) least squares in log10(T) vs log10(A), breakpoint chosen by exhaustive search over interior rungs, compared against a single-line fit by BIC",
+      "why": "It is the minimal model that can express 'a knee', it is deterministic (exhaustive search, no optimizer seed), and the BIC comparison gives a like-for-like test of whether a knee is supported at all rather than assumed. A spline or kernel derivative-based knee finder would introduce its own bandwidth - the exact class of free parameter D8 bars from the gate.",
+      "interval": "bootstrap over events within the segment, percentile 2.5/97.5 on the breakpoint location",
+      "bootstrap_reps": 1000,
+      "bootstrap_seed": 42
+    }
+  },
+  "envelope": {
+    "estimator": "the v2 adaptive centred k-block kNN rate estimator, REUSED, not rebuilt",
+    "scale_rule": "The envelope scale IS the T1 knee, per segment. It is NOT a free parameter and is NOT swept independently of the gate.",
+    "k_from_knee": "k_env = clip(round(n_prints / session_span_seconds * knee_seconds), 5, n_prints-1) - the expected number of prints in a knee-duration window at the event's own mean rate. Derived from the knee, adaptive per event, same estimator as the fast curve.",
+    "fast_k": 50,
+    "fast_k_note": "The v2 reference k, carried forward per D8(c). The fast curve is the rate; the envelope is the slow band. Whether the sub-burst count depends on this choice is exactly what failure row 1 tests."
+  },
+  "excursion": {
+    "rule": "ON where rate/envelope >= on_multiplier, OFF where rate/envelope < off_multiplier, hysteresis between. Operates on the RATIO of rate to envelope, NEVER on rate against a constant - the defect D8 exists to prevent.",
+    "on_multiplier": 2.0,
+    "off_multiplier": 1.5,
+    "multiplier_justification": "2x the event's own local envelope is a doubling of instantaneous participation relative to what the event is already doing - the smallest multiple that is unambiguously an excursion rather than estimator noise. 1.5x gives a hysteresis band without letting a sub-burst run on indefinitely.",
+    "min_duration_fraction_of_knee": 0.25,
+    "min_duration_note": "A sub-burst shorter than a quarter of the knee scale is below the resolution the gate certified and is dropped. Failure row 4 checks whether the median duration then sits on this floor.",
+    "merge_gap_fraction_of_knee": 0.25
+  },
+  "failure_criteria": {
+    "row_0": {
+      "mode": "Cooper rejects the decomposition on visual review of chart 07 against the tape",
+      "threshold": null,
+      "note": "Cooper's judgment. Overrides every other row in either direction."
+    },
+    "row_1": {
+      "mode": "Sub-burst count is a restatement of print count (the Arm A test)",
+      "observable": "Spearman(sub-burst count, T=0 print count) and the log-log slope",
+      "threshold_max_spearman": 0.5,
+      "threshold_max_slope": 0.35,
+      "direction": "FAIL if Spearman > 0.50 OR slope > 0.35",
+      "reference": "Arm A scored 0.96 and 0.85",
+      "note": "The row that matters most. Rows 6 and 7 gate whether the work is well-posed; row 1 tests whether the result is real."
+    },
+    "row_2": {
+      "mode": "Observable disagreement",
+      "observable": "Spearman of sub-burst count between print rate and volume rate",
+      "threshold_min_spearman": 0.5,
+      "direction": "FAIL if below"
+    },
+    "row_3": {
+      "mode": "Envelope instability within the knee interval",
+      "observable": "median per-event interval Jaccard of the sub-burst set between the knee interval's endpoints",
+      "threshold_min_jaccard": 0.5,
+      "direction": "FAIL if below",
+      "note": "Evaluated INSIDE the T1 knee interval only, not across an arbitrary grid."
+    },
+    "row_4": {
+      "mode": "Degenerate decomposition",
+      "observable_a": "share of events yielding one sub-burst spanning >= 50% of the session",
+      "threshold_max_share": 0.2,
+      "observable_b": "median sub-burst duration relative to the minimum-duration floor",
+      "threshold_min_duration_multiple": 1.25,
+      "direction": "FAIL if share > 0.20 OR median duration <= 1.25 * floor"
+    },
+    "row_5": {
+      "mode": "Segment incompatibility",
+      "observable": "separation between premarket and rth knee locations, in decades of log10(T)",
+      "threshold_max_decades": 1.0,
+      "direction": "FAIL if the separation exceeds this AND the bootstrap intervals do not overlap",
+      "note": "If their knees are incompatible, one envelope scale does not serve both. Not something to average over."
+    },
+    "row_6": {
+      "mode": "No characteristic scale (GATE)",
+      "observable": "Allan factor is a straight power law across the ladder with no detectable knee",
+      "threshold_min_delta_bic": 10.0,
+      "threshold_min_slope_change": 0.2,
+      "direction": "FAIL if delta_BIC(two-segment vs single-line) < 10.0 OR |slope change| < 0.20",
+      "justification": "delta_BIC >= 10 is the conventional 'very strong' threshold for preferring the more complex model and costs the two extra parameters honestly. A slope change below 0.20 in log-log is not a knee in any useful sense - it is a straight line with a slight bend, and an envelope scale read off it would be arbitrary. BOTH must hold to pass, because with 20 rungs BIC alone can prefer a two-segment fit whose bend is negligible.",
+      "gate": true,
+      "on_fire": "HARD STOP at T1. Do not proceed to T2."
+    },
+    "row_7": {
+      "mode": "Gate not robust (GATE)",
+      "observable": "interquartile range of per-event knee location within a segment, in decades",
+      "threshold_max_iqr_decades": 1.0,
+      "direction": "FAIL if above",
+      "justification": "If per-event knees are spread over more than one decade within a segment, the segment-level knee is a summary of incompatible events and the envelope scale it implies does not describe them.",
+      "gate": true,
+      "on_fire": "HARD STOP at T1. Do not proceed to T2."
+    },
+    "on_fire": "Hard stop. Commit, post observed values and charts. Do not adjust parameters to make a criterion pass. Do not reintroduce constant-reference thresholding, two-state segmentation, or Hawkes calibration - all closed by D6 and D8.",
+    "standing_lesson": "A pass on stability rows is not evidence of correctness. v1 proved that decisively, with all four numeric rows passing while both arms were wrong."
+  },
+  "charts": {
+    "engine": "plotly, standalone HTML, one per file, kaleido-verified .png sibling",
+    "caption_requires": [
+      "sample",
+      "n",
+      "filters applied",
+      "config hash"
+    ],
+    "chart_07": {
+      "dir": "results/phase_10/charts/v3_07_tape_review/",
+      "gitignore_rule": "nested .gitignore containing '*' inside the chart directory",
+      "produced_even_on_failure": true,
+      "produced_even_on_failure_why": "v2 skipped chart 07 because acceptance was off the table. Sound for gating a disqualified measurement, but it removed the only means of judging WHY the measurement failed. If the T1 gate fails, chart 07 ships with the envelope omitted and the rate curve shown raw.",
+      "max_charts": 60,
+      "max_scatter_points": 150000,
+      "over_cap_seed": 42,
+      "selection_rule": [
+        "all dev_v4_primary",
+        "stratified draw across segment and sub-burst count",
+        "every event flagged by any failure row",
+        "sidecar and row-cap labeled"
+      ]
+    }
+  },
+  "runtime_ceilings": {
+    "gate_seconds_per_event": 300,
+    "gate_seconds_aggregate": 7200,
+    "envelope_seconds_per_event": 120,
+    "on_breach": "escalation row 5 - hard stop"
+  },
+  "paths": {
+    "duckdb": "data/duckdb/main.duckdb",
+    "filtered_root": "data/filtered",
+    "cohort_manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+    "detection": "results/phase_10/artifacts/v2_r13_detection.parquet",
+    "v2_event_metrics": "results/phase_10/artifacts/v2_t1_event_metrics.parquet",
+    "out_artifacts": "results/phase_10/artifacts/",
+    "out_charts": "results/phase_10/charts/"
+  },
+  "write_allowlist": [
+    "prompts/",
+    "config/",
+    "research/phase_10/",
+    "results/phase_10/",
+    "docs/Universe-Decisions.md (APPEND-ONLY)",
+    "docs/Research-Library-Map.md (APPEND-ONLY)"
+  ],
+  "reporting": {
+    "description_only": "No envelope scale, observable or excursion rule selected. No latency budget proposed. No result characterized as good, promising, weak or disappointing.",
+    "segment_rule": "Every quantity split by detection segment from T1 onward.",
+    "n_rule": "Every statistic carries n. Every claim cites its chart."
+  },
+  "config_hash_note": "Committed before any v3 run. Outputs key on its content hash."
+}
