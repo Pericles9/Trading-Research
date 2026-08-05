@@ -1,0 +1,196 @@
+{
+  "phase": "10",
+  "version": "v3",
+  "title": "Sub-Burst Decomposition",
+  "config_hash": "c5aea7f6",
+  "status": "escalated",
+  "escalation": {
+    "criterion": "pre-registered failure rows 2, 3, 4",
+    "observed": {
+      "row_2_observable_disagreement": {
+        "spearman": 0.4233,
+        "floor": 0.5,
+        "n": 100
+      },
+      "row_3_envelope_instability_in_knee_interval": {
+        "print_rate": 0.0735,
+        "volume_rate": 0.1071,
+        "floor": 0.5,
+        "note": "median per-event interval Jaccard between sub-burst sets computed at the two ENDS of the knee's own bootstrap interval"
+      },
+      "row_4_degenerate": {
+        "print_rate_duration_over_floor": 1.0339,
+        "volume_rate_duration_over_floor": 1.5333,
+        "required": "> 1.25",
+        "degenerate_share_both": 0.0
+      }
+    },
+    "passed": [
+      "row_1 (the Arm A test)",
+      "row_5",
+      "row_6 (gate)",
+      "row_7 (gate)"
+    ],
+    "row_0": "not evaluated by the agent; chart 07 produced so it CAN be evaluated"
+  },
+  "decisions_recorded": [
+    "D8 appended to docs/Universe-Decisions.md (+34/-0)"
+  ],
+  "headline_metrics": [
+    {
+      "name": "gate_knee_rth_print_seconds",
+      "value": 128.0,
+      "n": 70,
+      "detail": "slopes +0.171 -> +1.043, dBIC 68.65; premarket 16.0s, dBIC 45.61. Allan/Fano computed directly on the point process, no bandwidth, no threshold",
+      "source": "research/phase_10/v3_t1_gate.py:main",
+      "chart": "results/phase_10/charts/v3_01_scale_separation.html"
+    },
+    {
+      "name": "row_1_spearman_vs_print_count_print",
+      "value": 0.2772,
+      "n": 100,
+      "detail": "log-log slope +0.2605; thresholds 0.50 and 0.35; Arm A scored 0.96 and 0.85 -- PASS",
+      "source": "research/phase_10/v3_t2_t4_subbursts.py:main",
+      "chart": "results/phase_10/charts/v3_04_subburst_count_vs_prints.html"
+    },
+    {
+      "name": "row_1_spearman_vs_print_count_volume",
+      "value": 0.3531,
+      "n": 100,
+      "detail": "log-log slope +0.1849 -- PASS",
+      "source": "research/phase_10/v3_t2_t4_subbursts.py:main",
+      "chart": "results/phase_10/charts/v3_04_subburst_count_vs_prints.html"
+    },
+    {
+      "name": "row_3_knee_interval_jaccard_print",
+      "value": 0.0735,
+      "n": 100,
+      "detail": "FAIL against a 0.50 floor; volume 0.1071. Inside the interval T1 itself placed on the knee, the decomposition returns almost entirely different sub-bursts",
+      "source": "research/phase_10/v3_t5_stability.py:main",
+      "chart": "results/phase_10/charts/v3_02_envelope_examples.html"
+    },
+    {
+      "name": "subburst_count_median_print",
+      "value": 27,
+      "n": 100,
+      "detail": "IQR 13-53; premarket median 131, rth median 20; volume median 70 (IQR 33-128)",
+      "source": "research/phase_10/v3_t2_t4_subbursts.py:main",
+      "chart": "results/phase_10/charts/v3_03_subburst_count.html"
+    },
+    {
+      "name": "subburst_duration_median_seconds_print",
+      "value": 33.09,
+      "n": 5679,
+      "detail": "premarket 11.62s, rth 79.31s; spacing median 87.33s. Row 4 fails on print: median duration is 1.0339x the minimum-duration floor",
+      "source": "research/phase_10/v3_t5_stability.py:main",
+      "chart": "results/phase_10/charts/v3_05_subburst_duration_spacing.html"
+    },
+    {
+      "name": "largest_subburst_move_share_median_print",
+      "value": 0.195,
+      "n": 100,
+      "detail": "2nd 0.083, 3rd -0.061; 0 undefined denominators; median share of session prints inside sub-bursts 0.207",
+      "source": "research/phase_10/v3_t5_stability.py:main",
+      "chart": "results/phase_10/charts/v3_06_subburst_move_share.html"
+    },
+    {
+      "name": "tie_variant_jaccard",
+      "value": 1.0,
+      "n": 100,
+      "detail": "median 1.0000 both observables; identical sub-burst count on 89/100 (print) and 86/100 (volume)",
+      "source": "research/phase_10/v3_t5_stability.py:main",
+      "chart": "results/phase_10/charts/v3_03_subburst_count.html"
+    }
+  ],
+  "decisions_log": [
+    {
+      "decision": "gate statistic and knee finder",
+      "options_considered": [
+        "Fano only",
+        "Allan primary with Fano alongside",
+        "spline or kernel-derivative knee finder",
+        "broken-stick by exhaustive search"
+      ],
+      "chose": "Allan primary, Fano alongside; broken-stick knee by exhaustive search compared to a single line by BIC",
+      "why": "Allan tolerates a slowly varying rate, which is exactly the envelope being separated out. A spline or derivative-based knee finder would introduce its own bandwidth -- the class of free parameter D8 bars from the gate. Exhaustive search is deterministic and the BIC comparison TESTS a knee rather than assuming one."
+    },
+    {
+      "decision": "gate row 6 requires two conditions",
+      "options_considered": [
+        "dBIC alone",
+        "slope change alone",
+        "both"
+      ],
+      "chose": "both dBIC >= 10 and |slope change| >= 0.20",
+      "why": "With 20 rungs, BIC alone can prefer a two-segment fit whose bend is negligible. Requiring a real bend as well stops a statistically-supported non-knee from passing."
+    },
+    {
+      "decision": "envelope scale",
+      "options_considered": [
+        "swept bandwidth grid",
+        "fixed seconds",
+        "derived from the T1 knee per event"
+      ],
+      "chose": "k_env = expected prints in a knee-duration window at the event's own mean rate",
+      "why": "D8 requires the scale come from the gate, not from a sweep. Converting the knee to a per-event k keeps the estimator adaptive while making the scale non-free."
+    },
+    {
+      "decision": "gate rows scored on configured segments only",
+      "options_considered": [
+        "score every stratum present",
+        "score configured segments only"
+      ],
+      "chose": "configured segments only",
+      "why": "The first run also scored a `no_detection` stratum -- the 2 never-crossing events, which have no detection anchor and therefore no segment -- whose n=2 knee IQR of 1.957 decades failed row 7. Row 7's observable is defined 'within a segment'. This is a population error, not a finding. No threshold was moved; their curves are retained."
+    },
+    {
+      "decision": "chart 07 selection trimmed to the cap",
+      "options_considered": [
+        "raise max_charts",
+        "trim the stratified draw"
+      ],
+      "chose": "trim the draw",
+      "why": "The first selection was 64 against a cap of 60 and the script refused to write. dev_v4_primary is kept whole per the selection rule; the stratified draw is trimmed on an even index spacing over (segment, sub-burst count), so it still spans the count range within each segment. The pre-registered cap is a constraint, not a target to adjust."
+    }
+  ],
+  "surprises": [
+    "The scale-separation gate PASSES, and cleanly: dBIC 45.6-68.7 with slope changes 0.61-0.87 on all four segment-by-observable cells. After four failed methods, a characteristic clustering scale does exist.",
+    "The Allan factor never approaches the Poisson value 1 anywhere on the ladder -- rth/print median is 5.99 at 15.6 ms and 1245 at 4096 s. Clustering is present at EVERY scale measured; the knee marks where the rate of increase changes (slope 0.173 -> 1.017), not where clustering starts. Easy to misread off log-log axes, and I did misread it once before checking the numbers.",
+    "Row 1 -- the Arm A test -- PASSES for the first time in this phase. Spearman 0.277/0.353 and log-log slope 0.261/0.185 against Arm A's 0.96 and 0.85. The envelope-relative reference appears to remove the mechanism that made Arm A's burst count a restatement of print count.",
+    "Row 3 fails badly and is the substantive result: sub-burst sets computed at the two ENDS of the knee's own bootstrap interval overlap by a median Jaccard of 0.0735 (print) / 0.1071 (volume). The gate certifies that a scale exists; row 3 says the knee is not sharp enough to pin the decomposition it licenses.",
+    "Premarket and regular-hours differ by ~8x in knee (16s vs 128s) and ~6x in sub-burst count (median 131 vs 20). D8(d) made segment a stratification variable from the start; this is the strongest evidence yet that it had to be.",
+    "The two observables disagree more than expected -- Spearman 0.4233 on sub-burst count, and levels differ 27 vs 70. Print rate and share-volume rate are not measuring the same object here.",
+    "Session activity duration spans only ~0.35 decades across the cohort against ~3 decades for print count, so the +1.425 duration slope in the row-1 diagnostic is fitted over a far narrower range than the print-count slope and carries less weight than its size suggests."
+  ],
+  "artifacts": [
+    "results/phase_10/artifacts/v3_t1_gate.json",
+    "results/phase_10/artifacts/v3_t1_gate_curves.parquet",
+    "results/phase_10/artifacts/v3_t1_gate_knees.parquet",
+    "results/phase_10/artifacts/v3_t3_subbursts.parquet",
+    "results/phase_10/artifacts/v3_t3_event_metrics.parquet",
+    "results/phase_10/artifacts/v3_t2_t4_summary.json",
+    "results/phase_10/artifacts/v3_t5_stability.json",
+    "results/phase_10/artifacts/v3_t6_chart_manifest.json",
+    "results/phase_10/artifacts/v3_t6b_tape_manifest.json"
+  ],
+  "charts": [
+    "results/phase_10/charts/v3_01_scale_separation.html",
+    "results/phase_10/charts/v3_02_envelope_examples.html",
+    "results/phase_10/charts/v3_03_subburst_count.html",
+    "results/phase_10/charts/v3_04_subburst_count_vs_prints.html",
+    "results/phase_10/charts/v3_05_subburst_duration_spacing.html",
+    "results/phase_10/charts/v3_06_subburst_move_share.html",
+    "results/phase_10/charts/v3_07_tape_review/index.html"
+  ],
+  "commits": [
+    "bc327f6",
+    "1d15028",
+    "2803ed0",
+    "3237305",
+    "f32f9e0",
+    "d4f3abe",
+    "3b491a4",
+    "bc9f2f1"
+  ],
+  "reproduce": "for s in v3_t1_gate v3_chart01 v3_t2_t4_subbursts v3_t5_stability v3_t6_charts v3_t6b_tape; do .venv/Scripts/python.exe research/phase_10/$s.py; done"
+}
