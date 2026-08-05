@@ -1,9 +1,23 @@
 {
+  "superseded": true,
+  "superseded_by": "docs/Universe-Decisions.md D8",
+  "superseded_note": "Phase 10 v2 hard-stopped on failure rows 1,2,3,6. D8 withdraws v2's one-global-peak framing and its T3c decay timescale, and measures within-session sub-burst structure against each event's own envelope instead. Live spec prompts/phase_10_v3.md.",
+  "survives_d8": [
+    "derived detection anchor (110/110 exact vs Phase 8 det_minute; reference deviation 0.000e+00)",
+    "detection-to-peak median ~1976s at the 1s poll; poll-grid ratio 1.010",
+    "~28% negative detection-to-peak share",
+    "segment split: premarket 0% negative vs regular-hours 40%",
+    "the adaptive nearest-neighbour intensity estimator"
+  ],
+  "withdrawn_by_d8": [
+    "decay-to-half / 1-over-e / 1-tenth timescales",
+    "the one-global-peak framing"
+  ],
   "phase": "10",
   "version": "v2",
   "title": "Intensity Profile and Burst Timescale",
   "config_hash": "d48912b0",
-  "status": "escalated",
+  "status": "superseded",
   "escalation": {
     "criterion": "pre-registered failure rows 1, 2, 3, 6",
     "observed": {

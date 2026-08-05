@@ -420,6 +420,40 @@ statistic, and state that it is session-anchored and superseded as a budget. Reu
 **How to apply:** cite D7 wherever a detection time is used in or after Phase 10 v2, and state the poll interval with the number. A detection-anchored figure quoted without its poll interval is incomplete.
 
 
+## D8 — Sub-burst structure, measured against the event's own envelope
+
+**Date:** 2026-08-04
+**Deciding phase gate:** Phase 10 v2 hard stop — pre-registered failure rows 1, 2, 3 and 6 fired
+**Supersedes:** `prompts/phase_10_v2.md` and `prompts/phase_10_v2_r1.md`; reverses D6's abandonment of within-session structure while retaining D6's diagnosis
+**Affects:** Phases 10, 11, 13, 14, 16, 17
+
+**Decision.** Phase 10 measures sub-burst structure within the T=0 session, using the event's own slowly-varying intensity as the reference level. D6's abandonment of within-session structure is reversed. D6's diagnosis is retained.
+
+**What D6 got right and what it got wrong.** D6 correctly established that no quiet state exists on T=0 — the session runs a median 78× above flanking baseline throughout, so there is nothing to threshold against. That finding stands. D6 then drew the wrong conclusion from it: that within-session structure should be abandoned in favour of one global peak and one decay number. That discarded the structure the trading thesis depends on. An event-level decay figure cannot inform intraday entry or exit; sub-burst structure can.
+
+**The actual defect, common to all four prior attempts.** Every method so far compared a fast-varying arrival rate against a reference level that does not describe the data:
+
+| Attempt | Reference level | Failure |
+|---|---|---|
+| Arm A (Kleinberg) | session mean rate, constant | rate varies by orders of magnitude within the session; burst count correlated **0.96** with print count |
+| Arm B | flanking-day, time-of-day matched | too thin to estimate — median 2.8 prints/min, 73/100 `baseline_partial` |
+| Hawkes (prior project) | constant exogenous baseline | branching ratio pinned at criticality, a documented misspecification signature |
+| v2 | none — one global peak | discarded within-session structure entirely; decay timescale ill-posed, four rows fired |
+
+**The reference level must track the event.** Sub-bursts are excursions above the event's own envelope, not above a constant. This repairs Arm A's defect at the root: burst count correlated with print count because a fast rate was compared to a fixed level, so more prints produced more crossings. A reference that follows the event removes that mechanism rather than tuning around it.
+
+**Conditional on a scale separation existing.** Envelope-and-excursion is only well-posed if the intensity process has a characteristic clustering scale — a slow band for the envelope, a fast band for the sub-bursts, and a gap between. If the process is self-similar, no principled envelope bandwidth exists and any choice manufactures the sub-bursts it then finds. That is Arm A's failure in new clothing. Phase 10 v3 T1 tests this with the Allan and Fano factors computed directly on the point process — no intensity estimation, no smoothing bandwidth, no threshold — and it is a **hard gate**.
+
+**Recorded consequences.**
+- **(a)** v2's one-global-peak framing and its T3c decay timescale are withdrawn.
+- **(b)** v2 artifacts are superseded, not deleted, and retained as the evidentiary record. Renamed `*_v3_superseded` with a header pointing here.
+- **(c)** These v2 results survive and carry forward: the derived detection anchor (110/110 exact against Phase 8 `det_minute`, reference-price deviation 0.000e+00); detection-to-peak (median ~1,976 s at the 1 s poll, poll-grid ratio 1.010); the ~28% negative share; the segment split (premarket 0% negative, regular-hours 40%); the adaptive nearest-neighbour intensity estimator.
+- **(d)** Detection segment becomes a **stratification variable from the start**, not a discovery. Premarket and regular-hours events differ by three orders of magnitude on v2's decay statistic and 40 points on negative share.
+- **(e)** If T1's gate fails, D5's premise is wrong — no burst timescale exists to anchor downstream horizons to — and Phases 11, 13, 14, 16 and 17 re-anchor to detection, clock time, or price-path events. That is a first-order program finding, not a phase failure.
+
+**How to apply:** cite D8 before treating any within-session intensity structure as measurable. Any method comparing a fast-varying arrival rate to a constant reference level is closed by this decision, as are two-state segmentation and constant-baseline Hawkes calibration; reopening any requires a numbered decision.
+
+
 ## Related
 
 - [[Open-Items-Register]] — the "2025 inclusion decision" item is closed there, referencing D1;

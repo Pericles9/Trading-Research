@@ -3,14 +3,32 @@
 tags:
   - type/research
   - domain/microstructure
-  - status/escalated
+  - status/superseded
 created: 2026-08-04
 phase: 10
 version: v2
 config_hash: d48912b0
 ---
 
-# Phase 10 v2 — Intensity Profile and Burst Timescale
+
+> [!warning] SUPERSEDED BY D8 — v2 evidentiary record
+> Phase 10 **v2 (Intensity Profile)** hard-stopped on pre-registered failure rows 1, 2, 3 and 6.
+> `docs/Universe-Decisions.md` **D8** supersedes it: v2's one-global-peak framing and its T3c decay
+> timescale are **withdrawn**, and within-session sub-burst structure is measured instead, against
+> each event's own envelope.
+>
+> **These v2 results survive D8 and carry forward (D8 consequence (c)):** the derived detection
+> anchor (110/110 exact against Phase 8 `det_minute`, reference-price deviation 0.000e+00);
+> detection-to-peak (median ~1,976 s at the 1 s poll, poll-grid ratio 1.010); the ~28% negative
+> share; the segment split (premarket 0% negative, regular-hours 40%); and the adaptive
+> nearest-neighbour intensity estimator.
+>
+> **Withdrawn:** every decay-timescale figure in §5 and §7, and the one-global-peak framing they rest on.
+>
+> Live spec: `prompts/phase_10_v3.md`. Live report: `results/phase_10/REPORT.md`.
+
+
+# Phase 10 v2 (SUPERSEDED BY D8) — Intensity Profile and Burst Timescale
 
 **Branch:** `phase/10` · **Baseline:** `phase-9-approved` (`7909d66`) · **config_hash:** `d48912b0`
 **Specs:** `prompts/phase_10_v2.md` + `prompts/phase_10_v2_r1.md` · **Decisions:** D6, D7
