@@ -1,0 +1,62 @@
+{
+  "phase": "10",
+  "version": "v2",
+  "task": "T6",
+  "config_hash": "d48912b0",
+  "n_charts": 7,
+  "n_kaleido_verified": 7,
+  "all_verified": true,
+  "charts": [
+    {
+      "chart": "v2_01_profile_peak_anchored.html",
+      "png": "v2_01_profile_peak_anchored.png",
+      "kaleido_verified": true,
+      "html_bytes": 37780,
+      "png_bytes": 274217
+    },
+    {
+      "chart": "v2_02_profile_detection_anchored.html",
+      "png": "v2_02_profile_detection_anchored.png",
+      "kaleido_verified": true,
+      "html_bytes": 38058,
+      "png_bytes": 297690
+    },
+    {
+      "chart": "v2_03_detection_to_peak.html",
+      "png": "v2_03_detection_to_peak.png",
+      "kaleido_verified": true,
+      "html_bytes": 25891,
+      "png_bytes": 368206
+    },
+    {
+      "chart": "v2_04_decay_timescale.html",
+      "png": "v2_04_decay_timescale.png",
+      "kaleido_verified": true,
+      "html_bytes": 26807,
+      "png_bytes": 406327
+    },
+    {
+      "chart": "v2_05_resolution_stability.html",
+      "png": "v2_05_resolution_stability.png",
+      "kaleido_verified": true,
+      "html_bytes": 59132,
+      "png_bytes": 1813003
+    },
+    {
+      "chart": "v2_06_level_dependence.html",
+      "png": "v2_06_level_dependence.png",
+      "kaleido_verified": true,
+      "html_bytes": 28124,
+      "png_bytes": 388224
+    },
+    {
+      "chart": "v2_07_observable_agreement.html",
+      "png": "v2_07_observable_agreement.png",
+      "kaleido_verified": true,
+      "html_bytes": 19151,
+      "png_bytes": 338106
+    }
+  ],
+  "note": "produced under a pre-registered failure (rows 1, 2, 3, 6); the prompt requires charts be posted with the observed values",
+  "source": "research/phase_10/v2_t6_charts.py:main"
+}
