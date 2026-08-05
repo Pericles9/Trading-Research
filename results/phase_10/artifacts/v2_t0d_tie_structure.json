@@ -1,0 +1,205 @@
+{
+  "phase": "10",
+  "version": "v2",
+  "task": "T0d",
+  "config_hash": "d48912b0",
+  "what_this_is": "tie structure only. NOT an inter-trade interval distribution, no noise floor, no interval regime -- those are Phase 13's deliverable.",
+  "by_group": {
+    "activity_extension": {
+      "n_events": 50,
+      "n_prints_total": 3800325,
+      "n_tied_with_prev_total": 18906,
+      "share_tied_overall": 0.004974903132010183,
+      "share_tied_per_event": {
+        "n": 50,
+        "q0": 0.0,
+        "q25": 0.0,
+        "q50": 0.0,
+        "q75": 0.0,
+        "q100": 0.06730608774425276,
+        "mean": 0.006768492390337239
+      },
+      "max_tie_run": {
+        "n": 50,
+        "q0": 1.0,
+        "q25": 1.0,
+        "q50": 1.0,
+        "q75": 1.0,
+        "q100": 12.0,
+        "mean": 1.84
+      },
+      "distinct_timestamp_ratio": {
+        "n": 50,
+        "q0": 0.9326944470932266,
+        "q25": 1.0,
+        "q50": 1.0,
+        "q75": 1.0,
+        "q100": 1.0,
+        "mean": 0.9932323738571753
+      },
+      "n_events_with_zero_ties": 42
+    },
+    "dev_v4_primary": {
+      "n_events": 50,
+      "n_prints_total": 3756147,
+      "n_tied_with_prev_total": 103138,
+      "share_tied_overall": 0.02745882228281112,
+      "share_tied_per_event": {
+        "n": 50,
+        "q0": 0.0,
+        "q25": 0.0,
+        "q50": 0.0,
+        "q75": 0.0,
+        "q100": 0.08123850877752031,
+        "mean": 0.006941533718849976
+      },
+      "max_tie_run": {
+        "n": 50,
+        "q0": 1.0,
+        "q25": 1.0,
+        "q50": 1.0,
+        "q75": 1.0,
+        "q100": 18.0,
+        "mean": 2.06
+      },
+      "distinct_timestamp_ratio": {
+        "n": 50,
+        "q0": 0.9187615889102396,
+        "q25": 1.0,
+        "q50": 1.0,
+        "q75": 1.0,
+        "q100": 1.0,
+        "mean": 0.9930586033566179
+      },
+      "n_events_with_zero_ties": 43
+    },
+    "dev_v4_sidecar": {
+      "n_events": 6,
+      "n_prints_total": 18715,
+      "n_tied_with_prev_total": 436,
+      "share_tied_overall": 0.023304292051953605,
+      "share_tied_per_event": {
+        "n": 6,
+        "q0": 0.0,
+        "q25": 0.0,
+        "q50": 0.0,
+        "q75": 0.0,
+        "q100": 0.06533792896748089,
+        "mean": 0.010889654827913481
+      },
+      "max_tie_run": {
+        "n": 6,
+        "q0": 1.0,
+        "q25": 1.0,
+        "q50": 1.0,
+        "q75": 1.0,
+        "q100": 7.0,
+        "mean": 2.0
+      },
+      "distinct_timestamp_ratio": {
+        "n": 6,
+        "q0": 0.9346718609529517,
+        "q25": 1.0,
+        "q50": 1.0,
+        "q75": 1.0,
+        "q100": 1.0,
+        "mean": 0.9891119768254919
+      },
+      "n_events_with_zero_ties": 5
+    },
+    "row_cap_census": {
+      "n_events": 8,
+      "n_prints_total": 800000,
+      "n_tied_with_prev_total": 0,
+      "share_tied_overall": 0.0,
+      "share_tied_per_event": {
+        "n": 8,
+        "q0": 0.0,
+        "q25": 0.0,
+        "q50": 0.0,
+        "q75": 0.0,
+        "q100": 0.0,
+        "mean": 0.0
+      },
+      "max_tie_run": {
+        "n": 8,
+        "q0": 1.0,
+        "q25": 1.0,
+        "q50": 1.0,
+        "q75": 1.0,
+        "q100": 1.0,
+        "mean": 1.0
+      },
+      "distinct_timestamp_ratio": {
+        "n": 8,
+        "q0": 1.0,
+        "q25": 1.0,
+        "q50": 1.0,
+        "q75": 1.0,
+        "q100": 1.0,
+        "mean": 1.0
+      },
+      "n_events_with_zero_ties": 8
+    }
+  },
+  "pooled_analysis_cohort": {
+    "n_events": 100,
+    "n_prints_total": 7556472,
+    "n_tied_with_prev_total": 122044,
+    "share_tied_overall": 0.01615113708006964,
+    "share_tied_per_event": {
+      "n": 100,
+      "q0": 0.0,
+      "q25": 0.0,
+      "q50": 0.0,
+      "q75": 0.0,
+      "q100": 0.08123850877752031,
+      "mean": 0.0068550130545936075
+    },
+    "max_tie_run": {
+      "n": 100,
+      "q0": 1.0,
+      "q25": 1.0,
+      "q50": 1.0,
+      "q75": 1.0,
+      "q100": 18.0,
+      "mean": 1.95
+    },
+    "distinct_timestamp_ratio": {
+      "n": 100,
+      "q0": 0.9187615889102396,
+      "q25": 1.0,
+      "q50": 1.0,
+      "q75": 1.0,
+      "q100": 1.0,
+      "mean": 0.9931454886068966
+    },
+    "n_events_with_zero_ties": 85
+  },
+  "timestamp_resolution_present": {
+    "n": 100,
+    "min_ns_observed": 49,
+    "median_min_gap_ns": 80.5,
+    "note": "smallest NON-ZERO inter-arrival gap observed per event, pooled. This is the resolution actually present in the data, as distinct from the nominal ns field width."
+  },
+  "estimator_consequence": {
+    "zero_span_floor_seconds": 1e-09,
+    "n_events_where_k_exceeds_distinct_timestamps": {
+      "k5": 0,
+      "k15": 0,
+      "k50": 0,
+      "k150": 0,
+      "k500": 1
+    },
+    "n_events_where_k_exceeds_n_prints": {
+      "k5": 0,
+      "k15": 0,
+      "k50": 0,
+      "k150": 0,
+      "k500": 1
+    },
+    "reading": "Where k exceeds the number of DISTINCT timestamps, a zero-span block is possible in the as_is variant and the floored rate becomes the peak. That is precisely what the collapse_same_timestamp variant removes, and why both variants are run (T1c)."
+  },
+  "source": "research/phase_10/v2_t0d_ties.py:main",
+  "artifact": "results/phase_10/artifacts/v2_t0d_tie_structure.parquet"
+}
