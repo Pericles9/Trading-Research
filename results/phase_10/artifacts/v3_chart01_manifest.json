@@ -1,0 +1,13 @@
+{
+  "phase": "10",
+  "version": "v3",
+  "chart": {
+    "chart": "v3_01_scale_separation.html",
+    "png": "v3_01_scale_separation.png",
+    "kaleido_verified": true,
+    "html_bytes": 271910,
+    "png_bytes": 1983739
+  },
+  "config_hash": "c5aea7f6",
+  "source": "research/phase_10/v3_chart01.py:main"
+}
