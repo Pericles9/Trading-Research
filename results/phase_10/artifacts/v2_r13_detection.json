@@ -1,0 +1,338 @@
+{
+  "phase": "10",
+  "version": "v2",
+  "task": "R1.3",
+  "config_hash": "d48912b0",
+  "decision": "D7 \u2014 the detection anchor is derived, not sourced",
+  "anchor_independence_statement": "The report states plainly, once, in the method section: detection comes from a price threshold, peak comes from arrival intensity, both are computed from the same T=0 tick stream; the comparison is legitimate but the two anchors are not independently sourced.",
+  "n_events": 114,
+  "thresholds": [
+    1.25,
+    1.3,
+    1.35
+  ],
+  "poll_intervals_seconds": [
+    0,
+    1,
+    5,
+    15,
+    60
+  ],
+  "reference_point": {
+    "threshold": 1.3,
+    "poll_interval_seconds": 1
+  },
+  "r1_3a_reference_price": {
+    "n_undefined": 1,
+    "undefined_by_group": {
+      "activity_extension": {
+        "size": 50,
+        "sum": 0
+      },
+      "dev_v4_primary": {
+        "size": 50,
+        "sum": 0
+      },
+      "dev_v4_sidecar": {
+        "size": 6,
+        "sum": 1
+      },
+      "row_cap_census": {
+        "size": 8,
+        "sum": 0
+      }
+    },
+    "undefined_events": [
+      {
+        "ticker": "RBC",
+        "event_date_canonical": "2022-09-26",
+        "momentum_pct": 44.21,
+        "cohort_group": "dev_v4_sidecar",
+        "reference_reason": "no T-1 session or no T-1 prints"
+      }
+    ],
+    "rule": "carried and flagged, never imputed"
+  },
+  "r1_3c_never_crosses": {
+    "at_reference_threshold": 1.3,
+    "n_pooled": 100,
+    "n_never_crosses_pooled": 2,
+    "share_pooled": 0.02,
+    "by_group_at_reference": {
+      "activity_extension": {
+        "size": 50,
+        "sum": 1
+      },
+      "dev_v4_primary": {
+        "size": 50,
+        "sum": 1
+      },
+      "dev_v4_sidecar": {
+        "size": 6,
+        "sum": 2
+      },
+      "row_cap_census": {
+        "size": 8,
+        "sum": 0
+      }
+    },
+    "by_threshold": {
+      "1.25": {
+        "n_pooled": 100,
+        "n_never_crosses_pooled": 1
+      },
+      "1.3": {
+        "n_pooled": 100,
+        "n_never_crosses_pooled": 2
+      },
+      "1.35": {
+        "n_pooled": 100,
+        "n_never_crosses_pooled": 16
+      }
+    },
+    "events_at_reference": [
+      {
+        "ticker": "VEEE",
+        "event_date_canonical": "2024-06-25",
+        "momentum_pct": 31.79,
+        "cohort_group": "dev_v4_primary",
+        "cross_reason": "running max never reaches threshold x reference",
+        "max_over_reference": 1.2561702127659573
+      },
+      {
+        "ticker": "AUID",
+        "event_date_canonical": "2023-02-27",
+        "momentum_pct": 31.64,
+        "cohort_group": "activity_extension",
+        "cross_reason": "running max never reaches threshold x reference",
+        "max_over_reference": 1.232847715393616
+      },
+      {
+        "ticker": "RBC",
+        "event_date_canonical": "2022-09-26",
+        "momentum_pct": 44.21,
+        "cohort_group": "dev_v4_sidecar",
+        "cross_reason": "reference undefined",
+        "max_over_reference": NaN
+      },
+      {
+        "ticker": "NUKK",
+        "event_date_canonical": "2022-04-18",
+        "momentum_pct": 50.37,
+        "cohort_group": "dev_v4_sidecar",
+        "cross_reason": "running max never reaches threshold x reference",
+        "max_over_reference": 1.124031007751938
+      }
+    ],
+    "d4_explanation": "a D4 consequence: the universe was selected on momentum_pct computed from quarantined spine numerics, and the anchor is re-derived on tick. Phase 8 observed 394/15,763 = 2.50% det_undefined on the same family of rule.",
+    "a12_breakout": {
+      "note": "the D7 trigger is a cross-session ratio, so A12 applies",
+      "n_flagged_cross_session_extreme": 6,
+      "n_never_crosses_and_flagged": 0
+    }
+  },
+  "r1_3b_detection_time": {
+    "poll_0s": {
+      "label": "instantaneous \u2014 UPPER BOUND ON RUNWAY, physically impossible",
+      "seconds_from_0400_pooled": {
+        "n": 98,
+        "q0": 0.838432707,
+        "q25": 17731.18274614325,
+        "q50": 24658.0909051775,
+        "q75": 31875.527918606,
+        "q100": 43134.079495792,
+        "mean": 23901.014270724198
+      },
+      "n_after_window_end": 0
+    },
+    "poll_1s": {
+      "label": "1s poll",
+      "seconds_from_0400_pooled": {
+        "n": 98,
+        "q0": 1.0,
+        "q25": 17731.75,
+        "q50": 24658.5,
+        "q75": 31875.75,
+        "q100": 43135.0,
+        "mean": 23901.54081632653
+      },
+      "n_after_window_end": 0
+    },
+    "poll_5s": {
+      "label": "5s poll",
+      "seconds_from_0400_pooled": {
+        "n": 98,
+        "q0": 5.0,
+        "q25": 17732.5,
+        "q50": 24662.5,
+        "q75": 31876.25,
+        "q100": 43135.0,
+        "mean": 23903.418367346938
+      },
+      "n_after_window_end": 0
+    },
+    "poll_15s": {
+      "label": "15s poll",
+      "seconds_from_0400_pooled": {
+        "n": 98,
+        "q0": 15.0,
+        "q25": 17733.75,
+        "q50": 24667.5,
+        "q75": 31886.25,
+        "q100": 43140.0,
+        "mean": 23909.081632653062
+      },
+      "n_after_window_end": 0
+    },
+    "poll_60s": {
+      "label": "60s poll",
+      "seconds_from_0400_pooled": {
+        "n": 98,
+        "q0": 60.0,
+        "q25": 17760.0,
+        "q50": 24690.0,
+        "q75": 31890.0,
+        "q100": 43140.0,
+        "mean": 23932.65306122449
+      },
+      "n_after_window_end": 0
+    }
+  },
+  "r1_3d_detection_segment": {
+    "poll_0s": {
+      "pooled": {
+        "rth": 70,
+        "premarket": 28
+      },
+      "by_group": {
+        "activity_extension": {
+          "rth": 35,
+          "premarket": 14
+        },
+        "dev_v4_primary": {
+          "rth": 35,
+          "premarket": 14
+        },
+        "dev_v4_sidecar": {
+          "rth": 2,
+          "premarket": 1,
+          "post": 1
+        },
+        "row_cap_census": {
+          "rth": 8
+        }
+      }
+    },
+    "poll_1s": {
+      "pooled": {
+        "rth": 70,
+        "premarket": 28
+      },
+      "by_group": {
+        "activity_extension": {
+          "rth": 35,
+          "premarket": 14
+        },
+        "dev_v4_primary": {
+          "rth": 35,
+          "premarket": 14
+        },
+        "dev_v4_sidecar": {
+          "rth": 2,
+          "premarket": 1,
+          "post": 1
+        },
+        "row_cap_census": {
+          "rth": 8
+        }
+      }
+    },
+    "poll_5s": {
+      "pooled": {
+        "rth": 70,
+        "premarket": 28
+      },
+      "by_group": {
+        "activity_extension": {
+          "rth": 35,
+          "premarket": 14
+        },
+        "dev_v4_primary": {
+          "rth": 35,
+          "premarket": 14
+        },
+        "dev_v4_sidecar": {
+          "rth": 2,
+          "premarket": 1,
+          "post": 1
+        },
+        "row_cap_census": {
+          "rth": 8
+        }
+      }
+    },
+    "poll_15s": {
+      "pooled": {
+        "rth": 70,
+        "premarket": 28
+      },
+      "by_group": {
+        "activity_extension": {
+          "rth": 35,
+          "premarket": 14
+        },
+        "dev_v4_primary": {
+          "rth": 35,
+          "premarket": 14
+        },
+        "dev_v4_sidecar": {
+          "rth": 2,
+          "premarket": 1,
+          "post": 1
+        },
+        "row_cap_census": {
+          "rth": 8
+        }
+      }
+    },
+    "poll_60s": {
+      "pooled": {
+        "rth": 70,
+        "premarket": 28
+      },
+      "by_group": {
+        "activity_extension": {
+          "rth": 35,
+          "premarket": 14
+        },
+        "dev_v4_primary": {
+          "rth": 35,
+          "premarket": 14
+        },
+        "dev_v4_sidecar": {
+          "rth": 2,
+          "premarket": 1,
+          "post": 1
+        },
+        "row_cap_census": {
+          "rth": 8
+        }
+      }
+    }
+  },
+  "failure_row_7": {
+    "mode": "Anchor does not exist for the cohort",
+    "observed_share": 0.02,
+    "threshold": 0.2,
+    "pass": true
+  },
+  "timing": {
+    "total_seconds": 11.1,
+    "ceiling": 1200
+  },
+  "source": "research/phase_10/v2_r13_detection.py:main",
+  "artifacts": [
+    "results/phase_10/artifacts/v2_r13_detection.parquet",
+    "results/phase_10/artifacts/v2_r13_reference_price.parquet"
+  ]
+}
