@@ -1,0 +1,563 @@
+{
+  "phase": "10",
+  "version": "v2",
+  "task": "T5",
+  "config_hash": "d48912b0",
+  "population": "pooled analysis cohort, n=100; reference k=50, as_is tie variant, threshold 1.30. row_cap_census and dev_v4_sidecar never pooled.",
+  "t5a_resolution": {
+    "print_rate": {
+      "pooled_median_decay_half_per_k": {
+        "k5": {
+          "n": 100,
+          "q0": 0.0,
+          "q25": 7.92075e-06,
+          "q50": 5905.2359190955,
+          "q75": 16440.47017996225,
+          "q100": 43749.694925824,
+          "mean": 9227.087818027592
+        },
+        "k15": {
+          "n": 100,
+          "q0": 3.91e-07,
+          "q25": 7.657e-05,
+          "q50": 2602.829790936,
+          "q75": 12440.78932166025,
+          "q100": 33759.895516935,
+          "mean": 6811.40137560666
+        },
+        "k50": {
+          "n": 100,
+          "q0": 8.1e-08,
+          "q25": 0.0003219635,
+          "q50": 67.38976309099999,
+          "q75": 6769.593152593,
+          "q100": 25819.888136369,
+          "mean": 4157.63106930396
+        },
+        "k150": {
+          "n": 99,
+          "q0": 1e-07,
+          "q25": 0.0022633765,
+          "q50": 17.1463219,
+          "q75": 292.8457268695,
+          "q100": 23344.936350436,
+          "mean": 1565.8154799973538
+        },
+        "k500": {
+          "n": 92,
+          "q0": 0.000491264,
+          "q25": 1.4231467055,
+          "q50": 134.5908153935,
+          "q75": 1814.7392738095,
+          "q100": 22990.238030946,
+          "mean": 2813.964771583348
+        }
+      },
+      "per_event_across_k_ratio": {
+        "n": 91,
+        "q0": 1.3902457090893687,
+        "q25": 12998432.167444583,
+        "q50": 309569068.9606618,
+        "q75": 2639301858.722524,
+        "q100": 152681592234.4167,
+        "mean": 13169615872.969912
+      },
+      "n_events_all_k_defined": 92,
+      "per_event_peak_location_range_seconds": {
+        "n": 99,
+        "q0": 31.71671488100037,
+        "q25": 3523.5042924709996,
+        "q50": 11473.999018209,
+        "q75": 18668.611729528002,
+        "q100": 32013.682181503,
+        "mean": 11544.240085718537
+      }
+    },
+    "volume_rate": {
+      "pooled_median_decay_half_per_k": {
+        "k5": {
+          "n": 100,
+          "q0": 0.0,
+          "q25": 1.5555e-06,
+          "q50": 335.9124727925,
+          "q75": 9664.403980852,
+          "q100": 40819.966220222,
+          "mean": 5599.931643220029
+        },
+        "k15": {
+          "n": 100,
+          "q0": 0.0,
+          "q25": 1.82005e-05,
+          "q50": 0.0005046745,
+          "q75": 2867.435277885,
+          "q100": 23007.298441823,
+          "mean": 2972.18055683666
+        },
+        "k50": {
+          "n": 100,
+          "q0": 8.1e-08,
+          "q25": 0.00013029924999999998,
+          "q50": 107.23197053550001,
+          "q75": 3624.9683193835,
+          "q100": 26469.275348674,
+          "mean": 3060.5045837438292
+        },
+        "k150": {
+          "n": 99,
+          "q0": 9.2e-08,
+          "q25": 0.001307917,
+          "q50": 0.387777813,
+          "q75": 115.08181415499999,
+          "q100": 17733.00612116,
+          "mean": 1082.720222812697
+        },
+        "k500": {
+          "n": 93,
+          "q0": 3.9085e-05,
+          "q25": 0.739381297,
+          "q50": 66.890789458,
+          "q75": 589.714069299,
+          "q100": 23059.572911602,
+          "mean": 2435.738727813817
+        }
+      },
+      "per_event_across_k_ratio": {
+        "n": 88,
+        "q0": 1.8159854674849532,
+        "q25": 9968817.935817273,
+        "q50": 367438468.38254035,
+        "q75": 2503740132.298193,
+        "q100": 302727611076.6184,
+        "mean": 19768709332.476295
+      },
+      "n_events_all_k_defined": 93,
+      "per_event_peak_location_range_seconds": {
+        "n": 99,
+        "q0": 24.72872472099698,
+        "q25": 4560.356690221999,
+        "q50": 13205.913361151004,
+        "q75": 18900.8578471745,
+        "q100": 30219.134371451,
+        "mean": 12453.236146601303
+      }
+    }
+  },
+  "t5b_observable_agreement": {
+    "n_events": 100,
+    "spearman_decay_half": 0.35398739873987395,
+    "spearman_pvalue": 0.0003025642864110588,
+    "decay_half_ratio_volume_over_print": {
+      "n": 100,
+      "q0": 3.48082986908834e-10,
+      "q25": 0.12811997732683425,
+      "q50": 0.9999999429515092,
+      "q75": 4.12398926292195,
+      "q100": 433602754.09471846,
+      "mean": 12508245.261891494
+    },
+    "peak_location_difference_seconds": {
+      "n": 100,
+      "q0": 0.0,
+      "q25": 0.0,
+      "q50": 0.004142719499213854,
+      "q75": 2866.94476352525,
+      "q100": 26469.275304797,
+      "mean": 2777.4120374612203
+    },
+    "n_events_peak_within_60s": 57
+  },
+  "t5c_tie_variant_agreement": {
+    "print_rate": {
+      "n_events": 100,
+      "median_abs_log_ratio_decay": 0.0,
+      "tolerance_max_median_abs_log_ratio": 0.6931471805599453,
+      "share_peak_moved_beyond_decay": 0.02,
+      "tolerance_max_share_peak_moved": 0.25,
+      "n_events_peak_identical": 87
+    },
+    "volume_rate": {
+      "n_events": 100,
+      "median_abs_log_ratio_decay": 0.0,
+      "tolerance_max_median_abs_log_ratio": 0.6931471805599453,
+      "share_peak_moved_beyond_decay": 0.06,
+      "tolerance_max_share_peak_moved": 0.25,
+      "n_events_peak_identical": 87
+    },
+    "within_tolerance": true,
+    "escalation_row_8_triggered": false
+  },
+  "t4_level_conditioning": {
+    "print_rate": {
+      "n_events": 100,
+      "by_absolute_peak_rate_quartile": {
+        "0": {
+          "n": 25,
+          "peak_rate_abs": {
+            "n": 25,
+            "q0": 0.044398714725768715,
+            "q25": 1.245380756148938,
+            "q50": 3.2221934374684498,
+            "q75": 12.716170601168118,
+            "q100": 116.11430090083107,
+            "mean": 12.998813383904187
+          },
+          "decay_half_s": {
+            "n": 25,
+            "q0": 7.0563e-05,
+            "q25": 0.626514438,
+            "q50": 13.313124121,
+            "q75": 461.532287543,
+            "q100": 7892.815694508,
+            "mean": 880.57287683668
+          }
+        },
+        "1": {
+          "n": 25,
+          "peak_rate_abs": {
+            "n": 25,
+            "q0": 542.090243599818,
+            "q25": 3168.238333358512,
+            "q50": 8797.516570182062,
+            "q75": 16805.449154579695,
+            "q100": 55730.85304278501,
+            "mean": 15393.791263074376
+          },
+          "decay_half_s": {
+            "n": 25,
+            "q0": 1.35e-07,
+            "q25": 0.000309057,
+            "q50": 0.007306795,
+            "q75": 3809.384600564,
+            "q100": 19738.53490454,
+            "mean": 3366.3151079266
+          }
+        },
+        "2": {
+          "n": 25,
+          "peak_rate_abs": {
+            "n": 25,
+            "q0": 61590.3671071953,
+            "q25": 84630.83131557707,
+            "q50": 100198.37553750597,
+            "q75": 190304.17422867514,
+            "q100": 234057.14285714287,
+            "mean": 130809.74194109552
+          },
+          "decay_half_s": {
+            "n": 25,
+            "q0": 8.1e-08,
+            "q25": 0.000112757,
+            "q50": 281.118565797,
+            "q75": 3809.405963662,
+            "q100": 22282.935382775,
+            "mean": 4618.2310441419995
+          }
+        },
+        "3": {
+          "n": 25,
+          "peak_rate_abs": {
+            "n": 25,
+            "q0": 237503.0577576444,
+            "q25": 450032.6180257511,
+            "q50": 537731.282051282,
+            "q75": 728177.7777777778,
+            "q100": 1446311.7241379311,
+            "mean": 622444.0215143337
+          },
+          "decay_half_s": {
+            "n": 25,
+            "q0": 2.263e-06,
+            "q25": 5.789e-05,
+            "q50": 7176.54371755,
+            "q75": 11635.372324426,
+            "q100": 25819.888136369,
+            "mean": 7765.405248310559
+          }
+        }
+      },
+      "spearman_decay_vs_peak_rate": 0.1372937293729373,
+      "spearman_pvalue": 0.1731549852146284,
+      "top_over_bottom_quartile_ratio": 539.0578238679369
+    },
+    "volume_rate": {
+      "n_events": 100,
+      "by_absolute_peak_rate_quartile": {
+        "0": {
+          "n": 25,
+          "peak_rate_abs": {
+            "n": 25,
+            "q0": 9.083273998648638,
+            "q25": 261.6421071224381,
+            "q50": 1122.9976347280767,
+            "q75": 3811.2734338640976,
+            "q100": 52307.335934055394,
+            "mean": 6323.046174988489
+          },
+          "decay_half_s": {
+            "n": 25,
+            "q0": 7.0563e-05,
+            "q25": 0.595847735,
+            "q50": 75.864770056,
+            "q75": 1205.484782498,
+            "q100": 14603.769907574,
+            "mean": 1801.5563535774004
+          }
+        },
+        "1": {
+          "n": 25,
+          "peak_rate_abs": {
+            "n": 25,
+            "q0": 66034.54888127302,
+            "q25": 565641.9060334659,
+            "q50": 1754234.8766728267,
+            "q75": 4097941.513905683,
+            "q100": 10756097.86903947,
+            "mean": 2955265.16682758
+          },
+          "decay_half_s": {
+            "n": 25,
+            "q0": 4.75e-07,
+            "q25": 0.000291565,
+            "q50": 237.528433862,
+            "q75": 4794.521775438,
+            "q100": 21787.447379354,
+            "mean": 2958.4689020901606
+          }
+        },
+        "2": {
+          "n": 25,
+          "peak_rate_abs": {
+            "n": 25,
+            "q0": 11796665.952436065,
+            "q25": 18141465.000807103,
+            "q50": 26814716.352053646,
+            "q75": 33766020.64109301,
+            "q100": 62458441.83451536,
+            "mean": 27474758.549352866
+          },
+          "decay_half_s": {
+            "n": 25,
+            "q0": 8.1e-08,
+            "q25": 4.9038e-05,
+            "q50": 0.003290162,
+            "q75": 3809.405862283,
+            "q100": 17251.569964975,
+            "mean": 2884.5594220287603
+          }
+        },
+        "3": {
+          "n": 25,
+          "peak_rate_abs": {
+            "n": 25,
+            "q0": 66156214.51104101,
+            "q25": 130073513.11125079,
+            "q50": 296610419.94388777,
+            "q75": 386076565.1478261,
+            "q100": 791476500.7567568,
+            "mean": 303465563.0317739
+          },
+          "decay_half_s": {
+            "n": 25,
+            "q0": 2.49e-07,
+            "q25": 1.7637e-05,
+            "q50": 746.808568865,
+            "q75": 3866.959580567,
+            "q100": 26469.275348674,
+            "mean": 4597.433657279
+          }
+        }
+      },
+      "spearman_decay_vs_peak_rate": -0.008064806480648064,
+      "spearman_pvalue": 0.9365272371720034,
+      "top_over_bottom_quartile_ratio": 9.843944274974262
+    }
+  },
+  "t5d_failure_criteria": {
+    "row_0": {
+      "mode": "Cooper rejects the profile on visual review of chart 08 against the tape",
+      "observed": null,
+      "pass": null,
+      "note": "Cooper's judgment. Overrides all other rows in either direction. Now also covers the detection marker's placement on the tape. A pass elsewhere is not acceptance."
+    },
+    "rows": [
+      {
+        "row": 1,
+        "observable": "print_rate",
+        "mode": "Resolution instability (caveat 1)",
+        "observed": 0.022791776185991087,
+        "threshold": "<= 3.0 and >= 0.333",
+        "pass": false,
+        "detail": {
+          "k_min": 5,
+          "k_max": 500,
+          "median_decay_at_k_min": 5905.2359190955,
+          "median_decay_at_k_max": 134.5908153935
+        }
+      },
+      {
+        "row": 1,
+        "observable": "volume_rate",
+        "mode": "Resolution instability (caveat 1)",
+        "observed": 0.199131603842885,
+        "threshold": "<= 3.0 and >= 0.333",
+        "pass": false,
+        "detail": {
+          "k_min": 5,
+          "k_max": 500,
+          "median_decay_at_k_min": 335.9124727925,
+          "median_decay_at_k_max": 66.890789458
+        }
+      },
+      {
+        "row": 2,
+        "observable": "print_rate vs volume_rate",
+        "mode": "Observable disagreement",
+        "observed": 0.35398739873987395,
+        "threshold": ">= 0.5",
+        "pass": false,
+        "detail": {
+          "n": 100
+        }
+      },
+      {
+        "row": 3,
+        "observable": "print_rate",
+        "mode": "Level dependence too strong to pool (caveat 2)",
+        "observed": 539.0578238679369,
+        "threshold": "<= 5.0 and >= 0.200",
+        "pass": false,
+        "detail": {
+          "spearman": 0.1372937293729373
+        }
+      },
+      {
+        "row": 3,
+        "observable": "volume_rate",
+        "mode": "Level dependence too strong to pool (caveat 2)",
+        "observed": 9.843944274974262,
+        "threshold": "<= 5.0 and >= 0.200",
+        "pass": false,
+        "detail": {
+          "spearman": -0.008064806480648064
+        }
+      },
+      {
+        "row": 4,
+        "observable": "print_rate",
+        "mode": "Peak not captured in-window",
+        "observed": 0.0,
+        "threshold": "<= 0.2",
+        "pass": true,
+        "detail": {
+          "n": 100,
+          "margin_seconds": 300
+        }
+      },
+      {
+        "row": 4,
+        "observable": "volume_rate",
+        "mode": "Peak not captured in-window",
+        "observed": 0.0,
+        "threshold": "<= 0.2",
+        "pass": true,
+        "detail": {
+          "n": 100,
+          "margin_seconds": 300
+        }
+      },
+      {
+        "row": 5,
+        "observable": "print_rate",
+        "mode": "No decay within session",
+        "observed": 0.0,
+        "threshold": "<= 0.2",
+        "pass": true,
+        "detail": {
+          "n": 100
+        }
+      },
+      {
+        "row": 5,
+        "observable": "volume_rate",
+        "mode": "No decay within session",
+        "observed": 0.0,
+        "threshold": "<= 0.2",
+        "pass": true,
+        "detail": {
+          "n": 100
+        }
+      },
+      {
+        "row": 6,
+        "observable": "print_rate",
+        "mode": "Peak instability across the grid",
+        "observed": 96.23009590514813,
+        "threshold": "<= 1.0",
+        "pass": false,
+        "detail": {
+          "n": 99
+        }
+      },
+      {
+        "row": 6,
+        "observable": "volume_rate",
+        "mode": "Peak instability across the grid",
+        "observed": 115.86464640840201,
+        "threshold": "<= 1.0",
+        "pass": false,
+        "detail": {
+          "n": 99
+        }
+      },
+      {
+        "row": 7,
+        "observable": "never-crosses",
+        "mode": "Anchor does not exist for the cohort",
+        "observed": 0.02,
+        "threshold": "<= 0.2",
+        "pass": true,
+        "detail": {}
+      },
+      {
+        "row": 8,
+        "observable": "phase-8 agreement",
+        "mode": "Phase 8 disagreement",
+        "observed": 0.0,
+        "threshold": "<= 0.1",
+        "pass": true,
+        "detail": {
+          "floor_comparison_beyond": 0.0
+        }
+      },
+      {
+        "row": 9,
+        "observable": "print_rate",
+        "mode": "Polling dominates the answer",
+        "observed": 1.0103283070352054,
+        "threshold": "<= 2.0",
+        "pass": true,
+        "detail": {
+          "median_det_to_peak_instantaneous": 1975.9023141405,
+          "median_det_to_peak_60s_poll": 1955.7032109085,
+          "note": "instantaneous is the physically impossible upper bound on runway"
+        }
+      },
+      {
+        "row": 9,
+        "observable": "volume_rate",
+        "mode": "Polling dominates the answer",
+        "observed": 1.0146021694202139,
+        "threshold": "<= 2.0",
+        "pass": true,
+        "detail": {
+          "median_det_to_peak_instantaneous": 2558.6937232640003,
+          "median_det_to_peak_60s_poll": 2521.8689653760002,
+          "note": "instantaneous is the physically impossible upper bound on runway"
+        }
+      }
+    ],
+    "any_failed": true
+  },
+  "standing_lesson": "A stability pass is not evidence of correctness. Both v1 arms passed every numeric row while being wrong. Rows 1-9 exist to DISQUALIFY, never to endorse.",
+  "source": "research/phase_10/v2_t5_stability.py:main"
+}
