@@ -11,6 +11,63 @@ This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `resea
 
 ---
 
+## Phase 10 additions (folder-level; branch `phase/10`, in progress, 2026-08-04)
+
+Phase 10 ran in two scopes on one branch. **v1 = "Burst Decomposition"** (segmentation, two arms) was
+**rejected at its approval gate on failure criterion row 0** — Cooper's visual review against the tape —
+and is superseded by `docs/Universe-Decisions.md` **D6**. **v2 = "Intensity Profile and Burst
+Timescale"** replaces it. v1's artifacts are retained as the evidentiary record D6 rests on (D6
+consequence (b)) and are **not inputs to any downstream phase**. Tick-grain throughout, zero passes over
+`filtered_trades`/`filtered_quotes` — all tick reads are targeted per-event reads of
+`data/filtered/{event}/trades.parquet` plus `*_repair_1c.parquet` siblings, proven row-for-row
+equivalent to `filtered_trades_dev_v4` on 56/56 dev v4 events (9,638,361 rows).
+
+Files added:
+
+- `prompts/phase_10.md` — v1 spec (segmentation). **Closed, not continued.**
+- `prompts/phase_10_v2.md` — v2 spec (intensity profiling), per D6.
+- `prompts/phase_10_v2_r1.md` — R1 resolution: derives the detection anchor per D7, amends v2 T2b and
+  escalation rows 9 and 13, and orders the docs entries this section is part of.
+- `config/phase_10.json` — v1 config: cohort + seed, both arms' parameters and baselines, sensitivity
+  grid, four pre-registered failure thresholds, chart-07 selection rule and cap, runtime ceilings.
+- `config/phase_10_v2.json` — v2 config: resolution grid `k`, both observables, anchor definitions,
+  decay fractions, terminal-condition multiples, tie variants, level-conditioning strata, poll and
+  threshold grids (D7), failure thresholds, runtime ceilings.
+- `research/phase_10/*.py` — `common` (config/cohort loaders, D3 extended-day session clock, targeted
+  per-event tick reader), `kleinberg` (v1 Arm A, brute-force-verified), `arm_b` (v1 Arm B),
+  `t1_cohort`, `t0d_tick_surface`, `t2_arm_a`, `t3_arm_b`, `t4_measure`, `t5_sensitivity`, `chartlib`,
+  `t6a_charts`, `t6b_tape_review`, `v2_t0a_preconditions`, plus the v2 estimation/measurement modules.
+- `results/phase_10/artifacts/*.json` — committed summaries (`t0_tick_surface`, `t1_cohort_summary`,
+  `t2_arm_a_summary`, `t3_arm_b_summary`, `t4_burst_measurements`, `t5_sensitivity`,
+  `t6a_chart_manifest`, `t6b_tape_review_manifest`, `v2_t0a_escalation_row9`, and the v2 artifacts);
+  `*.parquet` gitignored/regenerable per Agent_Prompt_Standard §12.
+- `results/phase_10/charts/01–06*.html` (+ `.png`) — v1, kaleido-verified.
+- `results/phase_10/charts/07_tape_review/` — v1 per-event tape review, 80 charts + full-cohort
+  sortable index, ~446 MB. Kept untracked by a **`.gitignore` nested inside that directory** rather
+  than an edit to the repo-root `.gitignore`, so the §12 outcome holds without writing outside the
+  phase's write allowlist. New pattern, recorded here.
+- `results/phase_10/{REPORT_v1_superseded.md, digest_v1_superseded.json}` — the v1 record, renamed at
+  R1.2 so it cannot be read cold as the phase's findings; cross-phase copy
+  `results/reports/phase_10_report.md`.
+- `results/phase_10/{REPORT.md, digest.json}` — v2.
+
+Frozen cohort, shared by v1 and v2: `results/phase_10/artifacts/t1_cohort_manifest.parquet`, 114
+events (50 dev v4 primary + 50 activity extension + 8 row-cap census + 6 sidecar), seed 42, content
+hash `e1a0ac73a79aa573`. Pooled analysis cohort = 100; row-cap census and sidecar are carried,
+labeled, never pooled. Stratified on **T=0 print-count decile** from `event_minute_bars_v2`, not
+`momentum_pct`.
+
+Files modified: `docs/Universe-Decisions.md` (**D6** — segmentation withdrawn in favour of intensity
+profiling; **D7** — the detection anchor is derived, not sourced), this file. Both appended, never
+edited in place, per the R1.1 amendment to escalation row 13.
+
+New DB objects: none.
+
+New flags: none on the canonical view. Phase 10 joins the three existing phase-artifact flags
+(`flag_possible_row_cap`, `flag_has_dup_prints`, `flag_cross_session_extreme`) and re-derives nothing.
+
+---
+
 ## Phase 9 additions (folder-level; `phase-9-approved`, 2026-08-03)
 
 Phase 9 = "Path Shape, Cross-Session Integrity, and Clustered Inference" (repairs the cross-session price-basis defect in Phase 8's markouts, separates the detection-time / holding-period / latency axes, and adds the first retracement measurement). Read-only: zero passes over `filtered_trades`/`filtered_quotes`; every quantity derives from `event_minute_bars_v2` and frozen Phase 6b/8 artifacts. Files added:

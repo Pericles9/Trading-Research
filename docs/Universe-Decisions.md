@@ -334,6 +334,92 @@ statistic, and state that it is session-anchored and superseded as a budget. Reu
 
 ---
 
+## D6 — Burst measurement moves from segmentation to intensity profiling
+
+**Date:** 2026-08-04
+**Deciding phase gate:** Phase 10 v1 approval gate — failure criterion row 0 fired (segmentation rejected on Cooper's visual review against the tape)
+**Supersedes:** the operational reading of D5's burst definition ("a contiguous high-intensity trade-arrival cluster within a T=0 session")
+**Affects:** Phases 10, 11, 13, 14, 16, 17
+
+**Decision.** The T=0 session is **not segmented into bursts**. A continuous relative-intensity profile is measured instead. D5's requirement — a burst timescale to anchor every downstream horizon — is satisfied from the *shape* of the intensity profile rather than from burst boundaries. There is no burst count, no burst spacing, and no per-burst move share. Those quantities are **withdrawn as deliverables**.
+
+**Why.** Both Phase 10 arms failed, in opposite directions, from a shared assumption: **that a quiet state exists on T=0 to detect bursts against.** It does not.
+
+- **Evidence 1 — the session is uniformly extreme.** Whole-session T=0 arrival rate against the flanking-day baseline rate, n=96: median **78.5×**, 5th percentile 2.5×. **86% of events exceed Arm B's own 4× on-threshold on a whole-session average basis.** By its own rule the entire session qualifies. There is no within-session baseline to threshold against; the baseline is the T− days.
+- **Evidence 2 — Arm A's burst count measured the data, not the market.** Spearman correlation between burst count and T=0 print count: **+0.96**, log-log slope 0.85. Median burst duration falls 11.4 s → 0.6 s across print-count quartiles. Kleinberg's two-state automaton assumes exponential inter-arrival gaps within a state; trade arrivals are heavy-tailed, so the Viterbi path flips state to accommodate gaps the model considers impossible. More prints, more flips. Compounding this, the transition cost scales as `gamma × ln(n)` while transition opportunities scale as `n` — fragmentation wins by construction as sessions get busier.
+- **Evidence 3 — Arm B's denominator was unusable.** Flanking-day density: median **2.8 prints/min**, 45% of events below 2/min, 27% below 0.5/min. 73 of 100 analysis-cohort events carry `baseline_partial`. An intraday shape cannot be estimated from that material. The result was a per-minute z-score with **median −1.26 and 25th percentile −17.7** on sessions running 78× hot — an unstable variance denominator on thin names, where an empty T=0 minute scores −18. That flicker is what fragmented a uniformly elevated session into ~25 pieces. Merge-and-dwell then rescued the fragments into approximately-correct blobs, which is why Arm B looked accurate while being imprecise.
+- **Evidence 4 — the same misspecification killed the earlier Hawkes work.** A branching ratio pinned at criticality is a documented failure signature, not a finding. Filimonov & Sornette (2015), *Apparent criticality and calibration issues in the Hawkes self-excited point process model*, show that calibration on mixtures of Poisson processes with regime changes yields spurious apparent critical values of n≈1 when the true value is n=0, and that regime shifts systematically bias the branching ratio upward. Constant-baseline Hawkes on a session whose intensity varies by orders of magnitude can only express that variation through self-excitation, so it maxes out self-excitation. The Hawkes project and the burst-detection project are one dead end found twice, not two.
+
+**What the data does support.** Roughly 85% of session prints fall in 15–33% of session clock time. There is real concentration within the session — it is simply not two-state structure, and it is not resolvable by thresholding.
+
+**What replaces the burst timescale.**
+
+| Old deliverable | Replacement |
+|---|---|
+| Burst count per event | *(withdrawn)* |
+| Burst duration, spacing | Decay timescale of the intensity profile |
+| Burst-relative concentration curve | Peak-anchored and detection-anchored intensity profile |
+| Burst confirmation as anchor | Peak intensity and scanner detection time as anchors |
+| Latency budget | **Time from detection to peak intensity** |
+
+**Time from detection to peak intensity is the runway.** It requires no baseline, no threshold, and no calibration. If that distribution is centred at 90 seconds, every downstream phase is a 90-second problem. If peak intensity routinely *precedes* detection, that is a first-order finding about the entire program and the segmentation approach could never have surfaced it cleanly.
+
+**Method constraints carried into Phase 10 v2.**
+- **Shape uses no baseline.** Each event's rate curve is normalized by its own peak. This also cancels the price-level print-fragmentation effect on level, which was the artifact behind Evidence 2.
+- **The flanking days retain exactly one job: the terminal condition** — has activity returned to normal. That requires a single scalar per ticker, not an intraday shape. 2.8 prints/min is sufficient for a scalar. The saturation objection that killed whole-day baselines for segmentation does not apply, because a smooth decaying curve is read once at its crossing rather than thresholded continuously.
+- **Time-of-day matching is abandoned.** Not because of non-stationarity in event timing — a clock-matched denominator does not assume events align — but because the flanking material is too thin to estimate an intraday shape at all. Recorded here so the reasoning is not re-litigated from the wrong premise later.
+- **Rate estimation must be adaptive.** Within-session arrival rate spans several orders of magnitude. Fixed-width binning is not acceptable: any bin width adequate at the peak is empty in the tails and vice versa. An adaptive estimator whose resolution follows local density is required.
+
+**Recorded consequences.**
+- (a) Phase 10 is re-scoped. `prompts/phase_10.md` is replaced by `prompts/phase_10_v2.md`; the segmentation version is superseded, not amended.
+- (b) Phase 10's Arm A and Arm B artifacts are retained as the evidentiary record for this decision and are **not** inputs to any downstream phase.
+- (c) Phase 14's regime-label design no longer inherits a burst segmentation. It inherits an intensity profile and its timescales.
+- (d) Phase 13's scope is unchanged — inter-trade interval distributions remain its deliverable.
+- (e) Any downstream phase that anchored a horizon to "burst confirmation" re-anchors to peak intensity or detection time. Both are pinned in Phase 10 v2.
+
+**Standing lessons.**
+- **Parameter stability is not evidence of correctness.** All four pre-registered numeric failure criteria passed. Row 3 — parameter stability — passed comfortably on both arms (median interval Jaccard 0.77 and 0.93). Both arms reliably produced the same wrong answer under perturbation. Stability tests detect noise sensitivity; they cannot detect a wrong model. Future pre-registration must not treat a stability pass as acceptance.
+- **Cross-arm agreement was the loudest signal and nothing was watching it.** Median interval Jaccard between arms: **0.31**, with zero events agreeing on burst count. Where two independently-motivated methods are run, their disagreement requires a pre-registered threshold of its own.
+- **Row 0 earned its place.** Cooper's visual review against the tape was the only criterion that fired, and it fired correctly. It stays as the top row of every future failure table.
+
+**How to apply:** cite D6 before using any `results/phase_10/` Arm A or Arm B artifact — they are evidence for this decision, not measurement inputs. Any phase inheriting a "burst-relative" anchor from D5 re-anchors to peak intensity or detection time.
+
+---
+
+## D7 — The detection anchor is derived, not sourced
+
+**Date:** 2026-08-04
+**Deciding phase gate:** Phase 10 v2 escalation row 9, raised at T0a and resolved by `prompts/phase_10_v2_r1.md`
+
+**What was wrong.** `prompts/phase_10_v2.md` T2b specified the detection timestamp as "taken from the canonical spine." **No such column exists, and never did.** `momentum_events_canonical` carries no timestamp column of any kind; the underlying `momentum_events` spine has `date` and `event_date` as date-only strings and `created_at` as a record-creation field. The prompt asserted a source without verifying it, on the input that produces the phase's headline number. T0a caught it before any measurement ran.
+
+**Decision.** Phase 10 v2's detection anchor is **derived from the tick archive under a pre-registered rule, at a pre-registered set of polling intervals**. It is not sourced from the spine, and it is not the Phase 8 `det_minute` artifact.
+
+**Definition.**
+- **Reference price:** tick-derived T−1 regular-hours close. Phase 8 already computes this as `tick_close_t_minus_1_rth`; reuse the definition, recompute the value.
+- **Trigger:** the running maximum of T=0 trade price reaching or exceeding `threshold × reference`.
+- **Threshold:** 1.30 at the reference point, matching universe construction. Carried as a config parameter with its own sensitivity grid.
+- **Detection time:** the first poll boundary at or after the trigger.
+
+**Why the polling interval is mandatory and not a refinement.** Defining detection as the instant of crossing produces a detection time no real scanner could achieve — no polling interval, no feed latency, no bar close. That biases detection-to-peak **upward**: more apparent runway than exists. It is the optimistic direction, on the number every downstream phase is anchored to. Making the interval an explicit parameter is the only way that bias stays visible. **The instantaneous-poll variant is the explicit upper bound on runway and is labeled as such on every chart and in every table where it appears. It is not a candidate operating point.**
+
+**Pinned grids.** Poll intervals: instantaneous, 1 s, 5 s, 15 s, 60 s. Thresholds: 1.25, 1.30, 1.35.
+
+**Never-crosses.** Events in-universe whose tick crossing does not exist are an expected consequence of D4 — the universe was selected on `momentum_pct` computed from quarantined spine numerics, and the anchor is re-derived on tick. They are **flagged, carried, and reported as their own row. Never dropped, never imputed, never resolved by falling back to a spine value.** The count is a headline number.
+
+**Detection segment.** Each event is tagged premarket / regular-hours / after-hours by its detection time, per the pinned XNYS calendar. Segment is a **conditioning variable carried through every Phase 10 v2 timescale table**, not a footnote.
+
+**Stated limitation.** Detection comes from a price threshold; peak comes from arrival intensity; both are computed from the same T=0 tick stream. These are different quantities and the comparison is legitimate, but the two anchors are **not independently sourced**, and every report using them says so.
+
+**Recorded consequences.**
+- (a) `prompts/phase_10_v2.md` T2b is replaced by the definition above.
+- (b) Escalation row 9 is replaced: a derived anchor undefined for any reason *other than* the pre-registered never-crosses condition is a hard stop; never-crosses events are not an escalation.
+- (c) Escalation row 13 is amended to permit **append-only** writes to `docs/Universe-Decisions.md` and `docs/Research-Library-Map.md`. The prior allowlist made it impossible to record a decision where decisions are recorded — a prompt defect that surfaced in Phase 10 v1 and reproduced in v2.
+- (d) Every T3/T4/T5 quantity referencing detection is computed **per poll interval**, and the detection-to-peak distribution is a **family indexed by polling interval**, not a single distribution. The spread across that family is a headline number.
+
+**How to apply:** cite D7 wherever a detection time is used in or after Phase 10 v2, and state the poll interval with the number. A detection-anchored figure quoted without its poll interval is incomplete.
+
+
 ## Related
 
 - [[Open-Items-Register]] — the "2025 inclusion decision" item is closed there, referencing D1;
