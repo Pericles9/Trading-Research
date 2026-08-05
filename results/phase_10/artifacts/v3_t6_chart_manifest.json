@@ -1,0 +1,48 @@
+{
+  "phase": "10",
+  "version": "v3",
+  "task": "T6",
+  "config_hash": "c5aea7f6",
+  "n_charts": 5,
+  "n_kaleido_verified": 5,
+  "all_verified": true,
+  "charts": [
+    {
+      "chart": "v3_02_envelope_examples.html",
+      "png": "v3_02_envelope_examples.png",
+      "kaleido_verified": true,
+      "html_bytes": 11856685,
+      "png_bytes": 1154314
+    },
+    {
+      "chart": "v3_03_subburst_count.html",
+      "png": "v3_03_subburst_count.png",
+      "kaleido_verified": true,
+      "html_bytes": 15004,
+      "png_bytes": 270402
+    },
+    {
+      "chart": "v3_04_subburst_count_vs_prints.html",
+      "png": "v3_04_subburst_count_vs_prints.png",
+      "kaleido_verified": true,
+      "html_bytes": 34501,
+      "png_bytes": 522862
+    },
+    {
+      "chart": "v3_05_subburst_duration_spacing.html",
+      "png": "v3_05_subburst_duration_spacing.png",
+      "kaleido_verified": true,
+      "html_bytes": 801190,
+      "png_bytes": 303017
+    },
+    {
+      "chart": "v3_06_subburst_move_share.html",
+      "png": "v3_06_subburst_move_share.png",
+      "kaleido_verified": true,
+      "html_bytes": 845009,
+      "png_bytes": 329328
+    }
+  ],
+  "note": "produced under a partial failure (rows 2, 3, 4)",
+  "source": "research/phase_10/v3_t6_charts.py:main"
+}
