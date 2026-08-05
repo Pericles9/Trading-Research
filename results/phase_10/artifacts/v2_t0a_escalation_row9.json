@@ -1,0 +1,301 @@
+{
+  "phase": "10",
+  "version": "v2",
+  "task": "T0a",
+  "status": "ESCALATED",
+  "escalation_row": 9,
+  "condition": "Detection timestamp unavailable or ambiguous for any cohort event",
+  "threshold": "any",
+  "observed": "No scanner detection timestamp exists on the canonical spine. The best available substitute covers 110/114 cohort events but is a RECONSTRUCTED minute-grain proxy, not a scanner detection time. The only true scanner-hit source has a usable timestamp for 3/114 cohort events.",
+  "triggered": true,
+  "detected_at": "T0a preconditions, before config was authored and before any measurement ran",
+  "what_the_prompt_specifies": {
+    "task": "T2b",
+    "text": "Detection anchor. The scanner detection timestamp for the event, taken from the canonical spine. Causal and operationally meaningful.",
+    "finding": "momentum_events_canonical has no timestamp column of any kind. Neither does the underlying momentum_events spine."
+  },
+  "evidence": {
+    "canonical_spine_columns": [
+      "ticker",
+      "event_date_canonical",
+      "momentum_pct",
+      "source_file",
+      "instrument_class",
+      "vendor_type",
+      "flag_bad_denominator",
+      "flag_trades_mom_outlier",
+      "flag_missing_event_day",
+      "flag_window_calendar_bug",
+      "repaired_1c",
+      "has_folder",
+      "trades_ingested",
+      "quotes_ingested",
+      "in_scope",
+      "coverage_class",
+      "quotes_full_window",
+      "trades_full_window",
+      "clean_window",
+      "trades_gap_label",
+      "quotes_gap_label",
+      "trades_bitmap",
+      "quotes_bitmap",
+      "flag_eth_dominant_t0",
+      "t0_eth_row_share"
+    ],
+    "canonical_time_like_columns": [],
+    "raw_spine_columns": [
+      "ticker",
+      "date",
+      "prev_close",
+      "high",
+      "open",
+      "close",
+      "event_volume",
+      "momentum_pct",
+      "price_move",
+      "id",
+      "event_date",
+      "event_high",
+      "event_open",
+      "event_close",
+      "market_cap_est",
+      "sector",
+      "has_minute_data",
+      "has_trade_data",
+      "created_at",
+      "min_volume_threshold",
+      "__index_level_0__"
+    ],
+    "raw_spine_note": "`date` and `event_date` are date-only strings. `created_at` is a record-creation field, not a market-time detection stamp. No intraday timestamp exists on the spine.",
+    "d4_note": "Every numeric column on the raw spine is D4-quarantined in any case; the point here is only that no TIME column exists, quarantined or otherwise."
+  },
+  "candidate_sources": {
+    "A_phase8_reconstructed": {
+      "artifact": "results/phase_8/artifacts/a102_detection_anchors.parquet",
+      "column": "det_minute",
+      "definition": "first minute_index at which the tick T=0 extended running max reaches 1.30x tick_close_t_minus_1_rth (Phase 8 A10.2)",
+      "grain": "1 minute, indexed from 04:00 ET",
+      "cohort_present": 114,
+      "cohort_total": 114,
+      "det_undefined": 4,
+      "cohort_usable": 110,
+      "usable_by_group": {
+        "dev_v4_primary": "49 / 50",
+        "activity_extension": "49 / 50",
+        "row_cap_census": "8 / 8",
+        "dev_v4_sidecar": "4 / 6"
+      },
+      "is_a_scanner_detection_time": false,
+      "objection_coverage": "110/114, not 114/114 \u2014 escalation row 9 says 'any cohort event'.",
+      "objection_grain": "This phase measures timescales whose relevant range is seconds-to-minutes. A 1-minute-grain anchor quantizes the detection-to-peak interval \u2014 chart 03, the phase's headline number \u2014 at exactly the resolution the number lives at.",
+      "objection_provenance": "It is a re-derivation of what a 30%-from-prev-close screen WOULD have fired at, computed from the tick archive after the fact. It is not the archive's own scanner output. Calling it 'the scanner detection timestamp' would misdescribe it.",
+      "objection_circularity": "It is derived from the same T=0 tick stream this phase estimates intensity from, and its 1.30x trigger is a price threshold. Detection-to-peak would then be the distance between a price-threshold crossing and an intensity peak computed on the same prints \u2014 a defensible quantity, but not the same quantity as 'time from when the scanner told you to when participation peaked'."
+    },
+    "B_scanner_hit_catalog": {
+      "artifact": "data/filtered/scanner_hit_catalog.json",
+      "column": "scanner_hit_ts_ns",
+      "grain": "nanoseconds \u2014 the correct grain",
+      "is_a_scanner_detection_time": true,
+      "catalog_records_total": 6395,
+      "catalog_records_with_timestamp": 786,
+      "cohort_present_in_catalog": 48,
+      "cohort_with_usable_timestamp": 3,
+      "cohort_total": 114,
+      "usable_by_group": {
+        "dev_v4_primary": "1 / 50",
+        "activity_extension": "0 / 50",
+        "row_cap_census": "2 / 8",
+        "dev_v4_sidecar": "0 / 6"
+      },
+      "the_three": [
+        {
+          "ticker": "MDIA",
+          "event_date_canonical": "2024-04-09",
+          "group": "dev_v4_primary",
+          "scanner_hit_tod_sec": 28423.318
+        },
+        {
+          "ticker": "AMIX",
+          "event_date_canonical": "2024-07-19",
+          "group": "row_cap_census",
+          "scanner_hit_tod_sec": 20565.498
+        },
+        {
+          "ticker": "ARBB",
+          "event_date_canonical": "2024-02-13",
+          "group": "row_cap_census",
+          "scanner_hit_tod_sec": 20108.984
+        }
+      ],
+      "dominant_failure_note": "5,081 of 6,395 catalog records are 'prev_close unavailable \u2014 skipped'; 604 carry an empty note and a null timestamp.",
+      "objection": "3 of 114 is not a cohort. Nothing distributional can be computed from it."
+    }
+  },
+  "what_is_blocked": [
+    "T2b \u2014 detection anchor",
+    "T3a \u2014 detection-to-peak interval, signed (the phase's headline number)",
+    "T3b \u2014 rise profile, which is defined from detection to peak",
+    "chart 02 \u2014 detection-anchored profile",
+    "chart 03 \u2014 detection-to-peak ('Chart 03 is the number' per the approval gate)",
+    "reporting item 4 \u2014 detection-to-peak table",
+    "escalation row 10 \u2014 cannot be evaluated, as there are no detection-to-peak values to preserve the sign of",
+    "chart 08's selection rule, which stratifies on the detection-to-peak range including its negative tail"
+  ],
+  "what_is_not_blocked": [
+    "T0c/T0d \u2014 config and tie structure",
+    "T1 \u2014 adaptive intensity estimation, both observables, full resolution grid, tie variants",
+    "T2a/T2c \u2014 peak anchor and its across-grid stability",
+    "T3c \u2014 decay timescale to each fraction",
+    "T3d \u2014 terminal condition against the scalar flanking baseline",
+    "T4 \u2014 level conditioning in full",
+    "T5a/T5b/T5c \u2014 resolution, observable and tie-variant stability",
+    "charts 01, 04, 05, 06, 07 and 08 (08 under an alternative selection rule)",
+    "failure rows 1, 2, 3, 4, 5, 6"
+  ],
+  "preconditions_that_did_pass": {
+    "phase_9_approved_tag": "present, 7909d66199c2adfde597eb8a263e7dbb730cc1fb",
+    "branch": "phase/10",
+    "v1_cohort_manifest_present": true,
+    "v1_cohort_rows": 114,
+    "v1_cohort_groups": {
+      "dev_v4_primary": 50,
+      "activity_extension": 50,
+      "row_cap_census": 8,
+      "dev_v4_sidecar": 6
+    },
+    "v1_embedded_config_hash": "6753cbe9",
+    "v1_seed": 42,
+    "cohort_content_sha256_16": "e1a0ac73a79aa573",
+    "cohort_content_hash_definition": "sha256 of the CSV of (ticker, event_date_canonical, momentum_pct, cohort_group) sorted by the 3-part key; pinned here so v2 can assert the frozen cohort on every later run",
+    "canonical_in_scope_join": "114 matched / 114, shortfall 0",
+    "escalation_row_1": "PASS",
+    "escalation_row_2": "PASS"
+  },
+  "no_fix_attempted": "Per CLAUDE.md, a hard stop is not fixed, tuned, or worked around. No detection anchor was substituted, no config was authored, and no measurement was run. The options above are stated for Cooper's decision and are not ranked.",
+  "source": "research/phase_10/v2_t0a_preconditions.py:main",
+  "measured": {
+    "row_1": {
+      "phase_9_approved_tag": "7909d66199c2adfde597eb8a263e7dbb730cc1fb",
+      "v1_cohort_manifest_present": true,
+      "v1_cohort_rows": 114,
+      "v1_cohort_groups": {
+        "dev_v4_primary": 50,
+        "activity_extension": 50,
+        "row_cap_census": 8,
+        "dev_v4_sidecar": 6
+      },
+      "v1_embedded_config_hash": [
+        "6753cbe9"
+      ],
+      "v1_seed": [
+        42
+      ],
+      "cohort_content_sha256_16": "e1a0ac73a79aa573",
+      "cohort_content_hash_expected": "e1a0ac73a79aa573",
+      "hash_matched": true,
+      "groups_matched": true,
+      "escalation_row_1": "PASS"
+    },
+    "row_2": {
+      "n_cohort": 114,
+      "n_matched": 114,
+      "shortfall": 0,
+      "escalation_row_2": "PASS"
+    },
+    "row_9": {
+      "canonical_time_like_columns": [],
+      "canonical_has_detection_timestamp": false,
+      "raw_spine_columns": [
+        "ticker",
+        "date",
+        "prev_close",
+        "high",
+        "open",
+        "close",
+        "event_volume",
+        "momentum_pct",
+        "price_move",
+        "id",
+        "event_date",
+        "event_high",
+        "event_open",
+        "event_close",
+        "market_cap_est",
+        "sector",
+        "has_minute_data",
+        "has_trade_data",
+        "created_at",
+        "min_volume_threshold",
+        "__index_level_0__"
+      ],
+      "A_phase8_reconstructed": {
+        "cohort_present": 114,
+        "det_undefined": 4,
+        "cohort_usable": 110,
+        "usable_by_group": {
+          "activity_extension": {
+            "n": 50,
+            "usable": 49
+          },
+          "dev_v4_primary": {
+            "n": 50,
+            "usable": 49
+          },
+          "dev_v4_sidecar": {
+            "n": 6,
+            "usable": 4
+          },
+          "row_cap_census": {
+            "n": 8,
+            "usable": 8
+          }
+        }
+      },
+      "B_scanner_hit_catalog": {
+        "catalog_records_total": 6395,
+        "catalog_records_with_timestamp": 786,
+        "cohort_present_in_catalog": 48,
+        "cohort_with_usable_timestamp": 3,
+        "usable_by_group": {
+          "activity_extension": {
+            "n": 50,
+            "usable": 0
+          },
+          "dev_v4_primary": {
+            "n": 50,
+            "usable": 1
+          },
+          "dev_v4_sidecar": {
+            "n": 6,
+            "usable": 0
+          },
+          "row_cap_census": {
+            "n": 8,
+            "usable": 2
+          }
+        },
+        "the_populated": [
+          {
+            "ticker": "MDIA",
+            "event_date_canonical": "2024-04-09",
+            "cohort_group": "dev_v4_primary",
+            "scanner_hit_tod_sec": 28423.318
+          },
+          {
+            "ticker": "AMIX",
+            "event_date_canonical": "2024-07-19",
+            "cohort_group": "row_cap_census",
+            "scanner_hit_tod_sec": 20565.498
+          },
+          {
+            "ticker": "ARBB",
+            "event_date_canonical": "2024-02-13",
+            "cohort_group": "row_cap_census",
+            "scanner_hit_tod_sec": 20108.984
+          }
+        ]
+      },
+      "escalation_row_9": "FAIL \u2014 triggered"
+    }
+  }
+}
