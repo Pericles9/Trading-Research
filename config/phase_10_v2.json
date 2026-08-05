@@ -1,0 +1,281 @@
+{
+  "phase": "10",
+  "version": "v2",
+  "title": "Intensity Profile and Burst Timescale",
+  "branch": "phase/10",
+  "spec": ["prompts/phase_10_v2.md", "prompts/phase_10_v2_r1.md"],
+  "governing_decisions": ["D6", "D7", "D5", "D4", "D3", "D1"],
+  "baseline": {
+    "tag": "phase-9-approved",
+    "tag_sha": "7909d66199c2adfde597eb8a263e7dbb730cc1fb",
+    "r1_base_sha": "2ae8c95f611abb42b4c38bc7fbf360b57d5d3b6a"
+  },
+
+  "cohort": {
+    "rule": "REUSED, NOT REDRAWN. The v1 manifest is frozen.",
+    "manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+    "n_total": 114,
+    "groups": {"dev_v4_primary": 50, "activity_extension": 50, "row_cap_census": 8, "dev_v4_sidecar": 6},
+    "analysis_cohort": ["dev_v4_primary", "activity_extension"],
+    "analysis_cohort_n": 100,
+    "never_pooled": ["row_cap_census", "dev_v4_sidecar"],
+    "seed": 42,
+    "content_hash": "e1a0ac73a79aa573",
+    "content_hash_definition": "sha256 (first 16 hex) of the CSV of (ticker, event_date_canonical, momentum_pct, cohort_group) sorted by the 3-part key. Order-independent, so it survives regeneration of the gitignored parquet. Asserted on every v2 run; mismatch is escalation row 1."
+  },
+
+  "read_path": {
+    "rule": "ZERO passes over filtered_trades / filtered_quotes.",
+    "source": "data/filtered/{TICKER}_{YYYY-MM-DD}_{MOMENTUM_PCT:.2f}/trades.parquet + trades*_repair_1c.parquet siblings",
+    "equivalence_proof": "v1 T0d: 56/56 dev v4 events, 9,638,361 rows, exactly equal to filtered_trades_dev_v4. Not re-run; cited."
+  },
+
+  "analysis_clock": {
+    "decision": "D3 extended day, America/New_York, DST-aware",
+    "premarket_start_et": "04:00:00",
+    "post_end_et_normal": "20:00:00",
+    "post_end_et_early_close": "17:00:00",
+    "calendar": "XNYS, pandas_market_calendars 5.4.0 / exchange_calendars 4.13.2 (pinned)",
+    "offsets_used": [-3, -2, -1, 0],
+    "offsets_note": "T-3..T-1 are read for the scalar terminal-condition baseline (D6) and the T-1 RTH reference price (D7). No intraday shape is estimated from them."
+  },
+
+  "d4": {
+    "status": "in force",
+    "rule": "Every computed quantity is tick-derived. No spine numeric column on any computation path. momentum_pct is used only to build the event-folder name and to carry cohort identity; it measures nothing.",
+    "reference_price_note": "The D7 reference price is the tick-derived T-1 regular-hours close, recomputed here from filtered/ prints. It is NOT momentum_events.prev_close and is not read from any Phase 8 artifact.",
+    "a12_note": "D4 Amendment A12 covers cross-session ratios. The D7 trigger IS a cross-session ratio: T=0 price against the T-1 RTH close. It is therefore inside A12's scope. Handled per a12_handling below."
+  },
+
+  "a12_handling": {
+    "applies_to": "the D7 detection trigger only (T=0 running max vs T-1 RTH close)",
+    "rule": "A12 requires a magnitude flag on any ratio spanning a session boundary, reported with and without the flagged set. flag_cross_session_extreme already exists per (event, session-pair) in results/phase_9/artifacts/t1_cross_session_flags.parquet for the (tm1, t0) pair. Join it, never re-derive (CLAUDE.md standing exception).",
+    "reporting": "Every never-crosses figure and every detection-anchored distribution is reported with the (T-1,T0) flagged set broken out as its own row. Untrimmed stays primary; flagged events are never dropped.",
+    "why_it_matters_here": "A corporate action between T-1 and T=0 changes the price basis, so a never-cross can be a split rather than a weak move -- and Phase 9 measured (T-1,T0) as the HIGHEST-flag-rate pair of any (5.66%), explicitly unexamined and open in docs/Open-Items-Register.md."
+  },
+
+  "detection_anchor": {
+    "decision": "D7 — derived, not sourced",
+    "reference_price": {
+      "definition": "last trade price in the T-1 REGULAR-hours window [rth_open, rth_close), tick-derived from data/filtered/",
+      "phase_8_relationship": "same definition as Phase 8's tick_close_t_minus_1_rth; the VALUE is recomputed here, not read from the Phase 8 artifact",
+      "undefined_rule": "events with no T-1 RTH print have no reference price. Flagged reference_undefined, carried, never imputed."
+    },
+    "trigger": "first T=0 in-window print whose price >= threshold * reference (equivalently, the first time the running maximum reaches the threshold)",
+    "thresholds": [1.25, 1.30, 1.35],
+    "threshold_reference_point": 1.30,
+    "threshold_reference_point_note": "1.30 matches universe construction. The other two are the pre-registered sensitivity grid.",
+    "poll_intervals_seconds": [0, 1, 5, 15, 60],
+    "poll_interval_reference_point": 1,
+    "poll_zero_label": "instantaneous",
+    "poll_zero_rule": "poll_interval = 0 means detection AT the instant of crossing. This is a PHYSICAL IMPOSSIBILITY and the explicit UPPER BOUND ON RUNWAY. It is labeled as such on every chart and in every table where it appears, and is never a candidate operating point (D7).",
+    "poll_origin": "the session's own premarket start (04:00 ET). Poll boundaries are premarket_start + n * interval.",
+    "poll_resolution": "detection_ns = first poll boundary at or after the crossing instant. For interval 0, detection_ns = the crossing instant.",
+    "never_crosses": {
+      "definition": "no in-window T=0 print reaches threshold * reference",
+      "rule": "FLAG, CARRY, report as its own row. Never dropped, never imputed, never resolved by falling back to a spine value.",
+      "expected_cause": "a D4 consequence: the universe was selected on momentum_pct computed from quarantined spine numerics, and the anchor is re-derived on tick. Phase 8 observed 394/15,763 = 2.50% det_undefined on the same family of rule.",
+      "headline": true
+    },
+    "detection_segment": {
+      "values": ["premarket", "rth", "post"],
+      "rule": "premarket if detection < rth_open; rth if detection < rth_close; else post",
+      "status": "CONDITIONING VARIABLE, carried through every v2 timescale table (R1.3d). Not a footnote."
+    },
+    "detection_after_window_end_rule": "if poll rounding pushes detection past the session's post_end, flag detection_after_window_end and carry; the event has a crossing but no in-window detection at that poll interval."
+  },
+
+  "phase8_crosscheck": {
+    "artifact": "results/phase_8/artifacts/a102_detection_anchors.parquet",
+    "column": "det_minute",
+    "compare_at": {"poll_interval_seconds": 60, "threshold": 1.30},
+    "comparison": "minute index from 04:00 ET of the 60s-poll detection vs det_minute",
+    "tolerance_minutes": 1,
+    "tolerance_note": "det_minute is minute-grain and the 60s poll lands on a minute boundary, so exact agreement is the expectation and +/-1 minute absorbs boundary convention. Wider disagreement is failure row 8, and per R1.4b is a hard stop, not a reconciliation exercise.",
+    "excluded_from_comparison": "events flagged det_undefined in Phase 8, and events never-crossing here; both counted and reported."
+  },
+
+  "estimator": {
+    "family": "adaptive k-nearest-neighbour arrival-rate estimator",
+    "variant": "centred k-block",
+    "definition": "For sorted in-window T=0 arrival times t[0..n-1] and window size k, the block for index i is a = clip(i - k//2, 0, n-k), b = a + k - 1. span_i = t[b] - t[a]. print rate = k / span_i (prints per second). volume rate = (sum of size over [a, b]) / span_i (shares per second).",
+    "why_this_family": "Within-session arrival rate spans several orders of magnitude (v1 measured T=0 print counts from 296 to 831,614 on the analysis cohort alone). A kNN estimator's resolution follows local density: the window is narrow where prints are dense and wide where they are sparse, so the same k is usable at the peak and in the tails. FIXED-WIDTH BINNING IS PROHIBITED (v2 T1, escalation row 7) precisely because any width adequate at the peak is empty in the tails.",
+    "why_centred_block": "It is the prompt's own wording -- 'the elapsed time spanning the k nearest prints' -- made exact and O(n) vectorizable. For an interior point the centred block IS the set of k nearest arrivals. It is fully deterministic and has no tuning beyond k.",
+    "evaluation_support": "the arrival times themselves. The curve is evaluated at every in-window T=0 print, so the sampling of the OUTPUT is as adaptive as the estimator and no output grid is imposed. Aggregation onto a common axis for the pooled profile charts is a display step and is labeled as such.",
+    "boundary_rule": "at the first and last k//2 prints the block is clamped, so the span is one-sided. This is a known boundary effect of any windowed estimator; it is not corrected. Failure row 4 (peak within margin of the window edge) is the pre-registered guard.",
+    "zero_span_floor_seconds": 1e-09,
+    "zero_span_floor_note": "If all k prints in a block share one timestamp the span is 0 and the rate is infinite. The span is floored at the sip_timestamp resolution (1 ns) and the count of floored evaluations is reported per event. This is the exact quantity the tie-variant comparison (T1c / failure row 8-tie) exists to expose: in the collapse variant a zero span cannot occur.",
+    "k_grid": [5, 15, 50, 150, 500],
+    "k_reference": 50,
+    "k_reference_note": "A REPORTING CONVENTION, not a selection. Escalation row 12 forbids selecting a k as preferable; the prompt requires one designated for headline reporting. k=50 is the geometric centre of the grid. Every headline number is reported with its across-grid spread, and the full grid is primary evidence (failure row 1), not a sensitivity afterthought.",
+    "k_grid_justification": "Spans two orders of magnitude (5 to 500, 100x) as required. Lower endpoint: k=5 is the smallest window that averages more than a couple of inter-arrival gaps, below which the estimate is dominated by single-gap noise and by ties. Upper endpoint: k=500 is ~2% of the median analysis-cohort event (25,204 T=0 prints) and 0.06% of the largest (831,614) -- wide enough to smooth away burst-scale structure entirely, which is what makes it a meaningful upper bound for the resolution-instability test.",
+    "k_exceeds_n_rule": "Where k >= n for an event, the estimator degenerates to a single whole-session window and no peak is resolvable. Flagged k_exceeds_n, carried, excluded from that k's statistics with the n stated. The analysis cohort's smallest event is 296 prints, so this affects only k=500 on the thinnest events."
+  },
+
+  "tie_handling": {
+    "variants": ["as_is", "collapse_same_timestamp"],
+    "as_is": "arrival times used exactly as recorded; zero spans floored per estimator.zero_span_floor_seconds",
+    "collapse_same_timestamp": "consecutive prints sharing a sip_timestamp are collapsed to a single arrival with summed size; timestamps become strictly increasing and a zero span is impossible",
+    "run_at": "the reference k for both variants; the full k grid for the as_is variant",
+    "divergence_tolerance": {
+      "max_median_abs_log_ratio_decay": 0.6931471805599453,
+      "max_median_abs_log_ratio_decay_desc": "ln(2). Fail if the median over events of |log(decay_collapse / decay_as_is)| exceeds it, i.e. the typical decay timescale moves by more than a factor of 2 between variants.",
+      "max_share_peak_moved_beyond_decay": 0.25,
+      "max_share_peak_moved_beyond_decay_desc": "Fail if more than this share of events have their peak location move, between variants, by more than that event's own decay timescale."
+    },
+    "on_divergence": "escalation row 8 — hard stop, post both."
+  },
+
+  "timescales": {
+    "normalization": "each event's rate curve is divided by that event's own peak rate (D6: shape uses no baseline)",
+    "decay_fractions": [0.5, 0.36787944117144233, 0.1],
+    "decay_fraction_labels": ["half", "one_over_e", "one_tenth"],
+    "decay_rule": "elapsed time from peak until the normalized curve falls to the fraction AND STAYS BELOW IT for the remainder of the in-window session. Implemented as: the last evaluation point after the peak whose normalized rate exceeds the fraction; the crossing is the next point after that.",
+    "never_reached_rule": "if the normalized curve exceeds the fraction at the final in-window print, the crossing does not exist. Reported as never_reached with its own count. NEVER imputed and never replaced by the window edge.",
+    "terminal_condition": {
+      "baseline": "a SINGLE SCALAR per event: total prints across the collected T-3..T-1 in-window sessions divided by their total in-window minutes (prints/min), converted to prints/sec. Whole-day, NOT time-of-day matched (D6).",
+      "collected_rule": "only sessions the canonical trades_bitmap marks collected contribute, to both numerator and denominator. Where the bitmap is NULL, fall back to print presence.",
+      "volume_baseline": "the same construction on summed size (shares/min), used for the volume observable",
+      "multiples": [1.0, 2.0, 5.0],
+      "rule": "elapsed time from peak until the UNNORMALIZED rate falls below multiple * baseline and stays below",
+      "undefined_rule": "baseline unusable (no collected flanking session, or zero flanking prints) => terminal condition undefined. Flagged, carried, counted."
+    }
+  },
+
+  "level_conditioning": {
+    "covariate": "absolute peak rate (unnormalized), per observable, per k",
+    "strata": "quartiles of absolute peak rate, computed within the analysis cohort",
+    "n_strata": 4,
+    "rank_correlation": "Spearman, timescale vs absolute peak rate, with n",
+    "also_report": "un-normalized profiles as a diagnostic alongside the normalized ones, so the discarded dimension is visible rather than assumed away (T4d)",
+    "interpretation_rule": "If timescale varies systematically with absolute level the deliverable is a CONDITIONED FAMILY, not one number, and every downstream phase inherits the conditioning variable. That is a legitimate result, not a failure. It is failure row 3 only if the variation is large enough that no single anchor timescale is usable. State the observed relationship and stop."
+  },
+
+  "failure_criteria": {
+    "row_0": {"mode": "Cooper rejects the profile on visual review of chart 08 against the tape", "threshold": null,
+      "note": "Cooper's judgment. Overrides all other rows in either direction. Now also covers the detection marker's placement on the tape. A pass elsewhere is not acceptance."},
+    "row_1": {
+      "mode": "Resolution instability (caveat 1)",
+      "observable": "ratio of the pooled median decay-to-half at the widest k (500) to that at the narrowest k (5), analysis cohort, reference tie variant",
+      "threshold_max_ratio": 3.0,
+      "direction": "FAIL if the ratio exceeds threshold_max_ratio or falls below its reciprocal",
+      "justification": "Some k-dependence is unavoidable: a wider window smooths the peak and mechanically lengthens time-to-half. The question is whether the answer is DOMINATED by resolution. Across a 100x change in k, a factor of 3 in the timescale means the timescale moves less than one decade while the estimator moves two -- the market's structure still dominates. A ratio above 3 means the estimator is contributing at least as much as the data, which is the v1 Arm A defect (burst count vs print count, Spearman +0.96) in a new form."
+    },
+    "row_2": {
+      "mode": "Observable disagreement",
+      "observable": "Spearman rank correlation between print-rate and volume-rate decay-to-half, per event, at the reference k",
+      "threshold_min_spearman": 0.5,
+      "direction": "FAIL if below threshold_min_spearman",
+      "justification": "Print rate is suspected of carrying a price-level fragmentation artifact. If the two observables rank events differently, at least one is measuring fragmentation rather than participation. 0.5 is a moderate-agreement floor: below it, the per-event ordering is more disagreement than agreement."
+    },
+    "row_3": {
+      "mode": "Level dependence too strong to pool (caveat 2)",
+      "observable": "ratio of median decay-to-half in the top absolute-peak-rate quartile to that in the bottom quartile",
+      "threshold_max_ratio": 5.0,
+      "direction": "FAIL if the ratio exceeds threshold_max_ratio or falls below its reciprocal",
+      "justification": "Mild dependence is a conditioning result, not a failure — the prompt says so explicitly. This row fires only where no single anchor timescale is usable. A 5x spread between the extreme quartiles means the pooled median describes neither end."
+    },
+    "row_4": {
+      "mode": "Peak not captured in-window",
+      "observable": "share of analysis-cohort events whose peak sits within margin_seconds of either in-window edge",
+      "margin_seconds": 300,
+      "threshold_max_share": 0.20,
+      "direction": "FAIL if the share exceeds threshold_max_share",
+      "justification": "A peak against the window edge means the profile is truncated and the timescale is a lower bound. 300s is the estimator's own scale at the reference k on a typical event. 0.20 allows the genuine premarket-open and close-auction cases without permitting systematic truncation."
+    },
+    "row_5": {
+      "mode": "No decay within session",
+      "observable": "share of analysis-cohort events never reaching the 1/2 fraction before the in-window session end",
+      "threshold_max_share": 0.20,
+      "direction": "FAIL if the share exceeds threshold_max_share",
+      "justification": "If a fifth of the cohort never halves, there is nothing to anchor to for that fifth and the pooled decay timescale is conditioned on survival."
+    },
+    "row_6": {
+      "mode": "Peak instability across the grid",
+      "observable": "median over events of (max-minus-min peak location across the k grid) divided by that event's decay-to-half at the reference k",
+      "threshold_max_ratio": 1.0,
+      "direction": "FAIL if above threshold_max_ratio",
+      "justification": "An anchor that moves further, as the estimator's resolution changes, than the quantity it anchors is not an anchor. A ratio of 1.0 is the exact break-even."
+    },
+    "row_7": {
+      "mode": "Anchor does not exist for the cohort",
+      "observable": "share of analysis-cohort events in the never-crosses condition, at the reference threshold 1.30",
+      "threshold_max_share": 0.20,
+      "direction": "FAIL if above threshold_max_share",
+      "justification": "Phase 8 observed 2.50% det_undefined (394/15,763) on the same family of rule over the full D1 population. A cohort share up to 0.20 leaves generous room for cohort-size noise and for the stratified extension reaching thinner events, while still firing if the tick-derived anchor simply does not exist for a large part of the cohort."
+    },
+    "row_8": {
+      "mode": "Phase 8 disagreement",
+      "observable": "share of comparable events where the 60s-poll / 1.30-threshold anchor differs from Phase 8 det_minute by more than the tolerance",
+      "tolerance_minutes": 1,
+      "threshold_max_share": 0.10,
+      "direction": "FAIL if above threshold_max_share",
+      "justification": "The two are the same rule at the same threshold on the same tick archive, so they should agree to the minute. 0.10 tolerates a small tail of boundary and reference-price differences; above that, one of the two is wrong and per R1.4b that is a hard stop, not a reconciliation exercise."
+    },
+    "row_9": {
+      "mode": "Polling dominates the answer",
+      "observable": "ratio of median detection-to-peak at the instantaneous poll to that at the 60s poll, analysis cohort, reference k and threshold",
+      "threshold_max_ratio": 2.0,
+      "direction": "FAIL if above threshold_max_ratio",
+      "justification": "This is the row to watch. If detection-to-peak collapses as the polling interval widens, the runway is an artifact of assuming instantaneous detection — the specific bias D7 exists to expose. A 60s poll can only move detection later by at most 60s, so a ratio above 2 means the typical runway is of the same order as the polling interval itself, i.e. the answer is mostly the assumption. Reported plainly, never resolved by selecting the friendlier poll interval."
+    },
+    "on_fire": "Hard stop. Commit, post observed values and charts. Do not adjust parameters to make a criterion pass. Do not reintroduce segmentation, thresholding of the intensity series, or Hawkes calibration — all three are closed by D6 and reopening any requires a numbered decision.",
+    "standing_lesson": "A stability pass is not evidence of correctness. Both v1 arms passed every numeric row while being wrong. Rows 1-9 exist to DISQUALIFY, never to endorse."
+  },
+
+  "charts": {
+    "engine": "plotly, standalone HTML, one per file, kaleido-verified .png sibling",
+    "caption_requires": ["sample", "n", "filters applied", "config hash"],
+    "rules": "distribution not just centre; n per bucket always; no smoothing; log axes where multiplicative; outliers shown, never clipped",
+    "profile_display_grid": {
+      "note": "A DISPLAY grid only, for aggregating per-event normalized curves onto a common axis. It is not part of the estimator and imposes no binning on the measurement.",
+      "log_seconds_min": 0.01,
+      "log_seconds_max": 14400,
+      "n_points": 121,
+      "spacing": "logarithmic, symmetric about the anchor for the signed axes"
+    },
+    "chart_08": {
+      "dir": "results/phase_10/charts/v2_08_tape_review/",
+      "gitignore_rule": "nested .gitignore containing '*' inside the chart directory — achieves the §12 outcome without writing outside the escalation-row-13 allowlist, the same pattern v1 used",
+      "selection_rule": ["all dev_v4_primary", "all dev_v4_sidecar, labeled", "all row_cap_census, labeled", "every event flagged by any failure row (never-crosses, k_exceeds_n, peak-at-edge, never-decays, reference_undefined)", "stratified draw over the remaining activity_extension spanning the detection-to-peak range including its negative tail"],
+      "max_charts": 90,
+      "max_scatter_points": 150000,
+      "over_cap_rule": "top panel plots a seeded uniform-random subsample with the rate stated (uniform sampling preserves relative density); the intensity curves and all markers always come from the full-resolution computation",
+      "over_cap_seed": 42,
+      "index": "sortable index over the FULL 114-event cohort, charted or not (Agent_Prompt_Standard §7)"
+    }
+  },
+
+  "runtime_ceilings": {
+    "tick_read_seconds_per_event": 180,
+    "estimator_seconds_per_event_all_k_all_observables": 120,
+    "estimator_seconds_aggregate": 3600,
+    "detection_anchor_seconds_aggregate": 1200,
+    "on_breach": "escalation row 5 — hard stop; do not silently reduce the cohort or the grid"
+  },
+
+  "paths": {
+    "duckdb": "data/duckdb/main.duckdb",
+    "filtered_root": "data/filtered",
+    "cohort_manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+    "phase8_detection_anchors": "results/phase_8/artifacts/a102_detection_anchors.parquet",
+    "phase9_cross_session_flags": "results/phase_9/artifacts/t1_cross_session_flags.parquet",
+    "out_artifacts": "results/phase_10/artifacts/",
+    "out_charts": "results/phase_10/charts/"
+  },
+
+  "write_allowlist": ["prompts/", "config/", "research/phase_10/", "results/phase_10/",
+                      "docs/Universe-Decisions.md (APPEND-ONLY)", "docs/Research-Library-Map.md (APPEND-ONLY)"],
+  "write_allowlist_note": "Escalation row 13, as amended by R1.1. The two docs entries are append-only: no existing line may be modified or deleted, and the diff must show 0 deletions.",
+
+  "reporting": {
+    "description_only": "Escalation rows 11 and 12. No output described as a detector, entry signal, operating point or latency budget. No k, observable, poll interval, threshold or timescale selected, recommended or called preferable.",
+    "poll_interval_rule": "Detection-to-peak is a FAMILY indexed by polling interval, not a single distribution. The spread across the family is a headline number. Any detection-anchored figure quoted without its poll interval is incomplete (D7).",
+    "instantaneous_label": "The instantaneous poll is labeled as the physical-impossibility upper bound on runway everywhere it appears.",
+    "segment_rule": "Every timescale table is additionally reported split by detection segment (R1.3d).",
+    "anchor_independence_statement": "The report states plainly, once, in the method section: detection comes from a price threshold, peak comes from arrival intensity, both are computed from the same T=0 tick stream; the comparison is legitimate but the two anchors are not independently sourced.",
+    "n_rule": "Every statistic carries n. Every claim cites its chart file."
+  },
+
+  "config_hash_note": "Committed before any v2 measurement run. Outputs key on its content hash."
+}
