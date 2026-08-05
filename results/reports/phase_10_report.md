@@ -3,13 +3,32 @@
 tags:
   - type/research
   - domain/microstructure
-  - status/awaiting-approval
+  - status/superseded
 created: 2026-08-04
 phase: 10
 config_hash: 6753cbe9
 ---
 
-# Phase 10 — Burst Decomposition
+
+> [!warning] SUPERSEDED — this is the v1 evidentiary record, not the phase's findings
+> Phase 10 **v1 (Burst Decomposition, segmentation)** was **rejected at its approval gate on
+> pre-registered failure criterion row 0** — Cooper's visual review of chart 07 against the tape.
+> It is superseded by `docs/Universe-Decisions.md` **D6**, which withdraws burst count, burst
+> spacing and per-burst move share as deliverables and replaces segmentation with continuous
+> intensity profiling.
+>
+> **Every burst statistic below is retained as the evidence D6 rests on (D6 consequence (b)), and
+> is not an input to any downstream phase.** Do not quote a burst count, duration, spacing or
+> move share from this document as a finding.
+>
+> The live phase spec is `prompts/phase_10_v2.md` (+ `prompts/phase_10_v2_r1.md`); the live report
+> is `results/phase_10/REPORT.md`.
+>
+> The read-path equivalence proof (§1), the frozen cohort (§2) and the two defects recorded in §9
+> are **method results that survive D6** and remain valid.
+
+
+# Phase 10 v1 (SUPERSEDED) — Burst Decomposition
 
 **Branch:** `phase/10` · **Baseline:** `phase-9-approved` (`7909d66`) · **config_hash:** `6753cbe9`
 **Status:** complete, awaiting Cooper review. No escalation fired. No pre-registered failure criterion fired.
