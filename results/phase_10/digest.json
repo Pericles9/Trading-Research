@@ -1,0 +1,200 @@
+{
+  "phase": "10",
+  "version": "v2",
+  "title": "Intensity Profile and Burst Timescale",
+  "config_hash": "d48912b0",
+  "status": "escalated",
+  "escalation": {
+    "criterion": "pre-registered failure rows 1, 2, 3, 6",
+    "observed": {
+      "row_1_resolution_instability": {
+        "print_rate": 0.0228,
+        "volume_rate": 0.1991,
+        "band": [
+          0.333,
+          3.0
+        ]
+      },
+      "row_2_observable_disagreement": {
+        "spearman": 0.354,
+        "floor": 0.5
+      },
+      "row_3_level_dependence": {
+        "print_rate": 539.06,
+        "volume_rate": 9.84,
+        "band": [
+          0.2,
+          5.0
+        ]
+      },
+      "row_6_peak_instability": {
+        "print_rate": 96.23,
+        "volume_rate": 115.86,
+        "ceiling": 1.0
+      }
+    },
+    "passed": [
+      "row_4",
+      "row_5",
+      "row_7",
+      "row_8",
+      "row_9"
+    ],
+    "row_0": "not evaluated - chart 08 not produced; acceptance is not on the table under a fired failure"
+  },
+  "decisions_recorded": [
+    "D6 appended to docs/Universe-Decisions.md (+86/-0)",
+    "D7 appended to docs/Universe-Decisions.md",
+    "Phase 10 entry appended to docs/Research-Library-Map.md (+57/-0)"
+  ],
+  "headline_metrics": [
+    {
+      "name": "detection_to_peak_median_seconds_poll1s_print",
+      "value": 1975.2,
+      "n": 98,
+      "detail": "IQR -24.1 to 9823.3; 28.6% NEGATIVE (peak preceded detection); signed and unclipped",
+      "source": "research/phase_10/v2_t1_t4_profile.py:main",
+      "chart": "results/phase_10/charts/v2_03_detection_to_peak.html"
+    },
+    {
+      "name": "detection_to_peak_negative_share_poll1s",
+      "value": 0.286,
+      "n": 98,
+      "detail": "identical for both observables; 27.6% at instantaneous poll, 29.6% at 60s",
+      "source": "research/phase_10/v2_t1_t4_profile.py:main",
+      "chart": "results/phase_10/charts/v2_03_detection_to_peak.html"
+    },
+    {
+      "name": "decay_to_half_median_seconds_print_k50",
+      "value": 67.4,
+      "n": 100,
+      "detail": "NOT STABLE - 5905.2/2602.8/67.4/17.1/134.6 s across k=5/15/50/150/500, non-monotonic",
+      "source": "research/phase_10/v2_t5_stability.py:main",
+      "chart": "results/phase_10/charts/v2_05_resolution_stability.html"
+    },
+    {
+      "name": "never_crosses_share_pooled",
+      "value": 0.02,
+      "n": 100,
+      "detail": "2/100 at threshold 1.30; Phase 8 saw 2.50% det_undefined over full D1",
+      "source": "research/phase_10/v2_r13_detection.py:main",
+      "chart": "results/phase_10/charts/v2_03_detection_to_peak.html"
+    },
+    {
+      "name": "phase8_agreement_exact",
+      "value": 110,
+      "n": 110,
+      "detail": "crossing-minute vs det_minute 110/110 exact; reference price max rel dev 0.000e+00",
+      "source": "research/phase_10/v2_r14_phase8_check.py:main",
+      "chart": "results/phase_10/charts/v2_03_detection_to_peak.html"
+    },
+    {
+      "name": "decay_to_half_premarket_vs_rth_seconds",
+      "value": [
+        6693.2,
+        6.2
+      ],
+      "n": [
+        28,
+        70
+      ],
+      "detail": "detection-segment conditioning: premarket 6693.2s / rth 6.2s; negative share 0.0% vs 40.0%",
+      "source": "research/phase_10/v2_t1_t4_profile.py:main",
+      "chart": "results/phase_10/charts/v2_06_level_dependence.html"
+    },
+    {
+      "name": "poll_family_spread_median_seconds",
+      "value": [
+        1975.9,
+        1955.7
+      ],
+      "n": 98,
+      "detail": "instantaneous (impossible upper bound) to 60s poll = 1.0% move; failure row 9 PASS at 1.0103",
+      "source": "research/phase_10/v2_t5_stability.py:main",
+      "chart": "results/phase_10/charts/v2_03_detection_to_peak.html"
+    }
+  ],
+  "decisions_log": [
+    {
+      "decision": "detection anchor source",
+      "options_considered": [
+        "canonical spine (as v2 T2b specified)",
+        "Phase 8 det_minute artifact",
+        "derive from tick per a pre-registered rule"
+      ],
+      "chose": "derive from tick (D7)",
+      "why": "The spine has no timestamp column of any kind and never did; the v2 prompt asserted a source without verifying it. Phase 8's det_minute is minute-grain on a seconds-to-minutes quantity and is a post-hoc re-derivation, not scanner output. scanner_hit_catalog.json has a usable timestamp for 3 of 114 cohort events."
+    },
+    {
+      "decision": "rate estimator",
+      "options_considered": [
+        "fixed-width bins (prohibited)",
+        "kernel intensity with fixed bandwidth",
+        "centred k-block adaptive kNN"
+      ],
+      "chose": "centred k-block adaptive kNN evaluated at arrival times",
+      "why": "Within-session rate spans orders of magnitude, so resolution must follow local density. The centred k-block is the prompt's own 'elapsed time spanning the k nearest prints' made exact and O(n), with no tuning beyond k."
+    },
+    {
+      "decision": "A12 applicability",
+      "options_considered": [
+        "treat the trigger as within-session",
+        "apply A12"
+      ],
+      "chose": "apply A12",
+      "why": "The D7 trigger compares a T=0 price to the T-1 RTH close - a cross-session ratio. flag_cross_session_extreme on the (tm1,t0) pair was joined from the Phase 9 artifact, never re-derived. 6 cohort events flagged; 0 of them never-cross."
+    },
+    {
+      "decision": "chart 08 not produced",
+      "options_considered": [
+        "produce the 80-chart tape review",
+        "skip and state it"
+      ],
+      "chose": "skip and state it",
+      "why": "Chart 08 is the acceptance gate for row 0. Acceptance is not on the table while four numeric rows have fired; producing it would invert the gate order. Stated in REPORT section 11, not silently skipped."
+    }
+  ],
+  "surprises": [
+    "About 28% of events have peak arrival intensity BEFORE detection (27.6% at the instantaneous poll, 29.6% at 60s). D6 anticipated this as a first-order finding about the whole program and it is present in this cohort.",
+    "Detection segment splits the decay timescale by three orders of magnitude: premarket median decay-to-half 6,693.2s with 0% negative detection-to-peak, versus rth 6.2s with 40% negative. Segment is not an optional conditioning variable on this evidence.",
+    "The decay timescale as specified - 'falls to the fraction AND STAYS BELOW for the remainder of the session' - is not well-posed on this data. Per-event values swing across ~10 orders of magnitude as k varies, down to microseconds, because the criterion is decided by whether any later noise spike re-crosses the fraction. That is the mechanism behind failure rows 1 and 6.",
+    "Failure row 9 PASSES comfortably (1.010): widening the poll from instantaneous to 60s moves median detection-to-peak by 1.0%. The optimistic bias D7 was written to expose is not material on this cohort - the runway figure is dominated by something other than the polling assumption.",
+    "The derived anchor reproduces Phase 8's det_minute on 110/110 events exactly, and the independently recomputed reference price matches tick_close_t_minus_1_rth to 0.000e+00 relative deviation.",
+    "Tie handling turned out not to matter at the reference k: median |log ratio| of decay-to-half between tie variants is exactly 0.000 and the peak is identical on 87/100 events. Max tie run is 18, well below k=50."
+  ],
+  "artifacts": [
+    "results/phase_10/artifacts/v2_t0a_escalation_row9.json",
+    "results/phase_10/artifacts/v2_r13_detection.parquet",
+    "results/phase_10/artifacts/v2_r13_detection.json",
+    "results/phase_10/artifacts/v2_r13_reference_price.parquet",
+    "results/phase_10/artifacts/v2_r14_phase8_crosscheck.json",
+    "results/phase_10/artifacts/v2_t0d_tie_structure.parquet",
+    "results/phase_10/artifacts/v2_t0d_tie_structure.json",
+    "results/phase_10/artifacts/v2_t1_event_metrics.parquet",
+    "results/phase_10/artifacts/v2_t1_profiles.parquet",
+    "results/phase_10/artifacts/v2_t1_t4_summary.json",
+    "results/phase_10/artifacts/v2_t5_stability.json",
+    "results/phase_10/artifacts/v2_t6_chart_manifest.json"
+  ],
+  "charts": [
+    "results/phase_10/charts/v2_01_profile_peak_anchored.html",
+    "results/phase_10/charts/v2_02_profile_detection_anchored.html",
+    "results/phase_10/charts/v2_03_detection_to_peak.html",
+    "results/phase_10/charts/v2_04_decay_timescale.html",
+    "results/phase_10/charts/v2_05_resolution_stability.html",
+    "results/phase_10/charts/v2_06_level_dependence.html",
+    "results/phase_10/charts/v2_07_observable_agreement.html"
+  ],
+  "commits": [
+    "8170c53",
+    "086f280",
+    "81826db",
+    "b71bcd0",
+    "46398d1",
+    "528eff7",
+    "de5ed07",
+    "38082da",
+    "b8495b3"
+  ],
+  "reproduce": "for s in v2_t0a_preconditions v2_r13_detection v2_r14_phase8_check v2_t0d_ties v2_t1_t4_profile v2_t5_stability v2_t6_charts; do .venv/Scripts/python.exe research/phase_10/$s.py; done"
+}
