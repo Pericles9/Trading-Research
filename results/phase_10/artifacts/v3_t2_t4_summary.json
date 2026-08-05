@@ -1,0 +1,366 @@
+{
+  "phase": "10",
+  "version": "v3",
+  "task": "T2-T4",
+  "config_hash": "c5aea7f6",
+  "envelope": {
+    "scale_rule": "The envelope scale IS the T1 knee, per segment. It is NOT a free parameter and is NOT swept independently of the gate.",
+    "k_from_knee": "k_env = clip(round(n_prints / session_span_seconds * knee_seconds), 5, n_prints-1) - the expected number of prints in a knee-duration window at the event's own mean rate. Derived from the knee, adaptive per event, same estimator as the fast curve.",
+    "fast_k": 50,
+    "knee_used_seconds": {
+      "print_rate": {
+        "premarket": 16.0,
+        "rth": 127.99999999999999
+      },
+      "volume_rate": {
+        "premarket": 16.0,
+        "rth": 63.999999999999986
+      }
+    },
+    "k_env": {
+      "print_rate": {
+        "n": 100,
+        "q0": 5.0,
+        "q25": 5.0,
+        "q50": 35.0,
+        "q75": 89.0,
+        "q100": 846.0,
+        "mean": 69.64
+      },
+      "volume_rate": {
+        "n": 100,
+        "q0": 5.0,
+        "q25": 5.0,
+        "q50": 21.5,
+        "q75": 50.5,
+        "q100": 423.0,
+        "mean": 42.6
+      }
+    }
+  },
+  "excursion_rule": "ON where rate/envelope >= on_multiplier, OFF where rate/envelope < off_multiplier, hysteresis between. Operates on the RATIO of rate to envelope, NEVER on rate against a constant - the defect D8 exists to prevent.",
+  "t2b_knee_interval_sensitivity": {
+    "print_rate": {
+      "n": 100,
+      "jaccard": {
+        "n": 100,
+        "q0": 0.0,
+        "q25": 0.0,
+        "q50": 0.07354505307169514,
+        "q75": 0.7032926911686439,
+        "q100": 1.0,
+        "mean": 0.32129252105098344
+      }
+    },
+    "volume_rate": {
+      "n": 100,
+      "jaccard": {
+        "n": 100,
+        "q0": 0.0,
+        "q25": 0.037593730383901666,
+        "q50": 0.10707549096560556,
+        "q75": 0.8193401213980864,
+        "q100": 0.9989942371975093,
+        "mean": 0.34596619821232194
+      }
+    }
+  },
+  "t3_counts": {
+    "print_rate": {
+      "n_events": 100,
+      "n_subbursts": 6219,
+      "count": {
+        "n": 100,
+        "q0": 0.0,
+        "q25": 13.0,
+        "q50": 27.0,
+        "q75": 53.25,
+        "q100": 372.0,
+        "mean": 56.79
+      },
+      "by_segment": {
+        "no_detection": {
+          "n": 2,
+          "q0": 8.0,
+          "q25": 9.25,
+          "q50": 10.5,
+          "q75": 11.75,
+          "q100": 13.0,
+          "mean": 10.5
+        },
+        "premarket": {
+          "n": 28,
+          "q0": 0.0,
+          "q25": 21.0,
+          "q50": 131.0,
+          "q75": 221.25,
+          "q100": 372.0,
+          "mean": 134.64285714285714
+        },
+        "rth": {
+          "n": 70,
+          "q0": 0.0,
+          "q25": 14.25,
+          "q50": 20.5,
+          "q75": 38.75,
+          "q100": 117.0,
+          "mean": 26.97142857142857
+        }
+      }
+    },
+    "volume_rate": {
+      "n_events": 100,
+      "n_subbursts": 11212,
+      "count": {
+        "n": 100,
+        "q0": 0.0,
+        "q25": 33.0,
+        "q50": 70.0,
+        "q75": 128.0,
+        "q100": 502.0,
+        "mean": 103.6
+      },
+      "by_segment": {
+        "no_detection": {
+          "n": 2,
+          "q0": 13.0,
+          "q25": 13.75,
+          "q50": 14.5,
+          "q75": 15.25,
+          "q100": 16.0,
+          "mean": 14.5
+        },
+        "premarket": {
+          "n": 28,
+          "q0": 0.0,
+          "q25": 128.0,
+          "q50": 202.0,
+          "q75": 280.0,
+          "q100": 502.0,
+          "mean": 219.17857142857142
+        },
+        "rth": {
+          "n": 70,
+          "q0": 0.0,
+          "q25": 25.5,
+          "q50": 48.0,
+          "q75": 94.5,
+          "q100": 219.0,
+          "mean": 59.91428571428571
+        }
+      }
+    }
+  },
+  "t4_arm_a_test": {
+    "pooled": {
+      "print_rate": {
+        "t0_print_count": {
+          "n": 83,
+          "spearman": 0.27718447732236096,
+          "spearman_pvalue": 0.005239587176881828,
+          "loglog_slope": 0.26046165338581506
+        },
+        "session_duration_seconds": {
+          "n": 83,
+          "spearman": 0.20554759814289958,
+          "spearman_pvalue": 0.04020902869369748,
+          "loglog_slope": 1.4249492071339542
+        },
+        "absolute_peak_rate": {
+          "n": 83,
+          "spearman": 0.1680051798984091,
+          "spearman_pvalue": 0.09475566982207174,
+          "loglog_slope": 0.07938927722766784
+        },
+        "n_events": 100,
+        "subbursts_per_1000_prints": {
+          "n": 100,
+          "q0": 0.0,
+          "q25": 0.3719708698929556,
+          "q50": 0.6480880025130819,
+          "q75": 15.76074450358526,
+          "q100": 26.941362916006337,
+          "mean": 6.9879759972719695
+        },
+        "subbursts_per_hour": {
+          "n": 100,
+          "q0": 0.0,
+          "q25": 0.9471137331469553,
+          "q50": 2.0141196479444297,
+          "q75": 3.9668099803888635,
+          "q100": 28.906945081542982,
+          "mean": 4.02178757212376
+        }
+      },
+      "volume_rate": {
+        "t0_print_count": {
+          "n": 98,
+          "spearman": 0.35307284804119016,
+          "spearman_pvalue": 0.00031443432518134045,
+          "loglog_slope": 0.1849112408505339
+        },
+        "session_duration_seconds": {
+          "n": 98,
+          "spearman": 0.3356457459639977,
+          "spearman_pvalue": 0.000640500383836824,
+          "loglog_slope": 1.1100816364518418
+        },
+        "absolute_peak_rate": {
+          "n": 98,
+          "spearman": 0.316682370425455,
+          "spearman_pvalue": 0.0013271152126519397,
+          "loglog_slope": 0.057161105218621215
+        },
+        "n_events": 100,
+        "subbursts_per_1000_prints": {
+          "n": 100,
+          "q0": 0.0,
+          "q25": 0.6298797489314046,
+          "q50": 4.637324668850511,
+          "q75": 25.45761924844203,
+          "q100": 51.24223602484472,
+          "mean": 12.222809468043035
+        },
+        "subbursts_per_hour": {
+          "n": 100,
+          "q0": 0.0,
+          "q25": 2.5292509910762773,
+          "q50": 4.783665829589589,
+          "q75": 9.63563161868087,
+          "q100": 33.56935557856604,
+          "mean": 7.289383650616089
+        }
+      }
+    },
+    "by_segment": {
+      "print_rate": {
+        "premarket": {
+          "t0_print_count": {
+            "n": 21,
+            "spearman": 0.07942873331993938,
+            "spearman_pvalue": 0.6878526497546897,
+            "loglog_slope": 0.0980231435621287
+          },
+          "session_duration_seconds": {
+            "n": 21,
+            "spearman": 0.0799803217457723,
+            "spearman_pvalue": 0.6857936638163991,
+            "loglog_slope": -1.5340736054870743
+          },
+          "absolute_peak_rate": {
+            "n": 21,
+            "spearman": 0.028682598143311446,
+            "spearman_pvalue": 0.8848025912684656,
+            "loglog_slope": 0.05211856706222748
+          },
+          "n_events": 28
+        },
+        "rth": {
+          "t0_print_count": {
+            "n": 60,
+            "spearman": 0.3030024602703974,
+            "spearman_pvalue": 0.010781602419544583,
+            "loglog_slope": 0.1291698772011642
+          },
+          "session_duration_seconds": {
+            "n": 60,
+            "spearman": 0.1324112157806043,
+            "spearman_pvalue": 0.2745236720810286,
+            "loglog_slope": 0.5136134136020859
+          },
+          "absolute_peak_rate": {
+            "n": 60,
+            "spearman": 0.16796055808355595,
+            "spearman_pvalue": 0.16457382496334452,
+            "loglog_slope": 0.03771554559103953
+          },
+          "n_events": 70
+        }
+      },
+      "volume_rate": {
+        "premarket": {
+          "t0_print_count": {
+            "n": 27,
+            "spearman": 0.03339720902578787,
+            "spearman_pvalue": 0.8660239292564892,
+            "loglog_slope": 0.06105231260743129
+          },
+          "session_duration_seconds": {
+            "n": 27,
+            "spearman": 0.35587189945511666,
+            "spearman_pvalue": 0.06308147326999089,
+            "loglog_slope": 0.5439091584455269
+          },
+          "absolute_peak_rate": {
+            "n": 27,
+            "spearman": 0.10347659845694931,
+            "spearman_pvalue": 0.6002833833274763,
+            "loglog_slope": 0.038055256679734986
+          },
+          "n_events": 28
+        },
+        "rth": {
+          "t0_print_count": {
+            "n": 69,
+            "spearman": 0.06940118379563547,
+            "spearman_pvalue": 0.5680769432548544,
+            "loglog_slope": -0.0035833484097935213
+          },
+          "session_duration_seconds": {
+            "n": 69,
+            "spearman": 0.18279494854493397,
+            "spearman_pvalue": 0.1298666100960568,
+            "loglog_slope": 0.05185332269052761
+          },
+          "absolute_peak_rate": {
+            "n": 69,
+            "spearman": 0.15707136302310234,
+            "spearman_pvalue": 0.19409210025842583,
+            "loglog_slope": 0.011482492702782376
+          },
+          "n_events": 70
+        }
+      }
+    }
+  },
+  "failure_row_1": {
+    "mode": "Sub-burst count is a restatement of print count (the Arm A test)",
+    "rows": [
+      {
+        "row": 1,
+        "observable": "print_rate",
+        "spearman_vs_print_count": 0.27718447732236096,
+        "loglog_slope": 0.26046165338581506,
+        "threshold_max_spearman": 0.5,
+        "threshold_max_slope": 0.35,
+        "arm_a_reference": {
+          "spearman": 0.96,
+          "slope": 0.85
+        },
+        "pass": true
+      },
+      {
+        "row": 1,
+        "observable": "volume_rate",
+        "spearman_vs_print_count": 0.35307284804119016,
+        "loglog_slope": 0.1849112408505339,
+        "threshold_max_spearman": 0.5,
+        "threshold_max_slope": 0.35,
+        "arm_a_reference": {
+          "spearman": 0.96,
+          "slope": 0.85
+        },
+        "pass": true
+      }
+    ],
+    "any_failed": false
+  },
+  "timing": {
+    "total_seconds": 19.7
+  },
+  "source": "research/phase_10/v3_t2_t4_subbursts.py:main",
+  "artifacts": [
+    "results/phase_10/artifacts/v3_t3_subbursts.parquet",
+    "results/phase_10/artifacts/v3_t3_event_metrics.parquet"
+  ]
+}
