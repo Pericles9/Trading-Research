@@ -235,11 +235,37 @@ precisely what you would expect from a method that is stably measuring the wrong
 | `results/phase_10/artifacts/v4_causal_audit.parquet` | 18 fields tagged |
 | `results/phase_10/artifacts/v4_t5_t6_summary.json`, `v4_pipeline_raw.json` | measurements, failure rows |
 | `results/phase_10/charts/v4_01–05*.html` (+ `.png`) | **kaleido-verified 5/5** |
-| `results/phase_10/charts/v4_06_tape_review/` | **60 charts + full-cohort index, all 10 `no_threshold` events charted first**, 328 MB, untracked via nested `.gitignore` |
+| `results/phase_10/charts/v4_06_tape_review/` | **60 charts + full-cohort index, all 11 `no_threshold` events charted first**, 5 panels each, 323 MB, untracked via nested `.gitignore` |
 | `results/phase_10/{REPORT.md, digest.json}` | this |
 
 Prior versions retained: v1 (`REPORT_v1_superseded`), v2 (`REPORT_v2_v3_superseded`),
 v3 (`REPORT_v3_superseded`, rejected on row 0), plus their artifacts.
+
+---
+
+## 11. Chart 06 rebuilt — the shading was invisible, and the reason is the finding
+
+The first build of chart 06 shaded sub-burst intervals on the full-session axis and **showed
+nothing**. The rectangles were drawn; they were sub-pixel. With a median duration of 348 ns on a
+57,600-second axis, a sub-burst is 6×10⁻¹² of the axis width — roughly one ten-billionth of a pixel.
+That is not a plotting bug so much as the same fact row 6 fires on, expressed visually.
+
+The rebuild has **five panels** instead of three:
+
+1–3. Full session — price with sub-burst **locations** marked as ticks (labelled as locations, not
+widths), inter-trade time, and normalized log interval with the threshold.
+4. **Zoom ≈2 s** on the densest sub-burst region, intervals shaded to true extent.
+5. **Zoom ≈5–20 µs** on a typical busy sub-burst, intervals shaded to true extent.
+
+Two defects found and fixed during the rebuild, both stated rather than quietly corrected: a long
+sub-burst overlapping a tight window stretched that panel's axis out of the window (rects are now
+clipped to the window and the axis range is set explicitly), and the tight zoom initially centred on
+the single longest sub-burst — a 1.9 s outlier — which made a "tight" zoom meaningless. It now
+centres on the busiest sub-burst among the typical ones (under 1 ms, which is 90.5% of them).
+
+**The tight zoom is itself the clearest statement of the result.** On MRSN 2023-05-03 the largest
+typical sub-burst is **7 prints at the same price inside 10.7 µs** — one marketable order sweeping
+the book. That is the object this method is counting.
 
 ---
 

@@ -8,8 +8,10 @@
   "n_no_threshold_charted": 11,
   "index_n_rows": 114,
   "index_covers_full_cohort": true,
-  "total_megabytes": 328.3,
+  "total_megabytes": 322.9,
   "produced_under_failure": true,
+  "panels": 5,
+  "scale_fix": "v4 sub-bursts median 348 ns, 90.5% under 1 ms -- sub-pixel on a 57,600 s axis. Full-session panel marks locations as ticks; two zoom panels (~2 s and ~200 us) show true extent.",
   "charts": [
     {
       "file": "SOS_2021-02-17.html",
@@ -19,7 +21,7 @@
       "segment": "premarket",
       "status": "no_threshold",
       "n_subbursts": 0,
-      "bytes": 12680957
+      "bytes": 12682239
     },
     {
       "file": "AEHL_2021-02-19.html",
@@ -29,7 +31,7 @@
       "segment": "rth",
       "status": "no_threshold",
       "n_subbursts": 0,
-      "bytes": 2540941
+      "bytes": 2542184
     },
     {
       "file": "IMTE_2022-09-16.html",
@@ -39,7 +41,7 @@
       "segment": "rth",
       "status": "no_threshold",
       "n_subbursts": 0,
-      "bytes": 6122901
+      "bytes": 6124144
     },
     {
       "file": "AMC_2020-11-09.html",
@@ -49,7 +51,7 @@
       "segment": "premarket",
       "status": "no_threshold",
       "n_subbursts": 0,
-      "bytes": 13163191
+      "bytes": 13164473
     },
     {
       "file": "SWVL_2022-04-21.html",
@@ -59,7 +61,7 @@
       "segment": "rth",
       "status": "no_threshold",
       "n_subbursts": 0,
-      "bytes": 10184219
+      "bytes": 10185462
     },
     {
       "file": "NA_2024-09-26.html",
@@ -69,7 +71,7 @@
       "segment": "rth",
       "status": "no_threshold",
       "n_subbursts": 0,
-      "bytes": 1718846
+      "bytes": 1720089
     },
     {
       "file": "NCTY_2021-03-09.html",
@@ -79,7 +81,7 @@
       "segment": "rth",
       "status": "no_threshold",
       "n_subbursts": 0,
-      "bytes": 5811911
+      "bytes": 5813154
     },
     {
       "file": "AMIX_2024-10-31.html",
@@ -89,7 +91,7 @@
       "segment": "premarket",
       "status": "no_threshold",
       "n_subbursts": 0,
-      "bytes": 11706957
+      "bytes": 11708200
     },
     {
       "file": "AMTD_2022-08-05.html",
@@ -99,7 +101,7 @@
       "segment": "rth",
       "status": "no_threshold",
       "n_subbursts": 0,
-      "bytes": 9555802
+      "bytes": 9557045
     },
     {
       "file": "SI_2023-03-13.html",
@@ -109,7 +111,7 @@
       "segment": "rth",
       "status": "no_threshold",
       "n_subbursts": 0,
-      "bytes": 12212038
+      "bytes": 12213281
     },
     {
       "file": "ARBB_2024-02-13.html",
@@ -119,7 +121,7 @@
       "segment": "rth",
       "status": "no_threshold",
       "n_subbursts": 0,
-      "bytes": 7298691
+      "bytes": 7299934
     },
     {
       "file": "ALXO_2020-08-05.html",
@@ -129,7 +131,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 44,
-      "bytes": 161844
+      "bytes": 161599
     },
     {
       "file": "OCUL_2020-10-07.html",
@@ -139,7 +141,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 65,
-      "bytes": 5268216
+      "bytes": 5269479
     },
     {
       "file": "OST_2024-06-13.html",
@@ -149,7 +151,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 9,
-      "bytes": 184301
+      "bytes": 186886
     },
     {
       "file": "PAR_2021-04-08.html",
@@ -159,7 +161,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 12,
-      "bytes": 2924882
+      "bytes": 2931350
     },
     {
       "file": "SCLX_2022-11-23.html",
@@ -169,7 +171,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 23,
-      "bytes": 280488
+      "bytes": 282366
     },
     {
       "file": "ALF_2021-05-10.html",
@@ -179,7 +181,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 2248,
-      "bytes": 11932860
+      "bytes": 11687555
     },
     {
       "file": "AMCX_2021-02-26.html",
@@ -189,7 +191,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 2220,
-      "bytes": 6617561
+      "bytes": 6391475
     },
     {
       "file": "OCUL_2023-12-04.html",
@@ -199,7 +201,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 215,
-      "bytes": 2813378
+      "bytes": 2798098
     },
     {
       "file": "PRTH_2020-09-15.html",
@@ -209,7 +211,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 28,
-      "bytes": 250505
+      "bytes": 254108
     },
     {
       "file": "VEEE_2024-06-25.html",
@@ -219,7 +221,7 @@
       "segment": "no_detection",
       "status": "ok",
       "n_subbursts": 12,
-      "bytes": 98853
+      "bytes": 101524
     },
     {
       "file": "ASPI_2023-08-01.html",
@@ -229,7 +231,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 29,
-      "bytes": 287265
+      "bytes": 289216
     },
     {
       "file": "CELH_2020-08-06.html",
@@ -239,7 +241,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 80,
-      "bytes": 4484094
+      "bytes": 4478363
     },
     {
       "file": "EDUC_2024-04-03.html",
@@ -249,7 +251,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 8,
-      "bytes": 132210
+      "bytes": 135698
     },
     {
       "file": "EWTX_2022-01-05.html",
@@ -259,7 +261,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 242,
-      "bytes": 6881748
+      "bytes": 6874832
     },
     {
       "file": "NE_2020-02-12.html",
@@ -269,7 +271,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 26,
-      "bytes": 3340848
+      "bytes": 3346237
     },
     {
       "file": "SIFY_2023-06-22.html",
@@ -279,7 +281,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 206,
-      "bytes": 528092
+      "bytes": 506239
     },
     {
       "file": "UCAR_2024-03-28.html",
@@ -289,7 +291,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 997,
-      "bytes": 8459328
+      "bytes": 8369895
     },
     {
       "file": "USEG_2020-05-15.html",
@@ -299,7 +301,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 34,
-      "bytes": 191859
+      "bytes": 192125
     },
     {
       "file": "AACG_2023-12-27.html",
@@ -309,7 +311,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 29,
-      "bytes": 120401
+      "bytes": 120843
     },
     {
       "file": "ABSI_2023-12-04.html",
@@ -319,7 +321,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 50,
-      "bytes": 2429747
+      "bytes": 2432077
     },
     {
       "file": "CREX_2022-02-01.html",
@@ -329,7 +331,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 2138,
-      "bytes": 13964005
+      "bytes": 13715428
     },
     {
       "file": "EGHT_2020-12-10.html",
@@ -339,7 +341,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 255,
-      "bytes": 9527860
+      "bytes": 9508760
     },
     {
       "file": "TORO_2023-03-31.html",
@@ -349,7 +351,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 1086,
-      "bytes": 5887419
+      "bytes": 5789062
     },
     {
       "file": "ALGS_2024-10-24.html",
@@ -359,7 +361,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 30,
-      "bytes": 819924
+      "bytes": 821790
     },
     {
       "file": "AQB_2022-03-10.html",
@@ -369,7 +371,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 47,
-      "bytes": 4391088
+      "bytes": 4393941
     },
     {
       "file": "SLGL_2024-11-22.html",
@@ -379,7 +381,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 8,
-      "bytes": 96003
+      "bytes": 98894
     },
     {
       "file": "WGS_2024-01-08.html",
@@ -389,7 +391,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 353,
-      "bytes": 1192579
+      "bytes": 1163921
     },
     {
       "file": "AHG_2022-08-03.html",
@@ -399,7 +401,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 75,
-      "bytes": 324960
+      "bytes": 323217
     },
     {
       "file": "FATBB_2022-03-29.html",
@@ -409,7 +411,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 32,
-      "bytes": 277408
+      "bytes": 280818
     },
     {
       "file": "MRSN_2023-05-03.html",
@@ -419,7 +421,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 1086,
-      "bytes": 12567654
+      "bytes": 12487114
     },
     {
       "file": "SLNH_2022-12-21.html",
@@ -429,7 +431,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 9,
-      "bytes": 251036
+      "bytes": 254572
     },
     {
       "file": "SPCB_2021-10-25.html",
@@ -439,7 +441,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 354,
-      "bytes": 3986000
+      "bytes": 3956372
     },
     {
       "file": "ACRE_2020-04-07.html",
@@ -449,7 +451,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 954,
-      "bytes": 1956158
+      "bytes": 1864831
     },
     {
       "file": "CVNA_2020-03-24.html",
@@ -459,7 +461,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 3859,
-      "bytes": 9702211
+      "bytes": 9207565
     },
     {
       "file": "MDIA_2024-04-09.html",
@@ -469,7 +471,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 5819,
-      "bytes": 14897457
+      "bytes": 14172179
     },
     {
       "file": "NEPH_2023-06-01.html",
@@ -479,7 +481,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 118,
-      "bytes": 594713
+      "bytes": 589972
     },
     {
       "file": "PPSI_2020-10-20.html",
@@ -489,7 +491,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 1395,
-      "bytes": 6719414
+      "bytes": 6570239
     },
     {
       "file": "CPSH_2020-05-06.html",
@@ -499,7 +501,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 626,
-      "bytes": 8019621
+      "bytes": 7962196
     },
     {
       "file": "DRUG_2023-08-08.html",
@@ -509,7 +511,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 2145,
-      "bytes": 14082728
+      "bytes": 13888722
     },
     {
       "file": "MDIA_2022-08-03.html",
@@ -519,7 +521,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 1110,
-      "bytes": 8125200
+      "bytes": 8010608
     },
     {
       "file": "ZENA_2024-10-11.html",
@@ -529,7 +531,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 3315,
-      "bytes": 14083674
+      "bytes": 13696281
     },
     {
       "file": "BLBX_2023-04-17.html",
@@ -539,7 +541,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 2218,
-      "bytes": 13182286
+      "bytes": 12904774
     },
     {
       "file": "CODX_2020-03-11.html",
@@ -549,7 +551,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 8419,
-      "bytes": 15673903
+      "bytes": 14838528
     },
     {
       "file": "EDSA_2020-06-15.html",
@@ -559,7 +561,7 @@
       "segment": "premarket",
       "status": "ok",
       "n_subbursts": 9761,
-      "bytes": 15800008
+      "bytes": 14802468
     },
     {
       "file": "EEIQ_2023-05-01.html",
@@ -569,7 +571,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 29,
-      "bytes": 228693
+      "bytes": 230540
     },
     {
       "file": "AUID_2023-02-27.html",
@@ -579,7 +581,7 @@
       "segment": "no_detection",
       "status": "ok",
       "n_subbursts": 14,
-      "bytes": 95227
+      "bytes": 98393
     },
     {
       "file": "OCG_2024-12-17.html",
@@ -589,7 +591,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 16,
-      "bytes": 156247
+      "bytes": 159245
     },
     {
       "file": "MESA_2020-03-20.html",
@@ -599,7 +601,7 @@
       "segment": "rth",
       "status": "ok",
       "n_subbursts": 329,
-      "bytes": 1322822
+      "bytes": 1288732
     },
     {
       "file": "PSIX_2022-11-15.html",
@@ -609,7 +611,7 @@
       "segment": "nan",
       "status": "n/a",
       "n_subbursts": 0,
-      "bytes": 25440
+      "bytes": 26683
     }
   ],
   "source": "research/phase_10/v4_t7b_tape.py:main"
