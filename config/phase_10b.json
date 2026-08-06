@@ -1,0 +1,269 @@
+{
+  "phase": "10b",
+  "title": "Randomness of Trade Arrivals Under a Non-Constant Rate",
+  "branch": "phase/10b",
+  "spec": "prompts/phase_10b.md",
+  "governing_decisions": [
+    "D10",
+    "D9",
+    "D8",
+    "D7",
+    "D6",
+    "D5",
+    "D4",
+    "D3",
+    "D1"
+  ],
+  "baseline": {
+    "tag": "phase-10-approved",
+    "trunk": "master",
+    "trunk_note": "`main` does not exist in this repo; `master` is the trunk. Verified at T0a -- the same condition Phase 9 escalation row 1 raised."
+  },
+  "cohort": {
+    "rule": "FROZEN. Phase 10 manifest, reused, never redrawn or extended.",
+    "manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+    "content_hash": "e1a0ac73a79aa573",
+    "n_total": 114,
+    "analysis_cohort_n": 100,
+    "expected_counts": {
+      "premarket": 28,
+      "rth": 70,
+      "row_cap_census": 8,
+      "dev_v4_sidecar": 6
+    },
+    "never_pooled": [
+      "row_cap_census",
+      "dev_v4_sidecar"
+    ],
+    "hard_stop_on_mismatch": "escalation row 2, including a mismatch in the segment split"
+  },
+  "detection_anchor": {
+    "rule": "REUSED, NOT RE-DERIVED (D7).",
+    "artifact": "results/phase_10/artifacts/v2_r13_detection.parquet",
+    "threshold": 1.3,
+    "poll_interval_seconds": 1,
+    "segment_source": "det_segment_poll1"
+  },
+  "segments": {
+    "values": [
+      "premarket",
+      "rth"
+    ],
+    "rule": "Computed and reported separately at every task. Pooled-across-segment statistics are NOT produced."
+  },
+  "t1_fragmentation": {
+    "sweep_gap_s": {
+      "primary": 0.0001,
+      "sensitivity": [
+        1e-05,
+        0.001
+      ]
+    },
+    "sweep_run_scope": "DIAGNOSTIC GROUPING FOR CHART 01 ONLY. Written to its own artifact and read by no other task; asserted in the verification block. It must not enter any Allan, intensity or rescaling computation anywhere in this phase.",
+    "plateau_rungs_exponents": [
+      -6,
+      2
+    ],
+    "plateau_flatness_max": 0.35,
+    "plateau_flatness_definition": "interquartile range of log A(T) across the plateau rungs, natural log. Events above this are NOT flat, are excluded from the fit, and are counted in the report.",
+    "regressions": [
+      "plateau_height ~ size-weighted mean run size E[N^2]/E[N] -- the prediction is a slope near 1",
+      "plateau_height ~ plain mean run size E[N] -- reported for contrast; testing against this alone produces a slope below 1 and a spurious rejection"
+    ],
+    "no_escalation": "No escalation row fires on T1's outcome. Both outcomes are informative and both are reported."
+  },
+  "t2_controls": {
+    "n_control_draws": 200,
+    "seed": 42,
+    "shared_pipeline_rule": "The T3 and T4 pipelines are built here and run end to end on simulated inputs BEFORE any real event is touched. The pipeline code is shared -- no separate control implementation, or the control tests nothing.",
+    "C1": {
+      "name": "homogeneous Poisson",
+      "rate": "matched to a real rth event's mean",
+      "quantization_ns": 80.5,
+      "required": "T3 curve inside the 95% matched-null band on >= 90% of eligible rungs; T4 reports no interior crossing"
+    },
+    "C2": {
+      "name": "inhomogeneous Poisson with a real event's shape",
+      "required": "same as C1",
+      "why": "the control that would have caught v1 Arm A -- a method that finds burst structure here is measuring the intensity profile, not clustering"
+    },
+    "C3": {
+      "name": "cluster process with known parameters",
+      "cluster_size_k": 6,
+      "cluster_duration_s": 1e-05,
+      "required": "T1c plateau height within +/-25% of E[N^2]/E[N]; T3 and T4 crossings each within 1 rung of the injected 10 us"
+    },
+    "C4": {
+      "name": "two injected scales",
+      "scale_1": {
+        "prints": 6,
+        "duration_s": 1e-05
+      },
+      "scale_2": {
+        "prints": 20,
+        "duration_s": 60
+      },
+      "required": "both scales visible and separated in T3's curve; T4 recovers the 60 s scale within 1 rung"
+    },
+    "band_coverage_bounds": [
+      0.9,
+      0.99
+    ],
+    "band_coverage_nominal": 0.95,
+    "on_fire": "Hard stop on any C1-C4 required outcome not met. Do not proceed to T3. Do not adjust the method to make a control pass."
+  },
+  "t3_allan": {
+    "ladder_exponents": [
+      -20,
+      12
+    ],
+    "n_rungs": 33,
+    "base_seconds": 1.0,
+    "ladder_note": "v3's 19 rungs (2^-6 through 2^12) are a strict subset, so v3's numbers remain directly comparable rung-for-rung. Assert that comparability numerically; do not claim it.",
+    "floor_justification": "2^-20 = 0.954 us is ~12x the median 80.5 ns timestamp resolution; going lower measures quantization. The floor extends below v3's because the fragmentation plateau's LOWER edge sits below 15.6 ms and T1's hypothesis cannot be closed without seeing where the plateau starts.",
+    "min_pairs_pooled": 20,
+    "min_pairs_event": 5,
+    "power_rule": "Rungs below min_pairs_pooled are plotted greyed and excluded from crossing determination; per-event curves require min_pairs_event. Report explicitly which rungs this excludes.",
+    "power_note_for_report": "This places v3's headline A = 1,245 at 4,096 s inside the low-power zone. State the pair count next to that figure wherever it is cited.",
+    "n_null_draws": 200,
+    "null_seed": 42,
+    "band_percentiles": [
+      2.5,
+      97.5
+    ],
+    "band_is_a_family": "The band is a family over the T4a bandwidth h, not one band. Report the full family. The crossing is where the real curve leaves the band at the WIDEST h for which it still leaves it -- the crossing that survives the most permissive null.",
+    "forbidden_comparison": "No statement in the report may compare a real Allan curve to the constant 1. The comparison object is the matched-null band and nothing else."
+  },
+  "t4_rescaling": {
+    "bandwidth_exponents": [
+      -6,
+      14
+    ],
+    "n_rungs": 21,
+    "kernel": "gaussian",
+    "endpoint_rule": "A crossing that lands on either endpoint is NOT a crossing -- it is the sweep hitting its own boundary, and must be reported as such. Escalation row 7.",
+    "held_out": {
+      "block_seconds": 60,
+      "scheme": "fit on odd blocks, evaluate on even; then swap",
+      "block_independence": "blocks are fixed at 60 s, independent of h",
+      "report": "both folds separately -- a large fold difference is itself a finding"
+    },
+    "lambda_floor_frac": 0.001,
+    "floored_time_max": 0.2,
+    "floor_accounting": "Report the fraction of held-out time sitting at the floor, per bandwidth, per segment. Bandwidths above floored_time_max are excluded from crossing determination and shaded on chart 05. Without this the small-h end reports the floor rather than the market.",
+    "ks_alpha": 0.05,
+    "ks_pass_share": 0.5,
+    "ks_pooling_rule": "Pool per segment by reporting the DISTRIBUTION of per-event statistics, not a pooled statistic over pooled intervals.",
+    "shimazaki_shinomoto": {
+      "compute": true,
+      "role": "reference marker only",
+      "rule": "Marked on chart 05 as a distribution. It does not select anything in this phase and no result is conditioned on it."
+    },
+    "circularity_note": "lambda-hat is fitted OUT OF SAMPLE throughout. In-sample fitting guarantees a crossing at a location set by the estimator's degrees of freedom -- Phase 10's failure mode wearing a different hat. Prior art: Rudemo 1982; Bowman 1984; the likelihood cross-validation selectors in spatstat; Shimazaki & Shinomoto 2010."
+  },
+  "t5_agreement": {
+    "estimates": [
+      "t3_allan_crossing",
+      "t4_rescaling_crossing",
+      "v3_knee"
+    ],
+    "v3_knee_seconds": {
+      "rth": 128,
+      "premarket": 16
+    },
+    "bands_fixed_before_run": [
+      {
+        "spread_rungs": "<= 1",
+        "factor": 2,
+        "reading": "Agreement",
+        "action": "report as the phase's convergent estimate"
+      },
+      {
+        "spread_rungs": "2",
+        "factor": 4,
+        "reading": "Partial",
+        "action": "report all three, no single headline number"
+      },
+      {
+        "spread_rungs": "> 2",
+        "reading": "Disagreement",
+        "action": "escalation row 6 -- hard stop"
+      }
+    ],
+    "applied": "per segment separately",
+    "no_crossing_rule": "A segment where one method produces no crossing at all is not a disagreement -- it is reported as a non-result for that method and the remaining two are compared."
+  },
+  "t6_tape_review": {
+    "produced_regardless": true,
+    "produced_regardless_why": "Produced regardless of every numeric outcome, including a T2 hard stop. v2 skipped this and could not be judged at all; v3 produced it and row 0 fired correctly.",
+    "n_events": 100,
+    "index_covers": 114,
+    "index_sortable_by": [
+      "ticker",
+      "date",
+      "segment",
+      "print_count",
+      "sweep_run_count",
+      "t3_crossing_rung",
+      "t4_crossing_rung"
+    ],
+    "gitignore_rule": "nested .gitignore inside results/phase_10b/event_charts/",
+    "max_scatter_points": 150000,
+    "over_cap_seed": 42
+  },
+  "single_bandwidth_headline_banned": "Every bandwidth in this phase DEFINES the null being tested, not the answer being reported. Every bandwidth is swept and reported as a family. A single-bandwidth headline number is not a deliverable of this phase and must not appear in the report.",
+  "negative_result_is_valid": "If arrivals are indistinguishable from a slowly-varying Poisson rate at every measured scale, that is the finding, it is reported as the finding, and no method is retuned to produce a positive one. Retuning in response to a null result is a banned output under Operating Plan section 4.3.",
+  "closed_do_not_reopen": [
+    "D6 no within-session quiet state",
+    "D8 event-relative reference",
+    "D9 interval-based, no intensity curve as operating variable",
+    "Hawkes calibration",
+    "constant-reference thresholding",
+    "two-state segmentation",
+    "envelope fitting",
+    "print aggregation",
+    "time-of-day-matched flanking baselines"
+  ],
+  "causal_audit": {
+    "rule": "Carried forward from Phase 10 v4 -- every derived field tagged causal or non_causal with a one-line reason.",
+    "output": "results/phase_10b/artifacts/causal_audit.parquet"
+  },
+  "runtime_ceilings": {
+    "seconds_per_event": 600,
+    "seconds_aggregate": 14400,
+    "on_breach": "hard stop; do not silently reduce the cohort or any ladder"
+  },
+  "paths": {
+    "filtered_root": "data/filtered",
+    "cohort_manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+    "detection": "results/phase_10/artifacts/v2_r13_detection.parquet",
+    "v3_allan_curves": "results/phase_10/artifacts/v3_t1_gate_curves.parquet",
+    "v3_allan_knees": "results/phase_10/artifacts/v3_t1_gate_knees.parquet",
+    "v4_subbursts": "results/phase_10/artifacts/v4_subbursts.parquet",
+    "out_artifacts": "results/phase_10b/artifacts/",
+    "out_charts": "results/phase_10b/charts/",
+    "out_event_charts": "results/phase_10b/event_charts/"
+  },
+  "write_allowlist": [
+    "prompts/",
+    "config/",
+    "research/",
+    "results/phase_10b/",
+    "docs/Universe-Decisions.md (APPEND-ONLY)",
+    "docs/Research-Library-Map.md (APPEND-ONLY)",
+    "docs/Claude-Code-Operating-Plan.md (the single T0c row-10b insert, already applied)"
+  ],
+  "write_allowlist_note": "Nothing in this phase writes to any results/phase_10* path other than results/phase_10b/.",
+  "pass_budget": {
+    "filtered_trades": 0,
+    "filtered_quotes": 0,
+    "method": "targeted per-event folder reads only; equivalence proven in Phase 10 v1 T0d"
+  },
+  "phase_13_boundary": "Intervals are an operating variable here. This phase does NOT produce the inter-trade interval distribution as a characterized finding, the noise floor, or interval regime definitions. If a task appears to be producing one, stop and post (escalation row 10).",
+  "reporting": {
+    "n_rule": "Every posted table carries n per row. Every prose claim carries its chart filename.",
+    "description_only": "No recommendations, no causal language, no 'suggests / confirms / indicates / therefore'.",
+    "escalation_report_order": "Report in table order -- the table is the priority order."
+  },
+  "config_hash_note": "Committed before any measurement run."
+}
