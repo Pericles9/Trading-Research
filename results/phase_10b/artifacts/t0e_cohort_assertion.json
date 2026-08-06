@@ -1,0 +1,87 @@
+{
+  "phase": "10b",
+  "task": "T0e",
+  "config_hash": "c200580e",
+  "cohort_manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+  "checks": {
+    "content_hash": {
+      "expected": "e1a0ac73a79aa573",
+      "observed": "e1a0ac73a79aa573",
+      "pass": true
+    },
+    "n_total": {
+      "expected": 114,
+      "observed": 114,
+      "pass": true
+    },
+    "analysis_cohort_n": {
+      "expected": 100,
+      "observed": 100,
+      "pass": true
+    },
+    "premarket": {
+      "expected": 28,
+      "observed": 28,
+      "pass": true
+    },
+    "rth": {
+      "expected": 70,
+      "observed": 70,
+      "pass": true
+    },
+    "row_cap_census": {
+      "expected": 8,
+      "observed": 8,
+      "pass": true
+    },
+    "dev_v4_sidecar": {
+      "expected": 6,
+      "observed": 6,
+      "pass": true
+    }
+  },
+  "all_pass": true,
+  "observed_counts": {
+    "n_total": 114,
+    "analysis_cohort_n": 100,
+    "premarket": 28,
+    "rth": 70,
+    "post": 0,
+    "no_detection": 2,
+    "row_cap_census": 8,
+    "dev_v4_sidecar": 6
+  },
+  "escalation_row_2_triggered": false,
+  "timestamp_resolution_ns": {
+    "rule": "Measured per event from the data as the smallest NON-ZERO inter-print gap. Reported as a precondition, not assumed. The T3 ladder floor (2^-20 s = 0.954 us) is ~12x the pooled median.",
+    "pooled_analysis_cohort": {
+      "n": 100,
+      "min": 49.0,
+      "q25": 64.0,
+      "median": 80.5,
+      "q75": 97.0,
+      "max": 8388.0
+    },
+    "by_segment": {
+      "premarket": {
+        "n": 28,
+        "min": 49.0,
+        "q25": 53.0,
+        "median": 66.5,
+        "q75": 94.75,
+        "max": 6054.0
+      },
+      "rth": {
+        "n": 70,
+        "min": 52.0,
+        "q25": 71.0,
+        "median": 83.0,
+        "q75": 97.75,
+        "max": 8388.0
+      }
+    },
+    "ladder_floor_seconds": 9.5367431640625e-07,
+    "ladder_floor_over_median_resolution": 11.846885918090063
+  },
+  "source": "research/phase_10b/t0e_cohort_assertion.py:main"
+}

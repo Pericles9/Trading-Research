@@ -1,0 +1,38 @@
+{
+  "rule": "These are regenerable from committed config + code and are untracked by design (Agent_Prompt_Standard \u00a712). Recorded so their absence from git is explicit rather than looking like loss.",
+  "items": [
+    {
+      "path": "results/phase_10/artifacts",
+      "exists_on_disk": true,
+      "n_files": 49,
+      "megabytes": 31.8,
+      "why_untracked": "gitignored *.parquet per Agent_Prompt_Standard \u00a712",
+      "regenerate_with": "research/phase_10/{t1_cohort,t2_arm_a,t3_arm_b,t4_measure,v2_*,v3_*,v4_*}.py"
+    },
+    {
+      "path": "results/phase_10/charts/07_tape_review",
+      "exists_on_disk": true,
+      "n_files": 81,
+      "megabytes": 446.1,
+      "why_untracked": "nested .gitignore \u2014 v1 per-event set",
+      "regenerate_with": "research/phase_10/t6b_tape_review.py"
+    },
+    {
+      "path": "results/phase_10/charts/v3_07_tape_review",
+      "exists_on_disk": true,
+      "n_files": 61,
+      "megabytes": 537.9,
+      "why_untracked": "nested .gitignore \u2014 v3 per-event set",
+      "regenerate_with": "research/phase_10/v3_t6b_tape.py"
+    },
+    {
+      "path": "results/phase_10/charts/v4_06_tape_review",
+      "exists_on_disk": true,
+      "n_files": 61,
+      "megabytes": 323.0,
+      "why_untracked": "nested .gitignore \u2014 v4 per-event set",
+      "regenerate_with": "research/phase_10/v4_t7b_tape.py"
+    }
+  ],
+  "tracked_phase_10_files_on_master": 122
+}
