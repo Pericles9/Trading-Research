@@ -1,203 +1,183 @@
 {
   "phase": "10",
-  "version": "v3",
-  "title": "Sub-Burst Decomposition",
-  "config_hash": "c5aea7f6",
-  "status": "rejected",
+  "version": "v4",
+  "title": "Sub-Burst Detection from Locally-Normalized Log Inter-Trade Intervals",
+  "config_hash": "fbb992ed",
+  "status": "escalated",
   "escalation": {
-    "criterion": "pre-registered failure rows 0, 2, 3, 4",
+    "criterion": "pre-registered failure rows 1 and 6",
     "observed": {
-      "row_2_observable_disagreement": {
-        "spearman": 0.4233,
-        "floor": 0.5,
-        "n": 100
+      "row_1_arm_a_test": {
+        "spearman_vs_print_count": 0.8748,
+        "loglog_slope": 0.9224,
+        "thresholds": [
+          0.5,
+          0.35
+        ],
+        "arm_a_reference": [
+          0.96,
+          0.85
+        ],
+        "v3_reference": [
+          0.277,
+          0.261
+        ]
       },
-      "row_3_envelope_instability_in_knee_interval": {
-        "print_rate": 0.0735,
-        "volume_rate": 0.1071,
-        "floor": 0.5,
-        "note": "median per-event interval Jaccard between sub-burst sets computed at the two ENDS of the knee's own bootstrap interval"
-      },
-      "row_4_degenerate": {
-        "print_rate_duration_over_floor": 1.0339,
-        "volume_rate_duration_over_floor": 1.5333,
-        "required": "> 1.25",
-        "degenerate_share_both": 0.0
+      "row_6_degenerate": {
+        "median_duration_s": 3.49e-07,
+        "resolution_floor_s": 8.05e-08,
+        "duration_over_floor": 4.3354,
+        "required": "> 10.0",
+        "degenerate_share": 0.0
       }
     },
     "passed": [
-      "row_1 (the Arm A test)",
-      "row_5",
-      "row_6 (gate)",
-      "row_7 (gate)"
+      "row_2 (no_threshold 0.100 <= 0.60)",
+      "row_3 (0.2667 <= 0.30)",
+      "row_4 (0.1984 <= 0.20)",
+      "row_5 (0.0000 <= 0.20)",
+      "row_7 (0.150 <= 1.0 decades)"
     ],
-    "row_0": "FAILED - Cooper rejected the decomposition on visual review of chart 07 against the tape. Row 0 overrides every other row in either direction, so the row-1 pass (the Arm A test, cleared for the first time in this phase) does NOT constitute acceptance. The decomposition is rejected.",
-    "operative_result": "REJECTED on row 0",
-    "what_survives_the_rejection": [
-      "the T1 gate result: a characteristic clustering scale exists (128s rth / 16s premarket, dBIC 45.6-68.7 on all four cells)",
-      "the row-1 method finding: an envelope-relative reference breaks the print-count dependence that sank Arm A (Spearman 0.277/0.353 vs Arm A's 0.96)"
-    ],
-    "what_is_rejected": "the sub-burst decomposition those results were meant to license"
+    "row_0": "not evaluated by the agent; chart 06 produced so it CAN be evaluated"
   },
   "decisions_recorded": [
-    "D8 appended to docs/Universe-Decisions.md (+34/-0)"
+    "D9 appended to docs/Universe-Decisions.md (+39/-0), with consequence (a) corrected against the repo"
   ],
   "headline_metrics": [
     {
-      "name": "gate_knee_rth_print_seconds",
-      "value": 128.0,
-      "n": 70,
-      "detail": "slopes +0.171 -> +1.043, dBIC 68.65; premarket 16.0s, dBIC 45.61. Allan/Fano computed directly on the point process, no bandwidth, no threshold",
-      "source": "research/phase_10/v3_t1_gate.py:main",
-      "chart": "results/phase_10/charts/v3_01_scale_separation.html"
+      "name": "row_1_spearman_vs_print_count",
+      "value": 0.8748,
+      "n": 90,
+      "detail": "log-log slope 0.9224, ABOVE Arm A's own 0.85 reference. The Arm A defect reached by a fifth route",
+      "source": "research/phase_10/v4_t5_t6.py:main",
+      "chart": "results/phase_10/charts/v4_04_count_vs_prints.html"
     },
     {
-      "name": "row_1_spearman_vs_print_count_print",
-      "value": 0.2772,
+      "name": "no_threshold_share",
+      "value": 0.1,
       "n": 100,
-      "detail": "log-log slope +0.2605; thresholds 0.50 and 0.35; Arm A scored 0.96 and 0.85 -- PASS",
-      "source": "research/phase_10/v3_t2_t4_subbursts.py:main",
-      "chart": "results/phase_10/charts/v3_04_subburst_count_vs_prints.html"
+      "detail": "10/100 pooled (premarket 3/28, rth 7/70). The void gate declines rather than inventing sub-bursts; no fallback threshold applied",
+      "source": "research/phase_10/v4_t5_t6.py:main",
+      "chart": "results/phase_10/charts/v4_01_log_interval_histograms.html"
     },
     {
-      "name": "row_1_spearman_vs_print_count_volume",
-      "value": 0.3531,
+      "name": "void_parameter_median",
+      "value": 0.8345,
+      "n": 90,
+      "detail": "cutoff 0.70; share within 0.05 above the cutoff 0.2667 (row 3 <= 0.30, PASS)",
+      "source": "research/phase_10/v4_t5_t6.py:main",
+      "chart": "results/phase_10/charts/v4_02_void_parameter.html"
+    },
+    {
+      "name": "derived_threshold_median_decades",
+      "value": -3.225,
+      "n": 90,
+      "detail": "intervals roughly 1/1700 of the local median; premarket -3.125, rth -3.275",
+      "source": "research/phase_10/v4_t5_t6.py:main",
+      "chart": "results/phase_10/charts/v4_01_log_interval_histograms.html"
+    },
+    {
+      "name": "subburst_duration_median_seconds",
+      "value": 3.49e-07,
+      "n": 114074,
+      "detail": "349 ns against an 80.5 ns timestamp resolution -- 4.34x, where row 6 required > 10x",
+      "source": "research/phase_10/v4_t5_t6.py:main",
+      "chart": "results/phase_10/charts/v4_05_duration_spacing_moveshare.html"
+    },
+    {
+      "name": "subburst_count_median",
+      "value": 210.5,
+      "n": 90,
+      "detail": "IQR 33-1702, max 9761; median 6.2% of session prints inside sub-bursts",
+      "source": "research/phase_10/v4_t5_t6.py:main",
+      "chart": "results/phase_10/charts/v4_03_subburst_count.html"
+    },
+    {
+      "name": "normalization_window_relative_change",
+      "value": 0.1984,
+      "n": 90,
+      "detail": "across the 10-30% grid; passes a 0.20 bar but is 66x Ko et al.'s published 0.003",
+      "source": "research/phase_10/v4_t5_t6.py:main",
+      "chart": "results/phase_10/charts/v4_03_subburst_count.html"
+    },
+    {
+      "name": "timestamp_resolution_median_ns",
+      "value": 80.5,
       "n": 100,
-      "detail": "log-log slope +0.1849 -- PASS",
-      "source": "research/phase_10/v3_t2_t4_subbursts.py:main",
-      "chart": "results/phase_10/charts/v3_04_subburst_count_vs_prints.html"
-    },
-    {
-      "name": "row_3_knee_interval_jaccard_print",
-      "value": 0.0735,
-      "n": 100,
-      "detail": "FAIL against a 0.50 floor; volume 0.1071. Inside the interval T1 itself placed on the knee, the decomposition returns almost entirely different sub-bursts",
-      "source": "research/phase_10/v3_t5_stability.py:main",
-      "chart": "results/phase_10/charts/v3_02_envelope_examples.html"
-    },
-    {
-      "name": "subburst_count_median_print",
-      "value": 27,
-      "n": 100,
-      "detail": "IQR 13-53; premarket median 131, rth median 20; volume median 70 (IQR 33-128)",
-      "source": "research/phase_10/v3_t2_t4_subbursts.py:main",
-      "chart": "results/phase_10/charts/v3_03_subburst_count.html"
-    },
-    {
-      "name": "subburst_duration_median_seconds_print",
-      "value": 33.09,
-      "n": 5679,
-      "detail": "premarket 11.62s, rth 79.31s; spacing median 87.33s. Row 4 fails on print: median duration is 1.0339x the minimum-duration floor",
-      "source": "research/phase_10/v3_t5_stability.py:main",
-      "chart": "results/phase_10/charts/v3_05_subburst_duration_spacing.html"
-    },
-    {
-      "name": "largest_subburst_move_share_median_print",
-      "value": 0.195,
-      "n": 100,
-      "detail": "2nd 0.083, 3rd -0.061; 0 undefined denominators; median share of session prints inside sub-bursts 0.207",
-      "source": "research/phase_10/v3_t5_stability.py:main",
-      "chart": "results/phase_10/charts/v3_06_subburst_move_share.html"
-    },
-    {
-      "name": "tie_variant_jaccard",
-      "value": 1.0,
-      "n": 100,
-      "detail": "median 1.0000 both observables; identical sub-burst count on 89/100 (print) and 86/100 (volume)",
-      "source": "research/phase_10/v3_t5_stability.py:main",
-      "chart": "results/phase_10/charts/v3_03_subburst_count.html"
+      "detail": "measured per event from the data (min 49 ns, max 8388 ns), never assumed",
+      "source": "research/phase_10/v4_t5_t6.py:main",
+      "chart": "results/phase_10/charts/v4_05_duration_spacing_moveshare.html"
     }
   ],
   "decisions_log": [
     {
-      "decision": "gate statistic and knee finder",
+      "decision": "D9 consequence (a) corrected rather than transcribed",
       "options_considered": [
-        "Fano only",
-        "Allan primary with Fano alongside",
-        "spline or kernel-derivative knee finder",
-        "broken-stick by exhaustive search"
+        "append D9 verbatim",
+        "append with (a) corrected and the correction explained"
       ],
-      "chose": "Allan primary, Fano alongside; broken-stick knee by exhaustive search compared to a single line by BIC",
-      "why": "Allan tolerates a slowly varying rate, which is exactly the envelope being separated out. A spline or derivative-based knee finder would introduce its own bandwidth -- the class of free parameter D8 bars from the gate. Exhaustive search is deterministic and the BIC comparison TESTS a knee rather than assuming one."
+      "chose": "append with (a) corrected",
+      "why": "D9 as drafted says v3 was withdrawn before execution and no v3 artifacts exist. v3 ran to completion, its gate and its Arm A test both passed, and Cooper rejected it on row 0; artifacts are committed. A decision record must not contradict the repo, and both surviving v3 results are load-bearing for D9's own argument."
     },
     {
-      "decision": "gate row 6 requires two conditions",
+      "decision": "reference tie variant",
       "options_considered": [
-        "dBIC alone",
-        "slope change alone",
-        "both"
+        "collapse_same_timestamp",
+        "resolution_floor"
       ],
-      "chose": "both dBIC >= 10 and |slope change| >= 0.20",
-      "why": "With 20 rungs, BIC alone can prefer a two-segment fit whose bend is negligible. Requiring a real bend as well stops a statistically-supported non-knee from passing."
+      "chose": "collapse_same_timestamp",
+      "why": "A zero interval cannot exist under it by construction, so the log transform needs no imputed value. resolution_floor runs alongside; row 5 measured the difference at exactly 0.0000."
     },
     {
-      "decision": "envelope scale",
+      "decision": "robust local location estimator",
       "options_considered": [
-        "swept bandwidth grid",
-        "fixed seconds",
-        "derived from the T1 knee per event"
+        "moving mean",
+        "moving median"
       ],
-      "chose": "k_env = expected prints in a knee-duration window at the event's own mean rate",
-      "why": "D8 requires the scale come from the gate, not from a sweep. Converting the knee to a per-event k keeps the estimator adaptive while making the scale non-free."
+      "chose": "moving median, evaluated at anchors spaced window/10 apart and interpolated",
+      "why": "The log-interval sequence is heavy-tailed with long quiet stretches; a moving mean is dragged by them. The anchored evaluation is O(10n) instead of O(n log w) for windows of ~1e5 samples, and the anchor spacing is a tenth of a window so the interpolated location cannot move more than the median does across a tenth of a window."
     },
     {
-      "decision": "gate rows scored on configured segments only",
+      "decision": "no histogram smoothing",
       "options_considered": [
-        "score every stratum present",
-        "score configured segments only"
+        "kernel-smooth the histogram before peak finding",
+        "none"
       ],
-      "chose": "configured segments only",
-      "why": "The first run also scored a `no_detection` stratum -- the 2 never-crossing events, which have no detection anchor and therefore no segment -- whose n=2 knee IQR of 1.957 decades failed row 7. Row 7's observable is defined 'within a segment'. This is a population error, not a finding. No threshold was moved; their curves are retained."
-    },
-    {
-      "decision": "chart 07 selection trimmed to the cap",
-      "options_considered": [
-        "raise max_charts",
-        "trim the stratified draw"
-      ],
-      "chose": "trim the draw",
-      "why": "The first selection was 64 against a cap of 60 and the script refused to write. dev_v4_primary is kept whole per the selection rule; the stratified draw is trimmed on an even index spacing over (segment, sub-burst count), so it still spans the count range within each segment. The pre-registered cap is a constraint, not a target to adjust."
+      "chose": "none; peak prominence does the work",
+      "why": "Smoothing would reintroduce a bandwidth -- the exact free parameter D9 exists to remove."
     }
   ],
   "surprises": [
-    "Row 0 fired again. This is the second consecutive phase version in which every numeric criterion that mattered behaved -- including the Arm A test that v1 failed and v3 passed -- while Cooper's visual review against the tape rejected the result. Producing chart 07 despite the numeric failures is the only reason that judgment was available; v2 skipped its equivalent and could not be judged at all.",
-    "The scale-separation gate PASSES, and cleanly: dBIC 45.6-68.7 with slope changes 0.61-0.87 on all four segment-by-observable cells. After four failed methods, a characteristic clustering scale does exist.",
-    "The Allan factor never approaches the Poisson value 1 anywhere on the ladder -- rth/print median is 5.99 at 15.6 ms and 1245 at 4096 s. Clustering is present at EVERY scale measured; the knee marks where the rate of increase changes (slope 0.173 -> 1.017), not where clustering starts. Easy to misread off log-log axes, and I did misread it once before checking the numbers.",
-    "Row 1 -- the Arm A test -- PASSES for the first time in this phase. Spearman 0.277/0.353 and log-log slope 0.261/0.185 against Arm A's 0.96 and 0.85. The envelope-relative reference appears to remove the mechanism that made Arm A's burst count a restatement of print count.",
-    "Row 3 fails badly and is the substantive result: sub-burst sets computed at the two ENDS of the knee's own bootstrap interval overlap by a median Jaccard of 0.0735 (print) / 0.1071 (volume). The gate certifies that a scale exists; row 3 says the knee is not sharp enough to pin the decomposition it licenses.",
-    "Premarket and regular-hours differ by ~8x in knee (16s vs 128s) and ~6x in sub-burst count (median 131 vs 20). D8(d) made segment a stratification variable from the start; this is the strongest evidence yet that it had to be.",
-    "The two observables disagree more than expected -- Spearman 0.4233 on sub-burst count, and levels differ 27 vs 70. Print rate and share-volume rate are not measuring the same object here.",
-    "Session activity duration spans only ~0.35 decades across the cohort against ~3 decades for print count, so the +1.425 duration slope in the row-1 diagnostic is fitted over a far narrower range than the print-count slope and carries less weight than its size suggests."
+    "Row 1 fails at Spearman 0.8748 and log-log slope 0.9224 -- the slope is ABOVE Arm A's own 0.85. Five methods have now been tried and this is the second-worst result on the test that matters, after Arm A itself.",
+    "The mechanism is visible in chart 01 and is not the one D9 anticipated. Every threshold-bearing event has an isolated narrow spike at a normalized log interval of about -3.5, separated from the broad main body by a deep trough. The void gate finds that trough and takes it. The spike is order fragmentation -- one marketable order sweeping several resting orders produces several prints microseconds apart -- so the method separates multi-fill microstructure from everything else, not bursts from quiet. Multi-fill count scales with print count, hence 0.87.",
+    "Median sub-burst duration is 349 nanoseconds against an 80.5 ns timestamp resolution. The decomposition is operating at the resolution of the clock, not the timescale of the tape.",
+    "The void gate itself performed well and did the honest thing: it declined on 10/100 events rather than inventing sub-bursts, and the no_threshold events are exactly those whose histograms are smooth and broad with no multi-fill spike. D9's Zaliapin prediction was borne out, just not at the magnitude that would have fired row 2.",
+    "Rows 4 and 5 passing is not reassuring in context: a method can be perfectly stable under its own parameters while stably measuring the wrong object, which is what appears to have happened.",
+    "The normalization-window sensitivity is 0.1984 -- inside our 0.20 bar but 66x the 0.003 that Ko et al. report for the same 10-30% grid on spike trains. Market tick data does not sit in the published regime.",
+    "The causal audit found exactly 2 causal fields out of 18: the D7 detection anchor and the segment derived from it. Everything the phase actually measures is non-causal, and the threshold -- the trough of the completed session's histogram -- is the most non-causal quantity of all."
   ],
   "artifacts": [
-    "results/phase_10/artifacts/v3_t1_gate.json",
-    "results/phase_10/artifacts/v3_t1_gate_curves.parquet",
-    "results/phase_10/artifacts/v3_t1_gate_knees.parquet",
-    "results/phase_10/artifacts/v3_t3_subbursts.parquet",
-    "results/phase_10/artifacts/v3_t3_event_metrics.parquet",
-    "results/phase_10/artifacts/v3_t2_t4_summary.json",
-    "results/phase_10/artifacts/v3_t5_stability.json",
-    "results/phase_10/artifacts/v3_t6_chart_manifest.json",
-    "results/phase_10/artifacts/v3_t6b_tape_manifest.json"
+    "results/phase_10/artifacts/v4_event_metrics.parquet",
+    "results/phase_10/artifacts/v4_subbursts.parquet",
+    "results/phase_10/artifacts/v4_histograms.parquet",
+    "results/phase_10/artifacts/v4_causal_audit.parquet",
+    "results/phase_10/artifacts/v4_t5_t6_summary.json",
+    "results/phase_10/artifacts/v4_pipeline_raw.json",
+    "results/phase_10/artifacts/v4_t7_chart_manifest.json",
+    "results/phase_10/artifacts/v4_t7b_tape_manifest.json"
   ],
   "charts": [
-    "results/phase_10/charts/v3_01_scale_separation.html",
-    "results/phase_10/charts/v3_02_envelope_examples.html",
-    "results/phase_10/charts/v3_03_subburst_count.html",
-    "results/phase_10/charts/v3_04_subburst_count_vs_prints.html",
-    "results/phase_10/charts/v3_05_subburst_duration_spacing.html",
-    "results/phase_10/charts/v3_06_subburst_move_share.html",
-    "results/phase_10/charts/v3_07_tape_review/index.html"
+    "results/phase_10/charts/v4_01_log_interval_histograms.html",
+    "results/phase_10/charts/v4_02_void_parameter.html",
+    "results/phase_10/charts/v4_03_subburst_count.html",
+    "results/phase_10/charts/v4_04_count_vs_prints.html",
+    "results/phase_10/charts/v4_05_duration_spacing_moveshare.html",
+    "results/phase_10/charts/v4_06_tape_review/index.html"
   ],
   "commits": [
-    "bc327f6",
-    "1d15028",
-    "2803ed0",
-    "3237305",
-    "f32f9e0",
-    "d4f3abe",
-    "3b491a4",
-    "bc9f2f1"
+    "55e4348",
+    "5eccc5b",
+    "a26cc64"
   ],
-  "reproduce": "for s in v3_t1_gate v3_chart01 v3_t2_t4_subbursts v3_t5_stability v3_t6_charts v3_t6b_tape; do .venv/Scripts/python.exe research/phase_10/$s.py; done"
+  "reproduce": "for s in v4_pipeline v4_t5_t6 v4_t7_charts v4_t7b_tape; do .venv/Scripts/python.exe research/phase_10/$s.py; done"
 }

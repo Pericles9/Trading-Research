@@ -1,0 +1,48 @@
+{
+  "phase": "10",
+  "version": "v4",
+  "task": "T7",
+  "config_hash": "fbb992ed",
+  "n_charts": 5,
+  "n_kaleido_verified": 5,
+  "all_verified": true,
+  "charts": [
+    {
+      "chart": "v4_01_log_interval_histograms.html",
+      "png": "v4_01_log_interval_histograms.png",
+      "kaleido_verified": true,
+      "html_bytes": 77284,
+      "png_bytes": 786302
+    },
+    {
+      "chart": "v4_02_void_parameter.html",
+      "png": "v4_02_void_parameter.png",
+      "kaleido_verified": true,
+      "html_bytes": 18470,
+      "png_bytes": 370286
+    },
+    {
+      "chart": "v4_03_subburst_count.html",
+      "png": "v4_03_subburst_count.png",
+      "kaleido_verified": true,
+      "html_bytes": 11955,
+      "png_bytes": 300405
+    },
+    {
+      "chart": "v4_04_count_vs_prints.html",
+      "png": "v4_04_count_vs_prints.png",
+      "kaleido_verified": true,
+      "html_bytes": 22223,
+      "png_bytes": 414221
+    },
+    {
+      "chart": "v4_05_duration_spacing_moveshare.html",
+      "png": "v4_05_duration_spacing_moveshare.png",
+      "kaleido_verified": true,
+      "html_bytes": 8693195,
+      "png_bytes": 359376
+    }
+  ],
+  "note": "produced under the failure (rows 1, 6)",
+  "source": "research/phase_10/v4_t7_charts.py:main"
+}

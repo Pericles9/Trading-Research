@@ -1,0 +1,616 @@
+{
+  "phase": "10",
+  "version": "v4",
+  "task": "T7b",
+  "config_hash": "fbb992ed",
+  "n_charts": 60,
+  "cap": 60,
+  "n_no_threshold_charted": 11,
+  "index_n_rows": 114,
+  "index_covers_full_cohort": true,
+  "total_megabytes": 328.3,
+  "produced_under_failure": true,
+  "charts": [
+    {
+      "file": "SOS_2021-02-17.html",
+      "ticker": "SOS",
+      "event_date_canonical": "2021-02-17",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "no_threshold",
+      "n_subbursts": 0,
+      "bytes": 12680957
+    },
+    {
+      "file": "AEHL_2021-02-19.html",
+      "ticker": "AEHL",
+      "event_date_canonical": "2021-02-19",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "no_threshold",
+      "n_subbursts": 0,
+      "bytes": 2540941
+    },
+    {
+      "file": "IMTE_2022-09-16.html",
+      "ticker": "IMTE",
+      "event_date_canonical": "2022-09-16",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "no_threshold",
+      "n_subbursts": 0,
+      "bytes": 6122901
+    },
+    {
+      "file": "AMC_2020-11-09.html",
+      "ticker": "AMC",
+      "event_date_canonical": "2020-11-09",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "no_threshold",
+      "n_subbursts": 0,
+      "bytes": 13163191
+    },
+    {
+      "file": "SWVL_2022-04-21.html",
+      "ticker": "SWVL",
+      "event_date_canonical": "2022-04-21",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "no_threshold",
+      "n_subbursts": 0,
+      "bytes": 10184219
+    },
+    {
+      "file": "NA_2024-09-26.html",
+      "ticker": "NA",
+      "event_date_canonical": "2024-09-26",
+      "cohort_group": "activity_extension",
+      "segment": "rth",
+      "status": "no_threshold",
+      "n_subbursts": 0,
+      "bytes": 1718846
+    },
+    {
+      "file": "NCTY_2021-03-09.html",
+      "ticker": "NCTY",
+      "event_date_canonical": "2021-03-09",
+      "cohort_group": "activity_extension",
+      "segment": "rth",
+      "status": "no_threshold",
+      "n_subbursts": 0,
+      "bytes": 5811911
+    },
+    {
+      "file": "AMIX_2024-10-31.html",
+      "ticker": "AMIX",
+      "event_date_canonical": "2024-10-31",
+      "cohort_group": "activity_extension",
+      "segment": "premarket",
+      "status": "no_threshold",
+      "n_subbursts": 0,
+      "bytes": 11706957
+    },
+    {
+      "file": "AMTD_2022-08-05.html",
+      "ticker": "AMTD",
+      "event_date_canonical": "2022-08-05",
+      "cohort_group": "activity_extension",
+      "segment": "rth",
+      "status": "no_threshold",
+      "n_subbursts": 0,
+      "bytes": 9555802
+    },
+    {
+      "file": "SI_2023-03-13.html",
+      "ticker": "SI",
+      "event_date_canonical": "2023-03-13",
+      "cohort_group": "activity_extension",
+      "segment": "rth",
+      "status": "no_threshold",
+      "n_subbursts": 0,
+      "bytes": 12212038
+    },
+    {
+      "file": "ARBB_2024-02-13.html",
+      "ticker": "ARBB",
+      "event_date_canonical": "2024-02-13",
+      "cohort_group": "row_cap_census",
+      "segment": "rth",
+      "status": "no_threshold",
+      "n_subbursts": 0,
+      "bytes": 7298691
+    },
+    {
+      "file": "ALXO_2020-08-05.html",
+      "ticker": "ALXO",
+      "event_date_canonical": "2020-08-05",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 44,
+      "bytes": 161844
+    },
+    {
+      "file": "OCUL_2020-10-07.html",
+      "ticker": "OCUL",
+      "event_date_canonical": "2020-10-07",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 65,
+      "bytes": 5268216
+    },
+    {
+      "file": "OST_2024-06-13.html",
+      "ticker": "OST",
+      "event_date_canonical": "2024-06-13",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 9,
+      "bytes": 184301
+    },
+    {
+      "file": "PAR_2021-04-08.html",
+      "ticker": "PAR",
+      "event_date_canonical": "2021-04-08",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 12,
+      "bytes": 2924882
+    },
+    {
+      "file": "SCLX_2022-11-23.html",
+      "ticker": "SCLX",
+      "event_date_canonical": "2022-11-23",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 23,
+      "bytes": 280488
+    },
+    {
+      "file": "ALF_2021-05-10.html",
+      "ticker": "ALF",
+      "event_date_canonical": "2021-05-10",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 2248,
+      "bytes": 11932860
+    },
+    {
+      "file": "AMCX_2021-02-26.html",
+      "ticker": "AMCX",
+      "event_date_canonical": "2021-02-26",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 2220,
+      "bytes": 6617561
+    },
+    {
+      "file": "OCUL_2023-12-04.html",
+      "ticker": "OCUL",
+      "event_date_canonical": "2023-12-04",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 215,
+      "bytes": 2813378
+    },
+    {
+      "file": "PRTH_2020-09-15.html",
+      "ticker": "PRTH",
+      "event_date_canonical": "2020-09-15",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 28,
+      "bytes": 250505
+    },
+    {
+      "file": "VEEE_2024-06-25.html",
+      "ticker": "VEEE",
+      "event_date_canonical": "2024-06-25",
+      "cohort_group": "dev_v4_primary",
+      "segment": "no_detection",
+      "status": "ok",
+      "n_subbursts": 12,
+      "bytes": 98853
+    },
+    {
+      "file": "ASPI_2023-08-01.html",
+      "ticker": "ASPI",
+      "event_date_canonical": "2023-08-01",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 29,
+      "bytes": 287265
+    },
+    {
+      "file": "CELH_2020-08-06.html",
+      "ticker": "CELH",
+      "event_date_canonical": "2020-08-06",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 80,
+      "bytes": 4484094
+    },
+    {
+      "file": "EDUC_2024-04-03.html",
+      "ticker": "EDUC",
+      "event_date_canonical": "2024-04-03",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 8,
+      "bytes": 132210
+    },
+    {
+      "file": "EWTX_2022-01-05.html",
+      "ticker": "EWTX",
+      "event_date_canonical": "2022-01-05",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 242,
+      "bytes": 6881748
+    },
+    {
+      "file": "NE_2020-02-12.html",
+      "ticker": "NE",
+      "event_date_canonical": "2020-02-12",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 26,
+      "bytes": 3340848
+    },
+    {
+      "file": "SIFY_2023-06-22.html",
+      "ticker": "SIFY",
+      "event_date_canonical": "2023-06-22",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 206,
+      "bytes": 528092
+    },
+    {
+      "file": "UCAR_2024-03-28.html",
+      "ticker": "UCAR",
+      "event_date_canonical": "2024-03-28",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 997,
+      "bytes": 8459328
+    },
+    {
+      "file": "USEG_2020-05-15.html",
+      "ticker": "USEG",
+      "event_date_canonical": "2020-05-15",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 34,
+      "bytes": 191859
+    },
+    {
+      "file": "AACG_2023-12-27.html",
+      "ticker": "AACG",
+      "event_date_canonical": "2023-12-27",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 29,
+      "bytes": 120401
+    },
+    {
+      "file": "ABSI_2023-12-04.html",
+      "ticker": "ABSI",
+      "event_date_canonical": "2023-12-04",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 50,
+      "bytes": 2429747
+    },
+    {
+      "file": "CREX_2022-02-01.html",
+      "ticker": "CREX",
+      "event_date_canonical": "2022-02-01",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 2138,
+      "bytes": 13964005
+    },
+    {
+      "file": "EGHT_2020-12-10.html",
+      "ticker": "EGHT",
+      "event_date_canonical": "2020-12-10",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 255,
+      "bytes": 9527860
+    },
+    {
+      "file": "TORO_2023-03-31.html",
+      "ticker": "TORO",
+      "event_date_canonical": "2023-03-31",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 1086,
+      "bytes": 5887419
+    },
+    {
+      "file": "ALGS_2024-10-24.html",
+      "ticker": "ALGS",
+      "event_date_canonical": "2024-10-24",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 30,
+      "bytes": 819924
+    },
+    {
+      "file": "AQB_2022-03-10.html",
+      "ticker": "AQB",
+      "event_date_canonical": "2022-03-10",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 47,
+      "bytes": 4391088
+    },
+    {
+      "file": "SLGL_2024-11-22.html",
+      "ticker": "SLGL",
+      "event_date_canonical": "2024-11-22",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 8,
+      "bytes": 96003
+    },
+    {
+      "file": "WGS_2024-01-08.html",
+      "ticker": "WGS",
+      "event_date_canonical": "2024-01-08",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 353,
+      "bytes": 1192579
+    },
+    {
+      "file": "AHG_2022-08-03.html",
+      "ticker": "AHG",
+      "event_date_canonical": "2022-08-03",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 75,
+      "bytes": 324960
+    },
+    {
+      "file": "FATBB_2022-03-29.html",
+      "ticker": "FATBB",
+      "event_date_canonical": "2022-03-29",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 32,
+      "bytes": 277408
+    },
+    {
+      "file": "MRSN_2023-05-03.html",
+      "ticker": "MRSN",
+      "event_date_canonical": "2023-05-03",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 1086,
+      "bytes": 12567654
+    },
+    {
+      "file": "SLNH_2022-12-21.html",
+      "ticker": "SLNH",
+      "event_date_canonical": "2022-12-21",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 9,
+      "bytes": 251036
+    },
+    {
+      "file": "SPCB_2021-10-25.html",
+      "ticker": "SPCB",
+      "event_date_canonical": "2021-10-25",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 354,
+      "bytes": 3986000
+    },
+    {
+      "file": "ACRE_2020-04-07.html",
+      "ticker": "ACRE",
+      "event_date_canonical": "2020-04-07",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 954,
+      "bytes": 1956158
+    },
+    {
+      "file": "CVNA_2020-03-24.html",
+      "ticker": "CVNA",
+      "event_date_canonical": "2020-03-24",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 3859,
+      "bytes": 9702211
+    },
+    {
+      "file": "MDIA_2024-04-09.html",
+      "ticker": "MDIA",
+      "event_date_canonical": "2024-04-09",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 5819,
+      "bytes": 14897457
+    },
+    {
+      "file": "NEPH_2023-06-01.html",
+      "ticker": "NEPH",
+      "event_date_canonical": "2023-06-01",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 118,
+      "bytes": 594713
+    },
+    {
+      "file": "PPSI_2020-10-20.html",
+      "ticker": "PPSI",
+      "event_date_canonical": "2020-10-20",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 1395,
+      "bytes": 6719414
+    },
+    {
+      "file": "CPSH_2020-05-06.html",
+      "ticker": "CPSH",
+      "event_date_canonical": "2020-05-06",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 626,
+      "bytes": 8019621
+    },
+    {
+      "file": "DRUG_2023-08-08.html",
+      "ticker": "DRUG",
+      "event_date_canonical": "2023-08-08",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 2145,
+      "bytes": 14082728
+    },
+    {
+      "file": "MDIA_2022-08-03.html",
+      "ticker": "MDIA",
+      "event_date_canonical": "2022-08-03",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 1110,
+      "bytes": 8125200
+    },
+    {
+      "file": "ZENA_2024-10-11.html",
+      "ticker": "ZENA",
+      "event_date_canonical": "2024-10-11",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 3315,
+      "bytes": 14083674
+    },
+    {
+      "file": "BLBX_2023-04-17.html",
+      "ticker": "BLBX",
+      "event_date_canonical": "2023-04-17",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 2218,
+      "bytes": 13182286
+    },
+    {
+      "file": "CODX_2020-03-11.html",
+      "ticker": "CODX",
+      "event_date_canonical": "2020-03-11",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 8419,
+      "bytes": 15673903
+    },
+    {
+      "file": "EDSA_2020-06-15.html",
+      "ticker": "EDSA",
+      "event_date_canonical": "2020-06-15",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "status": "ok",
+      "n_subbursts": 9761,
+      "bytes": 15800008
+    },
+    {
+      "file": "EEIQ_2023-05-01.html",
+      "ticker": "EEIQ",
+      "event_date_canonical": "2023-05-01",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 29,
+      "bytes": 228693
+    },
+    {
+      "file": "AUID_2023-02-27.html",
+      "ticker": "AUID",
+      "event_date_canonical": "2023-02-27",
+      "cohort_group": "activity_extension",
+      "segment": "no_detection",
+      "status": "ok",
+      "n_subbursts": 14,
+      "bytes": 95227
+    },
+    {
+      "file": "OCG_2024-12-17.html",
+      "ticker": "OCG",
+      "event_date_canonical": "2024-12-17",
+      "cohort_group": "activity_extension",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 16,
+      "bytes": 156247
+    },
+    {
+      "file": "MESA_2020-03-20.html",
+      "ticker": "MESA",
+      "event_date_canonical": "2020-03-20",
+      "cohort_group": "activity_extension",
+      "segment": "rth",
+      "status": "ok",
+      "n_subbursts": 329,
+      "bytes": 1322822
+    },
+    {
+      "file": "PSIX_2022-11-15.html",
+      "ticker": "PSIX",
+      "event_date_canonical": "2022-11-15",
+      "cohort_group": "dev_v4_sidecar",
+      "segment": "nan",
+      "status": "n/a",
+      "n_subbursts": 0,
+      "bytes": 25440
+    }
+  ],
+  "source": "research/phase_10/v4_t7b_tape.py:main"
+}
