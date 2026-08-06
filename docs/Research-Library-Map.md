@@ -11,6 +11,63 @@ This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `resea
 
 ---
 
+## Phase 10 addendum — v3 and v4 (folder-level; branch `phase/10`, 2026-08-06)
+
+Supersedes the "ran in two scopes" framing in the Phase 10 section below: the phase ran **four**
+method versions on one branch, none approved. Ordering, with the decision each produced:
+
+| Version | Method | Outcome | Decision |
+|---|---|---|---|
+| v1 | segmentation — Kleinberg 2-state (Arm A) and threshold+hysteresis (Arm B) | **rejected on row 0** (Cooper's tape review); all four numeric rows had passed | **D6** |
+| v2 | intensity profile — one global peak, decay timescale | hard stop, rows 1, 2, 3, 6 | **D8** |
+| v3 | envelope-and-excursion against the event's own envelope | **rejected on row 0**; its Allan/Fano gate and its Arm A test had both passed | **D9** |
+| v4 | locally-normalized log inter-trade-interval thresholding + void gate | hard stop, rows 1 and 6 | — |
+
+Files added beyond those listed in the Phase 10 section below:
+
+- `prompts/phase_10_v3.md` — v3 spec, containing D8. `prompts/phase_10_v4.md` — v4 spec, containing D9.
+- `config/phase_10_v3.json` — Allan/Fano dyadic ladder (2⁻⁶–2¹³ s, 20 rungs), broken-stick knee
+  detection with BIC comparison, envelope scale derived from the knee, excursion multipliers, seven
+  failure thresholds each with its justification.
+- `config/phase_10_v4.json` — tie variants, normalization-window grid (10/20/30%), histogram and
+  peak-finding parameters, void cutoff 0.70, minimum prints per sub-burst, eight failure thresholds
+  each with its justification and its provenance (adopted from the literature vs. proposed here).
+- `research/phase_10/v3_t1_gate.py` (Allan/Fano gate, broken-stick knee), `v3_t2_t4_subbursts.py`,
+  `v3_t5_stability.py`, `v3_chart01.py`, `v3_t6_charts.py`, `v3_t6b_tape.py`.
+- `research/phase_10/v4_pipeline.py` (intervals, local normalization, void gate, sub-bursts),
+  `v4_t5_t6.py` (Arm A test, stability, causal audit), `v4_t7_charts.py`, `v4_t7b_tape.py`.
+- `results/phase_10/artifacts/v3_*` — `t1_gate.json`, `t1_gate_curves.parquet`,
+  `t1_gate_knees.parquet`, `t3_subbursts.parquet`, `t3_event_metrics.parquet`, `t2_t4_summary.json`,
+  `t5_stability.json`, chart manifests.
+- `results/phase_10/artifacts/v4_*` — `event_metrics.parquet`, `subbursts.parquet`,
+  `histograms.parquet`, **`causal_audit.parquet`** (18 fields tagged causal / non-causal with a
+  one-line reason each — the handoff artifact for Phase 17), `t5_t6_summary.json`,
+  `pipeline_raw.json`, chart manifests.
+- `results/phase_10/charts/v3_01–06*.html` (+ `.png`), `results/phase_10/charts/v4_01–05*.html`
+  (+ `.png`) — kaleido-verified.
+- `results/phase_10/charts/v3_07_tape_review/`, `v4_06_tape_review/` — per-event review sets, 60
+  charts each plus a full-cohort sortable index, untracked via a nested `.gitignore` (the pattern
+  first used by v1 and now standard for this phase).
+- Superseded records, all retained, none deleted: `REPORT_v1_superseded.md` /
+  `digest_v1_superseded.json`, `REPORT_v2_v3_superseded.md` / `digest_v2_v3_superseded.json`,
+  `REPORT_v3_superseded.md` / `digest_v3_superseded.json`. Each carries a header naming the decision
+  that superseded it, what survives, and what is withdrawn. Live record: `REPORT.md` / `digest.json`
+  (v4). Cross-phase copies: `results/reports/phase_10_report.md` (v1),
+  `phase_10_v3_report.md`, `phase_10_v4_report.md`.
+
+**Note on v4's chart 06.** Its first build shaded sub-burst intervals on the full-session axis and
+showed nothing — median sub-burst duration is 348 ns against a 57,600 s axis, i.e. sub-pixel. The
+shipped version uses five panels: three full-session (with sub-burst *locations* marked as ticks,
+labelled as locations rather than widths) plus two zoom panels (~2 s and ~5–20 µs) where intervals
+are shaded to true extent. Recorded because any future per-event chart of a sub-second object hits
+the same wall.
+
+Files modified: `docs/Universe-Decisions.md` (**D8**, **D9**), this file. Both append-only.
+
+New DB objects: none. New canonical-view flags: none.
+
+---
+
 ## Phase 10 additions (folder-level; branch `phase/10`, in progress, 2026-08-04)
 
 Phase 10 ran in two scopes on one branch. **v1 = "Burst Decomposition"** (segmentation, two arms) was
