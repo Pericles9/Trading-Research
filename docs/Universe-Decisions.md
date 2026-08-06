@@ -493,6 +493,19 @@ v3's artifacts are committed under `results/phase_10/artifacts/v3_*` with report
 **How to apply:** cite D9 before any within-session sub-burst work. Intensity estimation, envelope fitting, constant-reference thresholding, two-state segmentation and constant-baseline Hawkes calibration are all closed (D6, D8, D9); reopening any requires a numbered decision. A `no_threshold` event is never given a fallback threshold.
 
 
+## D10 — Phase 10b scoping and numbering
+
+**Date:** 2026-08-06 · **Deciding phase gate:** Cooper decision at the Phase 10 close-out
+
+**Decision:** The arrival-randomness work is numbered **Phase 10b**, not Phase 11. It is a direct continuation of Phase 10 — same object, better-founded methods — and the numbering says so.
+
+**Consequence:** Operating Plan §6 row 11 (*Spread & impact by participation*) is **preserved unchanged**, along with rows 12–19. The row-*n*-is-`prompts/phase_{n}.md` contract established 2026-08-03 is not broken and no downstream row is renumbered.
+
+**Recorded alongside:** row 11's participation-bucketed effective-spread half does not depend on a burst timescale and is executable independently of Phase 10b's outcome. Only its "burst vs. quiet" half is blocked. This is recorded so the cost-stack measurement is not treated as blocked in full by Phase 10's failure.
+
+**How to apply:** cite D10 when reading the Operating Plan §6 map — row 10b sits between rows 10 and 11 and is not a renumbering of anything. Phase 10 itself is closed at tag `phase-10-approved` as a recorded negative result (no burst timescale established); D10 does not reopen it.
+
+
 ## Related
 
 - [[Open-Items-Register]] — the "2025 inclusion decision" item is closed there, referencing D1;
