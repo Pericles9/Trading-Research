@@ -1,0 +1,226 @@
+{
+  "phase": "10b",
+  "task": "T1",
+  "config_hash": "c200580e",
+  "hypothesis": "The near-flat Allan plateau below the v3 knee is execution fragmentation, and its height is set by sweep size rather than by anything about the market. For a cluster process the plateau equals the SIZE-BIASED mean cluster size E[N^2]/E[N], so the prediction is a slope near 1 against that and a slope below 1 against the plain mean E[N].",
+  "no_escalation_note": "No escalation row fires on T1's outcome. Both outcomes are informative and both are reported.",
+  "scope_fence": "DIAGNOSTIC GROUPING FOR CHART 01 ONLY. Written to its own artifact and read by no other task; asserted in the verification block. It must not enter any Allan, intensity or rescaling computation anywhere in this phase.",
+  "plateau_definition": {
+    "rungs_seconds": [
+      0.015625,
+      4.0
+    ],
+    "n_rungs": 9,
+    "height": "mean of natural-log Allan factor across the plateau rungs, print observable",
+    "flatness_rule": "IQR of log A across those rungs <= 0.35; above it the event is NOT flat, is excluded from the fit, and is counted"
+  },
+  "sweep_gap_primary_s": 0.0001,
+  "by_segment": {
+    "premarket": {
+      "n_events": 28,
+      "n_flat": 16,
+      "n_excluded_not_flat": 12,
+      "plateau_iqr_log": {
+        "median": 0.344972343461041,
+        "max": 2.299709549769276
+      },
+      "plateau_height_log": {
+        "median": 2.479926340699724,
+        "min": 1.2928312437838971,
+        "max": 3.143886140887097
+      },
+      "size_weighted_mean_run_size": {
+        "median": 3.2829453292677533,
+        "min": 1.6371923427529627,
+        "max": 4.806559296616611
+      },
+      "regression_vs_size_weighted": {
+        "n": 16,
+        "slope": 1.3452406006097157,
+        "ci95": [
+          0.984467024084083,
+          1.7060141771353483
+        ],
+        "stderr": 0.1682095373670367,
+        "intercept": 0.9708628474514436,
+        "r2": 0.8204174191560151,
+        "pvalue": 1.3746284958021591e-06,
+        "slope_1_inside_ci": true
+      },
+      "regression_vs_plain_mean": {
+        "n": 16,
+        "slope": 5.003757104060352,
+        "ci95": [
+          3.4729680830423932,
+          6.53454612507831
+        ],
+        "stderr": 0.7137255325395901,
+        "intercept": 0.6407245476113068,
+        "r2": 0.778308184360721,
+        "pvalue": 6.142528215354697e-06,
+        "slope_1_inside_ci": false
+      }
+    },
+    "rth": {
+      "n_events": 70,
+      "n_flat": 51,
+      "n_excluded_not_flat": 19,
+      "plateau_iqr_log": {
+        "median": 0.2518875504317959,
+        "max": 1.1258609051313322
+      },
+      "plateau_height_log": {
+        "median": 2.134772972357383,
+        "min": 0.7372882963170189,
+        "max": 3.475203507522757
+      },
+      "size_weighted_mean_run_size": {
+        "median": 2.6614420062695925,
+        "min": 1.161547212741752,
+        "max": 9.613118560441155
+      },
+      "regression_vs_size_weighted": {
+        "n": 51,
+        "slope": 1.0934515998443148,
+        "ci95": [
+          0.9431852673376429,
+          1.2437179323509868
+        ],
+        "stderr": 0.0747751712552617,
+        "intercept": 1.104482861304555,
+        "r2": 0.8135731744859424,
+        "pvalue": 1.6786230731470298e-19,
+        "slope_1_inside_ci": true
+      },
+      "regression_vs_plain_mean": {
+        "n": 51,
+        "slope": 3.614176517619306,
+        "ci95": [
+          3.0470249729057812,
+          4.181328062332831
+        ],
+        "stderr": 0.28222458867662226,
+        "intercept": 1.0037842695180645,
+        "r2": 0.7699470049033655,
+        "pvalue": 2.976251382602562e-17,
+        "slope_1_inside_ci": false
+      }
+    }
+  },
+  "sensitivity_across_sweep_gap": {
+    "gap_0.0001s": {
+      "premarket": {
+        "n": 16,
+        "slope": 1.3452406006097157,
+        "ci95": [
+          0.984467024084083,
+          1.7060141771353483
+        ],
+        "stderr": 0.1682095373670367,
+        "intercept": 0.9708628474514436,
+        "r2": 0.8204174191560151,
+        "pvalue": 1.3746284958021591e-06,
+        "slope_1_inside_ci": true
+      },
+      "rth": {
+        "n": 51,
+        "slope": 1.0934515998443148,
+        "ci95": [
+          0.9431852673376429,
+          1.2437179323509868
+        ],
+        "stderr": 0.0747751712552617,
+        "intercept": 1.104482861304555,
+        "r2": 0.8135731744859424,
+        "pvalue": 1.6786230731470298e-19,
+        "slope_1_inside_ci": true
+      }
+    },
+    "gap_1e-05s": {
+      "premarket": {
+        "n": 16,
+        "slope": 1.3421026408228365,
+        "ci95": [
+          0.440399477182423,
+          2.24380580446325
+        ],
+        "stderr": 0.42041624405819233,
+        "intercept": 1.63933127616243,
+        "r2": 0.4212699513029857,
+        "pvalue": 0.006519373260599733,
+        "slope_1_inside_ci": true
+      },
+      "rth": {
+        "n": 51,
+        "slope": 1.9451616646700396,
+        "ci95": [
+          1.4550754981803684,
+          2.4352478311597108
+        ],
+        "stderr": 0.24387550037179961,
+        "intercept": 1.347175719396541,
+        "r2": 0.5648980108990532,
+        "pvalue": 2.0786683503786798e-10,
+        "slope_1_inside_ci": false
+      }
+    },
+    "gap_0.001s": {
+      "premarket": {
+        "n": 16,
+        "slope": 1.0643836894042127,
+        "ci95": [
+          0.8991416841466002,
+          1.2296256946618251
+        ],
+        "stderr": 0.07704356157582841,
+        "intercept": 0.41028288348492237,
+        "r2": 0.9316619363605204,
+        "pvalue": 1.5037141740496097e-09,
+        "slope_1_inside_ci": true
+      },
+      "rth": {
+        "n": 51,
+        "slope": 0.9448115447628742,
+        "ci95": [
+          0.8829335141818058,
+          1.0066895753439427
+        ],
+        "stderr": 0.030791596869726462,
+        "intercept": 0.5777865394135802,
+        "r2": 0.9505306453270038,
+        "pvalue": 1.1924473673841369e-33,
+        "slope_1_inside_ci": true
+      }
+    }
+  },
+  "carried_never_pooled": {
+    "dev_v4_sidecar": {
+      "n_events": 6,
+      "n_flat": 4,
+      "regression_vs_size_weighted": {
+        "n": 4,
+        "slope": null,
+        "ci95": null,
+        "r2": null,
+        "intercept": null
+      }
+    },
+    "row_cap_census": {
+      "n_events": 8,
+      "n_flat": 4,
+      "regression_vs_size_weighted": {
+        "n": 4,
+        "slope": null,
+        "ci95": null,
+        "r2": null,
+        "intercept": null
+      }
+    }
+  },
+  "timing_seconds": 3.8,
+  "source": "research/phase_10b/t1_plateau.py:main",
+  "artifacts": [
+    "results/phase_10b/artifacts/t1_sweep_runs.parquet",
+    "results/phase_10b/artifacts/t1_plateau_fit.json"
+  ]
+}

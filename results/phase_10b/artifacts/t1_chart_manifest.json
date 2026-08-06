@@ -1,0 +1,17 @@
+{
+  "phase": "10b",
+  "chart": {
+    "chart": "01_plateau_vs_sweep_size.html",
+    "png": "01_plateau_vs_sweep_size.png",
+    "kaleido_verified": true,
+    "html_bytes": 29346,
+    "png_bytes": 535641
+  },
+  "config_hash": "c200580e",
+  "reads": [
+    "results/phase_10b/artifacts/t1_sweep_runs.parquet",
+    "results/phase_10/artifacts/v3_t1_gate_curves.parquet"
+  ],
+  "scope_fence_note": "This is the only task in the phase that reads t1_sweep_runs.parquet.",
+  "source": "research/phase_10b/chart01_plateau.py:main"
+}
