@@ -1,0 +1,9 @@
+{
+  "n_event_rows": 650,
+  "n_subbursts": 128818,
+  "timing": {
+    "total_seconds": 11.7,
+    "max_per_event": 0.88
+  },
+  "config_hash": "fbb992ed"
+}
