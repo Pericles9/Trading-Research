@@ -3,7 +3,7 @@
   "version": "v4",
   "title": "Sub-Burst Detection from Locally-Normalized Log Inter-Trade Intervals",
   "config_hash": "fbb992ed",
-  "status": "escalated",
+  "status": "complete_approved",
   "escalation": {
     "criterion": "pre-registered failure rows 1 and 6",
     "observed": {
@@ -44,6 +44,14 @@
     "D9 appended to docs/Universe-Decisions.md (+39/-0), with consequence (a) corrected against the repo"
   ],
   "headline_metrics": [
+    {
+      "name": "burst_timescale_established",
+      "value": 0,
+      "n": 100,
+      "source": "results/phase_10/REPORT.md",
+      "chart": "results/phase_10/charts/v4_04_count_vs_prints.html",
+      "detail": "Five method families across four versions produced no burst timescale that survives review. v1 Arm A/Arm B rejected on row 0; v2 rows 1,2,3,6; v3 rejected on row 0; v4 rows 1 and 6."
+    },
     {
       "name": "row_1_spearman_vs_print_count",
       "value": 0.8748,
@@ -148,6 +156,7 @@
     }
   ],
   "surprises": [
+    "SHARED ROOT CAUSE across all five method families: every method needed a reference level or a resolution -- a constant rate, a flanking baseline, a smoothing bandwidth, an envelope scale, a normalization window -- and in every case the answer tracked that choice rather than the market. Arm A's burst count correlated +0.96 with print count; v4's +0.87 with a log-log slope of 0.92, above Arm A's own 0.85. v3 was the sole exception on that test (+0.28) and was rejected on the tape instead. The binary question 'are there bursts?' is ill-posed without constraining how fast the underlying rate may vary, which is what Phase 10b re-poses as a timescale question.",
     "Row 1 fails at Spearman 0.8748 and log-log slope 0.9224 -- the slope is ABOVE Arm A's own 0.85. Five methods have now been tried and this is the second-worst result on the test that matters, after Arm A itself.",
     "The mechanism is visible in chart 01 and is not the one D9 anticipated. Every threshold-bearing event has an isolated narrow spike at a normalized log interval of about -3.5, separated from the broad main body by a deep trough. The void gate finds that trough and takes it. The spike is order fragmentation -- one marketable order sweeping several resting orders produces several prints microseconds apart -- so the method separates multi-fill microstructure from everything else, not bursts from quiet. Multi-fill count scales with print count, hence 0.87.",
     "Median sub-burst duration is 349 nanoseconds against an 80.5 ns timestamp resolution. The decomposition is operating at the resolution of the clock, not the timescale of the tape.",
@@ -179,5 +188,6 @@
     "5eccc5b",
     "a26cc64"
   ],
-  "reproduce": "for s in v4_pipeline v4_t5_t6 v4_t7_charts v4_t7b_tape; do .venv/Scripts/python.exe research/phase_10/$s.py; done"
+  "reproduce": "for s in v4_pipeline v4_t5_t6 v4_t7_charts v4_t7b_tape; do .venv/Scripts/python.exe research/phase_10/$s.py; done",
+  "approval_note": "Approval is of the PHASE, not of a finding. Phase 10 established no burst timescale. What is approved and merged is the surviving evidence: the D7 detection anchor validation (110/110 exact vs Phase 8 det_minute, reference deviation 0.000e+00), the 28.6% negative detection-to-peak share, the premarket/regular-hours segment split, the 78.5x session elevation, the concentration figures, and v3's Allan/Fano scale-separation gate. The escalation block below is retained unchanged -- v4's rows 1 and 6 did fire and that record is not erased by approving the phase."
 }
