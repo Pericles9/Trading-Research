@@ -454,6 +454,45 @@ statistic, and state that it is session-anchored and superseded as a budget. Reu
 **How to apply:** cite D8 before treating any within-session intensity structure as measurable. Any method comparing a fast-varying arrival rate to a constant reference level is closed by this decision, as are two-state segmentation and constant-baseline Hawkes calibration; reopening any requires a numbered decision.
 
 
+## D9 — Sub-bursts are detected from locally-normalized log inter-trade intervals
+
+**Date:** 2026-08-04
+**Deciding phase gate:** Phase 10 v3 rejected on failure row 0 (Cooper's visual review of chart 07 against the tape)
+**Supersedes:** `prompts/phase_10_v3.md` (envelope-and-excursion), which superseded v2 and v2_r1
+**Affects:** Phases 10, 11, 13, 14, 16, 17
+
+**Decision.** Sub-bursts are identified by thresholding the inter-trade interval, where the threshold is derived per event from the trough of its own locally-normalized log-interval distribution. v3's envelope-and-excursion approach is withdrawn.
+
+**Why.** Every prior attempt required estimating an intensity curve, which required choosing a smoothing scale, which made the answer track the estimator. Arm A's burst count correlated **0.96** with print count for this reason. v2's rows 1 and 6 failed for this reason. v3 carried it in the envelope bandwidth — and although v3's Arm A test passed (Spearman 0.277/0.353), its row 3 failed at a median interval Jaccard of 0.0735 between sub-burst sets computed at the two ends of its own knee interval, which is the same defect surfacing one level up. **Operating on intervals directly removes the mechanism rather than testing for it after the fact.**
+
+**Prior art.** This is standard practice in two mature fields and was not invented here.
+
+- **Neuroscience — spike train burst detection.** The log-interval histogram method (Selinger et al. 2007; Pasquale et al. 2010) locates peaks in the log-transformed interval histogram and sets the threshold at the minimum between the intra-burst peak and subsequent peaks. It carries a **void parameter** measuring peak separation, with a conventional cutoff of 0.7; where no intra-burst peak exists, no bursts are declared. Ko et al. (2012) handle non-stationary rate by normalizing log intervals against a **moving window of roughly 20% of the sequence**, reporting under 0.3% change in detected counts anywhere between 10% and 30%. Kapucu et al. (2012) derive thresholds from the cumulative moving average and skewness of the interval histogram, built for time-varying dynamics.
+- **Seismology — earthquake declustering.** Baiesi & Paczuski (2004), extended by Zaliapin & Ben-Zion (2013, 2020), separate clustered from background events using the bimodality of a nearest-neighbour distance whose proximity metric scales with event magnitude — the window widens for larger events by construction.
+
+**The warning that shapes this phase.** Zaliapin & Ben-Zion found the bimodality that separates clustered from background events is often violated in the vicinity of the largest earthquakes, where triggered activity dominates and a simple threshold between modes stops working. **Our entire T=0 session is that vicinity.** The void parameter is therefore a live gate, not a formality, and it is expected to fail on some events. **The share of events where it fails is a headline result, not an inconvenience.**
+
+**Everything in this phase is offline and non-causal.** The threshold, the void gate, and the normalization window all read the completed session. This is correct for label construction and useless for trading. Phase 17's online detector must re-derive every one of these under causality, and this phase's job is to hand it a defensible target, not a tradeable rule.
+
+**Recorded consequences.**
+- **(a)** *(corrected against the record — see the editorial note below)* v3 is withdrawn. It **was executed in full** before withdrawal, and its artifacts exist and are retained as evidentiary record alongside v2's.
+- **(b)** v2 artifacts remain the superseded evidentiary record per D8(b).
+- **(c)** These carry forward unchanged: the frozen cohort (`e1a0ac73a79aa573`); the D7 detection anchor (110/110 exact against Phase 8, reference deviation 0.000e+00); detection-to-peak (median ~1,976 s, poll ratio 1.010); the ~28% negative share; the segment split.
+- **(d)** D8's scale-separation gate is withdrawn as a separate task. The void parameter supersedes it: per-event rather than pooled, and computed as part of the method rather than alongside it. *(Note: that gate PASSED when run — see the editorial note.)*
+- **(e)** Detection segment remains a stratification variable from the start.
+
+**Editorial note on consequence (a), recorded because a decision record must not contradict the repo.** The D9 text as drafted states "v3 is withdrawn before execution; no v3 artifacts exist." That is not what happened, and it is corrected above rather than transcribed. Phase 10 v3 ran to completion on 2026-08-05:
+
+- its T1 Allan/Fano scale-separation **gate PASSED** on all four segment-by-observable cells (knees 128 s rth / 16 s premarket for the print observable, ΔBIC 45.6–68.7, slope changes 0.61–0.87);
+- its failure **row 1 — the Arm A test — PASSED** for the first time in the phase (Spearman 0.2772 / 0.3531, log-log slope 0.2605 / 0.1849, against Arm A's 0.96 and 0.85);
+- rows 2, 3 and 4 fired, row 3 most severely;
+- **Cooper then rejected it on row 0**, visual review of chart 07 against the tape.
+
+v3's artifacts are committed under `results/phase_10/artifacts/v3_*` with report and digest at `results/phase_10/{REPORT.md, digest.json}` (status `rejected`). Two v3 results are load-bearing for D9's own reasoning and would be lost if the record said v3 never ran: the demonstration that **a characteristic clustering scale does exist** in this data, and the demonstration that **an event-relative reference breaks the print-count dependence** that sank Arm A. D9 supersedes v3's *method*; it does not erase v3's *evidence*.
+
+**How to apply:** cite D9 before any within-session sub-burst work. Intensity estimation, envelope fitting, constant-reference thresholding, two-state segmentation and constant-baseline Hawkes calibration are all closed (D6, D8, D9); reopening any requires a numbered decision. A `no_threshold` event is never given a fallback threshold.
+
+
 ## Related
 
 - [[Open-Items-Register]] — the "2025 inclusion decision" item is closed there, referencing D1;

@@ -1,0 +1,249 @@
+{
+  "phase": "10",
+  "version": "v4",
+  "title": "Sub-Burst Detection from Locally-Normalized Log Inter-Trade Intervals",
+  "branch": "phase/10",
+  "spec": "prompts/phase_10_v4.md",
+  "governing_decisions": [
+    "D9",
+    "D7",
+    "D6 (diagnosis)",
+    "D5",
+    "D4",
+    "D3",
+    "D1"
+  ],
+  "baseline": {
+    "tag": "phase-9-approved",
+    "tag_sha": "7909d66199c2adfde597eb8a263e7dbb730cc1fb"
+  },
+  "cohort": {
+    "rule": "FROZEN. v1 manifest, reused, never redrawn. Hash asserted on every run.",
+    "manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+    "content_hash": "e1a0ac73a79aa573",
+    "n_total": 114,
+    "analysis_cohort_n": 100,
+    "analysis_cohort": [
+      "dev_v4_primary",
+      "activity_extension"
+    ],
+    "never_pooled": [
+      "row_cap_census",
+      "dev_v4_sidecar"
+    ]
+  },
+  "detection_anchor": {
+    "rule": "REUSED, NOT RE-DERIVED (D7).",
+    "artifact": "results/phase_10/artifacts/v2_r13_detection.parquet",
+    "threshold": 1.3,
+    "poll_interval_seconds": 1
+  },
+  "segments": {
+    "values": [
+      "premarket",
+      "rth",
+      "post"
+    ],
+    "source": "v2_r13_detection.parquet det_segment_poll1",
+    "rule": "Stratification variable from T1 onward. Pooled alongside, never instead.",
+    "observed_counts": {
+      "rth": 70,
+      "premarket": 28,
+      "post": 0
+    }
+  },
+  "no_intensity_curve": "No intensity curve is estimated anywhere in this phase. The operating variable is the inter-trade interval itself. This is the defect D9 exists to remove; any task appearing to need a smoothing scale is a stop-and-post.",
+  "ties": {
+    "variants": [
+      "collapse_same_timestamp",
+      "resolution_floor"
+    ],
+    "collapse_same_timestamp": "consecutive prints sharing a sip_timestamp collapse to one arrival with summed size; intervals become strictly positive",
+    "resolution_floor": "zero intervals are set to the event's own smallest observed NON-ZERO interval, so a tie is treated as one tick of real time rather than as a coincidence",
+    "resolution_note": "The nominal field width is 1 ns but the resolution actually present is coarser: v1 measured a smallest non-zero gap of 49 ns and a per-event median smallest gap of 80 ns. The floor is taken per event from the data, never assumed.",
+    "reference_variant": "collapse_same_timestamp",
+    "reference_variant_why": "It is the only variant under which a zero interval cannot exist by construction, so the log transform is defined without an imputed value. resolution_floor is run alongside because it preserves print count, and failure row 5 tests whether the choice matters.",
+    "load_bearing_note": "v1 floored 370,525 gaps -- 2.7% of prints on average, up to 8.1%, correlated 0.64 with print count. Zero intervals cannot be log-transformed, so this choice sits upstream of everything else in the phase."
+  },
+  "normalization": {
+    "transform": "log10 of the inter-trade interval in seconds",
+    "rule": "y_i = log10(dt_i) - local_location_i, where local_location is a centred moving MEDIAN of log10(dt) over a window of `window_fraction` x sequence length",
+    "estimator": "median",
+    "estimator_why": "The log-interval sequence is heavy-tailed and contains long quiet stretches; a moving mean is dragged by them and would make the normalized series depend on how far a quiet stretch happens to reach into the window. The median is the standard robust location and is what makes the threshold scale with the event rather than with its outliers. Ko et al. (2012) normalize against a local characteristic value for the same reason.",
+    "window_fraction_grid": [
+      0.1,
+      0.2,
+      0.3
+    ],
+    "window_fraction_reference": 0.2,
+    "window_fraction_why": "The published insensitivity range: Ko et al. report under 0.3% change in detected counts anywhere between 10% and 30%, with 20% conventional. The grid IS the row-4 test -- if our counts move materially more than the published figure, our data differs from that regime in a way that matters.",
+    "causality": "NON-CAUSAL by construction -- the window is centred and reads forward in time. Recorded, not worked around. Substituting a trailing window is Phase 17's problem and a different estimator (D9).",
+    "implementation_note": "The moving median is evaluated at anchors spaced window/10 apart and linearly interpolated between them, which is O(10n) rather than O(n log w) for windows of ~10^5 samples. The anchor spacing is one tenth of the window, so the interpolated location cannot move by more than the median does across a tenth of a window.",
+    "min_prints_for_normalization": 200,
+    "min_prints_why": "Below this the 20% window holds fewer than 40 intervals and the local median is too noisy to normalize against. Events below are labeled too_few_prints, carried, never given a fallback."
+  },
+  "threshold": {
+    "histogram": {
+      "bin_width_decades": 0.05,
+      "range_decades": [
+        -4.0,
+        4.0
+      ],
+      "bin_width_why": "0.05 decades gives ~160 bins over the normalized range, enough to resolve two modes without the ragged single-count bins that a finer grid produces on thin events."
+    },
+    "smoothing": {
+      "method": "none",
+      "why": "Smoothing the histogram would reintroduce a bandwidth -- the exact free parameter D9 removes. Peak prominence does the work instead."
+    },
+    "peak_finding": {
+      "method": "scipy.signal.find_peaks",
+      "prominence_fraction_of_max": 0.05,
+      "min_peak_separation_bins": 4,
+      "why": "Prominence relative to the tallest bin makes the criterion scale-free across events with wildly different print counts. 0.05 keeps a mode that is at least 5% as prominent as the main one; 4 bins (0.2 decades) stops one lumpy mode being read as two."
+    },
+    "void_parameter": {
+      "definition": "V = 1 - f(trough) / sqrt(f(peak_left) * f(peak_right)), on histogram densities",
+      "cutoff": 0.7,
+      "cutoff_why": "The conventional value in the spike-train literature (Selinger et al. 2007; Pasquale et al. 2010). Adopted, not tuned.",
+      "rule": "Threshold is the FIRST trough, scanning left to right from the short-interval peak, whose void parameter clears the cutoff.",
+      "no_threshold_rule": "Where no short-interval peak exists, or no trough clears the cutoff, NO sub-bursts are declared. The event is labeled `no_threshold`, carried, and reported as its own row. NEVER dropped, NEVER given a fallback threshold.",
+      "no_threshold_is_a_result": "Per D9's Zaliapin warning -- the whole T=0 session sits in the vicinity of the dominant event, exactly where bimodality is known to break. The share is a headline number, not an inconvenience."
+    }
+  },
+  "subbursts": {
+    "rule": "maximal runs of consecutive intervals strictly below the per-event threshold",
+    "min_prints_grid": [
+      2,
+      3,
+      5
+    ],
+    "min_prints_reference": 3,
+    "min_prints_why": "A 2-print run is a single interval and carries no internal structure; 3 is the smallest run that can show a rate change within itself. 2 and 5 bracket it for the sensitivity report.",
+    "session_move_denominator": "last in-window T=0 print price minus first in-window T=0 print price, tick-derived. Undefined only where that difference is exactly 0; counted, never imputed.",
+    "d5_anchor_note": "The session-move denominator is the one session-scale anchor, named by the prompt at T4b. Every timing quantity is anchored to the D7 detection anchor or to the event peak, both burst-relative or causal-anchored."
+  },
+  "failure_criteria": {
+    "row_0": {
+      "mode": "Cooper rejects the decomposition on visual review of chart 06 against the tape",
+      "threshold": null,
+      "note": "Cooper's judgment. Overrides every other row in either direction."
+    },
+    "row_1": {
+      "mode": "Sub-burst count is a restatement of print count (the Arm A test)",
+      "observable": "Spearman(count, T=0 print count) and the log-log slope",
+      "threshold_max_spearman": 0.5,
+      "threshold_max_slope": 0.35,
+      "direction": "FAIL if Spearman > 0.50 OR slope > 0.35",
+      "reference": "Arm A scored 0.96 and 0.85; v3 scored 0.277/0.353 and 0.261/0.185",
+      "note": "The criterion that decides whether the result is real."
+    },
+    "row_2": {
+      "mode": "Method does not apply to the cohort",
+      "observable": "share of analysis-cohort events labeled no_threshold",
+      "threshold_max_share": 0.6,
+      "direction": "FAIL if above",
+      "justification": "D9 predicts some events will fail bimodality and calls that a finding, not a failure -- so this threshold is deliberately permissive. It fires only where the method does not apply to the COHORT: above 60%, the majority of events yield nothing and a decomposition reported on the minority would be a statement about a self-selected subsample rather than about the universe. Below it, the no_threshold share is reported as the headline result D9 says it is."
+    },
+    "row_3": {
+      "mode": "Void parameters cluster at the cutoff",
+      "observable": "share of threshold-bearing events whose void parameter lies within `margin` above the cutoff",
+      "margin": 0.05,
+      "threshold_max_share": 0.3,
+      "direction": "FAIL if above",
+      "justification": "A pass/fail count hides fragility: a cohort sitting at 0.71 against a 0.70 cutoff would flip wholesale under a small change. 0.05 is one seventh of the distance from the cutoff to the maximum possible void of 1.0; more than 30% of events in that band means the cohort's thresholds are decided by the cutoff rather than by the data."
+    },
+    "row_4": {
+      "mode": "Normalization window drives the answer",
+      "observable": "median per-event relative change in sub-burst count across the 10-30% window grid, |max-min|/median",
+      "threshold_max_relative_change": 0.2,
+      "published_comparison": 0.003,
+      "direction": "FAIL if above",
+      "justification": "Ko et al. report under 0.3% across this exact grid. Requiring 0.3% of market tick data would be requiring the published regime rather than testing for it, so the bar is set at 20% -- roughly the point at which the count would move by a fifth on a parameter the literature calls immaterial. The published figure is reported alongside so the gap is visible either way."
+    },
+    "row_5": {
+      "mode": "Tie handling drives the answer",
+      "observable": "median per-event relative change in sub-burst count between the two tie variants",
+      "threshold_max_relative_change": 0.2,
+      "direction": "FAIL if above",
+      "justification": "Same scale as row 4, for the same reason: ties are an upstream representational choice, not a measurement, and the result should not hinge on it."
+    },
+    "row_6": {
+      "mode": "Degenerate decomposition",
+      "observable_a": "share of threshold-bearing events yielding one sub-burst spanning >= 50% of the session",
+      "threshold_max_share": 0.2,
+      "observable_b": "median sub-burst duration relative to the event's timestamp-resolution floor",
+      "threshold_min_duration_multiple": 10.0,
+      "direction": "FAIL if share > 0.20 OR median duration <= 10x the resolution floor",
+      "justification": "The resolution floor here is nanoseconds, not a rule parameter, so the multiple is set well above 1: a median sub-burst lasting under 10 timestamp ticks would mean the decomposition is reading the clock, not the tape."
+    },
+    "row_7": {
+      "mode": "Segment incompatibility",
+      "observable": "absolute difference in median derived threshold between premarket and rth, in decades of normalized log interval",
+      "threshold_max_decades": 1.0,
+      "direction": "FAIL if above",
+      "justification": "The threshold is already in locally-normalized units, so segment differences in raw rate are divided out before this comparison. A residual gap above one decade would mean normalization has not made the segments comparable and one threshold rule does not serve both."
+    },
+    "on_fire": "Hard stop. Commit, post observed values and charts. Do not adjust parameters to make a criterion pass. Do not fall back to a global threshold for no_threshold events. Do not reintroduce intensity estimation, envelope fitting, constant-reference thresholding, two-state segmentation or Hawkes calibration -- all closed by D6, D8 and D9.",
+    "standing_lesson": "A pass on stability rows is not evidence of correctness. v1 passed all four numeric rows while both arms were wrong; v3 passed the Arm A test and was still rejected on the tape."
+  },
+  "causal_audit": {
+    "rule": "Every derived field is tagged causal or non_causal as a first-class column, with a one-line reason.",
+    "expectation": "Everything except the D7 detection anchor is expected non_causal. Anything tagged causal must be justified explicitly rather than allowed to pass.",
+    "output": "results/phase_10/artifacts/v4_causal_audit.parquet plus a summary table of what Phase 17 must re-derive under causality."
+  },
+  "charts": {
+    "engine": "plotly, standalone HTML, one per file, kaleido-verified .png sibling",
+    "caption_requires": [
+      "sample",
+      "n",
+      "filters applied",
+      "config hash"
+    ],
+    "chart_06": {
+      "dir": "results/phase_10/charts/v4_06_tape_review/",
+      "gitignore_rule": "nested .gitignore containing '*' inside the chart directory",
+      "produced_even_on_failure": true,
+      "max_charts": 60,
+      "max_scatter_points": 150000,
+      "over_cap_seed": 42,
+      "selection_rule": [
+        "every no_threshold event up to the cap -- the most informative charts in the set, because they show what the method could not handle",
+        "all dev_v4_primary",
+        "stratified draw across segment and sub-burst count",
+        "sidecar and row-cap included and labeled"
+      ]
+    },
+    "chart_01_grid": {
+      "n_events": 12,
+      "selection": "spanning the activity range within each segment, plus no_threshold examples"
+    }
+  },
+  "runtime_ceilings": {
+    "seconds_per_event_all_variants": 300,
+    "seconds_aggregate": 7200,
+    "on_breach": "hard stop; do not silently reduce the cohort or the grid"
+  },
+  "paths": {
+    "filtered_root": "data/filtered",
+    "cohort_manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+    "detection": "results/phase_10/artifacts/v2_r13_detection.parquet",
+    "v2_event_metrics": "results/phase_10/artifacts/v2_t1_event_metrics.parquet",
+    "out_artifacts": "results/phase_10/artifacts/",
+    "out_charts": "results/phase_10/charts/"
+  },
+  "write_allowlist": [
+    "prompts/",
+    "config/",
+    "research/phase_10/",
+    "results/phase_10/",
+    "docs/Universe-Decisions.md (APPEND-ONLY)",
+    "docs/Research-Library-Map.md (APPEND-ONLY)"
+  ],
+  "phase_13_boundary": "This phase USES inter-trade intervals as its operating variable. It does NOT produce the interval distribution as a characterized finding, the noise floor, or interval regime definitions -- those remain Phase 13's. The boundary is narrow here and is stated in the report.",
+  "reporting": {
+    "description_only": "No normalization window, void cutoff or minimum print count selected. No latency budget proposed. No result characterized.",
+    "segment_rule": "Every quantity split by detection segment.",
+    "n_rule": "Every statistic carries n. Every claim cites its chart."
+  },
+  "config_hash_note": "Committed before any v4 run."
+}
