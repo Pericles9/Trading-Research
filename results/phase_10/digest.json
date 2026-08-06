@@ -3,9 +3,9 @@
   "version": "v3",
   "title": "Sub-Burst Decomposition",
   "config_hash": "c5aea7f6",
-  "status": "escalated",
+  "status": "rejected",
   "escalation": {
-    "criterion": "pre-registered failure rows 2, 3, 4",
+    "criterion": "pre-registered failure rows 0, 2, 3, 4",
     "observed": {
       "row_2_observable_disagreement": {
         "spearman": 0.4233,
@@ -31,7 +31,13 @@
       "row_6 (gate)",
       "row_7 (gate)"
     ],
-    "row_0": "not evaluated by the agent; chart 07 produced so it CAN be evaluated"
+    "row_0": "FAILED - Cooper rejected the decomposition on visual review of chart 07 against the tape. Row 0 overrides every other row in either direction, so the row-1 pass (the Arm A test, cleared for the first time in this phase) does NOT constitute acceptance. The decomposition is rejected.",
+    "operative_result": "REJECTED on row 0",
+    "what_survives_the_rejection": [
+      "the T1 gate result: a characteristic clustering scale exists (128s rth / 16s premarket, dBIC 45.6-68.7 on all four cells)",
+      "the row-1 method finding: an envelope-relative reference breaks the print-count dependence that sank Arm A (Spearman 0.277/0.353 vs Arm A's 0.96)"
+    ],
+    "what_is_rejected": "the sub-burst decomposition those results were meant to license"
   },
   "decisions_recorded": [
     "D8 appended to docs/Universe-Decisions.md (+34/-0)"
@@ -154,6 +160,7 @@
     }
   ],
   "surprises": [
+    "Row 0 fired again. This is the second consecutive phase version in which every numeric criterion that mattered behaved -- including the Arm A test that v1 failed and v3 passed -- while Cooper's visual review against the tape rejected the result. Producing chart 07 despite the numeric failures is the only reason that judgment was available; v2 skipped its equivalent and could not be judged at all.",
     "The scale-separation gate PASSES, and cleanly: dBIC 45.6-68.7 with slope changes 0.61-0.87 on all four segment-by-observable cells. After four failed methods, a characteristic clustering scale does exist.",
     "The Allan factor never approaches the Poisson value 1 anywhere on the ladder -- rth/print median is 5.99 at 15.6 ms and 1245 at 4096 s. Clustering is present at EVERY scale measured; the knee marks where the rate of increase changes (slope 0.173 -> 1.017), not where clustering starts. Easy to misread off log-log axes, and I did misread it once before checking the numbers.",
     "Row 1 -- the Arm A test -- PASSES for the first time in this phase. Spearman 0.277/0.353 and log-log slope 0.261/0.185 against Arm A's 0.96 and 0.85. The envelope-relative reference appears to remove the mechanism that made Arm A's burst count a restatement of print count.",

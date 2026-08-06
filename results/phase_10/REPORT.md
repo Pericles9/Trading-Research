@@ -3,7 +3,7 @@
 tags:
   - type/research
   - domain/microstructure
-  - status/escalated
+  - status/rejected
 created: 2026-08-05
 phase: 10
 version: v3
@@ -15,10 +15,13 @@ config_hash: c5aea7f6
 **Branch:** `phase/10` · **Baseline:** `phase-9-approved` (`7909d66`) · **config_hash:** `c5aea7f6`
 **Spec:** `prompts/phase_10_v3.md` · **Decisions:** D8 (new), D7, D6 (diagnosis retained), D5, D4, D3, D1
 
-> **STATUS — HARD STOP. Pre-registered rows 2, 3 and 4 fired. Rows 1, 5, 6 and 7 pass.**
+> **STATUS — REJECTED. Pre-registered rows 0, 2, 3 and 4 fired. Rows 1, 5, 6 and 7 pass.**
 > State committed at `3b491a4` before the stop. No parameter adjusted, no threshold moved, no
 > constant-reference thresholding, two-state segmentation or Hawkes calibration reintroduced.
-> Row 0 (Cooper's visual review of chart 07) is not evaluated by the agent.
+> **Row 0 ALSO FIRED: Cooper rejected the decomposition on visual review of chart 07 against
+> the tape.** Row 0 overrides every other row in either direction, so the row-1 pass — the Arm A
+> test, which this phase cleared for the first time — does **not** constitute acceptance. The
+> sub-burst decomposition is rejected.
 
 **Description only.** No envelope scale, observable or excursion rule is selected. No latency budget
 is proposed. No result is characterised as good, weak, promising or disappointing.
@@ -172,7 +175,7 @@ handling is a non-issue at these scales.
 
 | # | Mode | Observable | Observed | Threshold | Result |
 |---|---|---|---:|---|---|
-| **0** | Cooper rejects on chart 07 | — | — | Cooper's judgment | **not evaluated** |
+| **0** | **Cooper rejects the decomposition on visual review of chart 07** | — | — | Cooper's judgment | **FAILED — rejected by Cooper** |
 | **1** | **Sub-burst count restates print count** | print | ρ +0.2772, slope +0.2605 | ≤0.50, ≤0.35 | **PASS** |
 | **1** | | volume | ρ +0.3531, slope +0.1849 | ≤0.50, ≤0.35 | **PASS** |
 | **2** | **Observable disagreement** | print vs volume | **+0.4233** | ≥ 0.50 | **FAIL** |
@@ -197,8 +200,12 @@ not sharp enough to pin the decomposition it licenses.
 degenerate-share is 0.0 for both observables. Median print-rate sub-burst duration is 1.03× the
 minimum-duration floor, i.e. sitting on the rule's own parameter.
 
-Per D8's standing lesson, carried from v1: **a pass on stability rows is not evidence of
-correctness.** Rows 1, 5, 6 and 7 passing does not endorse the decomposition.
+**Row 0 fired.** Cooper rejected the decomposition on visual review of chart 07 against the tape.
+Row 0 overrides every other row in either direction. The row-1 pass — the Arm A test, cleared here
+for the first time in this phase — therefore does **not** constitute acceptance, and neither do rows
+5, 6 and 7. Per D8's standing lesson, carried from v1: **a pass on stability rows is not evidence of
+correctness.** This is the second consecutive phase version in which every numeric criterion that
+mattered behaved while the visual review rejected the result.
 
 ---
 
@@ -256,11 +263,18 @@ correctness.** Rows 1, 5, 6 and 7 passing does not endorse the decomposition.
 
 Not tagged, not merged. Phase 11 scoping not begun.
 
-**Rows 2, 3 and 4 fired.** Per the prompt: do not adjust parameters to make a criterion pass; do not
+**Rows 0, 2, 3 and 4 fired.** Per the prompt: do not adjust parameters to make a criterion pass; do not
 reintroduce constant-reference thresholding, two-state segmentation, or Hawkes calibration. None of
 that was done.
 
-**Chart 01 decides whether the phase is well-posed** — it passed. **Chart 04 decides whether the
-result is real** — row 1 passed, the first method in this phase to clear the Arm A test. **Chart 07
-is the gate**, produced despite the failure precisely so the failure can be judged rather than only
-counted. All three reads are Cooper's.
+**Chart 01 decided whether the phase is well-posed** — it passed: a characteristic clustering scale
+exists. **Chart 04 decided whether the result is real** — row 1 passed, the first method in this
+phase to clear the Arm A test. **Chart 07 was the gate, and Cooper rejected on it.** Producing chart
+07 despite the numeric failures is what made that judgment possible at all; had it been skipped as
+v2's was, the phase would have reported four numeric passes and a stalled decomposition with no way
+to see why.
+
+**Disposition: rejected on row 0.** What survives is the gate result (a characteristic scale exists,
+at 128 s / 16 s) and the row-1 method finding (an envelope-relative reference breaks the print-count
+dependence that sank Arm A). What is rejected is the decomposition those two results were meant to
+license. Recording that as a numbered decision — as v1's row-0 rejection became D6 — is Cooper's.

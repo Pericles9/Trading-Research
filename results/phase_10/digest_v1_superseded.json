@@ -17,7 +17,7 @@
     "observed": null
   },
   "pre_registered_failure_criteria": {
-    "row_0": "Cooper's judgment off chart 07 \u2014 not evaluated by the agent. A pass on rows 1-4 does not constitute acceptance.",
+    "row_0": "FAILED \u2014 Cooper rejected the segmentation on visual review of chart 07 against the tape. Row 0 overrides rows 1-4 in either direction, so the four numeric passes do NOT constitute acceptance: both arms are rejected. This rejection is the trigger recorded in docs/Universe-Decisions.md D6.",
     "row_1_degenerate": {
       "arm_a": "PASS (0.000 vs <=0.20)",
       "arm_b": "PASS (0.000 vs <=0.20)"
@@ -34,7 +34,8 @@
       "arm_a": "PASS (modal share 0.04, IQR 249.5)",
       "arm_b": "PASS (modal share 0.05, IQR 16.25)"
     },
-    "any_failed": false
+    "any_failed": true,
+    "operative_result": "REJECTED on row 0"
   },
   "headline_metrics": [
     {

@@ -296,7 +296,7 @@ before the run. **Pass/fail only; nothing further is stated about these results.
 
 | # | Failure mode | Arm | Observed | Threshold | Result |
 |---|---|---|---|---|---|
-| **0** | Cooper rejects the segmentation on visual review of chart 07 against the tape | both | — | Cooper's judgment | **not evaluated by the agent** |
+| **0** | **Cooper rejects the segmentation on visual review of chart 07 against the tape** | both | — | Cooper's judgment | **FAILED — rejected by Cooper** |
 | 1 | Degenerate to session flag | A | 0.000 | ≤ 0.20 | **PASS** |
 | 1 | Degenerate to session flag | B | 0.000 | ≤ 0.20 | **PASS** |
 | 2 | Fragmentation at the floor (median duration) | A | 2.390 s | > 75.0 s | **n/a** |
@@ -311,8 +311,11 @@ re-emitting its own parameter"; Arm A has no minimum-dwell parameter to re-emit.
 was written with `applies_to = ["arm_b"]`, `reported_for = ["arm_a", "arm_b"]` before the run, so
 Arm A's value is reported but not evaluated.
 
-**No criterion fired.** Per the prompt: *a pass on rows 1–4 does not constitute acceptance.* Row 0
-is the operative criterion and it is Cooper's.
+**Row 0 FIRED.** Cooper rejected the segmentation on visual review of chart 07 against the tape.
+Row 0 overrides rows 1–4 in either direction, so the four numeric passes below are superseded by it:
+both arms are rejected. Per the prompt, *a pass on rows 1–4 does not constitute acceptance* — and
+this is the case it was written for. The rejection is the trigger recorded in `docs/Universe-Decisions.md`
+**D6**.
 
 ### T5a — parameter sensitivity detail
 
