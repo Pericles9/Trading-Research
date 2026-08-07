@@ -4,13 +4,14 @@
     "chart": "04_control_harness.html",
     "png": "04_control_harness.png",
     "kaleido_verified": true,
-    "html_bytes": 88524,
-    "png_bytes": 685693
+    "html_bytes": 229955,
+    "png_bytes": 1174734
   },
-  "config_hash": "d9554f55",
+  "config_hash": "5fd653e4",
+  "amendment": "A10b.1",
   "reads": [
     "results/phase_10b/artifacts/t2_control_curves.parquet",
-    "results/phase_10b/artifacts/t2_control_results.json"
+    "results/phase_10b/artifacts/t2_controls.json"
   ],
   "source": "research/phase_10b/chart04_controls.py:main"
 }

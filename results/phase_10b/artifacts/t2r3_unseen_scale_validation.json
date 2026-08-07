@@ -1,0 +1,60 @@
+{
+  "phase": "10b",
+  "task": "T2-R3",
+  "config_hash": "5fd653e4",
+  "pre_registered": "A10b.1 T2-R3. C3' at 1 ms and C4' at 100 ms, PRE-REGISTERED by this commit before the run. Same background rate, cluster size k=6, timestamp quantization and draw count as C3/C4. Required: the knee recovers each within 1 rung. Hard stop (row 4b) if the knee recovers 10 us but misses either -- that is the signature of a statistic fitted to the case that motivated it, and it voids Change 1 rather than the controls.",
+  "controls": {
+    "C3": {
+      "injected_scale_s": 1e-05,
+      "selected_k": 3,
+      "delta_bic_vs_k1": 83.99956574411607,
+      "breakpoints_T_s": [
+        3.0517578125e-05,
+        256.0
+      ],
+      "best_breakpoint_rung_error": 1.6096404744368122,
+      "pass_knee": false
+    },
+    "C4": {
+      "injected_scale_s": 60.0,
+      "selected_k": 3,
+      "delta_bic_vs_k1": 97.15137226586965,
+      "breakpoints_T_s": [
+        6.103515625e-05,
+        8.0
+      ],
+      "best_breakpoint_rung_error": 2.9068905956085187,
+      "pass_knee": false
+    },
+    "C3p": {
+      "injected_scale_s": 0.001,
+      "selected_k": 3,
+      "delta_bic_vs_k1": 86.45773521621187,
+      "breakpoints_T_s": [
+        0.000244140625,
+        0.001953125
+      ],
+      "best_breakpoint_rung_error": 0.965784284662087,
+      "pass_knee": true
+    },
+    "C4p": {
+      "injected_scale_s": 0.1,
+      "selected_k": 3,
+      "delta_bic_vs_k1": 94.01880465131569,
+      "breakpoints_T_s": [
+        0.015625,
+        0.25
+      ],
+      "best_breakpoint_rung_error": 1.3219280948873622,
+      "pass_knee": false
+    }
+  },
+  "row_4b": {
+    "rule": "knee recovers 10 us but misses C3' (1 ms) or C4' (100 ms)",
+    "c3_pass": false,
+    "c3p_pass": true,
+    "c4p_pass": false,
+    "FIRED": false
+  },
+  "source": "research/phase_10b/t2r5_controls.py:main"
+}

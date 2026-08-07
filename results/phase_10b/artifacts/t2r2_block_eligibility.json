@@ -1,0 +1,735 @@
+{
+  "phase": "10b",
+  "task": "T2-R2",
+  "config_hash": "5fd653e4",
+  "rule": "A10b.1 Change 2. Block length = max(h / block_ratio, block_floor_event), where block_floor_event is PER EVENT the smallest block duration whose MEDIAN block print count is at least min_prints_per_block. Supersedes the fixed 60 s block in held_out.block_seconds, which is retained for provenance only and is no longer read. Odd/even fold structure unchanged; both folds still reported separately.",
+  "by_control": {
+    "C1": {
+      "block_floor_event_s": 17.448123722644123,
+      "block_floor_detail": {
+        "median_block_prints": 20.0,
+        "n_blocks": 1341,
+        "grid_steps_per_octave": 8
+      },
+      "bind_share_of_t4_sweep": 0.6190476190476191,
+      "by_h": [
+        {
+          "h": 0.015625,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.03125,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.0625,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.125,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.25,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.5,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 1.0,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 2.0,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 4.0,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 8.0,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 16.0,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 32.0,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 64.0,
+          "block_s": 17.448123722644123,
+          "block_floor_binds": true
+        },
+        {
+          "h": 128.0,
+          "block_s": 32.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 256.0,
+          "block_s": 64.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 512.0,
+          "block_s": 128.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 1024.0,
+          "block_s": 256.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 2048.0,
+          "block_s": 512.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 4096.0,
+          "block_s": 1024.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 8192.0,
+          "block_s": 2048.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 16384.0,
+          "block_s": 4096.0,
+          "block_floor_binds": false
+        }
+      ],
+      "n_prints": 26742
+    },
+    "C2": {
+      "block_floor_event_s": 22.627416997969522,
+      "block_floor_detail": {
+        "median_block_prints": 20.0,
+        "n_blocks": 1034,
+        "grid_steps_per_octave": 8
+      },
+      "bind_share_of_t4_sweep": 0.6190476190476191,
+      "by_h": [
+        {
+          "h": 0.015625,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.03125,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.0625,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.125,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.25,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.5,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 1.0,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 2.0,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 4.0,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 8.0,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 16.0,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 32.0,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 64.0,
+          "block_s": 22.627416997969522,
+          "block_floor_binds": true
+        },
+        {
+          "h": 128.0,
+          "block_s": 32.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 256.0,
+          "block_s": 64.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 512.0,
+          "block_s": 128.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 1024.0,
+          "block_s": 256.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 2048.0,
+          "block_s": 512.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 4096.0,
+          "block_s": 1024.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 8192.0,
+          "block_s": 2048.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 16384.0,
+          "block_s": 4096.0,
+          "block_floor_binds": false
+        }
+      ],
+      "n_prints": 26680
+    },
+    "C3": {
+      "block_floor_event_s": 20.749432874416154,
+      "block_floor_detail": {
+        "median_block_prints": 24.0,
+        "n_blocks": 1127,
+        "grid_steps_per_octave": 8
+      },
+      "bind_share_of_t4_sweep": 0.6190476190476191,
+      "by_h": [
+        {
+          "h": 0.015625,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.03125,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.0625,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.125,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.25,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.5,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 1.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 2.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 4.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 8.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 16.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 32.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 64.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 128.0,
+          "block_s": 32.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 256.0,
+          "block_s": 64.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 512.0,
+          "block_s": 128.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 1024.0,
+          "block_s": 256.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 2048.0,
+          "block_s": 512.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 4096.0,
+          "block_s": 1024.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 8192.0,
+          "block_s": 2048.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 16384.0,
+          "block_s": 4096.0,
+          "block_floor_binds": false
+        }
+      ],
+      "n_prints": 26196
+    },
+    "C4": {
+      "block_floor_event_s": 20.749432874416154,
+      "block_floor_detail": {
+        "median_block_prints": 22.0,
+        "n_blocks": 1127,
+        "grid_steps_per_octave": 8
+      },
+      "bind_share_of_t4_sweep": 0.6190476190476191,
+      "by_h": [
+        {
+          "h": 0.015625,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.03125,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.0625,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.125,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.25,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.5,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 1.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 2.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 4.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 8.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 16.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 32.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 64.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 128.0,
+          "block_s": 32.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 256.0,
+          "block_s": 64.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 512.0,
+          "block_s": 128.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 1024.0,
+          "block_s": 256.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 2048.0,
+          "block_s": 512.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 4096.0,
+          "block_s": 1024.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 8192.0,
+          "block_s": 2048.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 16384.0,
+          "block_s": 4096.0,
+          "block_floor_binds": false
+        }
+      ],
+      "n_prints": 27228
+    },
+    "C3p": {
+      "block_floor_event_s": 20.749432874416154,
+      "block_floor_detail": {
+        "median_block_prints": 24.0,
+        "n_blocks": 1127,
+        "grid_steps_per_octave": 8
+      },
+      "bind_share_of_t4_sweep": 0.6190476190476191,
+      "by_h": [
+        {
+          "h": 0.015625,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.03125,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.0625,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.125,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.25,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.5,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 1.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 2.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 4.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 8.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 16.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 32.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 64.0,
+          "block_s": 20.749432874416154,
+          "block_floor_binds": true
+        },
+        {
+          "h": 128.0,
+          "block_s": 32.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 256.0,
+          "block_s": 64.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 512.0,
+          "block_s": 128.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 1024.0,
+          "block_s": 256.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 2048.0,
+          "block_s": 512.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 4096.0,
+          "block_s": 1024.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 8192.0,
+          "block_s": 2048.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 16384.0,
+          "block_s": 4096.0,
+          "block_floor_binds": false
+        }
+      ],
+      "n_prints": 26676
+    },
+    "C4p": {
+      "block_floor_event_s": 19.027313840043536,
+      "block_floor_detail": {
+        "median_block_prints": 24.0,
+        "n_blocks": 1229,
+        "grid_steps_per_octave": 8
+      },
+      "bind_share_of_t4_sweep": 0.6190476190476191,
+      "by_h": [
+        {
+          "h": 0.015625,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.03125,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.0625,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.125,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.25,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 0.5,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 1.0,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 2.0,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 4.0,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 8.0,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 16.0,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 32.0,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 64.0,
+          "block_s": 19.027313840043536,
+          "block_floor_binds": true
+        },
+        {
+          "h": 128.0,
+          "block_s": 32.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 256.0,
+          "block_s": 64.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 512.0,
+          "block_s": 128.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 1024.0,
+          "block_s": 256.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 2048.0,
+          "block_s": 512.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 4096.0,
+          "block_s": 1024.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 8192.0,
+          "block_s": 2048.0,
+          "block_floor_binds": false
+        },
+        {
+          "h": 16384.0,
+          "block_s": 4096.0,
+          "block_floor_binds": false
+        }
+      ],
+      "n_prints": 27186
+    }
+  },
+  "t4_sweep_h": [
+    0.015625,
+    0.03125,
+    0.0625,
+    0.125,
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0,
+    8.0,
+    16.0,
+    32.0,
+    64.0,
+    128.0,
+    256.0,
+    512.0,
+    1024.0,
+    2048.0,
+    4096.0,
+    8192.0,
+    16384.0
+  ],
+  "held_out_property_check": "With block = max(h/4, block_floor_event) the kernel spans the held-out block, but lambda-hat inside a held-out block is still built ONLY from opposite-parity blocks: the support mask passed to kernel_intensity is the complement of the evaluated blocks, so no held-out arrival contributes to the rate used to rescale it. Verified by construction in pipeline.heldout_intensity and by the homogeneous-Poisson check (mean rescaled interval 0.995-1.004).",
+  "source": "research/phase_10b/t2r5_controls.py:main"
+}
