@@ -126,7 +126,12 @@
       "note": "Machine-readable mirror of the thresholds already stated in prose in C1-C4 and band_coverage_bounds above. Added before any run so the verdict code reads the committed number instead of a literal. c4_scale_separation_min_ratio = 2^10 is the only value not already in prose: it operationalizes 'separated' for the two injected scales, which are 2^22.5 apart, so it is a loose bound that a genuine two-scale structure clears by twelve rungs."
     },
     "rth_span_s": 23400.0,
-    "rth_span_note": "D3 regular session 09:30-16:00 ET = 23,400 s; the controls are rth-shaped."
+    "rth_span_note": "D3 regular session 09:30-16:00 ET = 23,400 s; the controls are rth-shaped.",
+    "control_c3_prime_duration_s": 0.001,
+    "control_c4_prime_duration_s": 0.1,
+    "unseen_scale_validation": "A10b.1 T2-R3. C3' at 1 ms and C4' at 100 ms, PRE-REGISTERED by this commit before the run. Same background rate, cluster size k=6, timestamp quantization and draw count as C3/C4. Required: the knee recovers each within 1 rung. Hard stop (row 4b) if the knee recovers 10 us but misses either -- that is the signature of a statistic fitted to the case that motivated it, and it voids Change 1 rather than the controls.",
+    "c2_lambda_timescale": 1404.0,
+    "c2_lambda_timescale_derivation": "A10b.1 T2-R4 asks for 'the smoothing bandwidth used to build C2's injected profile -- record the actual value'. RECORDED HONESTLY: C2's profile is ANALYTIC, not a smoothed real event (the amendment forbids reading a real event here), so there is no literal smoothing step. The profile is lambda(t) proportional to 0.15 + 0.85*(t/tp) for t < tp, then 0.15 + 0.85*exp(-(t-tp)/tau), with tp = 0.02*span = 468 s and tau = 0.06*span = 1404 s, on a 0.25 s grid. The value recorded is tau = 1404 s, the decay constant that sets the profile's shape and its dominant feature. ALTERNATIVE READING NOT USED: the instantaneous scale min |lambda / lambda'| over the session is 82.6 s, attained as t -> 0 where lambda sits at its 15% floor on the ramp. That is a transient corner of the construction rather than the parameter defining the profile, and adopting it would shrink C2's evaluation range to a single bandwidth. The choice is recorded because it is consequential: under tau the range holds more bandwidths and is therefore the STRICTER test."
   },
   "t3_allan": {
     "ladder_exponents": [
@@ -157,7 +162,28 @@
       10,
       14
     ],
-    "null_band_h_subset_reason": "AMENDMENT, made before any run, after benchmarking. The band is still a FAMILY over h and is reported in full, but over 6 bandwidths spanning the entire T4a sweep at every 4th rung rather than all 21. Measured cost: a 33-rung Allan curve is 14 ms at n=25k and 511 ms at n=831k, so one (draw, h) pass over the 100-event cohort is ~5 s; 200 draws x 21 h would be ~21,000 s against a 14,400 s aggregate ceiling. 6 x 200 x 100 fits. The subset endpoints are the sweep endpoints, so the widest-h crossing rule in band_is_a_family still evaluates the most permissive null available."
+    "null_band_h_subset_reason": "AMENDMENT, made before any run, after benchmarking. The band is still a FAMILY over h and is reported in full, but over 6 bandwidths spanning the entire T4a sweep at every 4th rung rather than all 21. Measured cost: a 33-rung Allan curve is 14 ms at n=25k and 511 ms at n=831k, so one (draw, h) pass over the 100-event cohort is ~5 s; 200 draws x 21 h would be ~21,000 s against a 14,400 s aggregate ceiling. 6 x 200 x 100 fits. The subset endpoints are the sweep endpoints, so the widest-h crossing rule in band_is_a_family still evaluates the most permissive null available.",
+    "crossing_statistic": "piecewise_knee",
+    "knee_max_segments": 3,
+    "knee_selection": "bic",
+    "band_direction": "upper_only",
+    "crossing_statistic_note": "A10b.1 Change 1. Replaces the void departure-point T3d. On the pooled log A(T) vs log T curve, fit CONTINUOUS piecewise-linear models with k=1,2,3 segments over the ELIGIBLE rungs, breakpoints searched over rung positions only, k selected by BIC. Report every breakpoint as a rung index with bracketing seconds, dBIC of the selected model vs k=1, and the fitted slope of every segment. Matches v3's Allan/Fano gate, which is already a plateau-to-slope transition statistic, so T5's comparison is like-for-like.",
+    "band_direction_note": "A10b.1 T2-R1c. Where the band is used to state that structure EXISTS, only excursions ABOVE the upper edge count. Downward excursions are reported separately and never as evidence of clustering. Applies to real data as well as controls.",
+    "widest_h_rationale_correction": "A10b.1: the original band_is_a_family rationale -- 'the crossing that survives the most permissive null' -- is sign-inverted. A NARROW bandwidth makes lambda-hat hug the data, so the null absorbs structure and rejection is harder. The most permissive null is the NARROWEST eligible bandwidth. Recorded; the crossing statistic is now the knee, so the widest-h selection rule is void either way.",
+    "control_band_h_exponents": [
+      -6,
+      -4,
+      -2,
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14
+    ],
+    "control_band_h_exponents_reason": "A10b.1, pre-run. The controls are ONE realization each, not a 100-event cohort, so they can afford 11 bandwidths where T3's real cohort uses the 6-member null_band_h_subset. Needed because the amendment evaluates C1 over ALL eligible h and C2 over h <= c2_lambda_timescale; with only 3 eligible bandwidths those ranges would hold 3 and 1 members and the min aggregator would be near-vacuous. Spans the same endpoints as the T4a sweep."
   },
   "t4_rescaling": {
     "bandwidth_exponents": [
@@ -171,7 +197,8 @@
       "block_seconds": 60,
       "scheme": "fit on odd blocks, evaluate on even; then swap",
       "block_independence": "blocks are fixed at 60 s, independent of h",
-      "report": "both folds separately -- a large fold difference is itself a finding"
+      "report": "both folds separately -- a large fold difference is itself a finding",
+      "block_seconds_superseded": true
     },
     "lambda_floor_frac": 0.001,
     "floored_time_max": 0.2,
@@ -189,7 +216,14 @@
     "max_grid_points": 8388608,
     "max_grid_points_reason": "AMENDMENT, before any run. dx = h/4 on a 23,400 s session gives 6.0e6 grid points at the smallest bandwidth 2^-6 s. The cap bounds memory; where it binds, dx > h/4 and the bandwidth is tagged grid_limited and excluded from crossing determination alongside the floored-time exclusions, rather than silently under-resolving the kernel.",
     "min_support_mass": 0.05,
-    "min_support_reason": "AMENDMENT, before any run. lambda-hat carries a Diggle edge/support correction: it is divided by the kernel mass falling inside the region the fit was allowed to see. That correction is what makes the top of the bandwidth sweep usable at all -- without it a 16,384 s kernel on a 23,400 s session puts most of its mass outside the session and biases lambda-hat low by ~2x -- and it supplies the held-out normalization exactly, including near boundaries. Where less than 5% of the kernel mass lies inside the support the estimate is 0/0 and diverges UPWARD, which an intensity floor alone would not catch; those cells are zeroed so the floored-time accounting counts them as unestimable. This is the mechanism that excludes bandwidths far below the 60 s held-out block."
+    "min_support_reason": "AMENDMENT, before any run. lambda-hat carries a Diggle edge/support correction: it is divided by the kernel mass falling inside the region the fit was allowed to see. That correction is what makes the top of the bandwidth sweep usable at all -- without it a 16,384 s kernel on a 23,400 s session puts most of its mass outside the session and biases lambda-hat low by ~2x -- and it supplies the held-out normalization exactly, including near boundaries. Where less than 5% of the kernel mass lies inside the support the estimate is 0/0 and diverges UPWARD, which an intensity floor alone would not catch; those cells are zeroed so the floored-time accounting counts them as unestimable. This is the mechanism that excludes bandwidths far below the 60 s held-out block.",
+    "block_ratio": 4,
+    "min_prints_per_block": 20,
+    "block_rule": "A10b.1 Change 2. Block length = max(h / block_ratio, block_floor_event), where block_floor_event is PER EVENT the smallest block duration whose MEDIAN block print count is at least min_prints_per_block. Supersedes the fixed 60 s block in held_out.block_seconds, which is retained for provenance only and is no longer read. Odd/even fold structure unchanged; both folds still reported separately.",
+    "block_rule_rationale": "At h = 16 s and 32 s against a fixed 60 s block the kernel is narrower than the block it must reach across, so lambda-hat inside a held-out block is extrapolated from >= 30 s away. It is STALE, not empty, so the floored-time rule cannot see it -- which is why C1 showed pass shares of 0.26 and 0.00 at those bandwidths on genuinely homogeneous data.",
+    "rejected_alternative": "Declaring h < 60 s ineligible is REJECTED and the rejection is recorded (T2-R2a): it truncates the sweep at 64 s while v3's premarket knee is 16 s, which would exclude the premarket segment's candidate answer from the search range by construction.",
+    "ineligible_share_max": 0.4,
+    "ineligible_share_max_note": "Escalation row 4d. Share of the bandwidth sweep made ineligible by block_floor_event BINDING (h/block_ratio < block_floor_event). Above this, too little of the sweep is testable to interpret a crossing."
   },
   "t5_agreement": {
     "estimates": [
@@ -224,7 +258,7 @@
     "no_crossing_rule": "A segment where one method produces no crossing at all is not a disagreement -- it is reported as a non-result for that method and the remaining two are compared."
   },
   "t6_tape_review": {
-    "produced_regardless": true,
+    "produced_regardless": "A10b.1 Change 4, amended wording: 'Produced regardless of any numeric outcome in T3, T4 or T5, including a null result, an ugly result, or an escalation on rows 6 through 9.' On a T2 hard stop, CLAUDE.md governs and T6 does NOT run -- T6 charts real events with the T3/T4 crossings overlaid, and at a T2 stop no real event has been read and neither crossing exists, so T6 has no inputs.",
     "produced_regardless_why": "Produced regardless of every numeric outcome, including a T2 hard stop. v2 skipped this and could not be judged at all; v3 produced it and row 0 fired correctly.",
     "n_events": 100,
     "index_covers": 114,
@@ -295,5 +329,11 @@
     "description_only": "No recommendations, no causal language, no 'suggests / confirms / indicates / therefore'.",
     "escalation_report_order": "Report in table order -- the table is the priority order."
   },
-  "config_hash_note": "Committed before any measurement run."
+  "config_hash_note": "Committed before any measurement run.",
+  "amendment_1": {
+    "file": "prompts/phase_10b_amendment_1.md",
+    "date": "2026-08-06",
+    "resolves": "T2 hard stop, escalation row 4. Four changes, all pre-run.",
+    "no_real_event": "No real event is read by any pipeline in this amendment. Escalation row 14 and the zero-pass budget stand."
+  }
 }
