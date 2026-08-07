@@ -110,7 +110,9 @@
       0.99
     ],
     "band_coverage_nominal": 0.95,
-    "on_fire": "Hard stop on any C1-C4 required outcome not met. Do not proceed to T3. Do not adjust the method to make a control pass."
+    "on_fire": "Hard stop on any C1-C4 required outcome not met. Do not proceed to T3. Do not adjust the method to make a control pass.",
+    "n_control_draws_t4": 50,
+    "n_control_draws_t4_reason": "AMENDMENT, before any run. The Allan band keeps 200 draws (cheap). The rescaling side uses 50: its statistic is a PASS SHARE over draws, and 50 draws give that share a standard error of ~0.07 against a 0.50 threshold, while one rescaling pass at the smallest bandwidth costs three orders of magnitude more than an Allan curve because it convolves a 6e6-point grid."
   },
   "t3_allan": {
     "ladder_exponents": [
@@ -132,7 +134,16 @@
       97.5
     ],
     "band_is_a_family": "The band is a family over the T4a bandwidth h, not one band. Report the full family. The crossing is where the real curve leaves the band at the WIDEST h for which it still leaves it -- the crossing that survives the most permissive null.",
-    "forbidden_comparison": "No statement in the report may compare a real Allan curve to the constant 1. The comparison object is the matched-null band and nothing else."
+    "forbidden_comparison": "No statement in the report may compare a real Allan curve to the constant 1. The comparison object is the matched-null band and nothing else.",
+    "null_band_h_subset_exponents": [
+      -6,
+      -2,
+      2,
+      6,
+      10,
+      14
+    ],
+    "null_band_h_subset_reason": "AMENDMENT, made before any run, after benchmarking. The band is still a FAMILY over h and is reported in full, but over 6 bandwidths spanning the entire T4a sweep at every 4th rung rather than all 21. Measured cost: a 33-rung Allan curve is 14 ms at n=25k and 511 ms at n=831k, so one (draw, h) pass over the 100-event cohort is ~5 s; 200 draws x 21 h would be ~21,000 s against a 14,400 s aggregate ceiling. 6 x 200 x 100 fits. The subset endpoints are the sweep endpoints, so the widest-h crossing rule in band_is_a_family still evaluates the most permissive null available."
   },
   "t4_rescaling": {
     "bandwidth_exponents": [
@@ -159,7 +170,10 @@
       "role": "reference marker only",
       "rule": "Marked on chart 05 as a distribution. It does not select anything in this phase and no result is conditioned on it."
     },
-    "circularity_note": "lambda-hat is fitted OUT OF SAMPLE throughout. In-sample fitting guarantees a crossing at a location set by the estimator's degrees of freedom -- Phase 10's failure mode wearing a different hat. Prior art: Rudemo 1982; Bowman 1984; the likelihood cross-validation selectors in spatstat; Shimazaki & Shinomoto 2010."
+    "circularity_note": "lambda-hat is fitted OUT OF SAMPLE throughout. In-sample fitting guarantees a crossing at a location set by the estimator's degrees of freedom -- Phase 10's failure mode wearing a different hat. Prior art: Rudemo 1982; Bowman 1984; the likelihood cross-validation selectors in spatstat; Shimazaki & Shinomoto 2010.",
+    "grid_dx_rule": "dx = h/4, so the Gaussian kernel is always resolved at 4 samples per bandwidth",
+    "max_grid_points": 8388608,
+    "max_grid_points_reason": "AMENDMENT, before any run. dx = h/4 on a 23,400 s session gives 6.0e6 grid points at the smallest bandwidth 2^-6 s. The cap bounds memory; where it binds, dx > h/4 and the bandwidth is tagged grid_limited and excluded from crossing determination alongside the floored-time exclusions, rather than silently under-resolving the kernel."
   },
   "t5_agreement": {
     "estimates": [
