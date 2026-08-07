@@ -1,0 +1,1376 @@
+{
+  "phase": "10b",
+  "task": "T2",
+  "config_hash": "d9554f55",
+  "gate": "Hard stop on any required outcome not met. Do not proceed to T3. Do not adjust the method to make a control pass -- post the control output and wait.",
+  "shared_pipeline": "research/phase_10b/pipeline.py (T2, T3 and T4 all call it)",
+  "controls": {
+    "span_s": 23400.0,
+    "n_target_prints": 26604.5,
+    "n_target_source": "median t0_print_count over the frozen 114-event cohort",
+    "profile_source": "synthetic post-trigger decay, ramp to 2% of span then exponential with tau = 6% of span -- no real tick data enters any control",
+    "timestamp_resolution_ns": 80.5,
+    "k3": 6,
+    "k4_fine": 6,
+    "k4_coarse": 20,
+    "injected_scales_s": [
+      1e-05,
+      60.0
+    ]
+  },
+  "band_h_family": [
+    0.015625,
+    0.25,
+    4.0,
+    64.0,
+    1024.0,
+    16384.0
+  ],
+  "t4_h_family": [
+    0.015625,
+    0.03125,
+    0.0625,
+    0.125,
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0,
+    8.0,
+    16.0,
+    32.0,
+    64.0,
+    128.0,
+    256.0,
+    512.0,
+    1024.0,
+    2048.0,
+    4096.0,
+    8192.0,
+    16384.0
+  ],
+  "n_control_draws": 200,
+  "n_coverage_draws": 200,
+  "n_control_draws_t4": 50,
+  "results": {
+    "C1": {
+      "n_prints": 26742,
+      "eligible_bandwidths": [
+        64.0,
+        1024.0,
+        16384.0
+      ],
+      "share_inside_by_h": {
+        "h=0.015625": {
+          "share_inside": 0.5483870967741935,
+          "n_eligible": 31,
+          "band_coverage": 0.9459677419354838,
+          "floored_time_fraction": 0.9999400707899188,
+          "h_eligible": false
+        },
+        "h=0.25": {
+          "share_inside": 0.5483870967741935,
+          "n_eligible": 31,
+          "band_coverage": 0.9574193548387097,
+          "floored_time_fraction": 0.9911645535134789,
+          "h_eligible": false
+        },
+        "h=4": {
+          "share_inside": 0.6451612903225806,
+          "n_eligible": 31,
+          "band_coverage": 0.947741935483871,
+          "floored_time_fraction": 0.7672321695654032,
+          "h_eligible": false
+        },
+        "h=64": {
+          "share_inside": 0.8709677419354839,
+          "n_eligible": 31,
+          "band_coverage": 0.9385483870967742,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        },
+        "h=1024": {
+          "share_inside": 0.9354838709677419,
+          "n_eligible": 31,
+          "band_coverage": 0.9395161290322581,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        },
+        "h=16384": {
+          "share_inside": 0.9032258064516129,
+          "n_eligible": 31,
+          "band_coverage": 0.9440322580645162,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        }
+      },
+      "t3_crossing_by_h": {
+        "h=0.015625": {
+          "crossing_T": null,
+          "crossing_index": null,
+          "reason": "curve never leaves the band and stays out",
+          "h_eligible": false
+        },
+        "h=0.25": {
+          "crossing_T": null,
+          "crossing_index": null,
+          "reason": "curve never leaves the band and stays out",
+          "h_eligible": false
+        },
+        "h=4": {
+          "crossing_T": null,
+          "crossing_index": null,
+          "reason": "curve never leaves the band and stays out",
+          "h_eligible": false
+        },
+        "h=64": {
+          "crossing_T": null,
+          "crossing_index": null,
+          "reason": "curve never leaves the band and stays out",
+          "h_eligible": true
+        },
+        "h=1024": {
+          "crossing_T": null,
+          "crossing_index": null,
+          "reason": "curve never leaves the band and stays out",
+          "h_eligible": true
+        },
+        "h=16384": {
+          "crossing_T": null,
+          "crossing_index": null,
+          "reason": "curve never leaves the band and stays out",
+          "h_eligible": true
+        }
+      },
+      "t3_widest_h_crossing": {
+        "crossing_T": null,
+        "crossing_index": null,
+        "reason": "curve never leaves the band and stays out",
+        "h_eligible": true
+      },
+      "loglog_slope_peaks": [
+        {
+          "T": 64.0,
+          "slope": 0.05561803733735438
+        },
+        {
+          "T": 8.0,
+          "slope": 0.0269415658408722
+        },
+        {
+          "T": 1.0,
+          "slope": 0.019892435421925737
+        }
+      ],
+      "t4": {
+        "rows": [
+          {
+            "h": 0.015625,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9999487980856299,
+            "grid_dx": 0.00390625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.03125,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9998015225029383,
+            "grid_dx": 0.0078125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.0625,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9992486917415614,
+            "grid_dx": 0.015625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.125,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9973096189877354,
+            "grid_dx": 0.03125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.25,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9912805789701021,
+            "grid_dx": 0.0625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.5,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9759025863989693,
+            "grid_dx": 0.125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 1.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9438401302560012,
+            "grid_dx": 0.25,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 2.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.8838118852762885,
+            "grid_dx": 0.5,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 4.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.7672355897698858,
+            "grid_dx": 1.0,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 8.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.5344842360207253,
+            "grid_dx": 2.0,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 16.0,
+            "n_folds": 100,
+            "pass_share": 0.26,
+            "floored_time_fraction_mean": 0.002057652289231236,
+            "grid_dx": 4.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 32.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0003203074951953875,
+            "grid_dx": 8.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 64.0,
+            "n_folds": 100,
+            "pass_share": 0.89,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 128.0,
+            "n_folds": 100,
+            "pass_share": 0.88,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 256.0,
+            "n_folds": 100,
+            "pass_share": 0.86,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 512.0,
+            "n_folds": 100,
+            "pass_share": 0.86,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 1024.0,
+            "n_folds": 100,
+            "pass_share": 0.86,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 2048.0,
+            "n_folds": 100,
+            "pass_share": 0.88,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 4096.0,
+            "n_folds": 100,
+            "pass_share": 0.89,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 8192.0,
+            "n_folds": 100,
+            "pass_share": 0.89,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 16384.0,
+            "n_folds": 100,
+            "pass_share": 0.89,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          }
+        ],
+        "crossing": {
+          "crossing_h": 64.0,
+          "index": 2,
+          "reason": "lowest h at and above which the pass share stays >= 0.5"
+        }
+      },
+      "measured_expected_plateau": 1.0000747887218608
+    },
+    "C2": {
+      "n_prints": 26680,
+      "eligible_bandwidths": [
+        64.0,
+        1024.0,
+        16384.0
+      ],
+      "share_inside_by_h": {
+        "h=0.015625": {
+          "share_inside": 0.5483870967741935,
+          "n_eligible": 31,
+          "band_coverage": 0.9659677419354838,
+          "floored_time_fraction": 0.9999557625608035,
+          "h_eligible": false
+        },
+        "h=0.25": {
+          "share_inside": 0.6129032258064516,
+          "n_eligible": 31,
+          "band_coverage": 0.9356451612903226,
+          "floored_time_fraction": 0.992374486179257,
+          "h_eligible": false
+        },
+        "h=4": {
+          "share_inside": 0.6451612903225806,
+          "n_eligible": 31,
+          "band_coverage": 0.947741935483871,
+          "floored_time_fraction": 0.7672321695654032,
+          "h_eligible": false
+        },
+        "h=64": {
+          "share_inside": 1.0,
+          "n_eligible": 31,
+          "band_coverage": 0.9420967741935484,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        },
+        "h=1024": {
+          "share_inside": 0.8064516129032258,
+          "n_eligible": 31,
+          "band_coverage": 0.9393548387096774,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        },
+        "h=16384": {
+          "share_inside": 0.7741935483870968,
+          "n_eligible": 31,
+          "band_coverage": 0.9459677419354838,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        }
+      },
+      "t3_crossing_by_h": {
+        "h=0.015625": {
+          "crossing_T": 128.0,
+          "crossing_index": 27,
+          "side": "above",
+          "h_eligible": false
+        },
+        "h=0.25": {
+          "crossing_T": 256.0,
+          "crossing_index": 28,
+          "side": "above",
+          "h_eligible": false
+        },
+        "h=4": {
+          "crossing_T": 256.0,
+          "crossing_index": 28,
+          "side": "above",
+          "h_eligible": false
+        },
+        "h=64": {
+          "crossing_T": null,
+          "crossing_index": null,
+          "reason": "curve never leaves the band and stays out",
+          "h_eligible": true
+        },
+        "h=1024": {
+          "crossing_T": 128.0,
+          "crossing_index": 27,
+          "side": "above",
+          "h_eligible": true
+        },
+        "h=16384": {
+          "crossing_T": 128.0,
+          "crossing_index": 27,
+          "side": "above",
+          "h_eligible": true
+        }
+      },
+      "t3_widest_h_crossing": {
+        "crossing_T": 128.0,
+        "crossing_index": 27,
+        "side": "above",
+        "h_eligible": true
+      },
+      "loglog_slope_peaks": [
+        {
+          "T": 256.0,
+          "slope": 1.1197665147068592
+        },
+        {
+          "T": 16.0,
+          "slope": 0.05916799447390411
+        },
+        {
+          "T": 1.0,
+          "slope": 0.007747173102599684
+        }
+      ],
+      "t4": {
+        "rows": [
+          {
+            "h": 0.015625,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9999481370279676,
+            "grid_dx": 0.00390625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.03125,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9998076122435586,
+            "grid_dx": 0.0078125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.0625,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9992832136178207,
+            "grid_dx": 0.015625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.125,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9975030482053961,
+            "grid_dx": 0.03125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.25,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9920558439861615,
+            "grid_dx": 0.0625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.5,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.977815823550035,
+            "grid_dx": 0.125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 1.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.946071089279267,
+            "grid_dx": 0.25,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 2.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.8845674252725704,
+            "grid_dx": 0.5,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 4.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.7672543912895164,
+            "grid_dx": 1.0,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 8.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.5344568855933748,
+            "grid_dx": 2.0,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 16.0,
+            "n_folds": 100,
+            "pass_share": 0.42,
+            "floored_time_fraction_mean": 0.0020850027165816637,
+            "grid_dx": 4.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 32.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0003203074951953875,
+            "grid_dx": 8.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 64.0,
+            "n_folds": 100,
+            "pass_share": 0.91,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 128.0,
+            "n_folds": 100,
+            "pass_share": 0.93,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 256.0,
+            "n_folds": 100,
+            "pass_share": 0.91,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 512.0,
+            "n_folds": 100,
+            "pass_share": 0.9,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 1024.0,
+            "n_folds": 100,
+            "pass_share": 0.67,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 2048.0,
+            "n_folds": 100,
+            "pass_share": 0.02,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 4096.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 8192.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 16384.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          }
+        ],
+        "crossing": {
+          "crossing_h": null,
+          "reason": "pass share never stabilizes above the threshold"
+        }
+      },
+      "measured_expected_plateau": 1.0
+    },
+    "C3": {
+      "n_prints": 26196,
+      "eligible_bandwidths": [
+        64.0,
+        1024.0,
+        16384.0
+      ],
+      "share_inside_by_h": {
+        "h=0.015625": {
+          "share_inside": 0.4838709677419355,
+          "n_eligible": 31,
+          "band_coverage": 0.9285483870967742,
+          "floored_time_fraction": 0.9999894831748325,
+          "h_eligible": false
+        },
+        "h=0.25": {
+          "share_inside": 0.0,
+          "n_eligible": 31,
+          "band_coverage": 0.9285483870967742,
+          "floored_time_fraction": 0.9978926338337771,
+          "h_eligible": false
+        },
+        "h=4": {
+          "share_inside": 0.0,
+          "n_eligible": 31,
+          "band_coverage": 0.9433870967741935,
+          "floored_time_fraction": 0.7929148326994573,
+          "h_eligible": false
+        },
+        "h=64": {
+          "share_inside": 0.06451612903225806,
+          "n_eligible": 31,
+          "band_coverage": 0.9390322580645162,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        },
+        "h=1024": {
+          "share_inside": 0.0,
+          "n_eligible": 31,
+          "band_coverage": 0.94,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        },
+        "h=16384": {
+          "share_inside": 0.0,
+          "n_eligible": 31,
+          "band_coverage": 0.9367741935483871,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        }
+      },
+      "t3_crossing_by_h": {
+        "h=0.015625": {
+          "crossing_T": 1024.0,
+          "crossing_index": 30,
+          "side": "below",
+          "h_eligible": false
+        },
+        "h=0.25": {
+          "crossing_T": 9.5367431640625e-07,
+          "crossing_index": 0,
+          "side": "above",
+          "h_eligible": false
+        },
+        "h=4": {
+          "crossing_T": 9.5367431640625e-07,
+          "crossing_index": 0,
+          "side": "above",
+          "h_eligible": false
+        },
+        "h=64": {
+          "crossing_T": null,
+          "crossing_index": null,
+          "reason": "curve never leaves the band and stays out",
+          "h_eligible": true
+        },
+        "h=1024": {
+          "crossing_T": 9.5367431640625e-07,
+          "crossing_index": 0,
+          "side": "above",
+          "h_eligible": true
+        },
+        "h=16384": {
+          "crossing_T": 9.5367431640625e-07,
+          "crossing_index": 0,
+          "side": "above",
+          "h_eligible": true
+        }
+      },
+      "t3_widest_h_crossing": {
+        "crossing_T": 9.5367431640625e-07,
+        "crossing_index": 0,
+        "side": "above",
+        "h_eligible": true
+      },
+      "loglog_slope_peaks": [
+        {
+          "T": 7.62939453125e-06,
+          "slope": 0.5480252268999397
+        },
+        {
+          "T": 256.0,
+          "slope": 0.052938854036155725
+        },
+        {
+          "T": 4.0,
+          "slope": 0.031925160831456134
+        }
+      ],
+      "t4": {
+        "rows": [
+          {
+            "h": 0.015625,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.999991526443699,
+            "grid_dx": 0.00390625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.03125,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9999658921046779,
+            "grid_dx": 0.0078125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.0625,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9998639023321039,
+            "grid_dx": 0.015625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.125,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9994678425764679,
+            "grid_dx": 0.03125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.25,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9979278900802245,
+            "grid_dx": 0.0625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.5,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9923838010533348,
+            "grid_dx": 0.125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 1.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9735579744442598,
+            "grid_dx": 0.25,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 2.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9187414769695356,
+            "grid_dx": 0.5,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 4.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.7908251919442928,
+            "grid_dx": 1.0,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 8.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.5404016810626278,
+            "grid_dx": 2.0,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 16.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0021431200378568796,
+            "grid_dx": 4.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 32.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0003203074951953875,
+            "grid_dx": 8.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 64.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 128.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 256.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 512.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 1024.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 2048.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 4096.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 8192.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 16384.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          }
+        ],
+        "crossing": {
+          "crossing_h": null,
+          "reason": "fails at every eligible h -- no interior crossing"
+        }
+      },
+      "measured_expected_plateau": 6.0
+    },
+    "C4": {
+      "n_prints": 27228,
+      "eligible_bandwidths": [
+        64.0,
+        1024.0,
+        16384.0
+      ],
+      "share_inside_by_h": {
+        "h=0.015625": {
+          "share_inside": 0.3225806451612903,
+          "n_eligible": 31,
+          "band_coverage": 0.9490322580645161,
+          "floored_time_fraction": 0.9999716212654212,
+          "h_eligible": false
+        },
+        "h=0.25": {
+          "share_inside": 0.0,
+          "n_eligible": 31,
+          "band_coverage": 0.9425806451612904,
+          "floored_time_fraction": 0.9940731995908131,
+          "h_eligible": false
+        },
+        "h=4": {
+          "share_inside": 0.03225806451612903,
+          "n_eligible": 31,
+          "band_coverage": 0.9464516129032258,
+          "floored_time_fraction": 0.7794111362762275,
+          "h_eligible": false
+        },
+        "h=64": {
+          "share_inside": 0.06451612903225806,
+          "n_eligible": 31,
+          "band_coverage": 0.9358064516129032,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        },
+        "h=1024": {
+          "share_inside": 0.0,
+          "n_eligible": 31,
+          "band_coverage": 0.9417741935483871,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        },
+        "h=16384": {
+          "share_inside": 0.0,
+          "n_eligible": 31,
+          "band_coverage": 0.9348387096774193,
+          "floored_time_fraction": 0.0,
+          "h_eligible": true
+        }
+      },
+      "t3_crossing_by_h": {
+        "h=0.015625": {
+          "crossing_T": 128.0,
+          "crossing_index": 27,
+          "side": "above",
+          "h_eligible": false
+        },
+        "h=0.25": {
+          "crossing_T": 9.5367431640625e-07,
+          "crossing_index": 0,
+          "side": "above",
+          "h_eligible": false
+        },
+        "h=4": {
+          "crossing_T": 8.0,
+          "crossing_index": 23,
+          "side": "below",
+          "h_eligible": false
+        },
+        "h=64": {
+          "crossing_T": null,
+          "crossing_index": null,
+          "reason": "curve never leaves the band and stays out",
+          "h_eligible": true
+        },
+        "h=1024": {
+          "crossing_T": 9.5367431640625e-07,
+          "crossing_index": 0,
+          "side": "above",
+          "h_eligible": true
+        },
+        "h=16384": {
+          "crossing_T": 9.5367431640625e-07,
+          "crossing_index": 0,
+          "side": "above",
+          "h_eligible": true
+        }
+      },
+      "t3_widest_h_crossing": {
+        "crossing_T": 9.5367431640625e-07,
+        "crossing_index": 0,
+        "side": "above",
+        "h_eligible": true
+      },
+      "loglog_slope_peaks": [
+        {
+          "T": 32.0,
+          "slope": 0.46465021478253243
+        },
+        {
+          "T": 7.62939453125e-06,
+          "slope": 0.37569783395245704
+        },
+        {
+          "T": 0.0625,
+          "slope": 0.004993542664829542
+        }
+      ],
+      "t4": {
+        "rows": [
+          {
+            "h": 0.015625,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9999698784772326,
+            "grid_dx": 0.00390625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.03125,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9998829995043798,
+            "grid_dx": 0.0078125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.0625,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9995554623686356,
+            "grid_dx": 0.015625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.125,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9983736666956247,
+            "grid_dx": 0.03125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.25,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9945145979058594,
+            "grid_dx": 0.0625,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.5,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9835220959189201,
+            "grid_dx": 0.125,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 1.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.9566754604830746,
+            "grid_dx": 0.25,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 2.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.8989333497143996,
+            "grid_dx": 0.5,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 4.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.7817999173859783,
+            "grid_dx": 1.0,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 8.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.5440526805995616,
+            "grid_dx": 2.0,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 16.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0023653247337457866,
+            "grid_dx": 4.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 32.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0003203074951953875,
+            "grid_dx": 8.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 64.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 128.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 256.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 512.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 1024.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 2048.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 4096.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 8192.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 16384.0,
+            "n_folds": 100,
+            "pass_share": 0.0,
+            "floored_time_fraction_mean": 0.0,
+            "grid_dx": 15.0,
+            "grid_limited": false,
+            "eligible": true
+          }
+        ],
+        "crossing": {
+          "crossing_h": null,
+          "reason": "fails at every eligible h -- no interior crossing"
+        }
+      },
+      "measured_expected_plateau": 3.3561040105773468
+    }
+  },
+  "verdicts": {
+    "C1": {
+      "inside_band_min_share_over_h": 0.8709677419354839,
+      "inside_band_required": 0.9,
+      "pass_inside": false,
+      "t4_crossing": {
+        "crossing_h": 64.0,
+        "index": 2,
+        "reason": "lowest h at and above which the pass share stays >= 0.5"
+      },
+      "pass_t4_no_interior_crossing": false,
+      "pass": false
+    },
+    "C2": {
+      "inside_band_min_share_over_h": 0.7741935483870968,
+      "inside_band_required": 0.9,
+      "pass_inside": false,
+      "t4_crossing": {
+        "crossing_h": null,
+        "reason": "pass share never stabilizes above the threshold"
+      },
+      "pass_t4_no_interior_crossing": true,
+      "pass": false
+    },
+    "C3": {
+      "plateau_height": 5.985210944625763,
+      "expected_size_weighted_mean": 6.0,
+      "relative_error": -0.002464842562372893,
+      "pass_plateau": true,
+      "injected_scale_s": 1e-05,
+      "injected_rung_index": 3,
+      "t3_crossing": {
+        "crossing_T": 9.5367431640625e-07,
+        "crossing_index": 0,
+        "side": "above",
+        "h_eligible": true
+      },
+      "pass_t3_crossing": false,
+      "t4_crossing": {
+        "crossing_h": null,
+        "reason": "fails at every eligible h -- no interior crossing"
+      },
+      "pass_t4_crossing": false,
+      "pass": false
+    },
+    "C4": {
+      "loglog_slope_peaks": [
+        {
+          "T": 32.0,
+          "slope": 0.46465021478253243
+        },
+        {
+          "T": 7.62939453125e-06,
+          "slope": 0.37569783395245704
+        }
+      ],
+      "separation_ratio": 4194304.0,
+      "pass_two_scales_separated": true,
+      "operationalization": "'both scales visible and separated' = at least two interior local maxima of d log A / d log T, at rungs separated by a factor >= 1024",
+      "t4_crossing": {
+        "crossing_h": null,
+        "reason": "fails at every eligible h -- no interior crossing"
+      },
+      "injected_coarse_s": 60.0,
+      "pass_t4_recovers_60s": false,
+      "pass": false
+    },
+    "T2e_band_coverage": {
+      "min": 0.9348387096774193,
+      "max": 0.9459677419354838,
+      "median": 0.9394354838709678,
+      "required_range": [
+        0.9,
+        0.99
+      ],
+      "n_checks": 12,
+      "pass": true
+    },
+    "ALL_PASS": false
+  },
+  "timing_seconds": 641.0,
+  "source": "research/phase_10b/t2_controls.py:main",
+  "artifacts": [
+    "results/phase_10b/artifacts/t2_control_results.json",
+    "results/phase_10b/artifacts/t2_control_curves.parquet"
+  ]
+}

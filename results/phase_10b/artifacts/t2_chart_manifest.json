@@ -1,0 +1,16 @@
+{
+  "phase": "10b",
+  "chart": {
+    "chart": "04_control_harness.html",
+    "png": "04_control_harness.png",
+    "kaleido_verified": true,
+    "html_bytes": 88524,
+    "png_bytes": 685693
+  },
+  "config_hash": "d9554f55",
+  "reads": [
+    "results/phase_10b/artifacts/t2_control_curves.parquet",
+    "results/phase_10b/artifacts/t2_control_results.json"
+  ],
+  "source": "research/phase_10b/chart04_controls.py:main"
+}

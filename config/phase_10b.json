@@ -112,7 +112,21 @@
     "band_coverage_nominal": 0.95,
     "on_fire": "Hard stop on any C1-C4 required outcome not met. Do not proceed to T3. Do not adjust the method to make a control pass.",
     "n_control_draws_t4": 50,
-    "n_control_draws_t4_reason": "AMENDMENT, before any run. The Allan band keeps 200 draws (cheap). The rescaling side uses 50: its statistic is a PASS SHARE over draws, and 50 draws give that share a standard error of ~0.07 against a 0.50 threshold, while one rescaling pass at the smallest bandwidth costs three orders of magnitude more than an Allan curve because it convolves a 6e6-point grid."
+    "n_control_draws_t4_reason": "AMENDMENT, before any run. The Allan band keeps 200 draws (cheap). The rescaling side uses 50: its statistic is a PASS SHARE over draws, and 50 draws give that share a standard error of ~0.07 against a 0.50 threshold, while one rescaling pass at the smallest bandwidth costs three orders of magnitude more than an Allan curve because it convolves a 6e6-point grid.",
+    "n_coverage_draws": 200,
+    "required_numeric": {
+      "c1_c2_min_share_inside": 0.9,
+      "c3_plateau_tolerance": 0.25,
+      "c3_crossing_rung_tolerance": 1,
+      "c4_scale_separation_min_ratio": 1024,
+      "t2e_coverage_range": [
+        0.9,
+        0.99
+      ],
+      "note": "Machine-readable mirror of the thresholds already stated in prose in C1-C4 and band_coverage_bounds above. Added before any run so the verdict code reads the committed number instead of a literal. c4_scale_separation_min_ratio = 2^10 is the only value not already in prose: it operationalizes 'separated' for the two injected scales, which are 2^22.5 apart, so it is a loose bound that a genuine two-scale structure clears by twelve rungs."
+    },
+    "rth_span_s": 23400.0,
+    "rth_span_note": "D3 regular session 09:30-16:00 ET = 23,400 s; the controls are rth-shaped."
   },
   "t3_allan": {
     "ladder_exponents": [
@@ -173,7 +187,9 @@
     "circularity_note": "lambda-hat is fitted OUT OF SAMPLE throughout. In-sample fitting guarantees a crossing at a location set by the estimator's degrees of freedom -- Phase 10's failure mode wearing a different hat. Prior art: Rudemo 1982; Bowman 1984; the likelihood cross-validation selectors in spatstat; Shimazaki & Shinomoto 2010.",
     "grid_dx_rule": "dx = h/4, so the Gaussian kernel is always resolved at 4 samples per bandwidth",
     "max_grid_points": 8388608,
-    "max_grid_points_reason": "AMENDMENT, before any run. dx = h/4 on a 23,400 s session gives 6.0e6 grid points at the smallest bandwidth 2^-6 s. The cap bounds memory; where it binds, dx > h/4 and the bandwidth is tagged grid_limited and excluded from crossing determination alongside the floored-time exclusions, rather than silently under-resolving the kernel."
+    "max_grid_points_reason": "AMENDMENT, before any run. dx = h/4 on a 23,400 s session gives 6.0e6 grid points at the smallest bandwidth 2^-6 s. The cap bounds memory; where it binds, dx > h/4 and the bandwidth is tagged grid_limited and excluded from crossing determination alongside the floored-time exclusions, rather than silently under-resolving the kernel.",
+    "min_support_mass": 0.05,
+    "min_support_reason": "AMENDMENT, before any run. lambda-hat carries a Diggle edge/support correction: it is divided by the kernel mass falling inside the region the fit was allowed to see. That correction is what makes the top of the bandwidth sweep usable at all -- without it a 16,384 s kernel on a 23,400 s session puts most of its mass outside the session and biases lambda-hat low by ~2x -- and it supplies the held-out normalization exactly, including near boundaries. Where less than 5% of the kernel mass lies inside the support the estimate is 0/0 and diverges UPWARD, which an intensity floor alone would not catch; those cells are zeroed so the floored-time accounting counts them as unestimable. This is the mechanism that excludes bandwidths far below the 60 s held-out block."
   },
   "t5_agreement": {
     "estimates": [

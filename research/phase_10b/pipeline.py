@@ -25,7 +25,22 @@ from __future__ import annotations
 import numpy as np
 
 __all__ = ["allan_fano_sparse", "allan_curve", "kernel_intensity", "simulate_inhomogeneous",
-           "simulate_homogeneous", "simulate_cluster", "rescale_ks", "quantize"]
+           "simulate_homogeneous", "simulate_cluster", "rescale_ks", "quantize",
+           "heldout_intensity", "grid_dx"]
+
+
+def grid_dx(h, block_s, span, max_grid):
+    """Cell width for the intensity grid.
+
+    The grid must resolve BOTH the kernel (h/4) AND the held-out block structure
+    (block_s/4). Sizing on h alone is wrong at large h: at h = 1024 s, h/4 = 256 s
+    spans four 60 s blocks, so a single cell is labelled with one parity while the
+    prints inside it belong to several -- lambda-hat and the points then disagree
+    about which time is held out. Returns (dx, grid_limited).
+    """
+    want = min(h / 4.0, block_s / 4.0)
+    floor_dx = span / max_grid
+    return max(want, floor_dx), bool(floor_dx > want * (1 + 1e-12))
 
 _NS = 1_000_000_000
 
@@ -85,12 +100,25 @@ def allan_curve(t_s, start_s, end_s, ladder, min_pairs) -> list[dict]:
 
 # ------------------------------------------------------------------ intensity
 def kernel_intensity(t_fit_s: np.ndarray, grid_s: np.ndarray, h: float,
+                     support: np.ndarray | None = None, min_support: float = 0.0,
                      truncate: float = 4.0) -> np.ndarray:
     """Gaussian kernel intensity on `grid_s`, fitted from arrivals `t_fit_s`.
 
-    Truncated at `truncate` bandwidths and evaluated by binned convolution so it
-    is O(G log G) rather than O(n*G) — the grid is uniform, so a kernel applied
-    to the arrival histogram is exact up to the bin width.
+    Truncated at `truncate` bandwidths and evaluated by binned convolution so it is
+    O(G log G) rather than O(n*G) — the grid is uniform, so a kernel applied to the
+    arrival histogram is exact up to the bin width.
+
+    EDGE / SUPPORT CORRECTION (Diggle). `support` is a 0/1 mask of the region the
+    fitting points were allowed to come from; the estimate is divided by the kernel
+    mass falling inside it. This does two jobs at once:
+
+      * session edges. Without it, at h comparable to the session length most of the
+        kernel lies outside the session and lambda-hat is biased low by ~2x at
+        h = 16,384 s — enough on its own to make the top of the bandwidth sweep
+        uninformative.
+      * held-out fitting. When the fit saw only alternating blocks, the mass inside
+        the support is ~0.5 and the correction supplies exactly the factor of two,
+        and does so correctly near boundaries where a flat x2 would not.
     """
     g = np.asarray(grid_s, dtype=np.float64)
     if g.size < 2 or t_fit_s.size == 0:
@@ -100,7 +128,18 @@ def kernel_intensity(t_fit_s: np.ndarray, grid_s: np.ndarray, h: float,
     half = max(1, int(np.ceil(truncate * h / dx)))
     k = np.exp(-0.5 * (np.arange(-half, half + 1) * dx / h) ** 2)
     k /= k.sum() * dx
-    return np.convolve(counts.astype(np.float64), k, mode="same")
+    # 'full' then centre-slice: mode='same' returns len(k) when the kernel is longer
+    # than the grid, which happens at large h where the grid is only a few points.
+    sl = slice(half, half + g.size)
+    num = np.convolve(counts.astype(np.float64), k, mode="full")[sl]
+    sup = np.ones(g.size) if support is None else np.asarray(support, dtype=np.float64)
+    den = np.convolve(sup, k, mode="full")[sl] * dx
+    lam = num / np.maximum(den, 1e-12)
+    # Where almost none of the kernel's mass lies inside the fitting region, the
+    # estimate is 0/0 and blows UP rather than collapsing, so an intensity floor
+    # alone would not catch it. Zero it instead, and let the floor count it as
+    # unestimable -- that is what excludes h far below the held-out block width.
+    return np.where(den < min_support, 0.0, lam)
 
 
 def simulate_inhomogeneous(lam: np.ndarray, grid_s: np.ndarray, rng,
@@ -155,10 +194,42 @@ def simulate_cluster(background: np.ndarray, k: int, duration_s: float, rng,
     return t
 
 
+def heldout_intensity(t_s, start_s, end_s, h, block_s, grid_dx, floor_frac,
+                      min_support=0.05):
+    """lambda-hat on a full-session grid where NO block's own prints set its own rate:
+    even blocks are fitted from odd blocks and vice versa.
+
+    Required by config t4_rescaling.circularity_note -- "lambda-hat is fitted OUT OF
+    SAMPLE throughout". It applies to the T3 Allan band too, not only to T4: an
+    in-sample lambda-hat makes each null draw carry the data's own fluctuations PLUS
+    fresh Poisson noise, so the band sits above a genuinely Poisson control and the
+    control falls out of its own null.
+
+    Returns (grid, lambda_hat, floored_time_fraction). Where h is far below block_s
+    the opposite-parity kernel cannot reach into a held-out block, lambda-hat falls to
+    the floor, and the floored fraction reports exactly that: at those bandwidths an
+    out-of-sample rate estimate does not exist and the bandwidth is not eligible.
+    """
+    t = np.asarray(t_s, dtype=np.float64)
+    grid = np.arange(start_s, end_s + grid_dx, grid_dx)
+    blk = np.floor((grid - start_s) / block_s).astype(np.int64)
+    tblk = np.floor((t - start_s) / block_s).astype(np.int64)
+    lam = np.zeros(grid.size)
+    for parity in (0, 1):
+        fit = t[(tblk % 2) != parity]
+        if fit.size == 0:
+            continue
+        m = (blk % 2) == parity
+        lam[m] = kernel_intensity(fit, grid, h, support=(~m).astype(float),
+                                  min_support=min_support)[m]
+    floor = floor_frac * (t.size / (end_s - start_s)) if t.size else 0.0
+    return grid, np.maximum(lam, floor), float((lam < floor).mean())
+
+
 # ------------------------------------------------------------------ rescaling
 def rescale_ks(t_s: np.ndarray, start_s: float, end_s: float, h: float,
                block_s: float, lambda_floor: float, grid_dx: float,
-               rng=None) -> dict:
+               min_support: float = 0.05, rng=None) -> dict:
     """Time-rescaling KS against unit exponential, with lambda-hat fitted OUT OF
     SAMPLE on alternating fixed-width blocks.
 
@@ -183,8 +254,10 @@ def rescale_ks(t_s: np.ndarray, start_s: float, end_s: float, h: float,
         if fit_mask_t.sum() < 10 or eval_grid.sum() < 10:
             out.append(None)
             continue
-        lam = kernel_intensity(t[fit_mask_t], grid, h)
-        lam_eval = np.where(eval_grid, lam, 0.0)
+        # support = the blocks the fit was allowed to see; the edge/support
+        # correction inside kernel_intensity supplies the normalization
+        lam = kernel_intensity(t[fit_mask_t], grid, h, support=(~eval_grid).astype(float),
+                               min_support=min_support)
         floored = float((lam[eval_grid] < lambda_floor).mean())
         lam_eval = np.where(eval_grid, np.maximum(lam, lambda_floor), 0.0)
         # rescaled time: Lambda(t) = integral of lambda over held-out region only
@@ -193,10 +266,15 @@ def rescale_ks(t_s: np.ndarray, start_s: float, end_s: float, h: float,
         if te.size < 10:
             out.append(None)
             continue
-        gi = np.clip(np.searchsorted(grid, te), 0, grid.size - 1)
-        lam_t = cum[gi]
+        # Lambda must be interpolated WITHIN the cell, not snapped to a grid node.
+        # dx is h/4, which at large h is many mean inter-arrival times, so snapping
+        # gives dozens of prints the same Lambda and quantizes the rescaled
+        # intervals into uselessness. lambda is piecewise-constant on cells, so
+        # linear interpolation of its integral is exact.
+        gi = np.clip(np.searchsorted(grid, te, side="right") - 1, 0, grid.size - 1)
+        lam_t = cum[gi] + lam_eval[gi] * (te - grid[gi])
         d = np.diff(np.sort(lam_t))
-        d = d[d > 0]
+        n_zero = int((d <= 0).sum())
         if d.size < 10:
             out.append(None)
             continue
@@ -204,6 +282,11 @@ def rescale_ks(t_s: np.ndarray, start_s: float, end_s: float, h: float,
         out.append({"fold": parity, "n_intervals": int(d.size),
                     "ks_stat": float(ks.statistic), "ks_pvalue": float(ks.pvalue),
                     "floored_time_fraction": floored,
+                    # zero-length rescaled intervals are exact timestamp ties. They are
+                    # KEPT, not filtered -- dropping them removes the smallest intervals
+                    # and inflates the mean, and for real events the ties are the
+                    # sub-microsecond fragmentation this phase is trying to characterize.
+                    "n_zero_intervals": n_zero,
                     "mean_rescaled_interval": float(d.mean())})
     return {"folds": out, "n": int(t.size)}
 
