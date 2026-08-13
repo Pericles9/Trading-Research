@@ -1,0 +1,63 @@
+{
+  "phase": "10b",
+  "document": "A10b.2",
+  "prompt": "prompts/phase_10b_amendment_2.md",
+  "date": "2026-08-13",
+  "row_15_override": {
+    "granted_by": "Cooper",
+    "date": "2026-08-13",
+    "reason": "Row 15 fired on amendment count, but D1 established that the failures being counted were specification defects in drafting, not method failures. Recorded so it is not read later as a rule quietly abandoned.",
+    "returns_to_force": "on completion of this amendment; a third amendment is a hard stop, not a document to be written"
+  },
+  "supersedes": [
+    "A10b.1 min_prints_per_block rule",
+    "A10b.1 C2 bandwidth restriction (superseded only if the A2-T6 prediction holds)",
+    "DX10b.1 D3a validation route"
+  ],
+
+  "a2_t3_block_rule": {
+    "min_prints_per_block": null,
+    "min_prints_per_block_was": 20,
+    "block_ratio": 4,
+    "rule": "block length = h / block_ratio, no floor",
+    "note": "A2-T3. Not in force until Cooper responds to the A2-T2 decision point."
+  },
+  "a2_t4": {
+    "c3_t4_requirement": "void_unreachable",
+    "reason": "10 us sits 10.61 rungs below the bandwidth sweep floor of 2^-6 s. Struck, not relaxed and not moved. Do NOT extend the sweep downward to reach it.",
+    "consequence": "The time-rescaling method has no validated recovery of a microsecond-scale cluster and cannot be read as evidence about the fragmentation scale. Its validation rests on C4 and C4' only."
+  },
+  "a2_t6": {
+    "c2_prime_lambda_timescale_s": 351,
+    "c2_rung_restriction": "controls_only",
+    "prediction": "C2' excursion band centre moves DOWN ~2 rungs from C2's 128-1024 s.",
+    "falsification": "Band stays at 128-1024 s, or moves in the wrong direction, or does not move.",
+    "real_data_counterpart": "none -- on a real event there is no known injected timescale, so no rung may be excluded on this basis outside the controls"
+  },
+  "a2_t2c_usability_criteria": {
+    "knee_interval_max_rungs": 3,
+    "knee_interval_max_rungs_applies_to": "C3'",
+    "knee_coverage_min": 3,
+    "knee_coverage_of": 4,
+    "common_bias_min_p": 0.05,
+    "survival_test": "the first two rows; failing either means the knee is unusable and Phase 10b reports a method limitation"
+  },
+  "a2_t5_envelope": {
+    "n_envelope_draws": 2499,
+    "envelope_ordering": "extreme_rank_length",
+    "intensity_reestimation": "per_simulation",
+    "offline_validation_triad": [
+      "single-rung reduction to the ordinary Monte Carlo rank p-value, exact identity, 200 cases",
+      "p-value uniformity under the null across the whole range, not merely the tail",
+      "type I error on C1 within [0.02, 0.10] over 200 independent datasets"
+    ]
+  },
+
+  "n_knee_draws": 500,
+  "n_knee_draws_note": "A2-T1 refits the knee on independent realizations of each control. 500 puts the standard error of the 2.5/97.5 percentiles well under a tenth of a rung, the resolution A2-T1b reports at. Not a gate threshold; carried forward from config/phase_10b_diagnostic_1.json.",
+  "knee_draw_seed_base": 900000,
+  "bootstrap_interval": 0.95,
+
+  "output_root": "results/phase_10b/amendment_2/",
+  "modifies": "No value in config/phase_10b.json or A10b.1 is modified by this file; A2-T3's floorless block rule is recorded here and takes effect only when A2-T3 runs."
+}

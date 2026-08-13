@@ -86,3 +86,11 @@
 - `docs/Claude-Code-Operating-Plan.md` is cited by prompts/phase_0a.md, prompts/phase_0b.md and
   docs/Research-Library-Map.md but has never existed in this checkout — Cooper holds it externally.
   Gap confirmed 2026-08-03, `results/redirect_d5/doc_existence_audit.json`.
+
+## Environment
+
+- **Environment is offline.** No package index, no R, no network fetch. Any prompt requiring an
+  external package, a reference implementation, or a downloaded artifact must state an offline
+  fallback at drafting time. `reuse-before-build` applies only to what is already installed.
+  (Added 2026-08-13, A10b.2 A2-T0c. This is why Phase 10b DX10b.1 escalation row 6 fired: the
+  global envelope test could not be validated against its R reference implementation.)
