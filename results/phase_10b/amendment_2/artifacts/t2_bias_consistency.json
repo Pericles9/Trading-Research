@@ -1,0 +1,541 @@
+{
+  "phase": "10b",
+  "amendment": "A10b.2",
+  "task": "A2-T1/A2-T2",
+  "config_hash": "5fd653e4",
+  "no_real_event_read": true,
+  "a2_t0b_regeneration": {
+    "C1": {
+      "stored": 26742,
+      "regen": 26742,
+      "match": true
+    },
+    "C2": {
+      "stored": 26680,
+      "regen": 26680,
+      "match": true
+    },
+    "C3": {
+      "stored": 26196,
+      "regen": 26196,
+      "match": true
+    },
+    "C4": {
+      "stored": 27228,
+      "regen": 27228,
+      "match": true
+    },
+    "C3p": {
+      "stored": 26676,
+      "regen": 26676,
+      "match": true
+    },
+    "C4p": {
+      "stored": 27186,
+      "regen": 27186,
+      "match": true
+    }
+  },
+  "n_knee_draws": 500,
+  "knee_draw_seed_base": 900000,
+  "per_control": {
+    "C3": {
+      "injected_s": 1e-05,
+      "n_draws": 500,
+      "selected_k_counts": {
+        "3": 290,
+        "2": 210
+      },
+      "nearest_to_injected": {
+        "n_draws": 500,
+        "median_breakpoint_s": 3.0517578125e-05,
+        "ci95_breakpoint_s": [
+          3.0517578125e-05,
+          3.0517578125e-05
+        ],
+        "bias_rungs_median": 1.6096404744368122,
+        "spread_rungs_ci95_width": 0.0,
+        "ci95_rungs": [
+          1.6096404744368122,
+          1.6096404744368122
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.0
+      },
+      "position_rule": {
+        "n_draws": 500,
+        "median_breakpoint_s": 3.0517578125e-05,
+        "ci95_breakpoint_s": [
+          3.0517578125e-05,
+          3.0517578125e-05
+        ],
+        "bias_rungs_median": 1.6096404744368122,
+        "spread_rungs_ci95_width": 0.0,
+        "ci95_rungs": [
+          1.6096404744368122,
+          1.6096404744368122
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.0,
+        "rule": "onset"
+      },
+      "first_breakpoint": {
+        "n_draws": 500,
+        "median_breakpoint_s": 3.0517578125e-05,
+        "ci95_breakpoint_s": [
+          3.0517578125e-05,
+          3.0517578125e-05
+        ],
+        "bias_rungs_median": 1.6096404744368122,
+        "spread_rungs_ci95_width": 0.0,
+        "ci95_rungs": [
+          1.6096404744368122,
+          1.6096404744368122
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.0
+      },
+      "last_breakpoint": {
+        "n_draws": 500,
+        "median_breakpoint_s": 32.0,
+        "ci95_breakpoint_s": [
+          3.0517578125e-05,
+          256.0
+        ],
+        "bias_rungs_median": 21.609640474436812,
+        "spread_rungs_ci95_width": 23.0,
+        "ci95_rungs": [
+          1.6096404744368122,
+          24.609640474436812
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.48458143416010613
+      }
+    },
+    "C4": {
+      "injected_s": 60.0,
+      "n_draws": 500,
+      "selected_k_counts": {
+        "3": 500
+      },
+      "nearest_to_injected": {
+        "n_draws": 500,
+        "median_breakpoint_s": 8.0,
+        "ci95_breakpoint_s": [
+          8.0,
+          16.0
+        ],
+        "bias_rungs_median": -2.9068905956085187,
+        "spread_rungs_ci95_width": 1.0,
+        "ci95_rungs": [
+          -2.9068905956085187,
+          -1.9068905956085187
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.022365160424231326
+      },
+      "position_rule": {
+        "n_draws": 500,
+        "median_breakpoint_s": 8.0,
+        "ci95_breakpoint_s": [
+          8.0,
+          16.0
+        ],
+        "bias_rungs_median": -2.9068905956085187,
+        "spread_rungs_ci95_width": 1.0,
+        "ci95_rungs": [
+          -2.9068905956085187,
+          -1.9068905956085187
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.022365160424231326,
+        "rule": "offset"
+      },
+      "first_breakpoint": {
+        "n_draws": 500,
+        "median_breakpoint_s": 3.0517578125e-05,
+        "ci95_breakpoint_s": [
+          3.0517578125e-05,
+          6.103515625e-05
+        ],
+        "bias_rungs_median": -20.90689059560852,
+        "spread_rungs_ci95_width": 1.0,
+        "ci95_rungs": [
+          -20.90689059560852,
+          -19.90689059560852
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.00993929470125102
+      },
+      "last_breakpoint": {
+        "n_draws": 500,
+        "median_breakpoint_s": 8.0,
+        "ci95_breakpoint_s": [
+          8.0,
+          16.0
+        ],
+        "bias_rungs_median": -2.9068905956085187,
+        "spread_rungs_ci95_width": 1.0,
+        "ci95_rungs": [
+          -2.9068905956085187,
+          -1.9068905956085187
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.022365160424231326
+      }
+    },
+    "C3p": {
+      "injected_s": 0.001,
+      "n_draws": 500,
+      "selected_k_counts": {
+        "3": 500
+      },
+      "nearest_to_injected": {
+        "n_draws": 500,
+        "median_breakpoint_s": 0.001953125,
+        "ci95_breakpoint_s": [
+          0.001953125,
+          0.00390625
+        ],
+        "bias_rungs_median": 0.965784284662087,
+        "spread_rungs_ci95_width": 1.0,
+        "ci95_rungs": [
+          0.965784284662087,
+          1.965784284662087
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.016815633531393464
+      },
+      "position_rule": {
+        "n_draws": 500,
+        "median_breakpoint_s": 0.001953125,
+        "ci95_breakpoint_s": [
+          0.001953125,
+          0.00390625
+        ],
+        "bias_rungs_median": 0.965784284662087,
+        "spread_rungs_ci95_width": 1.0,
+        "ci95_rungs": [
+          0.965784284662087,
+          1.965784284662087
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.016815633531393464,
+        "rule": "onset"
+      },
+      "first_breakpoint": {
+        "n_draws": 500,
+        "median_breakpoint_s": 0.000244140625,
+        "ci95_breakpoint_s": [
+          0.0001220703125,
+          0.000244140625
+        ],
+        "bias_rungs_median": -2.034215715337913,
+        "spread_rungs_ci95_width": 1.0,
+        "ci95_rungs": [
+          -3.034215715337913,
+          -2.034215715337913
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.0163280498045799
+      },
+      "last_breakpoint": {
+        "n_draws": 500,
+        "median_breakpoint_s": 0.001953125,
+        "ci95_breakpoint_s": [
+          0.001953125,
+          0.00390625
+        ],
+        "bias_rungs_median": 0.965784284662087,
+        "spread_rungs_ci95_width": 1.0,
+        "ci95_rungs": [
+          0.965784284662087,
+          1.965784284662087
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.016815633531393464
+      }
+    },
+    "C4p": {
+      "injected_s": 0.1,
+      "n_draws": 500,
+      "selected_k_counts": {
+        "3": 500
+      },
+      "nearest_to_injected": {
+        "n_draws": 500,
+        "median_breakpoint_s": 0.25,
+        "ci95_breakpoint_s": [
+          0.25,
+          0.5
+        ],
+        "bias_rungs_median": 1.3219280948873622,
+        "spread_rungs_ci95_width": 1.0,
+        "ci95_rungs": [
+          1.3219280948873622,
+          2.321928094887362
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.013047162791727083
+      },
+      "position_rule": {
+        "n_draws": 500,
+        "median_breakpoint_s": 0.25,
+        "ci95_breakpoint_s": [
+          0.25,
+          0.5
+        ],
+        "bias_rungs_median": 1.3219280948873622,
+        "spread_rungs_ci95_width": 1.0,
+        "ci95_rungs": [
+          1.3219280948873622,
+          2.321928094887362
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.013047162791727083,
+        "rule": "onset"
+      },
+      "first_breakpoint": {
+        "n_draws": 500,
+        "median_breakpoint_s": 0.015625,
+        "ci95_breakpoint_s": [
+          0.015625,
+          0.015625
+        ],
+        "bias_rungs_median": -2.678071905112638,
+        "spread_rungs_ci95_width": 0.0,
+        "ci95_rungs": [
+          -2.678071905112638,
+          -2.678071905112638
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 1.9880163339351726e-17
+      },
+      "last_breakpoint": {
+        "n_draws": 500,
+        "median_breakpoint_s": 0.25,
+        "ci95_breakpoint_s": [
+          0.25,
+          0.5
+        ],
+        "bias_rungs_median": 1.3219280948873622,
+        "spread_rungs_ci95_width": 1.0,
+        "ci95_rungs": [
+          1.3219280948873622,
+          2.321928094887362
+        ],
+        "covers_injected": false,
+        "bias_se_rungs": 0.013047162791727083
+      }
+    }
+  },
+  "delta_bic_brackets": {
+    "C3": {
+      "delta_bic_le_2_breakpoints_s": [
+        256.0
+      ],
+      "bracket_rungs_width": 0.0,
+      "note": "Profiled over the LAST breakpoint on the base realization only. Reported for comparison; A2-T1d says trust the bootstrap where they differ, because breakpoint estimation is non-regular."
+    },
+    "C4": {
+      "delta_bic_le_2_breakpoints_s": [
+        8.0
+      ],
+      "bracket_rungs_width": 0.0,
+      "note": "Profiled over the LAST breakpoint on the base realization only. Reported for comparison; A2-T1d says trust the bootstrap where they differ, because breakpoint estimation is non-regular."
+    },
+    "C3p": {
+      "delta_bic_le_2_breakpoints_s": [
+        0.001953125
+      ],
+      "bracket_rungs_width": 0.0,
+      "note": "Profiled over the LAST breakpoint on the base realization only. Reported for comparison; A2-T1d says trust the bootstrap where they differ, because breakpoint estimation is non-regular."
+    },
+    "C4p": {
+      "delta_bic_le_2_breakpoints_s": [
+        0.25
+      ],
+      "bracket_rungs_width": 0.0,
+      "note": "Profiled over the LAST breakpoint on the base realization only. Reported for comparison; A2-T1d says trust the bootstrap where they differ, because breakpoint estimation is non-regular."
+    }
+  },
+  "multi_scale": {
+    "C4": {
+      "n_draws_with_2_breakpoints": 500,
+      "first_bp_ci95_s": [
+        3.0517578125e-05,
+        6.103515625e-05
+      ],
+      "last_bp_ci95_s": [
+        8.0,
+        16.0
+      ],
+      "intervals_overlap": false,
+      "separation_rungs_median": 18.0,
+      "coarse_target_s": 60.0,
+      "last_bp_bias_rungs_vs_coarse": -2.9068905956085187,
+      "fine_target_s": 1e-05,
+      "first_bp_bias_rungs_vs_fine": 1.6096404744368122,
+      "compression_systematic": true,
+      "compression_note": "C4's single fit missed in OPPOSITE directions -- first breakpoint above the injected 1e-5 s, last breakpoint below the injected 60 s. 'compression_systematic' is True when that same inward pattern holds at the median across draws."
+    },
+    "C4p": {
+      "n_draws_with_2_breakpoints": 500,
+      "first_bp_ci95_s": [
+        0.015625,
+        0.015625
+      ],
+      "last_bp_ci95_s": [
+        0.25,
+        0.5
+      ],
+      "intervals_overlap": false,
+      "separation_rungs_median": 4.0,
+      "coarse_target_s": 0.1,
+      "last_bp_bias_rungs_vs_coarse": 1.3219280948873622,
+      "fine_target_s": null,
+      "first_bp_bias_rungs_vs_fine": null,
+      "compression_systematic": null,
+      "compression_note": "C4's single fit missed in OPPOSITE directions -- first breakpoint above the injected 1e-5 s, last breakpoint below the injected 60 s. 'compression_systematic' is True when that same inward pattern holds at the median across draws."
+    }
+  },
+  "bias_consistency": {
+    "all_four": {
+      "controls": [
+        "C3",
+        "C4",
+        "C3p",
+        "C4p"
+      ],
+      "per_control_bias_rungs": [
+        1.6096404744368122,
+        -2.9068905956085187,
+        0.965784284662087,
+        1.3219280948873622
+      ],
+      "per_control_se_rungs_measured": [
+        0.0,
+        0.022365160424231326,
+        0.016815633531393464,
+        0.013047162791727083
+      ],
+      "per_control_se_rungs_used": [
+        0.012909944487358058,
+        0.022365160424231326,
+        0.016815633531393464,
+        0.013047162791727083
+      ],
+      "se_floor_rungs": 0.012909944487358058,
+      "se_floor_note": "Measured se is 0 wherever the fit selects the same rung in every draw. Floored at the estimator's own quantization, (1 rung)/sqrt(12)/sqrt(n_draws), so Q is finite. Q remains hypersensitive: with a near-deterministic estimator any difference between controls is significant, so the plain bias_range_rungs below is the practically meaningful number.",
+      "common_bias_rungs": 0.8631454867571713,
+      "common_bias_ci95": [
+        0.8482910996132214,
+        0.8779998739011212
+      ],
+      "bias_range_rungs": 4.516531070045331,
+      "bias_min_rungs": -2.9068905956085187,
+      "bias_max_rungs": 1.6096404744368122,
+      "Q": 33032.204722132476,
+      "df": 3,
+      "p_homogeneity": 0.0,
+      "consistent_with_single_bias": false
+    },
+    "single_scale": {
+      "controls": [
+        "C3",
+        "C3p"
+      ],
+      "per_control_bias_rungs": [
+        1.6096404744368122,
+        0.965784284662087
+      ],
+      "per_control_se_rungs_measured": [
+        0.0,
+        0.016815633531393464
+      ],
+      "per_control_se_rungs_used": [
+        0.012909944487358058,
+        0.016815633531393464
+      ],
+      "se_floor_rungs": 0.012909944487358058,
+      "se_floor_note": "Measured se is 0 wherever the fit selects the same rung in every draw. Floored at the estimator's own quantization, (1 rung)/sqrt(12)/sqrt(n_draws), so Q is finite. Q remains hypersensitive: with a near-deterministic estimator any difference between controls is significant, so the plain bias_range_rungs below is the practically meaningful number.",
+      "common_bias_rungs": 1.3708739474617913,
+      "common_bias_ci95": [
+        1.3508032904647,
+        1.3909446044588825
+      ],
+      "bias_range_rungs": 0.6438561897747253,
+      "bias_min_rungs": 0.965784284662087,
+      "bias_max_rungs": 1.6096404744368122,
+      "Q": 922.387837823286,
+      "df": 1,
+      "p_homogeneity": 1.33364315127833e-202,
+      "consistent_with_single_bias": false
+    },
+    "multi_scale": {
+      "controls": [
+        "C4",
+        "C4p"
+      ],
+      "per_control_bias_rungs": [
+        -2.9068905956085187,
+        1.3219280948873622
+      ],
+      "per_control_se_rungs_measured": [
+        0.022365160424231326,
+        0.013047162791727083
+      ],
+      "per_control_se_rungs_used": [
+        0.022365160424231326,
+        0.013047162791727083
+      ],
+      "se_floor_rungs": 0.012909944487358058,
+      "se_floor_note": "Measured se is 0 wherever the fit selects the same rung in every draw. Floored at the estimator's own quantization, (1 rung)/sqrt(12)/sqrt(n_draws), so Q is finite. Q remains hypersensitive: with a near-deterministic estimator any difference between controls is significant, so the plain bias_range_rungs below is the practically meaningful number.",
+      "common_bias_rungs": 0.24818958860573084,
+      "common_bias_ci95": [
+        0.2261010074377654,
+        0.2702781697736963
+      ],
+      "bias_range_rungs": 4.228818690495881,
+      "bias_min_rungs": -2.9068905956085187,
+      "bias_max_rungs": 1.3219280948873622,
+      "Q": 26673.83319093023,
+      "df": 1,
+      "p_homogeneity": 0.0,
+      "consistent_with_single_bias": false
+    },
+    "statistic": "Cochran's Q homogeneity test on the four per-control median biases, weighted by the inverse squared standard error of each median across 500 draws. p >= 0.05 is consistent with a single common bias."
+  },
+  "usability_criteria": {
+    "row_1_interval_width_C3p": {
+      "observed_rungs": 1.0,
+      "threshold_rungs": 3,
+      "pass": true,
+      "meaning_if_failed": "The knee cannot locate a scale at all"
+    },
+    "row_2_coverage": {
+      "observed": 0,
+      "of": 4,
+      "threshold": 3,
+      "per_control": {
+        "C3": false,
+        "C4": false,
+        "C3p": false,
+        "C4p": false
+      },
+      "pass": false,
+      "meaning_if_failed": "The knee is biased in a way its own spread does not cover"
+    },
+    "row_3_common_bias": {
+      "p": 0.0,
+      "threshold": 0.05,
+      "pass": false,
+      "meaning_if_failed": "A calibration fitted on single-scale controls cannot transfer to the multi-scale real cohort"
+    },
+    "survival_test_passed": false,
+    "row_5_fires": true
+  },
+  "position_rule_note": "'nearest_to_injected' is the statistic A10b.1's pass/fail used and is reported for comparability, but it SELECTS ON THE ANSWER -- its coverage is optimistically biased by construction. 'plateau_onset' is a position rule fixed independently of the injected value: the breakpoint that ends a rising segment and begins a flat one. Both are reported at every control.",
+  "timing_seconds": 43.9,
+  "source": "research/phase_10b/a2_t1_t2_knee.py:main"
+}

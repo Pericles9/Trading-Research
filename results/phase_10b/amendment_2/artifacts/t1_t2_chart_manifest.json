@@ -1,0 +1,20 @@
+{
+  "charts": [
+    {
+      "chart": "11_knee_sampling_distribution.html",
+      "png": "11_knee_sampling_distribution.png",
+      "kaleido_verified": true,
+      "html_bytes": 15713,
+      "png_bytes": 387261
+    },
+    {
+      "chart": "12_bias_consistency.html",
+      "png": "12_bias_consistency.png",
+      "kaleido_verified": true,
+      "html_bytes": 12430,
+      "png_bytes": 289915
+    }
+  ],
+  "config_hash": "5fd653e4",
+  "source": "research/phase_10b/a2_charts_11_12.py:main"
+}
