@@ -1,0 +1,880 @@
+{
+  "D0": {
+    "task": "D0",
+    "branch": "phase/10b",
+    "tip": "1a5d5c6 phase-10b A10b.1 T2-R5: GATE FAILS AGAIN -- row 4d fired, knee misses 3 of 4",
+    "working_tree_porcelain": [
+      "M .gitignore",
+      "?? .claude/skills/",
+      "?? config/phase_10b_diagnostic_1.json",
+      "?? prompts/phase_9",
+      "?? research/phase_10b/dx1_d0_d1_d2.py"
+    ],
+    "working_tree_clean": false,
+    "escalation_row_1_note": "ROW 1 (working tree dirty) IS TRIPPED BY THREE PRE-EXISTING ENTRIES ONLY: a .gitignore modification, untracked .claude/skills/, and untracked prompts/phase_9. These are the exact three entries Cooper waived on 2026-08-06 with 'leave and proceed. make sure nothing gets lost'. None is an output of any phase 10b task and none is written by this diagnostic. Flagged rather than treated as a fresh stop; the waiver is recorded here so the decision is visible.",
+    "artifacts_present": {
+      "t0_regenerable_inventory.json": 1454,
+      "t0e_cohort_assertion.json": 2073,
+      "t0e_timestamp_resolution.parquet": 8747,
+      "t1_chart_manifest.json": 537,
+      "t1_plateau_fit.json": 6859,
+      "t1_sweep_runs.parquet": 20559,
+      "t2_chart_manifest.json": 455,
+      "t2_control_curves.parquet": 48893,
+      "t2_control_results.json": 39782,
+      "t2_controls.json": 88899,
+      "t2r0_departure_direction.json": 24514,
+      "t2r2_block_eligibility.json": 18392,
+      "t2r3_unseen_scale_validation.json": 1914
+    },
+    "d0b_per_draw_realizations": {
+      "persisted": false,
+      "what_was_persisted": "t2_controls.json holds per-control SUMMARIES and per-(control, h, rung) band/curve rows in t2_control_curves.parquet. Individual null-draw curves and repeated control realizations were not written to disk.",
+      "deterministically_reproducible": true,
+      "reproduction": "build_controls(cfg, span, median t0_print_count, numpy default_rng(42), 80.5 ns) in research/phase_10b/t2r5_controls.py",
+      "verification_against_stored_summaries": {
+        "C1": {
+          "stored_n_prints": 26742,
+          "regenerated_n_prints": 26742,
+          "match": true
+        },
+        "C2": {
+          "stored_n_prints": 26680,
+          "regenerated_n_prints": 26680,
+          "match": true
+        },
+        "C3": {
+          "stored_n_prints": 26196,
+          "regenerated_n_prints": 26196,
+          "match": true
+        },
+        "C4": {
+          "stored_n_prints": 27228,
+          "regenerated_n_prints": 27228,
+          "match": true
+        },
+        "C3p": {
+          "stored_n_prints": 26676,
+          "regenerated_n_prints": 26676,
+          "match": true
+        },
+        "C4p": {
+          "stored_n_prints": 27186,
+          "regenerated_n_prints": 27186,
+          "match": true
+        }
+      },
+      "row_2_fires": false
+    }
+  },
+  "D1": {
+    "task": "D1",
+    "config_hash": "5fd653e4",
+    "d1a_criteria": [
+      {
+        "target_s": 1e-05,
+        "target_log2": -16.609640474436812,
+        "range_log2": [
+          -6,
+          14
+        ],
+        "range_s": [
+          0.015625,
+          16384.0
+        ],
+        "inside_range": false,
+        "rungs_outside": 10.609640474436812,
+        "statistic": "C3 T4 crossing (bandwidth sweep)",
+        "criterion": "C3 T4 crossing recovers 10 us",
+        "source": "original prompt + A10b.1",
+        "reachable_by_range": false,
+        "nearest_eligible_bandwidth_s": 128.0,
+        "rungs_from_nearest_eligible": 23.609640474436812,
+        "reachable_within_1_rung_after_eligibility": false
+      },
+      {
+        "target_s": 60.0,
+        "target_log2": 5.906890595608519,
+        "range_log2": [
+          -6,
+          14
+        ],
+        "range_s": [
+          0.015625,
+          16384.0
+        ],
+        "inside_range": true,
+        "rungs_outside": 0.0,
+        "statistic": "C4 T4 crossing (bandwidth sweep)",
+        "criterion": "C4 T4 crossing recovers 60 s",
+        "source": "original prompt + A10b.1",
+        "reachable_by_range": true,
+        "nearest_eligible_bandwidth_s": 128.0,
+        "rungs_from_nearest_eligible": 1.0931094043914813,
+        "reachable_within_1_rung_after_eligibility": false
+      },
+      {
+        "target_s": 1e-05,
+        "target_log2": -16.609640474436812,
+        "range_log2": [
+          -20,
+          10
+        ],
+        "range_s": [
+          9.5367431640625e-07,
+          1024.0
+        ],
+        "inside_range": true,
+        "rungs_outside": 0.0,
+        "statistic": "C3 knee (T ladder, eligible rungs)",
+        "criterion": "C3 knee recovers 10 us",
+        "source": "A10b.1",
+        "reachable_by_range": true
+      },
+      {
+        "target_s": 60.0,
+        "target_log2": 5.906890595608519,
+        "range_log2": [
+          -20,
+          10
+        ],
+        "range_s": [
+          9.5367431640625e-07,
+          1024.0
+        ],
+        "inside_range": true,
+        "rungs_outside": 0.0,
+        "statistic": "C4 knee (T ladder, eligible rungs)",
+        "criterion": "C4 knee recovers 60 s",
+        "source": "A10b.1",
+        "reachable_by_range": true
+      },
+      {
+        "target_s": 0.001,
+        "target_log2": -9.965784284662087,
+        "range_log2": [
+          -20,
+          10
+        ],
+        "range_s": [
+          9.5367431640625e-07,
+          1024.0
+        ],
+        "inside_range": true,
+        "rungs_outside": 0.0,
+        "statistic": "C3' knee (T ladder, eligible rungs)",
+        "criterion": "C3' knee recovers 1 ms",
+        "source": "A10b.1",
+        "reachable_by_range": true
+      },
+      {
+        "target_s": 0.1,
+        "target_log2": -3.321928094887362,
+        "range_log2": [
+          -20,
+          10
+        ],
+        "range_s": [
+          9.5367431640625e-07,
+          1024.0
+        ],
+        "inside_range": true,
+        "rungs_outside": 0.0,
+        "statistic": "C4' knee (T ladder, eligible rungs)",
+        "criterion": "C4' knee recovers 100 ms",
+        "source": "A10b.1",
+        "reachable_by_range": true
+      }
+    ],
+    "d1b_confirmed": {
+      "C3_t4_target_rungs_below_sweep_floor": 10.609640474436812,
+      "C3_t4_never_satisfiable": true,
+      "C4_t4_target_inside_sweep": true,
+      "C4_t4_reachable_after_a10b1_eligibility": false
+    },
+    "d1c_interaction_matrix": {
+      "min_pairs_pooled": {
+        "value": 20,
+        "removes_T_rungs_above_s": 1114.2857142857142,
+        "can_void": "any knee or crossing target above that T"
+      },
+      "floored_time_max": {
+        "value": 0.2,
+        "can_void": "any T4 crossing target at a bandwidth whose out-of-sample lambda-hat sits at the floor"
+      },
+      "block_floor_binding": {
+        "block_floor_event_s": 17.448123722644123,
+        "binds_below_h_s": 69.79249489057649,
+        "can_void": "any T4 crossing target below h = block_ratio * block_floor_event -- which is what removed C4's 60 s"
+      }
+    },
+    "d1d_eligible_bandwidths_by_block_rule": {
+      "original_fixed_60s": {
+        "by_h": [
+          {
+            "h": 0.015625,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.9999400707899188,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.03125,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.9997966747473709,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.0625,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.9992094022373116,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.125,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.9971621298582668,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.25,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.9911645535134789,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.5,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.9760204272413074,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 1.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.9434194079123086,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 2.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.8836135980000427,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 4.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.7672321695654032,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 8.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.5344842321169131,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 16.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.0020509314647068877,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 32.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.0003417634996582365,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 64.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 128.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 256.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 512.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 1024.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 2048.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 4096.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 8192.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 16384.0,
+            "block_s": 60.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          }
+        ],
+        "n_eligible": 11,
+        "eligible_share": 0.5238095238095238,
+        "eligible_h": [
+          16.0,
+          32.0,
+          64.0,
+          128.0,
+          256.0,
+          512.0,
+          1024.0,
+          2048.0,
+          4096.0,
+          8192.0,
+          16384.0
+        ]
+      },
+      "a10b1_max_h_over_4_and_floor": {
+        "by_h": [
+          {
+            "h": 0.015625,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.9998300614599924,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.03125,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.9993205798208534,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.0625,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.9974652794702995,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.125,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.9907385273256847,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.25,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.9698852300073985,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.5,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.916715188487241,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 1.0,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.8064550592408201,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 2.0,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.5992179654280891,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 4.0,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.19794025896329218,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 8.0,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.0001709255619177848,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 16.0,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 32.0,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 64.0,
+            "block_s": 17.448123722644123,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": true,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 128.0,
+            "block_s": 32.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 256.0,
+            "block_s": 64.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 512.0,
+            "block_s": 128.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 1024.0,
+            "block_s": 256.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 2048.0,
+            "block_s": 512.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 4096.0,
+            "block_s": 1024.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 8192.0,
+            "block_s": 2048.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 16384.0,
+            "block_s": 4096.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          }
+        ],
+        "n_eligible": 8,
+        "eligible_share": 0.38095238095238093,
+        "eligible_h": [
+          128.0,
+          256.0,
+          512.0,
+          1024.0,
+          2048.0,
+          4096.0,
+          8192.0,
+          16384.0
+        ]
+      },
+      "no_block_length_rule_h_over_4": {
+        "by_h": [
+          {
+            "h": 0.015625,
+            "block_s": 0.00390625,
+            "floored_time_fraction": 0.9283871736064943,
+            "block_floor_binds": false,
+            "grid_limited": true,
+            "eligible": false
+          },
+          {
+            "h": 0.03125,
+            "block_s": 0.0078125,
+            "floored_time_fraction": 0.8660282056298011,
+            "block_floor_binds": false,
+            "grid_limited": true,
+            "eligible": false
+          },
+          {
+            "h": 0.0625,
+            "block_s": 0.015625,
+            "floored_time_fraction": 0.7507257026699882,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.125,
+            "block_s": 0.03125,
+            "floored_time_fraction": 0.5621933219172937,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.25,
+            "block_s": 0.0625,
+            "floored_time_fraction": 0.31929933273281735,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": false
+          },
+          {
+            "h": 0.5,
+            "block_s": 0.125,
+            "floored_time_fraction": 0.11126320611217133,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 1.0,
+            "block_s": 0.25,
+            "floored_time_fraction": 0.015544830275560162,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 2.0,
+            "block_s": 0.5,
+            "floored_time_fraction": 0.00016025555419041566,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 4.0,
+            "block_s": 1.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 8.0,
+            "block_s": 2.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 16.0,
+            "block_s": 4.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 32.0,
+            "block_s": 8.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 64.0,
+            "block_s": 16.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 128.0,
+            "block_s": 32.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 256.0,
+            "block_s": 64.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 512.0,
+            "block_s": 128.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 1024.0,
+            "block_s": 256.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 2048.0,
+            "block_s": 512.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 4096.0,
+            "block_s": 1024.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 8192.0,
+            "block_s": 2048.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          },
+          {
+            "h": 16384.0,
+            "block_s": 4096.0,
+            "floored_time_fraction": 0.0,
+            "block_floor_binds": false,
+            "grid_limited": false,
+            "eligible": true
+          }
+        ],
+        "n_eligible": 16,
+        "eligible_share": 0.7619047619047619,
+        "eligible_h": [
+          0.5,
+          1.0,
+          2.0,
+          4.0,
+          8.0,
+          16.0,
+          32.0,
+          64.0,
+          128.0,
+          256.0,
+          512.0,
+          1024.0,
+          2048.0,
+          4096.0,
+          8192.0,
+          16384.0
+        ]
+      },
+      "rejected_alternative_h_lt_60_ineligible": {
+        "by_h": [
+          {
+            "h": 0.015625,
+            "eligible": false
+          },
+          {
+            "h": 0.03125,
+            "eligible": false
+          },
+          {
+            "h": 0.0625,
+            "eligible": false
+          },
+          {
+            "h": 0.125,
+            "eligible": false
+          },
+          {
+            "h": 0.25,
+            "eligible": false
+          },
+          {
+            "h": 0.5,
+            "eligible": false
+          },
+          {
+            "h": 1.0,
+            "eligible": false
+          },
+          {
+            "h": 2.0,
+            "eligible": false
+          },
+          {
+            "h": 4.0,
+            "eligible": false
+          },
+          {
+            "h": 8.0,
+            "eligible": false
+          },
+          {
+            "h": 16.0,
+            "eligible": false
+          },
+          {
+            "h": 32.0,
+            "eligible": false
+          },
+          {
+            "h": 64.0,
+            "eligible": true
+          },
+          {
+            "h": 128.0,
+            "eligible": true
+          },
+          {
+            "h": 256.0,
+            "eligible": true
+          },
+          {
+            "h": 512.0,
+            "eligible": true
+          },
+          {
+            "h": 1024.0,
+            "eligible": true
+          },
+          {
+            "h": 2048.0,
+            "eligible": true
+          },
+          {
+            "h": 4096.0,
+            "eligible": true
+          },
+          {
+            "h": 8192.0,
+            "eligible": true
+          },
+          {
+            "h": 16384.0,
+            "eligible": true
+          }
+        ],
+        "n_eligible": 9,
+        "eligible_share": 0.42857142857142855,
+        "eligible_h": [
+          64.0,
+          128.0,
+          256.0,
+          512.0,
+          1024.0,
+          2048.0,
+          4096.0,
+          8192.0,
+          16384.0
+        ]
+      }
+    },
+    "d1d_plain_statement": "A10b.1's block rule leaves 0.381 of the 21-rung bandwidth sweep eligible. The alternative it explicitly rejected -- declaring h < 60 s ineligible -- leaves 0.429. A10b.1's rule is therefore WORSE than the alternative it rejected, by the measure used to reject it. The rejection rationale was that the alternative 'would exclude v3's premarket knee of 16 s from the search range by construction'; A10b.1's own rule also excludes h = 16 s, since the block floor binds below h = 69.8 s.",
+    "block_floor_event_s_for_C1": 17.448123722644123
+  }
+}

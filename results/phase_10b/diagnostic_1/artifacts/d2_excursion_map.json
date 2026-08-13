@@ -1,0 +1,1533 @@
+{
+  "task": "D2",
+  "read_only": true,
+  "source": "results/phase_10b/artifacts/t2_control_curves.parquet (A10b.1 amended run)",
+  "by_control": {
+    "C1": {
+      "h=0.015625": {
+        "h": 0.015625,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 14,
+            "T_s": 0.015625,
+            "n_pairs": 1497599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 15,
+            "T_s": 0.03125,
+            "n_pairs": 748799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 16,
+            "T_s": 0.0625,
+            "n_pairs": 374399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 17,
+            "T_s": 0.125,
+            "n_pairs": 187199,
+            "direction": "below"
+          },
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 20,
+            "T_s": 1.0,
+            "n_pairs": 23399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 21,
+            "T_s": 2.0,
+            "n_pairs": 11699,
+            "direction": "below"
+          },
+          {
+            "rung_index": 22,
+            "T_s": 4.0,
+            "n_pairs": 5849,
+            "direction": "below"
+          },
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "below"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 16,
+        "n_distinct_runs": 1,
+        "run_lengths": [
+          16
+        ],
+        "share_inside_upper_only_minpairs_applied": 1.0,
+        "share_inside_upper_only_all_33_rungs": 1.0,
+        "n_above_eligible": 0,
+        "n_below_eligible": 16
+      },
+      "h=0.0625": {
+        "h": 0.0625,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 16,
+            "T_s": 0.0625,
+            "n_pairs": 374399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 17,
+            "T_s": 0.125,
+            "n_pairs": 187199,
+            "direction": "below"
+          },
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 20,
+            "T_s": 1.0,
+            "n_pairs": 23399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 21,
+            "T_s": 2.0,
+            "n_pairs": 11699,
+            "direction": "below"
+          },
+          {
+            "rung_index": 22,
+            "T_s": 4.0,
+            "n_pairs": 5849,
+            "direction": "below"
+          },
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "below"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 14,
+        "n_distinct_runs": 1,
+        "run_lengths": [
+          14
+        ],
+        "share_inside_upper_only_minpairs_applied": 1.0,
+        "share_inside_upper_only_all_33_rungs": 1.0,
+        "n_above_eligible": 0,
+        "n_below_eligible": 14
+      },
+      "h=0.25": {
+        "h": 0.25,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 17,
+            "T_s": 0.125,
+            "n_pairs": 187199,
+            "direction": "below"
+          },
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 20,
+            "T_s": 1.0,
+            "n_pairs": 23399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 21,
+            "T_s": 2.0,
+            "n_pairs": 11699,
+            "direction": "below"
+          },
+          {
+            "rung_index": 22,
+            "T_s": 4.0,
+            "n_pairs": 5849,
+            "direction": "below"
+          },
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "below"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 13,
+        "n_distinct_runs": 1,
+        "run_lengths": [
+          13
+        ],
+        "share_inside_upper_only_minpairs_applied": 1.0,
+        "share_inside_upper_only_all_33_rungs": 1.0,
+        "n_above_eligible": 0,
+        "n_below_eligible": 13
+      },
+      "h=1": {
+        "h": 1.0,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 20,
+            "T_s": 1.0,
+            "n_pairs": 23399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 21,
+            "T_s": 2.0,
+            "n_pairs": 11699,
+            "direction": "below"
+          },
+          {
+            "rung_index": 22,
+            "T_s": 4.0,
+            "n_pairs": 5849,
+            "direction": "below"
+          },
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "below"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 12,
+        "n_distinct_runs": 1,
+        "run_lengths": [
+          12
+        ],
+        "share_inside_upper_only_minpairs_applied": 1.0,
+        "share_inside_upper_only_all_33_rungs": 1.0,
+        "n_above_eligible": 0,
+        "n_below_eligible": 12
+      },
+      "h=4": {
+        "h": 4.0,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 6,
+            "T_s": 6.103515625e-05,
+            "n_pairs": 383385599,
+            "direction": "above"
+          },
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 20,
+            "T_s": 1.0,
+            "n_pairs": 23399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 21,
+            "T_s": 2.0,
+            "n_pairs": 11699,
+            "direction": "below"
+          },
+          {
+            "rung_index": 22,
+            "T_s": 4.0,
+            "n_pairs": 5849,
+            "direction": "below"
+          },
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "below"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 12,
+        "n_distinct_runs": 2,
+        "run_lengths": [
+          1,
+          12
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.967741935483871,
+        "share_inside_upper_only_all_33_rungs": 0.9696969696969697,
+        "n_above_eligible": 1,
+        "n_below_eligible": 12
+      },
+      "h=16": {
+        "h": 16.0,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 22,
+            "T_s": 4.0,
+            "n_pairs": 5849,
+            "direction": "below"
+          },
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "below"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 8,
+        "n_distinct_runs": 2,
+        "run_lengths": [
+          2,
+          8
+        ],
+        "share_inside_upper_only_minpairs_applied": 1.0,
+        "share_inside_upper_only_all_33_rungs": 1.0,
+        "n_above_eligible": 0,
+        "n_below_eligible": 10
+      },
+      "h=64": {
+        "h": 64.0,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "below"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 2,
+        "n_distinct_runs": 2,
+        "run_lengths": [
+          2,
+          2
+        ],
+        "share_inside_upper_only_minpairs_applied": 1.0,
+        "share_inside_upper_only_all_33_rungs": 1.0,
+        "n_above_eligible": 0,
+        "n_below_eligible": 4
+      },
+      "h=256": {
+        "h": 256.0,
+        "h_eligible": true,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 6,
+            "T_s": 6.103515625e-05,
+            "n_pairs": 383385599,
+            "direction": "above"
+          },
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 2,
+        "n_distinct_runs": 2,
+        "run_lengths": [
+          1,
+          2
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.967741935483871,
+        "share_inside_upper_only_all_33_rungs": 0.9696969696969697,
+        "n_above_eligible": 1,
+        "n_below_eligible": 2
+      },
+      "h=1024": {
+        "h": 1024.0,
+        "h_eligible": true,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 2,
+        "n_distinct_runs": 1,
+        "run_lengths": [
+          2
+        ],
+        "share_inside_upper_only_minpairs_applied": 1.0,
+        "share_inside_upper_only_all_33_rungs": 1.0,
+        "n_above_eligible": 0,
+        "n_below_eligible": 2
+      },
+      "h=4096": {
+        "h": 4096.0,
+        "h_eligible": true,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 2,
+        "n_distinct_runs": 1,
+        "run_lengths": [
+          2
+        ],
+        "share_inside_upper_only_minpairs_applied": 1.0,
+        "share_inside_upper_only_all_33_rungs": 1.0,
+        "n_above_eligible": 0,
+        "n_below_eligible": 2
+      },
+      "h=16384": {
+        "h": 16384.0,
+        "h_eligible": true,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 6,
+            "T_s": 6.103515625e-05,
+            "n_pairs": 383385599,
+            "direction": "above"
+          },
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 2,
+        "n_distinct_runs": 2,
+        "run_lengths": [
+          1,
+          2
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.967741935483871,
+        "share_inside_upper_only_all_33_rungs": 0.9696969696969697,
+        "n_above_eligible": 1,
+        "n_below_eligible": 2
+      }
+    },
+    "C2": {
+      "h=0.015625": {
+        "h": 0.015625,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 14,
+            "T_s": 0.015625,
+            "n_pairs": 1497599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 15,
+            "T_s": 0.03125,
+            "n_pairs": 748799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 16,
+            "T_s": 0.0625,
+            "n_pairs": 374399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 17,
+            "T_s": 0.125,
+            "n_pairs": 187199,
+            "direction": "below"
+          },
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 20,
+            "T_s": 1.0,
+            "n_pairs": 23399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 21,
+            "T_s": 2.0,
+            "n_pairs": 11699,
+            "direction": "below"
+          },
+          {
+            "rung_index": 22,
+            "T_s": 4.0,
+            "n_pairs": 5849,
+            "direction": "below"
+          },
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "above"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "above"
+          },
+          {
+            "rung_index": 30,
+            "T_s": 1024.0,
+            "n_pairs": 21,
+            "direction": "above"
+          }
+        ],
+        "longest_consecutive_run": 13,
+        "n_distinct_runs": 2,
+        "run_lengths": [
+          13,
+          3
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.9032258064516129,
+        "share_inside_upper_only_all_33_rungs": 0.9090909090909091,
+        "n_above_eligible": 3,
+        "n_below_eligible": 13
+      },
+      "h=0.0625": {
+        "h": 0.0625,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 16,
+            "T_s": 0.0625,
+            "n_pairs": 374399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 17,
+            "T_s": 0.125,
+            "n_pairs": 187199,
+            "direction": "below"
+          },
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 20,
+            "T_s": 1.0,
+            "n_pairs": 23399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 21,
+            "T_s": 2.0,
+            "n_pairs": 11699,
+            "direction": "below"
+          },
+          {
+            "rung_index": 22,
+            "T_s": 4.0,
+            "n_pairs": 5849,
+            "direction": "below"
+          },
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "above"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "above"
+          },
+          {
+            "rung_index": 30,
+            "T_s": 1024.0,
+            "n_pairs": 21,
+            "direction": "above"
+          }
+        ],
+        "longest_consecutive_run": 11,
+        "n_distinct_runs": 2,
+        "run_lengths": [
+          11,
+          3
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.9032258064516129,
+        "share_inside_upper_only_all_33_rungs": 0.9090909090909091,
+        "n_above_eligible": 3,
+        "n_below_eligible": 11
+      },
+      "h=0.25": {
+        "h": 0.25,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 17,
+            "T_s": 0.125,
+            "n_pairs": 187199,
+            "direction": "below"
+          },
+          {
+            "rung_index": 18,
+            "T_s": 0.25,
+            "n_pairs": 93599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 20,
+            "T_s": 1.0,
+            "n_pairs": 23399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 21,
+            "T_s": 2.0,
+            "n_pairs": 11699,
+            "direction": "below"
+          },
+          {
+            "rung_index": 22,
+            "T_s": 4.0,
+            "n_pairs": 5849,
+            "direction": "below"
+          },
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "above"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "above"
+          },
+          {
+            "rung_index": 30,
+            "T_s": 1024.0,
+            "n_pairs": 21,
+            "direction": "above"
+          }
+        ],
+        "longest_consecutive_run": 10,
+        "n_distinct_runs": 2,
+        "run_lengths": [
+          10,
+          3
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.9032258064516129,
+        "share_inside_upper_only_all_33_rungs": 0.9090909090909091,
+        "n_above_eligible": 3,
+        "n_below_eligible": 10
+      },
+      "h=1": {
+        "h": 1.0,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 20,
+            "T_s": 1.0,
+            "n_pairs": 23399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 21,
+            "T_s": 2.0,
+            "n_pairs": 11699,
+            "direction": "below"
+          },
+          {
+            "rung_index": 22,
+            "T_s": 4.0,
+            "n_pairs": 5849,
+            "direction": "below"
+          },
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "above"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "above"
+          },
+          {
+            "rung_index": 30,
+            "T_s": 1024.0,
+            "n_pairs": 21,
+            "direction": "above"
+          }
+        ],
+        "longest_consecutive_run": 8,
+        "n_distinct_runs": 2,
+        "run_lengths": [
+          8,
+          3
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.9032258064516129,
+        "share_inside_upper_only_all_33_rungs": 0.9090909090909091,
+        "n_above_eligible": 3,
+        "n_below_eligible": 8
+      },
+      "h=4": {
+        "h": 4.0,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 19,
+            "T_s": 0.5,
+            "n_pairs": 46799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 20,
+            "T_s": 1.0,
+            "n_pairs": 23399,
+            "direction": "below"
+          },
+          {
+            "rung_index": 21,
+            "T_s": 2.0,
+            "n_pairs": 11699,
+            "direction": "below"
+          },
+          {
+            "rung_index": 22,
+            "T_s": 4.0,
+            "n_pairs": 5849,
+            "direction": "below"
+          },
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "below"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "above"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "above"
+          },
+          {
+            "rung_index": 30,
+            "T_s": 1024.0,
+            "n_pairs": 21,
+            "direction": "above"
+          }
+        ],
+        "longest_consecutive_run": 12,
+        "n_distinct_runs": 1,
+        "run_lengths": [
+          12
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.9032258064516129,
+        "share_inside_upper_only_all_33_rungs": 0.9090909090909091,
+        "n_above_eligible": 3,
+        "n_below_eligible": 9
+      },
+      "h=16": {
+        "h": 16.0,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 23,
+            "T_s": 8.0,
+            "n_pairs": 2924,
+            "direction": "below"
+          },
+          {
+            "rung_index": 24,
+            "T_s": 16.0,
+            "n_pairs": 1461,
+            "direction": "below"
+          },
+          {
+            "rung_index": 25,
+            "T_s": 32.0,
+            "n_pairs": 730,
+            "direction": "below"
+          },
+          {
+            "rung_index": 26,
+            "T_s": 64.0,
+            "n_pairs": 364,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "below"
+          }
+        ],
+        "longest_consecutive_run": 5,
+        "n_distinct_runs": 1,
+        "run_lengths": [
+          5
+        ],
+        "share_inside_upper_only_minpairs_applied": 1.0,
+        "share_inside_upper_only_all_33_rungs": 1.0,
+        "n_above_eligible": 0,
+        "n_below_eligible": 5
+      },
+      "h=64": {
+        "h": 64.0,
+        "h_eligible": false,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [],
+        "longest_consecutive_run": 0,
+        "n_distinct_runs": 0,
+        "run_lengths": [],
+        "share_inside_upper_only_minpairs_applied": 1.0,
+        "share_inside_upper_only_all_33_rungs": 1.0,
+        "n_above_eligible": 0,
+        "n_below_eligible": 0
+      },
+      "h=256": {
+        "h": 256.0,
+        "h_eligible": true,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 13,
+            "T_s": 0.0078125,
+            "n_pairs": 2995199,
+            "direction": "below"
+          },
+          {
+            "rung_index": 14,
+            "T_s": 0.015625,
+            "n_pairs": 1497599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "above"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "above"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "above"
+          }
+        ],
+        "longest_consecutive_run": 3,
+        "n_distinct_runs": 2,
+        "run_lengths": [
+          2,
+          3
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.9032258064516129,
+        "share_inside_upper_only_all_33_rungs": 0.9090909090909091,
+        "n_above_eligible": 3,
+        "n_below_eligible": 2
+      },
+      "h=1024": {
+        "h": 1024.0,
+        "h_eligible": true,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 13,
+            "T_s": 0.0078125,
+            "n_pairs": 2995199,
+            "direction": "below"
+          },
+          {
+            "rung_index": 14,
+            "T_s": 0.015625,
+            "n_pairs": 1497599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "above"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "above"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "above"
+          },
+          {
+            "rung_index": 30,
+            "T_s": 1024.0,
+            "n_pairs": 21,
+            "direction": "above"
+          }
+        ],
+        "longest_consecutive_run": 4,
+        "n_distinct_runs": 2,
+        "run_lengths": [
+          2,
+          4
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.8709677419354839,
+        "share_inside_upper_only_all_33_rungs": 0.8787878787878788,
+        "n_above_eligible": 4,
+        "n_below_eligible": 2
+      },
+      "h=4096": {
+        "h": 4096.0,
+        "h_eligible": true,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 7,
+            "T_s": 0.0001220703125,
+            "n_pairs": 191692799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 13,
+            "T_s": 0.0078125,
+            "n_pairs": 2995199,
+            "direction": "below"
+          },
+          {
+            "rung_index": 14,
+            "T_s": 0.015625,
+            "n_pairs": 1497599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "above"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "above"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "above"
+          },
+          {
+            "rung_index": 30,
+            "T_s": 1024.0,
+            "n_pairs": 21,
+            "direction": "above"
+          }
+        ],
+        "longest_consecutive_run": 4,
+        "n_distinct_runs": 3,
+        "run_lengths": [
+          1,
+          2,
+          4
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.8709677419354839,
+        "share_inside_upper_only_all_33_rungs": 0.8787878787878788,
+        "n_above_eligible": 4,
+        "n_below_eligible": 3
+      },
+      "h=16384": {
+        "h": 16384.0,
+        "h_eligible": true,
+        "n_rungs_eligible": 31,
+        "n_rungs_all": 33,
+        "excursions": [
+          {
+            "rung_index": 7,
+            "T_s": 0.0001220703125,
+            "n_pairs": 191692799,
+            "direction": "below"
+          },
+          {
+            "rung_index": 13,
+            "T_s": 0.0078125,
+            "n_pairs": 2995199,
+            "direction": "below"
+          },
+          {
+            "rung_index": 14,
+            "T_s": 0.015625,
+            "n_pairs": 1497599,
+            "direction": "below"
+          },
+          {
+            "rung_index": 27,
+            "T_s": 128.0,
+            "n_pairs": 181,
+            "direction": "above"
+          },
+          {
+            "rung_index": 28,
+            "T_s": 256.0,
+            "n_pairs": 90,
+            "direction": "above"
+          },
+          {
+            "rung_index": 29,
+            "T_s": 512.0,
+            "n_pairs": 44,
+            "direction": "above"
+          },
+          {
+            "rung_index": 30,
+            "T_s": 1024.0,
+            "n_pairs": 21,
+            "direction": "above"
+          }
+        ],
+        "longest_consecutive_run": 4,
+        "n_distinct_runs": 3,
+        "run_lengths": [
+          1,
+          2,
+          4
+        ],
+        "share_inside_upper_only_minpairs_applied": 0.8709677419354839,
+        "share_inside_upper_only_all_33_rungs": 0.8787878787878788,
+        "n_above_eligible": 4,
+        "n_below_eligible": 3
+      }
+    }
+  },
+  "d2c_note": "The min_pairs_pooled exclusion is ALREADY applied to the inside-band share in the implementation -- rungs with fewer than 20 window pairs never enter it. Both readings are reported so the effect of that choice is visible: 'minpairs_applied' is what the gate used, 'all_33_rungs' is what it would have been without the rule. n_pairs is given for every excursion so low-power rungs are identifiable.",
+  "d2d_false_positive_arithmetic": {
+    "band_level": 0.95,
+    "n_eligible_rungs": 31,
+    "expected_outside_pointwise": 1.55,
+    "expected_above_pointwise": 0.775,
+    "caveat": "Pointwise arithmetic assumes independent rungs. Allan values at neighbouring rungs come from nested windows and are strongly correlated, so this expectation is a lower bound on the variability of the count and adjacency in the excursion runs above is the direct evidence of that correlation."
+  }
+}

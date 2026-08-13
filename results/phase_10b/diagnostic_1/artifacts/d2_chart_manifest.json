@@ -1,0 +1,11 @@
+{
+  "chart": {
+    "chart": "09_excursion_map.html",
+    "png": "09_excursion_map.png",
+    "kaleido_verified": true,
+    "html_bytes": 132100,
+    "png_bytes": 335121
+  },
+  "config_hash": "5fd653e4",
+  "source": "research/phase_10b/dx1_chart09.py:main"
+}

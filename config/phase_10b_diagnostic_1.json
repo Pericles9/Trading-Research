@@ -1,0 +1,19 @@
+{
+  "phase": "10b",
+  "document": "DX10b.1",
+  "prompt": "prompts/phase_10b_diagnostic_1.md",
+  "date": "2026-08-13",
+  "status": "diagnostic, not an amendment -- changes no method, adopts no criterion, reads no real event",
+  "n_envelope_draws": 2499,
+  "n_type1_replicates": 200,
+  "envelope_ordering": "extreme_rank_length",
+  "envelope_alpha": 0.05,
+  "intensity_reestimation": "per_simulation",
+  "bootstrap_interval": 0.95,
+  "min_envelope_draws": 999,
+  "n_knee_draws": 500,
+  "n_knee_draws_note": "D4 refits the knee on independent realizations of each control. 500 gives the 2.5/97.5 percentiles of the breakpoint distribution a standard error well under a tenth of a rung, which is the resolution D4b reports at. Not a gate threshold.",
+  "knee_draw_seed_base": 900000,
+  "modifies_nothing": "No value in config/phase_10b.json or in A10b.1 is modified by this file.",
+  "output_root": "results/phase_10b/diagnostic_1/"
+}

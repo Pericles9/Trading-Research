@@ -1,0 +1,68 @@
+{
+  "task": "D0",
+  "branch": "phase/10b",
+  "tip": "1a5d5c6 phase-10b A10b.1 T2-R5: GATE FAILS AGAIN -- row 4d fired, knee misses 3 of 4",
+  "working_tree_porcelain": [
+    "M .gitignore",
+    "?? .claude/skills/",
+    "?? config/phase_10b_diagnostic_1.json",
+    "?? prompts/phase_9",
+    "?? research/phase_10b/dx1_d0_d1_d2.py"
+  ],
+  "working_tree_clean": false,
+  "escalation_row_1_note": "ROW 1 (working tree dirty) IS TRIPPED BY THREE PRE-EXISTING ENTRIES ONLY: a .gitignore modification, untracked .claude/skills/, and untracked prompts/phase_9. These are the exact three entries Cooper waived on 2026-08-06 with 'leave and proceed. make sure nothing gets lost'. None is an output of any phase 10b task and none is written by this diagnostic. Flagged rather than treated as a fresh stop; the waiver is recorded here so the decision is visible.",
+  "artifacts_present": {
+    "t0_regenerable_inventory.json": 1454,
+    "t0e_cohort_assertion.json": 2073,
+    "t0e_timestamp_resolution.parquet": 8747,
+    "t1_chart_manifest.json": 537,
+    "t1_plateau_fit.json": 6859,
+    "t1_sweep_runs.parquet": 20559,
+    "t2_chart_manifest.json": 455,
+    "t2_control_curves.parquet": 48893,
+    "t2_control_results.json": 39782,
+    "t2_controls.json": 88899,
+    "t2r0_departure_direction.json": 24514,
+    "t2r2_block_eligibility.json": 18392,
+    "t2r3_unseen_scale_validation.json": 1914
+  },
+  "d0b_per_draw_realizations": {
+    "persisted": false,
+    "what_was_persisted": "t2_controls.json holds per-control SUMMARIES and per-(control, h, rung) band/curve rows in t2_control_curves.parquet. Individual null-draw curves and repeated control realizations were not written to disk.",
+    "deterministically_reproducible": true,
+    "reproduction": "build_controls(cfg, span, median t0_print_count, numpy default_rng(42), 80.5 ns) in research/phase_10b/t2r5_controls.py",
+    "verification_against_stored_summaries": {
+      "C1": {
+        "stored_n_prints": 26742,
+        "regenerated_n_prints": 26742,
+        "match": true
+      },
+      "C2": {
+        "stored_n_prints": 26680,
+        "regenerated_n_prints": 26680,
+        "match": true
+      },
+      "C3": {
+        "stored_n_prints": 26196,
+        "regenerated_n_prints": 26196,
+        "match": true
+      },
+      "C4": {
+        "stored_n_prints": 27228,
+        "regenerated_n_prints": 27228,
+        "match": true
+      },
+      "C3p": {
+        "stored_n_prints": 26676,
+        "regenerated_n_prints": 26676,
+        "match": true
+      },
+      "C4p": {
+        "stored_n_prints": 27186,
+        "regenerated_n_prints": 27186,
+        "match": true
+      }
+    },
+    "row_2_fires": false
+  }
+}
