@@ -1,0 +1,71 @@
+{
+  "phase": "10b",
+  "diagnostic": "DX10b.1",
+  "task": "D3a",
+  "config_hash": "5fd653e4",
+  "question": "Is there a maintained implementation of the global envelope test (Myllymaki, Mrkvicka, Grabarnik, Seijo & Hahn, JRSS-B 79:381-404, 2017) to reuse, and can the reference implementation be run here for validation?",
+  "reference_implementation": {
+    "name": "R package GET (Myllymaki & Mrkvicka)",
+    "language": "R",
+    "available_here": false,
+    "evidence": {
+      "R_binaries_on_path": {
+        "R": null,
+        "Rscript": null,
+        "R.exe": null,
+        "Rscript.exe": null
+      },
+      "R_install_dirs_found": []
+    }
+  },
+  "python_candidates": {
+    "GET": {
+      "present": false
+    },
+    "spatstat": {
+      "present": false
+    },
+    "pointpats": {
+      "present": false
+    },
+    "rpy2": {
+      "present": false
+    },
+    "astropy": {
+      "present": false
+    },
+    "scipy": {
+      "present": true,
+      "version": "1.17.0"
+    },
+    "numpy": {
+      "present": true,
+      "version": "2.4.2"
+    }
+  },
+  "python_port_found": false,
+  "python_port_note": "No maintained Python port of the global envelope test is installed, and the method's reference implementation is R-only. rpy2, which would allow calling GET from Python, is also absent.",
+  "pypi": {
+    "reachable": false,
+    "error": "FileNotFoundError(2, 'The system cannot find the file specified', None, 2, None)"
+  },
+  "conclusion": "Cannot reuse and cannot validate. R is not installed and has no install directory; rpy2 is absent; no Python implementation is present; and PyPI is unreachable from this environment, so neither rpy2 nor any candidate package can be obtained. Implementing extreme rank length directly is feasible -- it is short -- but D3a requires validating such an implementation against GET on a published example BEFORE running it on the controls, and that comparison cannot be performed here.",
+  "escalation_row_6": {
+    "condition": "Envelope test implementation cannot be validated against the reference",
+    "FIRED": true,
+    "action": "Hard stop -- post what you have"
+  },
+  "what_was_not_done": [
+    "D3b re-simulation at 2,499 draws",
+    "D3c per-simulation intensity re-estimation",
+    "D3d the envelope test itself",
+    "D3e current-rule vs envelope verdict comparison",
+    "D3f type I error check",
+    "D3g chart 10"
+  ],
+  "independent_of_d3": [
+    "D4 knee sampling distribution (charts 11) -- does not use the envelope test",
+    "D5 bias consistency (chart 12) -- does not use the envelope test"
+  ],
+  "source": "research/phase_10b/dx1_d3a_reuse.py:main"
+}
