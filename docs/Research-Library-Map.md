@@ -856,3 +856,49 @@ Per `results/hardware/`, `results/ingestion_run/`, `results/rebuild_stage1/`, et
 - `results/phase_2/charts/01_window_coverage_by_offset.html`, `02_2025_momentum_quality.html`, `03_source_rowcount_comparison.html` — This phase's three Chart Contract charts.
 - `results/phase_2/digest.json`, `results/phase_2/REPORT.md` — This phase's digest and written report, covering T1-T5 and the T8 addendum.
 
+
+## Phase 10b — Randomness of Trade Arrivals Under a Non-Constant Rate (closed 2026-08-13)
+
+Closed as a recorded negative result. No burst timescale established; **no real event was read**.
+Summary: `results/phase_10b/SUMMARY.md` (cross-phase copy at
+`results/reports/phase_10b_summary.md`).
+
+**Prompts**
+- `prompts/phase_10b.md` — the phase as originally specified
+- `prompts/phase_10b_amendment_1.md` — A10b.1, knee statistic, h/4 blocks, directional band rule
+- `prompts/phase_10b_diagnostic_1.md` — DX10b.1, satisfiability audit and excursion structure
+- `prompts/phase_10b_amendment_2.md` — A10b.2, four repairs; T1-T2 executed, T3 onward never run
+- `prompts/phase_10b_closeout.md` — CO10b, this close-out
+
+**Configs**
+- `config/phase_10b.json`, `config/phase_10b_diagnostic_1.json`,
+  `config/phase_10b_amendment_2.json`
+
+**Code** (`research/phase_10b/`)
+- `pipeline.py` — shared Allan / intensity / rescaling pipeline; sparse Allan verified exactly
+  against a dense reference on 200 cases
+- `knee.py` — piecewise-linear knee, BIC-selected
+- `t0e_cohort_assertion.py`, `t1_plateau.py`, `chart01_plateau.py`
+- `t2_controls.py`, `t2r0_departure.py`, `t2r5_controls.py`, `chart04_controls.py`
+- `dx1_d0_d1_d2.py`, `dx1_chart09.py`, `dx1_d3a_reuse.py`
+- `a2_t1_t2_knee.py`, `a2_charts_11_12.py`, `co_verify.py`
+
+**Artifacts** — `results/phase_10b/artifacts/` (cohort assertion, timestamp resolution, T1 plateau
+fit, three control runs, departure direction, block eligibility, unseen-scale validation,
+`co_verification.json`); `results/phase_10b/diagnostic_1/artifacts/` (satisfiability audit,
+excursion map, envelope-validation block); `results/phase_10b/amendment_2/artifacts/` (per-draw knee
+distributions, bias consistency).
+
+**Charts** — `01_plateau_vs_sweep_size`, `04_control_harness` (control gate, six controls),
+`diagnostic_1/charts/09_excursion_map`, `amendment_2/charts/11_knee_sampling_distribution`,
+`amendment_2/charts/12_bias_consistency`.
+
+**Decisions** — D10 (numbering), D11-D14 (close-out) in `docs/Universe-Decisions.md`.
+
+**Prior art added by this phase**
+- Myllymaki, Mrkvicka, Grabarnik, Seijo & Hahn (2017), *Global envelope tests for spatial
+  processes*, JRSS-B 79:381-404 — multiplicity-correct curve-vs-simulation testing. Blocked offline.
+- Rudemo (1982); Bowman (1984); Shimazaki & Shinomoto (2010) — cross-validated bandwidth selection
+  for kernel intensity estimation; establishes held-out fitting as standard practice.
+- Gourieroux, Monfort & Renault (1993), *Indirect inference*, J. Appl. Econ. 8:S85-S118 — the route
+  recorded and declined.

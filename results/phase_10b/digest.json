@@ -1,0 +1,161 @@
+{
+  "phase": "10b",
+  "version": "closeout",
+  "title": "Randomness of Trade Arrivals Under a Non-Constant Rate",
+  "config_hash": "5fd653e4",
+  "status": "complete_approved",
+  "closed_as": "negative result",
+  "escalation": {
+    "criterion": "A10b.2 row 5 -- knee usability criteria 2 and 3",
+    "observed": {
+      "interval_width_C3prime_rungs": 1.0,
+      "interval_width_threshold_rungs": 3,
+      "interval_width_pass": true,
+      "coverage_injected_inside_ci95": "0 of 4",
+      "coverage_threshold": "3 of 4",
+      "coverage_pass": false,
+      "common_bias_p": 0.0,
+      "common_bias_threshold": 0.05,
+      "common_bias_pass": false
+    },
+    "fired_across_phase": [
+      "T2 row 4 (C1-C4 required outcomes not met)",
+      "A10b.1 T2-R5 rows 4 and 4d (block-floor binding 0.6190 > 0.40)",
+      "DX10b.1 row 6 (envelope test unvalidatable offline)",
+      "A10b.2 row 4 (decision point, by design) and row 5"
+    ],
+    "resolution": "Cooper closed the phase 2026-08-13. No third amendment. Row 15 stands."
+  },
+  "decisions_recorded": [
+    "D10",
+    "D11",
+    "D12",
+    "D13",
+    "D14"
+  ],
+  "headline_metrics": [
+    {
+      "name": "burst_timescale_established",
+      "value": 0,
+      "n": 0,
+      "source": "results/phase_10b/SUMMARY.md",
+      "note": "n = 0 because no real event was analysed at any point in this phase"
+    }
+  ],
+  "supporting_metrics": [
+    {
+      "name": "knee_bias_rungs_single_scale_common",
+      "value": 1.371,
+      "n": 500,
+      "source": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json"
+    },
+    {
+      "name": "knee_bias_rungs_two_scale_coarse",
+      "value": -2.907,
+      "n": 500,
+      "source": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json"
+    },
+    {
+      "name": "knee_ci95_width_rungs_max",
+      "value": 1.0,
+      "n": 500,
+      "source": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json"
+    },
+    {
+      "name": "knee_coverage_of_injected_scale",
+      "value": 0,
+      "n": 4,
+      "source": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json"
+    },
+    {
+      "name": "control_plateau_recovery_relative_error",
+      "value": -0.00246,
+      "n": 1,
+      "source": "results/phase_10b/artifacts/t2_controls.json"
+    },
+    {
+      "name": "band_coverage_min",
+      "value": 0.9292,
+      "n": 24,
+      "source": "results/phase_10b/artifacts/t2_controls.json"
+    },
+    {
+      "name": "real_events_read",
+      "value": 0,
+      "n": 0,
+      "source": "results/phase_10b/artifacts/co_verification.json"
+    }
+  ],
+  "surprises": [
+    "The knee is SHARP AND WRONG. Its 95% interval spans 0-1 rung across 500 draws per control while the injected scale falls inside that interval on 0 of 4 controls. The usability criteria were written expecting a bad estimator to be vague; the width criterion passed decisively and the failure was caught only by a second criterion that happened to exist. Parameter stability is not evidence of correctness.",
+    "The knee's bias REVERSES SIGN with the shape of the transition: +0.97 to +1.61 rungs where the curve approaches a plateau from below, -2.91 rungs where it lifts off one. Because the magnitude depends on scale separation, and separation is exactly what is unknown on real data, the bias cannot be corrected out. That is what closed the phase.",
+    "ELEVEN specification defects were authored across the phase's own prompts and amendments, including a required outcome ~10.6 rungs outside its own sweep, a repair that made another row unsatisfiable by 0.09 of a rung, and a block rule that left LESS of the sweep testable (0.381) than the alternative it rejected (0.429), than the rule it replaced (0.524), or than no rule at all (0.762).",
+    "Synthetic controls caught six implementation defects and eleven specification defects before a single real event was read. Not one would have surfaced from an outcome threshold.",
+    "The inhomogeneous-Poisson control's four upward excursions were CONTIGUOUS, at the four lowest-power eligible rungs (pair counts 181 -> 90 -> 44 -> 21 against a floor of 20). One excursion at one physical scale was counted by the gate as four independent failures.",
+    "D5's premise fails. The strategy surface required a burst timescale to anchor downstream horizons and none is available at usable precision, which also places v3's 128 s knee in roughly 50-1,000 s and its 16 s knee in roughly 6-120 s."
+  ],
+  "verification": {
+    "figures_checked": 109,
+    "match": 109,
+    "discrepancies": 0,
+    "no_artifact": 0,
+    "source": "results/phase_10b/artifacts/co_verification.json",
+    "note": "Two label/sign corrections recorded against the close-out's Part 1 despite matching values: a run-2 row labelled 'C3 knee' was the band-departure crossing (the knee did not exist until A10b.1), and a run-3 rung error written '+2.907' is an absolute value whose signed bias is negative."
+  },
+  "artifacts": [
+    "results/phase_10b/amendment_2/artifacts/t1_knee_distributions.parquet",
+    "results/phase_10b/amendment_2/artifacts/t1_t2_chart_manifest.json",
+    "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+    "results/phase_10b/artifacts/co_verification.json",
+    "results/phase_10b/artifacts/t0_regenerable_inventory.json",
+    "results/phase_10b/artifacts/t0e_cohort_assertion.json",
+    "results/phase_10b/artifacts/t0e_timestamp_resolution.parquet",
+    "results/phase_10b/artifacts/t1_chart_manifest.json",
+    "results/phase_10b/artifacts/t1_plateau_fit.json",
+    "results/phase_10b/artifacts/t1_sweep_runs.parquet",
+    "results/phase_10b/artifacts/t2_chart_manifest.json",
+    "results/phase_10b/artifacts/t2_control_curves.parquet",
+    "results/phase_10b/artifacts/t2_control_results.json",
+    "results/phase_10b/artifacts/t2_controls.json",
+    "results/phase_10b/artifacts/t2r0_departure_direction.json",
+    "results/phase_10b/artifacts/t2r2_block_eligibility.json",
+    "results/phase_10b/artifacts/t2r3_unseen_scale_validation.json",
+    "results/phase_10b/diagnostic_1/artifacts/d0_state.json",
+    "results/phase_10b/diagnostic_1/artifacts/d1_satisfiability_audit.json",
+    "results/phase_10b/diagnostic_1/artifacts/d2_chart_manifest.json",
+    "results/phase_10b/diagnostic_1/artifacts/d2_excursion_map.json",
+    "results/phase_10b/diagnostic_1/artifacts/d3_envelope_validation.json"
+  ],
+  "charts": [
+    "results/phase_10b/amendment_2/charts/11_knee_sampling_distribution.html",
+    "results/phase_10b/amendment_2/charts/12_bias_consistency.html",
+    "results/phase_10b/charts/01_plateau_vs_sweep_size.html",
+    "results/phase_10b/charts/04_control_harness.html",
+    "results/phase_10b/diagnostic_1/charts/09_excursion_map.html"
+  ],
+  "commits": [
+    "215bbb3 phase-10b A10b.2 A2-T2 DECISION POINT: the knee is precise and biased; coverage 0 of 4, survival test FAILED, row 5 fires",
+    "92bd639 phase-10b A10b.2 A2-T0: commit prompt, config and the offline constraint first",
+    "7a47892 phase-10b DX10b.1 D3a: ROW 6 FIRES -- envelope test cannot be validated here",
+    "868423a phase-10b DX10b.1 D0-D2: the block rule is worse than the one it rejected, and C2's excursions are one contiguous run in the lowest-power rungs",
+    "1a5d5c6 phase-10b A10b.1 T2-R5: GATE FAILS AGAIN -- row 4d fired, knee misses 3 of 4",
+    "7f0dc39 phase-10b A10b.1 T2-R0: C1's out-of-band failure is entirely DOWNWARD",
+    "730ecbb phase-10b A10b.1: commit the amendment and config BEFORE any task runs",
+    "d90d108 phase-10b T2 GATE FIRED -- hard stop, do not proceed to T3",
+    "43f02ec phase-10b T2 pre-run: three config amendments, recorded before any run",
+    "543c7b9 phase-10b T1: the sub-knee Allan plateau DOES track sweep size",
+    "a487b10 phase-10b T0e: cohort assertion passes; timestamp resolution as precondition",
+    "b0a474f phase-10b T0d: cut phase/10b; commit prompt and config before any other work",
+    "57a3bf3 phase-10b T0c: record D10; insert Operating Plan row 10b",
+    "30e1c4c phase-10 T0b: close Phase 10 as a recorded negative result"
+  ],
+  "reproduce": [
+    ".venv/Scripts/python.exe research/phase_10b/pipeline.py",
+    ".venv/Scripts/python.exe research/phase_10b/knee.py",
+    ".venv/Scripts/python.exe research/phase_10b/t2r5_controls.py",
+    ".venv/Scripts/python.exe research/phase_10b/dx1_d0_d1_d2.py",
+    ".venv/Scripts/python.exe research/phase_10b/a2_t1_t2_knee.py",
+    ".venv/Scripts/python.exe research/phase_10b/co_verify.py"
+  ],
+  "approval_note": "Closed by Cooper 2026-08-13 as a recorded negative result. Tagged phase-10b-closed, NOT phase-10b-approved: the convention marks an approved result and there is no result here. Next work is Phase 11, Spread & impact by participation, which requires no burst timescale."
+}

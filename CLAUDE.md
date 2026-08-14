@@ -94,3 +94,6 @@
   fallback at drafting time. `reuse-before-build` applies only to what is already installed.
   (Added 2026-08-13, A10b.2 A2-T0c. This is why Phase 10b DX10b.1 escalation row 6 fired: the
   global envelope test could not be validated against its R reference implementation.)
+
+- **D14 (Phase 10b close-out, 2026-08-13):** the offline constraint above is a standing decision in
+  `docs/Universe-Decisions.md`, not only an environment note.

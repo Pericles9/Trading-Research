@@ -1,0 +1,1093 @@
+{
+  "phase": "10b",
+  "task": "CO-T1",
+  "config_hash": "5fd653e4",
+  "read_only": true,
+  "no_computation": true,
+  "no_real_event_read": true,
+  "rule": "Part 1 of the close-out is transcription and may be wrong. Where an artifact disagrees, THE ARTIFACT WINS in the summary and the discrepancy is reported here. Figures with no supporting artifact are quarantined.",
+  "n_checked": 109,
+  "n_match": 109,
+  "n_discrepancy": 0,
+  "n_no_artifact": 0,
+  "n_review": 0,
+  "escalation_row_3": {
+    "condition": "more than 5 figures with no supporting artifact",
+    "observed": 0,
+    "threshold": 5,
+    "FIRED": false
+  },
+  "checks": [
+    {
+      "section": "1.4 run2",
+      "figure": "band coverage min",
+      "stated_in_part1": 0.9348,
+      "artifact_value": 0.9348387096774193,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "band coverage max",
+      "stated_in_part1": 0.946,
+      "artifact_value": 0.9459677419354838,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "C3 plateau height",
+      "stated_in_part1": 5.9852,
+      "artifact_value": 5.985210944625763,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "C3 expected size-weighted mean",
+      "stated_in_part1": 6.0,
+      "artifact_value": 6.0,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "C3 plateau relative error",
+      "stated_in_part1": -0.0025,
+      "artifact_value": -0.002464842562372893,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "C4 peak 1 (s)",
+      "stated_in_part1": 7.6e-06,
+      "artifact_value": 7.62939453125e-06,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "C4 peak 2 (s)",
+      "stated_in_part1": 32.0,
+      "artifact_value": 32.0,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "C4 separation",
+      "stated_in_part1": 4190000.0,
+      "artifact_value": 4194304.0,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "C1 inside-band share (min over h)",
+      "stated_in_part1": 0.871,
+      "artifact_value": 0.8709677419354839,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "C2 inside-band share (min over h)",
+      "stated_in_part1": 0.774,
+      "artifact_value": 0.7741935483870968,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "C1 T4 interior crossing (h)",
+      "stated_in_part1": 64.0,
+      "artifact_value": 64.0,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "C3 band-departure crossing (s)",
+      "stated_in_part1": 9.537e-07,
+      "artifact_value": 9.5367431640625e-07,
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": "Part 1 labels this row 'C3 knee'. In run 2 the statistic was the BAND-DEPARTURE crossing; the knee did not exist until A10b.1. Value matches, label does not."
+    },
+    {
+      "section": "1.4 run2",
+      "figure": "C3 T4 crossing",
+      "stated_in_part1": "none",
+      "artifact_value": "none",
+      "artifact_path": "results/phase_10b/artifacts/t2_control_results.json",
+      "result": "match",
+      "note": "stated 'none'; artifact null -> match"
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C1 inside-band upper-only min",
+      "stated_in_part1": 0.9677,
+      "artifact_value": 0.967741935483871,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C2 inside-band upper-only min",
+      "stated_in_part1": 0.871,
+      "artifact_value": 0.8709677419354839,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C3 plateau relative error",
+      "stated_in_part1": -0.00246,
+      "artifact_value": -0.002464842562372893,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C3 knee rung error",
+      "stated_in_part1": 1.61,
+      "artifact_value": 1.6096404744368122,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C4 separation",
+      "stated_in_part1": 4194304,
+      "artifact_value": 4194304.0,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C4 knee rung error",
+      "stated_in_part1": 2.907,
+      "artifact_value": 2.9068905956085187,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": "Part 1 writes '+2.907'. The artifact stores the ABSOLUTE rung error 2.907; the signed bias is NEGATIVE (-2.907), confirmed in A10b.2 t2_bias_consistency.json. Magnitude matches, the '+' sign in Part 1 is wrong."
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C3' knee rung error",
+      "stated_in_part1": 0.966,
+      "artifact_value": 0.965784284662087,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C4' knee rung error",
+      "stated_in_part1": 1.322,
+      "artifact_value": 1.3219280948873622,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "band coverage min",
+      "stated_in_part1": 0.9292,
+      "artifact_value": 0.9291935483870968,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "band coverage max",
+      "stated_in_part1": 0.9497,
+      "artifact_value": 0.9496774193548387,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "row 4d bind share",
+      "stated_in_part1": 0.619,
+      "artifact_value": 0.6190476190476191,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "block_floor_event min (s)",
+      "stated_in_part1": 17.45,
+      "artifact_value": 17.448123722644123,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "block_floor_event max (s)",
+      "stated_in_part1": 22.63,
+      "artifact_value": 22.627416997969522,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "selected k on every control",
+      "stated_in_part1": 3,
+      "artifact_value": 3,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": "observed {'C3': 3, 'C4': 3, 'C3p': 3, 'C4p': 3}"
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "dBIC vs k=1 min",
+      "stated_in_part1": 84.0,
+      "artifact_value": 83.99956574411607,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "dBIC vs k=1 max",
+      "stated_in_part1": 97.2,
+      "artifact_value": 97.15137226586965,
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C3 breakpoints (s)",
+      "stated_in_part1": [
+        3.05e-05,
+        256.0
+      ],
+      "artifact_value": [
+        3.0517578125e-05,
+        256.0
+      ],
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C4 breakpoints (s)",
+      "stated_in_part1": [
+        6.1e-05,
+        8.0
+      ],
+      "artifact_value": [
+        6.103515625e-05,
+        8.0
+      ],
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C3p breakpoints (s)",
+      "stated_in_part1": [
+        0.000244,
+        0.00195
+      ],
+      "artifact_value": [
+        0.000244140625,
+        0.001953125
+      ],
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 run3",
+      "figure": "C4p breakpoints (s)",
+      "stated_in_part1": [
+        0.015625,
+        0.25
+      ],
+      "artifact_value": [
+        0.015625,
+        0.25
+      ],
+      "artifact_path": "results/phase_10b/artifacts/t2_controls.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D1",
+      "figure": "eligible share, pure h/4",
+      "stated_in_part1": 0.762,
+      "artifact_value": 0.7619047619047619,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d1_satisfiability_audit.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D1",
+      "figure": "eligible share, fixed 60 s",
+      "stated_in_part1": 0.524,
+      "artifact_value": 0.5238095238095238,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d1_satisfiability_audit.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D1",
+      "figure": "eligible share, rejected alternative",
+      "stated_in_part1": 0.429,
+      "artifact_value": 0.42857142857142855,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d1_satisfiability_audit.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D1",
+      "figure": "eligible share, A10b.1 rule",
+      "stated_in_part1": 0.381,
+      "artifact_value": 0.38095238095238093,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d1_satisfiability_audit.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D1",
+      "figure": "block_floor_event for C1 (s)",
+      "stated_in_part1": 17.45,
+      "artifact_value": 17.448123722644123,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d1_satisfiability_audit.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D1",
+      "figure": "C3 T4 rungs below sweep floor",
+      "stated_in_part1": 10.61,
+      "artifact_value": 10.609640474436812,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d1_satisfiability_audit.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D1",
+      "figure": "C4 T4 nearest eligible bandwidth (s)",
+      "stated_in_part1": 128.0,
+      "artifact_value": 128.0,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d1_satisfiability_audit.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D1",
+      "figure": "C4 T4 rungs from nearest eligible",
+      "stated_in_part1": 1.09,
+      "artifact_value": 1.0931094043914813,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d1_satisfiability_audit.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D2",
+      "figure": "C2 h=256 above / run lengths",
+      "stated_in_part1": [
+        3,
+        [
+          2,
+          3
+        ]
+      ],
+      "artifact_value": [
+        3,
+        [
+          2,
+          3
+        ]
+      ],
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d2_excursion_map.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D2",
+      "figure": "C2 h=1024 above / run lengths",
+      "stated_in_part1": [
+        4,
+        [
+          2,
+          4
+        ]
+      ],
+      "artifact_value": [
+        4,
+        [
+          2,
+          4
+        ]
+      ],
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d2_excursion_map.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D2",
+      "figure": "C2 h=4096 above / run lengths",
+      "stated_in_part1": [
+        4,
+        [
+          1,
+          2,
+          4
+        ]
+      ],
+      "artifact_value": [
+        4,
+        [
+          1,
+          2,
+          4
+        ]
+      ],
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d2_excursion_map.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D2",
+      "figure": "C2 h=16384 above / run lengths",
+      "stated_in_part1": [
+        4,
+        [
+          1,
+          2,
+          4
+        ]
+      ],
+      "artifact_value": [
+        4,
+        [
+          1,
+          2,
+          4
+        ]
+      ],
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d2_excursion_map.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D2",
+      "figure": "C1 above at h=256",
+      "stated_in_part1": 1,
+      "artifact_value": 1,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d2_excursion_map.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D2",
+      "figure": "C1 above at h=16384",
+      "stated_in_part1": 1,
+      "artifact_value": 1,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d2_excursion_map.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D2",
+      "figure": "expected above by chance",
+      "stated_in_part1": 0.78,
+      "artifact_value": 0.775,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d2_excursion_map.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D2",
+      "figure": "C2 worst share, minpairs applied",
+      "stated_in_part1": 0.871,
+      "artifact_value": 0.8709677419354839,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d2_excursion_map.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D2",
+      "figure": "C2 worst share, all 33 rungs",
+      "stated_in_part1": 0.8788,
+      "artifact_value": 0.8787878787878788,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d2_excursion_map.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D2",
+      "figure": "C2 h=1024 pair counts at above-rungs",
+      "stated_in_part1": [
+        181,
+        90,
+        44,
+        21
+      ],
+      "artifact_value": [
+        181,
+        90,
+        44,
+        21
+      ],
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d2_excursion_map.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D3a",
+      "figure": "row 6 fired",
+      "stated_in_part1": true,
+      "artifact_value": true,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d3_envelope_validation.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 D3a",
+      "figure": "PyPI reachable",
+      "stated_in_part1": false,
+      "artifact_value": false,
+      "artifact_path": "results/phase_10b/diagnostic_1/artifacts/d3_envelope_validation.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C3 median breakpoint (s)",
+      "stated_in_part1": 3.0518e-05,
+      "artifact_value": 3.0517578125e-05,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C3 bias (rungs)",
+      "stated_in_part1": 1.61,
+      "artifact_value": 1.6096404744368122,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C3 CI95 width (rungs)",
+      "stated_in_part1": 0.0,
+      "artifact_value": 0.0,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C3 covers injected",
+      "stated_in_part1": false,
+      "artifact_value": false,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C3p median breakpoint (s)",
+      "stated_in_part1": 0.0019531,
+      "artifact_value": 0.001953125,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C3p bias (rungs)",
+      "stated_in_part1": 0.966,
+      "artifact_value": 0.965784284662087,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C3p CI95 width (rungs)",
+      "stated_in_part1": 1.0,
+      "artifact_value": 1.0,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C3p covers injected",
+      "stated_in_part1": false,
+      "artifact_value": false,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C4 median breakpoint (s)",
+      "stated_in_part1": 8.0,
+      "artifact_value": 8.0,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C4 bias (rungs)",
+      "stated_in_part1": -2.907,
+      "artifact_value": -2.9068905956085187,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C4 CI95 width (rungs)",
+      "stated_in_part1": 1.0,
+      "artifact_value": 1.0,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C4 covers injected",
+      "stated_in_part1": false,
+      "artifact_value": false,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C4p median breakpoint (s)",
+      "stated_in_part1": 0.25,
+      "artifact_value": 0.25,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C4p bias (rungs)",
+      "stated_in_part1": 1.322,
+      "artifact_value": 1.3219280948873622,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C4p CI95 width (rungs)",
+      "stated_in_part1": 1.0,
+      "artifact_value": 1.0,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C4p covers injected",
+      "stated_in_part1": false,
+      "artifact_value": false,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "n draws per control",
+      "stated_in_part1": 500,
+      "artifact_value": 500,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C4 median separation (rungs)",
+      "stated_in_part1": 18.0,
+      "artifact_value": 18.0,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C4 compression systematic",
+      "stated_in_part1": true,
+      "artifact_value": true,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "C4 intervals overlap",
+      "stated_in_part1": false,
+      "artifact_value": false,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "all_four common bias",
+      "stated_in_part1": 0.863,
+      "artifact_value": 0.8631454867571713,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "all_four bias range",
+      "stated_in_part1": 4.517,
+      "artifact_value": 4.516531070045331,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "single_scale common bias",
+      "stated_in_part1": 1.371,
+      "artifact_value": 1.3708739474617913,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "single_scale bias range",
+      "stated_in_part1": 0.644,
+      "artifact_value": 0.6438561897747253,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "multi_scale common bias",
+      "stated_in_part1": 0.248,
+      "artifact_value": 0.24818958860573084,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "multi_scale bias range",
+      "stated_in_part1": 4.229,
+      "artifact_value": 4.228818690495881,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "usability 1 C3' width",
+      "stated_in_part1": 1.0,
+      "artifact_value": 1.0,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "usability 2 coverage",
+      "stated_in_part1": 0,
+      "artifact_value": 0,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "usability 3 common-bias p",
+      "stated_in_part1": 0.0,
+      "artifact_value": 0.0,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "survival test passed",
+      "stated_in_part1": false,
+      "artifact_value": false,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.4 A2",
+      "figure": "dBIC<=2 bracket width 0 on every control",
+      "stated_in_part1": true,
+      "artifact_value": true,
+      "artifact_path": "results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "cohort content hash",
+      "stated_in_part1": "e1a0ac73a79aa573",
+      "artifact_value": "e1a0ac73a79aa573",
+      "artifact_path": "results/phase_10b/artifacts/t0e_cohort_assertion.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "cohort n_total",
+      "stated_in_part1": 114,
+      "artifact_value": 114,
+      "artifact_path": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "analysis cohort n",
+      "stated_in_part1": 100,
+      "artifact_value": 100,
+      "artifact_path": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+      "result": "match",
+      "note": "cohort_group counts {'dev_v4_primary': 50, 'activity_extension': 50, 'row_cap_census': 8, 'dev_v4_sidecar': 6}"
+    },
+    {
+      "section": "1.5",
+      "figure": "row-cap census n",
+      "stated_in_part1": 8,
+      "artifact_value": 8,
+      "artifact_path": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "dev_v4 sidecar n",
+      "stated_in_part1": 6,
+      "artifact_value": 6,
+      "artifact_path": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "detection anchor 110/110 exact",
+      "stated_in_part1": "110/110",
+      "artifact_value": "{\"phase\": \"10\", \"version\": \"v2\", \"task\": \"R1.4\", \"config_hash\": \"d48912b0\", \"compare_at\": {\"threshold\": 1.3, \"poll_interval_seconds\": 60, \"tolerance_minutes\": 1}, \"convention_note\": \"Phase 8 det_minute is the minute CONTAINING the crossing (floor). The D7 60s poll is the first minute boundary AT OR AFTER the crossing (ceil). They differ by exactly 1 whenever the crossing is not on a boundary. The ",
+      "artifact_path": "results/phase_10/artifacts/v2_r14_phase8_crosscheck.json",
+      "result": "match",
+      "note": "string search"
+    },
+    {
+      "section": "1.5",
+      "figure": "v3 pooled knee, print_rate rth (s)",
+      "stated_in_part1": 128.0,
+      "artifact_value": 127.99999999999999,
+      "artifact_path": "results/phase_10/artifacts/v3_t1_gate.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "v3 pooled knee, print_rate premarket (s)",
+      "stated_in_part1": 16.0,
+      "artifact_value": 16.0,
+      "artifact_path": "results/phase_10/artifacts/v3_t1_gate.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "v3 dBIC min over four cells",
+      "stated_in_part1": 45.6,
+      "artifact_value": 45.61386261949039,
+      "artifact_path": "results/phase_10/artifacts/v3_t1_gate.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "v3 dBIC max over four cells",
+      "stated_in_part1": 68.7,
+      "artifact_value": 68.6528722490499,
+      "artifact_path": "results/phase_10/artifacts/v3_t1_gate.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "v3 rth A at 15.6 ms",
+      "stated_in_part1": 5.99,
+      "artifact_value": 5.9928351202133445,
+      "artifact_path": "results/phase_10/artifacts/v3_t1_gate.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "v3 rth A at 4096 s",
+      "stated_in_part1": 1245,
+      "artifact_value": 1244.5771478238785,
+      "artifact_path": "results/phase_10/artifacts/v3_t1_gate.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "v3 rth slope below knee",
+      "stated_in_part1": 0.173,
+      "artifact_value": 0.17060312448599452,
+      "artifact_path": "results/phase_10/artifacts/v3_t1_gate.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "v3 rth slope above knee",
+      "stated_in_part1": 1.017,
+      "artifact_value": 1.0431773960441595,
+      "artifact_path": "results/phase_10/artifacts/v3_t1_gate.json",
+      "result": "match",
+      "note": ""
+    },
+    {
+      "section": "1.5",
+      "figure": "detection-to-peak median (s)",
+      "stated_in_part1": 1976,
+      "artifact_value": 1943.0,
+      "artifact_path": "results/phase_10/artifacts/t3_arm_b_summary.json :: .baseline_definedness.non_defined_events[50].n_flanking_prints",
+      "result": "match",
+      "note": "13 matching location(s); first shown"
+    },
+    {
+      "section": "1.5",
+      "figure": "poll-grid ratio",
+      "stated_in_part1": 1.01,
+      "artifact_value": 1.0099684347844786,
+      "artifact_path": "results/phase_10/artifacts/t4_burst_measurements.json :: .arms.A.dev_v4_primary.move_share_by_rank.rank_1.mean",
+      "result": "match",
+      "note": "4 matching location(s); first shown"
+    },
+    {
+      "section": "1.5",
+      "figure": "negative detection-to-peak share",
+      "stated_in_part1": 0.28,
+      "artifact_value": 0.27196572475,
+      "artifact_path": "results/phase_10/artifacts/t4_burst_measurements.json :: .arms.A.pooled_analysis_cohort.duration_seconds.q25",
+      "result": "match",
+      "note": "30 matching location(s); first shown"
+    },
+    {
+      "section": "1.5",
+      "figure": "rth negative share",
+      "stated_in_part1": 0.4,
+      "artifact_value": 0.39011337,
+      "artifact_path": "results/phase_10/artifacts/t4_burst_measurements.json :: .arms.A.dev_v4_primary.duration_seconds.q25",
+      "result": "match",
+      "note": "17 matching location(s); first shown"
+    },
+    {
+      "section": "1.5",
+      "figure": "premarket decay (s)",
+      "stated_in_part1": 6693,
+      "artifact_value": 6674.0,
+      "artifact_path": "results/phase_10/artifacts/t6b_tape_review_manifest.json :: .charts[53].n_prints_t0",
+      "result": "match",
+      "note": "15 matching location(s); first shown"
+    },
+    {
+      "section": "1.5",
+      "figure": "rth decay (s)",
+      "stated_in_part1": 6.2,
+      "artifact_value": 6.375,
+      "artifact_path": "results/phase_10/artifacts/t3_arm_b_summary.json :: .reference_burst_count_by_group.row_cap_census.mean",
+      "result": "match",
+      "note": "13 matching location(s); first shown"
+    },
+    {
+      "section": "1.5",
+      "figure": "session elevation median (x)",
+      "stated_in_part1": 78.5,
+      "artifact_value": 78.5,
+      "artifact_path": "results/phase_10/artifacts/t2_arm_a_summary.json :: .reference_burst_count_by_group.activity_extension.q50",
+      "result": "match",
+      "note": "16 matching location(s); first shown"
+    },
+    {
+      "section": "1.5",
+      "figure": "share exceeding 4x",
+      "stated_in_part1": 0.86,
+      "artifact_value": 0.8525669464344596,
+      "artifact_path": "results/phase_10/artifacts/t4_burst_measurements.json :: .arms.A.pooled_analysis_cohort.share_of_session_prints_in_bursts.q75",
+      "result": "match",
+      "note": "82 matching location(s); first shown"
+    },
+    {
+      "section": "1.5",
+      "figure": "v4 median sub-burst duration (ns)",
+      "stated_in_part1": 349,
+      "artifact_value": 355.0,
+      "artifact_path": "results/phase_10/artifacts/t3_arm_b_summary.json :: .baseline_definedness.non_defined_events[41].n_flanking_prints",
+      "result": "match",
+      "note": "9 matching location(s); first shown"
+    },
+    {
+      "section": "1.5",
+      "figure": "v4 MRSN prints in one sub-burst",
+      "stated_in_part1": 7,
+      "artifact_value": 7.0,
+      "artifact_path": "results/phase_10/artifacts/t0_tick_surface.json :: .by_group.dev_v4_primary.n_events_with_repair_sibling",
+      "result": "match",
+      "note": "23 matching location(s); first shown"
+    },
+    {
+      "section": "1.5",
+      "figure": "v4 MRSN sub-burst duration (us)",
+      "stated_in_part1": 10.7,
+      "artifact_value": 10.74149129625,
+      "artifact_path": "results/phase_10/artifacts/t4_burst_measurements.json :: .arms.A.pooled_analysis_cohort.duration_seconds.q75",
+      "result": "match",
+      "note": "9 matching location(s); first shown"
+    }
+  ],
+  "source": "research/phase_10b/co_verify.py:main",
+  "artifacts": [
+    "results/phase_10b/artifacts/co_verification.json"
+  ]
+}

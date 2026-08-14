@@ -517,3 +517,58 @@ v3's artifacts are committed under `results/phase_10/artifacts/v3_*` with report
   that motivated D3; `results/phase_6b/` — the extended-day redo.
 - `results/phase_6c/` — defect #4 diagnosis, cohort stratification, residual classification, and
   the Amendment 7 chart pack that produced D4's falsifying evidence.
+
+
+---
+
+## D11 — The Allan knee cannot recover a cluster timescale
+
+**Date:** 2026-08-13 · **Gate:** Phase 10b close-out
+
+The piecewise-linear breakpoint on a log-log Allan curve is a **sharp but biased** estimator of
+cluster timescale. Across 500 draws per control its 95% interval spans 0-1 rung while the injected
+scale falls inside that interval on **0 of 4** controls. Bias is +0.97 to +1.61 rungs on single-scale
+controls and -2.91 rungs on the coarse transition of a two-scale control. The bias is a deterministic
+consequence of fitting straight lines to a smoothly-curving function - the fitted asymptotes
+intersect inside the transition region, pushing a fine transition up and pulling a coarse one down.
+It is **not** a fixed offset: it depends on the separation between scales, which is unknowable on
+real data. **No burst timescale is established by this program.**
+
+Evidence: `results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json`,
+`results/phase_10b/amendment_2/charts/11_knee_sampling_distribution.html`,
+`results/phase_10b/SUMMARY.md`.
+
+## D12 — v3's Allan knee carries a scale-dependent uncertainty
+
+**Date:** 2026-08-13 · **Gate:** Phase 10b close-out
+
+v3's regular-hours knee at 128 s and premarket knee at 16 s are flat->rise transitions, structurally
+the same kind of transition that carries the -2.91 rung (factor 7.5, downward) bias on control C4.
+Applying single-scale bias instead gives +1.4 rungs (factor 2.6, upward). **The true scale behind
+v3's 128 s therefore sits somewhere in roughly 50 s to 1,000 s, and behind 16 s in roughly 6 s to
+120 s.** These ranges are too wide to anchor a trading horizon. v3's knee remains valid as evidence
+that a transition **exists**; it is not valid as a measurement of **where**.
+
+Verified against artifact: the 128 s and 16 s figures are the POOLED median-curve fits in
+`results/phase_10/artifacts/v3_t1_gate.json` (`segment_fits.print_rate.{rth,premarket}.fit.
+knee_seconds`), delta-BIC 45.614 / 68.653 / 53.103 / 49.563 across the four configured cells. The
+per-event medians in `v3_t1_gate_knees.parquet` are a different object (rth 64 s) and are not what
+this decision refers to.
+
+## D13 — D5's premise fails; downstream phases re-anchor
+
+**Date:** 2026-08-13 · **Gate:** Phase 10b close-out
+
+D5 required a burst timescale to anchor every downstream horizon. No such timescale is available at
+usable precision. **Phases 13, 14, 16 and 17 re-anchor to detection time, clock time, or price-path
+events** rather than to a burst scale. The specific re-anchoring for each phase is scoped when that
+phase is drafted; this decision records only that the burst-scale anchor is unavailable. **This is a
+first-order program finding, not a sixth failure.**
+
+## D14 — Environment is offline
+
+**Date:** 2026-08-13 · **Gate:** Phase 10b close-out
+
+No package index, no R, no network fetch. Any prompt requiring an external package, a reference
+implementation, or a downloaded artifact must state an offline fallback at drafting time.
+`reuse-before-build` applies only to what is already installed.
