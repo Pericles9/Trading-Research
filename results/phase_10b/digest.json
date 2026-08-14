@@ -38,7 +38,7 @@
       "name": "burst_timescale_established",
       "value": 0,
       "n": 0,
-      "source": "results/phase_10b/SUMMARY.md",
+      "source": "results/phase_10b/REPORT.md",
       "note": "n = 0 because no real event was analysed at any point in this phase"
     }
   ],

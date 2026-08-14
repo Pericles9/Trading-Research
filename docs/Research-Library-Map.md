@@ -860,8 +860,8 @@ Per `results/hardware/`, `results/ingestion_run/`, `results/rebuild_stage1/`, et
 ## Phase 10b — Randomness of Trade Arrivals Under a Non-Constant Rate (closed 2026-08-13)
 
 Closed as a recorded negative result. No burst timescale established; **no real event was read**.
-Summary: `results/phase_10b/SUMMARY.md` (cross-phase copy at
-`results/reports/phase_10b_summary.md`).
+Report: `results/phase_10b/REPORT.md` (cross-phase copy at
+`results/reports/phase_10b_report.md`).
 
 **Prompts**
 - `prompts/phase_10b.md` — the phase as originally specified

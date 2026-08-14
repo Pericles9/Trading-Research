@@ -536,7 +536,7 @@ real data. **No burst timescale is established by this program.**
 
 Evidence: `results/phase_10b/amendment_2/artifacts/t2_bias_consistency.json`,
 `results/phase_10b/amendment_2/charts/11_knee_sampling_distribution.html`,
-`results/phase_10b/SUMMARY.md`.
+`results/phase_10b/REPORT.md`.
 
 ## D12 — v3's Allan knee carries a scale-dependent uncertainty
 

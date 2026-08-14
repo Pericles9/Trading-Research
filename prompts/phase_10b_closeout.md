@@ -4,7 +4,9 @@
 **Decision (Cooper):** **Stop.** Phase 10b closes as a recorded negative result. No third amendment. No indirect-inference round. Row 15 stands.
 **Trigger:** A10b.2 escalation row 5 — knee usability criteria 2 and 3 failed (injected scale inside the 95% interval on 0 of 4 controls; common bias rejected).
 
-This document has two parts. **Part 1 is the record** — every decision, finding, error and piece of prior art from the Phase 10b design and gate work, so none of it lives only in a chat transcript. **Part 2 is the task list** to verify that record against artifacts, write `results/phase_10b/SUMMARY.md`, and close the repo.
+> **Filename correction, 2026-08-13.** This document as originally issued named the deliverable `results/phase_10b/SUMMARY.md`, with a cross-phase copy at `results/reports/phase_10b_summary.md`. Those names conflict with the standing rule in `CLAUDE.md` — *"Every phase's `REPORT.md` must exist in both locations: the canonical `results/phase_{x}/REPORT.md` ... and a copy at `results/reports/phase_{x}_report.md`"*. The files were renamed to `REPORT.md` and `phase_10b_report.md` and every path reference in this document was updated to match. Content is unchanged; only the filenames moved.
+
+This document has two parts. **Part 1 is the record** — every decision, finding, error and piece of prior art from the Phase 10b design and gate work, so none of it lives only in a chat transcript. **Part 2 is the task list** to verify that record against artifacts, write `results/phase_10b/REPORT.md`, and close the repo.
 
 **Part 1 is not authoritative on numbers.** It is my transcription and it may contain errors. **Every number in it must be verified against an artifact before it enters the summary**, and any discrepancy is reported, not silently corrected. This is the v2 lesson: a prompt once asserted a spine column that never existed, on the phase's headline input.
 
@@ -257,7 +259,7 @@ Record in `docs/Open-Items-Register.md` as available-but-declined, with the reas
 - [ ] **CO-T1c** — Flag any figure in Part 1 with **no** supporting artifact. Those are quarantined: they may appear in the summary only if labeled as unverified, or they are dropped.
 - [ ] CO-T1d — Commit.
 
-### CO-T2 — Write `results/phase_10b/SUMMARY.md`
+### CO-T2 — Write `results/phase_10b/REPORT.md`
 
 **The audience is a fresh chat with no context.** The test: could someone who has never seen this phase read only this document and correctly decide what to do next? Write for that reader.
 
@@ -295,10 +297,10 @@ Rules:
 
 ### CO-T4 — Close the repo state
 
-- [ ] **CO-T4a** — `results/phase_10b/digest.json`: status → `complete_approved`; headline metric `{"name": "burst_timescale_established", "value": 0, "n": 0, "source": "results/phase_10b/SUMMARY.md"}` with n = 0 because no real event was analysed. `surprises` non-empty — at minimum the sharp-but-biased finding and the eleven specification defects.
+- [ ] **CO-T4a** — `results/phase_10b/digest.json`: status → `complete_approved`; headline metric `{"name": "burst_timescale_established", "value": 0, "n": 0, "source": "results/phase_10b/REPORT.md"}` with n = 0 because no real event was analysed. `surprises` non-empty — at minimum the sharp-but-biased finding and the eleven specification defects.
 - [ ] **CO-T4b** — Post the exact digest diff before writing it.
 - [ ] **CO-T4c** — Tag `phase-10b-closed`. **Not `phase-10b-approved`** — the convention marks an approved result and there is no result here. Fast-forward `main`.
-- [ ] **CO-T4d** — Cross-phase copy to `results/reports/phase_10b_summary.md`.
+- [ ] **CO-T4d** — Cross-phase copy to `results/reports/phase_10b_report.md`.
 - [ ] CO-T4e — Commit. Post.
 
 ---
@@ -323,10 +325,10 @@ Rules:
 | File | Description | Status |
 |---|---|---|
 | `prompts/phase_10b_closeout.md` | This file | [ ] |
-| `results/phase_10b/SUMMARY.md` | The phase summary | [ ] |
+| `results/phase_10b/REPORT.md` | The phase report | [ ] |
 | `results/phase_10b/artifacts/co_verification.json` | Part 1 figures against artifacts, discrepancies, unsupported figures | [ ] |
 | `results/phase_10b/digest.json` | Status, headline metric, surprises | [ ] |
-| `results/reports/phase_10b_summary.md` | Cross-phase copy | [ ] |
+| `results/reports/phase_10b_report.md` | Cross-phase copy | [ ] |
 | `docs/Universe-Decisions.md` | D11–D14 appended | [ ] |
 | `docs/Open-Items-Register.md` | Three entries appended | [ ] |
 | `docs/Research-Library-Map.md` | Phase 10b entries, three prior-art entries | [ ] |
@@ -337,7 +339,7 @@ Rules:
 
 ## Reporting
 
-On completion, post: the CO-T1 verification table with every discrepancy and unsupported figure named · the SUMMARY.md section list with word counts · the four decision texts as written to the register · the digest diff · tag and merge confirmation · escalation check, all 8 rows · output file table · commit list.
+On completion, post: the CO-T1 verification table with every discrepancy and unsupported figure named · the REPORT.md section list with word counts · the four decision texts as written to the register · the digest diff · tag and merge confirmation · escalation check, all 8 rows · output file table · commit list.
 
 Description only. No recommendations.
 
@@ -345,4 +347,4 @@ Description only. No recommendations.
 
 ## Approval Gate
 
-Do not begin Phase 11 until Cooper has read `results/phase_10b/SUMMARY.md` and given explicit approval. **On approval the next work is Phase 11, *Spread & impact by participation*, whose participation-bucketed effective-spread measurement requires no burst timescale and is the binding constraint on the scalping thesis.**
+Do not begin Phase 11 until Cooper has read `results/phase_10b/REPORT.md` and given explicit approval. **On approval the next work is Phase 11, *Spread & impact by participation*, whose participation-bucketed effective-spread measurement requires no burst timescale and is the binding constraint on the scalping thesis.**
