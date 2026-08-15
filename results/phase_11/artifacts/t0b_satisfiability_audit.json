@@ -1,0 +1,154 @@
+{
+  "task": "T0b",
+  "phase": "11",
+  "date": "2026-08-15",
+  "purpose": "Satisfiability audit of the Phase 11 escalation table. New standing requirement introduced at the Phase 10b close-out, where two of three amendments carried an unreachable required outcome.",
+  "method": {
+    "checks_per_row": [
+      "C1 - is the row measured by an identified task in this prompt?",
+      "C2 - does that task actually produce the quantity the row names?",
+      "C3 - is the threshold reachable given the ranges and grids configured?",
+      "C4 - does the row contradict any other row?"
+    ],
+    "stop_rule": "Hard stop on any row failing any of the four checks. Post the table. Do not repair.",
+    "evidence_basis": "Read-only inspection of committed artifacts, the DuckDB catalogue, the momentum_events_canonical view DDL, and the source parquet layout. No measurement run. No config authored.",
+    "config_status": "config/phase_11.json DOES NOT EXIST at audit time. T0b is ordered before T0c, which is the task that commits the config. C3 is therefore indeterminate for every row whose threshold is a config key (rows 7, 9)."
+  },
+  "state_verified": {
+    "branch": "phase/11",
+    "cut_from": "master @ 219a1ef312a97470aa9aded5f71643f39a620f31",
+    "working_tree": "clean at T0a re-verify",
+    "detection_universe_n": 15369,
+    "d1_n": 15763,
+    "det_undefined_n": 394,
+    "det_segment_counts": {"rth": 10660, "premarket": 4630, "post": 79},
+    "filtered_trades_dev_v4_rows": 9638361,
+    "filtered_quotes_dev_v4_rows": 7249350,
+    "dev_v4_cohorts_trades": {"primary": 50, "flagged_sidecar": 6},
+    "dev_v4_cohorts_quotes": {"primary": 50, "flagged_sidecar": 3},
+    "dev_v4_cohort_note": "The quotes side carries 3 sidecar events, not the 6 the prompt states. Stage A is specified on the 50 primary events, so this does not bind Stage A, but the prompt's '50 primary + 6 sidecar' is not true of filtered_quotes_dev_v4."
+  },
+  "input_provenance_verified": {
+    "det_anchor": {
+      "file": "results/phase_8/artifacts/a102_detection_anchors.parquet",
+      "rows": 15763,
+      "columns_used": ["det_minute", "det_segment", "det_undefined", "det_price_lat0", "det_price_lat1", "det_price_lat5", "det_price_lat15", "det_price_lat30", "day_high_ext", "runway_minutes", "era"],
+      "latency_grid_matches_T6a": true,
+      "note": "Latency columns are exactly {0,1,5,15,30} min, matching T6a. day_high_ext present for the T7b(i) perfect-foresight denominator."
+    },
+    "pq_rth_open": {
+      "file": "results/phase_8/artifacts/t3_participation.parquet",
+      "rows": 15763,
+      "note": "T6c says 'reused from Phase 8'. It is NOT in a102_detection_anchors.parquet as the reader may assume; it lives in t3_participation.parquet. Path recorded so T6 does not re-derive."
+    },
+    "realized_capture": {
+      "file": "results/phase_9/artifacts/t4_axis_grid.parquet",
+      "rows": 461070,
+      "grids": ["fixed_exit", "fixed_horizon"],
+      "latency": [0, 1, 5, 15, 30],
+      "hold": [5, 15, 30, 60, 120, null],
+      "note": "null hold is t0_close. Grid covers every (latency, hold) pair T7a names."
+    },
+    "flag_cross_session_extreme": {"file": "results/phase_9/artifacts/t1_cross_session_flags.parquet", "rows": 62961},
+    "flag_possible_row_cap": {"file": "results/phase_8/artifacts/a101_labels.parquet", "rows": 15763},
+    "flag_has_dup_prints": {"file": "results/phase_6b/artifacts/event_index_v2.parquet", "rows": 15763},
+    "source_quotes_parquet": {"layout": "data/filtered/{TICKER}_{DATE}_{MOMENTUM}/quotes.parquet", "note": "T1c read-only route confirmed present."},
+    "scan_free_quote_coverage": {
+      "files": [
+        "results/phase_5/artifacts/quotes_bitmaps_all.parquet (20951 rows; quotes_bitmap, quotes_full_window, quotes_n_missing)",
+        "results/phase_4/artifacts/_actual_quotes_sessions_cache.parquet (115904 rows; ticker, event_date_canonical, mom_2dp, session_date)"
+      ],
+      "note": "These materialise per-event quote coverage without touching filtered_quotes. Relevant to the rows 10/12 contradiction below. Whether they may substitute for the canonical view is a Cooper decision, not the agent's."
+    }
+  },
+  "critical_finding_canonical_view_cost": {
+    "observed": "momentum_events_canonical is a VIEW, not a table. Its quotes_ingested column is computed as LEFT JOIN (SELECT DISTINCT ticker, event_date, round(momentum_pct,2) FROM filtered_quotes), and trades_ingested identically over filtered_trades.",
+    "consequence": "Any reference to quotes_ingested through the canonical view triggers a DISTINCT scan of filtered_quotes (3.8B rows) AND filtered_trades (4.95B rows).",
+    "how_observed": "duckdb_views() DDL read, read-only. An audit query joining the detection anchors to the canonical view was launched, exceeded 120s without returning, and was killed before completion specifically to avoid spending a pass. No pass over filtered_quotes or filtered_trades has been completed in this phase.",
+    "why_it_matters": "CLAUDE.md standing rule: 'Any quote-derived statistic filters on quotes_ingested = TRUE and reports the n excluded by that filter.' Stage A budgets ZERO full passes; Stage B budgets EXACTLY ONE. Obeying the standing rule through the canonical view costs a pass every time it is referenced, in both stages."
+  },
+  "rows": [
+    {"row": 0, "condition": "Cooper's review of the charts against the tape contradicts the numeric result", "threshold": "judgment", "measuring_task": "T4 gate and final approval gate (Cooper, not the agent)", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "Charts 01-08 that the review needs are produced by T1d/T2f/T3d/T6d/T7f/T8c. Declared precedence over all rows below is a stated ordering rule, not a contradiction."},
+
+    {"row": 1, "condition": "Working tree dirty at T0a", "threshold": "any", "measuring_task": "T0a", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "FIRED on the first T0a attempt (M .gitignore; untracked .claude/skills/, prompts/phase_9). Resolved by Cooper 2026-08-15. Tree clean at re-verify."},
+
+    {"row": 2, "condition": "T0b satisfiability audit fails on any row", "threshold": "any", "measuring_task": "T0b", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS (structurally) - AND IS FIRING, on rows 4, 5, 10, 12, 18, 19", "note": "Self-referential but not circular. Its action ('post, do not repair') matches T0b's own text."},
+
+    {"row": 3, "condition": "T1 cannot establish whether filtered_quotes is consolidated or per-venue", "threshold": "any", "measuring_task": "T1a", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "bid_exchange and ask_exchange both present and BIGINT-typed on filtered_quotes_dev_v4. The share of rows with bid_exchange != ask_exchange is computable per event over the 50 primary events."},
+
+    {"row": 4, "condition": "T1b: sip_timestamp null or non-monotonic share, per event", "threshold": "[Cooper] - UNSET", "measuring_task": "T1b (null share), T1b-ii (non-monotonic share)", "C1": "PASS", "C2": "FAIL", "C3": "FAIL", "C4": "FAIL", "verdict": "FAIL",
+     "C2_detail": "Null share is producible. 'Non-monotonic share' is NOT well-defined on the object T1b is specified against: filtered_quotes_dev_v4 is a DuckDB TABLE, which has no guaranteed row order. 'Consecutive rows in file order' exists only in the source parquet, and the prompt does not authorise a source-parquet read until T1c, which is ordered after T1b.",
+     "C3_detail": "Threshold is [Cooper] and unset. The prompt states '[Cooper] thresholds are set before execution'. Row 4 gates T1b, a Stage A task, so it must be set before T1 runs, unlike row 11 which is explicitly deferred.",
+     "C4_detail": "Contradicts row 19. Row 19 hard-stops any computation depending on storage order 'regardless of what T1b-ii observed', and T1b-ii's own text says the measurement 'determines nothing about the method'. Row 4 nevertheless makes that same methodologically-inert quantity a hard-stop trigger for the phase."},
+
+    {"row": 5, "condition": "T2: combined nonsensical-state TIME share on the T=0 RTH segment, per event", "threshold": "[Cooper] - UNSET", "measuring_task": "T2a", "C1": "PASS", "C2": "PASS (with a definitional gap)", "C3": "FAIL", "C4": "PASS", "verdict": "FAIL",
+     "C2_detail": "T2a produces per-state clock-time shares per event per segment. 'Combined' is undefined in the prompt: the states OVERLAP (a crossed quote can simultaneously carry zero bid_size), so a SUM can exceed 1.0 and is not a share. The combined figure must be a UNION of state time, and the prompt does not say so. Computable once defined.",
+     "C3_detail": "Threshold is [Cooper] and unset. Row 5 gates T2, a Stage A task, so it must be set before T2 runs."},
+
+    {"row": 6, "condition": "T3: alignment curve matches the flat row of the reading rule", "threshold": "any", "measuring_task": "T3a, T3b", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "T3b's pre-registered reading rule names the flat row explicitly; T3a produces the per-delta inside-spread share that the rule reads."},
+
+    {"row": 7, "condition": "T3: peak offset differs between premarket and RTH by more than one sweep rung", "threshold": "any", "measuring_task": "T3a (per segment)", "C1": "PASS", "C2": "PASS", "C3": "INDETERMINATE", "C4": "PASS", "verdict": "CONDITIONAL",
+     "C3_detail": "'One sweep rung' is defined only by config.alignment_offsets, which does not exist yet because T0b is ordered before T0c. Reachable in principle for any log-spaced grid spanning -1s to +1s. Re-audit required against the committed config (T0b1).",
+     "note": "Action is 'not a stop', so a wrong reading here degrades reporting rather than halting the phase."},
+
+    {"row": 8, "condition": "Any effective spread computed before the T4 gate", "threshold": "any", "measuring_task": "prohibition, enforced across T1-T3", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "note": "No contradiction with T2e. T2e computes QUOTED spread (ask - bid, a quote-only quantity) in Stage A; row 8 bars EFFECTIVE spread (2*|p-m|/m, which requires a trade and an adopted alignment offset). The two are distinct and the distinction is what keeps T2e legal. Recorded here so it is not re-litigated at T2."},
+
+    {"row": 9, "condition": "T5a runtime extrapolation exceeds config.runtime_ceiling_seconds", "threshold": "as configured - config does not exist", "measuring_task": "T5a", "C1": "PASS", "C2": "PASS", "C3": "INDETERMINATE", "C4": "PASS", "verdict": "CONDITIONAL",
+     "C3_detail": "runtime_ceiling_seconds is a config key and config/phase_11.json does not exist at audit time. Re-audit against the committed config (T0b1)."},
+
+    {"row": 10, "condition": "T6: quotes_ingested = FALSE share of the detection universe", "threshold": "[Cooper] - UNSET", "measuring_task": "T6", "C1": "PASS", "C2": "PASS (but only at a pass cost)", "C3": "FAIL", "C4": "FAIL", "verdict": "FAIL",
+     "C2_detail": "quotes_ingested exists on momentum_events_canonical, so the quantity is producible. But it is a VIEW column computed by SELECT DISTINCT over filtered_quotes, so producing it costs a scan of filtered_quotes and filtered_trades.",
+     "C3_detail": "Threshold is [Cooper] and unset. Unlike row 11 the prompt gives no deferral point, and row 10 gates T6.",
+     "C4_detail": "CONTRADICTS ROW 12. Stage B budgets exactly one full pass, spent by T5b. T6 reading quotes_ingested through the canonical view spends a second, which fires row 12 and hard-stops the phase. The same bite reaches Stage A: CLAUDE.md requires every quote-derived statistic to filter on quotes_ingested, and T2e is a quote-derived statistic in a stage budgeted at ZERO passes. Scan-free substitutes exist (phase_5 quotes_bitmaps_all, phase_4 _actual_quotes_sessions_cache) but substituting them changes the source of record away from the canonical view, which is a standing-rule matter and Cooper's call, not the agent's."},
+
+    {"row": 11, "condition": "T7: median round_trip_cost / realized_capture on the RTH detection cell at latency 5 min, hold 30 min, at 1x cost", "threshold": "[Cooper] - deferred by design to 'before T5 runs'", "measuring_task": "T7c", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "note": "The named cell EXISTS and is well populated: results/phase_9/artifacts/t4_axis_grid.parquet, grid=fixed_horizon, det_segment='rth', latency=5, hold=30 gives n=10,660 of which 10,607 have both entry and exit defined. Far above the n<100 hatching floor. The ratio is a positive real, so any threshold in (0, inf) is attainable. The unset threshold is NOT a defect here because the prompt itself fixes the deferral point."},
+
+    {"row": 12, "condition": "More than one full pass over filtered_quotes", "threshold": "> 1", "measuring_task": "enforced throughout; T5b is the single budgeted pass", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "FAIL", "verdict": "FAIL",
+     "C4_detail": "CONTRADICTS ROW 10 and the CLAUDE.md standing rule, by the mechanism recorded in critical_finding_canonical_view_cost. As written, the phase cannot simultaneously (a) obey the standing rule that every quote-derived statistic filters on quotes_ingested, (b) keep Stage A at zero passes, and (c) keep Stage B at one pass. Any two are achievable; all three are not, unless quotes_ingested is sourced from a materialised artifact instead of the view."},
+
+    {"row": 13, "condition": "Any spine numeric column on a computation path (D4)", "threshold": "any", "measuring_task": "all tasks, by code audit", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "note": "momentum_pct appears on filtered_quotes_dev_v4 and filtered_trades_dev_v4 and is used as a JOIN KEY (identity), which is not a computation path and is inside the D4/A9.1 exception. Recorded so the join is not mistaken for a violation at T1."},
+
+    {"row": 14, "condition": "Any write to the data root, DuckDB main tables, momentum_events_canonical, or src/", "threshold": "any", "measuring_task": "all tasks", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "AMBIGUOUS", "verdict": "FLAG - needs a ruling before T5, does not block Stage A",
+     "C4_detail": "T5b is REQUIRED to materialise DuckDB table event_quote_metrics_v1, and the Output Files table lists it as a deliverable. Row 14 bans writes to 'DuckDB main tables'. If that phrase means the existing main-line tables (filtered_trades, filtered_quotes, momentum_events), T5b is legal and precedented - Phase 8 created event_minute_bars_v2 in the same database. If it means anything inside main.duckdb, T5b is impossible and the phase cannot deliver its own cache. The phrase needs one sentence of disambiguation before T5. Stage A writes nothing, so this is not a Stage A blocker."},
+
+    {"row": 15, "condition": "Any burst/quiet split, intensity estimation, envelope fit, thresholding, two-state segmentation, or Hawkes calibration", "threshold": "any", "measuring_task": "all tasks", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "Consistent with the Context section and with D6/D8/D9/D11. Every bucket in this prompt is participation quintile, detection segment, latency, or era."},
+
+    {"row": 16, "condition": "Any short-side, fade, SSR, or borrow logic specified or measured", "threshold": "any", "measuring_task": "all tasks", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "T7's round trip is a long entry plus the sale that closes it. Crossing the spread on exit is not a short-side variant. Consistent with D5."},
+
+    {"row": 17, "condition": "Any exclusion rule or alignment offset adopted by the agent rather than set at the T4 gate", "threshold": "any", "measuring_task": "T2/T3 outputs and the T4 gate", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "note": "Authoring config.alignment_offsets is authoring the SWEEP GRID that T3 scans, not adopting an offset; the adopted offset is the T4 selection that T6a then uses. Recorded so writing the config at T0c is not later read as a row 17 violation."},
+
+    {"row": 18, "condition": "Any REPORT.md statement characterising a result beyond which pre-registered reading-rule row it matches", "threshold": "any", "measuring_task": "T9", "C1": "PASS", "C2": "FAIL", "C3": "FAIL", "C4": "PASS", "verdict": "FAIL",
+     "C2_detail": "A pre-registered reading rule exists for T3 ONLY (the four-row table at T3b). No reading rule is pre-registered for T1, T2, T6, T7 or T8. For those tasks the quantity row 18 tests - 'which pre-registered reading-rule row it matches' - has no referent.",
+     "C3_detail": "Unreachable as a standard: any descriptive sentence in REPORT.md about the T7 headline is either a bare number with no reading attached, or a characterisation that row 18 forbids because there is no rule row to cite. The Chart Contract's 'Looks like this if wrong' column supplies a partial referent, but it is written as a failure mode only, covers no observed-case reading, and is not framed as a pre-registered rule.",
+     "note": "This is the same defect class the Phase 10b close-out flagged: a required outcome with no reachable satisfying state."},
+
+    {"row": 19, "condition": "Any computation whose result depends on parquet storage order rather than an explicit ORDER BY or ASOF key", "threshold": "any", "measuring_task": "all tasks, by code audit", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "FAIL", "verdict": "FAIL",
+     "C4_detail": "Read literally, row 19 fires on T1b-ii, which the prompt REQUIRES. T1b-ii's entire purpose is to measure storage order ('share of consecutive rows in file order where sip_timestamp decreases'), so its result depends on storage order by construction and by design. The 'regardless of what T1b-ii observed' clause shows the two were meant to coexist, but no exemption is written for the measurement itself. Also contradicts row 4, which elevates that same storage-order quantity to a hard-stop trigger."},
+
+    {"row": 20, "condition": "T1c-iii finds no condition-code dictionary on disk", "threshold": "any", "measuring_task": "T1c-iii", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "Both outcomes are handled by the prompt and the action is 'not a stop'. Consistent with row 22 and with T1c-ii's 'report as opaque integers'."},
+
+    {"row": 21, "condition": "T1c-iv: indicators or conditions null pattern differs materially across eras", "threshold": "[Cooper] - UNSET", "measuring_task": "T1c-iv", "C1": "PASS", "C2": "PASS", "C3": "PASS (vacuously)", "C4": "PASS", "verdict": "PASS",
+     "note": "The action is 'not a stop' in every case, so the threshold has no operative consequence and its being unset changes nothing. The [Cooper] marker on a never-stop row is inert. Recorded, not raised as a defect."},
+
+    {"row": 22, "condition": "Any interpretation of a specific conditions code value without a dictionary found in T1c-iii", "threshold": "any", "measuring_task": "T1c-ii, T1c-iii", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "Consistent with row 20 and with T1c-ii's instruction to report codes as opaque integers."}
+  ],
+  "summary": {
+    "rows_audited": 23,
+    "pass": [0, 1, 2, 3, 6, 8, 11, 13, 15, 16, 17, 20, 21, 22],
+    "conditional_on_config": [7, 9],
+    "flag_needs_ruling": [14],
+    "fail": [4, 5, 10, 12, 18, 19],
+    "verdict": "ESCALATION ROW 2 FIRES. Six rows fail at least one of the four checks.",
+    "failure_classes": {
+      "unset_Cooper_threshold_gating_a_task_that_must_run": [4, 5, 10],
+      "mutually_contradictory_rows": [[4, 19], [10, 12]],
+      "required_outcome_with_no_reachable_satisfying_state": [18],
+      "row_fires_on_a_task_the_prompt_requires": [19]
+    },
+    "action_taken": "Posted. No row repaired. No config authored. No measurement run. No pass over filtered_quotes or filtered_trades completed. Awaiting Cooper."
+  }
+}
