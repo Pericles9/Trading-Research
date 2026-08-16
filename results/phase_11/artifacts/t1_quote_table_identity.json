@@ -1,0 +1,467 @@
+{
+  "task": "T1",
+  "phase": "11",
+  "date": "2026-08-15",
+  "interpreter": ".venv/Scripts/python.exe (duckdb 1.4.4, exchange_calendars 4.13.2)",
+  "cohort": {
+    "dev_table": "filtered_quotes_dev_v4",
+    "dev_cohort": "primary",
+    "n_events": 50,
+    "t0_quote_rows": 2240536,
+    "source_parquet_rows_all_sessions": 7061655
+  },
+  "passes_over_full_tables": 0,
+  "t1a_consolidated_best_quote": {
+    "reading": "CONFIRMED consolidated best-quote, not per-venue.",
+    "per_segment": {
+      "premarket": {
+        "n_events": 50,
+        "distinct_bid_exchanges": {
+          "min": 2.0,
+          "p25": 3.0,
+          "median": 6.0,
+          "p75": 9.0,
+          "max": 13.0
+        },
+        "distinct_ask_exchanges": {
+          "min": 1.0,
+          "p25": 4.0,
+          "median": 6.0,
+          "p75": 8.75,
+          "max": 13.0
+        },
+        "share_rows_bid_exch_ne_ask_exch": {
+          "min": 0.32620320855614976,
+          "p25": 0.6535320576632377,
+          "median": 0.8607679867121252,
+          "p75": 0.9051003025644647,
+          "max": 1.0
+        }
+      },
+      "rth": {
+        "n_events": 50,
+        "distinct_bid_exchanges": {
+          "min": 6.0,
+          "p25": 12.0,
+          "median": 13.0,
+          "p75": 14.0,
+          "max": 16.0
+        },
+        "distinct_ask_exchanges": {
+          "min": 7.0,
+          "p25": 12.0,
+          "median": 13.0,
+          "p75": 14.0,
+          "max": 15.0
+        },
+        "share_rows_bid_exch_ne_ask_exch": {
+          "min": 0.6179601219329369,
+          "p25": 0.7585926287706912,
+          "median": 0.8840304966545298,
+          "p75": 0.9134838701591677,
+          "max": 0.9651770858093653
+        }
+      },
+      "post": {
+        "n_events": 50,
+        "distinct_bid_exchanges": {
+          "min": 2.0,
+          "p25": 3.25,
+          "median": 5.0,
+          "p75": 6.0,
+          "max": 12.0
+        },
+        "distinct_ask_exchanges": {
+          "min": 1.0,
+          "p25": 3.0,
+          "median": 4.0,
+          "p75": 6.0,
+          "max": 10.0
+        },
+        "share_rows_bid_exch_ne_ask_exch": {
+          "min": 0.08863328822733424,
+          "p25": 0.4483296167822927,
+          "median": 0.8342857142857143,
+          "p75": 0.8889205036593096,
+          "max": 0.9701492537313433
+        }
+      }
+    },
+    "events_with_single_bid_venue_rth": 0,
+    "events_with_two_sided_share_below_1pct_rth": 0,
+    "null_exchange_rows": 0,
+    "premarket_does_not_collapse": "Two-sided share median 0.861 premarket vs 0.884 RTH. The premarket collapse the prompt asked about is not observed; venue COUNT falls (median 6 vs 13) while two-sidedness holds.",
+    "escalation_row_3": "does not fire - the reading is established"
+  },
+  "t1b_timestamps": {
+    "row_4a": {
+      "threshold": "> 1% on any single event",
+      "denominator_i_all_t0": {
+        "n_bad": 0,
+        "max_event_share": 0.0
+      },
+      "denominator_ii_t0_rth_sip_assigned": {
+        "n_bad": 0,
+        "max_event_share": 0.0
+      },
+      "denominator_iii_participant_clock": {
+        "n_bad": 0
+      },
+      "observed_max": 0.0,
+      "verdict": "DOES NOT FIRE. All three denominators are exactly zero, so the denominator ambiguity flagged at T0c is moot - no straddle exists."
+    },
+    "resolution_smallest_nonzero_gap_ns": {
+      "sip_timestamp": {
+        "min": 49,
+        "median": 80.5,
+        "max": 3072
+      },
+      "participant_timestamp": {
+        "min": 1,
+        "median": 34.0,
+        "max": 483
+      },
+      "corroboration": "sip min 49 ns / median 80 ns reproduces the Phase 10 v1 TRADES-side finding (median 80.5 ns, min 49 ns) on the quotes side, measured independently."
+    },
+    "identical_consecutive_timestamps": {
+      "sip": {
+        "n": 58465,
+        "of": 2240539,
+        "share": 0.026094167519512046
+      },
+      "participant": {
+        "n": 47561,
+        "share": 0.021227481422996877
+      }
+    },
+    "t1b_i_epoch_timezone": {
+      "check": "Quote intensity per minute relative to the XNYS regular open/close, after interpreting both fields as nanoseconds since the Unix epoch UTC and converting to America/New_York.",
+      "open_minute_minus_1": 2808,
+      "open_minute_0": 12835,
+      "open_jump_ratio": 4.57,
+      "close_minute_minus_1": 6949,
+      "close_minute_0": 878,
+      "close_drop_ratio": 7.92,
+      "rows_on_non_session_dates": 0,
+      "half_day_sessions_in_cohort": 1,
+      "verdict": "CONFIRMED. The activity discontinuities land exactly on the XNYS calendar boundaries; a wrong epoch or timezone would displace them."
+    },
+    "t1b_ii_ordering_agreement": {
+      "sorted_by": "sip_timestamp, sequence_number (explicit ORDER BY)",
+      "share_participant_inverts": {
+        "min": 0.017680034497628287,
+        "p25": 0.03451170172200378,
+        "median": 0.04908248488409041,
+        "p75": 0.07657046624435787,
+        "max": 0.19219066937119675
+      },
+      "share_sequence_number_inverts": {
+        "min": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 0.0,
+        "max": 0.0
+      },
+      "share_sip_ties": {
+        "min": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 0.0,
+        "max": 0.32334750891062725
+      },
+      "tied_sip_rows": 58465,
+      "tied_rows_where_sequence_number_also_tied": 0,
+      "escalation_row_6": {
+        "threshold": "> 1% of tied rows",
+        "observed": 0.0,
+        "verdict": "DOES NOT FIRE. sequence_number breaks every sip tie uniquely and never inverts on any of the 50 events, so it is a usable secondary ASOF sort key."
+      }
+    },
+    "t1b_iii_clock_latency_sip_minus_participant_ns": {
+      "premarket": {
+        "median_of_event_p50": 207561.0,
+        "median_of_event_p25": 17897.5,
+        "median_of_event_p75": 342612.5,
+        "max_event_share_negative": 0.0
+      },
+      "rth": {
+        "median_of_event_p50": 181971.0,
+        "median_of_event_p25": 14573.75,
+        "median_of_event_p75": 241012.625,
+        "max_event_share_negative": 0.005050505050505051
+      },
+      "post": {
+        "median_of_event_p50": 307002.5,
+        "median_of_event_p25": 31622.0,
+        "median_of_event_p75": 342754.375,
+        "max_event_share_negative": 0.125
+      }
+    },
+    "t1b_iv_which_timestamp_downstream": {
+      "T2_state_census": "sip_timestamp - the consolidated arrival clock is the one on which a prevailing-quote series is defined for a consolidated feed.",
+      "T3_alignment_sweep": "BOTH, by construction - T3a-i runs the whole sweep on each basis and the choice is Cooper's at the T4 gate.",
+      "T1c_v_storage_order": "all three fields, since the question is about file layout rather than about a clock.",
+      "Stage_B": "not decided here. Set at the T4 gate (escalation row 19)."
+    }
+  },
+  "t1c_source_columns": {
+    "indicators": {
+      "total_rows": 7061655,
+      "n_null": 787138,
+      "n_populated": 6274517,
+      "n_empty_list": 0,
+      "share_null": 0.11146650466498292,
+      "events_100pct_null": 0,
+      "per_event_null_share": {
+        "min": 0.002506446111408605,
+        "p25": 0.021874405776614758,
+        "median": 0.08449192077887357,
+        "p75": 0.21661150859527092,
+        "max": 0.619277885235332
+      },
+      "distinct_codes": 9,
+      "mean_list_length_among_populated": 1.0000001593748171,
+      "code_frequency": [
+        {
+          "code": 1,
+          "n": 6259835
+        },
+        {
+          "code": 3,
+          "n": 5781
+        },
+        {
+          "code": 7,
+          "n": 5357
+        },
+        {
+          "code": 8,
+          "n": 1970
+        },
+        {
+          "code": 2,
+          "n": 1503
+        },
+        {
+          "code": 5,
+          "n": 59
+        },
+        {
+          "code": 6,
+          "n": 7
+        },
+        {
+          "code": 4,
+          "n": 5
+        },
+        {
+          "code": 11,
+          "n": 1
+        }
+      ],
+      "finding": "CONTRADICTS the working assumption carried into the prompt from a 2-row sample. indicators is POPULATED on 88.85% of source rows, not null. No event is 100% null. Among populated rows 99.77% carry code 1 alone and the mean list length is 1.0."
+    },
+    "conditions": {
+      "n_null_rows": 0,
+      "distinct_codes": 7,
+      "distinct_combinations": 8,
+      "code_frequency": [
+        {
+          "code": 1,
+          "n_rows": 7051854,
+          "n_events": 50
+        },
+        {
+          "code": 81,
+          "n_rows": 3698276,
+          "n_events": 7
+        },
+        {
+          "code": 2,
+          "n_rows": 8177,
+          "n_events": 43
+        },
+        {
+          "code": 19,
+          "n_rows": 1421,
+          "n_events": 42
+        },
+        {
+          "code": 82,
+          "n_rows": 438,
+          "n_events": 43
+        },
+        {
+          "code": 20,
+          "n_rows": 162,
+          "n_events": 10
+        },
+        {
+          "code": 13,
+          "n_rows": 30,
+          "n_events": 7
+        }
+      ],
+      "combination_frequency": [
+        {
+          "combo": "1,81",
+          "n_rows": 3698235,
+          "n_events": 7
+        },
+        {
+          "combo": "1",
+          "n_rows": 3353181,
+          "n_events": 43
+        },
+        {
+          "combo": "2",
+          "n_rows": 8177,
+          "n_events": 43
+        },
+        {
+          "combo": "19",
+          "n_rows": 1421,
+          "n_events": 42
+        },
+        {
+          "combo": "1,82",
+          "n_rows": 438,
+          "n_events": 43
+        },
+        {
+          "combo": "20",
+          "n_rows": 162,
+          "n_events": 10
+        },
+        {
+          "combo": "13,81",
+          "n_rows": 30,
+          "n_events": 7
+        },
+        {
+          "combo": "81",
+          "n_rows": 11,
+          "n_events": 2
+        }
+      ],
+      "note": "Codes reported as OPAQUE INTEGERS. No meaning is inferred (escalation row 22). Code 81 appears on 3,698,276 rows but only 7 of 50 events - concentrated, not uniform."
+    },
+    "t1c_iii_dictionary_search": {
+      "searched": [
+        "data/metadata/",
+        "data/collection_scripts/",
+        "data/Schema.md",
+        "docs/",
+        "hawkes-ofi-impact/",
+        "scanner-epg-momentum/",
+        "repo-wide ripgrep for condition_code / conditions_map / sale_condition / quote_condition / trade_condition / nbbo_indicator / indicator_code"
+      ],
+      "found": false,
+      "closest_artifacts": [
+        "results/phase_1c/artifacts/archive_schema_reference.json - records conditions BIGINT[] / indicators BIGINT[] as TYPES only",
+        "results/phase_1c/artifacts/t3r1_optional_fields.json - file-level presence only"
+      ],
+      "escalation_row_20": "FIRES as NOT A STOP. Codes stay opaque, no withdrawn-quote filter is built in this phase, census recorded to docs/Open-Items-Register.md."
+    },
+    "t1c_iv_era_and_day_offset": {
+      "indicators_null_share_era_2020_2021": 0.0926717629495321,
+      "indicators_null_share_era_2022_2024": 0.15475886407375494,
+      "era_gap_pp": 6.21,
+      "threshold_pp": 20.0,
+      "conditions_null_share_all_cells": 0.0,
+      "escalation_row_21": "DOES NOT FIRE (6.21 pp < 20 pp). No collection-era artifact at the era grain; the null share varies more by day offset (3.4%-24.1%) than by era."
+    },
+    "t1c_v_storage_order": {
+      "exemption": "escalation row 19a - this task and nothing else",
+      "share_consecutive_file_rows_decreasing": {
+        "sip_timestamp": {
+          "min": 0.9126097106888501,
+          "p25": 0.997905719362145,
+          "median": 0.9997335816851294,
+          "p75": 0.9999148568357458,
+          "max": 0.99998650025987
+        },
+        "participant_timestamp": {
+          "min": 0.8581102870041922,
+          "p25": 0.911372819295541,
+          "median": 0.9375046040367119,
+          "p75": 0.9559682107191615,
+          "max": 0.9781690140845071
+        },
+        "sequence_number": {
+          "min": 0.996662958843159,
+          "p25": 0.9994698117012204,
+          "median": 0.9999015774857126,
+          "p75": 0.9999602761881967,
+          "max": 0.9999972657100905
+        }
+      },
+      "events_with_any_sip_decrease": 50,
+      "finding": "The source parquet is stored in REVERSE CHRONOLOGICAL order. sip_timestamp decreases between 99.97% of consecutive file rows at the median event (min 91.26%), and sequence_number decreases at 99.99%. This confirms Cooper's 2-row sample observation across all 50 events. Code that assumed file order is chronological would read the archive backwards.",
+      "consequence": "None for this phase - every query sorts explicitly (escalation row 19). Recorded to docs/Open-Items-Register.md."
+    }
+  },
+  "segment_census": [
+    {
+      "segment": "rth",
+      "is_t0": true,
+      "n": 1875676,
+      "n_events": 50
+    },
+    {
+      "segment": "premarket",
+      "is_t0": true,
+      "n": 339507,
+      "n_events": 50
+    },
+    {
+      "segment": "post",
+      "is_t0": true,
+      "n": 25353,
+      "n_events": 50
+    },
+    {
+      "segment": "outside_early",
+      "is_t0": true,
+      "n": 40,
+      "n_events": 20
+    },
+    {
+      "segment": "outside_late",
+      "is_t0": true,
+      "n": 13,
+      "n_events": 6
+    },
+    {
+      "segment": "rth",
+      "is_t0": false,
+      "n": 4479839,
+      "n_events": 50
+    },
+    {
+      "segment": "premarket",
+      "is_t0": false,
+      "n": 327201,
+      "n_events": 50
+    },
+    {
+      "segment": "post",
+      "is_t0": false,
+      "n": 94321,
+      "n_events": 50
+    },
+    {
+      "segment": "outside_early",
+      "is_t0": false,
+      "n": 240,
+      "n_events": 20
+    },
+    {
+      "segment": "outside_late",
+      "is_t0": false,
+      "n": 103,
+      "n_events": 7
+    }
+  ],
+  "segment_note": "53 T=0 rows across 26 events fall outside the 04:00-20:00 ET extended window (40 early, 13 late). They are labelled outside_early / outside_late and carried, never dropped. Zero rows land on a non-session date."
+}
