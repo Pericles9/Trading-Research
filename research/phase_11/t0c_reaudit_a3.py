@@ -1,0 +1,191 @@
+"""T0c re-audit against the Amendment 3 spec and config (A3-6 execution step 3).
+
+34 enumerated rows. Rows 0-29 are carried from the A2 re-audit at 98dac7c and
+re-checked only for contradictions introduced by A3. Rows 30-32 are new.
+
+Also carries the T4b-iv aggregate-function enumeration (A3-3), which extends the
+T4b audit to first()/last()/ANY_VALUE()/mode()/DISTINCT ON.
+"""
+from __future__ import annotations
+
+import json
+import pathlib
+
+CFG = json.loads(pathlib.Path("config/phase_11.json").read_text())
+R30 = CFG["cooper_thresholds"]["row_30_tie_price_error_p95_bp_max"]
+
+T4B_IV = [
+    {"location": "research/phase_9/common.py:148,150",
+     "code": "cl.pivot_table(index=KEY, columns='lab', values='close_price', "
+             "aggfunc='first') and the same for last_mi",
+     "reaches": "closes_wide() -> Phase 9 t4_axis_grid.parquet exit prices at t0_close "
+                "(T7a) - AN ARTIFACT PHASE 11 REUSES FROZEN",
+     "classification": "a",
+     "why": "`cl` is the output of GROUP BY ticker, event_date_canonical, mp, "
+            "session_offset, and `lab` is a 1:1 relabelling of session_offset, so every "
+            "(KEY, lab) cell holds EXACTLY ONE row. aggfunc='first' over a single value "
+            "is deterministic. The underlying close is ARG_MAX(last_price, minute_index) "
+            "- an explicit key, and minute_index is unique within a session group, so it "
+            "is tie-safe as well as order-safe."},
+
+    {"location": "research/phase_6/measurements.py:147,154",
+     "code": "g.dropna(...).groupby('event_id')['price_ffill'].first() and .last()",
+     "reaches": "phase_6 opportunity_decay_rth_legacy - NOT reused by Phase 11, which "
+                "takes opportunity_decay_primary from phase_6b",
+     "classification": "a",
+     "why": "Two independent reasons. (1) Artifact scope: Phase 11 consumes phase_6b's "
+            "artifacts, not phase_6's, and phase_6 was superseded by 6b. (2) Even so, "
+            "line 129 sorts explicitly - g = grid[...].sort_values(['event_id', "
+            "'minute_index']) - before these calls, so the pandas first()/last() "
+            "row-order semantics are pinned."},
+
+    {"location": "research/phase_8/a102_detection.py:123; "
+                 "research/phase_8/a102c_grid.py:96",
+     "code": "priced.pivot_table(..., aggfunc='first')",
+     "reaches": "a102_detection_anchors.parquet det_price_lat* (REUSED); "
+                "a102_detection_markout_grid.parquet (not reused)",
+     "classification": "a",
+     "why": "Already cleared in T4b: `priced` comes from an ASOF LEFT JOIN keyed on "
+            "(ticker, event_date_canonical, mp, lat|off), which yields exactly one row "
+            "per cell."},
+
+    {"location": "research/phase_11/common.py:73",
+     "code": "ANY_VALUE(momentum_pct) AS momentum_pct",
+     "reaches": "Phase 11's own primary_events() - the dev-cohort event list",
+     "classification": "a",
+     "why": "MEASURED, not assumed: 0 of the dev-primary (ticker, event_date) pairs "
+            "carry more than one distinct momentum_pct, so ANY_VALUE returns a constant "
+            "and is deterministic."},
+
+    {"location": "repo-wide", "code": "mode(), DISTINCT ON", "reaches": "-",
+     "classification": "a",
+     "why": "No occurrence of DuckDB's mode() aggregate or DISTINCT ON anywhere in "
+            "src/ or research/. The only 'mode' matches are Python file-open modes."},
+]
+
+NEW_ROWS = [
+    {"row": "30",
+     "condition": "T4c-iii: p95 bounded price error across affected bars feeding "
+                  "det_price_lat* or Phase 9 entry/exit",
+     "threshold": f"> {R30} bp (Cooper, set 2026-08-16)",
+     "task": "T4c-iii", "object": "filtered_trades over the detection universe",
+     "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "FAIL",
+     "C3_detail": f"Threshold now SET at {R30} bp. The quantity is a price range in bp, "
+                  "so any positive threshold is attainable in both directions.",
+     "C4_detail": "CONTRADICTS ROW 12 - see the pass-budget finding below.",
+     "verdict": "FAIL"},
+
+    {"row": "31",
+     "condition": "T4b-iv finds first(), last(), ANY_VALUE(), mode() or DISTINCT ON on a "
+                  "data path producing an artifact Phase 11 reuses frozen",
+     "threshold": "any", "task": "T4b-iv", "object": "src/ and prior-phase code, read-only",
+     "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "observed": "5 hit groups enumerated, ALL CLASS (a). Zero (b), zero (c). "
+                 "DOES NOT FIRE."},
+
+    {"row": "32",
+     "condition": "Any rebuild of a frozen artifact, or any src/ change, without an "
+                  "explicit Cooper decision - including applying the sequence_number "
+                  "tiebreak",
+     "threshold": "any", "task": "all", "object": "filesystem + DuckDB catalogue",
+     "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "note": "Consistent with row 14 (no writes to pre-existing objects) and with "
+             "T4c-iv's measure-and-bound-only instruction. Nothing in Phase 11 has "
+             "written to src/ or to any frozen artifact; common.connect() attaches the "
+             "database READ_ONLY."},
+]
+
+FINDING = {
+    "title": "T4c as specified requires a SECOND full scan of filtered_trades, which "
+             "escalation row 12 forbids.",
+    "row_12_text": "Any full scan of filtered_quotes or filtered_trades beyond the single "
+                   "budgeted pass in T5b - including any scan triggered indirectly by "
+                   "referencing a view column that computes one | > 1 | Hard stop.",
+    "a3_text": "A3-3 T4c-i: 'Over the detection universe, count (event_id, minute_index) "
+               "groups where the minimum sip_timestamp is shared by >=2 trades...'. "
+               "A3-6 places T4c at step 5, BEFORE T5b at step 6.",
+    "why_it_is_unavoidable_as_written": (
+        "Tie detection needs TRADE-LEVEL rows: whether two prints inside one minute bar "
+        "share the min (or max) sip_timestamp, and whether they differ in price. "
+        "event_minute_bars_v2 carries n_trades, first/last price and first/last_trade_ts "
+        "but records nothing about whether an extremum timestamp was shared, so the "
+        "materialised surface cannot answer it. Parquet row-group statistics cannot "
+        "either. The only source is filtered_trades, and reading it for 15,369 events "
+        "over the T=0 session is a full scan by row 12's own definition - the same shape "
+        "of read T5b performs."),
+    "budget_arithmetic": "Stage B is budgeted at EXACTLY ONE pass. T5b is that pass. "
+                         "T4c before it would be the second, so row 12 fires at > 1.",
+    "options_not_adopted": [
+        "(i) Run T4c on the dev v4 primary cohort only - zero passes, but A3-3 says "
+        "'over the detection universe', and row 30 is defined on bars feeding "
+        "det_price_lat* and Phase 9 entry/exit, which are detection-universe objects. A "
+        "50-event sample would bound the error by sampling, not measure it as specified.",
+        "(ii) Fold T4c into the T5b pass so one scan produces both - costs nothing in "
+        "evidence, since row 30's action is 'post the distribution, Cooper decides on any "
+        "fix', a post-hoc decision either way, and no headline is produced until T6/T7. "
+        "But it inverts the A3-6 gate order, which is a spec change.",
+        "(iii) Raise the pass budget to two and amend row 12.",
+    ],
+    "agent_position": "None of the three is adopted. The audit rule is 'hard stop on any "
+                      "row that fails any of the four checks; post the table; do not "
+                      "proceed to fix a defective row'. Posted for Cooper.",
+}
+
+audit = {
+    "task": "T0c re-audit (Amendment 3)", "phase": "11", "date": "2026-08-16",
+    "supersedes": "results/phase_11/artifacts/t0c_satisfiability_audit_a2.json",
+    "spec_audited": {
+        "prompt": "prompts/phase_11.md",
+        "amendments": ["phase_11_amendment_1.md", "phase_11_amendment_2.md",
+                       "phase_11_amendment_3.md"],
+        "config": "config/phase_11.json",
+        "rows_enumerated": 34,
+        "highest_row_number": 32,
+        "count_convention": "A3-0: report the ENUMERATED count, not the highest number.",
+    },
+    "rows_0_to_29": {
+        "disposition": "Carried from the A2 re-audit at 98dac7c (0 failures) and "
+                       "re-checked for contradictions introduced by A3.",
+        "a3_effects": {
+            "row_5": "A3-2 STRENGTHENS the reason: D17's excluded set is a strict SUBSET "
+                     "of the row 5 union (union minus locked), so a union measuring "
+                     "exactly 0.000000 bounds the subset at 0 a fortiori. Still PASS.",
+            "row_27": "A3-1 replaces the twin-axis encoding on charts 05 and 09 with two "
+                      "stacked panels. Both units remain present, so row 27 is still "
+                      "satisfiable. Still PASS.",
+            "row_9_and_26": "T5a measured 2,271 s against the 21,600 s ceiling, so both "
+                            "are satisfied on observation, not just in principle.",
+            "row_24": "The dev-tier cache carries all six required columns, verified at "
+                      "T5a. Still PASS.",
+        },
+        "failures_introduced": ["row 12 - see pass_budget_finding"],
+    },
+    "t4b_iv_aggregate_function_enumeration": {
+        "authority": "A3-3",
+        "patterns": ["first()", "last()", "ANY_VALUE()", "mode()", "DISTINCT ON",
+                     "pandas .first()/.last()", "pivot_table(aggfunc='first'/'last')"],
+        "hits": T4B_IV,
+        "counts": {"a": len(T4B_IV), "b": 0, "c": 0},
+        "escalation_row_31": "DOES NOT FIRE - zero class (b), zero class (c).",
+    },
+    "new_rows": NEW_ROWS,
+    "pass_budget_finding": FINDING,
+    "summary": {
+        "rows_audited": 34,
+        "fail": ["30 (via its contradiction with 12)", "12 (as the other side of it)"],
+        "verdict": "ESCALATION ROW 2 FIRES. T4c as specified in A3-3 requires a second "
+                   "full scan of filtered_trades, which row 12 forbids at > 1.",
+        "cleared_and_ready": "T4b-iv is complete and clean (row 31 does not fire). Row 32 "
+                             "passes. Row 30's threshold is now set at "
+                             f"{R30} bp and is reachable; the row fails only on the "
+                             "scan-budget contradiction, not on its own terms.",
+        "passes_spent_to_date": 0,
+        "action": "Posted. Nothing repaired. T4c not run. T5b not run.",
+    },
+}
+
+p = pathlib.Path("results/phase_11/artifacts/t0c_satisfiability_audit_a3.json")
+p.write_text(json.dumps(audit, indent=2))
+print(f"wrote {p.name}")
+print("row 31 (T4b-iv):", audit["t4b_iv_aggregate_function_enumeration"]["escalation_row_31"])
+print("VERDICT:", audit["summary"]["verdict"])
