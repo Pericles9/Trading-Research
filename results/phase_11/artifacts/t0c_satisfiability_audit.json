@@ -1,0 +1,201 @@
+{
+  "task": "T0c",
+  "phase": "11",
+  "date": "2026-08-15",
+  "supersedes": "results/phase_11/artifacts/t0b_satisfiability_audit.json (v1 audit, fired escalation row 2 on six rows). Retained as the historical record.",
+  "spec_audited": {
+    "prompt": "prompts/phase_11.md",
+    "amendment": "prompts/phase_11_amendment_1.md",
+    "config": "config/phase_11.json",
+    "committed_at": "99a1214",
+    "governing": "Amendment 1 over v1 (Cooper 2026-08-15). 24 escalation rows plus 4 sub-rows.",
+    "ordering_note": "Under A1-0 the audit runs AFTER the config is committed, which is what makes checks 3 and 4 decidable. In v1 the audit ran first and rows 7 and 9 were correctly reported indeterminate."
+  },
+  "method": {
+    "checks_per_row": [
+      "C1 - is the row measured by an identified task?",
+      "C2 - does that task produce the named quantity, ON THE OBJECT IT READS (T0c2)?",
+      "C3 - is the threshold reachable given the committed ranges and grids?",
+      "C4 - does the row contradict any other row?"
+    ],
+    "stop_rule": "Hard stop on any row failing any of the four checks. Post. Do not repair.",
+    "t0c2_object_rule": "For every row, name the object the measuring task actually reads - DuckDB table, DuckDB view, or source parquet - and confirm the quantity is defined on that object. A relational table has no row order; a view may hide a scan; a parquet file has both. v1's row 4 failed precisely here."
+  },
+
+  "environment_verification": {
+    "finding": "MATERIAL. The interpreter on PATH is NOT the interpreter this phase must use.",
+    "python_on_path": {
+      "exe": "C:\\Python314\\python.exe",
+      "version": "3.14.3",
+      "duckdb": "1.5.3",
+      "pandas_market_calendars": "MISSING",
+      "exchange_calendars": "MISSING"
+    },
+    "project_venv": {
+      "exe": "E:\\Trading Research\\.venv\\Scripts\\python.exe",
+      "version": "3.11.0",
+      "duckdb": "1.4.4",
+      "pandas_market_calendars": "5.4.0",
+      "exchange_calendars": "4.13.2",
+      "plotly": "6.5.2",
+      "kaleido": "present",
+      "pyarrow": "23.0.0",
+      "pandas": "2.3.3",
+      "numpy": "2.4.2"
+    },
+    "consequence": "T1b-i requires the pinned pandas_market_calendars==5.4.0 / exchange_calendars==4.13.2 to confirm epoch and timezone against XNYS session boundaries, and CLAUDE.md pins exchange_calendars XNYS as the session calendar for all market logic. Neither package exists on the PATH interpreter, and D14 makes the environment offline so neither can be installed. Running Phase 11 on the PATH interpreter would make T1b-i unrunnable and would silently break the standing calendar pin.",
+    "resolution": "Every Phase 11 command uses .venv/Scripts/python.exe. Both versions match the pin exactly. Recorded to config/phase_11.json under `environment`.",
+    "object_checks_rerun_on_venv": "All object-level checks below were re-run under .venv duckdb 1.4.4 after being first run on 1.5.3, because the interpreter changed. Results identical."
+  },
+
+  "object_level_checks": {
+    "note": "T0c2. Run empirically under .venv/Scripts/python.exe, duckdb 1.4.4. Read-only. No pass over filtered_quotes or filtered_trades.",
+    "read_parquet_file_row_number": {"supported": true, "sample": "file_row_number=0, sip_timestamp=1581548407216769113", "gates": "row 4b / T1c-v - storage order is measurable on the source parquet"},
+    "asof_join": {"supported": true, "gates": "row 19 / T3 - the explicit-key route that keeps every join off storage order"},
+    "source_parquet_columns": {
+      "path_pattern": "data/filtered/{TICKER}_{DATE}_{MOMENTUM}/quotes.parquet",
+      "columns": ["ask_exchange", "ask_price", "ask_size", "bid_exchange", "bid_price", "bid_size", "conditions", "participant_timestamp", "sequence_number", "sip_timestamp", "tape", "indicators"],
+      "conditions_present": true,
+      "indicators_present": true,
+      "gates": "T1c, rows 20 and 22 - both dropped columns confirmed present in source, absent from the DB table, exactly as the prompt states"
+    },
+    "dev_v4_table_columns": {
+      "object": "filtered_quotes_dev_v4 (DuckDB BASE TABLE)",
+      "columns": ["ask_exchange", "ask_price", "ask_size", "bid_exchange", "bid_price", "bid_size", "participant_timestamp", "sequence_number", "sip_timestamp", "tape", "ticker", "event_date", "momentum_pct", "dev_cohort"],
+      "has_row_order": false,
+      "note": "A relational table has no row order. Every order-dependent question is therefore homed on the source parquet (T1c-v), and every order-free aggregate on this table."
+    },
+    "d15_join_key_compatibility": {
+      "left": "results/phase_8/artifacts/a102_detection_anchors.parquet WHERE det_undefined = FALSE",
+      "right": "results/phase_5/artifacts/quotes_bitmaps_all.parquet",
+      "keys": ["ticker", "event_date_canonical", "round(momentum_pct, 2)"],
+      "detection_universe_n": 15369,
+      "matched": 15369,
+      "unmatched": 0,
+      "gates": "row 10 - the D15 coverage route joins the detection universe completely, scan-free. No event is lost to the substitution."
+    }
+  },
+
+  "rows": [
+    {"row": "0", "condition": "Cooper's review of the charts against the tape contradicts the numeric result", "threshold": "judgment", "task": "T4 gate and final approval gate (Cooper)", "object": "charts 01-08, standalone HTML", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "Declared precedence over all rows below is an ordering rule, not a contradiction."},
+
+    {"row": "1", "condition": "Working tree dirty at T0a", "threshold": "any", "task": "T0a", "object": "git working tree", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "Fired on the first attempt; resolved by Cooper 2026-08-15. Tree clean at re-verify and at T0b commit 99a1214."},
+
+    {"row": "2", "condition": "T0b satisfiability audit fails on any row", "threshold": "any", "task": "T0c (renamed by A1-0; the row text still says T0b)", "object": "this artifact", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS - FLAG (stale cross-reference)",
+     "flag": "A1-0 renamed the audit task T0b -> T0c but row 2's text was not updated with it. The measuring task exists, produces the table, has a reachable threshold and contradicts nothing, so no check fails; the label is a documentation lag. Recorded rather than repaired, per 'do not proceed to fix a defective row'. Suggested wording for a future amendment: 'T0c satisfiability audit fails on any row'."},
+
+    {"row": "3", "condition": "T1 cannot establish whether filtered_quotes is consolidated or per-venue", "threshold": "any", "task": "T1a", "object": "filtered_quotes_dev_v4 (DuckDB table)", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "object_detail": "bid_exchange and ask_exchange are BIGINT columns on a relational table. Distinct counts and the bid_exchange != ask_exchange share are order-free aggregates, fully defined on this object."},
+
+    {"row": "4a", "condition": "T1b: sip_timestamp null-or-zero share on the T=0 RTH segment, per event", "threshold": "> 0.01 on ANY single event (Cooper, set)", "task": "T1b", "object": "filtered_quotes_dev_v4 (DuckDB table)", "C1": "PASS", "C2": "PASS - with a recorded denominator convention", "C3": "PASS", "C4": "PASS", "verdict": "PASS - FLAG (denominator circularity)",
+     "object_detail": "sip_timestamp is BIGINT. `IS NULL OR = 0` is an order-free aggregate, fully defined on a relational table. This is the v1 row-4 defect fixed: the order-dependent half moved to T1c-v.",
+     "flag": "The row is scoped to the T=0 RTH SEGMENT, but segment assignment is derived from the very timestamp being tested. A row whose sip_timestamp is null cannot be placed in RTH by sip_timestamp. The quantity is therefore well-defined for every row that HAS the field, and segment-undefined for exactly the rows the row is counting.",
+     "resolution_no_rule_adopted": "T1b reports the null-or-zero share on three denominators, all well-defined and none requiring a new rule: (i) all T=0 quote rows for the event, keyed by the event_date column rather than by any clock; (ii) T=0 RTH rows assignable by sip_timestamp; (iii) T=0 RTH rows assigned by participant_timestamp, the independent second clock present on every row. All three are reported per event. If all three fall on the same side of the 1% threshold the row reads unambiguously. IF THEY STRADDLE 1%, THAT IS ITSELF A HARD STOP and is posted for Cooper rather than resolved by the agent picking a denominator. No exclusion rule and no offset is adopted (row 17 clean)."},
+
+    {"row": "4b", "condition": "T1c-v: any storage-order finding", "threshold": "any", "task": "T1c-v", "object": "source parquet, read_parquet(..., file_row_number=true)", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "object_detail": "Verified empirically: file_row_number is supported on duckdb 1.4.4 and returns file order. Storage order IS defined on a parquet file, unlike on the DuckDB table where v1 mis-specified it. Action is 'not a stop' at any value, and 19a exempts the task by name.",
+     "c4_detail": "No contradiction with row 19: 19a exempts T1c-v explicitly, and row 19 as reworded only fires on a computation whose OUTPUT FEEDS a downstream quantity. T1c-v feeds nothing. This is the v1 row-4/row-19 contradiction fixed."},
+
+    {"row": "5", "condition": "T2a: state_hard_unusable clock-time share on the T=0 RTH segment, median across events", "threshold": "> 0.25 (Cooper, set). Single trigger; v2's second clause not adopted", "task": "T2a", "object": "filtered_quotes_dev_v4 (DuckDB table)", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "definition_now_unambiguous": "state_hard_unusable = null price UNION non-positive price UNION one-side-missing UNION crossed. A set union over clock time, bounded in [0,1] by construction, so the v1 'sum can exceed 1.0' defect cannot recur. state_degraded = locked UNION zero-size, evaluated only on rows not already hard-unusable, is reported and does NOT fire. Partition asserted: hard_unusable + degraded + clean = 1.0 per event per segment.",
+     "object_detail": "Clock-time share is computed from durations between consecutive quotes under an explicit ORDER BY on the chosen timestamp - not from storage order. Row 19 clean.",
+     "note": "Cooper's rationale of record: a locked quote (bid = ask) has a well-defined midpoint equal to both sides, and a zero-size quote still yields a computable midpoint. Neither is 'no midpoint exists', so neither belongs in the trigger."},
+
+    {"row": "6", "condition": "T3: alignment curve matches the flat row of the reading rule", "threshold": "any", "task": "T3a, T3b", "object": "filtered_quotes_dev_v4 + filtered_trades_dev_v4 (DuckDB tables), ASOF join", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "ASOF JOIN verified supported. T3b's four-row reading rule is pre-registered and the flat row is named in it."},
+
+    {"row": "7", "condition": "T3: peak offset differs between premarket and RTH by more than one sweep rung", "threshold": "any (not a stop)", "task": "T3a per segment", "object": "dev v4 tables", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "c3_detail": "RESOLVED from v1's INDETERMINATE. config.alignment_sweep.alignment_offsets_ns is committed: 27 rungs, half-decade log spacing, -1s to +1s, includes exactly 0. 'One rung' is defined in the config as one adjacent step on that grid."},
+
+    {"row": "8", "condition": "Any effective spread computed before the T4 gate is passed", "threshold": "any", "task": "prohibition across T1-T3", "object": "n/a - code audit", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "note": "No conflict with T2e. T2e computes QUOTED spread (ask - bid), a quote-only quantity needing no trade and no adopted offset. Row 8 bars EFFECTIVE spread (2*|p-m|/m), which needs both. Recorded so it is not re-litigated at T2."},
+
+    {"row": "9", "condition": "T5a runtime extrapolation exceeds config.runtime_ceiling_seconds", "threshold": "21600 s (6 h), agent-authored, Cooper may overrule before T5", "task": "T5a", "object": "wall-clock timing on dev v4, extrapolated by per-event print count", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "c3_detail": "RESOLVED from v1's INDETERMINATE. Key is committed. Row 9 is 'as configured', not [Cooper]-marked, so authoring it is the agent's."},
+
+    {"row": "10", "condition": "T6: quotes_ingested = FALSE share of the 15,369-event detection universe", "threshold": "> 0.20 (Cooper, set)", "task": "T6", "object": "results/phase_5/artifacts/quotes_bitmaps_all.parquet + results/phase_4/artifacts/_actual_quotes_sessions_cache.parquet (parquet files), per D15", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "c4_detail": "RESOLVED from v1's FAIL. Under D15 the coverage columns are read from Phase 4/5 materialisations, not from momentum_events_canonical, so producing this quantity costs no scan and row 10 no longer contradicts row 12.",
+     "object_verification": "Join key compatibility tested: 15,369 of 15,369 detection-universe events match in quotes_bitmaps_all on (ticker, event_date_canonical, round(momentum_pct,2)); 0 unmatched. The substitution loses no event.",
+     "standing_rule_intact": "The CLAUDE.md requirement that every quote-derived statistic filters on quotes_ingested = TRUE and reports the n excluded is unchanged. D15 changes only where the column is read from."},
+
+    {"row": "11", "condition": "T7: median round_trip_cost / realized_capture on the named cell at 1x cost", "threshold": "0.50 (Cooper, set)", "task": "T7c", "object": "results/phase_9/artifacts/t4_axis_grid.parquet joined to the T5 cache", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "cell_verified": "grid=fixed_horizon, det_segment='rth', latency=5, hold=30: n=10,660, of which 10,607 have both entry and exit defined. Far above the n<100 hatching floor. The ratio is a positive real, so 0.50 is attainable."},
+
+    {"row": "12", "condition": "Any full scan of filtered_quotes or filtered_trades beyond the single budgeted T5b pass, including any scan triggered indirectly by referencing a view column that computes one", "threshold": "> 1", "task": "enforced throughout; T5b is the single budgeted pass", "object": "query plans", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "c4_detail": "RESOLVED from v1's FAIL by D15. The reworded row also names the indirect-scan mechanism explicitly, so the failure mode cannot recur silently.",
+     "passes_spent_to_date": 0},
+
+    {"row": "12a", "condition": "Any query running longer than config.query_watchdog_seconds without returning", "threshold": "300 s (agent-authored)", "task": "all tasks", "object": "query execution", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS as committed - FLAG on the amendment text", "verdict": "PASS - FLAG",
+     "flag": "As written in A1-3, row 12a applies to 'any query' with no carve-out, which would kill the T5b budgeted pass - the one long-running query the phase explicitly authorises, and the one governed by runtime_ceiling_seconds (6 h) rather than by the watchdog (5 min). Read literally, rows 12a and 9 contradict.",
+     "resolution": "config.runtime.query_watchdog_scope, committed at 99a1214, carves T5b out by name: the watchdog governs every query EXCEPT the single budgeted T5b pass. The audit runs against the committed config, under which no contradiction exists. The carve-out is AGENT-AUTHORED - query_watchdog_seconds is not [Cooper]-marked - and is disclosed here for Cooper to overrule.",
+     "precedent": "The v1 audit query was killed at 120 s before returning, which is what motivated this row."},
+
+    {"row": "13", "condition": "Any spine numeric column on a computation path (D4)", "threshold": "any", "task": "all tasks", "object": "code audit", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "note": "momentum_pct appears on both dev v4 tables and on every reused artifact as a JOIN KEY. Key use is identity, not computation, and sits inside the D4/A9.1 exception. All measured quantities come from filtered_trades / filtered_quotes and frozen tick-derived artifacts."},
+
+    {"row": "14", "condition": "Any write to the data root, to src/, or to any PRE-EXISTING table or view in main.duckdb", "threshold": "any", "task": "all tasks", "object": "filesystem and DuckDB catalogue", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "c4_detail": "RESOLVED from v1's AMBIGUOUS by A1-4. The enumeration is explicit: filtered_trades, filtered_quotes, momentum_events, momentum_events_canonical, event_minute_bars_v2, and the _dev_v3/_dev_v4 tables."},
+
+    {"row": "14a", "condition": "Creating a NEW phase-scoped table in main.duckdb", "threshold": "n/a", "task": "T5b", "object": "DuckDB catalogue", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS (permission, not a stop)",
+     "note": "event_quote_metrics_v1 and any _phase11 working table. Precedented: Phase 8 created event_minute_bars_v2 the same way. Named in the output file table; dropped or documented at the approval gate."},
+
+    {"row": "15", "condition": "Any burst/quiet split, intensity estimation, envelope fit, thresholding, two-state segmentation, or Hawkes calibration", "threshold": "any", "task": "all tasks", "object": "code audit", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "c4_detail": "Checked specifically against T2a's three-way hard_unusable / degraded / clean partition. That is a per-row validity classification by price and size predicates on the quote record. It is NOT 'two-state segmentation' in row 15's sense, which closes burst/quiet regime segmentation of the point process (D6/D8/D9/D11). Recorded so it is not re-litigated at T2.",
+     "buckets_in_this_phase": ["participation quintile", "detection segment", "latency", "era"]},
+
+    {"row": "16", "condition": "Any short-side, fade, SSR, or borrow logic specified or measured", "threshold": "any", "task": "all tasks", "object": "code audit", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "note": "T7's round trip is a long entry plus the sale that closes it. Crossing the spread on exit is not a short-side variant. D5 clean."},
+
+    {"row": "17", "condition": "Any exclusion rule or alignment offset adopted by the agent rather than set at the T4 gate", "threshold": "any", "task": "T2/T3 outputs and the T4 gate", "object": "code audit", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "cleared_items": [
+       "Authoring config.alignment_offsets_ns is authoring the SWEEP GRID T3 scans, not adopting an offset. The adopted offset is Cooper's T4 selection.",
+       "The row-4a three-denominator disclosure adopts nothing: all three are reported, and a straddle of the threshold is escalated rather than resolved.",
+       "The row-12a watchdog carve-out is a runtime guard, not an exclusion rule; it removes no data from any population.",
+       "No quote state is excluded anywhere in Stage A. T2 is a census; the exclusion rule is set at T4."
+     ]},
+
+    {"row": "18", "condition": "Any REPORT.md or digest sentence that EVALUATES a result, states a strategy implication, or recommends an action", "threshold": "any", "task": "T9", "object": "REPORT.md, digest.json", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "c3_detail": "RESOLVED from v1's FAIL. v1 required every sentence to cite a pre-registered reading-rule row while such a rule existed only for T3, leaving no satisfying state. A1-5 rewrites the row to ban EVALUATION while explicitly permitting description - measurements with n, what is visible in a chart including direction, monotonicity, overlap, dispersion and thin buckets, statements of uncertainty, and explicit 'I don't know'. Satisfying sentences now exist for every task."},
+
+    {"row": "18a", "condition": "For T3 specifically: the report does not name which pre-registered reading-rule row the curve matches", "threshold": "any", "task": "T9", "object": "REPORT.md", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "T3b's four-row rule is the referent and it exists."},
+
+    {"row": "19", "condition": "Any computation WHOSE OUTPUT FEEDS a downstream quantity that depends on parquet storage order rather than an explicit ORDER BY or ASOF key", "threshold": "any", "task": "all tasks", "object": "code audit", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "c4_detail": "RESOLVED from v1's FAIL. v1's row 19 fired on T1b-ii, a task the prompt required. A1-6 adds the 'output feeds a downstream quantity' qualifier and 19a exempts T1c-v by name. ASOF JOIN and explicit ORDER BY both verified available on duckdb 1.4.4, so the compliant route exists for every ordered computation in the phase."},
+
+    {"row": "19a", "condition": "T1c-v exempt by name", "threshold": "n/a", "task": "T1c-v", "object": "source parquet", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS (exemption)", "note": "Measuring storage order necessarily depends on storage order, and its output feeds nothing."},
+
+    {"row": "20", "condition": "T1c-iii finds no condition-code dictionary on disk", "threshold": "any (not a stop)", "task": "T1c-iii", "object": "data/metadata/, data/collection_scripts/, data/Schema.md, docs/, the two read-only sibling repos", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "Both outcomes are handled. Consistent with row 22 and with T1c-ii's 'report as opaque integers'."},
+
+    {"row": "21", "condition": "T1c-iv: indicators or conditions null pattern differs between eras", "threshold": "> 20.0 percentage points (Cooper, set). Not a stop", "task": "T1c-iv", "object": "source parquet", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS",
+     "note": "Eras verified present as era_2020_2021 and era_2022_2024 on the frozen Phase 8 artifact, so a two-era comparison is defined. Threshold decides only whether the finding gets its own report section."},
+
+    {"row": "22", "condition": "Any interpretation of a specific conditions code value without a dictionary found in T1c-iii", "threshold": "any", "task": "T1c-ii, T1c-iii", "object": "code and report audit", "C1": "PASS", "C2": "PASS", "C3": "PASS", "C4": "PASS", "verdict": "PASS", "note": "conditions confirmed present in the source parquet, so the census is producible. Codes stay opaque integers absent a dictionary."}
+  ],
+
+  "v1_failures_disposition": {
+    "note": "The six rows that fired escalation row 2 in the v1 audit, and how each is closed.",
+    "row_4": "FIXED by A1-1. Split into 4a (order-free null share, defined on the DuckDB table) and 4b (storage order, re-homed to T1c-v against the source parquet where it is defined). Threshold set at 1%. The row 4 <-> 19 contradiction is gone.",
+    "row_5": "FIXED by A1-2 as amended by Cooper's import of the v2 hard/degraded split. The trigger is a set UNION bounded in [0,1], so 'sum can exceed 1.0' cannot recur. Threshold set at 25% median.",
+    "row_10": "FIXED by D15. Threshold set at 20%. Join verified complete, 15,369/15,369.",
+    "row_12": "FIXED by D15 plus A1-3's rewording, which names the indirect-scan mechanism so it cannot recur silently.",
+    "row_18": "FIXED by A1-5. The bar is now evaluation, not characterisation-without-a-rule, and description is explicitly permitted.",
+    "row_19": "FIXED by A1-6 plus the 19a named exemption.",
+    "row_14_ambiguity": "FIXED by A1-4 plus 14a.",
+    "rows_7_and_9_indeterminate": "FIXED by A1-0's reordering. Both thresholds are now committed config keys and both are decidable."
+  },
+
+  "summary": {
+    "rows_audited": 24,
+    "sub_rows_audited": 4,
+    "fail": [],
+    "pass": ["0", "1", "2", "3", "4a", "4b", "5", "6", "7", "8", "9", "10", "11", "12", "12a", "13", "14", "14a", "15", "16", "17", "18", "18a", "19", "19a", "20", "21", "22"],
+    "flags_recorded_not_failures": [
+      {"row": "2", "issue": "Row text still names T0b as the audit task; A1-0 renamed it T0c. Documentation lag - measuring task, quantity, threshold and consistency all check out."},
+      {"row": "4a", "issue": "Segment scope is assigned by the same field the row measures. Resolved by reporting three well-defined denominators and escalating a straddle of the 1% threshold rather than picking one."},
+      {"row": "12a", "issue": "As written the watchdog would kill the T5b budgeted pass, contradicting row 9. Resolved in the committed config by an agent-authored carve-out excluding T5b, disclosed for Cooper to overrule."}
+    ],
+    "environment_finding": "The PATH interpreter lacks the pinned calendar packages; .venv/Scripts/python.exe has both at the exact pinned versions. All Phase 11 work uses .venv. Would otherwise have made T1b-i unrunnable and silently broken the CLAUDE.md calendar pin.",
+    "verdict": "ESCALATION ROW 2 DOES NOT FIRE. All 24 rows and 4 sub-rows pass all four checks against the committed spec and config. Three flags are recorded for Cooper's visibility; none is a check failure.",
+    "authorised_to_proceed": "T1, Stage A, dev v4 primary cohort only, zero full-table passes.",
+    "passes_spent_to_date": 0
+  }
+}

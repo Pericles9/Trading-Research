@@ -197,6 +197,28 @@
     "rule": "No short-side, fade, SSR or borrow logic is specified, implemented or measured. T7's round trip is a long entry plus the sale that closes it."
   },
 
+  "environment": {
+    "note": "Verified at T0c. The interpreter on PATH is NOT the one this phase uses.",
+    "interpreter": ".venv/Scripts/python.exe",
+    "python": "3.11.0",
+    "duckdb": "1.4.4",
+    "pandas_market_calendars": "5.4.0",
+    "exchange_calendars": "4.13.2",
+    "plotly": "6.5.2",
+    "pyarrow": "23.0.0",
+    "pandas": "2.3.3",
+    "numpy": "2.4.2",
+    "path_interpreter_rejected": {
+      "exe": "C:\\Python314\\python.exe",
+      "python": "3.14.3",
+      "duckdb": "1.5.3",
+      "pandas_market_calendars": "MISSING",
+      "exchange_calendars": "MISSING",
+      "why_rejected": "T1b-i requires the pinned calendars to confirm epoch/timezone against XNYS session boundaries, and CLAUDE.md pins exchange_calendars XNYS for all market logic. D14 makes the environment offline, so neither package can be installed. Running on the PATH interpreter would make T1b-i unrunnable and silently break the standing calendar pin."
+    },
+    "offline": "D14. No package index, no network fetch. Prior art is cited from the prompt, not fetched."
+  },
+
   "outputs": {
     "artifacts_dir": "results/phase_11/artifacts",
     "charts_dir": "results/phase_11/charts",
