@@ -32,7 +32,7 @@
 
 **Standing constraints that bind here** — see `CLAUDE.md`: spine join through `momentum_events_canonical` where `in_scope = TRUE`; D4 tick-derived only, no spine numeric on any computation path; any quote-derived statistic filters on `quotes_ingested = TRUE` and reports the n excluded; long-only (D5) — do not specify, implement, or measure any short-side or fade variant, and do not implement SSR or borrow logic; two-tier execution; DuckDB SQL, never materialize `filtered_trades` (4.95B rows) or `filtered_quotes` (3.8B rows) into a dataframe.
 
-**Pass budget.** Stage A: zero full-table passes — dev v4 only (`filtered_trades_dev_v4` / `filtered_quotes_dev_v4`, 50 primary + 6 sidecar, frozen Phase 5a, never rebuilt). Stage B: **exactly one** budgeted full pass over `filtered_quotes` joined to `filtered_trades`, materializing the reusable cache in T5. A second full pass is escalation row 12.
+**Pass budget.** Stage A: zero full-table passes — dev v4 only (`filtered_trades_dev_v4` / `filtered_quotes_dev_v4`, frozen Phase 5a, never rebuilt; **50 primary events on both sides, plus 6 trades-side and 3 quotes-side sidecar events** — Amendment 1 A1-7 correction; the sidecar is never pooled and Stage A runs on the 50 primary only). Stage B: **exactly one** budgeted full pass over `filtered_quotes` joined to `filtered_trades`, materializing the reusable cache in T5. A second full pass is escalation row 12.
 
 **Description only.** No recommendations. No characterisation of any result as good, promising, weak, or disappointing. No exclusion rule is *adopted* by the agent — T2 and T3 produce the evidence, the rule is set at the T4 gate by Cooper.
 
@@ -111,7 +111,7 @@
   `det_anchor` is **reused frozen** from `results/phase_8/artifacts/a102_detection_anchors.parquet` (D7). It is not re-derived. Detection universe n = 15,369, less the `quotes_ingested = FALSE` population, reported as its own row.
   - [ ] T6a — Effective spread `= 2 · |p − m| / m` at the T4-selected offset, measured at `det + latency` for latency ∈ {0, 1, 5, 15, 30} minutes. **Latency 0 is a physical impossibility and is labelled as the upper bound on every chart and in every table** (Phase 8 / D7 convention).
   - [ ] T6b — Reported in **basis points, in cents, and as a share of the detection price**. The cents figure is not optional — on a $3 median name it is the number that decides the phase.
-  - [ ] T6c — Bucketed by participation quintile (`pq_rth_open`, reused from Phase 8 — do not re-derive), detection segment, and era. Cells with n < 100 hatched and carrying no claim.
+  - [ ] T6c — Bucketed by participation quintile (`pq_rth_open`, reused frozen from `results/phase_8/artifacts/t3_participation.parquet` — **not** `a102_detection_anchors.parquet`, Amendment 1 A1-7 correction; do not re-derive), detection segment, and era. Cells with n < 100 hatched and carrying no claim.
   - [ ] T6d — Full distribution per cell, never the median alone. Chart 05. Commit.
 
 - [ ] **T7 — Round-trip cost against available capture** *(the headline)*
