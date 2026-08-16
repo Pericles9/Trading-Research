@@ -1,0 +1,35 @@
+{
+  "task": "T5a",
+  "phase": "11",
+  "date": "2026-08-16",
+  "dev_run": {
+    "wall_seconds": 5.99,
+    "cache_rows": 26710,
+    "events": 50,
+    "t0_trades": 3756147,
+    "t0_quotes": 2240589,
+    "t0_rows_total": 5996736,
+    "rows_per_second": 1000899.0
+  },
+  "full_tier_workload": {
+    "source_of_trade_count": "event_minute_bars_v2 SUM(n_trades) at session_offset = 0, joined to the detection universe. Already materialised - NO PASS SPENT.",
+    "events": 15369,
+    "t0_trades": 1423698333,
+    "t0_quotes_estimated": 849253989,
+    "quote_to_trade_ratio_used": 0.5965,
+    "quote_estimate_caveat": "There is no materialised per-event quote count, so the quote workload is ESTIMATED from the dev-tier T=0 quote-to-trade ratio. Labelled as an estimate; the trade half is exact."
+  },
+  "extrapolation": {
+    "method": "linear in total T=0 rows (trades + quotes) at the dev-measured throughput; the pipeline is event-partitioned so cost is linear in rows, not superlinear",
+    "estimated_seconds": 2270.9,
+    "estimated_hours": 0.63,
+    "ceiling_seconds": 21600,
+    "headroom_factor": 9.51
+  },
+  "escalation_row_9": {
+    "threshold": "extrapolation > 21600 s",
+    "observed": 2270.9,
+    "verdict": "DOES NOT FIRE"
+  },
+  "authorised": "T5b may run."
+}

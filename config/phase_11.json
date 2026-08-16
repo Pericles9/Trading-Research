@@ -7,7 +7,7 @@
     "prompt": "prompts/phase_11.md",
     "amendment": "prompts/phase_11_amendment_1.md",
     "governing": "Amendment 1 over v1 (Cooper 2026-08-15), as further amended by Amendment 2 (Cooper 2026-08-16, T4 gate). A 25-row v2 rewrite was circulated 2026-08-15, interrupted, and discarded; one v2 element was imported by explicit decision - T2a's hard/degraded state split.",
-    "escalation_rows": 31,
+    "escalation_rows": 34,
     "escalation_row_ids": [
       "0",
       "1",
@@ -39,7 +39,10 @@
       "26",
       "27",
       "28",
-      "29"
+      "29",
+      "30",
+      "31",
+      "32"
     ],
     "escalation_sub_rows": [
       "12a",
@@ -49,7 +52,8 @@
     ],
     "sub_row_note": "12a, 14a, 18a and 19a are qualifiers riding on their parent rows, not independent rows. They are audited with their parents and do not count toward the 24.",
     "amendment_2": "prompts/phase_11_amendment_2.md",
-    "row_count_note": "A2 states 'now 29 rows'. The explicit enumeration is 31: Amendment 1's 24 (0,1,2,3,4a,4b,5..22) plus A2-11's seven new rows (23..29). 29 is the highest row NUMBER, not the row count - 4a/4b split one number into two, and numbering starts at 0. Recorded at T0c as an editorial discrepancy, not a check failure; the audit covers all 31."
+    "row_count_note": "A3-0: report the ENUMERATED count, not the highest row number. Enumeration is 34 (0,1,2,3,4a,4b,5..29,30,31,32); highest number is 32. 4a/4b split one number into two and numbering starts at 0.",
+    "amendment_3": "prompts/phase_11_amendment_3.md"
   },
   "baseline": {
     "tag": "phase-10b-closed",
@@ -90,7 +94,10 @@
     "row_21_era_null_pattern_gap_pp_max": 20.0,
     "row_21_scope": "percentage-point difference in the indicators/conditions null pattern between any two eras. NOT a stop - decides only whether it gets its own report section.",
     "row_11_kill_threshold_confirmed": "2026-08-16, A2-5, unchanged",
-    "cost_multiple_reporting": "The 1x column remains the SOLE trigger for row 11. The 1.5x column is reported with EQUAL PROMINENCE in every table and on every chart. The expectation that 1.5x is the more honest read of realised cost was set at the T4 gate BEFORE Stage B ran; it is a statement about which column to read, not a prediction, and licenses no evaluative sentence - row 18 applies unchanged."
+    "cost_multiple_reporting": "The 1x column remains the SOLE trigger for row 11. The 1.5x column is reported with EQUAL PROMINENCE in every table and on every chart. The expectation that 1.5x is the more honest read of realised cost was set at the T4 gate BEFORE Stage B ran; it is a statement about which column to read, not a prediction, and licenses no evaluative sentence - row 18 applies unchanged.",
+    "row_30_tie_price_error_p95_bp_max": null,
+    "row_30_proposal_by_cooper_bp": 25.0,
+    "row_30_status": "UNSET. A3-4 marks row 30 [Cooper] and states a PROPOSAL of > 25 bp with reasoning, plus 'for Cooper to set or overrule'. Under the standing rule that [Cooper] thresholds are set before execution and are not the agent's to propose or fill, the proposal is not adopted until Cooper states it. Row 30 gates T4c, step 5 of the A3-6 order; T2e-i and T5a (steps 1-2) are explicitly unblocked and run first. Flagged at the T0c re-audit."
   },
   "state_definitions": {
     "note": "Cooper 2026-08-15 imported v2's three-way split, overriding Amendment 1 A1-2's single union. Rationale of record: a locked quote (bid = ask) has a well-defined midpoint equal to both sides, and a zero-size quote still yields a computable midpoint; neither is 'no midpoint exists'.",
@@ -380,7 +387,8 @@
     "sql_predicate": "(bid_price IS NULL OR ask_price IS NULL OR bid_price <= 0 OR ask_price <= 0 OR bid_price > ask_price OR bid_size IS NULL OR bid_size = 0 OR ask_size IS NULL OR ask_size = 0)",
     "note_vs_stage_a": "This is Stage A's state_hard_unusable UNION the zero-size predicates, MINUS locked. Stage A's state_degraded bundled locked with zero-size; D17 separates them.",
     "no_event_excluded_on_quality": true,
-    "covariate_instead": "unusable_time_share per event x segment carried into event_quote_metrics_v1 (T5b); T7g reports the headline with and without the 3 events above 1% unusable share"
+    "covariate_instead": "unusable_time_share per event x segment carried into event_quote_metrics_v1 (T5b); T7g reports the headline with and without the 3 events above 1% unusable share",
+    "a_fortiori_note": "A3-2: the D17-excluded set is a STRICT SUBSET of the row 5 union - T2a's union included locked, D17 carries it, so D17-excluded = row 5 union MINUS locked. A subset of a set whose RTH clock-time share measured exactly 0.000000 also measures 0. The passed gate transfers to the narrower rule a fortiori, not merely by non-interaction. T7h reports the locked clock-time share in the RTH decision cell so the carry decision is auditable."
   },
   "d18_stage_b_population": {
     "status": "Cooper, T4 gate 2026-08-16",
@@ -406,5 +414,18 @@
       "caption of chart 07"
     ],
     "guarded_by": "escalation row 29"
+  },
+  "charts": {
+    "twin_axis_deviation": "A3-1: charts 05 and 09 ship as two vertically stacked panels sharing the x-axis - upper basis points, lower cents, identical faceting and identical n annotations on both, single file. The prompt specified twin y-axes, which this project's visualization standard forbids outright; Phase 9 chart 06 set the precedent. Recorded in each chart caption. D19 and escalation row 27 are satisfied because both units are present. Rationale (A3-1): bp and cents move in OPPOSITE directions here, so twin axes would let a reader see one line, read a slope, and believe they had seen both units."
+  },
+  "t4c_tie_audit": {
+    "authority": "prompts/phase_11_amendment_3.md A3-3",
+    "not_exposed": "det_minute = MIN(minute_index) FILTER (high >= threshold) with high = MAX(price). MAX and MIN over a set are tie-immune by construction, so Phase 8's detection MINUTE is sound regardless of the T4c result.",
+    "exposed": [
+      "det_price_lat0/1/5/15/30 (via first_price/last_price)",
+      "Phase 9 t4_axis_grid entry_price and exit_price",
+      "tick_close_t_minus_1_rth"
+    ],
+    "measure_only": "T4c-iv: measure and bound only. sequence_number is the available tiebreak but applying it means rebuilding event_minute_bars_v2 and re-deriving frozen artifacts - a Cooper decision, guarded by escalation row 32."
   }
 }

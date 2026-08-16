@@ -1,0 +1,101 @@
+{
+  "task": "T2e-i",
+  "phase": "11",
+  "date": "2026-08-16",
+  "authority": "prompts/phase_11_amendment_2.md A2-6 (D19)",
+  "nature": "Retrospective on committed Stage A output. No new computation over tick data, no pass spent.",
+  "arithmetic": {
+    "identity": "spread_bp = 10000 * spread_dollars / mid",
+    "rearranged": "mid = 10000 * spread_dollars / spread_bp = 100 * spread_cents / spread_bp",
+    "worked_example_rth_t0": "100 * 3.79 cents / 83.92 bp = $4.52",
+    "worked_example_rth_tm3": "100 * 3.64 cents / 165.01 bp = $2.21"
+  },
+  "per_segment": {
+    "premarket": {
+      "T-3": {
+        "n_events": 50,
+        "median_spread_bp": 1292.15,
+        "median_spread_cents": 32.97,
+        "implied_price_from_medians": 2.551,
+        "median_of_per_event_implied_price": 2.624
+      },
+      "T-1": {
+        "n_events": 50,
+        "median_spread_bp": 974.28,
+        "median_spread_cents": 36.54,
+        "implied_price_from_medians": 3.75,
+        "median_of_per_event_implied_price": 2.789
+      },
+      "T0": {
+        "n_events": 50,
+        "median_spread_bp": 760.3,
+        "median_spread_cents": 25.99,
+        "implied_price_from_medians": 3.419,
+        "median_of_per_event_implied_price": 2.8
+      },
+      "change_T-3_to_T0": {
+        "spread_bp_pct": -41.2,
+        "spread_cents_pct": -21.2,
+        "implied_price_pct": 6.7
+      }
+    },
+    "rth": {
+      "T-3": {
+        "n_events": 50,
+        "median_spread_bp": 165.01,
+        "median_spread_cents": 3.64,
+        "implied_price_from_medians": 2.206,
+        "median_of_per_event_implied_price": 2.505
+      },
+      "T-1": {
+        "n_events": 50,
+        "median_spread_bp": 127.62,
+        "median_spread_cents": 3.43,
+        "implied_price_from_medians": 2.689,
+        "median_of_per_event_implied_price": 2.82
+      },
+      "T0": {
+        "n_events": 50,
+        "median_spread_bp": 83.92,
+        "median_spread_cents": 3.79,
+        "implied_price_from_medians": 4.517,
+        "median_of_per_event_implied_price": 3.796
+      },
+      "change_T-3_to_T0": {
+        "spread_bp_pct": -49.1,
+        "spread_cents_pct": 4.1,
+        "implied_price_pct": 51.5
+      }
+    },
+    "post": {
+      "T-3": {
+        "n_events": 49,
+        "median_spread_bp": 591.83,
+        "median_spread_cents": 19.7,
+        "implied_price_from_medians": 3.329,
+        "median_of_per_event_implied_price": 2.523
+      },
+      "T-1": {
+        "n_events": 50,
+        "median_spread_bp": 503.78,
+        "median_spread_cents": 13.13,
+        "implied_price_from_medians": 2.606,
+        "median_of_per_event_implied_price": 2.647
+      },
+      "T0": {
+        "n_events": 50,
+        "median_spread_bp": 250.6,
+        "median_spread_cents": 7.23,
+        "implied_price_from_medians": 2.885,
+        "median_of_per_event_implied_price": 3.854
+      },
+      "change_T-3_to_T0": {
+        "spread_bp_pct": -57.7,
+        "spread_cents_pct": -63.3,
+        "implied_price_pct": 52.8
+      }
+    }
+  },
+  "two_estimators_note": "Two implied-price columns are reported. 'implied_price_from_medians' divides the median cents figure by the median bp figure - this is the arithmetic A2-6 shows, and it is a ratio of medians. 'median_of_per_event_implied_price' computes the price per event first and then takes the median, which is the estimator the 'ratio computed per event, then distributed' rule prefers. Both are given so the difference between them is visible rather than hidden.",
+  "what_the_numbers_show": "RTH: median quoted spread goes 165.01 -> 127.62 -> 83.92 bp across T-3 / T-1 / T=0 (-49.1%), while the same cells in cents go 3.64 -> 3.43 -> 3.79 (4.1%). Median per-event implied price goes $2.505 -> $2.82 -> $3.796 (51.5%). n = 50 events at every point. The basis-point figure falls; the cents figure does not; the implied price rises."
+}
