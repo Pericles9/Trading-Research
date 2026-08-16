@@ -1,0 +1,40 @@
+{
+  "task": "T0c focused re-audit",
+  "phase": "11",
+  "date": "2026-08-16",
+  "scope": "NARROW BY DESIGN. Cooper's option (ii) changes exactly one thing - where T4c's read happens. Only the rows that bear on that are re-checked; rows unaffected by it keep their verdicts from the A2 re-audit (98dac7c) and the A3 re-audit (25cfcc0). The scope of this re-audit is stated rather than implied so a later reader is not misled into thinking all 34 were re-run.",
+  "rows_rechecked": {
+    "12": {
+      "was": "FAIL - T4c would be a second full scan of filtered_trades",
+      "now": "PASS",
+      "why": "T4c no longer performs its own read. The single budgeted T5b scan emits the tie statistics alongside the cache, so the pass count stays at exactly 1."
+    },
+    "30": {
+      "was": "FAIL - only through its contradiction with row 12",
+      "now": "PASS",
+      "why": "The contradiction is removed. The threshold is set at 25 bp, the quantity is produced by the pass, and the row is evaluated after the pass and before T6."
+    },
+    "28": {
+      "was": "PASS",
+      "now": "PASS",
+      "why": "T4b cleared at 98dac7c; Stage B was already authorised. Untouched."
+    },
+    "24": {
+      "was": "PASS",
+      "now": "PASS",
+      "why": "The required-column guard is checked at T5c and was verified present on the dev-tier cache at T5a."
+    },
+    "14 / 14a": {
+      "was": "PASS",
+      "now": "PASS",
+      "why": "T5b creates a NEW table, which 14a permits. The write protocol above makes the no-mutation claim checkable via a catalogue diff."
+    },
+    "32": {
+      "was": "PASS",
+      "now": "PASS",
+      "why": "No frozen artifact is rebuilt and no src/ file is touched."
+    }
+  },
+  "verdict": "ROW 2 NO LONGER FIRES on the rows this resolution touches. The single outstanding failure from 25cfcc0 is cleared.",
+  "authorised_next": "T5b - the single budgeted pass, emitting event_quote_metrics_v1 and the T4c tie audit together. Then row 30, then T5c, then T6."
+}

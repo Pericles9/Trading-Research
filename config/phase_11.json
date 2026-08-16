@@ -356,7 +356,12 @@
       "n_bbo_changes",
       "unusable_time_share"
     ],
-    "stage_b_required_columns_guard": "escalation row 24, checked at T5c"
+    "stage_b_required_columns_guard": "escalation row 24, checked at T5c",
+    "t5b_writes": {
+      "new_table": "event_quote_metrics_v1",
+      "permission": "escalation row 14a - creating a NEW phase-scoped table in main.duckdb is permitted and precedented (Phase 8 created event_minute_bars_v2 the same way). The ban in row 14 is on MUTATING what already exists.",
+      "write_protocol": "T5b is the only task that opens main.duckdb read-write. It issues exactly one CREATE OR REPLACE TABLE for event_quote_metrics_v1 and touches nothing else. A before/after catalogue diff is recorded in t5_cache_integrity.json so the 'no pre-existing object changed' claim is evidenced rather than asserted."
+    }
   },
   "d16_reference_convention": {
     "status": "Cooper, T4 gate 2026-08-16",
@@ -426,6 +431,14 @@
       "Phase 9 t4_axis_grid entry_price and exit_price",
       "tick_close_t_minus_1_rth"
     ],
-    "measure_only": "T4c-iv: measure and bound only. sequence_number is the available tiebreak but applying it means rebuilding event_minute_bars_v2 and re-deriving frozen artifacts - a Cooper decision, guarded by escalation row 32."
+    "measure_only": "T4c-iv: measure and bound only. sequence_number is the available tiebreak but applying it means rebuilding event_minute_bars_v2 and re-deriving frozen artifacts - a Cooper decision, guarded by escalation row 32.",
+    "resolution": {
+      "decision": "OPTION (ii) - Cooper, 2026-08-16, resolving the row-2 firing recorded in results/phase_11/artifacts/t0c_satisfiability_audit_a3.json.",
+      "rule": "T4c is computed INSIDE the single budgeted T5b pass. One scan of filtered_trades produces both event_quote_metrics_v1 and the tie audit.",
+      "pass_budget_effect": "Unchanged at exactly ONE. Row 12 is satisfied because no second scan occurs; T4c stops being a separate read.",
+      "order_effect": "A3-6 steps 5 and 6 merge. Row 30 is evaluated AFTER the pass, on the tie distribution the pass emits, and before T6. This costs nothing in evidence: row 30's action is 'post the distribution, Cooper decides on any fix' - post-hoc either way - and no headline exists until T6/T7, so the tie bound is still known before any number that depends on it is reported.",
+      "row_28_effect": "T4b cleared at 98dac7c, so Stage B was already authorised. Row 28 is unaffected.",
+      "scope": "Phase 11 only. No frozen artifact is rebuilt and src/ is untouched (row 32)."
+    }
   }
 }

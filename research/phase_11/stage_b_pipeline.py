@@ -181,6 +181,42 @@ def build_cache(con, quotes_tbl: str, trades_tbl: str, where: str,
         FROM _t2 GROUP BY 1, 2, 3, 4, 5
     """)
 
+    # ---- T4c tie audit, emitted from THIS scan (Cooper option (ii), 2026-08-16) ----
+    # arg_min/arg_max(price, sip_timestamp) is deterministic only where the extremum
+    # timestamp is unique within the bar. Where it is shared AND the tied prints differ
+    # in price, first_price/last_price are arbitrary among the tied set - with no
+    # ordering error anywhere in the code. Only AFFECTED bars are kept; absence from
+    # this table means the bar is unaffected. Totals travel in the JSON.
+    con.execute("""
+        CREATE OR REPLACE TEMP TABLE _tie AS
+        SELECT ticker, event_date, segment, minute_index, n_trades,
+               n_at_min, n_at_max, px_range_at_min, px_range_at_max,
+               GREATEST(px_range_at_min, px_range_at_max)                AS px_range_max,
+               GREATEST(px_range_at_min, px_range_at_max) * 100.0        AS px_range_cents,
+               10000.0 * GREATEST(px_range_at_min, px_range_at_max)
+                   / NULLIF(bar_mid_px, 0)                              AS px_range_bp
+        FROM (
+          SELECT ticker, event_date, segment, minute_index,
+                 COUNT(*)                                               AS n_trades,
+                 COUNT(*) FILTER (sip_timestamp = min_ts)               AS n_at_min,
+                 COUNT(*) FILTER (sip_timestamp = max_ts)               AS n_at_max,
+                 MAX(price) FILTER (sip_timestamp = min_ts)
+                   - MIN(price) FILTER (sip_timestamp = min_ts)         AS px_range_at_min,
+                 MAX(price) FILTER (sip_timestamp = max_ts)
+                   - MIN(price) FILTER (sip_timestamp = max_ts)         AS px_range_at_max,
+                 (MAX(price) + MIN(price)) / 2.0                        AS bar_mid_px
+          FROM (
+            SELECT *,
+                   MIN(sip_timestamp) OVER b AS min_ts,
+                   MAX(sip_timestamp) OVER b AS max_ts
+            FROM _t2
+            WINDOW b AS (PARTITION BY ticker, event_date, segment, minute_index)
+          )
+          GROUP BY 1, 2, 3, 4
+        )
+        WHERE n_at_min >= 2 OR n_at_max >= 2
+    """)
+
     con.execute(f"""
         CREATE OR REPLACE TABLE {out_table} AS
         SELECT COALESCE(q.ticker, t.ticker)             AS ticker,
