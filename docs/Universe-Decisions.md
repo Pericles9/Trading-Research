@@ -608,3 +608,80 @@ caption states the coverage source explicitly.
 materialized table rather than a live `DISTINCT`. That is a `src/` change and belongs in a
 maintenance phase. Recorded in `docs/Open-Items-Register.md`, including the observation that prior
 phases' runtime figures may embed this cost invisibly.
+
+## D16 — Instrument reference convention for all quote-derived work
+
+**Date:** 2026-08-16 · **Gate:** Phase 11 T4, Amendment 2 A2-2
+
+For Phase 11 and all subsequent quote-derived work: the reference midpoint is the **contemporaneous
+consolidated best quote at δ = 0 on the `sip_timestamp` basis**, with `sequence_number` as the
+secondary ASOF key. **A single basis is used across all segments.**
+
+**Offset — δ = 0, not the +100 µs peak.** Phase 11 T3 measured the peak at 0.0003 above the δ=0
+at-or-inside share, while the between-segment peak instability was 7 sweep rungs. Selecting the peak
+would fit a signal two orders of magnitude below the measured noise. δ=0 is contemporaneous and
+requires no appeal to a fitted value.
+
+**Basis — `sip`, single, whole phase.** Differences are marginal in both directions (sip higher in
+RTH, 0.9808 vs 0.9779; participant higher in premarket). Segment is a headline reporting axis, so
+switching basis by segment would place a measurement artifact directly on the axis being compared
+across. `sip` wins in RTH, the cell escalation row 11 names. The `participant_timestamp` medians ship
+as a robustness table (T6e): not primary, not charted, no claim resting on it.
+
+**Tie handling.** `sequence_number` never inverts under the sip sort on any of the 50 dev-primary
+events and breaks all 58,465 tied-sip rows uniquely. Use it; never fall back to arbitrary order.
+
+## D17 — Quote-state exclusion rule
+
+**Date:** 2026-08-16 · **Gate:** Phase 11 T4, Amendment 2 A2-3
+
+A quote row is **excluded** if crossed (`bid > ask`), price null or ≤ 0, one side missing, or
+`bid_size`/`ask_size` null or zero. **Locked quotes (`bid = ask`) are carried** — a real transient
+state with a genuine zero spread, and dropping it biases measured spread upward.
+
+**No event is excluded on quote-quality grounds.** The dirtiest dev event reaches 12.8% unusable
+time; excluding events on a quality metric is post-hoc selection. Instead `unusable_time_share` is
+carried per event × segment as a covariate in `event_quote_metrics_v1`, and T7g reports the headline
+with and without the events above 1% unusable share.
+
+The choice is not load-bearing: Phase 11 T2 measured RTH `state_hard_unusable` at a median of exactly
+0.000000 (p95 0.0073), with `one_side_miss` and `null_price` occurring in zero of 150 T=0 cells.
+
+Relative to Phase 11 Stage A's census vocabulary, D17 = `state_hard_unusable` ∪ the zero-size
+predicates, **minus** locked. Stage A's `state_degraded` bundled locked together with zero-size;
+D17 separates them.
+
+## D18 — Stage B population and the decision cell
+
+**Date:** 2026-08-16 · **Gate:** Phase 11 T4, Amendment 2 A2-4
+
+Stage B computes all **15,369** detection-universe events and reports all three segments. **The
+viability decision rests on the RTH cell alone.** Premarket and post are reported and charted; no
+kill/clear decision is taken from them.
+
+`quotes_ingested = FALSE` is excluded per D15 and counted as its own row in the filter waterfall.
+There is **no staleness-based event exclusion**.
+
+The RTH-only decision cell was already justified on sign in Phase 9. Phase 11 Stage A adds a second,
+independent justification: premarket median quoted spread 760.3 bp with 62.3% of trades on quotes
+older than 1 s and 30.7% older than 60 s; post 250.6 bp with 75.3% / 44.3%.
+
+## D19 — Spreads and costs are reported in both units, and baselines are not proxies
+
+**Date:** 2026-08-16 · **Gate:** Phase 11 T4, Amendment 2 A2-6
+
+Every spread and cost quantity in this program is reported in **both basis points and cents**.
+Neither unit is reported alone. **No baseline-session (T−1, T−3) spread is used as a proxy for
+detection-time cost**, in either unit.
+
+Phase 11 T2e measured the RTH median time-weighted quoted spread at 165.0 → 127.6 → 83.9 bp across
+T−3 / T−1 / T=0 — a 49% fall — while the same cells in cents go 3.64 → 3.43 → 3.79, a 4% rise.
+Backing the implied price out of each bp/cents pair gives ≈ $2.21 at T−3 and ≈ $4.52 at T=0. **The
+basis-point compression is the denominator growing**; the absolute spread is flat to slightly wider
+on the event day.
+
+Two structural consequences: detection fires after a ~30% move, so the bp spread at detection is
+mechanically compressed relative to the baseline session; and a cost estimate built from a
+baseline-session spread therefore overstates detection-time cost in bp.
+
+Guarded by Phase 11 escalation row 27.

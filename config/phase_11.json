@@ -3,17 +3,54 @@
   "title": "Instrument Validation and the Cost Stack on the Detection Cell",
   "branch": "phase/11",
   "date": "2026-08-15",
-
   "spec": {
     "prompt": "prompts/phase_11.md",
     "amendment": "prompts/phase_11_amendment_1.md",
-    "governing": "Amendment 1 over v1 (Cooper, 2026-08-15). A 25-row v2 rewrite was circulated the same day, interrupted, and discarded. One v2 element is imported by explicit Cooper decision: T2a's hard/degraded state split, which overrides A1-2's single union. See the 'Cooper's decisions' block appended to the amendment.",
-    "escalation_rows": 24,
-    "escalation_row_ids": ["0", "1", "2", "3", "4a", "4b", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22"],
-    "escalation_sub_rows": ["12a", "14a", "18a", "19a"],
-    "sub_row_note": "12a, 14a, 18a and 19a are qualifiers riding on their parent rows, not independent rows. They are audited with their parents and do not count toward the 24."
+    "governing": "Amendment 1 over v1 (Cooper 2026-08-15), as further amended by Amendment 2 (Cooper 2026-08-16, T4 gate). A 25-row v2 rewrite was circulated 2026-08-15, interrupted, and discarded; one v2 element was imported by explicit decision - T2a's hard/degraded state split.",
+    "escalation_rows": 31,
+    "escalation_row_ids": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4a",
+      "4b",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "23",
+      "24",
+      "25",
+      "26",
+      "27",
+      "28",
+      "29"
+    ],
+    "escalation_sub_rows": [
+      "12a",
+      "14a",
+      "18a",
+      "19a"
+    ],
+    "sub_row_note": "12a, 14a, 18a and 19a are qualifiers riding on their parent rows, not independent rows. They are audited with their parents and do not count toward the 24.",
+    "amendment_2": "prompts/phase_11_amendment_2.md",
+    "row_count_note": "A2 states 'now 29 rows'. The explicit enumeration is 31: Amendment 1's 24 (0,1,2,3,4a,4b,5..22) plus A2-11's seven new rows (23..29). 29 is the highest row NUMBER, not the row count - 4a/4b split one number into two, and numbering starts at 0. Recorded at T0c as an editorial discrepancy, not a check failure; the audit covers all 31."
   },
-
   "baseline": {
     "tag": "phase-10b-closed",
     "tag_sha": "e840fc0110044c94ea74803d3375857c6e5ecf79",
@@ -22,9 +59,7 @@
     "trunk": "master",
     "trunk_note": "Escalation row 1 fired at the first T0a: the working tree was dirty (modified .gitignore, untracked .claude/skills/ and prompts/phase_9). Cooper's resolution 2026-08-15: delete prompts/phase_9 (verified a strict subset of the tracked prompts/phase_9.md, which carries a 29-line appendix the untracked copy lacks), commit the rest, and consolidate the repo. No branch named `main` has ever existed here; `docs/d5-redirect` was origin/HEAD and sat 71 commits behind. All 21 branches were labels on one linear chain, so master was left at the tip and 20 redundant labels deleted. All 20 deleted tips and all 18 tags verified still reachable from master. phase/11 was then cut from master."
   },
-
   "objective": "Establish whether filtered_quotes supports effective-spread measurement in this universe at all, and - only if it does - measure the round-trip cost of a detection-anchored long entry against the capture available above the detection price.",
-
   "d15": {
     "status": "APPROVED by Cooper 2026-08-15, in response to the T0b audit finding",
     "rule": "For Phase 11, quotes_ingested and trades_ingested are read from the Phase 4/5 materializations, NOT from momentum_events_canonical.",
@@ -41,7 +76,6 @@
     "open_item": "The canonical view should compute the coverage columns from a materialized table rather than a live DISTINCT. That is a src/ change and belongs in a maintenance phase. Recorded to docs/Open-Items-Register.md, including that prior phases' runtime figures may embed this cost invisibly.",
     "not_relaxed": "The standing rule itself is unchanged: every quote-derived statistic still filters on quotes_ingested = TRUE and still reports the n excluded. D15 changes only where that column is read from."
   },
-
   "cooper_thresholds": {
     "set_date": "2026-08-15",
     "note": "All [Cooper]-marked thresholds are set. The agent proposed none of these values and fills none of them.",
@@ -49,23 +83,35 @@
     "row_4a_scope": "sip_timestamp null-or-zero share on the T=0 RTH segment, per event. Hard stop if ANY single event exceeds.",
     "row_5_hard_unusable_time_share_median_max": 0.25,
     "row_5_scope": "state_hard_unusable clock-time share on the T=0 RTH segment, MEDIAN across events. Single trigger. v2's second clause ('>20% of events above 50%') was considered and NOT adopted.",
-    "row_10_quotes_ingested_false_share_max": 0.20,
+    "row_10_quotes_ingested_false_share_max": 0.2,
     "row_10_scope": "share of the 15,369-event detection universe with quotes_ingested = FALSE, read per D15.",
-    "row_11_kill_threshold": 0.50,
+    "row_11_kill_threshold": 0.5,
     "row_11_scope": "median round_trip_cost / realized_capture on the named cell: Phase 9 t4_axis_grid, grid=fixed_horizon, det_segment='rth', latency=5 min, hold=30 min, at 1x cost. Hard stop at or above.",
     "row_21_era_null_pattern_gap_pp_max": 20.0,
-    "row_21_scope": "percentage-point difference in the indicators/conditions null pattern between any two eras. NOT a stop - decides only whether it gets its own report section."
+    "row_21_scope": "percentage-point difference in the indicators/conditions null pattern between any two eras. NOT a stop - decides only whether it gets its own report section.",
+    "row_11_kill_threshold_confirmed": "2026-08-16, A2-5, unchanged",
+    "cost_multiple_reporting": "The 1x column remains the SOLE trigger for row 11. The 1.5x column is reported with EQUAL PROMINENCE in every table and on every chart. The expectation that 1.5x is the more honest read of realised cost was set at the T4 gate BEFORE Stage B ran; it is a statement about which column to read, not a prediction, and licenses no evaluative sentence - row 18 applies unchanged."
   },
-
   "state_definitions": {
     "note": "Cooper 2026-08-15 imported v2's three-way split, overriding Amendment 1 A1-2's single union. Rationale of record: a locked quote (bid = ask) has a well-defined midpoint equal to both sides, and a zero-size quote still yields a computable midpoint; neither is 'no midpoint exists'.",
     "state_hard_unusable": {
-      "predicates": ["bid_price IS NULL", "ask_price IS NULL", "bid_price <= 0", "ask_price <= 0", "one side missing", "bid_price > ask_price (crossed)"],
+      "predicates": [
+        "bid_price IS NULL",
+        "ask_price IS NULL",
+        "bid_price <= 0",
+        "ask_price <= 0",
+        "one side missing",
+        "bid_price > ask_price (crossed)"
+      ],
       "meaning": "No midpoint can be computed, or the midpoint is economically impossible.",
       "gates": "escalation row 5"
     },
     "state_degraded": {
-      "predicates": ["bid_price = ask_price (locked)", "bid_size = 0 OR bid_size IS NULL", "ask_size = 0 OR ask_size IS NULL"],
+      "predicates": [
+        "bid_price = ask_price (locked)",
+        "bid_size = 0 OR bid_size IS NULL",
+        "ask_size = 0 OR ask_size IS NULL"
+      ],
       "evaluated_on": "rows NOT already in state_hard_unusable",
       "meaning": "A midpoint exists and is computable; whether it is trustworthy is a T4 gate question, not a definitional one.",
       "gates": "nothing - reported only"
@@ -75,39 +121,68 @@
     "also_reported": "Per-state non-exclusive shares, explicitly labelled non-exclusive, plus the pairwise overlap matrix so double-counting is visible rather than inferred (A1-2, retained).",
     "width_is_not_a_defect": "A wide quote is NOT unusable. Width is the measurement. No width predicate enters any state definition."
   },
-
   "alignment_sweep": {
     "alignment_offsets_ns": [
-      -1000000000, -300000000, -100000000, -30000000, -10000000, -3000000, -1000000,
-      -300000, -100000, -30000, -10000, -3000, -1000,
+      -1000000000,
+      -300000000,
+      -100000000,
+      -30000000,
+      -10000000,
+      -3000000,
+      -1000000,
+      -300000,
+      -100000,
+      -30000,
+      -10000,
+      -3000,
+      -1000,
       0,
-      1000, 3000, 10000, 30000, 100000, 300000, 1000000,
-      3000000, 10000000, 30000000, 100000000, 300000000, 1000000000
+      1000,
+      3000,
+      10000,
+      30000,
+      100000,
+      300000,
+      1000000,
+      3000000,
+      10000000,
+      30000000,
+      100000000,
+      300000000,
+      1000000000
     ],
     "n_rungs": 27,
     "span": "-1 s to +1 s, half-decade log spacing from 1 microsecond, symmetric, including exactly 0",
     "unit": "nanoseconds",
     "authored_by": "agent - this is the SWEEP GRID that T3 scans, not an adopted offset. The adopted offset is Cooper's selection at the T4 gate (escalation row 17).",
     "one_rung": "one adjacent step on this grid, used by escalation row 7",
-    "bases": ["sip_timestamp", "participant_timestamp"],
+    "bases": [
+      "sip_timestamp",
+      "participant_timestamp"
+    ],
     "basis_note": "T3a-i runs the whole sweep on both bases, both tables. The basis Stage B uses is Cooper's choice at the T4 gate, not the agent's."
   },
-
   "runtime": {
     "runtime_ceiling_seconds": 21600,
-    "runtime_ceiling_desc": "6 hours. Ceiling on the T5a extrapolation of the single budgeted Stage B pass to the detection universe. Escalation row 9. Agent-authored (row 9 is 'as configured', not [Cooper]) - Cooper may overrule before T5.",
+    "runtime_ceiling_desc": "6 hours. Ceiling on the T5a extrapolation AND the hard bound on the T5b pass itself. Accepted by Cooper in A2-9. T5a's dev-tier extrapolation is the primary protection; the ceiling is the backstop.",
     "query_watchdog_seconds": 300,
     "query_watchdog_desc": "5 minutes. Escalation row 12a: any query running longer without returning is killed, posted, and not retried.",
-    "query_watchdog_scope": "Applies to every query in the phase EXCEPT the single budgeted T5b pass, which is governed by runtime_ceiling_seconds instead. Without this carve-out row 12a would kill T5b, the one long-running query the phase is authorised to run. Flagged at T0c; see the audit artifact.",
-    "watchdog_precedent": "The T0b audit query was killed at 120s before returning, which is what motivated row 12a."
+    "query_watchdog_scope": "Applies to EVERY query in the phase except the single budgeted T5b pass, which is instead bounded by runtime_ceiling_seconds. The ceiling IS that query's watchdog. No query anywhere in the phase is unbounded. Cooper bounded the agent-authored carve-out in A2-9; guarded by escalation row 26.",
+    "watchdog_precedent": "The T0b audit query was killed at 120s before returning, which is what motivated row 12a.",
+    "t5b_bound_seconds": 21600
   },
-
   "impact": {
-    "impact_windows_seconds": [1, 5, 30, 60, 300],
+    "impact_windows_seconds": [
+      1,
+      5,
+      30,
+      60
+    ],
     "impact_windows_desc": "Fixed clock windows for delta-mid per unit signed volume, T8b. Agent-authored.",
-    "no_fitting": "Distributions only. No regression, no fitted impact coefficient, no fitted impact exponent - escalation row 15 territory is not entered and T8b explicitly forbids fitting."
+    "no_fitting": "Distributions only. No regression, no fitted impact coefficient, no fitted impact exponent - escalation row 15 territory is not entered and T8b explicitly forbids fitting.",
+    "min_window_seconds": 1,
+    "why_no_sub_second": "Trade-weighted BBO age is an RTH median of 1,372.6 ms, so any sub-second window is dominated by exact-zero delta-mid and attenuates toward zero - the Phase 9 zero-atom pathology that fixed the median in 34 of 450 grid cells. Guarded by escalation row 23."
   },
-
   "dev_tier": {
     "quotes_table": "filtered_quotes_dev_v4",
     "trades_table": "filtered_trades_dev_v4",
@@ -120,29 +195,60 @@
     "frozen": "Built Phase 5a. Never rebuilt, never reseeded.",
     "source_parquet_layout": "data/filtered/{TICKER}_{DATE}_{MOMENTUM}/quotes.parquet - read-only, T1c only"
   },
-
   "reused_frozen": {
     "note": "Verified present in the T0b audit. Reused frozen, never re-derived.",
     "det_anchor": {
       "file": "results/phase_8/artifacts/a102_detection_anchors.parquet",
       "rows": 15763,
-      "latency_columns": ["det_price_lat0", "det_price_lat1", "det_price_lat5", "det_price_lat15", "det_price_lat30"],
-      "latency_grid_minutes": [0, 1, 5, 15, 30],
+      "latency_columns": [
+        "det_price_lat0",
+        "det_price_lat1",
+        "det_price_lat5",
+        "det_price_lat15",
+        "det_price_lat30"
+      ],
+      "latency_grid_minutes": [
+        0,
+        1,
+        5,
+        15,
+        30
+      ],
       "latency_0_rule": "Latency 0 is a physical impossibility and is labelled the upper bound on every chart and in every table (Phase 8 / D7 convention).",
       "perfect_foresight_high": "day_high_ext"
     },
     "participation": {
       "file": "results/phase_8/artifacts/t3_participation.parquet",
       "column": "pq_rth_open",
-      "values": [1, 2, 3, 4, 5, null],
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        null
+      ],
       "correction": "A1-7: this is NOT in a102_detection_anchors.parquet. The v1 prompt cited the wrong path."
     },
     "realized_capture": {
       "file": "results/phase_9/artifacts/t4_axis_grid.parquet",
       "rows": 461070,
       "grid": "fixed_horizon",
-      "latency": [0, 1, 5, 15, 30],
-      "hold": [5, 15, 30, 60, 120, null],
+      "latency": [
+        0,
+        1,
+        5,
+        15,
+        30
+      ],
+      "hold": [
+        5,
+        15,
+        30,
+        60,
+        120,
+        null
+      ],
       "hold_null_means": "t0_close"
     },
     "flags": {
@@ -152,16 +258,30 @@
       "rule": "Own rows, never pooled. Untrimmed stays primary."
     }
   },
-
   "universe": {
     "d1_n": 15763,
     "det_undefined_n": 394,
     "detection_universe_n": 15369,
-    "det_segment_counts": {"rth": 10660, "premarket": 4630, "post": 79},
-    "eras": ["era_2020_2021", "era_2022_2024"],
+    "det_segment_counts": {
+      "rth": 10660,
+      "premarket": 4630,
+      "post": 79
+    },
+    "eras": [
+      "era_2020_2021",
+      "era_2022_2024"
+    ],
     "era_x_segment_counts": {
-      "era_2020_2021": {"rth": 3776, "premarket": 1479, "post": 31},
-      "era_2022_2024": {"rth": 6884, "premarket": 3151, "post": 48}
+      "era_2020_2021": {
+        "rth": 3776,
+        "premarket": 1479,
+        "post": 31
+      },
+      "era_2022_2024": {
+        "rth": 6884,
+        "premarket": 3151,
+        "post": 48
+      }
     },
     "kill_threshold_cell": {
       "grid": "fixed_horizon",
@@ -174,7 +294,6 @@
     "min_cell_n": 100,
     "min_cell_n_rule": "Cells with n < 100 are hatched and carry no claim."
   },
-
   "pass_budget": {
     "stage_a": 0,
     "stage_b": 1,
@@ -184,19 +303,16 @@
     "passes_spent_to_date": 0,
     "passes_spent_note": "One T0b audit query would have caused a scan and was killed at 120s before returning."
   },
-
   "d4": {
     "status": "in force",
     "rule": "No spine numeric column on any computation path. All measured quantities come from filtered_trades / filtered_quotes and frozen tick-derived artifacts.",
     "momentum_pct_use": "join key only (identity, per D4/A9.1). It is not a bucketing variable and enters no computation in this phase.",
     "a12": "Cross-session ratios carry flag_cross_session_extreme and are reported with and without. Untrimmed primary."
   },
-
   "d5": {
     "long_only": true,
     "rule": "No short-side, fade, SSR or borrow logic is specified, implemented or measured. T7's round trip is a long entry plus the sale that closes it."
   },
-
   "environment": {
     "note": "Verified at T0c. The interpreter on PATH is NOT the one this phase uses.",
     "interpreter": ".venv/Scripts/python.exe",
@@ -218,13 +334,77 @@
     },
     "offline": "D14. No package index, no network fetch. Prior art is cited from the prompt, not fetched."
   },
-
   "outputs": {
     "artifacts_dir": "results/phase_11/artifacts",
     "charts_dir": "results/phase_11/charts",
     "audit_artifact": "results/phase_11/artifacts/t0c_satisfiability_audit.json",
     "audit_artifact_note": "T0c under the amended ordering. The v1 audit that fired row 2 is retained at t0b_satisfiability_audit.json as the historical record.",
     "stage_b_table": "event_quote_metrics_v1",
-    "stage_b_table_permission": "row 14a - creating a NEW phase-scoped table in main.duckdb is permitted and precedented (Phase 8 created event_minute_bars_v2 the same way). The ban is on mutating what already exists."
+    "stage_b_table_permission": "row 14a - creating a NEW phase-scoped table in main.duckdb is permitted and precedented (Phase 8 created event_minute_bars_v2 the same way). The ban is on mutating what already exists.",
+    "stage_b_table_required_columns": [
+      "bbo_age_at_trade_p50",
+      "bbo_age_at_trade_p95",
+      "trade_share_age_gt_1s",
+      "trade_share_age_gt_60s",
+      "n_bbo_changes",
+      "unusable_time_share"
+    ],
+    "stage_b_required_columns_guard": "escalation row 24, checked at T5c"
+  },
+  "d16_reference_convention": {
+    "status": "Cooper, T4 gate 2026-08-16",
+    "reference_midpoint": "contemporaneous consolidated best quote at delta = 0",
+    "basis": "sip_timestamp",
+    "secondary_asof_key": "sequence_number",
+    "single_basis_all_segments": true,
+    "why_delta_zero": "The +100us peak sits 0.0003 above delta=0 in at-or-inside share, while the measured between-segment peak instability is 7 rungs. Selecting the peak would fit a signal two orders of magnitude below the measured noise.",
+    "why_sip": "Differences are marginal in both directions (sip higher in RTH 0.9808 vs 0.9779; participant higher in premarket). Segment is a headline reporting axis, so switching basis by segment would put a measurement artifact on the axis being compared across. sip wins in RTH, the cell row 11 names.",
+    "t6e_robustness": "participant_timestamp medians reported as one table; not primary, not charted, no claim rests on it"
+  },
+  "d17_exclusion_rule": {
+    "status": "Cooper, T4 gate 2026-08-16",
+    "exclude_row_if": [
+      "bid_price > ask_price (crossed)",
+      "bid_price IS NULL",
+      "ask_price IS NULL",
+      "bid_price <= 0",
+      "ask_price <= 0",
+      "one side missing",
+      "bid_size IS NULL OR bid_size = 0",
+      "ask_size IS NULL OR ask_size = 0"
+    ],
+    "carry": [
+      "locked (bid_price = ask_price)"
+    ],
+    "why_locked_carried": "A real transient state with a genuine zero spread; dropping it biases measured spread upward.",
+    "sql_predicate": "(bid_price IS NULL OR ask_price IS NULL OR bid_price <= 0 OR ask_price <= 0 OR bid_price > ask_price OR bid_size IS NULL OR bid_size = 0 OR ask_size IS NULL OR ask_size = 0)",
+    "note_vs_stage_a": "This is Stage A's state_hard_unusable UNION the zero-size predicates, MINUS locked. Stage A's state_degraded bundled locked with zero-size; D17 separates them.",
+    "no_event_excluded_on_quality": true,
+    "covariate_instead": "unusable_time_share per event x segment carried into event_quote_metrics_v1 (T5b); T7g reports the headline with and without the 3 events above 1% unusable share"
+  },
+  "d18_stage_b_population": {
+    "status": "Cooper, T4 gate 2026-08-16",
+    "compute": "all 15,369 detection-universe events, all three segments",
+    "decision_cell": "RTH only",
+    "premarket_and_post": "reported and charted; no kill/clear decision taken from them",
+    "quotes_ingested_false": "excluded per D15, counted as its own row in the filter waterfall",
+    "no_staleness_based_event_exclusion": true
+  },
+  "d19_units": {
+    "status": "Cooper, T4 gate 2026-08-16",
+    "rule": "Every spread and cost quantity is reported in BOTH basis points and cents. Neither unit alone.",
+    "baseline_proxy_banned": "No T-1 or T-3 spread is used as a proxy for detection-time cost, in either unit.",
+    "why": "RTH median quoted spread falls 165.0 -> 83.9 bp across T-3 -> T=0 (-49%) while cents goes 3.64 -> 3.79 (+4%). Implied price ~$2.21 -> ~$4.52. The bp compression is the denominator growing.",
+    "guarded_by": "escalation row 27"
+  },
+  "standing_qualifier": {
+    "text": "Effective spread measures the cost of the average print, not the cost of a specific order. Depth, queue position and fill probability are not measured in this phase.",
+    "required_verbatim_in": [
+      "REPORT.md section T7",
+      "caption of chart 05",
+      "caption of chart 06",
+      "caption of chart 07"
+    ],
+    "guarded_by": "escalation row 29"
   }
 }
