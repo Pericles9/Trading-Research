@@ -1,0 +1,255 @@
+{
+  "task": "T3",
+  "phase": "11",
+  "date": "2026-08-15",
+  "design": {
+    "n_rungs": 27,
+    "span_ns": [
+      -1000000000,
+      1000000000
+    ],
+    "bases": [
+      "sip_timestamp",
+      "participant_timestamp"
+    ],
+    "sessions": [
+      0,
+      -3
+    ],
+    "join": "ASOF on (ticker, event_date, session_date) with explicit key - never storage order",
+    "wall_seconds": 154.7,
+    "max_single_query_seconds": 0.85,
+    "query_watchdog_seconds": 300,
+    "n_rows": 15444,
+    "passes_over_full_tables": 0
+  },
+  "curves": {
+    "sip_timestamp|T0|premarket": {
+      "n_events": 48,
+      "n_trades_at_delta0": 576236,
+      "share_at_delta_0": 0.9324970599764798,
+      "peak_offset_ns": -3000,
+      "peak_rung_index": 11,
+      "share_at_peak": 0.9333076725686426,
+      "share_at_minus_1s": 0.8417592051431911,
+      "share_at_plus_1s": 0.8664609053497943,
+      "min_share": 0.8417592051431911,
+      "peak_minus_min": 0.09154846742545142,
+      "peak_minus_delta0": 0.0008106125921627516,
+      "rungs_from_zero": -2
+    },
+    "sip_timestamp|T0|rth": {
+      "n_events": 50,
+      "n_trades_at_delta0": 3128251,
+      "share_at_delta_0": 0.9805210334665926,
+      "peak_offset_ns": 100000,
+      "peak_rung_index": 18,
+      "share_at_peak": 0.9807969952488084,
+      "share_at_minus_1s": 0.7905754651579602,
+      "share_at_plus_1s": 0.8925957230599174,
+      "min_share": 0.7905754651579602,
+      "peak_minus_min": 0.1902215300908482,
+      "peak_minus_delta0": 0.0002759617822157834,
+      "rungs_from_zero": 5
+    },
+    "sip_timestamp|T0|post": {
+      "n_events": 50,
+      "n_trades_at_delta0": 51660,
+      "share_at_delta_0": 0.9671141068479472,
+      "peak_offset_ns": 300000,
+      "peak_rung_index": 19,
+      "share_at_peak": 0.969519071310116,
+      "share_at_minus_1s": 0.9111062335381914,
+      "share_at_plus_1s": 0.9434197154471544,
+      "min_share": 0.9111062335381914,
+      "peak_minus_min": 0.05841283777192463,
+      "peak_minus_delta0": 0.002404964462168868,
+      "rungs_from_zero": 6
+    },
+    "sip_timestamp|T-3|premarket": {
+      "n_events": 38,
+      "n_trades_at_delta0": 13241,
+      "share_at_delta_0": 0.9621428571428572,
+      "peak_offset_ns": -3000,
+      "peak_rung_index": 11,
+      "share_at_peak": 0.9744255744255744,
+      "share_at_minus_1s": 0.9578900709219859,
+      "share_at_plus_1s": 0.9296296296296296,
+      "min_share": 0.9296296296296296,
+      "peak_minus_min": 0.04479594479594484,
+      "peak_minus_delta0": 0.012282717282717237,
+      "rungs_from_zero": -2
+    },
+    "sip_timestamp|T-3|rth": {
+      "n_events": 50,
+      "n_trades_at_delta0": 549172,
+      "share_at_delta_0": 0.9863699125517785,
+      "peak_offset_ns": -3000,
+      "peak_rung_index": 11,
+      "share_at_peak": 0.9869360473948048,
+      "share_at_minus_1s": 0.9209394185871115,
+      "share_at_plus_1s": 0.9562587904360056,
+      "min_share": 0.9209394185871115,
+      "peak_minus_min": 0.0659966288076933,
+      "peak_minus_delta0": 0.0005661348430262558,
+      "rungs_from_zero": -2
+    },
+    "sip_timestamp|T-3|post": {
+      "n_events": 50,
+      "n_trades_at_delta0": 44218,
+      "share_at_delta_0": 1.0,
+      "peak_offset_ns": -1000000000,
+      "peak_rung_index": 0,
+      "share_at_peak": 1.0,
+      "share_at_minus_1s": 1.0,
+      "share_at_plus_1s": 1.0,
+      "min_share": 1.0,
+      "peak_minus_min": 0.0,
+      "peak_minus_delta0": 0.0,
+      "rungs_from_zero": -13
+    },
+    "participant_timestamp|T0|premarket": {
+      "n_events": 48,
+      "n_trades_at_delta0": 576236,
+      "share_at_delta_0": 0.9476980089376195,
+      "peak_offset_ns": -300000,
+      "peak_rung_index": 7,
+      "share_at_peak": 0.9572727272727273,
+      "share_at_minus_1s": 0.8605191949940809,
+      "share_at_plus_1s": 0.8750111259457054,
+      "min_share": 0.8605191949940809,
+      "peak_minus_min": 0.09675353227864636,
+      "peak_minus_delta0": 0.009574718335107812,
+      "rungs_from_zero": -6
+    },
+    "participant_timestamp|T0|rth": {
+      "n_events": 50,
+      "n_trades_at_delta0": 3128251,
+      "share_at_delta_0": 0.9776478413824031,
+      "peak_offset_ns": 3000,
+      "peak_rung_index": 15,
+      "share_at_peak": 0.9779306868073784,
+      "share_at_minus_1s": 0.7848855106044168,
+      "share_at_plus_1s": 0.8916975546554684,
+      "min_share": 0.7848855106044168,
+      "peak_minus_min": 0.19304517620296158,
+      "peak_minus_delta0": 0.0002828454249752532,
+      "rungs_from_zero": 2
+    },
+    "participant_timestamp|T0|post": {
+      "n_events": 50,
+      "n_trades_at_delta0": 51660,
+      "share_at_delta_0": 0.9556333441875611,
+      "peak_offset_ns": 300000,
+      "peak_rung_index": 19,
+      "share_at_peak": 0.9721739130434783,
+      "share_at_minus_1s": 0.9064685314685315,
+      "share_at_plus_1s": 0.9430770033388982,
+      "min_share": 0.9064685314685315,
+      "peak_minus_min": 0.06570538157494688,
+      "peak_minus_delta0": 0.01654056885591726,
+      "rungs_from_zero": 6
+    },
+    "participant_timestamp|T-3|premarket": {
+      "n_events": 38,
+      "n_trades_at_delta0": 13241,
+      "share_at_delta_0": 0.9792861353770299,
+      "peak_offset_ns": -100000,
+      "peak_rung_index": 8,
+      "share_at_peak": 0.9803090486339856,
+      "share_at_minus_1s": 0.9579545454545455,
+      "share_at_plus_1s": 0.9511674118231495,
+      "min_share": 0.9511674118231495,
+      "peak_minus_min": 0.029141636810836147,
+      "peak_minus_delta0": 0.0010229132569556931,
+      "rungs_from_zero": -5
+    },
+    "participant_timestamp|T-3|rth": {
+      "n_events": 50,
+      "n_trades_at_delta0": 549172,
+      "share_at_delta_0": 0.981202588130299,
+      "peak_offset_ns": 300000,
+      "peak_rung_index": 19,
+      "share_at_peak": 0.9856583073526655,
+      "share_at_minus_1s": 0.9128777326510564,
+      "share_at_plus_1s": 0.9562587904360056,
+      "min_share": 0.9128777326510564,
+      "peak_minus_min": 0.07278057470160904,
+      "peak_minus_delta0": 0.004455719222366428,
+      "rungs_from_zero": 6
+    },
+    "participant_timestamp|T-3|post": {
+      "n_events": 50,
+      "n_trades_at_delta0": 44218,
+      "share_at_delta_0": 1.0,
+      "peak_offset_ns": -1000000000,
+      "peak_rung_index": 0,
+      "share_at_peak": 1.0,
+      "share_at_minus_1s": 1.0,
+      "share_at_plus_1s": 1.0,
+      "min_share": 1.0,
+      "peak_minus_min": 0.0,
+      "peak_minus_delta0": 0.0,
+      "rungs_from_zero": -13
+    }
+  },
+  "t3b_reading_rule_selection": {
+    "rule_source": "prompts/phase_11.md T3b, pre-registered before any measurement",
+    "row_selected": "Row 1 - \"Maximum at delta = 0 or immediately before it, decaying smoothly either side\" -> \"The two tables are aligned; the contemporaneous quote is the reference midpoint\"",
+    "basis_of_selection": [
+      "The curve is not flat: on the T=0 RTH cell the pooled median rises from 0.7906 at delta=-1s to a plateau near 0.98 and falls to 0.9363 at +100ms (peak minus min = 0.1902 on sip_timestamp, 0.1930 on participant_timestamp).",
+      "The maximum sits inside a plateau that contains delta=0. Share at delta=0 is within 0.0008 of the peak on every T=0 curve (sip RTH 0.9805 vs peak 0.9808; participant RTH 0.9776 vs 0.9779; sip premarket 0.9325 vs 0.9333; participant premarket 0.9477 vs 0.9573).",
+      "Reading-rule row 2 does not match: the peak is not at a MATERIALLY non-zero delta (differences of 3e-4 to 1e-2 in share) and its sign is not consistent - premarket peaks before zero, RTH after, on both bases.",
+      "Reading-rule row 3 (flat) does not match, so escalation row 6 does not fire and Stage B is not barred by T3."
+    ],
+    "agent_statement": "The curve matches reading-rule row 1 on both timestamp bases, on the T=0 and T-3 sessions, in premarket and RTH.",
+    "nothing_further": "No offset is adopted and no basis is selected here. Both remain Cooper decisions at the T4 gate (escalation row 19)."
+  },
+  "escalation_row_6": {
+    "condition": "T3 alignment curve matches the flat row of the reading rule",
+    "threshold": "any",
+    "observed": "not flat - peak minus min 0.1902 (sip) / 0.1930 (participant) on the T=0 RTH cell",
+    "verdict": "DOES NOT FIRE"
+  },
+  "escalation_row_7": {
+    "condition": "T3 peak offset differs between premarket and RTH by more than one sweep rung",
+    "threshold": "any",
+    "action": "NOT A STOP - report both, do not pool",
+    "observed": [
+      {
+        "basis": "sip_timestamp",
+        "day_offset": 0,
+        "premarket_peak_ns": -3000,
+        "rth_peak_ns": 100000,
+        "rungs_apart": 7
+      },
+      {
+        "basis": "sip_timestamp",
+        "day_offset": -3,
+        "premarket_peak_ns": -3000,
+        "rth_peak_ns": -3000,
+        "rungs_apart": 0
+      },
+      {
+        "basis": "participant_timestamp",
+        "day_offset": 0,
+        "premarket_peak_ns": -300000,
+        "rth_peak_ns": 3000,
+        "rungs_apart": 8
+      },
+      {
+        "basis": "participant_timestamp",
+        "day_offset": -3,
+        "premarket_peak_ns": -100000,
+        "rth_peak_ns": 300000,
+        "rungs_apart": 11
+      }
+    ],
+    "verdict": "FIRES as NOT-A-STOP on all four (basis, session) combinations - 7 rungs apart in every case.",
+    "note": "The peak rung is unstable because the plateau is flat: the share difference between the two peak rungs is at most 0.0096. Premarket and RTH are reported separately throughout and are never pooled."
+  },
+  "t3c_baseline": {
+    "purpose": "An offset present on the event day but absent on the baseline would be a load-related artifact, not a clock artifact.",
+    "observed": "The T-3 curves have the same shape - rise, plateau containing delta=0, decay - at a higher level (RTH pooled median 0.9864 at delta=0 vs 0.9805 at T=0). No event-day-only offset appears."
+  }
+}

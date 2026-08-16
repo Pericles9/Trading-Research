@@ -171,11 +171,8 @@
       },
       "tied_sip_rows": 58465,
       "tied_rows_where_sequence_number_also_tied": 0,
-      "escalation_row_6": {
-        "threshold": "> 1% of tied rows",
-        "observed": 0.0,
-        "verdict": "DOES NOT FIRE. sequence_number breaks every sip tie uniquely and never inverts on any of the 50 events, so it is a usable secondary ASOF sort key."
-      }
+      "escalation_row": "NONE. The governing spec (Amendment 1 over v1) has no escalation row for tie-breaking; the >1%-of-tied-rows row belonged to the DISCARDED v2 rewrite, where it was row 6. Under Amendment 1 row 6 is the T3 flat-curve row. This is a measurement, not a gate.",
+      "tie_break_result": "sequence_number breaks every sip tie uniquely (0 of 58,465 tied rows had a tied sequence_number) and never inverts on any of the 50 events, so it is a usable secondary ASOF sort key."
     },
     "t1b_iii_clock_latency_sip_minus_participant_ns": {
       "premarket": {

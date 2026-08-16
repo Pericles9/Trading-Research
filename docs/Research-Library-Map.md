@@ -902,3 +902,51 @@ distributions, bias consistency).
   for kernel intensity estimation; establishes held-out fitting as standard practice.
 - Gourieroux, Monfort & Renault (1993), *Indirect inference*, J. Appl. Econ. 8:S85-S118 — the route
   recorded and declined.
+
+## Phase 11 — Instrument Validation and the Cost Stack on the Detection Cell (2026-08-15)
+
+First phase to compute a spread as a finding. Stage A validates whether `filtered_quotes` supports
+effective-spread measurement at all; Stage B (gated at T4) measures the round-trip cost stack.
+
+**Prompts**
+- `prompts/phase_11.md` — the phase as originally specified (v1)
+- `prompts/phase_11_amendment_1.md` — A1, repairs the six rows the T0b audit failed, plus Cooper's
+  recorded decisions (governing spec, D15, the state-split import, and all five thresholds)
+
+**Configs** — `config/phase_11.json` (24 escalation rows, Cooper thresholds, 27-rung alignment grid,
+D15 sources, environment pin)
+
+**Code** (`research/phase_11/`)
+- `common.py` — READ_ONLY attach of `main.duckdb` into an in-memory database (structural row-14
+  compliance), pinned XNYS session bounds, dev-primary event list with source-folder resolution
+- `chart_common.py` — palette and layout helpers, reused unchanged from the approved Phase 9 set
+- `t1_quote_table_identity.py` — T1a exchange identity, T1b timestamp semantics
+- `t1c_source_columns.py` — T1c `indicators` / `conditions` census, dictionary search, storage order
+- `t1_summary.py`, `t2_summary.py` — artifact assembly
+- `t2_state_census.py` — T2 state census, run lengths, stale top-of-book, quote-to-trade, spread
+- `t3_alignment_sweep.py` — T3 sweep, 27 rungs x 2 clock bases x 2 sessions
+- `chart_01.py` … `chart_04.py`
+
+**Artifacts** — `results/phase_11/artifacts/`: `t0b_satisfiability_audit.json` (the v1 audit that
+fired row 2), `t0c_satisfiability_audit.json` (the passing re-audit), `t1_quote_table_identity.json`
+plus the T1a/T1b/T1c tables, `t2_state_census.json` plus the T2a-T2e tables,
+`t3_alignment_sweep.parquet`.
+
+**Charts** — `01_quote_table_identity` (4 panels), `02_nonsensical_state_census` (9 facets),
+`03_spread_event_vs_baseline`, `04_alignment_sweep`.
+
+**Decisions** — D15 (coverage-column source) in `docs/Universe-Decisions.md`.
+
+**Open items added** — condition-code dictionary absent (with the full observed census);
+`indicators` populated not null; withdrawn-quote filter recoverable but not buildable; source parquet
+stored reverse-chronological; SIP-vs-direct-feed staleness as a permanent limitation; the canonical
+view's live `DISTINCT` coverage columns.
+
+**Prior art carried in** (cited from the prompt, not fetched — D14)
+- Holden & Jacobsen (2014), *Liquidity Measurement Problems in Fast, Competitive Markets*, JF
+  69:1747-1785 — the nonsensical-state census in T2 is this paper's recommendation applied here.
+- Lee & Ready (1991) — quote rule with tick-rule fallback; the 5-second rule is **not** applied.
+- Ellis, Michaely & O'Hara (2000); Odders-White (2000) — classification accuracy and the
+  unclassifiable share, reported as its own row.
+- Bartlett & McCrary (2017) — SIP-versus-direct-feed staleness, a permanent limitation of this
+  archive.

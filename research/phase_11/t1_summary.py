@@ -112,12 +112,15 @@ def main() -> None:
                 "share_sip_ties": q(o.share_sip_ties),
                 "tied_sip_rows": int(o.n_tie_rows.sum()),
                 "tied_rows_where_sequence_number_also_tied": int(o.n_tie_seq_dup.sum()),
-                "escalation_row_6": {
-                    "threshold": "> 1% of tied rows", "observed": 0.0,
-                    "verdict": ("DOES NOT FIRE. sequence_number breaks every sip tie uniquely "
-                                "and never inverts on any of the 50 events, so it is a usable "
-                                "secondary ASOF sort key."),
-                },
+                "escalation_row": (
+                    "NONE. The governing spec (Amendment 1 over v1) has no escalation row for "
+                    "tie-breaking; the >1%-of-tied-rows row belonged to the DISCARDED v2 "
+                    "rewrite, where it was row 6. Under Amendment 1 row 6 is the T3 flat-curve "
+                    "row. This is a measurement, not a gate."),
+                "tie_break_result": (
+                    "sequence_number breaks every sip tie uniquely (0 of 58,465 tied rows had a "
+                    "tied sequence_number) and never inverts on any of the 50 events, so it is a "
+                    "usable secondary ASOF sort key."),
             },
             "t1b_iii_clock_latency_sip_minus_participant_ns": {s: {
                 "median_of_event_p50": float(lat[lat.segment == s].p50.median()),
@@ -220,8 +223,8 @@ def main() -> None:
     pathlib.Path(A + "t1_quote_table_identity.json").write_text(json.dumps(out, indent=2))
     print("wrote t1_quote_table_identity.json")
     print("row 4a  :", out["t1b_timestamps"]["row_4a"]["verdict"][:60])
-    print("row 6   :", out["t1b_timestamps"]["t1b_ii_ordering_agreement"]
-                          ["escalation_row_6"]["verdict"][:60])
+    print("ties    :", out["t1b_timestamps"]["t1b_ii_ordering_agreement"]
+                          ["tie_break_result"][:60])
     print("row 21  : era gap",
           out["t1c_source_columns"]["t1c_iv_era_and_day_offset"]["era_gap_pp"], "pp")
 

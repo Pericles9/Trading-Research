@@ -572,3 +572,39 @@ first-order program finding, not a sixth failure.**
 No package index, no R, no network fetch. Any prompt requiring an external package, a reference
 implementation, or a downloaded artifact must state an offline fallback at drafting time.
 `reuse-before-build` applies only to what is already installed.
+
+## D15 — Phase 11 reads the quote/trade coverage columns from the Phase 4/5 materializations
+
+**Date:** 2026-08-15 · **Gate:** Phase 11 Amendment 1, approved by Cooper before T1 ran
+
+`momentum_events_canonical` is a VIEW. Its `quotes_ingested` and `trades_ingested` columns are
+computed by `SELECT DISTINCT ticker, event_date, round(momentum_pct,2)` over `filtered_quotes`
+(3.8B rows) and `filtered_trades` (4.95B rows) — **at every reference to the view**.
+
+`CLAUDE.md` requires every quote-derived statistic to filter on `quotes_ingested = TRUE`. Phase 11
+Stage A budgets **zero** full passes and Stage B budgets **exactly one**. Those three constraints are
+mutually unsatisfiable: obeying the standing rule through the view costs a scan every time, and the
+conflict binds Stage A as well as Stage B because T2e is a quote-derived statistic. The cost is also
+query-shape dependent — Phase 5a's dev-tier ASOF join through the same view returned in 17.1 s while
+the Phase 11 T0b audit query was still running at 120 s and was killed — so it never appears in a
+runtime estimate until it fires.
+
+**Decision.** For Phase 11, `quotes_ingested` and `trades_ingested` are read from:
+
+- `results/phase_5/artifacts/quotes_bitmaps_all.parquet` (20,951 rows)
+- `results/phase_4/artifacts/_actual_quotes_sessions_cache.parquet` (115,904 rows)
+
+Phase 4's three-way disk ↔ DB ↔ spine reconciliation stands as the verification; no new scan is run
+to re-verify. Join-key compatibility was checked at T0c: **15,369 of 15,369 detection-universe events
+match on (ticker, event_date_canonical, round(momentum_pct,2)), 0 unmatched.**
+
+**Scope.** Phase 11 only. This is a phase scope decision, **not** a change to the canonical view.
+`src/` is not touched, per "nothing in `src/` changes mid-phase". The standing rule itself is
+unchanged — every quote-derived statistic still filters on `quotes_ingested = TRUE` and still reports
+the n excluded. D15 changes only **where that column is read from**. Every artifact and every chart
+caption states the coverage source explicitly.
+
+**Open item, not this phase.** The canonical view should compute the coverage columns from a
+materialized table rather than a live `DISTINCT`. That is a `src/` change and belongs in a
+maintenance phase. Recorded in `docs/Open-Items-Register.md`, including the observation that prior
+phases' runtime figures may embed this cost invisibly.
