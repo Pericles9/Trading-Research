@@ -63,10 +63,17 @@ def _labelled(table: str, cols: str, where: str) -> str:
 
 
 def build_cache(con, quotes_tbl: str, trades_tbl: str, where: str,
-                out_table: str = "event_quote_metrics_v1") -> float:
-    """Materialise the cache into `out_table`. Returns wall seconds.
+                out_table: str = "event_quote_metrics_v1", append: bool = False) -> float:
+    """Materialise (or append to) the cache. Returns wall seconds.
 
     Caller must have created `sb` (session bounds) and the `et()` macro.
+
+    `append` drives the event-partitioned batch loop the prompt requires ("one
+    pass, event-partitioned, never one monolithic join"). Batching is what keeps
+    the window functions and the ASOF join inside memory at full scale; a single
+    monolithic build over ~2.3B rows crashed the process. Each batch predicate is
+    a ticker/event filter, which DuckDB satisfies from row-group zone maps rather
+    than by re-reading the table, so the batches together cost one logical read.
     """
     t0 = time.perf_counter()
 
@@ -216,9 +223,13 @@ def build_cache(con, quotes_tbl: str, trades_tbl: str, where: str,
         )
         WHERE n_at_min >= 2 OR n_at_max >= 2
     """)
+    con.execute("CREATE TABLE IF NOT EXISTS _tie_all AS SELECT * FROM _tie WHERE FALSE")
+    con.execute("INSERT INTO _tie_all SELECT * FROM _tie")
 
+    verb = (f"INSERT INTO {out_table}" if append
+            else f"CREATE OR REPLACE TABLE {out_table} AS")
     con.execute(f"""
-        CREATE OR REPLACE TABLE {out_table} AS
+        {verb}
         SELECT COALESCE(q.ticker, t.ticker)             AS ticker,
                COALESCE(q.event_date, t.event_date)     AS event_date,
                COALESCE(q.offset_ns, t.offset_ns)       AS offset_ns,

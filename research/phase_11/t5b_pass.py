@@ -41,6 +41,13 @@ def main() -> None:
     t_all = time.perf_counter()
     con = duckdb.connect()                      # in-memory driver
     con.execute(f"ATTACH '{DB}' AS mom")        # READ-WRITE, T5b only
+    # The first attempt crashed with a fatal GIL error inside the DuckDB call while
+    # detached. The progress-bar thread is the known culprit in that setting, and
+    # preserve_insertion_order=false plus an explicit spill directory keeps the
+    # window functions inside memory at full scale.
+    con.execute("SET enable_progress_bar = false")
+    con.execute("SET preserve_insertion_order = false")
+    con.execute("SET temp_directory = 'E:/Trading Research/.duckdb_spill'")
     con.execute("CREATE MACRO et(ns) AS (make_timestamp_ns(ns) AT TIME ZONE 'UTC' "
                 "AT TIME ZONE 'America/New_York')")
     cat_before = catalogue(con)
@@ -75,17 +82,37 @@ def main() -> None:
     WHERE = ("(ticker, event_date, round(momentum_pct, 2)) IN "
              "(SELECT ticker, event_date, mp2 FROM detq)")
 
-    print("running the single budgeted pass...")
-    secs = build_cache(con, "mom.filtered_quotes", "mom.filtered_trades", WHERE,
-                       out_table="mom.event_quote_metrics_v1")
+    # ---- event-partitioned batch loop -------------------------------
+    # "One pass, event-partitioned (never one monolithic join)". Batches are
+    # ticker-ordered so each predicate lands on contiguous row groups; DuckDB
+    # prunes by zone map (measured: one ticker reads in ~7s cold, not a full-table
+    # time), so the batches together cost one logical read of the table.
+    evs = con.execute("SELECT ticker, event_date, mp2 FROM detq "
+                      "ORDER BY ticker, event_date").df()
+    BATCH = 400
+    batches = [evs.iloc[i:i + BATCH] for i in range(0, len(evs), BATCH)]
+    print(f"running the single budgeted pass in {len(batches)} event-partitioned "
+          f"batches of <= {BATCH}...")
+    secs = 0.0
+    for i, b in enumerate(batches):
+        con.register("b_df", b)
+        con.execute("CREATE OR REPLACE TEMP TABLE _batch AS SELECT * FROM b_df")
+        w = ("(ticker, event_date, round(momentum_pct, 2)) IN "
+             "(SELECT ticker, event_date, mp2 FROM _batch)")
+        secs += build_cache(con, "mom.filtered_quotes", "mom.filtered_trades", w,
+                            out_table="mom.event_quote_metrics_v1", append=(i > 0))
+        if i % 5 == 0 or i == len(batches) - 1:
+            print(f"  batch {i+1}/{len(batches)}  cumulative {secs:.0f}s", flush=True)
+        if secs > CEIL:
+            raise SystemExit(f"ESCALATION ROW 26: T5b {secs:.0f}s exceeded ceiling {CEIL}s")
     print(f"  pass wall {secs:.1f}s ({secs/3600:.2f} h), ceiling {CEIL}s")
     if secs > CEIL:
         raise SystemExit(f"ESCALATION ROW 26: T5b {secs:.0f}s exceeded ceiling {CEIL}s")
 
     # ---- T4c: tie audit, from the same scan ------------------------------
-    tot_bars = con.execute("SELECT COUNT(*) FROM (SELECT ticker, event_date, segment, "
-                           "minute_index FROM _t2 GROUP BY ALL)").fetchone()[0]
-    tie = con.execute("SELECT * FROM _tie").df()
+    tot_bars = con.execute("SELECT COUNT(*) FROM mom.event_quote_metrics_v1 "
+                           "WHERE n_trades > 0").fetchone()[0]
+    tie = con.execute("SELECT * FROM _tie_all").df()
     tie.to_parquet(ARTIFACTS / "t4c_tie_audit.parquet", index=False)
 
     # Bars that actually feed the headline: det+latency targets and Phase 9 entry/exit,
@@ -117,13 +144,13 @@ def main() -> None:
         SELECT COUNT(*) n_head_bars,
                COUNT(*) FILTER (t.ticker IS NOT NULL) n_affected,
                COUNT(*) FILTER (t.px_range_max > 0) n_price_differing
-        FROM head_bars h LEFT JOIN _tie t USING (ticker, event_date, minute_index)
+        FROM head_bars h LEFT JOIN _tie_all t USING (ticker, event_date, minute_index)
     """).df().iloc[0]
     q = con.execute("""
         SELECT QUANTILE_CONT(px_range_bp, 0.5) p50, QUANTILE_CONT(px_range_bp, 0.95) p95,
                MAX(px_range_bp) mx, QUANTILE_CONT(px_range_cents, 0.5) c50,
                QUANTILE_CONT(px_range_cents, 0.95) c95, MAX(px_range_cents) cmx, COUNT(*) n
-        FROM head_bars h JOIN _tie t USING (ticker, event_date, minute_index)
+        FROM head_bars h JOIN _tie_all t USING (ticker, event_date, minute_index)
         WHERE t.px_range_max > 0
     """).df().iloc[0]
 
