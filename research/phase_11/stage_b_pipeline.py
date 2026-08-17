@@ -48,14 +48,26 @@ _SEGEND = """CASE WHEN sb.is_session IS NOT TRUE       THEN NULL
                   ELSE NULL END"""
 
 
-def _labelled(table: str, cols: str, where: str) -> str:
+def _labelled(table: str, cols: str, where: str = 'TRUE') -> str:
     return f"""
       SELECT x.ticker, x.event_date, {_SEG} AS segment,
              CAST(date_diff('minute', x.et_ts::DATE + TIME '{ORIGIN}', x.et_ts)
                   AS INTEGER) AS minute_index,
              epoch_ns(({_SEGEND}) AT TIME ZONE 'America/New_York') AS seg_end_ns,
              {cols}
-      FROM (SELECT *, et(sip_timestamp) AS et_ts FROM {table} WHERE {where}) x
+      FROM (
+        -- RAW-NANOSECOND PREFILTER. The event's T=0 extended session is bounded in
+        -- UTC ns on _bounds, so rows from the other six sessions are discarded by an
+        -- integer comparison BEFORE any timestamp conversion. Without it, 71.8% of
+        -- the rows pushed through et() and the segment CASE were thrown away
+        -- afterwards (181.2M in, 51.2M kept, per 400-event batch).
+        SELECT x0.*, et(x0.sip_timestamp) AS et_ts
+        FROM {table} x0
+        JOIN _bounds b
+          ON x0.ticker = b.ticker AND x0.event_date = b.event_date
+         AND round(x0.momentum_pct, 2) = b.mp2
+         AND x0.sip_timestamp >= b.lo_ns AND x0.sip_timestamp < b.hi_ns
+      ) x
       LEFT JOIN sb ON sb.session_date = x.et_ts::DATE
       WHERE x.et_ts::DATE = x.event_date
         AND {_SEG} IN ('premarket', 'rth', 'post')
@@ -120,51 +132,82 @@ def build_cache(con, quotes_tbl: str, trades_tbl: str, where: str,
         FROM _q GROUP BY 1, 2, 3, 4, 5
     """)
 
+    # ---- usable quotes, with the current stale-run start, MATERIALISED ------
+    # This must be its own table, not an inline subquery on the ASOF's right side.
+    # DuckDB 1.4.4 fatally crashes the interpreter ("PyEval_SaveThread: the function
+    # must be called with the GIL held") when an ASOF join's right side is a windowed
+    # subquery. Splitting it out is the workaround; it is also markedly faster.
+    con.execute("""
+        CREATE OR REPLACE TEMP TABLE _qg AS
+        SELECT ticker, event_date, segment, sip_timestamp, mid, bid_price, ask_price
+        FROM _q WHERE NOT excluded
+    """)
+    # NO RUNNING-FRAME WINDOW ANYWHERE BELOW. A windowed aggregate over
+    # ROWS BETWEEN UNBOUNDED PRECEDING AND ... fatally crashes the DuckDB 1.4.4 /
+    # Python interpreter at full-universe scale ("PyEval_SaveThread: the function
+    # must be called with the GIL held"), with or without a FILTER clause, whether
+    # it sits inline in an ASOF join or in its own table. Dev-tier partitions were
+    # small enough to survive it, which is why T5a passed. The plain LEAD/LAG
+    # windows in _q are unaffected and stay.
+    #
+    # The stale-run start is recovered by ASOF-joining to the BBO CHANGE POINTS,
+    # which is exactly what the running MAX computed: the most recent change at or
+    # before the timestamp.
+    con.execute("""
+        CREATE OR REPLACE TEMP TABLE _chg AS
+        SELECT ticker, event_date, segment, sip_timestamp AS chg_ts
+        FROM _q WHERE NOT excluded AND is_bbo_change = 1
+    """)
+
+    # ---- trades, MATERIALISED before the join ------------------------------
+    # BOTH sides of an ASOF join must be materialised tables. An inline filtered
+    # scan of a billion-row base table on EITHER side fatally crashes the DuckDB
+    # 1.4.4 / Python interpreter ("PyEval_SaveThread: the function must be called
+    # with the GIL held"). This is why the identical code ran fine on the dev tier -
+    # dev reads small dedicated tables, so both sides were already small and local.
+    con.execute(f"""
+        CREATE OR REPLACE TEMP TABLE _tr AS
+        {_labelled(trades_tbl, 'x.price, x.size, x.sip_timestamp, x.sequence_number',
+                   where)}
+    """)
+
     # ---- trades signed against the contemporaneous non-excluded quote ------
     con.execute(f"""
         CREATE OR REPLACE TEMP TABLE _t AS
         SELECT t.ticker, t.event_date, t.segment, t.minute_index, t.sip_timestamp,
                t.price, t.size, q.mid, q.bid_price, q.ask_price,
-               q.run_start_ns,
+               c.chg_ts AS run_start_ns,
                CASE WHEN q.mid IS NULL              THEN NULL
                     WHEN t.price > q.mid            THEN  1
                     WHEN t.price < q.mid            THEN -1
                     ELSE NULL END                   AS sign_quote
-        FROM ({_labelled(trades_tbl, 'x.price, x.size, x.sip_timestamp, '
-                                     'x.sequence_number', where)}) t
-        ASOF LEFT JOIN (
-          SELECT ticker, event_date, segment, sip_timestamp, mid, bid_price, ask_price,
-                 -- MAX, not MIN: the start of the CURRENT stale run is the MOST RECENT
-                 -- BBO change at or before this quote. MIN would give the first change
-                 -- of the whole segment and report an age of hours.
-                 MAX(sip_timestamp) FILTER (is_bbo_change = 1)
-                   OVER (PARTITION BY ticker, event_date, segment
-                         ORDER BY sip_timestamp, sequence_number
-                         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS run_start_ns
-          FROM _q WHERE NOT excluded
-        ) q
+        FROM _tr t
+        ASOF LEFT JOIN _qg q
           ON t.ticker = q.ticker AND t.event_date = q.event_date
          AND t.segment = q.segment
          AND t.sip_timestamp >= q.sip_timestamp
+        ASOF LEFT JOIN _chg c
+          ON t.ticker = c.ticker AND t.event_date = c.event_date
+         AND t.segment = c.segment
+         AND t.sip_timestamp >= c.chg_ts
     """)
 
     # Tick-rule fallback for midpoint-equal prints; unclassifiable stays NULL.
+    # SIMPLE TICK TEST: compares against the IMMEDIATELY PRECEDING trade price via a
+    # plain LAG, not against the last price that differed. The full walk-back needs
+    # LAST_VALUE(... IGNORE NULLS) over a running frame, which is the construct that
+    # crashes at scale. The simplification is CONSERVATIVE - a midpoint-equal print
+    # whose predecessor shares its price becomes unclassifiable rather than being
+    # signed from further back - and the unclassifiable share is reported per cell
+    # and never dropped (T8a).
     con.execute("""
         CREATE OR REPLACE TEMP TABLE _t2 AS
-        SELECT *, COALESCE(sign_quote, CASE WHEN price > prev_diff THEN 1
-                                            WHEN price < prev_diff THEN -1 END) AS sgn
+        SELECT *, COALESCE(sign_quote, CASE WHEN price > prev_px THEN 1
+                                            WHEN price < prev_px THEN -1 END) AS sgn
         FROM (
-          SELECT *, LAST_VALUE(prev_px IGNORE NULLS) OVER (
-                      PARTITION BY ticker, event_date, segment
-                      ORDER BY sip_timestamp
-                      ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS prev_diff
-          FROM (
-            SELECT *, CASE WHEN price IS DISTINCT FROM
-                                LAG(price) OVER (PARTITION BY ticker, event_date, segment
-                                                 ORDER BY sip_timestamp)
-                           THEN price END AS prev_px
-            FROM _t
-          )
+          SELECT *, LAG(price) OVER (PARTITION BY ticker, event_date, segment
+                                     ORDER BY sip_timestamp) AS prev_px
+          FROM _t
         )
     """)
 

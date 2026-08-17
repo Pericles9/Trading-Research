@@ -40,12 +40,13 @@ def catalogue(con):
 def main() -> None:
     t_all = time.perf_counter()
     con = duckdb.connect()                      # in-memory driver
-    con.execute(f"ATTACH '{DB}' AS mom")        # READ-WRITE, T5b only
+    con.execute(f"ATTACH '{DB}' AS mom (READ_ONLY)")   # read-only for the scan
     # The first attempt crashed with a fatal GIL error inside the DuckDB call while
     # detached. The progress-bar thread is the known culprit in that setting, and
     # preserve_insertion_order=false plus an explicit spill directory keeps the
     # window functions inside memory at full scale.
     con.execute("SET enable_progress_bar = false")
+    con.execute("SET threads = 8")
     con.execute("SET preserve_insertion_order = false")
     con.execute("SET temp_directory = 'E:/Trading Research/.duckdb_spill'")
     con.execute("CREATE MACRO et(ns) AS (make_timestamp_ns(ns) AT TIME ZONE 'UTC' "
@@ -97,10 +98,23 @@ def main() -> None:
     for i, b in enumerate(batches):
         con.register("b_df", b)
         con.execute("CREATE OR REPLACE TEMP TABLE _batch AS SELECT * FROM b_df")
+        # T=0 extended-session bounds in UTC ns, for the raw prefilter.
+        con.execute("""
+            CREATE OR REPLACE TEMP TABLE _bounds AS
+            SELECT ticker, event_date, mp2,
+                   epoch_ns((event_date::DATE + TIME '04:00:00') AT TIME ZONE 'America/New_York') AS lo_ns,
+                   epoch_ns((event_date::DATE + TIME '20:00:00') AT TIME ZONE 'America/New_York') AS hi_ns
+            FROM _batch
+        """)
         w = ("(ticker, event_date, round(momentum_pct, 2)) IN "
              "(SELECT ticker, event_date, mp2 FROM _batch)")
+        # Accumulate IN MEMORY. Writing each batch straight into the attached
+        # on-disk database made every INSERT after the first ~4x slower than the
+        # work itself (314s for the CREATE, ~1371s per INSERT): each insert
+        # checkpoints against a 100GB+ file. The cache is only ~8M rows, so it is
+        # held in memory and written once, after the loop.
         secs += build_cache(con, "mom.filtered_quotes", "mom.filtered_trades", w,
-                            out_table="mom.event_quote_metrics_v1", append=(i > 0))
+                            out_table="_cache_mem", append=(i > 0))
         if i % 5 == 0 or i == len(batches) - 1:
             print(f"  batch {i+1}/{len(batches)}  cumulative {secs:.0f}s", flush=True)
         if secs > CEIL:
@@ -109,36 +123,52 @@ def main() -> None:
     if secs > CEIL:
         raise SystemExit(f"ESCALATION ROW 26: T5b {secs:.0f}s exceeded ceiling {CEIL}s")
 
+    # ---- single write of the cache to the database (row 14a) --------------
+    con.execute("DETACH mom")
+    con.execute(f"ATTACH '{DB}' AS mom")          # read-write, for this one write
+    t_w = time.perf_counter()
+    con.execute("CREATE OR REPLACE TABLE mom.event_quote_metrics_v1 AS "
+                "SELECT * FROM _cache_mem")
+    print(f"  cache written to main.duckdb in {time.perf_counter()-t_w:.1f}s", flush=True)
+
     # ---- T4c: tie audit, from the same scan ------------------------------
-    tot_bars = con.execute("SELECT COUNT(*) FROM mom.event_quote_metrics_v1 "
-                           "WHERE n_trades > 0").fetchone()[0]
+    # Persisted FIRST. _tie_all is a TEMP table: if anything below failed after a
+    # multi-hour pass, the tie evidence would die with the process while the cache
+    # (written per batch to the on-disk table) survived.
     tie = con.execute("SELECT * FROM _tie_all").df()
     tie.to_parquet(ARTIFACTS / "t4c_tie_audit.parquet", index=False)
+    print(f"  tie audit persisted: {len(tie):,} affected bars", flush=True)
+    con.execute("CREATE OR REPLACE TABLE mom.event_quote_tie_audit_v1 AS "
+                "SELECT * FROM _tie_all")
+    tot_bars = con.execute("SELECT COUNT(*) FROM mom.event_quote_metrics_v1 "
+                           "WHERE n_trades > 0").fetchone()[0]
 
     # Bars that actually feed the headline: det+latency targets and Phase 9 entry/exit,
     # ASOF-resolved to the bar the original code would have picked.
+    con.execute("""
+        CREATE OR REPLACE TEMP TABLE _cb AS
+        SELECT ticker, event_date, minute_index FROM mom.event_quote_metrics_v1
+        WHERE n_trades > 0
+    """)
     con.execute(f"""
-        CREATE TABLE head_bars AS
-        SELECT DISTINCT ticker, event_date, minute_index FROM (
-          SELECT d.ticker, d.event_date, b.minute_index
-          FROM (SELECT ticker, event_date, mp2, det_minute + l AS tgt
-                FROM detq, unnest({LAT}) AS u(l)) d
-          ASOF LEFT JOIN (SELECT ticker, event_date, minute_index FROM mom.event_quote_metrics_v1
-                          WHERE n_trades > 0) b
-            ON d.ticker = b.ticker AND d.event_date = b.event_date
-           AND d.tgt >= b.minute_index
-          UNION ALL
-          SELECT g.ticker, g.event_date_canonical, b.minute_index
-          FROM (SELECT ticker, event_date_canonical, entry_minute AS tgt FROM read_parquet('{GRID}')
-                WHERE grid = 'fixed_horizon' AND NOT entry_undefined
-                UNION ALL
-                SELECT ticker, event_date_canonical, exit_minute FROM read_parquet('{GRID}')
-                WHERE grid = 'fixed_horizon' AND NOT exit_undefined) g
-          ASOF LEFT JOIN (SELECT ticker, event_date, minute_index FROM mom.event_quote_metrics_v1
-                          WHERE n_trades > 0) b
-            ON g.ticker = b.ticker AND g.event_date_canonical = b.event_date
-           AND g.tgt >= b.minute_index
-        ) WHERE minute_index IS NOT NULL
+        CREATE OR REPLACE TEMP TABLE _tgt AS
+        SELECT ticker, event_date, det_minute + l AS tgt
+        FROM detq, unnest({LAT}) AS u(l)
+        UNION ALL
+        SELECT ticker, event_date_canonical, entry_minute FROM read_parquet('{GRID}')
+        WHERE grid = 'fixed_horizon' AND NOT entry_undefined
+        UNION ALL
+        SELECT ticker, event_date_canonical, exit_minute FROM read_parquet('{GRID}')
+        WHERE grid = 'fixed_horizon' AND NOT exit_undefined
+    """)
+    con.execute("""
+        CREATE OR REPLACE TABLE head_bars AS
+        SELECT DISTINCT t.ticker, t.event_date, b.minute_index
+        FROM _tgt t
+        ASOF LEFT JOIN _cb b
+          ON t.ticker = b.ticker AND t.event_date = b.event_date
+         AND t.tgt >= b.minute_index
+        WHERE b.minute_index IS NOT NULL
     """)
     hb = con.execute("""
         SELECT COUNT(*) n_head_bars,

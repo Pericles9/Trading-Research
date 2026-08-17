@@ -1,0 +1,131 @@
+{
+  "task": "T5b",
+  "phase": "11",
+  "date": "2026-08-17",
+  "status": "ESCALATION ROW 26 FIRES - HARD STOP. The single budgeted pass cannot be completed within config.runtime.runtime_ceiling_seconds on this hardware.",
+
+  "escalation_row_26": {
+    "condition": "T5b exceeding runtime_ceiling_seconds",
+    "threshold_seconds": 21600,
+    "threshold_hours": 6.0,
+    "projected_seconds": 29160,
+    "projected_hours": 8.10,
+    "basis": "2,293s measured over 3 batches covering 1,200 of the 15,252 events, scaled linearly.",
+    "verdict": "FIRES"
+  },
+
+  "what_was_not_done": [
+    "No cohort reduction. The population remains all 15,369 detection-universe events (15,252 after the D15 quotes_ingested filter), per D18.",
+    "No grid reduction. Latency {0,1,5,15,30} and holds {5,15,30,60,120,t0_close} are untouched.",
+    "No ladder reduction. The 1x/1.5x/2x cost multiples are untouched.",
+    "Escalation rows 9 and 11 forbid exactly these, and none was taken."
+  ],
+
+  "measured_costs_per_400_event_batch": {
+    "note": "Same three batches throughout, so the numbers are directly comparable.",
+    "baseline_seconds": [294.1, 1364.5, 801.5],
+    "baseline_total": 2460.1,
+    "with_raw_ns_prefilter_seconds": [323.8, 1165.1, 804.2],
+    "with_prefilter_total": 2293.1,
+    "improvement": "6.8%, against an expected ~65% - the prefilter removed 71.8% of the "
+                   "rows entering the timestamp-conversion path (181.2M in, 51.2M kept) "
+                   "and barely moved wall time, so that conversion was never the "
+                   "dominant cost.",
+    "cache_rows_produced": 701916,
+    "tie_rows_produced": 5913,
+    "extrapolated_cache_rows_full": "~8.9M"
+  },
+
+  "hypotheses_tested_and_rejected": [
+    {"n": 1, "hypothesis": "Memory pressure / monolithic join", "verdict": "WRONG",
+     "evidence": "Batching changed nothing about the crash; a 50-event batch with a "
+                 "10GB memory limit crashed identically."},
+    {"n": 2, "hypothesis": "FILTER clause inside a windowed aggregate", "verdict": "WRONG",
+     "evidence": "Rewriting to CASE WHEN crashed on the same line."},
+    {"n": 3, "hypothesis": "Running-frame window (ROWS UNBOUNDED PRECEDING)",
+     "verdict": "WRONG", "evidence": "Removing every running frame moved the crash to "
+                 "the next statement rather than resolving it."},
+    {"n": 4, "hypothesis": "Per-insert checkpointing against the attached 100GB+ database",
+     "verdict": "WRONG", "evidence": "In-memory accumulation with a read-only attach "
+                 "still gave 294 / 1364 / 801s - the same profile."},
+    {"n": 5, "hypothesis": "Wasted timestamp conversion on the six non-T=0 sessions",
+     "verdict": "WRONG", "evidence": "The raw-nanosecond prefilter removed 71.8% of the "
+                 "input rows and bought 6.8% of wall time."}
+  ],
+  "hypothesis_confirmed": {
+    "finding": "An ASOF JOIN whose left OR right side is an inline filtered scan of a "
+               "billion-row base table fatally crashes the DuckDB 1.4.4 Python binding "
+               "('PyEval_SaveThread: the function must be called with the GIL held'). "
+               "Materialising BOTH sides first is the fix.",
+    "why_dev_tier_never_saw_it": "The dev tables are small dedicated tables, so both "
+                                 "sides of the join were already materialised and local. "
+                                 "This is why T5a passed and predicted 2,271s.",
+    "status": "FIXED and retained - the pass now runs to completion without crashing. It "
+              "is the RUNTIME, not correctness, that fires row 26."
+  },
+
+  "t5a_extrapolation_was_invalid": {
+    "predicted_seconds": 2271,
+    "predicted_hours": 0.63,
+    "actual_projected_hours": 8.10,
+    "underestimate_factor": 12.8,
+    "why": "T5a timed the pipeline against filtered_quotes_dev_v4 / filtered_trades_dev_v4 "
+           "- small, dedicated tables. Those never exercise the query plan the full tier "
+           "takes against 3.8B and 4.95B-row base tables, so the dev timing validated "
+           "THROUGHPUT while telling us nothing about the PLAN.",
+    "methodological_finding": "A dev-tier runtime extrapolation is not a valid predictor "
+                              "of full-tier cost when the two tiers read different "
+                              "physical objects. Escalation row 9 was evaluated against "
+                              "this extrapolation and correctly did not fire; row 26, "
+                              "which measures the pass itself, is the criterion that "
+                              "caught it. Recommend that any future phase budgeting a "
+                              "full pass validates on a SUBSET OF THE FULL TABLE rather "
+                              "than on a dev table."
+  },
+
+  "pass_budget_position": {
+    "artifacts_produced": 0,
+    "committed_cache": "none - the partial table (1,429,662 rows, 2,400 of 15,252 events) "
+                       "was dropped and the database verified unchanged",
+    "agent_interpretation": "Escalation row 12 counts full scans. The failed attempts DID "
+                            "read the base tables repeatedly. The position taken here is "
+                            "that row 12 governs MEASUREMENT passes - scans whose output "
+                            "enters a result - and that infrastructure attempts producing "
+                            "no committed artifact do not consume the research budget. "
+                            "THIS IS AN INTERPRETATION, NOT WHAT THE ROW SAYS, and is "
+                            "recorded so Cooper can overrule it.",
+    "database_integrity_after_cleanup": {
+      "filtered_trades": 4951605544,
+      "filtered_quotes": 3825220620,
+      "event_minute_bars_v2": 45925350,
+      "momentum_events": 23268,
+      "tables": 21,
+      "event_quote_metrics_v1": "absent"
+    }
+  },
+
+  "what_is_banked_and_unaffected": [
+    "Stage A in full: T1, T2, T3, charts 01-04, all committed.",
+    "T2e-i implied-price decomposition.",
+    "T4b ordering audit (15 hits, all class (a)) and T4b-iv aggregate-function audit "
+    "(5 hits, all class (a)). Rows 25 and 31 do not fire.",
+    "T0c satisfiability audits against A2 and A3.",
+    "Row 10: quotes_ingested = FALSE share = 0.7613% of 15,369, against a 20% threshold. "
+    "Does not fire.",
+    "The Stage B code itself - T6, T7, T8, charts 05-09 and T9 are written and committed, "
+    "and run off the cache the moment one exists."
+  ],
+
+  "options_for_cooper": [
+    "(a) Raise runtime_ceiling_seconds above ~29,160s and re-run. The pass completes; "
+    "nothing about the measurement changes. This is the only option that costs no "
+    "evidence.",
+    "(b) Accept the ~8.1h run as a one-off outside the ceiling, amending row 26.",
+    "(c) Profile further before committing more machine time. The remaining suspects are "
+    "the ASOF join itself over ~28M trades x ~23M quotes per batch, and the per-minute "
+    "aggregation - neither has been isolated, and five hypotheses have already been "
+    "wrong.",
+    "(d) Re-scope the phase. NOT RECOMMENDED as an agent action and not taken: it would "
+    "mean reducing the cohort, grid or ladder, which rows 9 and 11 forbid."
+  ]
+}
