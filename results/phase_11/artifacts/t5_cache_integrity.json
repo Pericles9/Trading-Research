@@ -1,0 +1,109 @@
+{
+  "task": "T5b + T4c",
+  "phase": "11",
+  "date": "2026-08-16",
+  "resolution": "Cooper option (ii) - one scan, both outputs.",
+  "pass": {
+    "wall_hours": 0.007,
+    "ceiling_seconds": 21600,
+    "t5a_predicted_seconds": 2271,
+    "standing_ceiling_seconds": 21600,
+    "oneoff_bound_seconds": 43200,
+    "escalation_row_26": "FIRED at 8.10h projected against the 6.00h standing ceiling; Cooper accepted a ONE-OFF exception 2026-08-17 and the pass ran under a 12h bound. The standing ceiling is unchanged.",
+    "passes_spent": 1,
+    "wall_seconds_logged": 24.7,
+    "wall_seconds_logged_note": "MEANINGLESS AS A PASS TIME. `secs` accumulates only the batches a single invocation newly computes, and the chunked wrapper's final invocation computed one batch. Corrected figures below.",
+    "true_elapsed_seconds_first_to_last_part": 35949.2,
+    "true_elapsed_hours": 9.99,
+    "elapsed_note": "Wall span from the first to the last checkpoint part, across all invocations, INCLUDING the leaked-process batches 1-16 that ran at up to 2322 s/batch before the auto-restart fix. It is an upper bound on the compute actually required: in the fast regime batches ran 295-511 s, so a clean run is roughly 39 x ~400 s ~ 4.3 h.",
+    "leak_finding": "Per-batch cost rose monotonically WITHIN a single DuckDB process (1241 -> 1591 -> 2322 s/batch) while RSS reached 17.6 GB and spill grew 2.6 -> 7.4 GB. Restarting the process restored batch 16 to 295 s - an ~8x penalty from state DuckDB does not reclaim across batches. The fix is to restart every 2 batches; checkpointing makes that free."
+  },
+  "filter_waterfall": {
+    "detection_universe": 15369,
+    "quotes_ingested_true": 15252,
+    "quotes_ingested_false_excluded": 117,
+    "quotes_ingested_false_share": 0.007613,
+    "row_10_threshold": 0.2,
+    "row_10_verdict": "DOES NOT FIRE",
+    "coverage_source": "results/phase_4/artifacts/_actual_quotes_sessions_cache.parquet (D15) - NOT momentum_events_canonical"
+  },
+  "t5c_integrity": {
+    "cache_rows": 9017475,
+    "distinct_events": 15252,
+    "duplicate_keys": 0,
+    "minute_index_min": 0,
+    "minute_index_max": 959,
+    "required_columns_missing": [],
+    "escalation_row_24": "DOES NOT FIRE",
+    "catalogue_objects_added": [
+      "_batch",
+      "_bounds",
+      "_cache_batch",
+      "_cache_mem",
+      "_cb",
+      "_chg",
+      "_q",
+      "_qg",
+      "_qm",
+      "_t",
+      "_t2",
+      "_tgt",
+      "_tie",
+      "_tie_all",
+      "_tm",
+      "_tr",
+      "b_df",
+      "det",
+      "detq",
+      "event_quote_metrics_v1",
+      "event_quote_tie_audit_v1",
+      "head_bars",
+      "sb",
+      "sb_df"
+    ],
+    "catalogue_objects_removed": [],
+    "catalogue_note": "The catalogue diff recorded above was taken over information_schema.tables on the SESSION, so it lists in-memory temp tables (_q, _tr, _batch, ...) alongside the real writes. VERIFIED SEPARATELY against main.duckdb: 23 tables, exactly two added - event_quote_metrics_v1 and event_quote_tie_audit_v1 - and nothing removed or mutated. filtered_trades 4,951,605,544, filtered_quotes 3,825,220,620, event_minute_bars_v2 45,925,350, momentum_events 23,268, all unchanged.",
+    "main_duckdb_verified": {
+      "tables": 23,
+      "added": [
+        "event_quote_metrics_v1",
+        "event_quote_tie_audit_v1"
+      ],
+      "removed": [],
+      "filtered_trades": 4951605544,
+      "filtered_quotes": 3825220620,
+      "event_minute_bars_v2": 45925350,
+      "momentum_events": 23268
+    }
+  },
+  "t4c_tie_audit": {
+    "t0_minute_bars_with_trades": 8392215,
+    "affected_bars": 54827,
+    "affected_share": 0.006533,
+    "price_differing_bars": 18971,
+    "price_differing_share_of_affected": 0.346016,
+    "headline_feeding_bars": {
+      "n_bars": 317225,
+      "n_affected": 1911,
+      "n_price_differing": 643,
+      "affected_share": 0.006024
+    },
+    "bounded_price_error_on_headline_feeding_bars": {
+      "n": 643,
+      "p50_bp": 14.332,
+      "p95_bp": 123.047,
+      "max_bp": 676.409,
+      "p50_cents": 1.0,
+      "p95_cents": 18.9,
+      "max_cents": 162.0
+    },
+    "escalation_row_30": {
+      "threshold_bp": 25.0,
+      "observed_p95_bp": 123.047,
+      "verdict": "FIRES - HARD STOP"
+    },
+    "not_exposed": "det_minute = MIN(minute_index) FILTER (high >= threshold) with high = MAX(price). Tie-immune by construction, so the detection MINUTE is sound regardless of this result.",
+    "measure_only": "No fix applied. The sequence_number tiebreak would require rebuilding event_minute_bars_v2 and re-deriving frozen artifacts - a Cooper decision (row 32)."
+  },
+  "total_wall_seconds": 72.4
+}

@@ -1,0 +1,48 @@
+{
+  "t0_minute_bars_with_trades": 8392215,
+  "affected_bars": 54827,
+  "affected_share": 0.006533,
+  "price_differing_bars": 18971,
+  "price_differing_share_of_affected": 0.346016,
+  "headline_feeding_bars": {
+    "n_bars": 317225,
+    "n_affected": 1911,
+    "n_price_differing": 643,
+    "affected_share": 0.006024
+  },
+  "bounded_price_error_on_headline_feeding_bars": {
+    "n": 643,
+    "p50_bp": 14.332,
+    "p95_bp": 123.047,
+    "max_bp": 676.409,
+    "p50_cents": 1.0,
+    "p95_cents": 18.9,
+    "max_cents": 162.0
+  },
+  "escalation_row_30": {
+    "threshold_bp": 25.0,
+    "observed_p95_bp": 123.047,
+    "verdict": "FIRES - HARD STOP"
+  },
+  "not_exposed": "det_minute = MIN(minute_index) FILTER (high >= threshold) with high = MAX(price). Tie-immune by construction, so the detection MINUTE is sound regardless of this result.",
+  "measure_only": "No fix applied. The sequence_number tiebreak would require rebuilding event_minute_bars_v2 and re-deriving frozen artifacts - a Cooper decision (row 32).",
+  "escalation_row_30_detail": {
+    "threshold_bp": 25.0,
+    "observed_p95_bp": 123.047,
+    "verdict": "FIRES - HARD STOP",
+    "action_per_A3-4": "Post the distribution; Cooper decides on any fix.",
+    "scope": "p95 bounded price error across affected bars feeding det_price_lat* or Phase 9 entry/exit.",
+    "both_units_D19": {
+      "p50_bp": 14.332,
+      "p95_bp": 123.047,
+      "max_bp": 676.409,
+      "p50_cents": 1.0,
+      "p95_cents": 18.9,
+      "max_cents": 162.0
+    },
+    "n_bars_in_the_statistic": 643,
+    "exposure": "643 of 317,225 headline-feeding bars (0.203%) have a tied extremum timestamp AND price-differing tied prints.",
+    "not_exposed": "det_minute = MIN(minute_index) FILTER (high >= threshold) with high = MAX(price). MAX and MIN over a set are tie-immune, so the DETECTION MINUTE is unaffected regardless of this result.",
+    "measure_only": "No fix applied (T4c-iv). The sequence_number tiebreak would require rebuilding event_minute_bars_v2 and re-deriving four frozen artifacts - a Cooper decision, guarded by escalation row 32."
+  }
+}
