@@ -38,3 +38,4 @@ results/phase_*/artifacts/*.parquet
 # (ticker, session) pair, thousands of files). Regenerable via the heal
 # manifest + fetch script; the repair ledger is the record, not this.
 results/phase_1c/staging/.duckdb_spill/
+results/phase_11/artifacts/_t5b_parts/

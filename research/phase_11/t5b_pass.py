@@ -97,8 +97,20 @@ def main() -> None:
     batches = [evs.iloc[i:i + BATCH] for i in range(0, len(evs), BATCH)]
     print(f"running the single budgeted pass in {len(batches)} event-partitioned "
           f"batches of <= {BATCH}...")
+    # PER-BATCH CHECKPOINT + RESUME. The cache was accumulating in memory and was
+    # written only after the loop, so a termination near the end would have destroyed
+    # every completed batch. Each batch is now persisted to its own parquet part and
+    # completed parts are skipped on restart, so no batch is ever computed twice and
+    # an interrupted run resumes instead of restarting.
+    PARTS = ARTIFACTS / "_t5b_parts"
+    PARTS.mkdir(parents=True, exist_ok=True)
     secs = 0.0
     for i, b in enumerate(batches):
+        cpart, tpart = PARTS / f"cache_{i:03d}.parquet", PARTS / f"tie_{i:03d}.parquet"
+        if cpart.exists() and tpart.exists():
+            if i % 5 == 0:
+                print(f"  batch {i+1}/{len(batches)}  resumed (already on disk)", flush=True)
+            continue
         con.register("b_df", b)
         con.execute("CREATE OR REPLACE TEMP TABLE _batch AS SELECT * FROM b_df")
         # T=0 extended-session bounds in UTC ns, for the raw prefilter.
@@ -117,7 +129,9 @@ def main() -> None:
         # checkpoints against a 100GB+ file. The cache is only ~8M rows, so it is
         # held in memory and written once, after the loop.
         secs += build_cache(con, "mom.filtered_quotes", "mom.filtered_trades", w,
-                            out_table="_cache_mem", append=(i > 0))
+                            out_table="_cache_batch", append=False)
+        con.execute(f"COPY _cache_batch TO '{cpart.as_posix()}' (FORMAT PARQUET)")
+        con.execute(f"COPY _tie TO '{tpart.as_posix()}' (FORMAT PARQUET)")
         if i % 5 == 0 or i == len(batches) - 1:
             print(f"  batch {i+1}/{len(batches)}  cumulative {secs:.0f}s", flush=True)
         if secs > BOUND:
@@ -125,6 +139,14 @@ def main() -> None:
     print(f"  pass wall {secs:.1f}s ({secs/3600:.2f} h), ceiling {CEIL}s")
     if secs > BOUND:
         raise SystemExit(f"ESCALATION ROW 26: T5b {secs:.0f}s exceeded the one-off bound {BOUND}s")
+
+    # ---- assemble from the checkpointed parts -----------------------------
+    con.execute(f"CREATE OR REPLACE TEMP TABLE _cache_mem AS "
+                f"SELECT * FROM read_parquet('{(PARTS / 'cache_*.parquet').as_posix()}')")
+    con.execute(f"CREATE OR REPLACE TEMP TABLE _tie_all AS "
+                f"SELECT * FROM read_parquet('{(PARTS / 'tie_*.parquet').as_posix()}')")
+    print(f"  assembled {con.execute('SELECT COUNT(*) FROM _cache_mem').fetchone()[0]:,} "
+          f"cache rows from {len(list(PARTS.glob('cache_*.parquet')))} parts", flush=True)
 
     # ---- single write of the cache to the database (row 14a) --------------
     con.execute("DETACH mom")
