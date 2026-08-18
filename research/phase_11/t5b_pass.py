@@ -19,6 +19,8 @@ import time
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
+import os
+
 import duckdb
 import pandas as pd
 from common import ARTIFACTS, CONFIG, DB, session_bounds
@@ -104,6 +106,14 @@ def main() -> None:
     # an interrupted run resumes instead of restarting.
     PARTS = ARTIFACTS / "_t5b_parts"
     PARTS.mkdir(parents=True, exist_ok=True)
+    # AUTO-RESTART. Per-batch cost rose monotonically (1241 -> 1591 -> 2322 s/batch)
+    # while process RSS reached 17.6 GB and the spill directory grew 2.6 -> 7.4 GB:
+    # state accumulates across batches and DuckDB does not reclaim it. Each invocation
+    # therefore computes at most MAX_NEW batches and exits, and the wrapper re-invokes
+    # with a fresh process. Checkpointing makes this free - completed parts are skipped,
+    # so no batch is ever computed twice.
+    MAX_NEW = int(os.environ.get("T5B_MAX_NEW", "4"))
+    new_done = 0
     secs = 0.0
     for i, b in enumerate(batches):
         cpart, tpart = PARTS / f"cache_{i:03d}.parquet", PARTS / f"tie_{i:03d}.parquet"
@@ -132,6 +142,12 @@ def main() -> None:
                             out_table="_cache_batch", append=False)
         con.execute(f"COPY _cache_batch TO '{cpart.as_posix()}' (FORMAT PARQUET)")
         con.execute(f"COPY _tie TO '{tpart.as_posix()}' (FORMAT PARQUET)")
+        new_done += 1
+        if new_done >= MAX_NEW and len(list(PARTS.glob("cache_*.parquet"))) < len(batches):
+            print(f"  chunk done ({new_done} new, "
+                  f"{len(list(PARTS.glob('cache_*.parquet')))}/{len(batches)} parts) - "
+                  f"exiting for a fresh process", flush=True)
+            return
         if i % 5 == 0 or i == len(batches) - 1:
             print(f"  batch {i+1}/{len(batches)}  cumulative {secs:.0f}s", flush=True)
         if secs > BOUND:
