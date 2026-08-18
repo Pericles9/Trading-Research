@@ -28,6 +28,9 @@ ANCH = "results/phase_8/artifacts/a102_detection_anchors.parquet"
 QSESS = "results/phase_4/artifacts/_actual_quotes_sessions_cache.parquet"
 GRID = "results/phase_9/artifacts/t4_axis_grid.parquet"
 CEIL = CONFIG["runtime"]["runtime_ceiling_seconds"]
+# Cooper accepted a ONE-OFF exception to row 26 for this pass (2026-08-17). The
+# standing ceiling above is untouched; only this run is bounded higher.
+BOUND = CONFIG["runtime"]["row_26_oneoff_exception"]["t5b_oneoff_ceiling_seconds"]
 R30 = CONFIG["cooper_thresholds"]["row_30_tie_price_error_p95_bp_max"]
 LAT = [0, 1, 5, 15, 30]
 
@@ -117,11 +120,11 @@ def main() -> None:
                             out_table="_cache_mem", append=(i > 0))
         if i % 5 == 0 or i == len(batches) - 1:
             print(f"  batch {i+1}/{len(batches)}  cumulative {secs:.0f}s", flush=True)
-        if secs > CEIL:
-            raise SystemExit(f"ESCALATION ROW 26: T5b {secs:.0f}s exceeded ceiling {CEIL}s")
+        if secs > BOUND:
+            raise SystemExit(f"ESCALATION ROW 26: T5b {secs:.0f}s exceeded the one-off bound {BOUND}s")
     print(f"  pass wall {secs:.1f}s ({secs/3600:.2f} h), ceiling {CEIL}s")
-    if secs > CEIL:
-        raise SystemExit(f"ESCALATION ROW 26: T5b {secs:.0f}s exceeded ceiling {CEIL}s")
+    if secs > BOUND:
+        raise SystemExit(f"ESCALATION ROW 26: T5b {secs:.0f}s exceeded the one-off bound {BOUND}s")
 
     # ---- single write of the cache to the database (row 14a) --------------
     con.execute("DETACH mom")
@@ -202,7 +205,8 @@ def main() -> None:
         "resolution": "Cooper option (ii) - one scan, both outputs.",
         "pass": {"wall_seconds": round(secs, 1), "wall_hours": round(secs / 3600, 3),
                  "ceiling_seconds": CEIL, "t5a_predicted_seconds": 2271,
-                 "escalation_row_26": "DOES NOT FIRE" if secs <= CEIL else "FIRES",
+                 "standing_ceiling_seconds": CEIL, "oneoff_bound_seconds": BOUND,
+                 "escalation_row_26": "FIRED at 8.10h projected against the 6.00h standing ceiling; Cooper accepted a ONE-OFF exception 2026-08-17 and the pass ran under a 12h bound. The standing ceiling is unchanged.",
                  "passes_spent": 1},
         "filter_waterfall": {
             "detection_universe": int(n_det),

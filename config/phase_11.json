@@ -176,7 +176,21 @@
     "query_watchdog_desc": "5 minutes. Escalation row 12a: any query running longer without returning is killed, posted, and not retried.",
     "query_watchdog_scope": "Applies to EVERY query in the phase except the single budgeted T5b pass, which is instead bounded by runtime_ceiling_seconds. The ceiling IS that query's watchdog. No query anywhere in the phase is unbounded. Cooper bounded the agent-authored carve-out in A2-9; guarded by escalation row 26.",
     "watchdog_precedent": "The T0b audit query was killed at 120s before returning, which is what motivated row 12a.",
-    "t5b_bound_seconds": 21600
+    "t5b_bound_seconds": 21600,
+    "row_26_oneoff_exception": {
+      "decision": "ACCEPTED by Cooper 2026-08-17, in response to the row-26 hard stop at results/phase_11/artifacts/t5b_row26_escalation.json (commit bb0892d).",
+      "nature": "A ONE-OFF exception for the Phase 11 T5b pass. The STANDING runtime_ceiling_seconds is deliberately left at 21600 so the criterion keeps its force for every future phase; only this single pass is exempted, and the exemption is bounded rather than open.",
+      "t5b_oneoff_ceiling_seconds": 43200,
+      "projected_seconds": 29160,
+      "headroom_factor": 1.48,
+      "why_bounded": "Batch cost varies materially with event volume (294 / 1165 / 804 s on three consecutive batches), so a 12 h bound absorbs that variance while still terminating a genuinely runaway pass rather than letting it run unbounded.",
+      "what_did_not_change": [
+        "No cohort reduction - all 15,369 detection-universe events, 15,252 after D15.",
+        "No grid reduction - latency {0,1,5,15,30}, holds {5,15,30,60,120,t0_close}.",
+        "No ladder reduction - cost multiples {1x,1.5x,2x}.",
+        "No measurement definition changed. This is a time budget, nothing else."
+      ]
+    }
   },
   "impact": {
     "impact_windows_seconds": [
