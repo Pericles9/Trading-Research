@@ -1,6 +1,6 @@
 {
   "phase": "11",
-  "date": "2026-08-16",
+  "date": "2026-08-18",
   "config_hash": "98723f27b96c",
   "governing_spec": "Amendment 1 over v1 (Cooper 2026-08-15), as further amended by Amendment 2 (Cooper 2026-08-16, T4 gate). A 25-row v2 rewrite was circulated 2026-08-15, interrupted, and discarded; one v2 element was imported by explicit decision - T2a's hard/degraded state split.",
   "escalation_rows_enumerated": 34,

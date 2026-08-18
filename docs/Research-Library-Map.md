@@ -935,7 +935,40 @@ plus the T1a/T1b/T1c tables, `t2_state_census.json` plus the T2a-T2e tables,
 **Charts** — `01_quote_table_identity` (4 panels), `02_nonsensical_state_census` (9 facets),
 `03_spread_event_vs_baseline`, `04_alignment_sweep`.
 
-**Decisions** — D15 (coverage-column source) in `docs/Universe-Decisions.md`.
+**Decisions** — D15 (coverage-column source), D16 (reference midpoint: contemporaneous
+consolidated best quote at δ = 0 on the `sip_timestamp` basis), D17 (quote-state exclusion;
+locked carried), D18 (Stage B population; RTH is the decision cell), D19 (both units always;
+no baseline spread as a detection-time proxy) — all in `docs/Universe-Decisions.md`.
+
+**Stage B code and outputs** (added after the T4 gate)
+- `stage_b_pipeline.py` — the cache builder. Both sides of every ASOF join are materialised
+  and no running-frame window survives, for the DuckDB 1.4.4 reasons recorded in the
+  open-items register.
+- `t5b_pass.py` — the single budgeted pass, event-partitioned into 39 batches with per-batch
+  parquet checkpointing and resume; `run_t5b.sh` re-invokes it in fresh processes.
+- `t6_effective_spread.py`, `t7_cost_vs_capture.py`, `t8_impact.py`, `t9_report.py`
+  (the last carries a row-18 language guard that refuses to write an evaluative report).
+- `chart_05.py` … `chart_09.py`.
+
+**Stage B artifacts** — `t5_cache_integrity.json`, `t5b_row26_escalation.json`,
+`t4c_tie_audit.json`, `t6_effective_spread.{parquet,json}`, `t6_cells.parquet`,
+`t7_cost_vs_capture.{parquet,json}`, `t8_impact.{parquet,json}`, `t8_impact_cells.parquet`,
+`t0c_satisfiability_audit_a2.json`, `t0c_satisfiability_audit_a3.json`,
+`t0c_focused_reaudit_option_ii.json`, `t2e_i_implied_price.json`.
+
+**DuckDB tables created** (escalation row 14a) — `event_quote_metrics_v1` (9,017,475 rows,
+15,252 events, per event × offset × session-minute × segment) and
+`event_quote_tie_audit_v1` (54,827 rows). Nothing pre-existing was modified.
+
+**Charts** — `05_effective_spread_at_detection`, `06_cost_vs_capture` (the gate),
+`07_cost_capture_grid`, `08_impact_by_participation`, `09_spread_vs_staleness`. Charts 05
+and 09 ship as stacked bp/cents panels rather than the specified twin axes (A3-1, Phase 9
+chart 06 precedent); the deviation is recorded in each caption.
+
+**Escalations fired** — row 1 (dirty tree, resolved), row 2 (twice: six defective rows in
+the v1 audit, then the T4c/row-12 pass-budget contradiction resolved by option (ii)), row 7
+and row 20 (both not-a-stop), row 26 (runtime ceiling; one-off bounded exception accepted),
+row 30 (tie price error p95 123.047 bp vs 25 bp; option (a) accepted).
 
 **Open items added** — condition-code dictionary absent (with the full observed census);
 `indicators` populated not null; withdrawn-quote filter recoverable but not buildable; source parquet

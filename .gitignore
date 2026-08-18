@@ -37,6 +37,7 @@ results/phase_*/artifacts/*.parquet
 # Phase 1c - staged vendor fetch output (raw + aligned parquet per
 # (ticker, session) pair, thousands of files). Regenerable via the heal
 # manifest + fetch script; the repair ledger is the record, not this.
-results/phase_1c/staging/.duckdb_spill/
+results/phase_1c/staging/
+.duckdb_spill/
 results/phase_11/artifacts/_t5b_parts/
 run_t5b.sh

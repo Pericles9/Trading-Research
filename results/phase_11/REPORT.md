@@ -23,8 +23,8 @@ stored reverse-chronological: `sip_timestamp` decreases across 99.97% of consecu
 file rows at the median event, on all 50 events.
 
 **T2 — state census.** Row 5: `state_hard_unusable` clock-time share on the T=0 RTH
-segment, median across 50 events = 1.3052849543148892e-08,
-threshold 0.25 — DOES NOT FIRE. The three-way
+segment, median across 50 events = 1.31e-08
+(1.3e-08, i.e. zero to 6 dp), threshold 0.25 — DOES NOT FIRE. The three-way
 partition sums to 1.0 to 0.0 deviation. Charts 02, 03.
 
 **T2e / T2e-i — quoted spread and implied price.** RTH median time-weighted quoted
@@ -42,21 +42,26 @@ timestamp bases, both sessions, both segments. Chart 04.
 
 ## Stage B — the cost stack
 
-**Filter waterfall.** Detection universe 15369 ->
-`quotes_ingested` 15252 ->
-excluded 117
-(0.007613), row 10 threshold 0.20 —
-DOES NOT FIRE. Coverage read from the Phase 4/5 materializations (D15).
+**Filter waterfall.** Detection universe 15,369 →
+`quotes_ingested` 15,252 → excluded
+117 (0.7613%),
+row 10 threshold 20% — DOES NOT FIRE. Coverage read from the Phase 4/5 materializations (D15).
 
 **T7 — cost against capture.**
 
 > Effective spread measures the cost of the average print, not the cost of a specific order. Depth, queue position and fill probability are not measured in this phase.
 
-Named cell (`fixed_horizon`, RTH, latency 5 min, hold 30 min): n = 10544,
-median ratio at 1x cost = 0.1608230405341811, at 1.5x = 0.24123456080127165,
-at 2x = 0.3216460810683622. Share of events where cost exceeds capture:
-0.1263752601843592. Kill threshold 0.5 —
-row 11 DOES NOT FIRE.
+Named cell (`fixed_horizon`, RTH, latency 5 min, hold 30 min), n = 10,544:
+
+| cost multiple | median ratio |
+|---|---|
+| 1× (the sole row-11 trigger) | **0.1608** |
+| 1.5× (equal prominence, A2-5) | **0.2412** |
+| 2× | 0.3216 |
+
+Share of events where round-trip cost exceeds realized capture outright:
+**12.64%**. Kill threshold
+0.5 — row 11 **DOES NOT FIRE**.
 
 **Pre-registered reading rule (T7e-i):** Realized capture <= 0 for more than half the cell - the denominator is non-positive for the majority; the ratio is undefined on that population and is reported as a share, not a ratio
 

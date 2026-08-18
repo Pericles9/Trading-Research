@@ -61,7 +61,7 @@ def main() -> None:
     t6, t7, t8 = load("t6_effective_spread.json"), load("t7_cost_vs_capture.json"), load("t8_impact.json")
 
     digest = {
-        "phase": "11", "date": "2026-08-16", "config_hash": cfg_hash(),
+        "phase": "11", "date": "2026-08-18", "config_hash": cfg_hash(),
         "governing_spec": CFG["spec"]["governing"],
         "escalation_rows_enumerated": CFG["spec"]["escalation_rows"],
         "passes_spent": (t5 or {}).get("pass", {}).get("passes_spent", 0),
@@ -122,8 +122,8 @@ stored reverse-chronological: `sip_timestamp` decreases across 99.97% of consecu
 file rows at the median event, on all 50 events.
 
 **T2 — state census.** Row 5: `state_hard_unusable` clock-time share on the T=0 RTH
-segment, median across 50 events = {(t2 or {}).get('escalation_row_5', {}).get('observed_median', 'n/a')},
-threshold 0.25 — {(t2 or {}).get('escalation_row_5', {}).get('verdict', 'n/a')}. The three-way
+segment, median across 50 events = {(t2 or {}).get('escalation_row_5', {}).get('observed_median', 0):.3g}
+(1.3e-08, i.e. zero to 6 dp), threshold 0.25 — {(t2 or {}).get('escalation_row_5', {}).get('verdict', 'n/a')}. The three-way
 partition sums to 1.0 to 0.0 deviation. Charts 02, 03.
 
 **T2e / T2e-i — quoted spread and implied price.** RTH median time-weighted quoted
@@ -141,21 +141,26 @@ timestamp bases, both sessions, both segments. Chart 04.
 
 ## Stage B — the cost stack
 
-**Filter waterfall.** Detection universe {fw.get('detection_universe', 'n/a')} ->
-`quotes_ingested` {fw.get('quotes_ingested_true', 'n/a')} ->
-excluded {fw.get('quotes_ingested_false_excluded', 'n/a')}
-({fw.get('quotes_ingested_false_share', 'n/a')}), row 10 threshold 0.20 —
-{fw.get('row_10_verdict', 'n/a')}. Coverage read from the Phase 4/5 materializations (D15).
+**Filter waterfall.** Detection universe {fw.get('detection_universe', 0):,} →
+`quotes_ingested` {fw.get('quotes_ingested_true', 0):,} → excluded
+{fw.get('quotes_ingested_false_excluded', 0):,} ({fw.get('quotes_ingested_false_share', 0):.4%}),
+row 10 threshold 20% — {fw.get('row_10_verdict', 'n/a')}. Coverage read from the Phase 4/5 materializations (D15).
 
 **T7 — cost against capture.**
 
 > {QUAL}
 
-Named cell (`fixed_horizon`, RTH, latency 5 min, hold 30 min): n = {nc.get('n', 'n/a')},
-median ratio at 1x cost = {nc.get('median_ratio_1x', 'n/a')}, at 1.5x = {nc.get('median_ratio_1_5x', 'n/a')},
-at 2x = {nc.get('median_ratio_2x', 'n/a')}. Share of events where cost exceeds capture:
-{nc.get('share_cost_exceeds_capture', 'n/a')}. Kill threshold {nc.get('kill_threshold', 'n/a')} —
-row 11 {nc.get('escalation_row_11', 'n/a')}.
+Named cell (`fixed_horizon`, RTH, latency 5 min, hold 30 min), n = {nc.get('n', 0):,}:
+
+| cost multiple | median ratio |
+|---|---|
+| 1× (the sole row-11 trigger) | **{nc.get('median_ratio_1x', 0):.4f}** |
+| 1.5× (equal prominence, A2-5) | **{nc.get('median_ratio_1_5x', 0):.4f}** |
+| 2× | {nc.get('median_ratio_2x', 0):.4f} |
+
+Share of events where round-trip cost exceeds realized capture outright:
+**{nc.get('share_cost_exceeds_capture', 0):.2%}**. Kill threshold
+{nc.get('kill_threshold', 0)} — row 11 **{nc.get('escalation_row_11', 'n/a')}**.
 
 **Pre-registered reading rule (T7e-i):** {(t7 or {}).get('t7e_i_reading_rule_row', 'n/a')}
 
