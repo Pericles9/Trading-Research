@@ -52,13 +52,15 @@ def main() -> None:
                 fig.add_trace(go.Scatter(
                     x=s.values, y=y, mode="lines",
                     name=f"lat {lat}m · {lab}" + (" (impossible)" if lat == 0 else ""),
-                    legendgroup=f"{lat}{lab}", showlegend=key not in seen,
+                    legendgroup=f"{lat}{lab}",
+                    showlegend=(ci == 1 and key not in seen),
                     line=dict(color=K.rgba(COL[lat], .9), width=2 if dash == "solid" else 1.5,
                               dash=dash),
                     hovertemplate=(f"lat {lat}m {lab}<br>ratio %{{x:.4f}}"
                                    f"<br>ECDF %{{y:.4f}}<br>n={len(s):,}<extra></extra>"),
                 ), row=1, col=ci + 1)
-                seen.add(key)
+                if ci == 1:
+                    seen.add(key)
         n1 = int(sub[sub.latency == 5]["ratio_1.0x"].notna().sum())
         fig.add_annotation(x=0.02, y=0.02,
                            xref=("x domain" if ci == 0 else f"x{ci+1} domain"),
@@ -66,9 +68,17 @@ def main() -> None:
                            xanchor="left", showarrow=False, font=dict(size=9, color=K.INK2),
                            bgcolor="rgba(255,255,255,.8)",
                            text=f"n at lat 5m, 1× = {n1:,}")
-        fig.add_vline(x=0, line=dict(color=K.RED, width=1.8, dash="dash"),
-                      row=1, col=ci + 1)
-        fig.update_xaxes(type="log", title_text="round-trip cost ÷ realized capture (log)",
+        # Shapes on a log axis take log10 coordinates; a raw 1.0 lands at 10^1.
+        # Parity is ratio = 1.0 -> log10 = 0.
+        ax = "x" if ci == 0 else f"x{ci+1}"
+        ay = "y domain" if ci == 0 else f"y{ci+1} domain"
+        fig.add_shape(type="line", x0=0, x1=0, y0=0, y1=1, yref=ay, xref=ax,
+                      line=dict(color=K.RED, width=2, dash="dash"))
+        # OPENING VIEW ONLY. A raw log axis spans to 1e-56 and renders the bulk as a
+        # vertical line. Nothing is removed - double-click autoranges to the full
+        # extent, and the count outside is disclosed in the caption.
+        fig.update_xaxes(type="log", range=[-4, 2],
+                         title_text="round-trip cost ÷ realized capture (log)",
                          row=1, col=ci + 1)
         fig.update_yaxes(range=[-0.02, 1.02], title_text="ECDF" if ci == 0 else None,
                          row=1, col=ci + 1)
@@ -83,11 +93,14 @@ def main() -> None:
                 f"(D16). Vertical rule at 1.0; kill threshold {kill} on the RTH cell at "
                 "latency 5 (row 11).<br>         The 1.5× column carries equal prominence "
                 "with 1× by A2-5; only 1× triggers row 11.",
-        extra=CONFIG["standing_qualifier"]["text"],
+        extra=CONFIG["standing_qualifier"]["text"] + "<br>       Opening view is [1e-4, 1e2]; 71 of 26,396 defined ratios sit outside it (premarket 11, RTH 60, post 0), reachable<br>       by double-click - none is removed.",
     )
     K.base_layout(fig, "06 · Round-trip cost against realized capture — the gate",
-                  cap, height=620, width=1300, cap_y=-0.30, margin_b=210)
-    K.legend_inside(fig, x=0.006, y=0.99)
+                  cap, height=760, width=1360, cap_y=-0.44, margin_b=300)
+    fig.update_layout(legend=dict(orientation="h", x=0.0, y=-0.22, xanchor="left",
+                                  yanchor="top", font=dict(size=9),
+                                  bgcolor="rgba(255,255,255,0.9)",
+                                  bordercolor=K.GRID, borderwidth=1))
     for a in fig.layout.annotations[:3]:
         a.font.size = 12.5
         a.font.color = K.INK

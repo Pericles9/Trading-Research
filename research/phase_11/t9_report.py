@@ -93,7 +93,7 @@ def main() -> None:
             "full tier takes.",
         ],
     }
-    (R / "digest.json").write_text(json.dumps(digest, indent=2, default=str))
+    (R / "digest.json").write_text(json.dumps(digest, indent=2, default=str), encoding="utf-8")
 
     nc = (t7 or {}).get("named_cell", {})
     fw = (t5 or {}).get("filter_waterfall", {})
@@ -159,7 +159,60 @@ row 11 {nc.get('escalation_row_11', 'n/a')}.
 
 **Pre-registered reading rule (T7e-i):** {(t7 or {}).get('t7e_i_reading_rule_row', 'n/a')}
 
-Charts 05, 06, 07, 08, 09.
+Of the {nc.get('n', 0):,} rows in the named cell, {nc.get('n_ratio_defined', 0):,} have a
+defined ratio; realized capture is non-positive on
+{nc.get('share_capture_nonpositive', 0):.2%} of the cell, and the median ratio above is
+computed only on the complement. Median round-trip cost in the named cell is
+{nc.get('median_rt_cost_bp', 0):.2f} bp and {nc.get('median_rt_cost_cents', 0):.3f} cents
+(D19: both units, never one alone). Charts 06, 07.
+
+**T6 — effective spread at the detection anchor.** RTH, at the T4-selected offset
+(δ = 0, sip basis, D16), size-weighted per bar:
+
+| latency | n | bp | cents | share of detection price |
+|---|---|---|---|---|
+| 0 (impossible upper bound) | 10,408 | 97.07 | 3.060 | 0.956% |
+| 1 | 10,292 | 90.29 | 2.803 | 0.904% |
+| 5 | 10,087 | 75.80 | 2.385 | 0.757% |
+| 15 | 9,669 | 65.69 | 2.096 | 0.656% |
+| 30 | 9,384 | 60.50 | 1.958 | 0.605% |
+
+Latency 0 is a physical impossibility and is the upper bound, not an operating point
+(Phase 8 / D7). Premarket and post are in the artifact and on chart 05; the decision
+rests on the RTH cell alone (D18). Chart 05.
+
+**T8 — impact and classification.** Overall unclassifiable share
+{(t8 or {}).get('classification', {}).get('unclassifiable_overall_share', 0):.4%},
+reported per cell and never dropped. Distributions only — no regression and no fitted
+impact exponent. Charts 08, 09.
+
+**T4c — tie dependence (escalation row 30, FIRED).**
+{CFG['t4c_tie_audit']['row_30_resolution']['caveat_required_in_report']}
+Cooper accepted option (a) on 2026-08-18: proceed carrying this as a stated caveat, with
+no frozen artifact rebuilt (row 32 respected).
+
+---
+
+## Escalation check
+
+| row | quantity | observed | threshold | verdict |
+|---|---|---|---|---|
+| 1 | working tree dirty at T0a | dirty, then clean | any | fired once, resolved |
+| 2 | T0c audit failure | fired on the pass-budget contradiction, resolved by option (ii) | any | resolved |
+| 3 | consolidated vs per-venue | established | any | does not fire |
+| 4a | sip null-or-zero | 0.0 | > 1% | does not fire |
+| 5 | hard_unusable RTH median | 0.000000 | > 0.25 | does not fire |
+| 6 | alignment curve flat | peak−min 0.1902 | any | does not fire |
+| 7 | premarket vs RTH peak rung | 7 rungs | any | fired, not a stop |
+| 10 | quotes_ingested FALSE | 0.7613% | > 20% | does not fire |
+| 11 | kill threshold, named cell 1× | 0.1608 | ≥ 0.50 | does not fire |
+| 20 | condition-code dictionary | none on disk | any | fired, not a stop |
+| 21 | era null-pattern gap | 6.21 pp | > 20 pp | does not fire |
+| 24 | cache required columns | none missing | any | does not fire |
+| 25 | ordering class (b)/(c) | 0 of 15 | any | does not fire |
+| 26 | pass exceeds ceiling | projected 8.10 h vs 6.00 h | > ceiling | **fired**, one-off exception accepted |
+| 30 | tie price error p95 | **123.047 bp** | > 25 bp | **fired**, option (a) accepted |
+| 31 | aggregate-function class (b)/(c) | 0 of 5 | any | does not fire |
 
 ---
 
@@ -180,7 +233,7 @@ Every number above is reproducible from the committed artifacts in
         for h in hits[:10]:
             print("  ", h)
         raise SystemExit("escalation row 18")
-    (R / "REPORT.md").write_text(md)
+    (R / "REPORT.md").write_text(md, encoding="utf-8")
     pathlib.Path("results/reports").mkdir(parents=True, exist_ok=True)
     shutil.copy(R / "REPORT.md", "results/reports/phase_11_report.md")
     print("wrote digest.json, REPORT.md, results/reports/phase_11_report.md")

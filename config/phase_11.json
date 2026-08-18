@@ -453,6 +453,13 @@
       "order_effect": "A3-6 steps 5 and 6 merge. Row 30 is evaluated AFTER the pass, on the tie distribution the pass emits, and before T6. This costs nothing in evidence: row 30's action is 'post the distribution, Cooper decides on any fix' - post-hoc either way - and no headline exists until T6/T7, so the tie bound is still known before any number that depends on it is reported.",
       "row_28_effect": "T4b cleared at 98dac7c, so Stage B was already authorised. Row 28 is unaffected.",
       "scope": "Phase 11 only. No frozen artifact is rebuilt and src/ is untouched (row 32)."
+    },
+    "row_30_resolution": {
+      "decision": "OPTION (a) - ACCEPTED by Cooper 2026-08-18. Proceed to T6-T9 carrying the tie ambiguity as a stated caveat. No fix applied; no frozen artifact rebuilt (row 32 respected).",
+      "fired": true,
+      "observed_p95_bp": 123.047,
+      "threshold_bp": 25.0,
+      "caveat_required_in_report": "On 643 of 317,225 bars that feed det_price_lat* or the Phase 9 entry/exit prices (0.203%), the extremum sip_timestamp is shared by two or more prints that differ in price, so first_price/last_price is arbitrary among the tied set. The bounded ambiguity on those bars is p50 14.332 bp / 1.0 cents, p95 123.047 bp / 18.9 cents, max 676.409 bp / 162.0 cents. det_minute itself is tie-immune - it is MIN(minute_index) FILTER over MAX(price) - so the detection MINUTE is unaffected; only the PRICE attached to it on those bars is ambiguous."
     }
   }
 }
