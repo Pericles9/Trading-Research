@@ -1,0 +1,193 @@
+{
+  "config_hash": "9c739c08",
+  "n_events": 114,
+  "variants": [
+    "poll0",
+    "poll1",
+    "poll5",
+    "poll15",
+    "poll60"
+  ],
+  "base_variant": "poll0",
+  "segment_counts": {
+    "poll0": {
+      "rth": 80,
+      "premarket": 30,
+      "null": 3,
+      "post": 1
+    },
+    "poll1": {
+      "rth": 80,
+      "premarket": 30,
+      "null": 3,
+      "post": 1
+    },
+    "poll5": {
+      "rth": 80,
+      "premarket": 30,
+      "null": 3,
+      "post": 1
+    },
+    "poll15": {
+      "rth": 80,
+      "premarket": 30,
+      "null": 3,
+      "post": 1
+    },
+    "poll60": {
+      "rth": 80,
+      "premarket": 30,
+      "null": 3,
+      "post": 1
+    }
+  },
+  "migration_vs_base": {
+    "poll0_to_poll1": {
+      "n_moved": 0,
+      "share_moved": 0.0,
+      "matrix": {
+        "post": {
+          "post": 1,
+          "premarket": 0,
+          "rth": 0,
+          "nan": 0
+        },
+        "premarket": {
+          "post": 0,
+          "premarket": 30,
+          "rth": 0,
+          "nan": 0
+        },
+        "rth": {
+          "post": 0,
+          "premarket": 0,
+          "rth": 80,
+          "nan": 0
+        },
+        "nan": {
+          "post": 0,
+          "premarket": 0,
+          "rth": 0,
+          "nan": 3
+        }
+      }
+    },
+    "poll0_to_poll5": {
+      "n_moved": 0,
+      "share_moved": 0.0,
+      "matrix": {
+        "post": {
+          "post": 1,
+          "premarket": 0,
+          "rth": 0,
+          "nan": 0
+        },
+        "premarket": {
+          "post": 0,
+          "premarket": 30,
+          "rth": 0,
+          "nan": 0
+        },
+        "rth": {
+          "post": 0,
+          "premarket": 0,
+          "rth": 80,
+          "nan": 0
+        },
+        "nan": {
+          "post": 0,
+          "premarket": 0,
+          "rth": 0,
+          "nan": 3
+        }
+      }
+    },
+    "poll0_to_poll15": {
+      "n_moved": 0,
+      "share_moved": 0.0,
+      "matrix": {
+        "post": {
+          "post": 1,
+          "premarket": 0,
+          "rth": 0,
+          "nan": 0
+        },
+        "premarket": {
+          "post": 0,
+          "premarket": 30,
+          "rth": 0,
+          "nan": 0
+        },
+        "rth": {
+          "post": 0,
+          "premarket": 0,
+          "rth": 80,
+          "nan": 0
+        },
+        "nan": {
+          "post": 0,
+          "premarket": 0,
+          "rth": 0,
+          "nan": 3
+        }
+      }
+    },
+    "poll0_to_poll60": {
+      "n_moved": 0,
+      "share_moved": 0.0,
+      "matrix": {
+        "post": {
+          "post": 1,
+          "premarket": 0,
+          "rth": 0,
+          "nan": 0
+        },
+        "premarket": {
+          "post": 0,
+          "premarket": 30,
+          "rth": 0,
+          "nan": 0
+        },
+        "rth": {
+          "post": 0,
+          "premarket": 0,
+          "rth": 80,
+          "nan": 0
+        },
+        "nan": {
+          "post": 0,
+          "premarket": 0,
+          "rth": 0,
+          "nan": 3
+        }
+      }
+    }
+  },
+  "headline_poll0_vs_poll60": 0,
+  "anchor_shift_seconds_vs_base": {
+    "poll1": {
+      "n": 111,
+      "median_s": 0.426910464,
+      "p90_abs_s": 0.869321984,
+      "max_abs_s": 0.992206336
+    },
+    "poll5": {
+      "n": 111,
+      "median_s": 2.250376704,
+      "p90_abs_s": 4.622508032,
+      "max_abs_s": 4.992206336
+    },
+    "poll15": {
+      "n": 111,
+      "median_s": 7.068311552,
+      "p90_abs_s": 14.285337088,
+      "max_abs_s": 14.992206336
+    },
+    "poll60": {
+      "n": 111,
+      "median_s": 29.288945664,
+      "p90_abs_s": 53.035488512,
+      "max_abs_s": 59.992206336
+    }
+  }
+}

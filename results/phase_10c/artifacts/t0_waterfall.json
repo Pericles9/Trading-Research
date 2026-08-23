@@ -1,0 +1,9 @@
+{
+  "events_attempted": 56,
+  "events_with_trades": 56,
+  "raw_prints": 3774862,
+  "prints_after_tie_collapse": 3671288,
+  "intervals_raw": 3671232,
+  "timing_seconds": 55.2,
+  "config_hash": "9c739c08"
+}

@@ -1,0 +1,41 @@
+{
+  "config_hash": "9c739c08",
+  "charts": [
+    {
+      "chart": "s0_1_raw_landscape.html",
+      "png": "s0_1_raw_landscape.png",
+      "kaleido_verified": true,
+      "html_bytes": 40145,
+      "png_bytes": 394034
+    },
+    {
+      "chart": "s0_2_sweep_floor.html",
+      "png": "s0_2_sweep_floor.png",
+      "kaleido_verified": true,
+      "html_bytes": 11863,
+      "png_bytes": 402703
+    },
+    {
+      "chart": "s0_3_peak_location.html",
+      "png": "s0_3_peak_location.png",
+      "kaleido_verified": true,
+      "html_bytes": 14239,
+      "png_bytes": 252307
+    },
+    {
+      "chart": "s0_4_d4_sensitivity.html",
+      "png": "s0_4_d4_sensitivity.png",
+      "kaleido_verified": true,
+      "html_bytes": 11760,
+      "png_bytes": 346161
+    },
+    {
+      "chart": "s0_5_clipped_fraction.html",
+      "png": "s0_5_clipped_fraction.png",
+      "kaleido_verified": true,
+      "html_bytes": 70504,
+      "png_bytes": 378048
+    }
+  ],
+  "source": "research/phase_10c/t0_charts.py:main"
+}

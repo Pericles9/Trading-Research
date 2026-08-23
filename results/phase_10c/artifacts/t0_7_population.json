@@ -1,0 +1,53 @@
+{
+  "config_hash": "9c739c08",
+  "canonical_scan_seconds": 333.4,
+  "per_event_seconds_from_stage0": 0.986,
+  "stage3_kernel_count_assumed": 10,
+  "candidate_populations": {
+    "phase10_analysis_cohort": 100,
+    "phase10_frozen_cohort": 114,
+    "in_scope": 20951,
+    "in_scope_and_trades_ingested": 20951,
+    "in_scope_trades_and_quotes_ingested": 20772,
+    "in_scope_trades_ingested_full_window": 15476
+  },
+  "compute_estimates": {
+    "phase10_analysis_cohort": {
+      "n_events": 100,
+      "stage1_est_seconds": 98.6,
+      "stage1_est_hours": 0.03,
+      "stage3_est_hours_at_10_kernels": 0.27
+    },
+    "phase10_frozen_cohort": {
+      "n_events": 114,
+      "stage1_est_seconds": 112.4,
+      "stage1_est_hours": 0.03,
+      "stage3_est_hours_at_10_kernels": 0.31
+    },
+    "in_scope": {
+      "n_events": 20951,
+      "stage1_est_seconds": 20651.7,
+      "stage1_est_hours": 5.74,
+      "stage3_est_hours_at_10_kernels": 57.37
+    },
+    "in_scope_and_trades_ingested": {
+      "n_events": 20951,
+      "stage1_est_seconds": 20651.7,
+      "stage1_est_hours": 5.74,
+      "stage3_est_hours_at_10_kernels": 57.37
+    },
+    "in_scope_trades_and_quotes_ingested": {
+      "n_events": 20772,
+      "stage1_est_seconds": 20475.3,
+      "stage1_est_hours": 5.69,
+      "stage3_est_hours_at_10_kernels": 56.88
+    },
+    "in_scope_trades_ingested_full_window": {
+      "n_events": 15476,
+      "stage1_est_seconds": 15254.9,
+      "stage1_est_hours": 4.24,
+      "stage3_est_hours_at_10_kernels": 42.37
+    }
+  },
+  "note": "Stage 1 is one kernel; Stage 3 is the population times N kernels (A1.7). Per-event seconds is measured from the Stage 0 dev-sample pass and covers the tick read plus one interval pass; it is a lower bound for Stage 1, which additionally builds the normalisation window and selects a threshold."
+}

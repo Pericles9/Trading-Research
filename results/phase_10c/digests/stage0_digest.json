@@ -1,0 +1,464 @@
+{
+  "phase": "10c",
+  "stage": 0,
+  "tasks": "T0.1-T0.8",
+  "config": "config/phase_10c.json",
+  "config_hash": "9c739c08",
+  "wall_clock_seconds": 55.2,
+  "governing_documents": [
+    "Phase-10c-Prompt.md",
+    "Phase-10c-Amendment-A1.md"
+  ],
+  "stage_0_constraints_honoured": {
+    "no_sub_bursts": true,
+    "no_threshold_selected": true,
+    "no_void_parameter_computed": true,
+    "no_normalisation_window_applied": true,
+    "no_interval_pooling_across_events": true,
+    "pooling_note": "Every histogram is per event. Every population statement below is the distribution ACROSS events of a per-event summary quantity."
+  },
+  "verification_block": {
+    "row_waterfall": {
+      "events_attempted": 56,
+      "events_with_trades": 56,
+      "raw_prints_in": 3774862,
+      "exact_timestamp_ties_collapsed_D12": 103574,
+      "tie_share": 0.027438,
+      "prints_after_tie_collapse": 3671288,
+      "intervals_computed": 3671232,
+      "reconciles": true,
+      "reconciliation_identity": "intervals = prints_after_tie_collapse - events_with_trades (one interval is lost per event boundary)",
+      "sub_bursts_extracted": 0,
+      "sub_bursts_note": "Stage 0 produces no sub-bursts by construction (A1.2)."
+    },
+    "d4_quarantine_A1_8": {
+      "tick_reader_columns": [
+        "sip_timestamp",
+        "price",
+        "size",
+        "sequence_number"
+      ],
+      "momentum_pct_in_read_path": false,
+      "verified": true,
+      "note": "research/phase_10/common.py:_TRADE_COLS is the only column list the tick reader uses. momentum_pct is absent from it, so the quarantined spine numeric is never loaded, let alone computed on."
+    },
+    "dev_sample": {
+      "name": "dev_v4_primary",
+      "n_primary": 50,
+      "n_sidecar": 6,
+      "n_total": 56,
+      "seed": 42,
+      "stratification": "t0_print_count decile"
+    },
+    "segment_split": {
+      "UNLABELLED|sidecar=True": 2,
+      "post|sidecar=True": 1,
+      "premarket|sidecar=False": 15,
+      "premarket|sidecar=True": 1,
+      "rth|sidecar=False": 35,
+      "rth|sidecar=True": 2
+    },
+    "segment_note": "All three events without a premarket/rth label are SIDECAR events, which A1.6 already carries and reports separately. The 50 primary events are cleanly premarket or rth.",
+    "cooper_values_used": {
+      "class_E": {
+        "D4_median_precision_factor": 1.2,
+        "D7_threshold_lo_ms": 10,
+        "D7_threshold_hi_s": 10,
+        "D8_min_median_duration_s": 30,
+        "D9_slope_max": 0.5
+      },
+      "class_M": {
+        "D1_sweep_floor_us": null,
+        "D2_max_cutoff_ms": null,
+        "D11_grid_ceiling_min": null,
+        "D14_population": null,
+        "D15_stage3_scope": null
+      },
+      "class_M_note": "All null. Not required at Stage 0 (A1.9)."
+    },
+    "derived_data_floor": {
+      "formula": "n >= ( sqrt(pi/2) * sigma_log10 / log10(F) )^2",
+      "derivation": "Asymptotic standard error of a sample median, SE = sqrt(pi/2)*sigma/sqrt(n). Requiring the local median within a multiplicative factor F in log space sets SE <= log10(F). sigma_log10 is the event's own spread, so the floor is data-derived per event.",
+      "sigma_log10_across_events": {
+        "p10": 1.7949165119253419,
+        "median": 2.2217926505243217,
+        "p90": 2.624757873727206
+      },
+      "at_configured_F": 1.2,
+      "derived_min_count_median": 1236.7557254281649
+    },
+    "config_hash": "9c739c08",
+    "no_real_event_excluded": "All 56 dev-sample events returned trades."
+  },
+  "T0_1_raw_landscape": {
+    "n_events": 56,
+    "leftmost_mode_log10s": {
+      "p10": -7.050000000000007,
+      "median": -7.050000000000007,
+      "p90": -5.2000000000000135
+    },
+    "leftmost_mode_seconds_median": 8.912509381337313e-08,
+    "first_trough_log10s_median": -6.450000000000009,
+    "frac_below_trough_median": 0.033686294441981915,
+    "prominence_sweep": {
+      "0.01": {
+        "leftmost_mode_median": -7.050000000000007,
+        "n_peaks_median": 15.5
+      },
+      "0.02": {
+        "leftmost_mode_median": -7.050000000000007,
+        "n_peaks_median": 13.0
+      },
+      "0.05": {
+        "leftmost_mode_median": -7.050000000000007,
+        "n_peaks_median": 9.0
+      },
+      "0.1": {
+        "leftmost_mode_median": -6.950000000000007,
+        "n_peaks_median": 7.0
+      },
+      "0.2": {
+        "leftmost_mode_median": -6.850000000000008,
+        "n_peaks_median": 5.0
+      }
+    }
+  },
+  "T0_2_T0_3_floor_sensitivity": {
+    "1": {
+      "frac_absorbed_median": 0.022452149088748825,
+      "frac_absorbed_p90": 0.07605800140931185,
+      "leftmost_mode_log10s_median": -5.550000000000012,
+      "floor_itself_log10s": -6.0,
+      "mode_minus_floor_decades": 0.44999999999998774,
+      "largest_peak_log10s_median": -4.000000000000018,
+      "largest_peak_log10s_p90": 0.7999999999999652,
+      "admissible_under_check4_cond2": true
+    },
+    "10": {
+      "frac_absorbed_median": 0.11566891760337301,
+      "frac_absorbed_p90": 0.20410148779301496,
+      "leftmost_mode_log10s_median": -4.950000000000014,
+      "floor_itself_log10s": -5.0,
+      "mode_minus_floor_decades": 0.04999999999998561,
+      "largest_peak_log10s_median": -3.35000000000002,
+      "largest_peak_log10s_p90": 1.1999999999999638,
+      "admissible_under_check4_cond2": true
+    },
+    "100": {
+      "frac_absorbed_median": 0.22195964803801846,
+      "frac_absorbed_p90": 0.3523703339601738,
+      "leftmost_mode_log10s_median": -3.950000000000018,
+      "floor_itself_log10s": -4.0,
+      "mode_minus_floor_decades": 0.04999999999998206,
+      "largest_peak_log10s_median": -3.35000000000002,
+      "largest_peak_log10s_p90": 1.1999999999999638,
+      "admissible_under_check4_cond2": true
+    },
+    "1000": {
+      "frac_absorbed_median": 0.3911147268371287,
+      "frac_absorbed_p90": 0.5440769169366491,
+      "leftmost_mode_log10s_median": -2.9500000000000215,
+      "floor_itself_log10s": -3.0,
+      "mode_minus_floor_decades": 0.049999999999978506,
+      "largest_peak_log10s_median": -2.7000000000000224,
+      "largest_peak_log10s_p90": 1.1999999999999638,
+      "admissible_under_check4_cond2": true
+    },
+    "10000": {
+      "frac_absorbed_median": 0.5350133923299655,
+      "frac_absorbed_p90": 0.6688344940111677,
+      "leftmost_mode_log10s_median": -1.950000000000025,
+      "floor_itself_log10s": -2.0,
+      "mode_minus_floor_decades": 0.04999999999997495,
+      "largest_peak_log10s_median": -3.197442310920451e-14,
+      "largest_peak_log10s_p90": 1.399999999999963,
+      "admissible_under_check4_cond2": false
+    }
+  },
+  "T0_4_density_and_D4": {
+    "prints_per_min_by_segment": {
+      "UNLABELLED": {
+        "n": 2,
+        "p25": 1.6580729166666666,
+        "median": 3.271354166666667,
+        "p75": 4.884635416666667
+      },
+      "post": {
+        "n": 1,
+        "p25": 1.6395833333333334,
+        "median": 1.6395833333333334,
+        "p75": 1.6395833333333334
+      },
+      "premarket": {
+        "n": 16,
+        "p25": 50.5375,
+        "median": 131.62656249999998,
+        "p75": 295.7328125
+      },
+      "rth": {
+        "n": 37,
+        "p25": 1.3927083333333334,
+        "median": 7.4875,
+        "p75": 35.20104166666667
+      }
+    },
+    "window_count_at_4min_median_across_events": 283.0,
+    "sensitivity": {
+      "1.1": {
+        "derived_min_count_median": 4525.654470205319,
+        "too_few_prints_median": 1.0,
+        "too_few_prints_p90": 1.0,
+        "events_with_no_usable_interval": 39,
+        "of": 56
+      },
+      "1.2": {
+        "derived_min_count_median": 1236.7557254281649,
+        "too_few_prints_median": 1.0,
+        "too_few_prints_p90": 1.0,
+        "events_with_no_usable_interval": 30,
+        "of": 56
+      },
+      "1.3": {
+        "derived_min_count_median": 597.2423669555624,
+        "too_few_prints_median": 0.8354846669348958,
+        "too_few_prints_p90": 1.0,
+        "events_with_no_usable_interval": 22,
+        "of": 56
+      },
+      "1.5": {
+        "derived_min_count_median": 250.06504909178574,
+        "too_few_prints_median": 0.4570837753734902,
+        "too_few_prints_p90": 1.0,
+        "events_with_no_usable_interval": 17,
+        "of": 56
+      }
+    },
+    "A1_3_question": "Is the too_few_prints fraction flat or steep across 1.1-1.5?",
+    "A1_3_answer": "Steep. The median fraction moves 1.000 / 1.000 / 0.836 / 0.457 across F = 1.1 / 1.2 / 1.3 / 1.5. D4 is load-bearing, not a preference. Reported per A1.3; no value is recommended."
+  },
+  "T0_5_clipped_fraction": {
+    "by_kernel_median_across_events": {
+      "1": {
+        "extended_day_only": 0.0,
+        "plus_rth_boundaries": 0.008338963213715935
+      },
+      "2": {
+        "extended_day_only": 0.0,
+        "plus_rth_boundaries": 0.013201243280212736
+      },
+      "4": {
+        "extended_day_only": 3.7934015857436044e-05,
+        "plus_rth_boundaries": 0.02424028832907279
+      },
+      "8": {
+        "extended_day_only": 8.075515419607368e-05,
+        "plus_rth_boundaries": 0.03989622931962718
+      },
+      "16": {
+        "extended_day_only": 0.00018563198049592554,
+        "plus_rth_boundaries": 0.07299699703038884
+      },
+      "32": {
+        "extended_day_only": 0.000376746472874842,
+        "plus_rth_boundaries": 0.13728140397909916
+      },
+      "64": {
+        "extended_day_only": 0.0006189281664018425,
+        "plus_rth_boundaries": 0.2251826875319637
+      },
+      "128": {
+        "extended_day_only": 0.0011947789383716305,
+        "plus_rth_boundaries": 0.4171855286001793
+      },
+      "256": {
+        "extended_day_only": 0.0029703516298422725,
+        "plus_rth_boundaries": 0.7629991911833555
+      },
+      "512": {
+        "extended_day_only": 0.08398053948546472,
+        "plus_rth_boundaries": 1.0
+      }
+    },
+    "two_definitions_note": "S3.3 motivates clipping solely by the overnight gap, which points at the extended-day edges. A centered window spanning the RTH open instead mixes two rate regimes. Both are reported; the choice between them is the D11 decision."
+  },
+  "T0_6_anchor_migration": {
+    "n_events": 114,
+    "base": "poll0",
+    "n_moved_vs_each_variant": {
+      "poll0_to_poll1": 0,
+      "poll0_to_poll5": 0,
+      "poll0_to_poll15": 0,
+      "poll0_to_poll60": 0
+    },
+    "segment_counts": {
+      "rth": 80,
+      "premarket": 30,
+      "null": 3,
+      "post": 1
+    },
+    "anchor_shift_seconds": {
+      "poll1": {
+        "n": 111,
+        "median_s": 0.426910464,
+        "p90_abs_s": 0.869321984,
+        "max_abs_s": 0.992206336
+      },
+      "poll5": {
+        "n": 111,
+        "median_s": 2.250376704,
+        "p90_abs_s": 4.622508032,
+        "max_abs_s": 4.992206336
+      },
+      "poll15": {
+        "n": 111,
+        "median_s": 7.068311552,
+        "p90_abs_s": 14.285337088,
+        "max_abs_s": 14.992206336
+      },
+      "poll60": {
+        "n": 111,
+        "median_s": 29.288945664,
+        "p90_abs_s": 53.035488512,
+        "max_abs_s": 59.992206336
+      }
+    },
+    "resolution": "Zero events change detection segment across all five poll variants. Per A1.6 the anchor choice therefore remains a default rather than becoming a decision with its own D-number. poll0 stands."
+  },
+  "T0_7_population": {
+    "candidates": {
+      "phase10_analysis_cohort": 100,
+      "phase10_frozen_cohort": 114,
+      "in_scope": 20951,
+      "in_scope_and_trades_ingested": 20951,
+      "in_scope_trades_and_quotes_ingested": 20772,
+      "in_scope_trades_ingested_full_window": 15476
+    },
+    "compute_estimates": {
+      "phase10_analysis_cohort": {
+        "n_events": 100,
+        "stage1_est_seconds": 98.6,
+        "stage1_est_hours": 0.03,
+        "stage3_est_hours_at_10_kernels": 0.27
+      },
+      "phase10_frozen_cohort": {
+        "n_events": 114,
+        "stage1_est_seconds": 112.4,
+        "stage1_est_hours": 0.03,
+        "stage3_est_hours_at_10_kernels": 0.31
+      },
+      "in_scope": {
+        "n_events": 20951,
+        "stage1_est_seconds": 20651.7,
+        "stage1_est_hours": 5.74,
+        "stage3_est_hours_at_10_kernels": 57.37
+      },
+      "in_scope_and_trades_ingested": {
+        "n_events": 20951,
+        "stage1_est_seconds": 20651.7,
+        "stage1_est_hours": 5.74,
+        "stage3_est_hours_at_10_kernels": 57.37
+      },
+      "in_scope_trades_and_quotes_ingested": {
+        "n_events": 20772,
+        "stage1_est_seconds": 20475.3,
+        "stage1_est_hours": 5.69,
+        "stage3_est_hours_at_10_kernels": 56.88
+      },
+      "in_scope_trades_ingested_full_window": {
+        "n_events": 15476,
+        "stage1_est_seconds": 15254.9,
+        "stage1_est_hours": 4.24,
+        "stage3_est_hours_at_10_kernels": 42.37
+      }
+    },
+    "canonical_scan_seconds": 333.4,
+    "per_event_seconds_basis": 0.986,
+    "note": "Stage 1 is one kernel; Stage 3 is the population times N kernels (A1.7). Per-event seconds is measured from the Stage 0 dev-sample pass and covers the tick read plus one interval pass; it is a lower bound for Stage 1, which additionally builds the normalisation window and selects a threshold."
+  },
+  "reported_not_gated": {
+    "implied_min_intervals_per_subburst": 3.0,
+    "formula": "D8_min_median_duration_s / D7_threshold_hi_s",
+    "note": "Reported per A1.4. Not evaluated."
+  },
+  "labelled_and_carried_counts": {
+    "no_intraburst_peak": 0,
+    "too_few_prints": 0,
+    "no_threshold": 0,
+    "note": "All three labels belong to Stage 1. Stage 0 selects no threshold and applies no window, so none can be produced here. The too_few_prints figures under T0_4 are a SENSITIVITY SWEEP, not carried labels."
+  },
+  "gate_outcomes": {
+    "stage_0": "no gate; mandatory halt for disposition (A1.2 T0.8)"
+  },
+  "open_items_for_stage_0_approval": [
+    {
+      "id": "O1",
+      "item": "peak-finding prominence has no configured value",
+      "detail": "config.mechanism.peak_finding fixes method and criterion ('prominence') and smoothing=false, but sets no prominence LEVEL. At Stage 1 that value selects the intraburst peak and therefore the threshold. Stage 0 swept it at 0.01/0.02/0.05/0.10/0.20 as a fraction of each event's own peak density and reports every value rather than choosing one. It needs a value before Stage 1.",
+      "evidence": "T0_1_raw_landscape.prominence_sweep, chart s0_1"
+    },
+    {
+      "id": "O2",
+      "item": "session-boundary definition for clipping",
+      "detail": "Extended-day-only and plus-RTH clipping give materially different clipped fractions and therefore different D11 readings. Both reported; not chosen.",
+      "evidence": "T0_5_clipped_fraction, chart s0_5"
+    },
+    {
+      "id": "O3",
+      "item": "D4 = 1.2 saturates the too_few_prints fraction",
+      "detail": "At the configured F = 1.2 the derived floor is 1,237 prints against a median achievable 283 in a 4-minute window; the median event's too_few_prints fraction is 1.000 and 30 of 56 events have no usable interval. Reported per A1.3, which asked for steep-or-flat and forbade a recommendation.",
+      "evidence": "T0_4_density_and_D4.sensitivity, chart s0_4"
+    },
+    {
+      "id": "O4",
+      "item": "the leftmost mode tracks the sweep floor",
+      "detail": "Across all five candidate floors the leftmost surviving mode lands in the first histogram bin above the floor, within 0.05 decades. The config guide asked whether the floor that clears the sub-microsecond mode and the floor that begins destroying real structure are far apart; in the tested range they are not separated.",
+      "evidence": "T0_2_T0_3_floor_sensitivity.mode_minus_floor_decades, chart s0_2"
+    },
+    {
+      "id": "O5",
+      "item": "check-4 condition 2 excludes the largest candidate floor",
+      "detail": "D7_threshold_lo_ms = 10 caps the admissible D1_sweep_floor_us at 1000. The 10000 us candidate would fail check-4 condition 2 at Stage 1 against the frozen D7_lo. Marked per floor in T0_2_T0_3_floor_sensitivity.",
+      "evidence": "T0_2_T0_3_floor_sensitivity.admissible_under_check4_cond2"
+    }
+  ],
+  "charts": [
+    {
+      "chart": "s0_1_raw_landscape.html",
+      "png": "s0_1_raw_landscape.png",
+      "kaleido_verified": true,
+      "html_bytes": 40145,
+      "png_bytes": 394034
+    },
+    {
+      "chart": "s0_2_sweep_floor.html",
+      "png": "s0_2_sweep_floor.png",
+      "kaleido_verified": true,
+      "html_bytes": 11863,
+      "png_bytes": 402703
+    },
+    {
+      "chart": "s0_3_peak_location.html",
+      "png": "s0_3_peak_location.png",
+      "kaleido_verified": true,
+      "html_bytes": 14239,
+      "png_bytes": 252307
+    },
+    {
+      "chart": "s0_4_d4_sensitivity.html",
+      "png": "s0_4_d4_sensitivity.png",
+      "kaleido_verified": true,
+      "html_bytes": 11760,
+      "png_bytes": 346161
+    },
+    {
+      "chart": "s0_5_clipped_fraction.html",
+      "png": "s0_5_clipped_fraction.png",
+      "kaleido_verified": true,
+      "html_bytes": 70504,
+      "png_bytes": 378048
+    }
+  ],
+  "escalations_raised": [],
+  "next": "T0.8 HALT. Stage 0 does not flow into Stage 1 (A1.2). Awaiting Cooper's disposition and the five Class M values.",
+  "source": "research/phase_10c/t0_digest.py:main"
+}
