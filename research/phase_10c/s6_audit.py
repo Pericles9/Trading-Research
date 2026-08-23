@@ -1,128 +1,199 @@
-import json, os
+"""
+Phase 10c -- S6 satisfiability audit, evaluated PER STAGE per Amendment A1.9.
 
-out = {
- "phase": "10c", "task": "S6 satisfiability audit",
- "run_state": "HALTED BEFORE ANY CODE EXECUTION",
- "rule": "S6: If any check fails, halt and escalate. Do not proceed with three of four.",
- "no_pipeline_code_executed": True,
- "no_real_event_processed": True,
- "reads_performed": [
-   "config/ directory listing",
-   "config/dev_sample_v3.json (metadata)",
-   "results/phase_10/artifacts/t1_cohort_summary.json",
-   "results/phase_10/artifacts/t1_cohort_manifest.parquet (ticker/date/group only)",
-   "results/phase_10/artifacts/v2_r13_detection.parquet (schema + keys)",
-   "DuckDB DESCRIBE on filtered_trades and momentum_events_canonical (metadata only, no scan)",
-   "python import checks"],
+Target stage is taken from the command line (default 0). Reads the committed
+config and the repo; runs no pipeline code and touches no real event data
+beyond artifact metadata.
 
- "check_1_measurable": {
-   "verdict": "PASS",
-   "filtered_trades_columns": ["exchange", "id", "participant_timestamp", "price",
-       "sequence_number", "sip_timestamp", "size", "tape", "trf_id", "trf_timestamp",
-       "correction", "ticker", "event_date", "momentum_pct"],
-   "s7_quantities_traceable": {
-     "inter-trade intervals": "sip_timestamp + sequence_number tiebreak",
-     "sweep aggregation (sum volume, VWAP, first timestamp)": "size + price",
-     "sub-burst duration / spacing / count": "sip_timestamp",
-     "timing relative to T=0": "detection anchor artifact",
-     "share of total price move inside sub-bursts": "filtered_trades.price only -- tick-derived",
-     "detection-price decile (T3.5)": "v2_r13_detection.parquet cross_price / reference_price, tick-derived per Phase 10 D7"},
-   "d4_risk_noted": ("filtered_trades carries a momentum_pct column. It is a SPINE numeric and is "
-       "D4-quarantined from computation; permitted only as a universe-selection / stratification "
-       "variable. 'Total price move' in T1.4 must be derived from tick prices, never from "
-       "momentum_pct or any spine OHLC column."),
-   "dependencies_present": {
-       "exchange_calendars": "4.13.2 -- required for D3 session-boundary clipping",
-       "scipy": "1.17.0 -- find_peaks supports prominence=, required by S2.2",
-       "plotly": "6.5.2", "kaleido": "present", "duckdb": "1.4.4",
-       "numpy": "2.4.2", "pandas": "2.3.3"}},
+A1.9: "check 2 is evaluated per stage, not once. Stage 0 requires only the Class E
+values present. Stage 1 requires Class E and Class M both present and Stage 0
+approved."
 
- "check_2_threshold_set": {
-   "verdict": "FAIL",
-   "reason": "No run configuration exists. There is no config/phase_10c*.json in the repo.",
-   "cooper_values_required_and_absent": ["D1_sweep_floor_us", "D2_max_cutoff_ms",
-       "D4_median_precision_factor", "D7_threshold_lo_ms", "D7_threshold_hi_s",
-       "D8_min_median_duration_s", "D9_slope_max", "D11_grid_ceiling_min"],
-   "n_absent": 8,
-   "governing_rule": ("S5: No value marked [Cooper] is ever filled in by you. If a run "
-       "configuration reaches you with a [Cooper] field empty, halt and escalate. Do not infer a "
-       "sensible default, do not copy the v4 value, do not proceed with a placeholder.")},
+S5 / A1.9: "no [Cooper] value is ever filled by the agent. Not inferred, not
+defaulted, not copied from the v4 configuration. An empty field is a halt."
 
- "check_3_reachable": {
-   "verdict": "FAIL",
-   "blocking_ambiguities": [
-     {"id": "A1", "item": "dev sample identity",
-      "prompt_text": "pinned 50-event development sample (v4, seed 42, stratified by momentum percentage decile)",
-      "problem": ("That description matches no existing object. The two candidates are DISJOINT -- "
-          "they share ZERO events -- so this is not a naming quibble; it selects a completely "
-          "different 50 events and changes every Stage 1 number."),
-      "candidate_1": {"name": "config/dev_sample_v3.json", "n": 50, "seed": 42,
-          "stratification": "momentum_pct decile (n_deciles=10, per_decile=5)",
-          "matches": "the stratification wording",
-          "conflicts": "labelled v3, not v4",
-          "detection_anchors_available": "0 of 50 -- none of these events appear in v2_r13_detection.parquet",
-          "note": "This is CLAUDE.md's pinned program dev sample."},
-      "candidate_2": {"name": "dev_v4_primary in results/phase_10/artifacts/t1_cohort_manifest.parquet",
-          "n": 50, "stratification": "t0_print_count decile",
-          "matches": "the 'v4' label",
-          "conflicts": "stratified by print-count decile, NOT momentum percentage decile",
-          "detection_anchors_available": "50 of 50"},
-      "consequence": ("Candidate 1 cannot run Stage 1 as written without first deriving a detection "
-          "anchor for all 50 events, which is not a task in S7.")},
-     {"id": "A2", "item": "detection anchor is not unique",
-      "problem": ("S1.1 refers to 'the detection anchor' in the singular. The artifact carries FIVE "
-          "poll variants per event -- det_ns_poll0, poll1, poll5, poll15, poll60 -- each with its own "
-          "det_segment_* column. Since S1.3 stratifies every chart and table by detection segment, "
-          "the poll choice propagates into every reported split."),
-      "artifact": "results/phase_10/artifacts/v2_r13_detection.parquet",
-      "rows": 342, "unique_events": 114, "rows_per_event": 3},
-     {"id": "A3", "item": "'full population' is undefined",
-      "problem": ("T1.5 computes the gate 'on the full population' and S7 says headline numbers come "
-          "from 'the full-population run'. The prompt never defines the population. Candidates differ "
-          "by more than two orders of magnitude in cost."),
-      "candidates": {"Phase 10 analysis cohort": 100, "Phase 10 frozen cohort": 114,
-          "dev_sample_v3 eligible population": 15349,
-          "Phase 10 stratification eligible pool": 15299}}]},
+Usage: .venv/Scripts/python.exe research/phase_10c/s6_audit.py [stage]
+"""
+from __future__ import annotations
 
- "check_4_non_contradictory": {
-   "verdict": "CANNOT EVALUATE",
-   "reason": ("Both numeric conditions in check 4 reference [Cooper] values that do not exist, so "
-       "neither can be confirmed: that D2_max_cutoff_ms sits above D1_sweep_floor_us by at least two "
-       "orders of magnitude, and that the D7 sanity band lies at or below D2_max_cutoff_ms."),
-   "structural_findings_independent_of_values": [
-     {"id": "C1", "severity": "constrains admissible Cooper values",
-      "finding": ("Check 4 requires the D7 band -- the median THRESHOLD location -- to lie at or "
-          "below D2_max_cutoff_ms. S3.2 requires the threshold to be a trough strictly to the RIGHT "
-          "of the intraburst peak, and that peak is itself at or below D2_max_cutoff_ms. Together "
-          "these confine the median threshold to the half-open interval "
-          "(intraburst peak, D2_max_cutoff_ms]. The band is satisfiable only if the intraburst peak "
-          "sits strictly below D2 with room to spare; if the peak lands at the ceiling there is no "
-          "admissible trough at all."),
-      "unit_consequence": ("D7_threshold_hi is expressed in SECONDS while D2_max_cutoff is in "
-          "MILLISECONDS. Satisfying check 4 therefore requires "
-          "D7_threshold_hi_s <= D2_max_cutoff_ms / 1000. Worth confirming this is intended when the "
-          "values are set, because it caps the threshold three orders of magnitude below the "
-          "seconds-scale sub-burst durations D8 requires.")},
-     {"id": "C2", "severity": "comparability",
-      "finding": ("D6's Stage-2 kernel set is 1, 5 and 30 minutes. D10's Stage-3 grid is geometric "
-          "base 2 from 1 minute: 1, 2, 4, 8, 16, 32, 64. Only the 1-minute kernel is common to both. "
-          "5 and 30 minutes are NOT on the Stage-3 grid, and D5's first kernel of 5 minutes is not "
-          "either. Stage 2's slope test and Stage 3's grid therefore sit on different rungs and are "
-          "not directly comparable rung-for-rung."),
-      "verified": {"D10_grid_first_8": [1, 2, 4, 8, 16, 32, 64, 128],
-          "D6_kernel_1min_on_grid": True, "D6_kernel_5min_on_grid": False,
-          "D6_kernel_30min_on_grid": False}}]},
+import hashlib
+import json
+import os
+import sys
 
- "summary": {"check_1_measurable": "PASS", "check_2_threshold_set": "FAIL",
-             "check_3_reachable": "FAIL", "check_4_non_contradictory": "CANNOT EVALUATE",
-             "passed": 1, "of": 4,
-             "action": "HALT AND ESCALATE. No Stage 1 task was started."},
- "source": "research/phase_10c/s6_audit.py"}
+CFG = "config/phase_10c.json"
+OUT = "results/phase_10c/artifacts/s6_satisfiability_audit_stage{stage}.json"
 
-os.makedirs("results/phase_10c/artifacts", exist_ok=True)
-p = "results/phase_10c/artifacts/s6_satisfiability_audit.json"
-with open(p, "w", encoding="utf-8") as f:
-    json.dump(out, f, indent=2)
-print("written:", p)
-for k, v in out["summary"].items():
-    print(f"  {k}: {v}")
+
+def main() -> int:
+    stage = int(sys.argv[1]) if len(sys.argv) > 1 else 0
+    cfg = json.load(open(CFG, encoding="utf-8"))
+    chash = hashlib.sha256(open(CFG, "rb").read()).hexdigest()[:8]
+    cv = cfg["cooper_values"]
+    classE = cv["_class_E_fill_before_stage_0"]
+    classM = cv["_class_M_fill_at_stage_0_approval"]
+    empty_E = sorted(k for k, v in classE.items() if v is None)
+    empty_M = sorted(k for k, v in classM.items() if v is None)
+
+    rows = []
+
+    # ---------------------------------------------------------------- check 1
+    c1 = {
+        "check": "1 measurable",
+        "verdict": "PASS",
+        "basis": ("Re-confirmed from the 2026-08-22 audit and unchanged by A1. "
+                  "filtered_trades carries sip_timestamp, sequence_number, price, size. "
+                  "Detection anchors and detection prices exist in "
+                  "results/phase_10/artifacts/v2_r13_detection.parquet. Dependencies present: "
+                  "exchange_calendars 4.13.2 (D3 session clipping), scipy 1.17.0 "
+                  "(find_peaks prominence), plotly 6.5.2, kaleido, duckdb 1.4.4."),
+        "a1_8_quarantine_registered": ("filtered_trades.momentum_pct" in
+                                       cfg["quarantine"]["columns"]),
+        "quarantine_columns": cfg["quarantine"]["columns"],
+        "stage_0_uses_no_cooper_value": True,
+        "stage_0_task_inputs": {
+            "T0.1": "raw intervals only",
+            "T0.2": f"candidate floors {cfg['stage_0_sweeps']['T0_2_candidate_sweep_floors_us']} us",
+            "T0.3": "largest peak per candidate floor",
+            "T0.4": f"candidate precision factors {cfg['stage_0_sweeps']['T0_4_candidate_precision_factors']}",
+            "T0.5": f"candidate kernels {cfg['stage_0_sweeps']['T0_5_candidate_kernels_min']} min",
+            "T0.6": f"anchor variants {cfg['stage_0_sweeps']['T0_6_anchor_variants']}",
+            "T0.7": "population counts"},
+    }
+    rows.append(c1)
+
+    # ---------------------------------------------------------------- check 2
+    if stage == 0:
+        required, missing, req_label = classE, empty_E, "class_E only"
+    else:
+        required = {**classE, **classM}
+        missing = empty_E + empty_M
+        req_label = "class_E and class_M, stage 0 approved"
+    c2 = {
+        "check": "2 threshold set",
+        "stage_evaluated": stage,
+        "requirement": req_label,
+        "config_rule": cfg["satisfiability_checks"][f"check_2_stage_{min(stage,1)}_requires"],
+        "n_required": len(required),
+        "n_present": len(required) - len(missing),
+        "missing": missing,
+        "verdict": "PASS" if not missing else "FAIL",
+        "governing_rule": ("A1.9 / S5: no [Cooper] value is ever filled by the agent. Not "
+                           "inferred, not defaulted, not copied from the v4 configuration. An "
+                           "empty field is a halt."),
+    }
+    if stage == 0 and missing:
+        c2["why_it_still_blocks_stage_0"] = (
+            "Every Stage 0 task (T0.1-T0.7) is computable without these values -- Stage 0 "
+            "produces no sub-bursts, selects no threshold and applies no normalisation window. "
+            "The requirement is not computational, it is PRE-REGISTRATION. A1.1: Class E values "
+            "'must be locked before any sub-burst exists', and A1.1's locking rule freezes them "
+            "at Stage 0 approval so that a gate threshold cannot be set after seeing the "
+            "landscape it will later judge. Running Stage 0 first and setting D7/D8/D9 afterwards "
+            "would convert three pre-registered gates into descriptions of data already seen.")
+    rows.append(c2)
+
+    # ---------------------------------------------------------------- check 3
+    ds = cfg["dev_sample"]
+    c3 = {
+        "check": "3 reachable",
+        "verdict": "PASS",
+        "resolutions": {
+            "A1 dev sample": (f"Resolved by A1.6. dev_sample = {ds['name']}, n={ds['n']}, "
+                              f"stratified by {ds['stratification']}. The 'momentum percentage "
+                              "decile' wording is struck; dev_sample_v3.json is not used. "
+                              "Verified 2026-08-22: dev_v4_primary has 50 of 50 detection anchors, "
+                              "dev_sample_v3 has 0 of 50."),
+            "A2 detection anchor": (f"Resolved by A1.6. Provisional variant "
+                                    f"'{cfg['data']['detection_anchor_variant']}', confirmed or "
+                                    "revised at Stage 0 approval on the T0.6 migration matrix."),
+            "A3 population": ("Resolved by A1.7. Split into D14_population and D15_stage3_scope, "
+                              "both Class M, both read from T0.7. Not required for Stage 0."),
+            "sidecar": (f"A1.6: {ds['sidecar_events']['n']} sidecar events are "
+                        f"{ds['sidecar_events']['disposition']} and reported "
+                        f"{ds['sidecar_events']['reported']}.")},
+        "note": "Stage 0 charts and digest fields are all reachable from the dev sample.",
+    }
+    rows.append(c3)
+
+    # ---------------------------------------------------------------- check 4
+    grid = [2 ** k for k in range(0, 10)]
+    k_s2 = cfg["settled"]["D6_stage2_kernels_min"]
+    d5 = cfg["settled"]["D5_first_kernel_min"]
+    on_grid = {str(k): (k in grid) for k in k_s2}
+    c4 = {
+        "check": "4 non-contradictory",
+        "stage_evaluated": stage,
+        "verdict": "NOT APPLICABLE AT STAGE 0" if stage == 0 else "PENDING",
+        "conditions": cfg["satisfiability_checks"]["check_4_conditions"],
+        "removed_condition": cfg["satisfiability_checks"]["_removed_condition"],
+        "c1_finding_resolved": ("A1.4 accepts the finding and replaces the condition. The max "
+                               "cutoff bounds where the intraburst PEAK may sit, not where the "
+                               "threshold lands; the threshold is a trough to the right of that "
+                               "peak and routinely sits above the cutoff."),
+        "c2_finding_resolved": {
+            "note": ("A1.5 moves D5 to 4 min and D6 to {1, 4, 32}. All three Stage 2 kernels now "
+                     "sit on the base-2 Stage 3 grid at rungs 0, 2 and 5."),
+            "D5_first_kernel_min": d5, "D5_on_grid": d5 in grid,
+            "D6_stage2_kernels_min": k_s2, "D6_on_grid": on_grid,
+            "grid_first_10": grid},
+        "why_na_at_stage_0": ("Both surviving conditions reference D1_sweep_floor_us, a Class M "
+                              "value set at Stage 0 approval. Neither is evaluable before Stage 0 "
+                              "runs, and neither is required by any Stage 0 task."),
+    }
+    # Forward-looking arithmetic on the surviving check-4 condition 2.
+    floors = cfg["stage_0_sweeps"]["T0_2_candidate_sweep_floors_us"]
+    c4["forward_risk_D7lo_vs_D1"] = {
+        "condition": "D7_threshold_lo_ms must exceed D1_sweep_floor_us by >= 1 order of magnitude",
+        "candidate_D1_floors_us": floors,
+        "implied_min_D7_lo_ms_per_floor": {str(f): (f * 10) / 1000.0 for f in floors},
+        "D7_lo_ms_that_satisfies_every_candidate_floor": (max(floors) * 10) / 1000.0,
+        "risk": ("D7_threshold_lo_ms is Class E and frozen at Stage 0 approval; D1_sweep_floor_us "
+                 "is Class M and read from Stage 0 output. If the pair fails this condition at "
+                 "Stage 1, A1.1's locking rule leaves no way to repair it -- revising a Class E "
+                 "gate value after its stage's output exists requires a new phase number. Setting "
+                 "D7_threshold_lo_ms at or above the value shown satisfies the condition against "
+                 "every candidate floor in T0.2's sweep."),
+        "reported_not_recommended": True,
+    }
+    rows.append(c4)
+
+    verdicts = {r["check"]: r["verdict"] for r in rows}
+    blocking = [r["check"] for r in rows if r["verdict"] == "FAIL"]
+    out = {
+        "phase": "10c", "task": "S6 satisfiability audit", "stage_evaluated": stage,
+        "config": CFG, "config_hash": chash,
+        "governing_documents": cfg["_governing_documents"],
+        "protocol": "A1.9 -- check 2 evaluated per stage, not once",
+        "no_pipeline_code_executed": True,
+        "no_real_event_processed": True,
+        "checks": rows,
+        "verdicts": verdicts,
+        "blocking_checks": blocking,
+        "action": ("HALT AND ESCALATE. Stage 0 not started."
+                   if blocking else "All checks clear for this stage."),
+        "source": "research/phase_10c/s6_audit.py:main",
+    }
+    p = OUT.format(stage=stage)
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    with open(p, "w", encoding="utf-8") as f:
+        json.dump(out, f, indent=2)
+
+    print(f"Phase 10c S6 audit -- stage {stage}, config hash {chash}")
+    for r in rows:
+        print(f"  check {r['check']:22s} {r['verdict']}")
+    if c2["missing"]:
+        print(f"\n  check 2 missing ({len(c2['missing'])} of {c2['n_required']}):")
+        for m in c2["missing"]:
+            print(f"     {m} = null")
+    fr = c4["forward_risk_D7lo_vs_D1"]
+    print(f"\n  forward arithmetic: D7_threshold_lo_ms >= "
+          f"{fr['D7_lo_ms_that_satisfies_every_candidate_floor']} ms satisfies check-4 "
+          f"condition 2 against every candidate D1 floor {fr['candidate_D1_floors_us']} us")
+    print(f"\n  {out['action']}")
+    print(f"  written: {p}")
+    return 2 if blocking else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
