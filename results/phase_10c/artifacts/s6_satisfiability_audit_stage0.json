@@ -3,7 +3,7 @@
   "task": "S6 satisfiability audit",
   "stage_evaluated": 0,
   "config": "config/phase_10c.json",
-  "config_hash": "e4c56709",
+  "config_hash": "9c739c08",
   "governing_documents": [
     "Phase-10c-Prompt.md",
     "Phase-10c-Amendment-A1.md"
@@ -42,17 +42,10 @@
       "requirement": "class_E only",
       "config_rule": "class_E only",
       "n_required": 5,
-      "n_present": 0,
-      "missing": [
-        "D4_median_precision_factor",
-        "D7_threshold_hi_s",
-        "D7_threshold_lo_ms",
-        "D8_min_median_duration_s",
-        "D9_slope_max"
-      ],
-      "verdict": "FAIL",
-      "governing_rule": "A1.9 / S5: no [Cooper] value is ever filled by the agent. Not inferred, not defaulted, not copied from the v4 configuration. An empty field is a halt.",
-      "why_it_still_blocks_stage_0": "Every Stage 0 task (T0.1-T0.7) is computable without these values -- Stage 0 produces no sub-bursts, selects no threshold and applies no normalisation window. The requirement is not computational, it is PRE-REGISTRATION. A1.1: Class E values 'must be locked before any sub-burst exists', and A1.1's locking rule freezes them at Stage 0 approval so that a gate threshold cannot be set after seeing the landscape it will later judge. Running Stage 0 first and setting D7/D8/D9 afterwards would convert three pre-registered gates into descriptions of data already seen."
+      "n_present": 5,
+      "missing": [],
+      "verdict": "PASS",
+      "governing_rule": "A1.9 / S5: no [Cooper] value is ever filled by the agent. Not inferred, not defaulted, not copied from the v4 configuration. An empty field is a halt."
     },
     {
       "check": "3 reachable",
@@ -127,13 +120,11 @@
   ],
   "verdicts": {
     "1 measurable": "PASS",
-    "2 threshold set": "FAIL",
+    "2 threshold set": "PASS",
     "3 reachable": "PASS",
     "4 non-contradictory": "NOT APPLICABLE AT STAGE 0"
   },
-  "blocking_checks": [
-    "2 threshold set"
-  ],
-  "action": "HALT AND ESCALATE. Stage 0 not started.",
+  "blocking_checks": [],
+  "action": "All checks clear for this stage.",
   "source": "research/phase_10c/s6_audit.py:main"
 }

@@ -11,11 +11,11 @@
 
   "cooper_values": {
     "_class_E_fill_before_stage_0": {
-      "D4_median_precision_factor": null,
-      "D7_threshold_lo_ms": null,
-      "D7_threshold_hi_s": null,
-      "D8_min_median_duration_s": null,
-      "D9_slope_max": null
+      "D4_median_precision_factor": 1.2,
+      "D7_threshold_lo_ms": 10,
+      "D7_threshold_hi_s": 10,
+      "D8_min_median_duration_s": 30,
+      "D9_slope_max": 0.5
     },
     "_class_M_fill_at_stage_0_approval": {
       "D1_sweep_floor_us": null,
