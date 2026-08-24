@@ -1,0 +1,498 @@
+{
+  "phase": "10c",
+  "amendment": "A4",
+  "config_hash": "1cf48950",
+  "A1_closing_print": {
+    "A1_1_reader": {
+      "action": "conditions read via a Phase-10c-local reader, not by mutating _TRADE_COLS",
+      "why": "research/phase_10/common.py belongs to a closed, tagged phase. Editing its module from Phase 10c would change a closed phase's load path for every future re-run. The local reader achieves the same read with a smaller blast radius. Recorded rather than done silently; say the word if the in-place edit is wanted instead.",
+      "file_discovery": "identical to Phase 10 -- base trades.parquet plus *_repair_1c siblings"
+    },
+    "A1_2_distribution": {
+      "window": "|t - session_close| <= 1 s",
+      "n_events_scanned": 114,
+      "n_prints_in_window": 877,
+      "code_counts_whole_window": {
+        "41": 279,
+        "37": 245,
+        "15": 208,
+        "14": 196,
+        "8": 83,
+        "9": 76,
+        "12": 30,
+        "7": 2,
+        "2": 1
+      },
+      "code_counts_after_close_only": {
+        "15": 208,
+        "41": 112,
+        "8": 83,
+        "9": 76,
+        "12": 30,
+        "14": 29,
+        "37": 28,
+        "2": 1
+      },
+      "n_prints_after_close": 339,
+      "largest_prints_near_close": [
+        {
+          "ticker": "APLD",
+          "event_date_canonical": "2024-09-05",
+          "seconds_from_close": 0.32685824,
+          "price": 5.37,
+          "size": 764761,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "APLD",
+          "event_date_canonical": "2024-09-05",
+          "seconds_from_close": 0.32687616,
+          "price": 5.37,
+          "size": 764761,
+          "codes": "15"
+        },
+        {
+          "ticker": "MRSN",
+          "event_date_canonical": "2023-05-03",
+          "seconds_from_close": 0.214245888,
+          "price": 6.4,
+          "size": 625935,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "MRSN",
+          "event_date_canonical": "2023-05-03",
+          "seconds_from_close": 0.451321344,
+          "price": 6.4,
+          "size": 625935,
+          "codes": "15"
+        },
+        {
+          "ticker": "NCNO",
+          "event_date_canonical": "2023-06-16",
+          "seconds_from_close": 0.26507392,
+          "price": 31.69,
+          "size": 364853,
+          "codes": "15"
+        },
+        {
+          "ticker": "NCNO",
+          "event_date_canonical": "2023-06-16",
+          "seconds_from_close": 0.264634624,
+          "price": 31.69,
+          "size": 364853,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "MESA",
+          "event_date_canonical": "2020-03-20",
+          "seconds_from_close": 0.96722688,
+          "price": 3.13,
+          "size": 356805,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "MESA",
+          "event_date_canonical": "2020-03-20",
+          "seconds_from_close": 0.967291904,
+          "price": 3.13,
+          "size": 356805,
+          "codes": "15"
+        },
+        {
+          "ticker": "ACET",
+          "event_date_canonical": "2020-09-18",
+          "seconds_from_close": 0.007885824,
+          "price": 21.4,
+          "size": 229769,
+          "codes": "15"
+        },
+        {
+          "ticker": "ACET",
+          "event_date_canonical": "2020-09-18",
+          "seconds_from_close": 0.007793664,
+          "price": 21.4,
+          "size": 229769,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "BBBY",
+          "event_date_canonical": "2022-08-08",
+          "seconds_from_close": 0.379580416,
+          "price": 11.41,
+          "size": 184399,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "BBBY",
+          "event_date_canonical": "2022-08-08",
+          "seconds_from_close": 0.379589632,
+          "price": 11.41,
+          "size": 184399,
+          "codes": "15"
+        },
+        {
+          "ticker": "ANY",
+          "event_date_canonical": "2021-09-02",
+          "seconds_from_close": 0.347076096,
+          "price": 9.4,
+          "size": 124240,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "ANY",
+          "event_date_canonical": "2021-09-02",
+          "seconds_from_close": 0.347098368,
+          "price": 9.4,
+          "size": 124240,
+          "codes": "15"
+        },
+        {
+          "ticker": "MGNX",
+          "event_date_canonical": "2023-11-07",
+          "seconds_from_close": 0.147850496,
+          "price": 6.37,
+          "size": 86950,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "MGNX",
+          "event_date_canonical": "2023-11-07",
+          "seconds_from_close": 0.147870464,
+          "price": 6.37,
+          "size": 86950,
+          "codes": "15"
+        },
+        {
+          "ticker": "AMCX",
+          "event_date_canonical": "2021-02-26",
+          "seconds_from_close": 0.571859968,
+          "price": 65.59,
+          "size": 66463,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "AMCX",
+          "event_date_canonical": "2021-02-26",
+          "seconds_from_close": 0.57186816,
+          "price": 65.59,
+          "size": 66463,
+          "codes": "15"
+        },
+        {
+          "ticker": "CODX",
+          "event_date_canonical": "2020-03-11",
+          "seconds_from_close": 0.371447552,
+          "price": 13.18,
+          "size": 62901,
+          "codes": "15"
+        },
+        {
+          "ticker": "CODX",
+          "event_date_canonical": "2020-03-11",
+          "seconds_from_close": 0.371403008,
+          "price": 13.18,
+          "size": 62901,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "AEHL",
+          "event_date_canonical": "2021-02-19",
+          "seconds_from_close": 0.511296,
+          "price": 4.61,
+          "size": 56595,
+          "codes": "15"
+        },
+        {
+          "ticker": "AEHL",
+          "event_date_canonical": "2021-02-19",
+          "seconds_from_close": 0.511264512,
+          "price": 4.61,
+          "size": 56595,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "TANH",
+          "event_date_canonical": "2020-11-23",
+          "seconds_from_close": 0.70453248,
+          "price": 2.14,
+          "size": 47470,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "TANH",
+          "event_date_canonical": "2020-11-23",
+          "seconds_from_close": 0.704546816,
+          "price": 2.14,
+          "size": 47470,
+          "codes": "15"
+        },
+        {
+          "ticker": "FULC",
+          "event_date_canonical": "2023-08-22",
+          "seconds_from_close": 0.279686912,
+          "price": 5.43,
+          "size": 46219,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "FULC",
+          "event_date_canonical": "2023-08-22",
+          "seconds_from_close": 0.286244096,
+          "price": 5.43,
+          "size": 46219,
+          "codes": "15"
+        },
+        {
+          "ticker": "OCUL",
+          "event_date_canonical": "2023-12-04",
+          "seconds_from_close": 0.02015744,
+          "price": 3.36,
+          "size": 43702,
+          "codes": "8,9,41"
+        },
+        {
+          "ticker": "OCUL",
+          "event_date_canonical": "2023-12-04",
+          "seconds_from_close": 0.06542848,
+          "price": 3.36,
+          "size": 43702,
+          "codes": "15"
+        },
+        {
+          "ticker": "VEEE",
+          "event_date_canonical": "2024-06-25",
+          "seconds_from_close": 0.1838848,
+          "price": 0.56,
+          "size": 37535,
+          "codes": "15"
+        },
+        {
+          "ticker": "VEEE",
+          "event_date_canonical": "2024-06-25",
+          "seconds_from_close": 0.183862272,
+          "price": 0.56,
+          "size": 37535,
+          "codes": "8,9,41"
+        }
+      ],
+      "exclusively_after_close_codes": {
+        "15": 208,
+        "8": 83,
+        "9": 76,
+        "12": 30,
+        "2": 1
+      },
+      "straddling_codes": {
+        "41": 279,
+        "37": 245,
+        "14": 196,
+        "7": 2
+      }
+    },
+    "A1_3_code_definitions": {
+      "available_in_repo": false,
+      "searched": [
+        "data/filtered/METADATA.md",
+        "data/Schema.md",
+        "docs/**"
+      ],
+      "what_metadata_says": "'conditions (object): Trade conditions.' -- no code-to-meaning map",
+      "consequence": "The archive ships no code dictionary and D14 makes this environment offline, so the vendor's documentation cannot be fetched. Per the amendment's own instruction I am NOT supplying a remembered mapping. The rule therefore cannot be keyed on documented semantics today; it can only be keyed on an empirically identified code set, or the dictionary has to be brought into the repo first."
+    },
+    "A1_4_proposal": {
+      "status": "PROPOSED on empirical grounds; Cooper sets it",
+      "proposed_code_set": [
+        8,
+        9,
+        15
+      ],
+      "discriminant_test": {
+        "method": "anchor print looked up by NEAREST match, its codes compared against the three genuine after-hours anchors",
+        "ACET 2020-09-18 (closing cross)": {
+          "codes": [
+            8,
+            9,
+            41
+          ],
+          "size": 229769,
+          "price": 21.4
+        },
+        "OST 2024-06-13 (after hours)": {
+          "codes": [
+            14,
+            12,
+            41
+          ],
+          "size": 304,
+          "price": 0.55
+        },
+        "CELH 2020-08-06 (after hours)": {
+          "codes": [
+            12
+          ],
+          "size": 215,
+          "price": 21.32
+        },
+        "BMR 2024-03-13 (after hours)": {
+          "codes": [
+            12,
+            37
+          ],
+          "size": 5,
+          "price": 7.51
+        }
+      },
+      "justification": "Codes 8 and 9 occur ONLY after the close in the +/-1 s window (83 and 76 occurrences) and appear on the ACET auction print but on NONE of the three genuine after-hours anchors. Code 15 is likewise exclusively after close (208) and carries ACET's twin print -- same price, same 229,769 shares, 92 microseconds later -- so including it catches the closing print proper as well as the auction trade.",
+      "why_exclusivity_alone_is_not_enough": "Code 12 is ALSO exclusively after close (30 occurrences) but appears on all three ordinary after-hours anchors and not on ACET. 'Occurs only after the close' therefore does not by itself mark an auction print; the discriminant is {8, 9, 15}.",
+      "size_signature_corroborates": "229,769 shares against 304, 215 and 5 for the after-hours anchors -- consistent with an auction cross. Reported as corroboration, not as part of the proposed rule.",
+      "residual_caveat": "This is an EMPIRICAL identification, not a semantic one. The archive ships no code dictionary and the environment is offline (D14), so what codes 8, 9 and 15 are called cannot be confirmed here. The set discriminates correctly on every case in the cohort; confirming it means the intended thing still needs the dictionary."
+    },
+    "A1_5_float64_anchor_precision": {
+      "finding": "det_ns_poll0 and every det_ns_* column in v2_r13_detection.parquet are stored as float64. At epoch-nanosecond magnitude float64 spacing is 256 ns, so an anchor timestamp cannot round-trip exactly to the print that produced it.",
+      "consequence": "An exact join on the anchor timestamp silently returns nothing -- it did, on the first run of this discriminant test. Nearest-match within a microsecond recovers the print with a 0 ns residual in all four cases.",
+      "materiality": "Immaterial to Phase 10c results, which measure at millisecond scale and use the anchor only as an origin. It matters for any exact join on the anchor, so it is recorded rather than left to be rediscovered."
+    }
+  },
+  "A2_evening_gap": {
+    "span": "20:00 -> 04:00 ET inside the redefined day",
+    "by_variant": {
+      "1.25": 0,
+      "1.3": 0,
+      "1.35": 0
+    },
+    "measured_empty": true,
+    "note": "Measured, not assumed. Phase 10 derived anchors on the 04:00-20:00 window, so this span could only be non-empty if an anchor sat exactly at a boundary."
+  },
+  "A2_segments": {
+    "evening": "prior session close -> 20:00 ET",
+    "premarket": "04:00 -> 09:30 ET",
+    "rth": "09:30 ET -> session close",
+    "retired": [
+      "post",
+      "outside_redefined_day"
+    ]
+  },
+  "A3_rederivation": {
+    "by_variant": {
+      "1.25": {
+        "n_rth_events": 36,
+        "sigma_rth_median": 1.757571925363104,
+        "rth_derived_floor": 156.48419971291972,
+        "binding_rung_min": 8
+      },
+      "1.3": {
+        "n_rth_events": 36,
+        "sigma_rth_median": 1.7406674092344292,
+        "rth_derived_floor": 153.4885119696363,
+        "binding_rung_min": 8
+      },
+      "1.35": {
+        "n_rth_events": 28,
+        "sigma_rth_median": 1.679381147607287,
+        "rth_derived_floor": 142.89396279945026,
+        "binding_rung_min": 8
+      }
+    },
+    "all_agree_at_8": true,
+    "verdict": "D5 = 8 and D6 = {2, 8, 32} stand with ACET in the RTH pool"
+  },
+  "D_migration": {
+    "marginals": {
+      "1.25": {
+        "rth": 80,
+        "premarket": 30,
+        "unlabelled": 3,
+        "evening": 1
+      },
+      "1.30": {
+        "rth": 80,
+        "premarket": 29,
+        "unlabelled": 4,
+        "evening": 1
+      },
+      "1.35": {
+        "rth": 64,
+        "premarket": 28,
+        "unlabelled": 19,
+        "evening": 3
+      }
+    },
+    "matrix_125_to_130": {
+      "evening": {
+        "evening": 1,
+        "premarket": 0,
+        "rth": 0,
+        "unlabelled": 0
+      },
+      "premarket": {
+        "evening": 0,
+        "premarket": 29,
+        "rth": 0,
+        "unlabelled": 0
+      },
+      "rth": {
+        "evening": 0,
+        "premarket": 1,
+        "rth": 79,
+        "unlabelled": 0
+      },
+      "unlabelled": {
+        "evening": 0,
+        "premarket": 0,
+        "rth": 1,
+        "unlabelled": 3
+      }
+    },
+    "matrix_130_to_135": {
+      "evening": {
+        "evening": 0,
+        "premarket": 0,
+        "rth": 3,
+        "unlabelled": 0
+      },
+      "premarket": {
+        "evening": 0,
+        "premarket": 28,
+        "rth": 0,
+        "unlabelled": 0
+      },
+      "rth": {
+        "evening": 0,
+        "premarket": 1,
+        "rth": 63,
+        "unlabelled": 0
+      },
+      "unlabelled": {
+        "evening": 1,
+        "premarket": 0,
+        "rth": 14,
+        "unlabelled": 4
+      }
+    },
+    "n_events_changing_segment_125_to_130": 2,
+    "n_events_changing_segment_130_to_135": 19,
+    "offsetting_check": "Marginal rth was 37 under both 1.25 and 1.30. The matrix shows whether that is the same 37 events or offsetting swaps.",
+    "offsetting_swaps_found": {
+      "1.25_to_1.30": {
+        "n_changed": 2,
+        "events": [
+          {
+            "ticker": "VEEE",
+            "date": "2024-06-25",
+            "from": "rth",
+            "to": "unlabelled (lost its anchor)"
+          },
+          {
+            "ticker": "CODX",
+            "date": "2020-03-11",
+            "from": "premarket",
+            "to": "rth"
+          }
+        ],
+        "reading": "The rth marginal is 80 under both variants because VEEE left and CODX entered. The identical count concealed two changes -- the same error class as the segment table concealing the timing deltas."
+      }
+    }
+  },
+  "source": "research/phase_10c/a6_conditions.py:main"
+}
