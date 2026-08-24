@@ -1,0 +1,12 @@
+{
+  "events": 56,
+  "prints_raw": 3774862,
+  "prints_tie_collapsed": 3671288,
+  "prints_after_D1": 2629076,
+  "intervals": 2629020,
+  "intervals_insufficient_context": 69729,
+  "intervals_usable": 2559291,
+  "subbursts": 46709,
+  "timing_seconds": 12.4,
+  "config_hash": "1cf48950"
+}
