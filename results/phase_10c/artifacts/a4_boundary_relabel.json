@@ -1,0 +1,136 @@
+{
+  "phase": "10c",
+  "amendment": "A2 (session boundary)",
+  "config_hash": "1cf48950",
+  "A_boundary": {
+    "rule": "trading day = (prior XNYS session close, this session's close]",
+    "source": "exchange_calendars XNYS session_close; no constant, so early closes and holidays resolve automatically",
+    "early_close_events_in_sample": 0
+  },
+  "B1_existing_gap": {
+    "question": "were anchors/segments NOT computed for the three, or computed and excluded?",
+    "answer": "NEITHER. All three were computed and returned a definite result. The anchor exists for one; for the other two the momentum condition was never satisfied, which is a measured property with a stated reason.",
+    "per_event": {
+      "ACET 2020-09-18": "anchor EXISTS at 2020-09-18 16:00:00.0078 ET, segment 'post'. It crossed 7.8 ms after the RTH close. Not a gap.",
+      "RBC 2022-09-26": "never_crosses=True, reason 'reference undefined' -- no reference price could be established, so no threshold exists.",
+      "NUKK 2022-04-18": "never_crosses=True, reason 'running max never reaches threshold x reference'; only 43 T=0 prints."
+    }
+  },
+  "B3_reclassification": {
+    "n_events": 56,
+    "n_moved": 1,
+    "moved_events": [
+      {
+        "ticker": "ACET",
+        "event_date_canonical": "2020-09-18",
+        "is_sidecar": true,
+        "old_segment": "post",
+        "new_segment": "outside_redefined_day",
+        "anchor_et": "2020-09-18 16:00:00.007793664-04:00",
+        "this_close_et": "2020-09-18 16:00:00-04:00",
+        "seconds_past_this_close": 0.007793
+      }
+    ],
+    "before": {
+      "rth": 37,
+      "premarket": 16,
+      "unlabelled": 2,
+      "post": 1
+    },
+    "after": {
+      "rth": 37,
+      "premarket": 16,
+      "unlabelled": 2,
+      "outside_redefined_day": 1
+    }
+  },
+  "B4_unlabelled": {
+    "n": 2,
+    "resolution": "POSITIVELY UNLABELLABLE, not an unresolved gap. Both have never_crosses=True: RBC because the reference price is undefined, NUKK because its running max never reaches threshold x reference. With no anchor there is no segment to assign under any boundary definition.",
+    "events": [
+      {
+        "ticker": "RBC",
+        "event_date_canonical": "2022-09-26",
+        "is_sidecar": true,
+        "reason": "reference undefined",
+        "never_crosses": true,
+        "reference_undefined": true
+      },
+      {
+        "ticker": "NUKK",
+        "event_date_canonical": "2022-04-18",
+        "is_sidecar": true,
+        "reason": "running max never reaches threshold x reference",
+        "never_crosses": true,
+        "reference_undefined": false
+      }
+    ]
+  },
+  "B_structural_limit": {
+    "finding": "Relabelling under the new boundary can only push events OUT of the day, never pull any in. Phase 10's anchor derivation searched the OLD extended day (04:00-20:00 ET on the event date), so by construction no anchor exists before 04:00. The prior-evening and overnight span the new boundary adds was never searched.",
+    "consequence": "To find anchors in the prior evening or overnight, the detection derivation itself must be re-run on the redefined window. That is Phase 10 D7 work, not a relabel.",
+    "anchors_before_0400_et": 0
+  },
+  "C_rederivation": {
+    "F": 1.5,
+    "sigma_old": {
+      "premarket": 1.3627139807662514,
+      "rth": 1.757571925363104
+    },
+    "sigma_new": {
+      "premarket": 1.3627139807662514,
+      "rth": 1.757571925363104
+    },
+    "rth_derived_floor_old": 156.48419971291972,
+    "rth_derived_floor_new": 156.48419971291972,
+    "rth_binding_rung_old_min": 8,
+    "rth_binding_rung_new_min": 8,
+    "rth_window_counts_old": {
+      "1": 29.0,
+      "2": 54.0,
+      "4": 114.0,
+      "8": 226.0,
+      "16": 471.0,
+      "32": 1036.0,
+      "64": 1779.0
+    },
+    "rth_window_counts_new": {
+      "1": 29.0,
+      "2": 54.0,
+      "4": 114.0,
+      "8": 226.0,
+      "16": 471.0,
+      "32": 1036.0,
+      "64": 1779.0
+    },
+    "binding_rung_unchanged": true,
+    "verdict": "D5 = 8 and D6 = {2, 8, 32} CONFIRMED on the corrected basis"
+  },
+  "threshold_variant_defect": {
+    "issue": "v2_r13_detection.parquet carries THREE rows per event, one per momentum threshold variant (1.25, 1.30, 1.35). research/phase_10c/common.py load_detection() calls drop_duplicates(subset=COHORT_KEY), which keeps the FIRST row and therefore silently selects threshold 1.25.",
+    "impact": "Every segment-stratified number in Stage 0b and Stage 1 was computed on the 1.25 variant without that being a recorded decision. The anchor variant is a free parameter selecting the anchor -- the class of choice this phase's rules exist to surface.",
+    "segment_counts_by_threshold": {
+      "1.25": {
+        "post": 1,
+        "premarket": 30,
+        "rth": 80,
+        "nan": 3
+      },
+      "1.3": {
+        "post": 1,
+        "premarket": 29,
+        "rth": 80,
+        "nan": 4
+      },
+      "1.35": {
+        "post": 3,
+        "premarket": 28,
+        "rth": 64,
+        "nan": 19
+      }
+    },
+    "note_on_T0_6": "T0.6 reported zero segment migration across the five POLL variants. That stands, but it was computed after the same drop_duplicates, so it compared poll variants within threshold 1.25 only. The THRESHOLD variant was never examined and it moves segments materially.",
+    "status": "REPORTED, not silently fixed. Selecting a threshold variant is a Cooper decision."
+  },
+  "source": "research/phase_10c/a4_boundary_relabel.py:main"
+}
