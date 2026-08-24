@@ -1,0 +1,46 @@
+{
+  "question": "56 total vs 53 in the T0b.6 gate table vs 50 implied by the 3+12 breakdown",
+  "resolved": true,
+  "events_missing": 0,
+  "events_double_counted": 0,
+  "by_segment": {
+    "post": {
+      "primary": 0,
+      "sidecar": 1,
+      "total": 1
+    },
+    "premarket": {
+      "primary": 15,
+      "sidecar": 1,
+      "total": 16
+    },
+    "rth": {
+      "primary": 35,
+      "sidecar": 2,
+      "total": 37
+    },
+    "unlabelled": {
+      "primary": 0,
+      "sidecar": 2,
+      "total": 2
+    }
+  },
+  "totals": {
+    "all": 56,
+    "primary": 50,
+    "sidecar": 6
+  },
+  "explanation": {
+    "56": "all dev-sample events, 50 primary + 6 sidecar",
+    "53": "the T0b.6 gate table = premarket 16 + rth 37. The gate is specified by segment and segment means premarket or rth, so the 3 omitted events are post(1) and unlabelled(2) -- ALL of them sidecar, which A1.6 already carries separately.",
+    "50": "primary only, splitting premarket 15 + rth 35"
+  },
+  "silent_failure_figure": {
+    "19_of_56": "counts ALL events including sidecar",
+    "published_breakdown_3_of_15_and_12_of_35": "was PRIMARY ONLY, totalling 15 of 50",
+    "sidecar_contribution": 4,
+    "identity": "15 primary + 4 sidecar = 19",
+    "defect": "presentation, not population: one figure quoted on all-56 with its breakdown on primary-only in the same sentence. Stage 1 names the population inline for every count."
+  },
+  "source": "research/phase_10c/apply_a3.py"
+}

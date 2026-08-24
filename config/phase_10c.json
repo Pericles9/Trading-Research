@@ -5,7 +5,8 @@
   "_governing_documents": [
     "Phase-10c-Prompt.md",
     "Phase-10c-Amendment-A1.md",
-    "Phase-10c-Amendment-A2.md"
+    "Phase-10c-Amendment-A2.md",
+    "Phase-10c-Amendment-A2.7-A2.8-Resolution.md"
   ],
   "_created": "2026-08-23",
   "_note": "Fields with null values are [Cooper] and are never filled by the agent. An empty field required by the current stage is a halt. See Phase-10c-Config-Guide.md for field definitions.",
@@ -23,7 +24,7 @@
       "D11_grid_ceiling_min": 64,
       "D14_population": 20951,
       "D15_stage3_scope": null,
-      "D4_median_precision_factor": null,
+      "D4_median_precision_factor": 1.5,
       "D5_first_kernel_min": null,
       "D6_stage2_kernels_min": null
     },
@@ -211,7 +212,29 @@
     "D6_derivation": "{D5/4, D5, D5*4}, low rung >= 1 min, high rung <= D11.",
     "stage3_io_requirement": "Each event's trades are pulled and aggregated ONCE; kernels loop in memory over that single materialisation. No re-query per kernel. Realistic Stage 3 cost is ~2-3x Stage 1, not Nx.",
     "prominence_floor_derivation": "A2.4 Part 1: histogram bin counts carry Poisson noise of order sqrt(k). A peak whose prominence does not exceed the counting noise in its own bin is not distinguishable from noise. Derive a per-event minimum prominence on that basis.",
-    "prominence_sensitivity_reporting": "A2.4 Part 2: report the T0b.4 displacement distribution BESIDE the D9 slope distribution in the Stage 2 digest. No pass threshold is attached in this phase."
+    "prominence_sensitivity_reporting": "A2.4 Part 2: report the T0b.4 displacement distribution BESIDE the D9 slope distribution in the Stage 2 digest. No pass threshold is attached in this phase.",
+    "D2_scope": "per_event",
+    "D2_scope_rationale": "A2.7 resolution. T0b.1 found a median of 10 surviving peaks per event (max 17); a single segment-level split was always a compromise against that much per-event structure.",
+    "D2_selection_rule_status": "UNSET -- pending conflict C1",
+    "D2_selection_rule_conflict_C1": "The drafted rule takes the first trough whose VOID PARAMETER clears 0.70. That contradicts config D13_void_parameter ('never thresholded in this phase', threshold null, marked deliberate and permanent) and prompt S4 ('This phase does NOT threshold on the void parameter at all', naming 0.70 as the retired v4 value). Not implemented. Either D13 and S4 are amended or the rule uses a different discriminator.",
+    "D2_stage1_verification": "Stage 1 must re-run the silent-selection check (largest peak at or below D2 without triggering no_intraburst_peak) using the per-event D2 and report the rate against the Stage 0b baseline of 19/56 all-events, 15/50 primary. If the rate does not drop meaningfully, per-event D2 has not solved the problem it was adopted for.",
+    "D5_derivation_result": {
+      "at_F": 1.5,
+      "rth_floor": 156,
+      "rth_clears_at_min": 8,
+      "premarket_floor": 94,
+      "premarket_clears_at_min": 1,
+      "binding_segment": "rth",
+      "implied_D5": 8,
+      "implied_D6": [
+        2,
+        8,
+        32
+      ],
+      "status": "UNSET -- pending Cooper's (a)/(b) choice and conflict C3",
+      "conflict_C3": "The (a) option keeps 5 minutes, but A1.5 amended D5 from 5 to 4 precisely so every Stage 2 kernel sits on the base-2 grid, and 5 is not a base-2 rung. The live options are 4 (A1.5) or 8 (what A2.8's rule derives at F=1.5).",
+      "conflict_C2": "Every clearing rung above was computed on CENTERED windows clipped at the RTH open and close per A2.5. A2.8 says 'trailing window', which config D3_window forbids (_forbidden_variants includes 'trailing') and prompt S3.3 forbids explicitly. On a trailing window these numbers would differ."
+    }
   },
   "stage_0b_sweeps": {
     "T0b_1_prominence_primary": null,
@@ -231,5 +254,18 @@
     ],
     "T0b_5_near_detection_window_min": 30,
     "unimodal_label": "unimodal"
+  },
+  "labels_carried": {
+    "no_intraburst_peak": "no peak at or below D2",
+    "too_few_prints": "window below the derived data floor (v4 count-based lineage)",
+    "no_threshold": "void gate produced no threshold",
+    "insufficient_context": "A2.8: fewer than the derived floor of prints in the window for an event/kernel pair. Carried forward, never given a fallback estimate.",
+    "unimodal": "fewer than two surviving peaks"
+  },
+  "local_label_convention": {
+    "rule": "Local decision labels carry their appendix section prefix.",
+    "A2.7.D2": "fast/slow-mode interval boundary (local). NOT master D2, the 2025-data-exclusion flag.",
+    "A2.8.D5": "first validation kernel (local). NOT master D5, the long-only burst-scale thesis.",
+    "A2.8.D4": "median precision factor F (local)."
   }
 }
