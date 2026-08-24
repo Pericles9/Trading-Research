@@ -66,5 +66,21 @@
       "results/phase_10c/artifacts/t0b_3_5_density_floor.parquet"
     ],
     "note": "D4 is Class M and not a gate value, so A1.1's locking rule does not bar setting it from measurement; A2.11 reclassified it to M for exactly that reason. Logged because Stage 0b output measuring its sensitivity already existed."
+  },
+  {
+    "timestamp_utc": "2026-08-24T20:29:51.959173+00:00",
+    "authority": "Phase 10c Amendment 1, Revision 2 (2026-08-24)",
+    "field": "A2.7 status + A2.7.D17_burst_envelope_boundary",
+    "prior_class": "gate",
+    "new_class": "descriptive diagnostic",
+    "prior_value": "A2.7 silent-failure check as a Stage 1 gate",
+    "new_value": "descriptive report; Rule B relabelled as the burst-envelope boundary",
+    "stage_in_progress": "Stage 0b approved; Stage 1 not started",
+    "task_in_progress": "Revision 2 carry-in",
+    "outputs_already_existing_when_changed": [
+      "results/phase_10c/artifacts/a3_d2_rule_confirmation.json",
+      "results/phase_10c/artifacts/a3_d2_rule_comparison.parquet"
+    ],
+    "note": "Logged because the demotion was decided after the measurement that motivated it existed. A2.7 was never a Class E pre-registered gate value, so A1.1's locking rule does not bar the change; recorded as a fact."
   }
 ]

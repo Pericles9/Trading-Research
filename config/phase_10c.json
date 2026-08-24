@@ -239,6 +239,31 @@
       "status": "UNSET -- pending Cooper's (a)/(b) choice and conflict C3",
       "conflict_C3": "The (a) option keeps 5 minutes, but A1.5 amended D5 from 5 to 4 precisely so every Stage 2 kernel sits on the base-2 grid, and 5 is not a base-2 rung. The live options are 4 (A1.5) or 8 (what A2.8's rule derives at F=1.5).",
       "conflict_C2": "Every clearing rung above was computed on CENTERED windows clipped at the RTH open and close per A2.5. A2.8 says 'trailing window', which config D3_window forbids (_forbidden_variants includes 'trailing') and prompt S3.3 forbids explicitly. On a trailing window these numbers would differ."
+    },
+    "A2_7_status": "DEMOTED to descriptive diagnostic, Revision 2 (2026-08-24)",
+    "A2_7_demotion_reason": "A2.7's single-boundary premise assumed one fast mode, one slow mode, one boundary. T0b.1 measured a median of 10 surviving peaks per event (max 17). Two structurally different candidate-set rules were tested head to head; they agree on which trough is D2 on only 12/56 events (21.4%) and where they disagree the median differs by 3.5 decades -- two different objects, not two estimates of one. Neither reduces the silent-failure rate. Chasing a fourth variant would be searching for whichever specification makes the check pass, the failure mode already ruled out for Kleinberg, ACD and the Allan/Fano knee.",
+    "A2_7_silent_failure_reporting": "Carried into the Stage 1 digest as a DESCRIPTIVE report, not a gate: 58.0% (29/50) under rule A and 64.0% (32/50) under rule B, primary population. Caveat carried with the numbers: this is NOT a clean deterioration from Stage 0b's 30%. That baseline asked whether the later of the top-two peaks was taller, a hazard proxy with no D2 in existence. These figures measure the actual A2.7 question against a computed D2 for the first time. Different statistics; 30 -> 58 is not a valid before/after.",
+    "A2_7_peak_ranking": "Resolved to PROMINENCE, not height. Height was inconsistent with how peaks are found and kept everywhere else in the pipeline (prominence-filtered against the Poisson floor). Moot for the envelope rule, where all troughs are candidates, but recorded.",
+    "D2_max_cutoff_status": "A2.7 Revision 2 states there is no per-event fast/slow D2. The field remains null and its consumer -- mechanism.threshold_search, which anchors the trough search to 'largest peak at or below D2' -- has NOT been formally superseded. See open_question_stage1_threshold_source.",
+    "A2_7_D17_burst_envelope_boundary": {
+      "label": "A2.7.D17_burst_envelope_boundary",
+      "section_prefix_note": "Prefixed per the housekeeping convention. Distinct from A2.7.D2 (the void fast/slow boundary, now reframed away) and from master D-numbers in docs/Universe-Decisions.md.",
+      "definition": "argmax void parameter across ALL troughs in the event; no threshold applied anywhere, per D13_void_parameter. Peaks are those surviving the Poisson-derived per-peak floor (A2.4 Part 1); each trough's void is taken against its immediately adjacent surviving peaks.",
+      "measures": "where burst-period activity gives way to background or quiet activity -- a burst-envelope boundary, NOT an intraburst fast/slow split.",
+      "provenance": "Rule B in a3_d2_rule_confirmation.json, relabelled per Revision 2.",
+      "dev_sample_measurement": {
+        "n_primary": 50,
+        "median_seconds_pooled": 35.481338923354485,
+        "median_seconds_by_segment": {
+          "premarket": 0.5623413251903089,
+          "rth": 44.66835921509242
+        },
+        "median_void": 0.8937412211392595,
+        "check4_cond1_pass_share": 0.875,
+        "_note": "dev sample only; indicative, not the Stage 1 population figure"
+      },
+      "relationship_to_prompt_s3_2": "S3.2 (Correction 2) introduced a CEILING on the trough search precisely to stop v4's unbounded scan. This rule is an unbounded scan over all troughs, so it drops that ceiling. Measured consequence: v4's pathology has NOT recurred -- v4 produced a 349 ns median sub-burst duration, this boundary sits at 35.5 s pooled, eight orders of magnitude away. D1 = 100 us now does the anti-fragmentation work the ceiling was carrying. Recorded so the dropped ceiling is a visible decision rather than an unnoticed regression.",
+      "status": "adopted as a reported quantity; its role in Stage 1 threshold selection is NOT stated"
     }
   },
   "stage_0b_sweeps": {
@@ -272,5 +297,25 @@
     "A2.7.D2": "fast/slow-mode interval boundary (local). NOT master D2, the 2025-data-exclusion flag.",
     "A2.8.D5": "first validation kernel (local). NOT master D5, the long-only burst-scale thesis.",
     "A2.8.D4": "median precision factor F (local)."
+  },
+  "open_question_stage1_threshold_source": {
+    "question": "Which quantity is the Stage 1 sub-burst threshold?",
+    "option_1": "the burst-envelope boundary (A2.7.D17). Then D2_max_cutoff_ms is void and mechanism.threshold_search is superseded.",
+    "option_2": "the S3.2 D2-anchored intraburst-peak search stands and the envelope boundary is an additional reported quantity. Then D2_max_cutoff_ms still needs a value, which A2.7 Revision 2 says does not exist.",
+    "why_it_matters": "The two give materially different Stage 1 pipelines, and under option 1 the Stage 1 scale-sanity gate is likely to fire -- see d7_gate_preview.",
+    "d7_gate_preview": {
+      "band_seconds": [
+        0.01,
+        10
+      ],
+      "envelope_median_seconds_by_segment": {
+        "premarket": 0.5623413251903089,
+        "rth": 44.66835921509242
+      },
+      "premarket_in_band": true,
+      "rth_in_band": false,
+      "consequence": "RTH median 44.67 s exceeds D7_threshold_hi_s = 10 s. The Stage 1 gate halts if EITHER segment is out of band. This is the dev sample, not the D14 population, so it is indicative rather than binding -- but it is the arithmetic available before the run.",
+      "d7_hi_rationale_cross_check": "The config guide set D7_hi as 'the largest inter-trade gap you would still call burst interior', noting that a 30 s threshold makes a 25 s silence burst interior and is incoherent for a scalp. At 44.67 s a 40 s silence would count as burst interior."
+    }
   }
 }
