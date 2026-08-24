@@ -20,7 +20,7 @@
     },
     "_class_M_fill_at_stage_0_approval": {
       "D1_sweep_floor_us": 100,
-      "D2_max_cutoff_ms": null,
+      "D2_max_cutoff_ms": "VOID",
       "D11_grid_ceiling_min": 64,
       "D14_population": 20951,
       "D15_stage3_scope": null,
@@ -72,6 +72,22 @@
       "intraburst_peak": "largest peak at interval <= D2_max_cutoff_ms",
       "trough_search_domain": "strictly right of intraburst peak",
       "no_peak_label": "no_intraburst_peak"
+    },
+    "threshold_search_superseded": {
+      "superseded_on": "2026-08-24, Cooper option 1",
+      "was": {
+        "intraburst_peak": "largest peak at interval <= D2_max_cutoff_ms",
+        "trough_search_domain": "strictly right of intraburst peak",
+        "no_peak_label": "no_intraburst_peak"
+      },
+      "now": {
+        "rule": "A2.7.D17_burst_envelope_boundary -- argmax void across ALL troughs in the event",
+        "ceiling": null,
+        "void_thresholded": false,
+        "no_peak_label": "unimodal",
+        "no_threshold_label": "no_threshold"
+      },
+      "consequence_recorded": "Prompt S3.2 (Correction 2) introduced the ceiling specifically to stop v4's unbounded trough scan. Option 1 removes it. Measured: v4's pathology has not recurred -- v4 gave a 349 ns median sub-burst duration against 35.5 s for this boundary on raw intervals. D1 = 100 us now carries the anti-fragmentation work. Recorded so the removal is a visible decision rather than an unnoticed regression."
     }
   },
   "data": {
@@ -183,7 +199,8 @@
       "D7_threshold_lo_ms exceeds D1_sweep_floor_us by >= 1 order of magnitude"
     ],
     "_removed_condition": "The original 'D7 band at or below D2_max_cutoff_ms' condition is REMOVED per Amendment A1.4. It was a mechanism error.",
-    "check_2_stage_0b_requires": "class_E only (now includes D16)"
+    "check_2_stage_0b_requires": "class_E only (now includes D16)",
+    "check_2_stage_1_D15_exemption": "D15_stage3_scope is Class M and still unset, so check 2 as literally written fails for Stage 1. Recorded exemption: D15 is a Stage 3 SCOPE decision, consumed by no Stage 1 task, and unlike D16 it does not gate a statistic that a Stage 1 task produces -- so deferring it carries no pre-registration cost. Stage 1 proceeds; D15 is required before Stage 3. Flagged rather than silently waived."
   },
   "reported_not_gated": {
     "implied_min_intervals_per_subburst": "D8_min_median_duration_s / D7_threshold_hi_s",
@@ -244,7 +261,7 @@
     "A2_7_demotion_reason": "A2.7's single-boundary premise assumed one fast mode, one slow mode, one boundary. T0b.1 measured a median of 10 surviving peaks per event (max 17). Two structurally different candidate-set rules were tested head to head; they agree on which trough is D2 on only 12/56 events (21.4%) and where they disagree the median differs by 3.5 decades -- two different objects, not two estimates of one. Neither reduces the silent-failure rate. Chasing a fourth variant would be searching for whichever specification makes the check pass, the failure mode already ruled out for Kleinberg, ACD and the Allan/Fano knee.",
     "A2_7_silent_failure_reporting": "Carried into the Stage 1 digest as a DESCRIPTIVE report, not a gate: 58.0% (29/50) under rule A and 64.0% (32/50) under rule B, primary population. Caveat carried with the numbers: this is NOT a clean deterioration from Stage 0b's 30%. That baseline asked whether the later of the top-two peaks was taller, a hazard proxy with no D2 in existence. These figures measure the actual A2.7 question against a computed D2 for the first time. Different statistics; 30 -> 58 is not a valid before/after.",
     "A2_7_peak_ranking": "Resolved to PROMINENCE, not height. Height was inconsistent with how peaks are found and kept everywhere else in the pipeline (prominence-filtered against the Poisson floor). Moot for the envelope rule, where all troughs are candidates, but recorded.",
-    "D2_max_cutoff_status": "A2.7 Revision 2 states there is no per-event fast/slow D2. The field remains null and its consumer -- mechanism.threshold_search, which anchors the trough search to 'largest peak at or below D2' -- has NOT been formally superseded. See open_question_stage1_threshold_source.",
+    "D2_max_cutoff_status": "VOID, Cooper option 1 (2026-08-24). A2.7 Revision 2 established there is no per-event fast/slow D2; the Stage 1 sub-burst threshold is the burst-envelope boundary (A2.7.D17), which needs no ceiling. The field is struck, not relaxed and not left pending -- the same disposition Phase 10b applied to its unreachable time-rescaling row.",
     "A2_7_D17_burst_envelope_boundary": {
       "label": "A2.7.D17_burst_envelope_boundary",
       "section_prefix_note": "Prefixed per the housekeeping convention. Distinct from A2.7.D2 (the void fast/slow boundary, now reframed away) and from master D-numbers in docs/Universe-Decisions.md.",
@@ -317,5 +334,17 @@
       "consequence": "RTH median 44.67 s exceeds D7_threshold_hi_s = 10 s. The Stage 1 gate halts if EITHER segment is out of band. This is the dev sample, not the D14 population, so it is indicative rather than binding -- but it is the arithmetic available before the run.",
       "d7_hi_rationale_cross_check": "The config guide set D7_hi as 'the largest inter-trade gap you would still call burst interior', noting that a 30 s threshold makes a 25 s silence burst interior and is incoherent for a scalp. At 44.67 s a 40 s silence would count as burst interior."
     }
+  },
+  "stage_1": {
+    "threshold_rule": "A2.7.D17_burst_envelope_boundary",
+    "histogram_basis": "LOCALLY NORMALISED log intervals",
+    "histogram_basis_note": "Prompt Correction 3 (S3.3) makes the clock-time centered window the NORMALISER: each interval is divided by the local median over its window. T1.2 builds the window and T1.3 selects the threshold, in that order, so threshold selection operates on normalised intervals. Stage 0b's envelope measurement was on RAW intervals because Stage 0b applies no window by construction (A2.3), so the 35.5 s / 44.67 s figures are NOT the Stage 1 quantity and the D7 preview built on them does not transfer directly.",
+    "threshold_in_seconds": "The selected threshold is dimensionless -- a multiple of the local median. D7's band is in seconds, so the reportable threshold location is threshold x local_median at each interval, summarised per event by its median. Documented because it is an interpretation, not a restatement.",
+    "d5_kernel_min": 8,
+    "labels": [
+      "insufficient_context",
+      "unimodal",
+      "no_threshold"
+    ]
   }
 }

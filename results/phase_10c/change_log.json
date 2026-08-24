@@ -82,5 +82,21 @@
       "results/phase_10c/artifacts/a3_d2_rule_comparison.parquet"
     ],
     "note": "Logged because the demotion was decided after the measurement that motivated it existed. A2.7 was never a Class E pre-registered gate value, so A1.1's locking rule does not bar the change; recorded as a fact."
+  },
+  {
+    "timestamp_utc": "2026-08-24T20:37:00.813025+00:00",
+    "authority": "Cooper, 2026-08-24, option 1",
+    "field": "D2_max_cutoff_ms",
+    "prior_class": "M",
+    "new_class": "M",
+    "prior_value": null,
+    "new_value": "VOID",
+    "stage_in_progress": "Stage 0b approved; Stage 1 starting",
+    "task_in_progress": "option 1 carry-in, before T1.1",
+    "outputs_already_existing_when_changed": [
+      "results/phase_10c/digests/stage0b_digest.json",
+      "results/phase_10c/artifacts/a3_d2_rule_confirmation.json"
+    ],
+    "note": "D2 is struck rather than valued. Its consumer, mechanism.threshold_search, is superseded by the envelope rule in the same change."
   }
 ]
