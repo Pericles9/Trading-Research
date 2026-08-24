@@ -25,8 +25,12 @@
       "D14_population": 20951,
       "D15_stage3_scope": null,
       "D4_median_precision_factor": 1.5,
-      "D5_first_kernel_min": null,
-      "D6_stage2_kernels_min": null
+      "D5_first_kernel_min": 8,
+      "D6_stage2_kernels_min": [
+        2,
+        8,
+        32
+      ]
     },
     "_class_E_note": "A2.11 register. D4 moved to Class M; D16 added, gates T0b.6 and must be set before Stage 0b runs.",
     "_class_M_note": "A2.6 dispositions: D1=100, D11=64, D14=20951 set at Stage 0 approval. D2, D4, D5, D6, D15 held for Stage 0b approval. D5/D6 are DERIVED per A2.8, not chosen."
@@ -40,7 +44,8 @@
         "trailing",
         "anchored_to_detection"
       ],
-      "_a2_5": "Resolved by A2.5 against open item O2. Premarket median print density 131.6/min vs RTH 7.5/min is a 17x inversion; a centered window spanning 09:30 mixes two regimes and the local median is set by whichever side is denser. Extended-day-only clipping would permit that. D11 reads from the plus-RTH column of T0.5."
+      "_a2_5": "Resolved by A2.5 against open item O2. Premarket median print density 131.6/min vs RTH 7.5/min is a 17x inversion; a centered window spanning 09:30 mixes two regimes and the local median is set by whichever side is denser. Extended-day-only clipping would permit that. D11 reads from the plus-RTH column of T0.5.",
+      "_c2_resolution": "Resolved 2026-08-24: CENTERED, as committed. The outline's trailing wording is void. Stage 0b and R2 numbers stand unchanged. The non-causal-window problem stays deferred to Phase 17."
     },
     "D10_grid": {
       "spacing": "geometric",
@@ -215,7 +220,7 @@
     "prominence_sensitivity_reporting": "A2.4 Part 2: report the T0b.4 displacement distribution BESIDE the D9 slope distribution in the Stage 2 digest. No pass threshold is attached in this phase.",
     "D2_scope": "per_event",
     "D2_scope_rationale": "A2.7 resolution. T0b.1 found a median of 10 surviving peaks per event (max 17); a single segment-level split was always a compromise against that much per-event structure.",
-    "D2_selection_rule_status": "UNSET -- pending conflict C1",
+    "D2_selection_rule_status": "UNSET -- both candidate sets measured; see a3_d2_rule_confirmation.json",
     "D2_selection_rule_conflict_C1": "The drafted rule takes the first trough whose VOID PARAMETER clears 0.70. That contradicts config D13_void_parameter ('never thresholded in this phase', threshold null, marked deliberate and permanent) and prompt S4 ('This phase does NOT threshold on the void parameter at all', naming 0.70 as the retired v4 value). Not implemented. Either D13 and S4 are amended or the rule uses a different discriminator.",
     "D2_stage1_verification": "Stage 1 must re-run the silent-selection check (largest peak at or below D2 without triggering no_intraburst_peak) using the per-event D2 and report the rate against the Stage 0b baseline of 19/56 all-events, 15/50 primary. If the rate does not drop meaningfully, per-event D2 has not solved the problem it was adopted for.",
     "D5_derivation_result": {
