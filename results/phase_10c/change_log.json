@@ -1,0 +1,41 @@
+[
+  {
+    "timestamp_utc": "2026-08-24T00:46:37.083663+00:00",
+    "authority": "Phase-10c-Amendment-A2.md A2.11",
+    "field": "D4_median_precision_factor",
+    "prior_class": "E",
+    "new_class": "M",
+    "prior_value": 1.2,
+    "new_value": null,
+    "stage_in_progress": "Stage 0 approved; Stage 0b not started",
+    "task_in_progress": "A2 carry-in, before any Stage 0b task",
+    "outputs_already_existing_when_changed": [
+      "results/phase_10c/digests/stage0_digest.json",
+      "results/phase_10c/artifacts/t0_4_density_d4.parquet",
+      "results/phase_10c/charts/s0_4_d4_sensitivity.html"
+    ],
+    "note": "A1.1 requires this entry because D4 was a Class E value and Stage 0 output that measured its sensitivity already existed when it changed. A2.11 reclassifies it to Class M on the grounds that Stage 0 answered A1.3's flat-or-steep question with 'steep', making it a data question. D4 is not a gate value. Recorded as a fact, with no evaluative language attached."
+  },
+  {
+    "timestamp_utc": "2026-08-24T00:46:37.083663+00:00",
+    "authority": "Phase-10c-Amendment-A2.md A2.8",
+    "field": "D5_first_kernel_min / D6_stage2_kernels_min",
+    "prior_class": "settled",
+    "new_class": "M (derived)",
+    "prior_value": {
+      "D5": 4,
+      "D6": [
+        1,
+        4,
+        32
+      ]
+    },
+    "new_value": null,
+    "stage_in_progress": "Stage 0 approved; Stage 0b not started",
+    "task_in_progress": "A2 carry-in, before any Stage 0b task",
+    "outputs_already_existing_when_changed": [
+      "results/phase_10c/digests/stage0_digest.json"
+    ],
+    "note": "Neither was a Class E gate value, so A1.1's locking rule does not apply; logged for completeness because both were previously 'settled' and are now derived."
+  }
+]

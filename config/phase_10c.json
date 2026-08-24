@@ -4,37 +4,43 @@
   "_standard": "Agent Prompt Standard v1.3",
   "_governing_documents": [
     "Phase-10c-Prompt.md",
-    "Phase-10c-Amendment-A1.md"
+    "Phase-10c-Amendment-A1.md",
+    "Phase-10c-Amendment-A2.md"
   ],
   "_created": "2026-08-23",
   "_note": "Fields with null values are [Cooper] and are never filled by the agent. An empty field required by the current stage is a halt. See Phase-10c-Config-Guide.md for field definitions.",
-
   "cooper_values": {
     "_class_E_fill_before_stage_0": {
-      "D4_median_precision_factor": 1.2,
       "D7_threshold_lo_ms": 10,
       "D7_threshold_hi_s": 10,
       "D8_min_median_duration_s": 30,
-      "D9_slope_max": 0.5
+      "D9_slope_max": 0.5,
+      "D16_min_median_void": null
     },
     "_class_M_fill_at_stage_0_approval": {
-      "D1_sweep_floor_us": null,
+      "D1_sweep_floor_us": 100,
       "D2_max_cutoff_ms": null,
-      "D11_grid_ceiling_min": null,
-      "D14_population": null,
-      "D15_stage3_scope": null
-    }
+      "D11_grid_ceiling_min": 64,
+      "D14_population": 20951,
+      "D15_stage3_scope": null,
+      "D4_median_precision_factor": null,
+      "D5_first_kernel_min": null,
+      "D6_stage2_kernels_min": null
+    },
+    "_class_E_note": "A2.11 register. D4 moved to Class M; D16 added, gates T0b.6 and must be set before Stage 0b runs.",
+    "_class_M_note": "A2.6 dispositions: D1=100, D11=64, D14=20951 set at Stage 0 approval. D2, D4, D5, D6, D15 held for Stage 0b approval. D5/D6 are DERIVED per A2.8, not chosen."
   },
-
   "settled": {
     "D3_window": {
       "basis": "clock_time",
       "centering": "centered",
-      "session_boundary": "clip",
-      "_forbidden_variants": ["trailing", "anchored_to_detection"]
+      "session_boundary": "clip_at_rth_open_and_close",
+      "_forbidden_variants": [
+        "trailing",
+        "anchored_to_detection"
+      ],
+      "_a2_5": "Resolved by A2.5 against open item O2. Premarket median print density 131.6/min vs RTH 7.5/min is a 17x inversion; a centered window spanning 09:30 mixes two regimes and the local median is set by whichever side is denser. Extended-day-only clipping would permit that. D11 reads from the plus-RTH column of T0.5."
     },
-    "D5_first_kernel_min": 4,
-    "D6_stage2_kernels_min": [1, 4, 32],
     "D10_grid": {
       "spacing": "geometric",
       "base": 2,
@@ -48,7 +54,6 @@
       "_note": "null here is deliberate and permanent, not a [Cooper] field. The void parameter is never thresholded in this phase."
     }
   },
-
   "mechanism": {
     "histogram_bin_width_log10": 0.1,
     "peak_finding": {
@@ -63,7 +68,6 @@
       "no_peak_label": "no_intraburst_peak"
     }
   },
-
   "data": {
     "trades_table": "filtered_trades",
     "quotes_table": "filtered_quotes",
@@ -75,7 +79,6 @@
     "_detection_anchor_note": "Provisional. Confirmed or revised at Stage 0 approval on the T0.6 migration matrix.",
     "session_calendar": "exchange_calendars:XNYS"
   },
-
   "quarantine": {
     "_rule": "D4 standing constraint. Display as diagnostic label only. Never enters a computation, filter, sort key, or derived quantity.",
     "columns": [
@@ -88,7 +91,6 @@
     ],
     "verification_required": true
   },
-
   "dev_sample": {
     "name": "dev_v4_primary",
     "n": 50,
@@ -101,17 +103,43 @@
     },
     "_superseded": "dev_sample_v3.json is NOT used in this phase. It carries no detection anchors."
   },
-
   "stage_0_sweeps": {
     "_note": "Stage 0 reports all candidates and recommends none.",
-    "T0_2_candidate_sweep_floors_us": [1, 10, 100, 1000, 10000],
+    "T0_2_candidate_sweep_floors_us": [
+      1,
+      10,
+      100,
+      1000,
+      10000
+    ],
     "T0_3_peak_location_per_floor": true,
-    "T0_4_candidate_precision_factors": [1.1, 1.2, 1.3, 1.5],
+    "T0_4_candidate_precision_factors": [
+      1.1,
+      1.2,
+      1.3,
+      1.5
+    ],
     "T0_4_sensitivity_kernel_min": 4,
-    "T0_5_candidate_kernels_min": [1, 2, 4, 8, 16, 32, 64, 128, 256, 512],
-    "T0_6_anchor_variants": ["poll0", "poll1", "poll5", "poll15", "poll60"]
+    "T0_5_candidate_kernels_min": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128,
+      256,
+      512
+    ],
+    "T0_6_anchor_variants": [
+      "poll0",
+      "poll1",
+      "poll5",
+      "poll15",
+      "poll60"
+    ]
   },
-
   "gates": {
     "stage_1_scale_sanity": {
       "median_threshold_location": {
@@ -131,9 +159,15 @@
     "stage_3": {
       "gate": null,
       "_note": "Descriptive stage. No gate."
+    },
+    "stage_0b_bimodality": {
+      "statistic": "median void parameter at the deepest trough between the two most prominent peaks",
+      "min": "D16_min_median_void",
+      "evaluated_by": "segment",
+      "halt_condition": "median void below D16 in either segment",
+      "_on_halt": "The correct conclusion is that the log-interval decomposition is the wrong instrument for this data -- not that a parameter needs adjusting. Do not alter D1 or the prominence level to rescue the run."
     }
   },
-
   "satisfiability_checks": {
     "_evaluated_per_stage": true,
     "check_2_stage_0_requires": "class_E only",
@@ -142,16 +176,15 @@
       "D2_max_cutoff_ms exceeds D1_sweep_floor_us by >= 2 orders of magnitude",
       "D7_threshold_lo_ms exceeds D1_sweep_floor_us by >= 1 order of magnitude"
     ],
-    "_removed_condition": "The original 'D7 band at or below D2_max_cutoff_ms' condition is REMOVED per Amendment A1.4. It was a mechanism error."
+    "_removed_condition": "The original 'D7 band at or below D2_max_cutoff_ms' condition is REMOVED per Amendment A1.4. It was a mechanism error.",
+    "check_2_stage_0b_requires": "class_E only (now includes D16)"
   },
-
   "reported_not_gated": {
     "implied_min_intervals_per_subburst": "D8_min_median_duration_s / D7_threshold_hi_s",
     "clipped_window_fraction_by_kernel": true,
     "too_few_prints_fraction": true,
     "noncontiguous_kernel_set_fraction": true
   },
-
   "outputs": {
     "results_root": "results/phase_10c",
     "artifacts": "results/phase_10c/artifacts",
@@ -161,10 +194,42 @@
     "chart_format": "self_contained_html_plotly",
     "dual_y_axis": false
   },
-
   "git": {
     "branch": "phase-10c",
     "commit_at_task_boundary": true,
-    "tags": ["phase-10c-stage0", "phase-10c-stage1", "phase-10c-stage2", "phase-10c-stage3"]
+    "tags": [
+      "phase-10c-stage0",
+      "phase-10c-stage1",
+      "phase-10c-stage2",
+      "phase-10c-stage3"
+    ]
+  },
+  "a2_rules": {
+    "D2_selection_rule": "From T0b.1's joint distribution of the two most prominent peak locations: if the fast-mode p95 and the slow-mode p5 are separated, set D2 in the gap positioned to keep no_intraburst_peak incidence low. If they OVERLAP, no single global D2 exists -- do not pick a compromise; report the overlap and escalate.",
+    "D2_silent_failure_mode": "In a sparse event the SLOW mode can be the taller peak. If D2 sits above it, 'largest peak at or below D2' selects the slow mode as the intraburst peak and the trough search runs to its right, returning nothing or a meaningless value WITHOUT triggering no_intraburst_peak.",
+    "D5_derivation": "Smallest rung on the base-2 grid at which the median RTH event clears the D4 derived data floor, using near-detection density from T0b.5.",
+    "D6_derivation": "{D5/4, D5, D5*4}, low rung >= 1 min, high rung <= D11.",
+    "stage3_io_requirement": "Each event's trades are pulled and aggregated ONCE; kernels loop in memory over that single materialisation. No re-query per kernel. Realistic Stage 3 cost is ~2-3x Stage 1, not Nx.",
+    "prominence_floor_derivation": "A2.4 Part 1: histogram bin counts carry Poisson noise of order sqrt(k). A peak whose prominence does not exceed the counting noise in its own bin is not distinguishable from noise. Derive a per-event minimum prominence on that basis.",
+    "prominence_sensitivity_reporting": "A2.4 Part 2: report the T0b.4 displacement distribution BESIDE the D9 slope distribution in the Stage 2 digest. No pass threshold is attached in this phase."
+  },
+  "stage_0b_sweeps": {
+    "T0b_1_prominence_primary": null,
+    "_prominence_note": "Derived per event from the Poisson floor (A2.4 Part 1); no constant.",
+    "T0b_4_prominence_sweep": [
+      0.01,
+      0.02,
+      0.05,
+      0.1,
+      0.2
+    ],
+    "T0b_3_candidate_precision_factors": [
+      1.1,
+      1.2,
+      1.3,
+      1.5
+    ],
+    "T0b_5_near_detection_window_min": 30,
+    "unimodal_label": "unimodal"
   }
 }

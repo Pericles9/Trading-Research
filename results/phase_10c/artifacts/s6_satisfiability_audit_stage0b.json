@@ -1,0 +1,25 @@
+{
+  "phase": "10c",
+  "task": "S6 satisfiability audit",
+  "stage_evaluated": "0b",
+  "config": "config/phase_10c.json",
+  "config_hash": "622e4227",
+  "protocol": "A1.9 check 2 per stage; A2.11 register; Stage 0b requires class_E only",
+  "class_E": {
+    "D7_threshold_lo_ms": 10,
+    "D7_threshold_hi_s": 10,
+    "D8_min_median_duration_s": 30,
+    "D9_slope_max": 0.5,
+    "D16_min_median_void": null
+  },
+  "n_required": 5,
+  "n_present": 4,
+  "missing": [
+    "D16_min_median_void"
+  ],
+  "check_2_verdict": "FAIL",
+  "why_it_blocks": "D16_min_median_void gates T0b.6 and its statistic is PRODUCED BY T0b.2. Running T0b.1-T0b.5 first and setting D16 afterwards would set the threshold after seeing the void distribution it judges, which is the pre-registration failure A1.1's locking rule exists to prevent. A2.3 states it plainly: 'set before Stage 0b runs.'",
+  "no_pipeline_code_executed": true,
+  "action": "HALT AND ESCALATE. Stage 0b not started.",
+  "source": "research/phase_10c/s6_audit_0b.py"
+}
