@@ -1,0 +1,41 @@
+{
+  "config_hash": "9c7f50cf",
+  "charts": [
+    {
+      "chart": "b1_peak_set.html",
+      "png": "b1_peak_set.png",
+      "kaleido_verified": true,
+      "html_bytes": 37714,
+      "png_bytes": 413681
+    },
+    {
+      "chart": "b2_void_gate.html",
+      "png": "b2_void_gate.png",
+      "kaleido_verified": true,
+      "html_bytes": 11157,
+      "png_bytes": 233878
+    },
+    {
+      "chart": "b3_d2_gap.html",
+      "png": "b3_d2_gap.png",
+      "kaleido_verified": true,
+      "html_bytes": 12313,
+      "png_bytes": 307652
+    },
+    {
+      "chart": "b4_dispersion_floor.html",
+      "png": "b4_dispersion_floor.png",
+      "kaleido_verified": true,
+      "html_bytes": 13498,
+      "png_bytes": 345112
+    },
+    {
+      "chart": "b5_prominence_density.html",
+      "png": "b5_prominence_density.png",
+      "kaleido_verified": true,
+      "html_bytes": 11567,
+      "png_bytes": 269282
+    }
+  ],
+  "source": "research/phase_10c/t0b_charts.py:main"
+}

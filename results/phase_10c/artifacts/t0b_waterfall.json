@@ -1,0 +1,10 @@
+{
+  "events": 56,
+  "prints_raw": 3774862,
+  "prints_tie_collapsed": 3671288,
+  "prints_after_D1_aggregation": 2629076,
+  "intervals": 2629020,
+  "timing_seconds": 15.0,
+  "D1_sweep_floor_us": 100.0,
+  "config_hash": "9c7f50cf"
+}

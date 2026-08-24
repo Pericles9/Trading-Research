@@ -37,5 +37,18 @@
       "results/phase_10c/digests/stage0_digest.json"
     ],
     "note": "Neither was a Class E gate value, so A1.1's locking rule does not apply; logged for completeness because both were previously 'settled' and are now derived."
+  },
+  {
+    "timestamp_utc": "2026-08-24T00:52:56.879432+00:00",
+    "authority": "Cooper, 2026-08-23, in response to the Stage 0b check-2 halt",
+    "field": "D16_min_median_void",
+    "prior_class": "E",
+    "new_class": "E",
+    "prior_value": null,
+    "new_value": 0.25,
+    "stage_in_progress": "Stage 0b not started",
+    "task_in_progress": "before T0b.1",
+    "outputs_already_existing_when_changed": [],
+    "note": "Initial set of a Class E gate value, not a revision. The empty list above is the point: NO Stage 0b output existed when D16 was set, so the threshold was fixed before the void distribution it judges was produced. Recorded as fact."
   }
 ]

@@ -1,0 +1,389 @@
+{
+  "phase": "10c",
+  "stage": "0b",
+  "tasks": "T0b.1-T0b.7",
+  "config": "config/phase_10c.json",
+  "config_hash": "9c7f50cf",
+  "wall_clock_seconds": 15.0,
+  "governing_documents": [
+    "Phase-10c-Prompt.md",
+    "Phase-10c-Amendment-A1.md",
+    "Phase-10c-Amendment-A2.md"
+  ],
+  "stage_0b_constraints_honoured": {
+    "no_sub_bursts": true,
+    "no_normalisation_window_applied": true,
+    "no_interval_pooling_across_events": true,
+    "trough_and_void_computed": true,
+    "why_permitted": "A2.3 permits a candidate trough and void because that is the precondition being tested."
+  },
+  "verification_block": {
+    "row_waterfall": {
+      "events": 56,
+      "prints_raw": 3774862,
+      "exact_ties_collapsed_D12": 103574,
+      "prints_tie_collapsed": 3671288,
+      "absorbed_by_D1_aggregation": 1042212,
+      "absorbed_share_of_tie_collapsed": 0.283882,
+      "prints_after_D1_aggregation": 2629076,
+      "intervals": 2629020,
+      "reconciles": true,
+      "identity": "intervals = prints_after_D1_aggregation - events",
+      "sub_bursts_extracted": 0
+    },
+    "d4_quarantine_A1_8": {
+      "tick_reader_columns": [
+        "sip_timestamp",
+        "price",
+        "size",
+        "sequence_number"
+      ],
+      "momentum_pct_in_read_path": false,
+      "verified": true,
+      "note": "research/phase_10/common.py:_TRADE_COLS is the only column list the tick reader uses. momentum_pct is absent from it, so the quarantined spine numeric is never loaded, let alone computed on."
+    },
+    "cooper_values_used": {
+      "class_E": {
+        "D7_threshold_lo_ms": 10,
+        "D7_threshold_hi_s": 10,
+        "D8_min_median_duration_s": 30,
+        "D9_slope_max": 0.5,
+        "D16_min_median_void": 0.25
+      },
+      "class_M": {
+        "D1_sweep_floor_us": 100,
+        "D2_max_cutoff_ms": null,
+        "D11_grid_ceiling_min": 64,
+        "D14_population": 20951,
+        "D15_stage3_scope": null,
+        "D4_median_precision_factor": null,
+        "D5_first_kernel_min": null,
+        "D6_stage2_kernels_min": null
+      }
+    },
+    "D1_applied_us": 100.0,
+    "prominence_floor": {
+      "method": "per-peak Poisson floor",
+      "rule": "keep a peak iff prominence_counts > sqrt(count) at its bin",
+      "derivation": "A2.4 Part 1: histogram bin counts carry Poisson noise of order sqrt(k). A peak whose prominence does not exceed the counting noise in its own bin is not distinguishable from noise. Derive a per-event minimum prominence on that basis.",
+      "global_constant_used": false
+    },
+    "session_boundary": "clip_at_rth_open_and_close"
+  },
+  "T0b_1_peak_set": {
+    "peak_count": {
+      "min": 5,
+      "p25": 8.0,
+      "median": 10.0,
+      "p75": 12.0,
+      "max": 17
+    },
+    "peak_count_by_segment": {
+      "post": 13.0,
+      "premarket": 8.0,
+      "rth": 11.0,
+      "unlabelled": 9.0
+    },
+    "note": "A2.2 states the method assumes a two-mode histogram. The surviving peak count is reported here as measured, against a Poisson-derived floor."
+  },
+  "T0b_2_void": {
+    "labels": {
+      "bimodal": 56
+    },
+    "by_segment": {
+      "post": {
+        "n": 1,
+        "median": 0.9092158700996796,
+        "p10": 0.9092158700996796,
+        "p90": 0.9092158700996796
+      },
+      "premarket": {
+        "n": 16,
+        "median": 0.634957157942603,
+        "p10": 0.4661103315846529,
+        "p90": 0.8239337316274713
+      },
+      "rth": {
+        "n": 37,
+        "median": 0.8636947796536163,
+        "p10": 0.6836264118518481,
+        "p90": 1.0
+      },
+      "unlabelled": {
+        "n": 2,
+        "median": 0.8438838186424531,
+        "p10": 0.8054774475429454,
+        "p90": 0.8822901897419609
+      }
+    }
+  },
+  "T0b_3_dispersion": {
+    "sigma_raw_median": 2.2217926505243217,
+    "sigma_post_aggregation_median": 1.6570698150712466,
+    "by_segment": {
+      "post": 2.0579732430408146,
+      "premarket": 1.3627139807662514,
+      "rth": 1.757571925363104,
+      "unlabelled": 1.6258334212768024
+    },
+    "too_few_prints_fraction_by_segment_kernel_factor": {
+      "premarket": {
+        "1": {
+          "1.1": 0.9325193691251563,
+          "1.2": 0.5030685347657868,
+          "1.3": 0.26681444698852563,
+          "1.5": 0.1120959878866304
+        },
+        "2": {
+          "1.1": 0.7615130764507683,
+          "1.2": 0.28201223381168583,
+          "1.3": 0.13566616113657348,
+          "1.5": 0.05930028841784915
+        },
+        "4": {
+          "1.1": 0.5284300422960049,
+          "1.2": 0.1442562087062118,
+          "1.3": 0.06983051959263414,
+          "1.5": 0.022406219227460195
+        },
+        "8": {
+          "1.1": 0.28102716650088055,
+          "1.2": 0.07160656333432801,
+          "1.3": 0.03189536364184334,
+          "1.5": 0.008947128786424976
+        },
+        "16": {
+          "1.1": 0.13595768436348846,
+          "1.2": 0.03080783836563234,
+          "1.3": 0.009293966140875071,
+          "1.5": 0.004380790005754075
+        },
+        "32": {
+          "1.1": 0.06168559396652183,
+          "1.2": 0.010397084148361635,
+          "1.3": 0.004838489775163625,
+          "1.5": 0.0025515597411394724
+        },
+        "64": {
+          "1.1": 0.020512979595514853,
+          "1.2": 0.005827344858259335,
+          "1.3": 0.0028890687605004715,
+          "1.5": 0.001053790268558483
+        }
+      },
+      "rth": {
+        "1": {
+          "1.1": 1.0,
+          "1.2": 1.0,
+          "1.3": 1.0,
+          "1.5": 0.9515618821668643
+        },
+        "2": {
+          "1.1": 1.0,
+          "1.2": 1.0,
+          "1.3": 1.0,
+          "1.5": 0.8557865024377727
+        },
+        "4": {
+          "1.1": 1.0,
+          "1.2": 1.0,
+          "1.3": 0.8539902489094175,
+          "1.5": 0.6207689779822544
+        },
+        "8": {
+          "1.1": 1.0,
+          "1.2": 1.0,
+          "1.3": 0.6752288436390809,
+          "1.5": 0.3722058568705597
+        },
+        "16": {
+          "1.1": 1.0,
+          "1.2": 0.6659816925088735,
+          "1.3": 0.4972067039106145,
+          "1.5": 0.2689981858496271
+        },
+        "32": {
+          "1.1": 1.0,
+          "1.2": 0.48899112717712784,
+          "1.3": 0.3147550896996573,
+          "1.5": 0.05544966210362156
+        },
+        "64": {
+          "1.1": 1.0,
+          "1.2": 0.3597057044950615,
+          "1.3": 0.10380971578310824,
+          "1.5": 0.0405440082114447
+        }
+      }
+    }
+  },
+  "T0b_4_prominence_sensitivity": {
+    "n_events": 56,
+    "trough_displacement_decades": {
+      "median": 0.0,
+      "p90": 0.0,
+      "max": 0.0
+    },
+    "reporting_rule": "A2.4 Part 2: report the T0b.4 displacement distribution BESIDE the D9 slope distribution in the Stage 2 digest. No pass threshold is attached in this phase.",
+    "no_pass_threshold": true
+  },
+  "T0b_5_near_detection_density": {
+    "premarket": {
+      "session_prints_per_min_median": 90.91979166666667,
+      "near_detection_prints_per_min_median": 87.46666666666667
+    },
+    "rth": {
+      "session_prints_per_min_median": 6.0125,
+      "near_detection_prints_per_min_median": 42.36666666666667
+    }
+  },
+  "T0b_6_gate": {
+    "premarket": {
+      "n": 16,
+      "median_void": 0.634957157942603,
+      "p10": 0.4661103315846529,
+      "p90": 0.8239337316274713,
+      "threshold_D16": 0.25,
+      "below_threshold": false
+    },
+    "rth": {
+      "n": 37,
+      "median_void": 0.8636947796536163,
+      "p10": 0.6836264118518481,
+      "p90": 1.0,
+      "threshold_D16": 0.25,
+      "below_threshold": false
+    },
+    "outcome": "does not fire"
+  },
+  "A2_7_D2_selection": {
+    "rule": "From T0b.1's joint distribution of the two most prominent peak locations: if the fast-mode p95 and the slow-mode p5 are separated, set D2 in the gap positioned to keep no_intraburst_peak incidence low. If they OVERLAP, no single global D2 exists -- do not pick a compromise; report the overlap and escalate.",
+    "fast_mode_p95_log10s": -1.8850000000000262,
+    "slow_mode_p5_log10s": -2.3250000000000237,
+    "fast_p95_seconds": 0.013031667784522208,
+    "slow_p5_seconds": 0.004731512589614547,
+    "separated": false,
+    "overlap_decades": 0.4399999999999975,
+    "rule_applied": "rule 2 (no single global D2)",
+    "action": "ESCALATE. Report the overlap; do not pick a compromise value. Resolution is per-segment or per-event D2, a new decision requiring its own amendment.",
+    "n_primary_events": 50
+  },
+  "A2_7_silent_failure_incidence": {
+    "question": "A2.7's silent failure mode: is the LATER of the two most prominent peaks the taller one? If so, a D2 above it selects the slow mode as the intraburst peak without triggering no_intraburst_peak.",
+    "n_events_slow_is_taller": 19,
+    "of": 56,
+    "share": 0.3392857142857143,
+    "by_segment": {
+      "premarket": {
+        "n": 3,
+        "of": 15
+      },
+      "rth": {
+        "n": 12,
+        "of": 35
+      }
+    }
+  },
+  "A2_8_D5_derivation_inputs": {
+    "rule": "Smallest rung on the base-2 grid at which the median RTH event clears the D4 derived data floor, using near-detection density from T0b.5.",
+    "rth_median_window_count_by_kernel": {
+      "1": 29.0,
+      "2": 54.0,
+      "4": 114.0,
+      "8": 226.0,
+      "16": 471.0,
+      "32": 1036.0,
+      "64": 1779.0
+    },
+    "by_precision_factor": {
+      "1.1": {
+        "derived_floor_median": 2832.0367861057475,
+        "smallest_clearing_rung_min": null,
+        "note": "no rung at or below D11=64 clears it"
+      },
+      "1.2": {
+        "derived_floor_median": 773.9295460796769,
+        "smallest_clearing_rung_min": 32,
+        "note": null
+      },
+      "1.3": {
+        "derived_floor_median": 373.7387298509966,
+        "smallest_clearing_rung_min": 16,
+        "note": null
+      },
+      "1.5": {
+        "derived_floor_median": 156.48419971291972,
+        "smallest_clearing_rung_min": 8,
+        "note": null
+      }
+    },
+    "D6_rule": "{D5/4, D5, D5*4}, low rung >= 1 min, high rung <= D11."
+  },
+  "labelled_and_carried_counts": {
+    "unimodal": 0,
+    "adjacent_peaks": 0,
+    "no_intraburst_peak": 0,
+    "too_few_prints": 0,
+    "no_threshold": 0,
+    "note": "The last three belong to Stage 1. Stage 0b selects no threshold and applies no window; the too_few_prints figures above are a sensitivity sweep, not carried labels."
+  },
+  "class_M_still_held": {
+    "D2_max_cutoff_ms": null,
+    "D15_stage3_scope": null,
+    "D4_median_precision_factor": null,
+    "D5_first_kernel_min": null,
+    "D6_stage2_kernels_min": null
+  },
+  "escalations_raised": [
+    {
+      "id": "E1",
+      "authority": "Phase-10c-Amendment-A2.md A2.7 rule 2",
+      "condition": "fast-mode p95 and slow-mode p5 overlap",
+      "observed": {
+        "fast_p95_log10s": -1.8850000000000262,
+        "slow_p5_log10s": -2.3250000000000237,
+        "overlap_decades": 0.4399999999999975
+      },
+      "action": "No single global D2 exists. Reported, not resolved. A2.7 forbids picking a compromise value; the resolution is per-segment or per-event D2, which is a new decision requiring its own amendment."
+    }
+  ],
+  "charts": [
+    {
+      "chart": "b1_peak_set.html",
+      "png": "b1_peak_set.png",
+      "kaleido_verified": true,
+      "html_bytes": 37714,
+      "png_bytes": 413681
+    },
+    {
+      "chart": "b2_void_gate.html",
+      "png": "b2_void_gate.png",
+      "kaleido_verified": true,
+      "html_bytes": 11157,
+      "png_bytes": 233878
+    },
+    {
+      "chart": "b3_d2_gap.html",
+      "png": "b3_d2_gap.png",
+      "kaleido_verified": true,
+      "html_bytes": 12313,
+      "png_bytes": 307652
+    },
+    {
+      "chart": "b4_dispersion_floor.html",
+      "png": "b4_dispersion_floor.png",
+      "kaleido_verified": true,
+      "html_bytes": 13498,
+      "png_bytes": 345112
+    },
+    {
+      "chart": "b5_prominence_density.html",
+      "png": "b5_prominence_density.png",
+      "kaleido_verified": true,
+      "html_bytes": 11567,
+      "png_bytes": 269282
+    }
+  ],
+  "next": "T0b.7 HALT. Stage 0b does not flow into Stage 1. The T0b.6 gate did not fire; the A2.7 D2 rule escalated. Awaiting Cooper's disposition and the held Class M values D2, D4, D5, D6, D15.",
+  "source": "research/phase_10c/t0b_digest.py:main"
+}
