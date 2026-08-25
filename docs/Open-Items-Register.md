@@ -111,3 +111,18 @@ created per Phase 2's T8 addendum instruction to "log verbatim to the register."
   is the binding constraint on the scalping thesis and is measurable today (~33.6% of the excursion
   sits above the detection price on a median ~$3 stock). Recorded so a future revival starts from
   the argument rather than rediscovering it.
+
+### Phase 10c Amendment 5 (2026-08-25)
+
+- **Massive trade-condition dictionary stored locally.** `data/metadata/massive_trade_conditions.json`
+  holds the vendor table retrieved from the Massive *Conditions & Indicators* glossary
+  (`https://massive.com/glossary/conditions-indicators`, retrieved 2026-08-25). Stored so the
+  offline environment (D14) never needs to re-retrieve it, and so Phase 11 escalation row 22 is
+  cleared by a published table rather than an inferred mapping. **Partial by design** — it holds
+  the nine codes observed in the Phase 10c near-close census with full attributes, plus six named
+  in Amendment 5 section D with the single attribute that section states. Codes absent from the
+  file have no meaning available offline and must not be inferred. Closes the open item Phase 11
+  T1c-iii created.
+- **Vendor identity:** Polygon rebranded to Massive; `polygon.io` documentation URLs redirect to
+  `massive.com`. Same vendor as the Massive API used for instrument classification and the Phase 1b
+  Amendment 1 key. Recorded so a future phase does not treat them as two sources.

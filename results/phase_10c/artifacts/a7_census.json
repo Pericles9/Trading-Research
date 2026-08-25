@@ -1,0 +1,126 @@
+{
+  "phase": "10c",
+  "amendment": "A5",
+  "config_hash": "1cf48950",
+  "dictionary": {
+    "stored_at": "data/metadata/massive_trade_conditions.json",
+    "source": {
+      "vendor": "Massive",
+      "document": "Conditions & Indicators glossary",
+      "url": "https://massive.com/glossary/conditions-indicators",
+      "retrieved": "2026-08-25",
+      "retrieved_by": "Cooper, supplied in Phase 10c Amendment 5 section A",
+      "vendor_identity_note": "Polygon rebranded to Massive. Same vendor as the Massive API already used for instrument classification and the Phase 1b Amendment 1 API key. polygon.io documentation URLs now redirect to massive.com. Recorded so a future phase does not treat them as two sources."
+    },
+    "completeness": {
+      "status": "PARTIAL",
+      "what_is_here": "The nine codes observed in the Phase 10c near-close census, with full attributes; plus six further codes named in Amendment 5 section D with the single attribute that section states.",
+      "what_is_missing": "Every other code in the vendor table. This file must not be treated as the full dictionary.",
+      "rule": "Codes absent from this file have no meaning available offline. Do not infer one."
+    }
+  },
+  "B_code_set": {
+    "code_set": [
+      8,
+      15
+    ],
+    "dropped": [
+      9
+    ],
+    "n_near_close_prints": 877,
+    "n_with_9": 76,
+    "n_with_9_without_8_or_15": 0,
+    "n_with_8_or_15": 291,
+    "n_with_8": 83,
+    "n_with_15": 208,
+    "reading": "Every print carrying 9 also carries 8 or 15, so on this cohort dropping 9 changes nothing and the choice is immaterial here.",
+    "examples_9_without_8_or_15": [],
+    "scope_populations": {
+      "anchor_classification_only": {
+        "n_anchors_affected": 1,
+        "detail": "ACET 2020-09-18 only, across all three threshold variants"
+      },
+      "all_trades": {
+        "n_near_close_prints_matching_8_or_15": 291,
+        "detail": "every print within +/-1 s of a session close carrying 8 or 15, across the 114-event cohort. This is the population the wider reading reassigns."
+      },
+      "note": "Reported so the error tolerance on the code set can be judged against the population it actually governs. The scope choice is Cooper's."
+    }
+  },
+  "D_record_census": {
+    "codes_counted_non_volume_updating": [
+      15,
+      16,
+      38
+    ],
+    "codes_counted_volume_but_not_last": [
+      2,
+      7,
+      12,
+      13,
+      21,
+      37,
+      52,
+      53
+    ],
+    "cohort_total": {
+      "n_prints": 25218726,
+      "n_non_volume_updating": 3868,
+      "share_non_volume_updating": 0.00015337808896452582,
+      "n_volume_not_last": 13005055,
+      "share_volume_not_last": 0.5156904040275468
+    },
+    "by_print_position": {
+      "evening": {
+        "n_prints": 8367979,
+        "n_non_volume_updating": 2022,
+        "share_non_volume_updating": 0.00024163540563378565,
+        "n_volume_not_last": 4353358,
+        "share_volume_not_last": 0.5202400723041968
+      },
+      "premarket": {
+        "n_prints": 9873390,
+        "n_non_volume_updating": 1626,
+        "share_non_volume_updating": 0.00016468507776964142,
+        "n_volume_not_last": 5692679,
+        "share_volume_not_last": 0.5765678252353041
+      },
+      "rth": {
+        "n_prints": 6977357,
+        "n_non_volume_updating": 220,
+        "share_non_volume_updating": 3.153056379371157e-05,
+        "n_volume_not_last": 2959018,
+        "share_volume_not_last": 0.42408866279882196
+      }
+    },
+    "no_exclusion_applied": true,
+    "note": "Counts only. Whether any record class leaves the interval stream is a Cooper decision needing its own amendment, since it changes what a print means after Stage 0b already measured on the current definition.",
+    "timing_seconds": 47.6
+  },
+  "F_floor_scope": {
+    "question": "is the A2.8 derived floor per-event or segment-derived?",
+    "answer": "PER EVENT. Confirmed.",
+    "code_path": "research/phase_10c/t1_subbursts.py computes sigma = np.std(li, ddof=1) on THAT event's own log intervals, then floor = c10c.median_se_min_count(sigma, F). Nothing segment-level enters.",
+    "what_the_segment_figures_are": "The 1.363 premarket / 1.758 rth values are medians of per-event sigma, computed for reporting. They are not inputs to any floor.",
+    "consequence": "A4 dissolves as Amendment 5 F anticipates. Evening events get their own per-event floors, are evaluated against the global D6 grid, and take insufficient_context per event/kernel pair. No evening sigma exists to borrow and none is needed."
+  },
+  "H_timestamp_resolution_provenance": {
+    "question": "did any timestamp-resolution figure come from a float64 column?",
+    "answer": "NO. The chain is int64 end to end.",
+    "chain": [
+      "sip_timestamp is int64 on disk (verified by a live parquet read)",
+      "t0e_cohort_assertion.py takes t0['sip_timestamp'].to_numpy() -> int64",
+      "np.diff on int64 -> int64",
+      "min_nonzero_gap_ns stored as int64 in t0e_timestamp_resolution.parquet"
+    ],
+    "pooled_analysis_cohort": {
+      "n": 100,
+      "min_ns": 49,
+      "median_ns": 80.5,
+      "max_ns": 8388
+    },
+    "all_rows_including_never_pooled_median_ns": 79.0,
+    "verdict": "The 80.5 ns median and 49 ns minimum stand. The 256 ns float64 quantisation affects det_ns_* only, which is a different column on a different chain and never enters a resolution measurement. The fragmentation-floor reasoning built on those figures is unaffected."
+  },
+  "source": "research/phase_10c/a7_census.py:main"
+}

@@ -1,0 +1,45 @@
+{
+  "_file": "data/metadata/massive_trade_conditions.json",
+  "_purpose": "Vendor trade-condition dictionary, stored locally so the offline environment (D14) never needs to re-retrieve it.",
+  "source": {
+    "vendor": "Massive",
+    "document": "Conditions & Indicators glossary",
+    "url": "https://massive.com/glossary/conditions-indicators",
+    "retrieved": "2026-08-25",
+    "retrieved_by": "Cooper, supplied in Phase 10c Amendment 5 section A",
+    "vendor_identity_note": "Polygon rebranded to Massive. Same vendor as the Massive API already used for instrument classification and the Phase 1b Amendment 1 API key. polygon.io documentation URLs now redirect to massive.com. Recorded so a future phase does not treat them as two sources."
+  },
+  "completeness": {
+    "status": "PARTIAL",
+    "what_is_here": "The nine codes observed in the Phase 10c near-close census, with full attributes; plus six further codes named in Amendment 5 section D with the single attribute that section states.",
+    "what_is_missing": "Every other code in the vendor table. This file must not be treated as the full dictionary.",
+    "rule": "Codes absent from this file have no meaning available offline. Do not infer one."
+  },
+  "codes": {
+    "2":  {"name": "Average Price Trade",        "updates_volume": true},
+    "7":  {"name": "Cash Sale",                  "updates_volume": true},
+    "8":  {"name": "Closing Prints",             "updates_volume": true},
+    "9":  {"name": "Cross Trade",                "updates_volume": true},
+    "12": {"name": "Form T",                     "updates_volume": true,
+           "note": "extended-hours trade, executed outside regular primary market hours"},
+    "14": {"name": "Intermarket Sweep",          "updates_volume": true},
+    "15": {"name": "Market Center Official Close", "updates_volume": false,
+           "updates_high_low": false, "updates_last": false,
+           "note": "dissemination of the official closing value, NOT an execution"},
+    "37": {"name": "Odd Lot Trade",              "updates_volume": true},
+    "41": {"name": "Trade Thru Exempt",          "updates_volume": true}
+  },
+  "codes_named_without_full_attributes": {
+    "16": {"name": "Market Center Official Open", "updates_volume": false},
+    "38": {"name": "Corrected Consolidated Close (per listing market)", "updates_volume": false},
+    "13": {"name": "Extended Trading Hours", "updates_volume": true, "updates_last": false},
+    "21": {"name": "Price Variation Trade", "updates_volume": true, "updates_last": false},
+    "52": {"name": "Contingent Trade", "updates_volume": true, "updates_last": false},
+    "53": {"name": "Qualified Contingent Trade", "updates_volume": true, "updates_last": false},
+    "_caveat": "Attributes here are only those stated in Amendment 5 section D. Other attributes for these codes are unknown offline."
+  },
+  "used_by": [
+    "Phase 10c Amendment 5 section B -- closing-auction code set {8, 15}",
+    "Phase 10c Amendment 5 section D -- non-volume-updating record census"
+  ]
+}
