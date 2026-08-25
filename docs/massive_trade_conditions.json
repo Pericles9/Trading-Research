@@ -1,6 +1,7 @@
 {
-  "_file": "data/metadata/massive_trade_conditions.json",
+  "_file": "docs/massive_trade_conditions.json",
   "_purpose": "Vendor trade-condition dictionary, stored locally so the offline environment (D14) never needs to re-retrieve it.",
+  "_moved": "Originally force-added into data/metadata/ (fully gitignored), which left a silent tracking exception in an otherwise-ignored tree. Moved to docs/ in Phase 10c Amendment 6 section C -- normally tracked, no force-add, same durability. 2 KB of vendor reference text, not data.",
   "source": {
     "vendor": "Massive",
     "document": "Conditions & Indicators glossary",

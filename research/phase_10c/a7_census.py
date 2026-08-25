@@ -32,7 +32,7 @@ c10c = ilu.module_from_spec(_s); _s.loader.exec_module(c10c)
 
 ART = "results/phase_10c/artifacts"
 ET = "America/New_York"
-DICT = "data/metadata/massive_trade_conditions.json"
+DICT = "docs/massive_trade_conditions.json"  # moved from data/ in Amendment 6 section C
 NON_VOLUME = {15, 16, 38}
 VOL_NOT_LAST = {2, 7, 12, 13, 21, 37, 52, 53}
 COLS = ["sip_timestamp", "price", "size", "conditions"]

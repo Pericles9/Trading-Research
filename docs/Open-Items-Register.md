@@ -114,10 +114,11 @@ created per Phase 2's T8 addendum instruction to "log verbatim to the register."
 
 ### Phase 10c Amendment 5 (2026-08-25)
 
-- **Massive trade-condition dictionary stored locally.** `data/metadata/massive_trade_conditions.json`
-  holds the vendor table retrieved from the Massive *Conditions & Indicators* glossary
-  (`https://massive.com/glossary/conditions-indicators`, retrieved 2026-08-25). Stored so the
-  offline environment (D14) never needs to re-retrieve it, and so Phase 11 escalation row 22 is
+- **Massive trade-condition dictionary stored locally.** `docs/massive_trade_conditions.json`
+  (moved from `data/metadata/` in Amendment 6 section C, below — this entry originally named the
+  `data/metadata/` path) holds the vendor table retrieved from the Massive *Conditions & Indicators*
+  glossary (`https://massive.com/glossary/conditions-indicators`, retrieved 2026-08-25). Stored so
+  the offline environment (D14) never needs to re-retrieve it, and so Phase 11 escalation row 22 is
   cleared by a published table rather than an inferred mapping. **Partial by design** — it holds
   the nine codes observed in the Phase 10c near-close census with full attributes, plus six named
   in Amendment 5 section D with the single attribute that section states. Codes absent from the
@@ -126,3 +127,45 @@ created per Phase 2's T8 addendum instruction to "log verbatim to the register."
 - **Vendor identity:** Polygon rebranded to Massive; `polygon.io` documentation URLs redirect to
   `massive.com`. Same vendor as the Massive API used for instrument classification and the Phase 1b
   Amendment 1 key. Recorded so a future phase does not treat them as two sources.
+
+### Phase 10c Amendment 6 (2026-08-25)
+
+- **Dictionary relocated out of the gitignored tree.** `data/metadata/` is fully gitignored, so the
+  file above was reaching git only via `git add -f` — a silent exception inside a tree every other
+  file in it is invisibly untracked. Moved to `docs/massive_trade_conditions.json`, normally tracked,
+  no force-add, `.gitignore` itself untouched. Same durability, no trap for a future `git add` on a
+  sibling path. — closed Amendment 6 section C.
+- **Closing-auction rule settled: {8, 15}, scope all trades.** Any print carrying code 8 or 15 is
+  assigned to the session whose close it settles, regardless of timestamp — implemented in
+  `research/phase_10c/common.py:assign_segment`. Anchor-only scope was rejected as internally
+  inconsistent (ACET's anchor and its own official-close twin 92 µs later would disagree on which
+  day they belong to). Affects 1 anchor (ACET, moves evening→rth at thresholds 1.25/1.30) and 291
+  near-close prints of 25,218,726 cohort-wide. D5=8 / D6={2,8,32} re-confirmed with ACET genuinely
+  in the rth pool (not merely described as such — Amendment 4's own re-derivation code had no
+  code-aware override and still excluded ACET from the rth bucket it claimed to include it in).
+  Code 9 is dropped on semantic grounds only (Cross Trade carries no session/auction meaning); the
+  cohort itself does not discriminate {8,15} from {8,9,15} (0/877 near-close prints carry 9 without
+  8 or 15). **Standing limitation, not closed:** empirical plus semantic, not validated — {8,15} is
+  not established to capture every closing auction in the archive or to exclude every non-auction
+  print. Source: `results/phase_10c/artifacts/a8_auction_closure.json`.
+- **A4 (evening-segment sigma) dissolved, formally closed.** The A2.8 floor is per-event
+  (`t1_subbursts.py`: `sigma = np.std(li, ddof=1)` on that event's own log intervals; nothing
+  segment-level enters), so no evening-segment sigma-borrowing value was ever needed. No further
+  action.
+- **Stream-composition census recorded descriptively; two follow-on measurements declined and
+  logged, not run.** `results/phase_10c/artifacts/a7_record_census.parquet`, 25,218,726 prints /
+  114 events, no exclusion applied: non-volume-updating {15,16,38} = 3,868 (0.0153%); volume-but-
+  not-last {2,7,12,13,21,37,52,53} = 13,005,055 (**51.57%**, majority share — evening 52.02% /
+  premarket 57.66% / rth 42.41%). Phase 10c's premise (clock-time normalization resolves scale
+  without separately identifying fragmentation) stands as-is; opening a second investigative thread
+  mid-phase was judged scope creep against a phase already five amendments deep. **Recorded for a
+  future phase rather than acted on:**
+  - RTH's 42.41% volume-not-last share cannot be Form T (extended-hours only) and is likely
+    code-37 (Odd Lot) dominated — order fragmentation, the same phenomenon that produced v4's
+    349 ns median sub-burst. Unconfirmed.
+  - Measurement 1 (unrun): per-code breakdown of the 51.57% by segment.
+  - Measurement 2 (unrun): interval distribution split by odd-lot flag, to test whether odd-lot
+    prints show materially shorter inter-trade intervals than round-lot prints.
+  - If a future phase takes this on, it is a better instrument for the fragmentation mode than any
+    size or interval cutoff this program has already ruled out, and costs two queries against data
+    already on disk.

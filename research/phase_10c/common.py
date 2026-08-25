@@ -165,6 +165,35 @@ def first_trough_right_of(centers, dens, peak_idx: int):
 
 
 # ---------------------------------------------------------------- sessions
+CLOSING_PRINT_CODES = frozenset({8, 15})
+
+
+def assign_segment(a, codes, opn, close) -> str:
+    """evening / premarket / rth, with the Amendment 6 auction override.
+
+    A print carrying condition code 8 (Closing Prints) or 15 (Market Center
+    Official Close) is assigned to 'rth' -- the session whose close it settles
+    -- regardless of its timestamp. Without this override a closing-cross print
+    a few microseconds past the close is bucketed into the NEXT day's evening
+    segment while its own twin, timestamped a moment earlier, stays in rth: the
+    tick stream and the anchor disagreeing about which session the print
+    belongs to (Amendment 6 section A). Scope is all trades, not anchor
+    classification only; the affected population is 291 near-close prints
+    against 25.2M in the cohort (Amendment 6, from the Amendment 5 census).
+
+    codes: iterable of int condition codes for this print, or None/empty if
+    unavailable -- in which case the override cannot fire and the plain
+    timestamp rule applies.
+    """
+    if codes and (set(codes) & CLOSING_PRINT_CODES):
+        return "rth"
+    if a > close:
+        return "evening"
+    if a >= opn:
+        return "rth"
+    return "premarket"
+
+
 def session_bounds(event_date: str) -> dict | None:
     """Extended-day session bounds plus the RTH sub-boundaries."""
     w = session_window(event_date, 0)

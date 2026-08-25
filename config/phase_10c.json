@@ -281,7 +281,8 @@
       },
       "relationship_to_prompt_s3_2": "S3.2 (Correction 2) introduced a CEILING on the trough search precisely to stop v4's unbounded scan. This rule is an unbounded scan over all troughs, so it drops that ceiling. Measured consequence: v4's pathology has NOT recurred -- v4 produced a 349 ns median sub-burst duration, this boundary sits at 35.5 s pooled, eight orders of magnitude away. D1 = 100 us now does the anti-fragmentation work the ceiling was carrying. Recorded so the dropped ceiling is a visible decision rather than an unnoticed regression.",
       "status": "adopted as a reported quantity; its role in Stage 1 threshold selection is NOT stated"
-    }
+    },
+    "A4_evening_sigma_status": "DISSOLVED, Amendment 5 section F / Amendment 6 section D. The A2.8 floor is genuinely per-event (t1_subbursts.py: sigma = np.std(li, ddof=1) on that events own log intervals, nothing segment-level enters), so no evening-segment sigma-borrowing decision is needed. No A4 value was ever set because none is required."
   },
   "stage_0b_sweeps": {
     "T0b_1_prominence_primary": null,
@@ -346,5 +347,26 @@
       "unimodal",
       "no_threshold"
     ]
+  },
+  "closing_print_rule": {
+    "status": "SETTLED, Amendment 6 section A, 2026-08-25",
+    "code_set": [
+      8,
+      15
+    ],
+    "dropped": [
+      9
+    ],
+    "scope": "all_trades",
+    "rule": "any print carrying condition code 8 (Closing Prints) or 15 (Market Center Official Close) is assigned to the session whose close it settles, regardless of timestamp. Implemented in research/phase_10c/common.py:assign_segment.",
+    "rationale": "anchor-only scope is internally inconsistent, not merely narrower -- under it ACET's anchor sits in day T while its own twin (the official-close record 92us later) stays attributed to day T+1.",
+    "code_9_note": "0 of 877 near-close prints carry 9 without 8 or 15 (Amendment 5 B) -- the cohort does not discriminate {8,15} from {8,9,15}. Dropping 9 rests on the semantic argument alone (Cross Trade carries no session/auction meaning).",
+    "affected_population": {
+      "anchor_classification_only": 1,
+      "all_trades_near_close": 291,
+      "cohort_total_prints": 25218726
+    },
+    "standing_limitation": "empirical plus semantic, not validated -- the dictionary confirms what 8/15 mean, not that they capture every closing auction in the archive or that no non-auction print carries them.",
+    "reclassification_effect": "ACET 2020-09-18 moves evening->rth at thresholds 1.25/1.30 (never crosses at 1.35). D5=8, D6={2,8,32} re-confirmed with ACET genuinely in the rth pool (n_rth 36->37). See results/phase_10c/artifacts/a8_auction_closure.json."
   }
 }

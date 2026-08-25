@@ -3,7 +3,7 @@
   "amendment": "A5",
   "config_hash": "1cf48950",
   "dictionary": {
-    "stored_at": "data/metadata/massive_trade_conditions.json",
+    "stored_at": "docs/massive_trade_conditions.json",
     "source": {
       "vendor": "Massive",
       "document": "Conditions & Indicators glossary",
@@ -17,7 +17,8 @@
       "what_is_here": "The nine codes observed in the Phase 10c near-close census, with full attributes; plus six further codes named in Amendment 5 section D with the single attribute that section states.",
       "what_is_missing": "Every other code in the vendor table. This file must not be treated as the full dictionary.",
       "rule": "Codes absent from this file have no meaning available offline. Do not infer one."
-    }
+    },
+    "relocation_note": "Originally data/metadata/massive_trade_conditions.json, force-added into a gitignored tree. Moved to docs/ in Amendment 6 section C -- normally tracked, no force-add. Path corrected here as metadata; no recomputation was needed."
   },
   "B_code_set": {
     "code_set": [
