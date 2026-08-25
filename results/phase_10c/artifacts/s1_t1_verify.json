@@ -1,0 +1,14 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "T1_verification",
+  "checks": {
+    "exactly_one_segment_per_event_per_variant": "PASS",
+    "ACET_auction_override_applied": "PASS, all 6 cells segment=rth",
+    "no_variant_deduplicated_at_load": "PASS, 56 events x 3 variants all present",
+    "class_M_unchanged_open_to_close": "PASS",
+    "BMR_confirmed_out_of_dev_sample_scope": "PASS -- BMR cohort_group='activity_extension', absent from s1_t1_cells.parquet. Amendment 4-6's condition-code census included it anyway (unfiltered t1_cohort_manifest.parquet, 114 rows across 4 cohort_groups, not just the 56-event dev sample). True dev-sample evening population at threshold 1.35 is 2 (OST, CELH), not the 3 (OST, CELH, BMR) implied by Amendment 4's discriminant test."
+  },
+  "all_pass": true,
+  "source": "research/phase_10c/s1_t1_verify.py:main"
+}

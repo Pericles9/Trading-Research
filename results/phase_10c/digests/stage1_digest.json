@@ -1,0 +1,16 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "config_hash": "998c2461",
+  "T0_denominator_clarification": "results/phase_10c/artifacts/s1_t0_denominator.json",
+  "T1_subburst_extraction": {
+    "waterfall": "results/phase_10c/artifacts/s1_t1_waterfall.json",
+    "cells": "results/phase_10c/artifacts/s1_t1_cells.parquet",
+    "subbursts": "results/phase_10c/artifacts/s1_t1_subbursts.parquet",
+    "label_population": "results/phase_10c/artifacts/s1_t1c_label_population.json",
+    "verification": "results/phase_10c/artifacts/s1_t1_verify.json",
+    "no_threshold_share": "0/168 event-kernel cells with sufficient context ever failed to find a trough",
+    "escalation_rows_13_16_status": "CANNOT BE EVALUATED -- thresholds are [Cooper], unset. Raw figures reported instead: insufficient_context share ranges 0%-42% across cells (highest at 2-minute kernel RTH, as anticipated by construction); no_threshold share is 0% in every cell. Not an escalation determination -- no number exists to compare against, and none was invented."
+  },
+  "note": "T2-T7 not yet run."
+}

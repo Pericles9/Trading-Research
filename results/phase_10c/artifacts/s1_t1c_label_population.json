@@ -1,0 +1,512 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "T1c_label_population_report",
+  "population_note": "n_events is the number of dev-sample events (out of 56) resolving to that (threshold, segment) combination -- the denominator for share. segment=None/NaN means no anchor exists at that threshold (unlabelled).",
+  "rows": [
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "label": "ok",
+      "n": 15,
+      "n_events": 16,
+      "share": 0.9375
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "label": "insufficient_context",
+      "n": 1,
+      "n_events": 16,
+      "share": 0.0625
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "label": "ok",
+      "n": 22,
+      "n_events": 38,
+      "share": 0.5789473684210527
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n": 16,
+      "n_events": 38,
+      "share": 0.42105263157894735
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "segment": null,
+      "label": "insufficient_context",
+      "n": 1,
+      "n_events": 2,
+      "share": 0.5
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "segment": null,
+      "label": "ok",
+      "n": 1,
+      "n_events": 2,
+      "share": 0.5
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "label": "ok",
+      "n": 15,
+      "n_events": 16,
+      "share": 0.9375
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "label": "insufficient_context",
+      "n": 1,
+      "n_events": 16,
+      "share": 0.0625
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "label": "ok",
+      "n": 27,
+      "n_events": 38,
+      "share": 0.7105263157894737
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n": 11,
+      "n_events": 38,
+      "share": 0.2894736842105263
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "segment": null,
+      "label": "insufficient_context",
+      "n": 1,
+      "n_events": 2,
+      "share": 0.5
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "segment": null,
+      "label": "ok",
+      "n": 1,
+      "n_events": 2,
+      "share": 0.5
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 32.0,
+      "segment": "premarket",
+      "label": "ok",
+      "n": 16,
+      "n_events": 16,
+      "share": 1.0
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "label": "ok",
+      "n": 32,
+      "n_events": 38,
+      "share": 0.8421052631578947
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n": 6,
+      "n_events": 38,
+      "share": 0.15789473684210525
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 32.0,
+      "segment": null,
+      "label": "insufficient_context",
+      "n": 1,
+      "n_events": 2,
+      "share": 0.5
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 32.0,
+      "segment": null,
+      "label": "ok",
+      "n": 1,
+      "n_events": 2,
+      "share": 0.5
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "label": "ok",
+      "n": 14,
+      "n_events": 15,
+      "share": 0.9333333333333333
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "label": "insufficient_context",
+      "n": 1,
+      "n_events": 15,
+      "share": 0.06666666666666667
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "label": "ok",
+      "n": 23,
+      "n_events": 38,
+      "share": 0.6052631578947368
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n": 15,
+      "n_events": 38,
+      "share": 0.39473684210526316
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "segment": null,
+      "label": "insufficient_context",
+      "n": 2,
+      "n_events": 3,
+      "share": 0.6666666666666666
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "segment": null,
+      "label": "ok",
+      "n": 1,
+      "n_events": 3,
+      "share": 0.3333333333333333
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "label": "ok",
+      "n": 14,
+      "n_events": 15,
+      "share": 0.9333333333333333
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "label": "insufficient_context",
+      "n": 1,
+      "n_events": 15,
+      "share": 0.06666666666666667
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "label": "ok",
+      "n": 28,
+      "n_events": 38,
+      "share": 0.7368421052631579
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n": 10,
+      "n_events": 38,
+      "share": 0.2631578947368421
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "segment": null,
+      "label": "insufficient_context",
+      "n": 2,
+      "n_events": 3,
+      "share": 0.6666666666666666
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "segment": null,
+      "label": "ok",
+      "n": 1,
+      "n_events": 3,
+      "share": 0.3333333333333333
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 32.0,
+      "segment": "premarket",
+      "label": "ok",
+      "n": 15,
+      "n_events": 15,
+      "share": 1.0
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "label": "ok",
+      "n": 33,
+      "n_events": 38,
+      "share": 0.868421052631579
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n": 5,
+      "n_events": 38,
+      "share": 0.13157894736842105
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 32.0,
+      "segment": null,
+      "label": "insufficient_context",
+      "n": 2,
+      "n_events": 3,
+      "share": 0.6666666666666666
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 32.0,
+      "segment": null,
+      "label": "ok",
+      "n": 1,
+      "n_events": 3,
+      "share": 0.3333333333333333
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "evening",
+      "label": "insufficient_context",
+      "n": 1,
+      "n_events": 2,
+      "share": 0.5
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "evening",
+      "label": "ok",
+      "n": 1,
+      "n_events": 2,
+      "share": 0.5
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "label": "ok",
+      "n": 14,
+      "n_events": 15,
+      "share": 0.9333333333333333
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "label": "insufficient_context",
+      "n": 1,
+      "n_events": 15,
+      "share": 0.06666666666666667
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "label": "ok",
+      "n": 18,
+      "n_events": 28,
+      "share": 0.6428571428571429
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n": 10,
+      "n_events": 28,
+      "share": 0.35714285714285715
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": null,
+      "label": "insufficient_context",
+      "n": 6,
+      "n_events": 11,
+      "share": 0.5454545454545454
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": null,
+      "label": "ok",
+      "n": 5,
+      "n_events": 11,
+      "share": 0.45454545454545453
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "evening",
+      "label": "insufficient_context",
+      "n": 1,
+      "n_events": 2,
+      "share": 0.5
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "evening",
+      "label": "ok",
+      "n": 1,
+      "n_events": 2,
+      "share": 0.5
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "label": "ok",
+      "n": 14,
+      "n_events": 15,
+      "share": 0.9333333333333333
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "label": "insufficient_context",
+      "n": 1,
+      "n_events": 15,
+      "share": 0.06666666666666667
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "label": "ok",
+      "n": 23,
+      "n_events": 28,
+      "share": 0.8214285714285714
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n": 5,
+      "n_events": 28,
+      "share": 0.17857142857142858
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": null,
+      "label": "insufficient_context",
+      "n": 6,
+      "n_events": 11,
+      "share": 0.5454545454545454
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": null,
+      "label": "ok",
+      "n": 5,
+      "n_events": 11,
+      "share": 0.45454545454545453
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": "evening",
+      "label": "ok",
+      "n": 2,
+      "n_events": 2,
+      "share": 1.0
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": "premarket",
+      "label": "ok",
+      "n": 15,
+      "n_events": 15,
+      "share": 1.0
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "label": "ok",
+      "n": 25,
+      "n_events": 28,
+      "share": 0.8928571428571429
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n": 3,
+      "n_events": 28,
+      "share": 0.10714285714285714
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": null,
+      "label": "ok",
+      "n": 7,
+      "n_events": 11,
+      "share": 0.6363636363636364
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": null,
+      "label": "insufficient_context",
+      "n": 4,
+      "n_events": 11,
+      "share": 0.36363636363636365
+    }
+  ]
+}

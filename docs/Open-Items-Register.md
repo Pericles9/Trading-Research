@@ -128,6 +128,26 @@ created per Phase 2's T8 addendum instruction to "log verbatim to the register."
   `massive.com`. Same vendor as the Massive API used for instrument classification and the Phase 1b
   Amendment 1 key. Recorded so a future phase does not treat them as two sources.
 
+### Phase 10c Stage 1, T1 (2026-08-25)
+
+- **Amendment 4-6's condition-code census silently mixed the 56-event dev sample with 58 events
+  outside it.** `research/phase_10c/a6_conditions.py` and `a7_census.py` both load
+  `results/phase_10/artifacts/t1_cohort_manifest.parquet` without filtering to `cohort_group in
+  (dev_v4_primary, dev_v4_sidecar)` — the manifest actually holds 114 rows across four groups
+  (`dev_v4_primary` 50, `activity_extension` 50, `row_cap_census` 8, `dev_v4_sidecar` 6), so every
+  "114-event cohort" figure in Amendments 4-6 (the 877 near-close prints, the 25,218,726-print
+  record census, the {8,15} discriminant test) was computed over a population 58 events larger
+  than, and different from, the Stage-1 dev sample it was reported alongside. Surfaced concretely
+  in Stage 1 T1: BMR — one of the 4 "genuine after-hours anchors" backing the {8,15} vs {8,9,15}
+  code-set decision — is `cohort_group='activity_extension'`, not a dev-sample event at all. Does
+  **not** change the code-set decision (BMR's own codes `{12,37}` carry neither 8 nor 15 regardless
+  of scope) but the true dev-sample-scoped evening population at threshold 1.35 is 2 (OST, CELH),
+  not the 3 (OST, CELH, BMR) Amendment 4's discriminant test implied. Not corrected retroactively in
+  the already-committed Amendment 4-6 JSON artifacts (verbatim record); confirmed by assertion in
+  `research/phase_10c/s1_t1_verify.py`. **Unscheduled:** whether the 114-event "cohort" scope was
+  ever the deliberately intended population for the condition-code characterization work (as
+  opposed to an accidental widening) is a Cooper question, not resolved here.
+
 ### Phase 10c Amendment 6 (2026-08-25)
 
 - **Dictionary relocated out of the gitignored tree.** `data/metadata/` is fully gitignored, so the

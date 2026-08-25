@@ -1,0 +1,13 @@
+{
+  "events_in_dev_sample": 56,
+  "events_with_prints": 56,
+  "prints_raw": 3774862,
+  "prints_tie_collapsed": 3671288,
+  "prints_after_D1": 2629076,
+  "intervals": 2629020,
+  "kernel_cell_computations": 168,
+  "subbursts_total": 170722,
+  "timing_seconds": 19.6,
+  "config_hash": "a0943e2a",
+  "design_note": "sub-burst extraction computed once per (event, kernel) -- 56x3=168 -- then cross-joined onto each of 3 variants' own segment/anchor context to form the 9 reported cells. See module docstring."
+}
