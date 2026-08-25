@@ -75,7 +75,8 @@
       "1.35": 28
     },
     "all_agree_at_8": true,
-    "verdict": "D5 = 8 and D6 = {2, 8, 32} CONFIRMED, now with ACET genuinely included in the rth pool at thresholds 1.25/1.30 (it never crosses at 1.35, unaffected by this rule)."
+    "verdict": "D5 = 8 and D6 = {2, 8, 32} CONFIRMED, now with ACET genuinely included in the rth pool at thresholds 1.25/1.30 (it never crosses at 1.35, unaffected by this rule).",
+    "correction_stage1_t0": "n_rth_events below used r_.ticker.nunique(), which undercounts by 1 wherever OCUL (dev-sample events 2020-10-07 and 2023-12-04, both classify rth at 1.25/1.30) collapses to one ticker string. TRUE counts, corrected in results/phase_10c/artifacts/s1_t0_denominator.json (Stage 1 T0): pre-override 37 (not 36), post-override 38 (not 37) at 1.25 and 1.30; 28 unaffected at 1.35. The printed 37 at post-override here was a coincidence -- the nunique() bug (-1) and ACET (+1) cancelled numerically. rth_derived_floor and binding_rung_min below were computed on the full, correctly-populated row-set throughout and are NOT affected by this correction."
   },
   "D_amendment5_items_closed": {
     "5.A": "dictionary stored, location corrected in Amendment 6 section C (see below)",

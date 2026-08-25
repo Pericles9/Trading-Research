@@ -367,6 +367,7 @@
       "cohort_total_prints": 25218726
     },
     "standing_limitation": "empirical plus semantic, not validated -- the dictionary confirms what 8/15 mean, not that they capture every closing auction in the archive or that no non-auction print carries them.",
-    "reclassification_effect": "ACET 2020-09-18 moves evening->rth at thresholds 1.25/1.30 (never crosses at 1.35). D5=8, D6={2,8,32} re-confirmed with ACET genuinely in the rth pool (n_rth 36->37). See results/phase_10c/artifacts/a8_auction_closure.json."
+    "reclassification_effect": "ACET 2020-09-18 moves evening->rth at thresholds 1.25/1.30 (never crosses at 1.35). D5=8, D6={2,8,32} re-confirmed with ACET genuinely in the rth pool (n_rth 36->37). See results/phase_10c/artifacts/a8_auction_closure.json.",
+    "reclassification_effect_correction_stage1_t0": "The n_rth 36->37 figure recorded at Amendment 6 close undercounted by 1 at both stages (pre- and post-override) due to a .ticker.nunique() bug colliding on OCUL (two dev-sample events, 2020-10-07 and 2023-12-04, both classify rth at 1.25/1.30). Corrected true counts: 37->38, not 36->37. See results/phase_10c/artifacts/s1_t0_denominator.json (Stage 1 T0). The floor statistic and D5=8 rung were computed on the full correct row-set throughout and are unaffected by the correction."
   }
 }

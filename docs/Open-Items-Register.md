@@ -143,6 +143,11 @@ created per Phase 2's T8 addendum instruction to "log verbatim to the register."
   near-close prints of 25,218,726 cohort-wide. D5=8 / D6={2,8,32} re-confirmed with ACET genuinely
   in the rth pool (not merely described as such — Amendment 4's own re-derivation code had no
   code-aware override and still excluded ACET from the rth bucket it claimed to include it in).
+  **Correction, Stage 1 T0 (2026-08-25):** the counts here (n_rth 36→37) were undercounted by 1 at
+  both stages — `.ticker.nunique()` collapses OCUL's two dev-sample events (2020-10-07, 2023-12-04,
+  both classify rth at 1.25/1.30) to one ticker string. True counts are 37→38, not 36→37; the
+  floor statistic and D5=8 were computed on the full correct row-set throughout and are unaffected.
+  See `results/phase_10c/artifacts/s1_t0_denominator.json`.
   Code 9 is dropped on semantic grounds only (Cross Trade carries no session/auction meaning); the
   cohort itself does not discriminate {8,15} from {8,9,15} (0/877 near-close prints carry 9 without
   8 or 15). **Standing limitation, not closed:** empirical plus semantic, not validated — {8,15} is

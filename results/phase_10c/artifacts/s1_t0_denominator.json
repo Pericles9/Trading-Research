@@ -1,0 +1,57 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "T0_denominator_clarification",
+  "config_hash": "998c2461",
+  "finding": "Neither 37 is a different POPULATION from the other. Both traced to the same code path (a6_conditions.py / a8_auction_closure.py: \"n_rth_events\": int(r_.ticker.nunique())), which counts DISTINCT TICKER STRINGS, not distinct (ticker, event_date) pairs. Two dev-sample tickers repeat on different dates (MDIA: 2024-04-09 and 2022-08-03; OCUL: 2020-10-07 and 2023-12-04) -- an expected consequence of stratifying the 56-event draw by t0_print_count decile rather than by unique company, not a defect in the draw itself.",
+  "which_pool_is_the_36": "a6_conditions.py's ORIGINAL A3 re-derivation (pre-Amendment-6, no auction override). OCUL's two dev-sample events (2020-10-07, 2023-12-04) BOTH classify segment='rth' at thresholds 1.25 and 1.30 -- two real, distinct (ticker, event_date) rows that share one ticker string. .ticker.nunique() collapses them to 1, undercounting the TRUE 37-event rth population by exactly 1, reporting 36. At threshold 1.35 OCUL never crosses at all (both dates unlabelled), so no collision occurs there and the printed 28 was always correct.",
+  "the_missing_event_is_not_missing": "No event is absent from the floor derivation. The row-set the floor/rung statistics are computed over (r_ = d[(d.seg_v=='rth') & (d.precision_factor==F)]) always contained every classified-rth dev-sample event's rows, OCUL's both included -- verified by assertion in this script. Only the DISPLAYED COUNT used the wrong denominator. rth_derived_floor and the binding rung (8) are unaffected by the bug at either threshold, confirmed per-variant below.",
+  "the_dev_manifest_37_and_the_true_pre_override_37_are_the_same_population": "a5_variants.py's A4 table used sub.det_segment_poll0.value_counts() -- a row-count over the FULL 56-event frame, immune to the nunique() bug entirely and therefore correct at 37. This script's independently-recomputed pre_override_true_n_event_pairs confirms 37 at 1.25/1.30, 28 at 1.35 -- identical to the manifest table. There were never two different 37-event populations; there was one 37-event population (with ACET separately unlabelled/'evening') and one buggy DISPLAY of it as 36.",
+  "post_override_true_count_is_38_not_37": "Amendment 6 adds ACET (1 real event) on top of the TRUE 37-event pre-override population, so the correct post-override count is 38 at 1.25 and 1.30 -- not the 37 a8_auction_closure.py printed. That 37 was itself a coincidence: the nunique() bug's -1 and ACET's +1 cancelled numerically, producing an unchanged printed total across an amendment that Cooper's own text says changes the population. This is the same error class as Amendment 4's VEEE/CODX offsetting swap and Amendment 2's threshold- variant segment-count marginals -- an identical count concealing a membership change.",
+  "systemic_scope_of_the_nunique_bug": ".ticker.nunique() is used the same way, with the same OCUL/MDIA collision exposure, in a5_variants.py:108 (Amendment 3's own A3 rederivation, predates this diagnosis), t0_landscape.py:164, t0_charts.py:101/220 and t0b_charts.py:165/166/203 -- all in Stage 0 / Stage 0b, both already tagged (phase-10c-stage0, phase-10c-stage0b) and therefore NOT edited here, per the same closed-tagged-artifact convention used for Phase 10's common.py. Flagged, not silently fixed: any of those printed dev-sample n figures may be undercounting by 1 wherever OCUL or MDIA's two events land in the same bucket. This script and a8_auction_closure.py (untagged, still on the open branch) are corrected below; the tagged Stage 0/0b captions are not.",
+  "by_variant": {
+    "1.25": {
+      "pre_override_true_n_event_pairs": 37,
+      "pre_override_buggy_nunique_count": 36,
+      "post_override_true_n_event_pairs": 38,
+      "post_override_buggy_nunique_count": 37,
+      "pre_override_floor": 156.48419971291972,
+      "post_override_floor": 159.31395000867968,
+      "which_duplicated_ticker_collides": [
+        "OCUL"
+      ]
+    },
+    "1.3": {
+      "pre_override_true_n_event_pairs": 37,
+      "pre_override_buggy_nunique_count": 36,
+      "post_override_true_n_event_pairs": 38,
+      "post_override_buggy_nunique_count": 37,
+      "pre_override_floor": 153.4885119696363,
+      "post_override_floor": 154.986355841278,
+      "which_duplicated_ticker_collides": [
+        "OCUL"
+      ]
+    },
+    "1.35": {
+      "pre_override_true_n_event_pairs": 28,
+      "pre_override_buggy_nunique_count": 28,
+      "post_override_true_n_event_pairs": 28,
+      "post_override_buggy_nunique_count": 28,
+      "pre_override_floor": 142.89396279945026,
+      "post_override_floor": 142.89396279945026,
+      "which_duplicated_ticker_collides": []
+    }
+  },
+  "duplicated_dev_sample_tickers": {
+    "MDIA": [
+      "2024-04-09",
+      "2022-08-03"
+    ],
+    "OCUL": [
+      "2020-10-07",
+      "2023-12-04"
+    ]
+  },
+  "verdict": "NAMING RESOLVED, not a stop. Pre-override RTH population is 37 (ticker,event_date) pairs at 1.25/1.30 (28 at 1.35), identical to the dev-manifest table. Post-override is 38 at 1.25/1.30 (unchanged 28 at 1.35, ACET never crosses there). D5=8 confirmed on the corrected count -- see rth_derived_floor per variant above, unchanged from the previously reported figures since the floor was always computed on the full, correct row-set.",
+  "source": "research/phase_10c/s1_t0_denominator.py:main"
+}

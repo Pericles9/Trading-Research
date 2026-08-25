@@ -103,7 +103,12 @@ def main() -> int:
         ok = [k for k, c in wc.items() if c >= fl]
         e_ = ev0b.copy()
         e_["seg_v"] = [sm.get((a, b)) for a, b in zip(e_.ticker, e_.event_date_canonical)]
-        a3[str(v)] = {"n_rth_events": int(r_.ticker.nunique()),
+        # NOTE (Stage 1 T0 correction): count distinct (ticker, event_date) pairs, not
+        # r_.ticker.nunique() -- two dev-sample tickers (MDIA, OCUL) each cover two distinct
+        # events on different dates, and .nunique() silently collapses them. See
+        # results/phase_10c/artifacts/s1_t0_denominator.json.
+        n_events = r_[["ticker", "event_date_canonical"]].drop_duplicates().shape[0]
+        a3[str(v)] = {"n_rth_events": int(n_events),
                       "sigma_rth_median": float(e_[e_.seg_v == "rth"].sigma_log10_post_agg.median()),
                       "rth_derived_floor": fl,
                       "acet_in_pool": bool(("ACET" in r_.ticker.values))
