@@ -12,7 +12,7 @@
     "no_threshold_share": "0/168 event-kernel cells with sufficient context ever failed to find a trough",
     "escalation_rows_13_16_status": "CANNOT BE EVALUATED -- thresholds are [Cooper], unset. Raw figures reported instead: insufficient_context share ranges 0%-42% across cells (highest at 2-minute kernel RTH, as anticipated by construction); no_threshold share is 0% in every cell. Not an escalation determination -- no number exists to compare against, and none was invented."
   },
-  "note": "Stage 1 T0-T5 and T7 complete. T6a-c complete (both layouts, 4 sample events); T6d (full-sample production) BLOCKED pending Cooper's layout choice -- not an agent decision. Verification Block and final digest close-out pending.",
+  "note": "Stage 1 T0-T7 all complete and committed. No escalation row fired (rows 1-12, 17-18 confirmed not violated; rows 13-16 unevaluable, [Cooper] thresholds unset, raw figures reported instead; row 0 is Cooper's alone, not evaluated here). One prior-amendment defect surfaced and flagged, not silently fixed (BMR population-scope mixing, logged to Open-Items-Register.md). Stage 1 is functionally complete pending Cooper's review of the tape review (row 0) and any reads on the reported findings.",
   "T2_anchor_independent": {
     "threshold_location": "results/phase_10c/artifacts/s1_t2a_threshold_location.parquet",
     "subburst_duration": "results/phase_10c/artifacts/s1_t2b_subburst_duration.parquet",
@@ -41,7 +41,7 @@
     "headline_finding": "T5a: sub-burst count vs T=0 print count, positive as expected, weakest at the 32-min kernel (rho=0.033, n=49) vs 2-min (rho=0.407, n=38) and 8-min (rho=0.411, n=43) -- identical across all 3 variants by construction (label==ok never depends on the variant, and T5a is not segment-stratified), confirmed not assumed. No threshold, no gate. T5b: A2.7 silent-selection rate 57.9%/60.5%/61.2% at kernel 2/8/32min (also identical across variants for the same reason) -- NOT comparable to Stage 0b's 30% figure, a different statistic on a mechanism (the envelope boundary) that did not exist then."
   },
   "T6_animation": {
-    "status": "T6a-c done on 4 sample events; T6d (full 56-event production) BLOCKED pending Cooper choice of layout",
+    "status": "COMPLETE -- T6d run on full 56-event dev sample, combined comparative layout (Cooper choice)",
     "chart_manifest": "results/phase_10c/artifacts/s1_t6_chart_manifest.json",
     "sample_events": [
       [
@@ -65,7 +65,10 @@
         "evening"
       ]
     ],
-    "open_question_for_cooper": "T6c: both layouts built -- per-kernel-separate animation (3 files per event) and a combined 3-panel comparative view (1 file per event), 16 charts total on 4 events. Each frame is a real recomputation over its own time window, not an interpolation. Cooper picks which layout T6d runs for the full 56-event dev sample; not an agent decision per the prompt."
+    "open_question_for_cooper": "T6c: both layouts built -- per-kernel-separate animation (3 files per event) and a combined 3-panel comparative view (1 file per event), 16 charts total on 4 events. Each frame is a real recomputation over its own time window, not an interpolation. Cooper picks which layout T6d runs for the full 56-event dev sample; not an agent decision per the prompt.",
+    "t6d_manifest": "results/phase_10c/artifacts/s1_t6d_manifest.json",
+    "t6d_index": "results/phase_10c/charts/s1_06_animation_full/index.html (gitignored, regenerable)",
+    "t6d_n_events": 56
   },
   "T7_tape_review": {
     "status": "DONE, not evaluated -- Row 0 is Cooper's alone",
