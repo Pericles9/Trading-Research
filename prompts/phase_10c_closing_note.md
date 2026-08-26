@@ -187,3 +187,81 @@ other two.** The first-trough rule and the run-length floor are what 10d changes
 duration** is fixed background in 10d — 10c's recorded specification, not re-derived, not gridded.
 The **void cutoff** stays carried at 0.70 and unrevisited; it remains on the register as a named
 tension, not a 10d task.
+
+---
+
+## Correction (2026-08-26, appended after reconciliation against the committed Stage 1 record)
+
+The text above is preserved verbatim as received — it is what Cooper actually sent, and this repo's
+convention is to keep an issued instruction on record rather than edit it after the fact. But its
+technical description of what Stage 1 specified and ran does not match `prompts/phase_10c.md`,
+`config/phase_10c.json`, or the tagged Stage 1 artifacts (`phase-10c-stage1`), on three load-bearing
+points. Recorded here so nothing downstream — 10d included — inherits the wrong premise.
+
+**1. The window is centered, not trailing — and was never trailing.** `prompts/phase_10c.md:178-182`
+states, in the original design, "the local normalisation window is defined in clock time. It remains
+**centered** ... Do not implement a trailing variant" — twice, for a stated reason
+(`prompts/phase_10c.md:185`; `config/phase_10c.json` → `settled.D3_window._a2_5`): a centered window
+spanning the 09:30 open would let RTH's 17x-denser print rate set the local median for premarket
+intervals too. `config/phase_10c.json` → `settled.D3_window._c2_resolution` records this exact
+question being raised and settled on 2026-08-24: *"CENTERED, as committed. The outline's trailing
+wording is void."* Stage 1's own escalation table carried this forward as a hard stop (row 2, "any
+trailing-window implementation") that never fired. **Consequence: the causal-status claim in §1 and
+§3 row 7 is also reversed.** A centered window reads forward in time by construction — this is the
+*same* non-causal property `results/phase_10/artifacts/v4_causal_audit.parquet` flagged in v4
+(`local_median_log_interval`: "CENTRED moving median — reads forward in time by half a window ...
+Phase 17 needs a trailing estimator"). Cross-checked directly: **0 of the 16 non-causal fields in
+the v4 audit are retired by Stage 1** — every one of them (histogram, peaks, void parameter, the
+threshold, the sub-burst objects, move share) still derives from a centered window over a completed
+session. The causal debt is exactly where v4 left it, still parked for Phase 17, because the fix
+that would have retired it (trailing) was tried in the outline stage and rejected for the density-
+inversion reason above — not because it was never considered.
+
+**2. The threshold rule Stage 1 ran is not "first trough left of peak, void ≥ 0.70."** That is v4's
+retired rule. `config/phase_10c.json` → `cooper_values._class_E_fill_before_stage_0.D13_void_parameter`
+is `null`, "deliberate and permanent... never thresholded in this phase" — 0.70 does not appear
+anywhere in Stage 1's mechanism, and Stage 1's escalation row 1 (any void cutoff applied anywhere)
+never fired. What Stage 1 actually ran is `A2.7.D17_burst_envelope_boundary`
+(`research/phase_10c/common.py:envelope_boundary` / `s1_t1_subbursts.py`): the argmax of the void
+parameter across **every** trough in the event, not the first one right of the short-interval peak,
+adopted specifically because two earlier candidate rules that *were* local to that peak (Amendment
+1, "A2.7/A2.8 Resolution") were measured to increase, not decrease, the rate of silently selecting
+the wrong mode.
+
+**The underlying concern in §1 is not wrong, though — it is just evidenced differently than
+described, and Stage 1 already measured it directly rather than leaving it as a described risk:**
+`s1_t5_summary.json` (T5b) found the tallest peak at-or-below the chosen boundary is the
+fastest-arriving one only 38–42% of the time (57.9%–61.2% "silent selection", by kernel) — i.e. the
+non-parametric, all-troughs rule *still* does not reliably land on a boundary that isolates a single
+clean mode. `s1_t4_summary.json` (T4a) adds a second, independent signal: the per-event log-log
+slope of threshold location against kernel width has median **−1.359**, not flat and not the ~1:1
+free-parameter signature — a third pattern nobody had named going in. Both are real, measured
+evidence that deriving a single burst-defining threshold and assembling runs from it is unresolved
+mechanism work, which is exactly the category of problem §1 and §8 route to Phase 10d rather than
+tune inside 10c. The routing decision stands; only the diagnosis quoted for it should cite these two
+figures, not the retired v4 rule.
+
+**3. The multi-kernel grid, the per-event diagnostics, and the animation were run in Stage 1 — none
+of them were deferred.** §4 lists six items as "specified and not run." Five of them are exactly what
+Stage 1's T1–T6 tasks are: the {2, 8, 32}-minute kernel grid (not one validation kernel — all three,
+crossed with all three momentum-threshold variants, 168 (event, kernel) computations,
+`s1_t1_cells.parquet`); threshold-location-vs-window-size per event (T4a, above); void-parameter
+strength by kernel per event (T4b: kernel 32min best-separates 21 events, 2min 16, 8min 12,
+`s1_t4_summary.json`); heterogeneity against event size/segment/price decile (T4c, `s1_t4_summary.json`
+— neither correlation significant at p<0.05 in this dev sample); and the animated histogram through
+time, synced across kernels (T6, both candidate layouts built, Cooper's combined-comparative choice
+run on the full 56-event sample, `results/phase_10c/charts/s1_06_animation_full/`). **What is
+genuinely not run**, and is the accurate content for §4: a kernel grid *wider* than the three rungs
+{2, 8, 32} (this grid was derived as D5÷4, D5, D5×4 from the single RTH floor-clearing kernel D5=8 —
+it was never meant to span "1 minute through an hours-to-multi-day ceiling"); and Stage 2 (the
+multi-kernel scale-coupling gate) and Stage 3 (the full-population run), which is what "stage 1 —
+not stage 2 or 3" actually refers to.
+
+**What §1's headline conclusion gets right, unaffected by the above:** Stage 1 did confirm the
+histogram/peak-detection chain works under a clock-time-normalized window — every event in the dev
+sample produces a computable trough (0% `no_threshold`, against v4's 10/100 = 10%), and the resulting
+sub-burst durations sit at session/market scale rather than at v4's 349 ns order-sweep scale (pooled
+median 1.29 ms, `s1_t1_subbursts.parquet`). The corrected, evidence-cited account of all of this is
+in `results/phase_10c/REPORT.md` (updated alongside this correction) and its cross-phase copy;
+`docs/Open-Items-Register.md`'s Phase 10c close-out entry carries the accurate "not run" list
+forward to 10d.

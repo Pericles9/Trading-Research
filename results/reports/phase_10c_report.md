@@ -85,6 +85,28 @@ prints → 3,671,288 tie-collapsed → 2,629,076 after D1 (100 µs floor) → 2,
 **170,722 sub-bursts** across the 168 kernel-cells. `no_threshold` share: **0%** in every cell —
 every event with sufficient context found a computable trough.
 
+**The v4 comparison, stated explicitly (this is the number the phase was about):**
+
+| | v4 (Phase 10, 2026-08-06) | Stage 1 (Phase 10c) |
+|---|---|---|
+| Normalization window | count-based, 20% of sequence length, centered | clock-time, {2,8,32} min, **centered** (not trailing — see below) |
+| Threshold rule | first trough right of the fastest peak, void ≥ 0.70 | `A2.7.D17_burst_envelope_boundary`: argmax void across **all** troughs, never thresholded (`D13_void_parameter.threshold = null`, permanent) |
+| `no_threshold` share | 10/100 = 10% | **0/504 cells (0%)** — pooled across all 9 (variant × kernel) cells |
+| Median sub-burst duration | **349 ns** | **1.29 ms pooled** (q25 0.44 ms, q75 4.2 ms, n=170,722 sub-bursts), varying by segment/kernel — session/market scale, not order-sweep scale |
+
+**Causal status, cross-checked against `results/phase_10/artifacts/v4_causal_audit.parquet` (18
+fields, 16 non-causal in v4):** **0 of 16 are retired by Stage 1.** The window stayed centered, not
+trailing (`config/phase_10c.json` → `settled.D3_window`, resolved 2026-08-24 against the outline's
+original trailing wording — "CENTERED, as committed... the outline's trailing wording is void" — for
+a stated reason: a centered window spanning the 09:30 open lets RTH's 17×-denser print rate set the
+local median for premarket intervals too). A centered window reads forward in time by construction,
+the same property the v4 audit flagged (`local_median_log_interval`: "reads forward in time by half
+a window ... Phase 17 needs a trailing estimator"). Every downstream quantity — histogram, peaks,
+void parameter, the threshold, the sub-burst objects, move share — still derives from a centered
+window over a completed session. **The causal debt is exactly where v4 left it, still parked for
+Phase 17.** Only `detection_anchor_ns` and `detection_segment` were causal in v4 and remain so; that
+was never in question.
+
 ---
 
 ## 4. Findings, T2–T5 (descriptive; no gate anywhere in this stage)
@@ -109,6 +131,19 @@ every event with sufficient context found a computable trough.
 - **T5 — sub-burst count vs. print count is positive as expected** (no gate; Amendment 1 retired
   this as a criterion). A2.7 silent-selection rate 57.9%/60.5%/61.2% by kernel — **not comparable**
   to Stage 0b's 30% figure, a different statistic measured before the envelope boundary existed.
+
+**Reading T4a and T5 together — the residual mechanism problem, evidenced rather than assumed.**
+Stage 1's threshold rule (`A2.7.D17`, above) already replaced v4's naive "first trough right of the
+fastest peak" rule with a global, non-parametric one, specifically because two earlier local
+candidates were measured to *increase* the silent-selection rate they existed to reduce (Amendment
+1). That replacement is not itself the residual problem. What T4a and T5b show is that the
+replacement doesn't fully resolve it either: 58–61% of events have their tallest sub-boundary peak
+be something other than the fastest-arriving one (T5b), and the threshold's own location scales
+with kernel width in a pattern that is neither flat (a real structural interval) nor the ~1:1
+free-parameter signature, but a third, unnamed, mostly-negative one (T4a, median slope −1.359). Both
+are measured evidence that deriving a single burst-defining threshold and assembling runs from it
+remains open mechanism work — the category of problem this report's closing guidance (§9) routes to
+Phase 10d rather than tunes here.
 
 ---
 
@@ -186,7 +221,35 @@ standing rule that row 0 overrides every numeric row and is Cooper's alone. **Co
 
 ---
 
-## 9. Standing decisions recorded
+## 9. Reconciling Cooper's closing note
+
+Cooper issued a closing note (`prompts/phase_10c_closing_note.md`) framing 10c as a scoped
+hypothesis test — did switching the normalization window from count-based to clock-time fix v4's
+fragmentation-scale failure — confirmed at the histogram/peak-detection stage, with a residual
+threshold/burst-assembly defect routed to Phase 10d rather than tuned here. **That framing is
+correct and is what this report uses.** Its technical description of *what was specified and run*
+did not match the committed record on three points, corrected in an appended section of that same
+file and reflected in §3–§4 above:
+
+1. The window is **centered**, and was always specified as centered — not trailing. Trailing was
+   explicitly considered and ruled out (`config/phase_10c.json` → `settled.D3_window`, resolved
+   2026-08-24) for a stated technical reason, not overlooked. Consequence: the causal-status
+   improvement the note assumed did not happen — 0 of v4's 16 non-causal fields are retired (§3).
+2. The threshold rule that ran is `A2.7.D17_burst_envelope_boundary` (argmax void across all
+   troughs, never thresholded), not v4's retired first-trough/0.70-cutoff rule. The residual
+   mechanism concern the note raised is real, but its evidence is T4a's and T5b's measured figures
+   (§4), not the old rule's description.
+3. The {2, 8, 32}-minute kernel grid, the per-event cross-kernel diagnostics (T4a–c), and the
+   synced-kernel animation (T6) all ran in Stage 1 — none were deferred. What is genuinely not run
+   is a kernel grid wider than those three rungs, and Stages 2 (scale-coupling gate) and 3
+   (full-population run).
+
+None of this changes the routing decision: the threshold-derivation and burst-assembly mechanism is
+Phase 10d's to revise, on the evidence in §4, not something to be tuned inside 10c.
+
+---
+
+## 10. Standing decisions recorded
 
 - **`docs/Universe-Decisions.md` D3, Amendment (Phase 10c):** the session-boundary and
   auction-print assignment rule this phase established is now the standing convention for any
@@ -198,9 +261,11 @@ standing rule that row 0 overrides every numeric row and is Cooper's alone. **Co
 
 ---
 
-## 10. What happens next
+## 11. What happens next
 
 Cooper: *"we have learned what we need... going to do a 10d."* Stage 1 is approved; Stages 2
 (multi-kernel scale-coupling gate) and 3 (full-population run) are **not run** and are not
-scheduled under this phase number. The program proceeds to **Phase 10d**, scope set by Cooper's
-next prompt.
+scheduled under this phase number. Also not run and carried to 10d: a kernel grid wider than the
+three validated rungs {2, 8, 32} minutes, and any resolution of the threshold-derivation /
+burst-assembly mechanism problem evidenced in §4. The program proceeds to **Phase 10d**, scope set
+by Cooper's next prompt.

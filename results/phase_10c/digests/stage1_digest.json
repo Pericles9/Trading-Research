@@ -90,5 +90,30 @@
       "violation_in_prior_amendment_work_flagged": 1,
       "violation_in_stage1_own_code": 0
     }
+  },
+  "v4_comparison": {
+    "window_basis": {
+      "v4": "count-based, 20% of sequence length, centered",
+      "stage1": "clock-time, {2,8,32} min, centered (trailing was specified and explicitly rejected 2026-08-24 for the A2.5 density-inversion reason, not implemented)"
+    },
+    "threshold_rule": {
+      "v4": "first trough right of the fastest peak, void >= 0.70",
+      "stage1": "A2.7.D17_burst_envelope_boundary: argmax void across all troughs, never thresholded"
+    },
+    "no_threshold_share": {
+      "v4": "10/100 = 10%",
+      "stage1": "0/504 cells (0%), pooled across all 9 variant x kernel cells"
+    },
+    "median_subburst_duration": {
+      "v4": "349 ns",
+      "stage1": "1.29 ms pooled (q25 0.44ms, q75 4.2ms, n=170722)"
+    },
+    "causal_status_vs_v4_causal_audit": {
+      "source": "results/phase_10/artifacts/v4_causal_audit.parquet",
+      "n_non_causal_fields_in_v4": 16,
+      "n_retired_by_stage1": 0,
+      "reason": "window stayed centered, not trailing; causal debt unchanged, still parked for Phase 17"
+    },
+    "note": "Added during closing-note reconciliation, 2026-08-26 -- see prompts/phase_10c_closing_note.md appended Correction and results/phase_10c/REPORT.md section 9."
   }
 }

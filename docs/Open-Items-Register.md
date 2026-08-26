@@ -214,6 +214,30 @@ created per Phase 2's T8 addendum instruction to "log verbatim to the register."
   `det_ns_*` float64 precision at source; the auction rule {8,15} remains empirical plus semantic,
   not independently validated; the odd-lot/fragmentation hypothesis above, declined as mid-phase
   scope creep, still unmeasured.
+- **Cooper's closing note (`prompts/phase_10c_closing_note.md`) routes the threshold-derivation /
+  burst-assembly mechanism to Phase 10d, correctly, but its own technical description of what ran
+  needed correcting — see that file's appended "Correction" section and `results/phase_10c/REPORT.md`
+  §9 for the full reconciliation. The corrected open items it raises, carried forward here:**
+  - **A kernel grid wider than the three validated rungs {2, 8, 32} minutes is untested.** That grid
+    was derived as D5÷4, D5, D5×4 from the single RTH floor-clearing kernel D5=8 — it was never a
+    wide log-spaced sweep, and one was never run. Whether a wider or denser grid changes T4's
+    heterogeneity findings is open. **Unscheduled.**
+  - **Whether a single per-event threshold is the right object, given a session's histogram shape
+    may shift across it, is unexamined as a finding** — the animation that would support reading this
+    was built and run (`results/phase_10c/charts/s1_06_animation_full/`, all 56 events, Cooper's
+    chosen combined layout) but the reading itself (does the shape shift materially within a
+    session) has not been articulated. **Unscheduled.**
+  - **The threshold-derivation/burst-assembly mechanism problem is now evidenced, not just
+    suspected:** T5b's 57.9%-61.2% silent-selection rate and T4a's median −1.359 log-log slope
+    (neither flat nor the ~1:1 free-parameter signature) are the measured basis for routing this to
+    Phase 10d. Carried as the diagnosis 10d starts from, replacing the closing note's description of
+    v4's retired first-trough/0.70-cutoff rule, which Stage 1 never used
+    (`D13_void_parameter.threshold = null`, permanent).
+  - **The causal debt is unchanged from v4, confirmed by direct cross-check** against
+    `results/phase_10/artifacts/v4_causal_audit.parquet`: 0 of 16 non-causal fields are retired.
+    The window stayed centered (the outline's trailing wording was raised and explicitly voided
+    2026-08-24, `config/phase_10c.json` → `settled.D3_window._c2_resolution`, for the A2.5
+    premarket/RTH density-inversion reason). Still parked for Phase 17, as it was after Phase 10 v4.
 - **Documentation gap closed retroactively:** Amendments 2-6 had been pasted as full documents and
   acted on directly but never saved as their own committed prompt files at the time this closeout
   was written. Recovered verbatim from the session transcript (the only surviving copy of the
