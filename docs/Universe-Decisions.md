@@ -114,6 +114,30 @@ the headline result. Session-date and segment-boundary computation must be timez
 through Phase 6) misassigns EST-winter post-market prints after 19:00 ET to the next calendar day
 and must not be reused for extended-day work.
 
+**D3 Amendment (Phase 10c, 2026-08-26) — session boundary and auction-print assignment.** Phase
+10c needed a more precise session-boundary rule than "cast to an ET date" to correctly attribute
+prints near a session close, and settled two standing conventions any future phase doing intraday
+segment work should reuse rather than re-derive:
+
+- **Trading day** = `(prior XNYS session close, this session's close]`, with bounds from
+  `exchange_calendars`' own `session_close`/`session_open` — no fixed clock constant, so early
+  closes and holidays resolve automatically. Within a day: `evening` (prior close → 20:00 ET),
+  `premarket` (04:00 → 09:30 ET), `rth` (09:30 ET → this session's close). The 20:00–04:00 span was
+  measured empty across the dev sample, not assumed so.
+- **Auction-print assignment overrides the timestamp rule.** A print carrying vendor condition
+  code 8 (Closing Prints) or 15 (Market Center Official Close) is assigned to the session whose
+  close it settles, regardless of its timestamp — otherwise a closing-cross print a few
+  microseconds past the close is bucketed into the *next* day's evening segment while its own twin,
+  timestamped a moment earlier, stays in that day's `rth`: the tick stream disagreeing with itself
+  about which session a print belongs to. Implemented as `assign_segment()` in
+  `research/phase_10c/common.py`. **Standing limitation:** empirical plus semantic, not
+  independently validated — the code set is confirmed to mean what the vendor dictionary
+  (`docs/massive_trade_conditions.json`) says, not confirmed to capture every closing auction in
+  the archive or exclude every non-auction print.
+
+Full text and the resolution sequence: `results/phase_10c/REPORT.md` §2-3;
+`prompts/phase_10c_amendment_{2,4,5,6}.md`.
+
 ---
 
 ## D4 — All measured quantities are tick-only; the spine's numeric columns are permanently quarantined

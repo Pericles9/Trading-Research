@@ -194,3 +194,32 @@ created per Phase 2's T8 addendum instruction to "log verbatim to the register."
   - If a future phase takes this on, it is a better instrument for the fragmentation mode than any
     size or interval cutoff this program has already ruled out, and costs two queries against data
     already on disk.
+
+### Phase 10c close-out (2026-08-26)
+
+- **Stage 1 approved by Cooper. The phase closes here — Stages 2 and 3 are not run and are not
+  scheduled under this phase number.** Full record: `results/phase_10c/REPORT.md`. This is the
+  sixth method family attempted on the burst-timescale question across Phase 10/10b/10c and the
+  first to produce sub-bursts that are not a reporting artifact (170,722 across 56 dev events, 0%
+  `no_threshold`) — informative for, but not itself a resolution of, the "five methods have failed"
+  open item logged Phase 10 v4 above; that item stays open as recorded, cross-referenced here rather
+  than closed unilaterally.
+- **Two defects found and handled during Stage 1's own close-out, both reported not silently
+  fixed:** a `.ticker.nunique()` counting bug that undercounted the RTH population by exactly the
+  same margin a real population change (ACET's addition) added, masking both behind an unchanged
+  printed total (`s1_t0_denominator.json`); and the BMR population-scope mixing already logged above
+  under "Phase 10c Stage 1, T1."
+- **Carried forward to Phase 10d, unresolved:** the eligible-pool gap (15,299 eligible vs. D14's
+  20,951 canonical in-scope events, 5,652 unexplained) — required before any full-population run;
+  `det_ns_*` float64 precision at source; the auction rule {8,15} remains empirical plus semantic,
+  not independently validated; the odd-lot/fragmentation hypothesis above, declined as mid-phase
+  scope creep, still unmeasured.
+- **Documentation gap closed retroactively:** Amendments 2-6 had been pasted as full documents and
+  acted on directly but never saved as their own committed prompt files at the time this closeout
+  was written. Recovered verbatim from the session transcript (the only surviving copy of the
+  original text — no reconstruction or paraphrase) and committed as
+  `prompts/phase_10c_amendment_{2..6}.md`, alongside the complete two-revision text of
+  `phase_10c_amendment_a2_7_a2_8_resolution.md`, which had only its first draft committed.
+- **Standing decision recorded:** `docs/Universe-Decisions.md` D3 gained an amendment for the
+  session-boundary and auction-print assignment rule this phase established, for reuse by any
+  future intraday segment work.

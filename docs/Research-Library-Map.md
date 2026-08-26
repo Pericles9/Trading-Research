@@ -983,3 +983,86 @@ view's live `DISTINCT` coverage columns.
   unclassifiable share, reported as its own row.
 - Bartlett & McCrary (2017) — SIP-versus-direct-feed staleness, a permanent limitation of this
   archive.
+
+## Phase 10c — Clock-Time Sub-Burst Decomposition (Stage 1 approved 2026-08-26; phase closes here)
+
+Sixth method family attempted on the burst-timescale question (five in Phase 10) and the first to
+produce sub-bursts that are not a reporting artifact. Stages 2 and 3 were never run; the program
+proceeds to Phase 10d. Report: `results/phase_10c/REPORT.md` (cross-phase copy at
+`results/reports/phase_10c_report.md`).
+
+**Prompts** (two numbering series on this phase: an "A"-prefixed pair predating Stage 1, then a
+plain-numbered "Amendment N" series; "Amendment 1" of the second series is filed under its
+descriptive name, not `amendment_1.md` — kept as-is since it's already referenced by that name
+elsewhere)
+- `prompts/phase_10c.md` — the base phase prompt (Stage 0/0b spec)
+- `prompts/phase_10c_amendment_a1.md` — A1, Class E/Class M decision taxonomy
+- `prompts/phase_10c_amendment_a2.md` — A2, Stage 0b insertion, D16 void-gate floor
+- `prompts/phase_10c_amendment_a2_7_a2_8_resolution.md` — "Amendment 1": A2.7/A2.8 resolution,
+  including both revisions (R3 conflict resolution; A2.7 reframed as `A2.7.D17_burst_envelope_boundary`)
+- `prompts/phase_10c_amendment_2.md` — session boundary redefinition
+- `prompts/phase_10c_amendment_3.md` — threshold-variant handling (carry all 3, never collapse)
+- `prompts/phase_10c_amendment_4.md` — closing-print rules, population tier
+- `prompts/phase_10c_amendment_5.md` — condition-code dictionary, auction code set proposed
+- `prompts/phase_10c_amendment_6.md` — auction rule closure, dictionary relocation
+- `prompts/phase_10c_config_guide.md` — per-field derivation reasoning for the config
+- `prompts/phase_10c_stage_1.md` — the Stage 1 prompt (T0-T7, escalation table, verification block)
+
+**Config** — `config/phase_10c.json`: `cooper_values` (Class E/M taxonomy), `settled`, `mechanism`,
+`gates`, `a2_rules` (D2/D5/D6/D17 registry), `closing_print_rule` (settled {8,15}, scope all trades),
+`stage_1` (threshold rule), `dev_sample`.
+
+**Vendor reference** — `docs/massive_trade_conditions.json`: the Massive (formerly Polygon)
+trade-condition-code glossary, partial by design (9 codes with full attributes, 6 named with a
+single stated attribute); moved here from a force-added entry under gitignored `data/metadata/`
+(Amendment 6 section C).
+
+**Code** (`research/phase_10c/`)
+- `common.py` — shared plumbing: config/cfg-hash, dev-sample loader, tie-collapse, D1 sweep
+  aggregation, log-interval histograms, Poisson peak-finding, session bounds, `assign_segment()`
+  (the auction-code-aware segment classifier, Amendment 6), D4 floor derivation
+- `s6_audit.py`, `s6_audit_0b.py` — per-stage satisfiability audits
+- `t0_landscape.py`, `t0_6_7.py`, `t0_charts.py`, `t0_digest.py` — Stage 0 (T0.1-T0.8)
+- `t0b_bimodality.py`, `t0b_charts.py`, `t0b_digest.py` — Stage 0b
+- `a3_d2_rule_check.py`, `apply_a2.py`, `apply_a3.py`, `apply_a3_rev2.py`, `apply_option1.py` —
+  amendment-application scripts (fast/slow-mode rule comparison, Class-E/M config mutations)
+- `a4_boundary_relabel.py` — Amendment 2 (session boundary)
+- `a5_variants.py`, `a5_chart.py` — Amendment 3 (threshold variants)
+- `a6_conditions.py`, `a6_append.py` — Amendment 4 (closing-print rules)
+- `a7_census.py` — Amendment 5 (condition-code census)
+- `a8_auction_closure.py` — Amendment 6 (auction rule, real ACET reclassification)
+- `t1_subbursts.py` — the original single-kernel/single-variant T1.1-T1.4 run, superseded by Stage
+  1's multi-cell pipeline before Amendments 2-6 were applied to it (kept, not deleted)
+- `s1_t0_denominator.py` — Stage 1 T0, the 36-vs-37-vs-38 denominator resolution
+- `s1_t1_subbursts.py`, `s1_t1_verify.py` — Stage 1 T1, the 9-cell sub-burst extraction and its
+  executable-assertion verification
+- `s1_t2_anchor_independent.py`, `s1_t2_charts.py` — Stage 1 T2
+- `s1_t3_anchor_relative.py`, `s1_t3_charts.py` — Stage 1 T3
+- `s1_t4_cross_kernel.py`, `s1_t4_charts.py` — Stage 1 T4
+- `s1_t5_descriptive.py` — Stage 1 T5
+- `s1_t6_animation.py`, `s1_t6d_full_combined.py` — Stage 1 T6, both candidate layouts then the
+  full-sample production under Cooper's chosen layout (combined comparative)
+- `s1_t7_tape_review.py` — Stage 1 T7, Row 0 (adapted from `research/phase_10/v4_t7b_tape.py`'s
+  proven 5-panel grammar)
+- `s1_verification_block.py` — Stage 1's consolidated S5 Verification Block
+
+**Artifacts** — `results/phase_10c/artifacts/` (36 JSON files spanning Stage 0/0b/Stage 1, plus the
+per-cell parquets `s1_t1_cells.parquet`, `s1_t1_subbursts.parquet` and the T2-T5 summary tables, all
+gitignored/regenerable per SS12); `results/phase_10c/digests/{stage0,stage0b,stage1}_digest.json`.
+
+**Charts** — `results/phase_10c/charts/`: `s0_1-5*`, `b1-5*` (Stage 0/0b), `s1_02_01-04*` (T2),
+`s1_03_05-07*` (T3), `s1_04_08-10*` (T4), `s1_05_11*` (T5), `a3_1_variant_anchor_deltas`.
+`s1_06_t6_*` (4-event T6 layout samples), `s1_06_animation_full/` (T6d, 56 combined animations,
+gitignored) and `s1_07_tape_review/` (T7, 56 five-panel charts, gitignored) are regenerable — their
+manifests (`s1_t6d_manifest.json`, `s1_t7_tape_manifest.json`) are the committed record. **139/139
+charts Kaleido-verified** stage-wide.
+
+**Decisions** — `A2.7.D17_burst_envelope_boundary` and the `closing_print_rule` ({8,15}, all
+trades) in `config/phase_10c.json`; a `docs/Universe-Decisions.md` D3 amendment recording the
+session-boundary/auction-assignment rule as the standing convention for future intraday segment
+work.
+
+**Escalations / open items** — no escalation row fired in Stage 1's own code (19-row table reviewed
+in `s1_verification_block.json`); one population-scope defect found in prior (Amendment 4-6) work
+and flagged, not corrected retroactively (BMR, `docs/Open-Items-Register.md`); the eligible-pool gap
+(15,299 vs. D14's 20,951) and the `det_ns_*` float64 repair remain open, carried to Phase 10d.
