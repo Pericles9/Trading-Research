@@ -1,0 +1,26 @@
+{
+  "charts": [
+    {
+      "chart": "s1_03_05_position_vs_detection.html",
+      "png": "s1_03_05_position_vs_detection.png",
+      "kaleido_verified": true,
+      "html_bytes": 12279809,
+      "png_bytes": 365625
+    },
+    {
+      "chart": "s1_03_06_near_anchor_density.html",
+      "png": "s1_03_06_near_anchor_density.png",
+      "kaleido_verified": true,
+      "html_bytes": 29231,
+      "png_bytes": 394463
+    },
+    {
+      "chart": "s1_03_07_first_vs_largest.html",
+      "png": "s1_03_07_first_vs_largest.png",
+      "kaleido_verified": true,
+      "html_bytes": 34544,
+      "png_bytes": 387609
+    }
+  ],
+  "config_hash": "a0943e2a"
+}

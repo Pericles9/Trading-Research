@@ -1,0 +1,199 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "T3b_near_anchor_density",
+  "anchor_delta_caption": "<b>Inherited anchor-delta uncertainty (Amendment 3 A1):</b> median cross-variant anchor disagreement 112.9s (1.25<->1.30), 313.6s (1.25<->1.35), 53.4s (1.30<->1.35); max 13,856s. The 2-min kernel is 120s -- comparable to the smallest median delta and ~1/3 of the 8-min kernel. Only the 32-min kernel is comfortably larger than the widest pair's median.",
+  "definition": "prints (D1-aggregated) within +/- kernel/2 minutes of that variant's anchor, divided by kernel width -- prints per minute",
+  "rows": [
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "n": 16,
+      "median": 43.0,
+      "p25": 22.25,
+      "p75": 94.125
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "n": 38,
+      "median": 61.0,
+      "p25": 17.125,
+      "p75": 194.625
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "n": 16,
+      "median": 65.75,
+      "p25": 19.59375,
+      "p75": 148.5625
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "n": 38,
+      "median": 49.5625,
+      "p25": 8.59375,
+      "p75": 124.15625
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 32.0,
+      "segment": "premarket",
+      "n": 16,
+      "median": 74.0625,
+      "p25": 17.7734375,
+      "p75": 114.0234375
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "n": 38,
+      "median": 37.421875,
+      "p25": 9.109375,
+      "p75": 98.2265625
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "n": 15,
+      "median": 73.0,
+      "p25": 23.5,
+      "p75": 268.25
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "n": 38,
+      "median": 77.5,
+      "p25": 21.25,
+      "p75": 237.375
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "n": 15,
+      "median": 106.125,
+      "p25": 14.6875,
+      "p75": 198.3125
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "n": 38,
+      "median": 67.4375,
+      "p25": 15.71875,
+      "p75": 181.75
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 32.0,
+      "segment": "premarket",
+      "n": 15,
+      "median": 87.6875,
+      "p25": 15.078125,
+      "p75": 185.21875
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "n": 38,
+      "median": 41.921875,
+      "p25": 10.34375,
+      "p75": 110.1328125
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "evening",
+      "n": 2,
+      "median": 14.75,
+      "p25": 9.875,
+      "p75": 19.625
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "n": 15,
+      "median": 75.0,
+      "p25": 24.5,
+      "p75": 176.75
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "n": 28,
+      "median": 129.25,
+      "p25": 30.375,
+      "p75": 350.375
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "evening",
+      "n": 2,
+      "median": 6.875,
+      "p25": 4.9375,
+      "p75": 8.8125
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "n": 15,
+      "median": 101.125,
+      "p25": 14.6875,
+      "p75": 208.25
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "n": 28,
+      "median": 98.5625,
+      "p25": 18.53125,
+      "p75": 246.1875
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": "evening",
+      "n": 2,
+      "median": 4.953125,
+      "p25": 3.5703125,
+      "p75": 6.3359375
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": "premarket",
+      "n": 15,
+      "median": 81.0,
+      "p25": 19.6875,
+      "p75": 239.828125
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "n": 28,
+      "median": 65.375,
+      "p25": 13.1328125,
+      "p75": 199.4453125
+    }
+  ],
+  "config_hash": "a0943e2a"
+}

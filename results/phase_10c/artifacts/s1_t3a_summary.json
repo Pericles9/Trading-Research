@@ -1,0 +1,280 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "T3a_position_vs_detection",
+  "anchor_delta_caption": "<b>Inherited anchor-delta uncertainty (Amendment 3 A1):</b> median cross-variant anchor disagreement 112.9s (1.25<->1.30), 313.6s (1.25<->1.35), 53.4s (1.30<->1.35); max 13,856s. The 2-min kernel is 120s -- comparable to the smallest median delta and ~1/3 of the 8-min kernel. Only the 32-min kernel is comfortably larger than the widest pair's median.",
+  "population": "sub-bursts whose event has a valid anchor under that variant",
+  "rows": [
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "n": 90385,
+      "median": 10583.36064,
+      "p25": 6351.377508864,
+      "p75": 18207.797001472
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "n": 6708,
+      "median": 5808.198768640001,
+      "p25": 909.578477248,
+      "p75": 19020.643469568
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "segment": NaN,
+      "n": 0,
+      "median": null,
+      "p25": null,
+      "p75": null
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "n": 24844,
+      "median": 7244.373462656,
+      "p25": 1843.974366976,
+      "p75": 19144.339936576
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "n": 21839,
+      "median": 6832.933565952,
+      "p25": 1311.307676288,
+      "p75": 14676.837894784
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "segment": NaN,
+      "n": 0,
+      "median": null,
+      "p25": null,
+      "p75": null
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 32.0,
+      "segment": "premarket",
+      "n": 3176,
+      "median": 25122.250680448,
+      "p25": 11727.535511552,
+      "p75": 32913.675300288
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "n": 22959,
+      "median": 2797.831613184,
+      "p25": -54.534251008,
+      "p75": 10429.70852544
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 32.0,
+      "segment": NaN,
+      "n": 0,
+      "median": null,
+      "p25": null,
+      "p75": null
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "n": 90348,
+      "median": 10532.183953536001,
+      "p25": 6287.351947839999,
+      "p75": 18115.379103104
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "n": 6745,
+      "median": 4568.156834304,
+      "p25": 375.729716992,
+      "p75": 18619.025899008
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "segment": NaN,
+      "n": 0,
+      "median": null,
+      "p25": null,
+      "p75": null
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "n": 24803,
+      "median": 6865.937609472,
+      "p25": 1516.4396785919998,
+      "p75": 19142.57957696
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "n": 21880,
+      "median": 3023.37366528,
+      "p25": -1020.655618624,
+      "p75": 12926.28669632
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "segment": NaN,
+      "n": 0,
+      "median": null,
+      "p25": null,
+      "p75": null
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 32.0,
+      "segment": "premarket",
+      "n": 1654,
+      "median": 17219.792434176,
+      "p25": 10915.170723456,
+      "p75": 33344.190509312
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "n": 24481,
+      "median": 846.90388224,
+      "p25": -5157.201662208,
+      "p75": 8931.453972224
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 32.0,
+      "segment": NaN,
+      "n": 0,
+      "median": null,
+      "p25": null,
+      "p75": null
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "evening",
+      "n": 15,
+      "median": -14407.204953088,
+      "p25": -27728.498947712003,
+      "p75": -14309.181094528001
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "premarket",
+      "n": 90348,
+      "median": 10502.867890304,
+      "p25": 6257.333003968,
+      "p75": 18027.437840704002
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": "rth",
+      "n": 6198,
+      "median": 6165.111946112,
+      "p25": 573.0549104,
+      "p75": 18579.11515392
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "segment": NaN,
+      "n": 0,
+      "median": null,
+      "p25": null,
+      "p75": null
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "evening",
+      "n": 49,
+      "median": -19662.861914624,
+      "p25": -20310.665291776,
+      "p75": -18847.341202944
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "premarket",
+      "n": 24803,
+      "median": 6160.791737344,
+      "p25": 1509.884582144,
+      "p75": 19127.873718144
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": "rth",
+      "n": 14802,
+      "median": 8042.855437952,
+      "p25": 1479.462901248,
+      "p75": 16879.212240704
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "segment": NaN,
+      "n": 0,
+      "median": null,
+      "p25": null,
+      "p75": null
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": "evening",
+      "n": 2924,
+      "median": -13879.911939456,
+      "p25": -21301.867666624,
+      "p75": -9947.808356352
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": "premarket",
+      "n": 1654,
+      "median": 17186.117871872,
+      "p25": 10898.92041504,
+      "p75": 33322.072156352
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": "rth",
+      "n": 12709,
+      "median": 4615.041609472,
+      "p25": 127.504841472,
+      "p75": 15842.132483328
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "segment": NaN,
+      "n": 0,
+      "median": null,
+      "p25": null,
+      "p75": null
+    }
+  ],
+  "config_hash": "a0943e2a"
+}

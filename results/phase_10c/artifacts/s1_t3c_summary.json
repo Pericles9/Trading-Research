@@ -1,0 +1,35 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "T3c_first_and_largest_since_detection",
+  "anchor_delta_caption": "<b>Inherited anchor-delta uncertainty (Amendment 3 A1):</b> median cross-variant anchor disagreement 112.9s (1.25<->1.30), 313.6s (1.25<->1.35), 53.4s (1.30<->1.35); max 13,856s. The 2-min kernel is 120s -- comparable to the smallest median delta and ~1/3 of the 8-min kernel. Only the 32-min kernel is comfortably larger than the widest pair's median.",
+  "population": "events with at least one sub-burst starting at or after detection, per cell",
+  "n_cells_with_a_first_subburst": 347,
+  "n_cells_with_a_largest_subburst": 347,
+  "share_where_first_is_also_largest": {
+    "1.25": 0.07258064516129033,
+    "1.3": 0.10833333333333334,
+    "1.35": 0.0970873786407767
+  },
+  "first_subburst_timing_summary": {
+    "1.25": {
+      "n": 124,
+      "median": 1024.457069056,
+      "p25": 14.760484224,
+      "p75": 5052.8481856
+    },
+    "1.3": {
+      "n": 120,
+      "median": 1424.9950120960002,
+      "p25": 5.940208128,
+      "p75": 5944.0693224960005
+    },
+    "1.35": {
+      "n": 103,
+      "median": 1517.292619264,
+      "p25": 8.941356288,
+      "p75": 5681.648837632
+    }
+  },
+  "config_hash": "a0943e2a"
+}
