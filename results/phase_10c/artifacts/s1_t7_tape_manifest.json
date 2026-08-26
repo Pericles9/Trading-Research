@@ -1,0 +1,578 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "T7a_tape_review",
+  "config_hash": "a0943e2a",
+  "reference_cell": {
+    "kernel_min": 8.0,
+    "threshold": 1.25
+  },
+  "n_charts": 56,
+  "index_path": "results/phase_10c/charts/s1_07_tape_review/index.html",
+  "total_megabytes": 204.2,
+  "evaluated": false,
+  "note": "Row 0 is Cooper's. This manifest describes; it evaluates nothing.",
+  "charts": [
+    {
+      "file": "ALXO_2020-08-05.html",
+      "ticker": "ALXO",
+      "event_date_canonical": "2020-08-05",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 136634
+    },
+    {
+      "file": "OCUL_2020-10-07.html",
+      "ticker": "OCUL",
+      "event_date_canonical": "2020-10-07",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 3764,
+      "bytes": 4247815
+    },
+    {
+      "file": "OST_2024-06-13.html",
+      "ticker": "OST",
+      "event_date_canonical": "2024-06-13",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 163738
+    },
+    {
+      "file": "PAR_2021-04-08.html",
+      "ticker": "PAR",
+      "event_date_canonical": "2021-04-08",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 45,
+      "bytes": 3976279
+    },
+    {
+      "file": "SCLX_2022-11-23.html",
+      "ticker": "SCLX",
+      "event_date_canonical": "2022-11-23",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 22,
+      "bytes": 273682
+    },
+    {
+      "file": "ALF_2021-05-10.html",
+      "ticker": "ALF",
+      "event_date_canonical": "2021-05-10",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 3954,
+      "bytes": 7145636
+    },
+    {
+      "file": "AMCX_2021-02-26.html",
+      "ticker": "AMCX",
+      "event_date_canonical": "2021-02-26",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 3075,
+      "bytes": 4532142
+    },
+    {
+      "file": "OCUL_2023-12-04.html",
+      "ticker": "OCUL",
+      "event_date_canonical": "2023-12-04",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 145,
+      "bytes": 2469703
+    },
+    {
+      "file": "PRTH_2020-09-15.html",
+      "ticker": "PRTH",
+      "event_date_canonical": "2020-09-15",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 219195
+    },
+    {
+      "file": "VEEE_2024-06-25.html",
+      "ticker": "VEEE",
+      "event_date_canonical": "2024-06-25",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 87408
+    },
+    {
+      "file": "ASPI_2023-08-01.html",
+      "ticker": "ASPI",
+      "event_date_canonical": "2023-08-01",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 17,
+      "bytes": 270966
+    },
+    {
+      "file": "CELH_2020-08-06.html",
+      "ticker": "CELH",
+      "event_date_canonical": "2020-08-06",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 49,
+      "bytes": 3523599
+    },
+    {
+      "file": "EDUC_2024-04-03.html",
+      "ticker": "EDUC",
+      "event_date_canonical": "2024-04-03",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 116817
+    },
+    {
+      "file": "EWTX_2022-01-05.html",
+      "ticker": "EWTX",
+      "event_date_canonical": "2022-01-05",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 699,
+      "bytes": 4662071
+    },
+    {
+      "file": "SOS_2021-02-17.html",
+      "ticker": "SOS",
+      "event_date_canonical": "2021-02-17",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 256,
+      "bytes": 5003162
+    },
+    {
+      "file": "AEHL_2021-02-19.html",
+      "ticker": "AEHL",
+      "event_date_canonical": "2021-02-19",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 14,
+      "bytes": 3669321
+    },
+    {
+      "file": "NE_2020-02-12.html",
+      "ticker": "NE",
+      "event_date_canonical": "2020-02-12",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 441,
+      "bytes": 3114807
+    },
+    {
+      "file": "SIFY_2023-06-22.html",
+      "ticker": "SIFY",
+      "event_date_canonical": "2023-06-22",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 8,
+      "bytes": 459544
+    },
+    {
+      "file": "UCAR_2024-03-28.html",
+      "ticker": "UCAR",
+      "event_date_canonical": "2024-03-28",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 16,
+      "bytes": 9343190
+    },
+    {
+      "file": "USEG_2020-05-15.html",
+      "ticker": "USEG",
+      "event_date_canonical": "2020-05-15",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 10,
+      "bytes": 179851
+    },
+    {
+      "file": "AACG_2023-12-27.html",
+      "ticker": "AACG",
+      "event_date_canonical": "2023-12-27",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 105061
+    },
+    {
+      "file": "ABSI_2023-12-04.html",
+      "ticker": "ABSI",
+      "event_date_canonical": "2023-12-04",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 9,
+      "bytes": 3212203
+    },
+    {
+      "file": "CREX_2022-02-01.html",
+      "ticker": "CREX",
+      "event_date_canonical": "2022-02-01",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 11123,
+      "bytes": 8747610
+    },
+    {
+      "file": "EGHT_2020-12-10.html",
+      "ticker": "EGHT",
+      "event_date_canonical": "2020-12-10",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 575,
+      "bytes": 6194630
+    },
+    {
+      "file": "TORO_2023-03-31.html",
+      "ticker": "TORO",
+      "event_date_canonical": "2023-03-31",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 80,
+      "bytes": 4296411
+    },
+    {
+      "file": "ALGS_2024-10-24.html",
+      "ticker": "ALGS",
+      "event_date_canonical": "2024-10-24",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 14,
+      "bytes": 762254
+    },
+    {
+      "file": "AQB_2022-03-10.html",
+      "ticker": "AQB",
+      "event_date_canonical": "2022-03-10",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 207,
+      "bytes": 3285834
+    },
+    {
+      "file": "IMTE_2022-09-16.html",
+      "ticker": "IMTE",
+      "event_date_canonical": "2022-09-16",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 21,
+      "bytes": 4549985
+    },
+    {
+      "file": "SLGL_2024-11-22.html",
+      "ticker": "SLGL",
+      "event_date_canonical": "2024-11-22",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 86312
+    },
+    {
+      "file": "WGS_2024-01-08.html",
+      "ticker": "WGS",
+      "event_date_canonical": "2024-01-08",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 501,
+      "bytes": 1111876
+    },
+    {
+      "file": "AHG_2022-08-03.html",
+      "ticker": "AHG",
+      "event_date_canonical": "2022-08-03",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 278680
+    },
+    {
+      "file": "FATBB_2022-03-29.html",
+      "ticker": "FATBB",
+      "event_date_canonical": "2022-03-29",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 56,
+      "bytes": 274318
+    },
+    {
+      "file": "MRSN_2023-05-03.html",
+      "ticker": "MRSN",
+      "event_date_canonical": "2023-05-03",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 6875,
+      "bytes": 7684765
+    },
+    {
+      "file": "SLNH_2022-12-21.html",
+      "ticker": "SLNH",
+      "event_date_canonical": "2022-12-21",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 223628
+    },
+    {
+      "file": "SPCB_2021-10-25.html",
+      "ticker": "SPCB",
+      "event_date_canonical": "2021-10-25",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 48,
+      "bytes": 3305120
+    },
+    {
+      "file": "ACRE_2020-04-07.html",
+      "ticker": "ACRE",
+      "event_date_canonical": "2020-04-07",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 6,
+      "bytes": 1639418
+    },
+    {
+      "file": "CVNA_2020-03-24.html",
+      "ticker": "CVNA",
+      "event_date_canonical": "2020-03-24",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 5494,
+      "bytes": 6135683
+    },
+    {
+      "file": "MDIA_2024-04-09.html",
+      "ticker": "MDIA",
+      "event_date_canonical": "2024-04-09",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 38,
+      "bytes": 24533579
+    },
+    {
+      "file": "NEPH_2023-06-01.html",
+      "ticker": "NEPH",
+      "event_date_canonical": "2023-06-01",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 17,
+      "bytes": 552829
+    },
+    {
+      "file": "PPSI_2020-10-20.html",
+      "ticker": "PPSI",
+      "event_date_canonical": "2020-10-20",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 319,
+      "bytes": 4718179
+    },
+    {
+      "file": "AMC_2020-11-09.html",
+      "ticker": "AMC",
+      "event_date_canonical": "2020-11-09",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 27,
+      "bytes": 5515725
+    },
+    {
+      "file": "CPSH_2020-05-06.html",
+      "ticker": "CPSH",
+      "event_date_canonical": "2020-05-06",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 634,
+      "bytes": 5390691
+    },
+    {
+      "file": "DRUG_2023-08-08.html",
+      "ticker": "DRUG",
+      "event_date_canonical": "2023-08-08",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 2058,
+      "bytes": 5341332
+    },
+    {
+      "file": "MDIA_2022-08-03.html",
+      "ticker": "MDIA",
+      "event_date_canonical": "2022-08-03",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 5093,
+      "bytes": 5771513
+    },
+    {
+      "file": "ZENA_2024-10-11.html",
+      "ticker": "ZENA",
+      "event_date_canonical": "2024-10-11",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 3,
+      "bytes": 5098788
+    },
+    {
+      "file": "BLBX_2023-04-17.html",
+      "ticker": "BLBX",
+      "event_date_canonical": "2023-04-17",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 19,
+      "bytes": 14178768
+    },
+    {
+      "file": "CODX_2020-03-11.html",
+      "ticker": "CODX",
+      "event_date_canonical": "2020-03-11",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 41,
+      "bytes": 5540000
+    },
+    {
+      "file": "EDSA_2020-06-15.html",
+      "ticker": "EDSA",
+      "event_date_canonical": "2020-06-15",
+      "cohort_group": "dev_v4_primary",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 840,
+      "bytes": 5437259
+    },
+    {
+      "file": "EEIQ_2023-05-01.html",
+      "ticker": "EEIQ",
+      "event_date_canonical": "2023-05-01",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 3,
+      "bytes": 260373
+    },
+    {
+      "file": "SWVL_2022-04-21.html",
+      "ticker": "SWVL",
+      "event_date_canonical": "2022-04-21",
+      "cohort_group": "dev_v4_primary",
+      "segment": "rth",
+      "label": "ok",
+      "n_subbursts": 14,
+      "bytes": 13467042
+    },
+    {
+      "file": "SLXN_2024-08-19.html",
+      "ticker": "SLXN",
+      "event_date_canonical": "2024-08-19",
+      "cohort_group": "dev_v4_sidecar",
+      "segment": "premarket",
+      "label": "ok",
+      "n_subbursts": 53,
+      "bytes": 1512905
+    },
+    {
+      "file": "APLD_2022-03-28.html",
+      "ticker": "APLD",
+      "event_date_canonical": "2022-03-28",
+      "cohort_group": "dev_v4_sidecar",
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 22874
+    },
+    {
+      "file": "ACET_2020-09-18.html",
+      "ticker": "ACET",
+      "event_date_canonical": "2020-09-18",
+      "cohort_group": "dev_v4_sidecar",
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 224113
+    },
+    {
+      "file": "RBC_2022-09-26.html",
+      "ticker": "RBC",
+      "event_date_canonical": "2022-09-26",
+      "cohort_group": "dev_v4_sidecar",
+      "segment": "None",
+      "label": "ok",
+      "n_subbursts": 26,
+      "bytes": 1140799
+    },
+    {
+      "file": "NUKK_2022-04-18.html",
+      "ticker": "NUKK",
+      "event_date_canonical": "2022-04-18",
+      "cohort_group": "dev_v4_sidecar",
+      "segment": "None",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 18926
+    },
+    {
+      "file": "PSIX_2022-11-15.html",
+      "ticker": "PSIX",
+      "event_date_canonical": "2022-11-15",
+      "cohort_group": "dev_v4_sidecar",
+      "segment": "rth",
+      "label": "insufficient_context",
+      "n_subbursts": 0,
+      "bytes": 25164
+    }
+  ],
+  "source": "research/phase_10c/s1_t7_tape_review.py:main"
+}

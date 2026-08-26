@@ -12,7 +12,7 @@
     "no_threshold_share": "0/168 event-kernel cells with sufficient context ever failed to find a trough",
     "escalation_rows_13_16_status": "CANNOT BE EVALUATED -- thresholds are [Cooper], unset. Raw figures reported instead: insufficient_context share ranges 0%-42% across cells (highest at 2-minute kernel RTH, as anticipated by construction); no_threshold share is 0% in every cell. Not an escalation determination -- no number exists to compare against, and none was invented."
   },
-  "note": "T7 not yet run. T6d blocked on Cooper.",
+  "note": "Stage 1 T0-T5 and T7 complete. T6a-c complete (both layouts, 4 sample events); T6d (full-sample production) BLOCKED pending Cooper's layout choice -- not an agent decision. Verification Block and final digest close-out pending.",
   "T2_anchor_independent": {
     "threshold_location": "results/phase_10c/artifacts/s1_t2a_threshold_location.parquet",
     "subburst_duration": "results/phase_10c/artifacts/s1_t2b_subburst_duration.parquet",
@@ -66,5 +66,13 @@
       ]
     ],
     "open_question_for_cooper": "T6c: both layouts built -- per-kernel-separate animation (3 files per event) and a combined 3-panel comparative view (1 file per event), 16 charts total on 4 events. Each frame is a real recomputation over its own time window, not an interpolation. Cooper picks which layout T6d runs for the full 56-event dev sample; not an agent decision per the prompt."
+  },
+  "T7_tape_review": {
+    "status": "DONE, not evaluated -- Row 0 is Cooper's alone",
+    "manifest": "results/phase_10c/artifacts/s1_t7_tape_manifest.json",
+    "index": "results/phase_10c/charts/s1_07_tape_review/index.html (regenerable, gitignored like Phase 10 v4's tape review)",
+    "reference_cell": "kernel=8min (D5), threshold=1.25",
+    "n_charts": 56,
+    "total_megabytes": 204
   }
 }
