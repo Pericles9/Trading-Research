@@ -242,10 +242,15 @@ def main() -> int:
         p = os.path.join(OUT_SUB, f"{name}.html")
         fig.write_html(p, include_plotlyjs="cdn", full_html=True,
                       config={"displaylogo": False, "responsive": True})
+        png = os.path.join(OUT_SUB, f"{name}.png")
+        fig.write_image(png, scale=2)  # Chart Contract: Kaleido-verified before commit
+        kaleido_ok = os.path.exists(png) and os.path.getsize(png) > 5000
         rows.append({"file": f"{name}.html", "ticker": r.ticker,
                     "event_date_canonical": r.event_date_canonical,
                     "cohort_group": r.cohort_group, "segment": str(seg), "label": str(label),
-                    "n_subbursts": int(len(iv)), "bytes": os.path.getsize(p)})
+                    "n_subbursts": int(len(iv)), "bytes": os.path.getsize(p),
+                    "kaleido_verified": bool(kaleido_ok),
+                    "png_bytes": os.path.getsize(png) if kaleido_ok else 0})
         if i % 10 == 0:
             print(f"  {i}/{len(dev)} charts", flush=True)
 
@@ -273,15 +278,18 @@ return d[i]?x.localeCompare(y):y.localeCompare(x)}});r.forEach(x=>t.appendChild(
     with open(os.path.join(OUT_SUB, "index.html"), "w", encoding="utf-8") as f:
         f.write(doc)
 
+    n_verified = sum(1 for r in rows if r.get("kaleido_verified"))
     c10c.write_json(rel(f"{ART}/s1_t7_tape_manifest.json"), {
         "phase": "10c", "stage": "1", "task": "T7a_tape_review", "config_hash": chash,
         "reference_cell": {"kernel_min": REF_KERNEL, "threshold": REF_VARIANT},
         "n_charts": len(rows), "index_path": f"{OUT_SUB}/index.html",
         "total_megabytes": round(sum(x["bytes"] for x in rows) / 1e6, 1),
+        "n_kaleido_verified": n_verified,
         "evaluated": False, "note": "Row 0 is Cooper's. This manifest describes; it evaluates nothing.",
         "charts": rows, "source": "research/phase_10c/s1_t7_tape_review.py:main"})
 
-    print(f"\nwrote {len(rows)} tape-review charts, {sum(x['bytes'] for x in rows)/1e6:.0f} MB")
+    print(f"\nwrote {len(rows)} tape-review charts, {sum(x['bytes'] for x in rows)/1e6:.0f} MB, "
+         f"kaleido {n_verified}/{len(rows)}")
     print(f"index: {OUT_SUB}/index.html")
     return 0
 

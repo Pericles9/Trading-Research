@@ -10,6 +10,7 @@
   "n_charts": 56,
   "index_path": "results/phase_10c/charts/s1_07_tape_review/index.html",
   "total_megabytes": 204.2,
+  "n_kaleido_verified": 56,
   "evaluated": false,
   "note": "Row 0 is Cooper's. This manifest describes; it evaluates nothing.",
   "charts": [
@@ -21,7 +22,9 @@
       "segment": "rth",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 136634
+      "bytes": 136634,
+      "kaleido_verified": true,
+      "png_bytes": 688553
     },
     {
       "file": "OCUL_2020-10-07.html",
@@ -31,7 +34,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 3764,
-      "bytes": 4247815
+      "bytes": 4247815,
+      "kaleido_verified": true,
+      "png_bytes": 1589487
     },
     {
       "file": "OST_2024-06-13.html",
@@ -41,7 +46,9 @@
       "segment": "rth",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 163738
+      "bytes": 163738,
+      "kaleido_verified": true,
+      "png_bytes": 592765
     },
     {
       "file": "PAR_2021-04-08.html",
@@ -51,7 +58,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 45,
-      "bytes": 3976279
+      "bytes": 3976279,
+      "kaleido_verified": true,
+      "png_bytes": 1528501
     },
     {
       "file": "SCLX_2022-11-23.html",
@@ -61,7 +70,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 22,
-      "bytes": 273682
+      "bytes": 273682,
+      "kaleido_verified": true,
+      "png_bytes": 809851
     },
     {
       "file": "ALF_2021-05-10.html",
@@ -71,7 +82,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 3954,
-      "bytes": 7145636
+      "bytes": 7145636,
+      "kaleido_verified": true,
+      "png_bytes": 1923397
     },
     {
       "file": "AMCX_2021-02-26.html",
@@ -81,7 +94,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 3075,
-      "bytes": 4532142
+      "bytes": 4532142,
+      "kaleido_verified": true,
+      "png_bytes": 1492271
     },
     {
       "file": "OCUL_2023-12-04.html",
@@ -91,7 +106,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 145,
-      "bytes": 2469703
+      "bytes": 2469703,
+      "kaleido_verified": true,
+      "png_bytes": 1390374
     },
     {
       "file": "PRTH_2020-09-15.html",
@@ -101,7 +118,9 @@
       "segment": "rth",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 219195
+      "bytes": 219195,
+      "kaleido_verified": true,
+      "png_bytes": 680108
     },
     {
       "file": "VEEE_2024-06-25.html",
@@ -111,7 +130,9 @@
       "segment": "rth",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 87408
+      "bytes": 87408,
+      "kaleido_verified": true,
+      "png_bytes": 527927
     },
     {
       "file": "ASPI_2023-08-01.html",
@@ -121,7 +142,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 17,
-      "bytes": 270966
+      "bytes": 270966,
+      "kaleido_verified": true,
+      "png_bytes": 825961
     },
     {
       "file": "CELH_2020-08-06.html",
@@ -131,7 +154,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 49,
-      "bytes": 3523599
+      "bytes": 3523599,
+      "kaleido_verified": true,
+      "png_bytes": 1493742
     },
     {
       "file": "EDUC_2024-04-03.html",
@@ -141,7 +166,9 @@
       "segment": "rth",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 116817
+      "bytes": 116817,
+      "kaleido_verified": true,
+      "png_bytes": 624007
     },
     {
       "file": "EWTX_2022-01-05.html",
@@ -151,7 +178,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 699,
-      "bytes": 4662071
+      "bytes": 4662071,
+      "kaleido_verified": true,
+      "png_bytes": 1609319
     },
     {
       "file": "SOS_2021-02-17.html",
@@ -161,7 +190,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 256,
-      "bytes": 5003162
+      "bytes": 5003162,
+      "kaleido_verified": true,
+      "png_bytes": 1711561
     },
     {
       "file": "AEHL_2021-02-19.html",
@@ -171,7 +202,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 14,
-      "bytes": 3669321
+      "bytes": 3669321,
+      "kaleido_verified": true,
+      "png_bytes": 1443626
     },
     {
       "file": "NE_2020-02-12.html",
@@ -181,7 +214,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 441,
-      "bytes": 3114807
+      "bytes": 3114807,
+      "kaleido_verified": true,
+      "png_bytes": 1423208
     },
     {
       "file": "SIFY_2023-06-22.html",
@@ -191,7 +226,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 8,
-      "bytes": 459544
+      "bytes": 459544,
+      "kaleido_verified": true,
+      "png_bytes": 942726
     },
     {
       "file": "UCAR_2024-03-28.html",
@@ -201,7 +238,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 16,
-      "bytes": 9343190
+      "bytes": 9343190,
+      "kaleido_verified": true,
+      "png_bytes": 1425975
     },
     {
       "file": "USEG_2020-05-15.html",
@@ -211,7 +250,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 10,
-      "bytes": 179851
+      "bytes": 179851,
+      "kaleido_verified": true,
+      "png_bytes": 730194
     },
     {
       "file": "AACG_2023-12-27.html",
@@ -221,7 +262,9 @@
       "segment": "rth",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 105061
+      "bytes": 105061,
+      "kaleido_verified": true,
+      "png_bytes": 610717
     },
     {
       "file": "ABSI_2023-12-04.html",
@@ -231,7 +274,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 9,
-      "bytes": 3212203
+      "bytes": 3212203,
+      "kaleido_verified": true,
+      "png_bytes": 1419442
     },
     {
       "file": "CREX_2022-02-01.html",
@@ -241,7 +286,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 11123,
-      "bytes": 8747610
+      "bytes": 8747610,
+      "kaleido_verified": true,
+      "png_bytes": 1781280
     },
     {
       "file": "EGHT_2020-12-10.html",
@@ -251,7 +298,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 575,
-      "bytes": 6194630
+      "bytes": 6194630,
+      "kaleido_verified": true,
+      "png_bytes": 1444121
     },
     {
       "file": "TORO_2023-03-31.html",
@@ -261,7 +310,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 80,
-      "bytes": 4296411
+      "bytes": 4296411,
+      "kaleido_verified": true,
+      "png_bytes": 1372040
     },
     {
       "file": "ALGS_2024-10-24.html",
@@ -271,7 +322,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 14,
-      "bytes": 762254
+      "bytes": 762254,
+      "kaleido_verified": true,
+      "png_bytes": 1028958
     },
     {
       "file": "AQB_2022-03-10.html",
@@ -281,7 +334,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 207,
-      "bytes": 3285834
+      "bytes": 3285834,
+      "kaleido_verified": true,
+      "png_bytes": 1279274
     },
     {
       "file": "IMTE_2022-09-16.html",
@@ -291,7 +346,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 21,
-      "bytes": 4549985
+      "bytes": 4549985,
+      "kaleido_verified": true,
+      "png_bytes": 1324360
     },
     {
       "file": "SLGL_2024-11-22.html",
@@ -301,7 +358,9 @@
       "segment": "rth",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 86312
+      "bytes": 86312,
+      "kaleido_verified": true,
+      "png_bytes": 520840
     },
     {
       "file": "WGS_2024-01-08.html",
@@ -311,7 +370,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 501,
-      "bytes": 1111876
+      "bytes": 1111876,
+      "kaleido_verified": true,
+      "png_bytes": 1118104
     },
     {
       "file": "AHG_2022-08-03.html",
@@ -321,7 +382,9 @@
       "segment": "premarket",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 278680
+      "bytes": 278680,
+      "kaleido_verified": true,
+      "png_bytes": 773174
     },
     {
       "file": "FATBB_2022-03-29.html",
@@ -331,7 +394,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 56,
-      "bytes": 274318
+      "bytes": 274318,
+      "kaleido_verified": true,
+      "png_bytes": 795670
     },
     {
       "file": "MRSN_2023-05-03.html",
@@ -341,7 +406,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 6875,
-      "bytes": 7684765
+      "bytes": 7684765,
+      "kaleido_verified": true,
+      "png_bytes": 1372392
     },
     {
       "file": "SLNH_2022-12-21.html",
@@ -351,7 +418,9 @@
       "segment": "rth",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 223628
+      "bytes": 223628,
+      "kaleido_verified": true,
+      "png_bytes": 705935
     },
     {
       "file": "SPCB_2021-10-25.html",
@@ -361,7 +430,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 48,
-      "bytes": 3305120
+      "bytes": 3305120,
+      "kaleido_verified": true,
+      "png_bytes": 1155518
     },
     {
       "file": "ACRE_2020-04-07.html",
@@ -371,7 +442,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 6,
-      "bytes": 1639418
+      "bytes": 1639418,
+      "kaleido_verified": true,
+      "png_bytes": 1323323
     },
     {
       "file": "CVNA_2020-03-24.html",
@@ -381,7 +454,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 5494,
-      "bytes": 6135683
+      "bytes": 6135683,
+      "kaleido_verified": true,
+      "png_bytes": 1408168
     },
     {
       "file": "MDIA_2024-04-09.html",
@@ -391,7 +466,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 38,
-      "bytes": 24533579
+      "bytes": 24533579,
+      "kaleido_verified": true,
+      "png_bytes": 1728142
     },
     {
       "file": "NEPH_2023-06-01.html",
@@ -401,7 +478,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 17,
-      "bytes": 552829
+      "bytes": 552829,
+      "kaleido_verified": true,
+      "png_bytes": 853265
     },
     {
       "file": "PPSI_2020-10-20.html",
@@ -411,7 +490,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 319,
-      "bytes": 4718179
+      "bytes": 4718179,
+      "kaleido_verified": true,
+      "png_bytes": 1296184
     },
     {
       "file": "AMC_2020-11-09.html",
@@ -421,7 +502,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 27,
-      "bytes": 5515725
+      "bytes": 5515725,
+      "kaleido_verified": true,
+      "png_bytes": 1540934
     },
     {
       "file": "CPSH_2020-05-06.html",
@@ -431,7 +514,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 634,
-      "bytes": 5390691
+      "bytes": 5390691,
+      "kaleido_verified": true,
+      "png_bytes": 1577871
     },
     {
       "file": "DRUG_2023-08-08.html",
@@ -441,7 +526,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 2058,
-      "bytes": 5341332
+      "bytes": 5341332,
+      "kaleido_verified": true,
+      "png_bytes": 1605857
     },
     {
       "file": "MDIA_2022-08-03.html",
@@ -451,7 +538,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 5093,
-      "bytes": 5771513
+      "bytes": 5771513,
+      "kaleido_verified": true,
+      "png_bytes": 1826053
     },
     {
       "file": "ZENA_2024-10-11.html",
@@ -461,7 +550,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 3,
-      "bytes": 5098788
+      "bytes": 5098788,
+      "kaleido_verified": true,
+      "png_bytes": 1684997
     },
     {
       "file": "BLBX_2023-04-17.html",
@@ -471,7 +562,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 19,
-      "bytes": 14178768
+      "bytes": 14178768,
+      "kaleido_verified": true,
+      "png_bytes": 1492899
     },
     {
       "file": "CODX_2020-03-11.html",
@@ -481,7 +574,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 41,
-      "bytes": 5540000
+      "bytes": 5540000,
+      "kaleido_verified": true,
+      "png_bytes": 1453620
     },
     {
       "file": "EDSA_2020-06-15.html",
@@ -491,7 +586,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 840,
-      "bytes": 5437259
+      "bytes": 5437259,
+      "kaleido_verified": true,
+      "png_bytes": 1608597
     },
     {
       "file": "EEIQ_2023-05-01.html",
@@ -501,7 +598,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 3,
-      "bytes": 260373
+      "bytes": 260373,
+      "kaleido_verified": true,
+      "png_bytes": 828084
     },
     {
       "file": "SWVL_2022-04-21.html",
@@ -511,7 +610,9 @@
       "segment": "rth",
       "label": "ok",
       "n_subbursts": 14,
-      "bytes": 13467042
+      "bytes": 13467042,
+      "kaleido_verified": true,
+      "png_bytes": 1274340
     },
     {
       "file": "SLXN_2024-08-19.html",
@@ -521,7 +622,9 @@
       "segment": "premarket",
       "label": "ok",
       "n_subbursts": 53,
-      "bytes": 1512905
+      "bytes": 1512905,
+      "kaleido_verified": true,
+      "png_bytes": 1468912
     },
     {
       "file": "APLD_2022-03-28.html",
@@ -531,7 +634,9 @@
       "segment": "rth",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 22874
+      "bytes": 22874,
+      "kaleido_verified": true,
+      "png_bytes": 438348
     },
     {
       "file": "ACET_2020-09-18.html",
@@ -541,7 +646,9 @@
       "segment": "rth",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 224113
+      "bytes": 224113,
+      "kaleido_verified": true,
+      "png_bytes": 694005
     },
     {
       "file": "RBC_2022-09-26.html",
@@ -551,7 +658,9 @@
       "segment": "None",
       "label": "ok",
       "n_subbursts": 26,
-      "bytes": 1140799
+      "bytes": 1140799,
+      "kaleido_verified": true,
+      "png_bytes": 1197146
     },
     {
       "file": "NUKK_2022-04-18.html",
@@ -561,7 +670,9 @@
       "segment": "None",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 18926
+      "bytes": 18926,
+      "kaleido_verified": true,
+      "png_bytes": 417908
     },
     {
       "file": "PSIX_2022-11-15.html",
@@ -571,7 +682,9 @@
       "segment": "rth",
       "label": "insufficient_context",
       "n_subbursts": 0,
-      "bytes": 25164
+      "bytes": 25164,
+      "kaleido_verified": true,
+      "png_bytes": 425393
     }
   ],
   "source": "research/phase_10c/s1_t7_tape_review.py:main"

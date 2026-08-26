@@ -8,6 +8,7 @@
   "n_events": 56,
   "index_path": "results/phase_10c/charts/s1_06_animation_full/index.html",
   "total_megabytes": 8.3,
+  "n_kaleido_verified": 56,
   "charts": [
     {
       "file": "ALXO_2020-08-05.html",
@@ -18,7 +19,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "insufficient_context",
-      "bytes": 27605
+      "bytes": 27605,
+      "kaleido_verified": true,
+      "png_bytes": 171393
     },
     {
       "file": "OCUL_2020-10-07.html",
@@ -29,7 +32,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 184871
+      "bytes": 184871,
+      "kaleido_verified": true,
+      "png_bytes": 170425
     },
     {
       "file": "OST_2024-06-13.html",
@@ -40,7 +45,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "ok",
-      "bytes": 70676
+      "bytes": 70676,
+      "kaleido_verified": true,
+      "png_bytes": 169082
     },
     {
       "file": "PAR_2021-04-08.html",
@@ -51,7 +58,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 190020
+      "bytes": 190020,
+      "kaleido_verified": true,
+      "png_bytes": 173117
     },
     {
       "file": "SCLX_2022-11-23.html",
@@ -62,7 +71,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 115315
+      "bytes": 115315,
+      "kaleido_verified": true,
+      "png_bytes": 171718
     },
     {
       "file": "ALF_2021-05-10.html",
@@ -73,7 +84,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 193922
+      "bytes": 193922,
+      "kaleido_verified": true,
+      "png_bytes": 201621
     },
     {
       "file": "AMCX_2021-02-26.html",
@@ -84,7 +97,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 184323
+      "bytes": 184323,
+      "kaleido_verified": true,
+      "png_bytes": 173099
     },
     {
       "file": "OCUL_2023-12-04.html",
@@ -95,7 +110,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 179261
+      "bytes": 179261,
+      "kaleido_verified": true,
+      "png_bytes": 170519
     },
     {
       "file": "PRTH_2020-09-15.html",
@@ -106,7 +123,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "ok",
-      "bytes": 79788
+      "bytes": 79788,
+      "kaleido_verified": true,
+      "png_bytes": 169262
     },
     {
       "file": "VEEE_2024-06-25.html",
@@ -117,7 +136,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "insufficient_context",
-      "bytes": 27605
+      "bytes": 27605,
+      "kaleido_verified": true,
+      "png_bytes": 168368
     },
     {
       "file": "ASPI_2023-08-01.html",
@@ -128,7 +149,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 114233
+      "bytes": 114233,
+      "kaleido_verified": true,
+      "png_bytes": 171628
     },
     {
       "file": "CELH_2020-08-06.html",
@@ -139,7 +162,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 184813
+      "bytes": 184813,
+      "kaleido_verified": true,
+      "png_bytes": 171878
     },
     {
       "file": "EDUC_2024-04-03.html",
@@ -150,7 +175,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "insufficient_context",
-      "bytes": 27605
+      "bytes": 27605,
+      "kaleido_verified": true,
+      "png_bytes": 168506
     },
     {
       "file": "EWTX_2022-01-05.html",
@@ -161,7 +188,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 191892
+      "bytes": 191892,
+      "kaleido_verified": true,
+      "png_bytes": 172902
     },
     {
       "file": "SOS_2021-02-17.html",
@@ -172,7 +201,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 209203
+      "bytes": 209203,
+      "kaleido_verified": true,
+      "png_bytes": 194357
     },
     {
       "file": "AEHL_2021-02-19.html",
@@ -183,7 +214,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 191300
+      "bytes": 191300,
+      "kaleido_verified": true,
+      "png_bytes": 170882
     },
     {
       "file": "NE_2020-02-12.html",
@@ -194,7 +227,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 183006
+      "bytes": 183006,
+      "kaleido_verified": true,
+      "png_bytes": 170479
     },
     {
       "file": "SIFY_2023-06-22.html",
@@ -205,7 +240,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 133926
+      "bytes": 133926,
+      "kaleido_verified": true,
+      "png_bytes": 170973
     },
     {
       "file": "UCAR_2024-03-28.html",
@@ -216,7 +253,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 178895
+      "bytes": 178895,
+      "kaleido_verified": true,
+      "png_bytes": 172777
     },
     {
       "file": "USEG_2020-05-15.html",
@@ -227,7 +266,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 116100
+      "bytes": 116100,
+      "kaleido_verified": true,
+      "png_bytes": 171826
     },
     {
       "file": "AACG_2023-12-27.html",
@@ -238,7 +279,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "insufficient_context",
-      "bytes": 27605
+      "bytes": 27605,
+      "kaleido_verified": true,
+      "png_bytes": 169825
     },
     {
       "file": "ABSI_2023-12-04.html",
@@ -249,7 +292,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 194345
+      "bytes": 194345,
+      "kaleido_verified": true,
+      "png_bytes": 171794
     },
     {
       "file": "CREX_2022-02-01.html",
@@ -260,7 +305,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 198529
+      "bytes": 198529,
+      "kaleido_verified": true,
+      "png_bytes": 173409
     },
     {
       "file": "EGHT_2020-12-10.html",
@@ -271,7 +318,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 184951
+      "bytes": 184951,
+      "kaleido_verified": true,
+      "png_bytes": 168977
     },
     {
       "file": "TORO_2023-03-31.html",
@@ -282,7 +331,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 188245
+      "bytes": 188245,
+      "kaleido_verified": true,
+      "png_bytes": 172799
     },
     {
       "file": "ALGS_2024-10-24.html",
@@ -293,7 +344,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 177918
+      "bytes": 177918,
+      "kaleido_verified": true,
+      "png_bytes": 172452
     },
     {
       "file": "AQB_2022-03-10.html",
@@ -304,7 +357,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 188635
+      "bytes": 188635,
+      "kaleido_verified": true,
+      "png_bytes": 172512
     },
     {
       "file": "IMTE_2022-09-16.html",
@@ -315,7 +370,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 187321
+      "bytes": 187321,
+      "kaleido_verified": true,
+      "png_bytes": 171277
     },
     {
       "file": "SLGL_2024-11-22.html",
@@ -326,7 +383,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "ok",
-      "bytes": 72928
+      "bytes": 72928,
+      "kaleido_verified": true,
+      "png_bytes": 166398
     },
     {
       "file": "WGS_2024-01-08.html",
@@ -337,7 +396,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 154656
+      "bytes": 154656,
+      "kaleido_verified": true,
+      "png_bytes": 171532
     },
     {
       "file": "AHG_2022-08-03.html",
@@ -348,7 +409,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "ok",
-      "bytes": 80235
+      "bytes": 80235,
+      "kaleido_verified": true,
+      "png_bytes": 171241
     },
     {
       "file": "FATBB_2022-03-29.html",
@@ -359,7 +422,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 112945
+      "bytes": 112945,
+      "kaleido_verified": true,
+      "png_bytes": 172745
     },
     {
       "file": "MRSN_2023-05-03.html",
@@ -370,7 +435,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 176688
+      "bytes": 176688,
+      "kaleido_verified": true,
+      "png_bytes": 172654
     },
     {
       "file": "SLNH_2022-12-21.html",
@@ -381,7 +448,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "ok",
-      "bytes": 67278
+      "bytes": 67278,
+      "kaleido_verified": true,
+      "png_bytes": 169344
     },
     {
       "file": "SPCB_2021-10-25.html",
@@ -392,7 +461,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 192486
+      "bytes": 192486,
+      "kaleido_verified": true,
+      "png_bytes": 172512
     },
     {
       "file": "ACRE_2020-04-07.html",
@@ -403,7 +474,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 168248
+      "bytes": 168248,
+      "kaleido_verified": true,
+      "png_bytes": 173809
     },
     {
       "file": "CVNA_2020-03-24.html",
@@ -414,7 +487,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 179739
+      "bytes": 179739,
+      "kaleido_verified": true,
+      "png_bytes": 172313
     },
     {
       "file": "MDIA_2024-04-09.html",
@@ -425,7 +500,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 203540
+      "bytes": 203540,
+      "kaleido_verified": true,
+      "png_bytes": 205191
     },
     {
       "file": "NEPH_2023-06-01.html",
@@ -436,7 +513,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 152472
+      "bytes": 152472,
+      "kaleido_verified": true,
+      "png_bytes": 169647
     },
     {
       "file": "PPSI_2020-10-20.html",
@@ -447,7 +526,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 182348
+      "bytes": 182348,
+      "kaleido_verified": true,
+      "png_bytes": 169675
     },
     {
       "file": "AMC_2020-11-09.html",
@@ -458,7 +539,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 188357
+      "bytes": 188357,
+      "kaleido_verified": true,
+      "png_bytes": 173515
     },
     {
       "file": "CPSH_2020-05-06.html",
@@ -469,7 +552,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 198354
+      "bytes": 198354,
+      "kaleido_verified": true,
+      "png_bytes": 179204
     },
     {
       "file": "DRUG_2023-08-08.html",
@@ -480,7 +565,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 204332
+      "bytes": 204332,
+      "kaleido_verified": true,
+      "png_bytes": 174722
     },
     {
       "file": "MDIA_2022-08-03.html",
@@ -491,7 +578,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 201552
+      "bytes": 201552,
+      "kaleido_verified": true,
+      "png_bytes": 191152
     },
     {
       "file": "ZENA_2024-10-11.html",
@@ -502,7 +591,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 203960
+      "bytes": 203960,
+      "kaleido_verified": true,
+      "png_bytes": 202392
     },
     {
       "file": "BLBX_2023-04-17.html",
@@ -513,7 +604,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 193720
+      "bytes": 193720,
+      "kaleido_verified": true,
+      "png_bytes": 172657
     },
     {
       "file": "CODX_2020-03-11.html",
@@ -524,7 +617,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 199735
+      "bytes": 199735,
+      "kaleido_verified": true,
+      "png_bytes": 175719
     },
     {
       "file": "EDSA_2020-06-15.html",
@@ -535,7 +630,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 190382
+      "bytes": 190382,
+      "kaleido_verified": true,
+      "png_bytes": 173284
     },
     {
       "file": "EEIQ_2023-05-01.html",
@@ -546,7 +643,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 149568
+      "bytes": 149568,
+      "kaleido_verified": true,
+      "png_bytes": 170398
     },
     {
       "file": "SWVL_2022-04-21.html",
@@ -557,7 +656,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 205870
+      "bytes": 205870,
+      "kaleido_verified": true,
+      "png_bytes": 173063
     },
     {
       "file": "SLXN_2024-08-19.html",
@@ -568,7 +669,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 188570
+      "bytes": 188570,
+      "kaleido_verified": true,
+      "png_bytes": 204124
     },
     {
       "file": "APLD_2022-03-28.html",
@@ -579,7 +682,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "insufficient_context",
-      "bytes": 27605
+      "bytes": 27605,
+      "kaleido_verified": true,
+      "png_bytes": 170785
     },
     {
       "file": "ACET_2020-09-18.html",
@@ -590,7 +695,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "ok",
-      "bytes": 69791
+      "bytes": 69791,
+      "kaleido_verified": true,
+      "png_bytes": 171606
     },
     {
       "file": "RBC_2022-09-26.html",
@@ -601,7 +708,9 @@
       "label_k2": "ok",
       "label_k8": "ok",
       "label_k32": "ok",
-      "bytes": 150792
+      "bytes": 150792,
+      "kaleido_verified": true,
+      "png_bytes": 173938
     },
     {
       "file": "NUKK_2022-04-18.html",
@@ -612,7 +721,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "insufficient_context",
-      "bytes": 27616
+      "bytes": 27616,
+      "kaleido_verified": true,
+      "png_bytes": 170216
     },
     {
       "file": "PSIX_2022-11-15.html",
@@ -623,7 +734,9 @@
       "label_k2": "insufficient_context",
       "label_k8": "insufficient_context",
       "label_k32": "insufficient_context",
-      "bytes": 27605
+      "bytes": 27605,
+      "kaleido_verified": true,
+      "png_bytes": 168350
     }
   ],
   "source": "research/phase_10c/s1_t6d_full_combined.py:main"

@@ -12,7 +12,7 @@
     "no_threshold_share": "0/168 event-kernel cells with sufficient context ever failed to find a trough",
     "escalation_rows_13_16_status": "CANNOT BE EVALUATED -- thresholds are [Cooper], unset. Raw figures reported instead: insufficient_context share ranges 0%-42% across cells (highest at 2-minute kernel RTH, as anticipated by construction); no_threshold share is 0% in every cell. Not an escalation determination -- no number exists to compare against, and none was invented."
   },
-  "note": "Stage 1 T0-T7 all complete and committed. No escalation row fired (rows 1-12, 17-18 confirmed not violated; rows 13-16 unevaluable, [Cooper] thresholds unset, raw figures reported instead; row 0 is Cooper's alone, not evaluated here). One prior-amendment defect surfaced and flagged, not silently fixed (BMR population-scope mixing, logged to Open-Items-Register.md). Stage 1 is functionally complete pending Cooper's review of the tape review (row 0) and any reads on the reported findings.",
+  "note": "Stage 1 T0-T7 COMPLETE, verification block assembled. 139/139 charts kaleido-verified. No escalation row fired in Stage 1's own code; row 0 (tape review) is reserved for Cooper; rows 13-16 unevaluable ([Cooper] thresholds unset -- raw figures reported, none invented); one violation of row 10 was found in PRIOR (Amendment 4-6) work and flagged to the register, not silently corrected. Awaiting Cooper's review of the tape (row 0) and any reads before a stage-gate tag.",
   "T2_anchor_independent": {
     "threshold_location": "results/phase_10c/artifacts/s1_t2a_threshold_location.parquet",
     "subburst_duration": "results/phase_10c/artifacts/s1_t2b_subburst_duration.parquet",
@@ -77,5 +77,18 @@
     "reference_cell": "kernel=8min (D5), threshold=1.25",
     "n_charts": 56,
     "total_megabytes": 204
+  },
+  "S5_verification_block": {
+    "report": "results/phase_10c/artifacts/s1_verification_block.json",
+    "waterfall_per_cell": "results/phase_10c/artifacts/s1_t1_waterfall_per_cell.json",
+    "chart_contract": "139/139 charts kaleido-verified across the whole stage",
+    "class_M_held": true,
+    "escalation_summary": {
+      "not_fired": 13,
+      "unevaluable_cooper_unset": 4,
+      "reserved_for_cooper_row_0": 1,
+      "violation_in_prior_amendment_work_flagged": 1,
+      "violation_in_stage1_own_code": 0
+    }
   }
 }

@@ -1,0 +1,261 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "S5_verification_block",
+  "config_hash": "a0943e2a",
+  "waterfall_reconciliation": {
+    "pooled_upstream_variant_kernel_independent_stages": {
+      "events_in_dev_sample": 56,
+      "events_with_prints": 56,
+      "prints_raw": 3774862,
+      "prints_tie_collapsed": 3671288,
+      "prints_after_D1": 2629076,
+      "intervals": 2629020,
+      "kernel_cell_computations": 168,
+      "subbursts_total": 170722,
+      "timing_seconds": 18.6,
+      "config_hash": "a0943e2a",
+      "design_note": "sub-burst extraction computed once per (event, kernel) -- 56x3=168 -- then cross-joined onto each of 3 variants' own segment/anchor context to form the 9 reported cells. See module docstring."
+    },
+    "per_cell": [
+      {
+        "threshold": 1.25,
+        "kernel_min": 2.0,
+        "n_events_in_population": 56,
+        "n_events_label_ok": 38,
+        "n_events_insufficient_context": 18,
+        "n_intervals_total_across_events": 2629020,
+        "n_intervals_usable_after_floor": 2375822,
+        "n_subbursts_this_kernel": 97122
+      },
+      {
+        "threshold": 1.25,
+        "kernel_min": 8.0,
+        "n_events_in_population": 56,
+        "n_events_label_ok": 43,
+        "n_events_insufficient_context": 13,
+        "n_intervals_total_across_events": 2629020,
+        "n_intervals_usable_after_floor": 2559291,
+        "n_subbursts_this_kernel": 46709
+      },
+      {
+        "threshold": 1.25,
+        "kernel_min": 32.0,
+        "n_events_in_population": 56,
+        "n_events_label_ok": 49,
+        "n_events_insufficient_context": 7,
+        "n_intervals_total_across_events": 2629020,
+        "n_intervals_usable_after_floor": 2606074,
+        "n_subbursts_this_kernel": 26891
+      },
+      {
+        "threshold": 1.3,
+        "kernel_min": 2.0,
+        "n_events_in_population": 56,
+        "n_events_label_ok": 38,
+        "n_events_insufficient_context": 18,
+        "n_intervals_total_across_events": 2629020,
+        "n_intervals_usable_after_floor": 2375822,
+        "n_subbursts_this_kernel": 97122
+      },
+      {
+        "threshold": 1.3,
+        "kernel_min": 8.0,
+        "n_events_in_population": 56,
+        "n_events_label_ok": 43,
+        "n_events_insufficient_context": 13,
+        "n_intervals_total_across_events": 2629020,
+        "n_intervals_usable_after_floor": 2559291,
+        "n_subbursts_this_kernel": 46709
+      },
+      {
+        "threshold": 1.3,
+        "kernel_min": 32.0,
+        "n_events_in_population": 56,
+        "n_events_label_ok": 49,
+        "n_events_insufficient_context": 7,
+        "n_intervals_total_across_events": 2629020,
+        "n_intervals_usable_after_floor": 2606074,
+        "n_subbursts_this_kernel": 26891
+      },
+      {
+        "threshold": 1.35,
+        "kernel_min": 2.0,
+        "n_events_in_population": 56,
+        "n_events_label_ok": 38,
+        "n_events_insufficient_context": 18,
+        "n_intervals_total_across_events": 2629020,
+        "n_intervals_usable_after_floor": 2375822,
+        "n_subbursts_this_kernel": 97122
+      },
+      {
+        "threshold": 1.35,
+        "kernel_min": 8.0,
+        "n_events_in_population": 56,
+        "n_events_label_ok": 43,
+        "n_events_insufficient_context": 13,
+        "n_intervals_total_across_events": 2629020,
+        "n_intervals_usable_after_floor": 2559291,
+        "n_subbursts_this_kernel": 46709
+      },
+      {
+        "threshold": 1.35,
+        "kernel_min": 32.0,
+        "n_events_in_population": 56,
+        "n_events_label_ok": 49,
+        "n_events_insufficient_context": 7,
+        "n_intervals_total_across_events": 2629020,
+        "n_intervals_usable_after_floor": 2606074,
+        "n_subbursts_this_kernel": 26891
+      }
+    ],
+    "per_cell_note": "raw/tie-collapse/D1/intervals never depend on threshold variant or kernel width -- one pipeline pass per event, shared across all 9 cells (see s1_t1_subbursts.py design note). Per-cell divergence starts at the floor/insufficient_context step, which IS kernel-dependent."
+  },
+  "class_M_held": "PASS",
+  "executable_assertions": {
+    "exactly_one_segment_per_event_per_variant": "PASS",
+    "ACET_auction_override_applied": "PASS, all 6 cells segment=rth",
+    "no_variant_deduplicated_at_load": "PASS, 56 events x 3 variants all present",
+    "class_M_unchanged_open_to_close": "PASS",
+    "BMR_confirmed_out_of_dev_sample_scope": "PASS -- BMR cohort_group='activity_extension', absent from s1_t1_cells.parquet. Amendment 4-6's condition-code census included it anyway (unfiltered t1_cohort_manifest.parquet, 114 rows across 4 cohort_groups, not just the 56-event dev sample). True dev-sample evening population at threshold 1.35 is 2 (OST, CELH), not the 3 (OST, CELH, BMR) implied by Amendment 4's discriminant test."
+  },
+  "chart_contract": {
+    "n_total": 139,
+    "n_kaleido_verified": 139,
+    "by_manifest": {
+      "s1_t2_chart_manifest.json": {
+        "n": 4,
+        "kaleido_ok": 4
+      },
+      "s1_t3_chart_manifest.json": {
+        "n": 3,
+        "kaleido_ok": 3
+      },
+      "s1_t4_chart_manifest.json": {
+        "n": 3,
+        "kaleido_ok": 3
+      },
+      "s1_t5_chart_manifest.json": {
+        "n": 1,
+        "kaleido_ok": 1
+      },
+      "s1_t6_chart_manifest.json": {
+        "n": 16,
+        "kaleido_ok": 16
+      },
+      "s1_t6d_manifest.json": {
+        "n": 56,
+        "kaleido_ok": 56
+      },
+      "s1_t7_tape_manifest.json": {
+        "n": 56,
+        "kaleido_ok": 56
+      }
+    }
+  },
+  "escalation_table": {
+    "0": {
+      "condition": "visual review against the tape",
+      "status": "RESERVED",
+      "note": "produced (T7, 56 charts), not evaluated by this pipeline -- Cooper's alone"
+    },
+    "1": {
+      "condition": "void parameter cutoff applied anywhere",
+      "status": "NOT FIRED",
+      "note": "D13_void_parameter threshold is null throughout; void only ranks (argmax across troughs in envelope_boundary()), never gates"
+    },
+    "2": {
+      "condition": "trailing-window implementation",
+      "status": "NOT FIRED",
+      "note": "every local median uses pandas .rolling(win, center=True, ...)"
+    },
+    "3": {
+      "condition": "kernel or variant dropped/promoted/selected on results",
+      "status": "NOT FIRED",
+      "note": "all 3 kernels and 3 variants carried in parallel through every task, T0-T7"
+    },
+    "4": {
+      "condition": "kernel outputs combined into a single per-event signal",
+      "status": "NOT FIRED",
+      "note": "T4 explicitly kept per-kernel throughout; no combining rule implemented anywhere"
+    },
+    "5": {
+      "condition": "summary statistic without its supporting distributional chart",
+      "status": "NOT FIRED",
+      "note": "139/139 charts kaleido-verified; T5a's chart added specifically to satisfy this row"
+    },
+    "6": {
+      "condition": "count without population named inline",
+      "status": "NOT FIRED",
+      "note": "n stated in every summary table (T1c, T2a-d, T3a-c, T4, T5a-b)"
+    },
+    "7": {
+      "condition": "T3 quantity without the anchor-delta uncertainty in caption",
+      "status": "NOT FIRED",
+      "note": "ANCHOR_DELTA_CAPTION applied to every T3 JSON output and every T3 chart"
+    },
+    "8": {
+      "condition": "condition code interpreted beyond docs/massive_trade_conditions.json",
+      "status": "NOT FIRED",
+      "note": "codes {8,15} used per that file's stated meaning only; no other code interpreted"
+    },
+    "9": {
+      "condition": "result characterized evaluatively rather than described",
+      "status": "NOT FIRED",
+      "note": "every finding stated as measured, with reads left explicitly to Cooper (T4a, T4b, T4c, T2e, T5b)"
+    },
+    "10": {
+      "condition": "prose asserts membership/inclusion/exclusion the code does not assert",
+      "status": "VIOLATION FOUND IN PRIOR WORK, FLAGGED",
+      "note": "Amendment 4-6's 'genuine after-hours anchor' framing implicitly asserted BMR was a dev-sample event; the code (unfiltered cohort manifest read) never asserted that. Found in Stage 1 T1, logged to docs/Open-Items-Register.md, not silently corrected in the tagged/committed Amendment artifacts. Stage 1's OWN new code does not repeat this -- confirmed by the BMR assertion in s1_t1_verify.json."
+    },
+    "11": {
+      "condition": "write to an archived drive",
+      "status": "NOT FIRED",
+      "note": "no D:\\ path referenced anywhere in Stage 1"
+    },
+    "12": {
+      "condition": "spine OHLC or volume numeric enters a computation",
+      "status": "NOT FIRED",
+      "note": "every price used (agg_px, price_at_detection) is tick-derived; momentum_pct never read (verify_quarantine)"
+    },
+    "13": {
+      "condition": "median sub-burst duration below [Cooper] at 8/32min kernel",
+      "status": "UNEVALUABLE",
+      "note": "[Cooper] threshold not set. Duration figures reported in T2b (medians span microseconds to tens of seconds by segment/kernel); no pass/fail determination made"
+    },
+    "14": {
+      "condition": "insufficient_context share exceeds [Cooper] in any cell",
+      "status": "UNEVALUABLE",
+      "note": "[Cooper] threshold not set. Raw shares reported in T1c (0%-42%, highest at 2min RTH by construction)"
+    },
+    "15": {
+      "condition": "no_threshold share exceeds [Cooper] in any cell",
+      "status": "UNEVALUABLE",
+      "note": "[Cooper] threshold not set. Raw share is 0% in every cell (T1c)"
+    },
+    "16": {
+      "condition": "T4a shows threshold location scaling ~1:1 with kernel width",
+      "status": "UNEVALUABLE",
+      "note": "[Cooper] slope band not set. Measured slope reported (median -1.359); the read is explicitly Cooper's (T4a)"
+    },
+    "17": {
+      "condition": "any [Cooper] parameter filled by the agent",
+      "status": "NOT FIRED",
+      "note": "D7/D8/D9/D16 and the row-13/14/15/16 thresholds remain unset; none invented to force an evaluation"
+    },
+    "18": {
+      "condition": "agent-side workaround applied instead of stopping and escalating",
+      "status": "NOT FIRED",
+      "note": "the two real defects found this stage (T0's nunique() undercount, T1's BMR scope mixing) were reported and fixed at the source/flagged in the register, not silently worked around"
+    }
+  },
+  "escalation_summary": {
+    "not_fired": 13,
+    "unevaluable_cooper_unset": 4,
+    "reserved_for_cooper": 1,
+    "violation_found_in_prior_work_flagged": 1,
+    "violation_found_in_stage1_own_code": 0
+  },
+  "source": "research/phase_10c/s1_verification_block.py:main"
+}

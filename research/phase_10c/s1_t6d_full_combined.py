@@ -57,12 +57,16 @@ def main() -> int:
         p = os.path.join(OUT_SUB, f"{name}.html")
         fig.write_html(p, include_plotlyjs="cdn", full_html=True,
                       config={"displaylogo": False, "responsive": True})
+        png = os.path.join(OUT_SUB, f"{name}.png")
+        fig.write_image(png, scale=2)  # Chart Contract: Kaleido-verified before commit
+        kaleido_ok = os.path.exists(png) and os.path.getsize(png) > 5000
         labels = {k: evs_by_kernel[k].get("label", "n/a") for k in KERNELS}
         rows.append({"file": f"{name}.html", "ticker": r.ticker,
                     "event_date_canonical": r.event_date_canonical,
                     "cohort_group": r.cohort_group, "segment": str(seg),
                     "label_k2": labels[2.0], "label_k8": labels[8.0], "label_k32": labels[32.0],
-                    "bytes": os.path.getsize(p)})
+                    "bytes": os.path.getsize(p), "kaleido_verified": bool(kaleido_ok),
+                    "png_bytes": os.path.getsize(png) if kaleido_ok else 0})
         if i % 10 == 0:
             print(f"  {i}/{len(dev)}", flush=True)
 
@@ -90,13 +94,16 @@ return d[i]?x.localeCompare(y):y.localeCompare(x)}});r.forEach(x=>t.appendChild(
     with open(os.path.join(OUT_SUB, "index.html"), "w", encoding="utf-8") as f:
         f.write(doc)
 
+    n_verified = sum(1 for r in rows if r.get("kaleido_verified"))
     c10c.write_json(rel(f"{ART}/s1_t6d_manifest.json"), {
         "phase": "10c", "stage": "1", "task": "T6d_full_combined_animation", "config_hash": chash,
         "layout": "combined_comparative_3_panel", "layout_chosen_by": "Cooper (T6c)",
         "n_events": len(rows), "index_path": f"{OUT_SUB}/index.html",
         "total_megabytes": round(sum(x["bytes"] for x in rows) / 1e6, 1),
+        "n_kaleido_verified": n_verified,
         "charts": rows, "source": "research/phase_10c/s1_t6d_full_combined.py:main"})
-    print(f"\nwrote {len(rows)} combined animations, {sum(x['bytes'] for x in rows)/1e6:.0f} MB")
+    print(f"\nwrote {len(rows)} combined animations, {sum(x['bytes'] for x in rows)/1e6:.0f} MB, "
+         f"kaleido {n_verified}/{len(rows)}")
     print(f"index: {OUT_SUB}/index.html")
     return 0
 

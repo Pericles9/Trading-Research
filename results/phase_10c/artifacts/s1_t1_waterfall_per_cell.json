@@ -1,0 +1,105 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "verification_waterfall_per_cell",
+  "pooled_upstream_stages_variant_kernel_independent": {
+    "events_in_dev_sample": 56,
+    "prints_raw": 3774862,
+    "prints_tie_collapsed": 3671288,
+    "prints_after_D1_aggregation": 2629076,
+    "intervals_total": 2629020,
+    "note": "raw/tie-collapse/D1/intervals never depend on threshold variant or kernel width -- one pipeline pass per event, shared across all 9 cells (see s1_t1_subbursts.py design note). Per-cell divergence starts at the floor/insufficient_context step, which IS kernel-dependent."
+  },
+  "per_cell": [
+    {
+      "threshold": 1.25,
+      "kernel_min": 2.0,
+      "n_events_in_population": 56,
+      "n_events_label_ok": 38,
+      "n_events_insufficient_context": 18,
+      "n_intervals_total_across_events": 2629020,
+      "n_intervals_usable_after_floor": 2375822,
+      "n_subbursts_this_kernel": 97122
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 8.0,
+      "n_events_in_population": 56,
+      "n_events_label_ok": 43,
+      "n_events_insufficient_context": 13,
+      "n_intervals_total_across_events": 2629020,
+      "n_intervals_usable_after_floor": 2559291,
+      "n_subbursts_this_kernel": 46709
+    },
+    {
+      "threshold": 1.25,
+      "kernel_min": 32.0,
+      "n_events_in_population": 56,
+      "n_events_label_ok": 49,
+      "n_events_insufficient_context": 7,
+      "n_intervals_total_across_events": 2629020,
+      "n_intervals_usable_after_floor": 2606074,
+      "n_subbursts_this_kernel": 26891
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 2.0,
+      "n_events_in_population": 56,
+      "n_events_label_ok": 38,
+      "n_events_insufficient_context": 18,
+      "n_intervals_total_across_events": 2629020,
+      "n_intervals_usable_after_floor": 2375822,
+      "n_subbursts_this_kernel": 97122
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 8.0,
+      "n_events_in_population": 56,
+      "n_events_label_ok": 43,
+      "n_events_insufficient_context": 13,
+      "n_intervals_total_across_events": 2629020,
+      "n_intervals_usable_after_floor": 2559291,
+      "n_subbursts_this_kernel": 46709
+    },
+    {
+      "threshold": 1.3,
+      "kernel_min": 32.0,
+      "n_events_in_population": 56,
+      "n_events_label_ok": 49,
+      "n_events_insufficient_context": 7,
+      "n_intervals_total_across_events": 2629020,
+      "n_intervals_usable_after_floor": 2606074,
+      "n_subbursts_this_kernel": 26891
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 2.0,
+      "n_events_in_population": 56,
+      "n_events_label_ok": 38,
+      "n_events_insufficient_context": 18,
+      "n_intervals_total_across_events": 2629020,
+      "n_intervals_usable_after_floor": 2375822,
+      "n_subbursts_this_kernel": 97122
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 8.0,
+      "n_events_in_population": 56,
+      "n_events_label_ok": 43,
+      "n_events_insufficient_context": 13,
+      "n_intervals_total_across_events": 2629020,
+      "n_intervals_usable_after_floor": 2559291,
+      "n_subbursts_this_kernel": 46709
+    },
+    {
+      "threshold": 1.35,
+      "kernel_min": 32.0,
+      "n_events_in_population": 56,
+      "n_events_label_ok": 49,
+      "n_events_insufficient_context": 7,
+      "n_intervals_total_across_events": 2629020,
+      "n_intervals_usable_after_floor": 2606074,
+      "n_subbursts_this_kernel": 26891
+    }
+  ]
+}
