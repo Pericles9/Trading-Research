@@ -12,7 +12,7 @@
     "no_threshold_share": "0/168 event-kernel cells with sufficient context ever failed to find a trough",
     "escalation_rows_13_16_status": "CANNOT BE EVALUATED -- thresholds are [Cooper], unset. Raw figures reported instead: insufficient_context share ranges 0%-42% across cells (highest at 2-minute kernel RTH, as anticipated by construction); no_threshold share is 0% in every cell. Not an escalation determination -- no number exists to compare against, and none was invented."
   },
-  "note": "T6-T7 not yet run.",
+  "note": "T7 not yet run. T6d blocked on Cooper.",
   "T2_anchor_independent": {
     "threshold_location": "results/phase_10c/artifacts/s1_t2a_threshold_location.parquet",
     "subburst_duration": "results/phase_10c/artifacts/s1_t2b_subburst_duration.parquet",
@@ -39,5 +39,32 @@
     "summary": "results/phase_10c/artifacts/s1_t5_summary.json",
     "chart": "results/phase_10c/artifacts/s1_t5_chart_manifest.json",
     "headline_finding": "T5a: sub-burst count vs T=0 print count, positive as expected, weakest at the 32-min kernel (rho=0.033, n=49) vs 2-min (rho=0.407, n=38) and 8-min (rho=0.411, n=43) -- identical across all 3 variants by construction (label==ok never depends on the variant, and T5a is not segment-stratified), confirmed not assumed. No threshold, no gate. T5b: A2.7 silent-selection rate 57.9%/60.5%/61.2% at kernel 2/8/32min (also identical across variants for the same reason) -- NOT comparable to Stage 0b's 30% figure, a different statistic on a mechanism (the envelope boundary) that did not exist then."
+  },
+  "T6_animation": {
+    "status": "T6a-c done on 4 sample events; T6d (full 56-event production) BLOCKED pending Cooper choice of layout",
+    "chart_manifest": "results/phase_10c/artifacts/s1_t6_chart_manifest.json",
+    "sample_events": [
+      [
+        "ASPI",
+        "2023-08-01",
+        "rth, highest void"
+      ],
+      [
+        "OCUL",
+        "2020-10-07",
+        "rth, lowest void"
+      ],
+      [
+        "ZENA",
+        "2024-10-11",
+        "premarket, highest void"
+      ],
+      [
+        "CELH",
+        "2020-08-06",
+        "evening"
+      ]
+    ],
+    "open_question_for_cooper": "T6c: both layouts built -- per-kernel-separate animation (3 files per event) and a combined 3-panel comparative view (1 file per event), 16 charts total on 4 events. Each frame is a real recomputation over its own time window, not an interpolation. Cooper picks which layout T6d runs for the full 56-event dev sample; not an agent decision per the prompt."
   }
 }

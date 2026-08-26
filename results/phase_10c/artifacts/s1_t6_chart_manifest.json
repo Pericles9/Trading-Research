@@ -1,0 +1,140 @@
+{
+  "charts": [
+    {
+      "chart": "s1_06_t6_ASPI_2023-08-01_k2.html",
+      "png": "s1_06_t6_ASPI_2023-08-01_k2.png",
+      "kaleido_verified": true,
+      "html_bytes": 19698,
+      "png_bytes": 134303
+    },
+    {
+      "chart": "s1_06_t6_ASPI_2023-08-01_k8.html",
+      "png": "s1_06_t6_ASPI_2023-08-01_k8.png",
+      "kaleido_verified": true,
+      "html_bytes": 54854,
+      "png_bytes": 140552
+    },
+    {
+      "chart": "s1_06_t6_ASPI_2023-08-01_k32.html",
+      "png": "s1_06_t6_ASPI_2023-08-01_k32.png",
+      "kaleido_verified": true,
+      "html_bytes": 71507,
+      "png_bytes": 140150
+    },
+    {
+      "chart": "s1_06_t6_ASPI_2023-08-01_combined.html",
+      "png": "s1_06_t6_ASPI_2023-08-01_combined.png",
+      "kaleido_verified": true,
+      "html_bytes": 114240,
+      "png_bytes": 172137
+    },
+    {
+      "chart": "s1_06_t6_OCUL_2020-10-07_k2.html",
+      "png": "s1_06_t6_OCUL_2020-10-07_k2.png",
+      "kaleido_verified": true,
+      "html_bytes": 70946,
+      "png_bytes": 141591
+    },
+    {
+      "chart": "s1_06_t6_OCUL_2020-10-07_k8.html",
+      "png": "s1_06_t6_OCUL_2020-10-07_k8.png",
+      "kaleido_verified": true,
+      "html_bytes": 75894,
+      "png_bytes": 142154
+    },
+    {
+      "chart": "s1_06_t6_OCUL_2020-10-07_k32.html",
+      "png": "s1_06_t6_OCUL_2020-10-07_k32.png",
+      "kaleido_verified": true,
+      "html_bytes": 70136,
+      "png_bytes": 142372
+    },
+    {
+      "chart": "s1_06_t6_OCUL_2020-10-07_combined.html",
+      "png": "s1_06_t6_OCUL_2020-10-07_combined.png",
+      "kaleido_verified": true,
+      "html_bytes": 184877,
+      "png_bytes": 171226
+    },
+    {
+      "chart": "s1_06_t6_ZENA_2024-10-11_k2.html",
+      "png": "s1_06_t6_ZENA_2024-10-11_k2.png",
+      "kaleido_verified": true,
+      "html_bytes": 77604,
+      "png_bytes": 151130
+    },
+    {
+      "chart": "s1_06_t6_ZENA_2024-10-11_k8.html",
+      "png": "s1_06_t6_ZENA_2024-10-11_k8.png",
+      "kaleido_verified": true,
+      "html_bytes": 78739,
+      "png_bytes": 148043
+    },
+    {
+      "chart": "s1_06_t6_ZENA_2024-10-11_k32.html",
+      "png": "s1_06_t6_ZENA_2024-10-11_k32.png",
+      "kaleido_verified": true,
+      "html_bytes": 79865,
+      "png_bytes": 150488
+    },
+    {
+      "chart": "s1_06_t6_ZENA_2024-10-11_combined.html",
+      "png": "s1_06_t6_ZENA_2024-10-11_combined.png",
+      "kaleido_verified": true,
+      "html_bytes": 203967,
+      "png_bytes": 203271
+    },
+    {
+      "chart": "s1_06_t6_CELH_2020-08-06_k2.html",
+      "png": "s1_06_t6_CELH_2020-08-06_k2.png",
+      "kaleido_verified": true,
+      "html_bytes": 70875,
+      "png_bytes": 139068
+    },
+    {
+      "chart": "s1_06_t6_CELH_2020-08-06_k8.html",
+      "png": "s1_06_t6_CELH_2020-08-06_k8.png",
+      "kaleido_verified": true,
+      "html_bytes": 75048,
+      "png_bytes": 137912
+    },
+    {
+      "chart": "s1_06_t6_CELH_2020-08-06_k32.html",
+      "png": "s1_06_t6_CELH_2020-08-06_k32.png",
+      "kaleido_verified": true,
+      "html_bytes": 70937,
+      "png_bytes": 140212
+    },
+    {
+      "chart": "s1_06_t6_CELH_2020-08-06_combined.html",
+      "png": "s1_06_t6_CELH_2020-08-06_combined.png",
+      "kaleido_verified": true,
+      "html_bytes": 184810,
+      "png_bytes": 171156
+    }
+  ],
+  "config_hash": "a0943e2a",
+  "layout_choice_needed": "T6c: both layouts built on 4 sample events (one per kernel separately, AND a combined 3-panel comparative view). Cooper picks which layout T6d produces for the full 56-event dev sample -- not an agent decision.",
+  "sample_events": [
+    [
+      "ASPI",
+      "2023-08-01",
+      "rth, highest void"
+    ],
+    [
+      "OCUL",
+      "2020-10-07",
+      "rth, lowest void"
+    ],
+    [
+      "ZENA",
+      "2024-10-11",
+      "premarket, highest void"
+    ],
+    [
+      "CELH",
+      "2020-08-06",
+      "evening"
+    ]
+  ]
+}
