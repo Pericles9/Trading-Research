@@ -1,0 +1,156 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "T5_descriptive",
+  "config_hash": "a0943e2a",
+  "T5a_subburst_vs_printcount": {
+    "no_threshold_no_gate": true,
+    "rows": [
+      {
+        "threshold": 1.25,
+        "kernel_min": 2.0,
+        "n": 38,
+        "spearman_rho": 0.40713583113911084,
+        "p_value": 0.011184278872561739,
+        "log_log_slope": 0.6868122841247419
+      },
+      {
+        "threshold": 1.25,
+        "kernel_min": 8.0,
+        "n": 43,
+        "spearman_rho": 0.41061854388264823,
+        "p_value": 0.0062372441756522075,
+        "log_log_slope": 0.5526471001870681
+      },
+      {
+        "threshold": 1.25,
+        "kernel_min": 32.0,
+        "n": 49,
+        "spearman_rho": 0.03347622033407596,
+        "p_value": 0.8193756377503566,
+        "log_log_slope": 0.1092572381073913
+      },
+      {
+        "threshold": 1.3,
+        "kernel_min": 2.0,
+        "n": 38,
+        "spearman_rho": 0.40713583113911084,
+        "p_value": 0.011184278872561739,
+        "log_log_slope": 0.6868122841247419
+      },
+      {
+        "threshold": 1.3,
+        "kernel_min": 8.0,
+        "n": 43,
+        "spearman_rho": 0.41061854388264823,
+        "p_value": 0.0062372441756522075,
+        "log_log_slope": 0.5526471001870681
+      },
+      {
+        "threshold": 1.3,
+        "kernel_min": 32.0,
+        "n": 49,
+        "spearman_rho": 0.03347622033407596,
+        "p_value": 0.8193756377503566,
+        "log_log_slope": 0.1092572381073913
+      },
+      {
+        "threshold": 1.35,
+        "kernel_min": 2.0,
+        "n": 38,
+        "spearman_rho": 0.40713583113911084,
+        "p_value": 0.011184278872561739,
+        "log_log_slope": 0.6868122841247419
+      },
+      {
+        "threshold": 1.35,
+        "kernel_min": 8.0,
+        "n": 43,
+        "spearman_rho": 0.41061854388264823,
+        "p_value": 0.0062372441756522075,
+        "log_log_slope": 0.5526471001870681
+      },
+      {
+        "threshold": 1.35,
+        "kernel_min": 32.0,
+        "n": 49,
+        "spearman_rho": 0.03347622033407596,
+        "p_value": 0.8193756377503566,
+        "log_log_slope": 0.1092572381073913
+      }
+    ],
+    "identical_across_variants": true,
+    "why_identical": "T5a doesn't segment-stratify, and label=='ok' never depends on the threshold variant (only the kernel does -- s1_t1_subbursts.py's design note). So every (kernel) row here is the SAME population and the SAME values under all 3 variants, confirmed by the check above rather than left as an unexplained coincidence -- the same reasoning as T2c's identical spacing result.",
+    "reading": "A positive Spearman/log-log slope is EXPECTED -- a bigger, longer, more active event produces more sub-bursts under any reasonable definition (Amendment 1 retired this as a gate). Reported as context."
+  },
+  "T5b_A27_silent_failure_rate": {
+    "rows": [
+      {
+        "threshold": 1.25,
+        "kernel_min": 2.0,
+        "n": 38,
+        "n_silent": 22,
+        "rate": 0.5789473684210527
+      },
+      {
+        "threshold": 1.25,
+        "kernel_min": 8.0,
+        "n": 43,
+        "n_silent": 26,
+        "rate": 0.6046511627906976
+      },
+      {
+        "threshold": 1.25,
+        "kernel_min": 32.0,
+        "n": 49,
+        "n_silent": 30,
+        "rate": 0.6122448979591837
+      },
+      {
+        "threshold": 1.3,
+        "kernel_min": 2.0,
+        "n": 38,
+        "n_silent": 22,
+        "rate": 0.5789473684210527
+      },
+      {
+        "threshold": 1.3,
+        "kernel_min": 8.0,
+        "n": 43,
+        "n_silent": 26,
+        "rate": 0.6046511627906976
+      },
+      {
+        "threshold": 1.3,
+        "kernel_min": 32.0,
+        "n": 49,
+        "n_silent": 30,
+        "rate": 0.6122448979591837
+      },
+      {
+        "threshold": 1.35,
+        "kernel_min": 2.0,
+        "n": 38,
+        "n_silent": 22,
+        "rate": 0.5789473684210527
+      },
+      {
+        "threshold": 1.35,
+        "kernel_min": 8.0,
+        "n": 43,
+        "n_silent": 26,
+        "rate": 0.6046511627906976
+      },
+      {
+        "threshold": 1.35,
+        "kernel_min": 32.0,
+        "n": 49,
+        "n_silent": 30,
+        "rate": 0.6122448979591837
+      }
+    ],
+    "identical_across_variants": true,
+    "caveat": "These figures are NOT comparable to Stage 0b's 30% (T0b's silent-selection check measured whether the LATER of the top-two-prominence peaks was taller, with no envelope boundary in existence at all -- a different statistic on a different mechanism). This measures, at the CHOSEN envelope boundary, whether the tallest peak at or below it is the fastest-arriving one; a different question, on a mechanism that didn't exist at Stage 0b."
+  },
+  "source": "research/phase_10c/s1_t5_descriptive.py:main"
+}

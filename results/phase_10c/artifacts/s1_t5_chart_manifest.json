@@ -1,0 +1,12 @@
+{
+  "charts": [
+    {
+      "chart": "s1_05_11_subburst_vs_printcount.html",
+      "png": "s1_05_11_subburst_vs_printcount.png",
+      "kaleido_verified": true,
+      "html_bytes": 16087,
+      "png_bytes": 244727
+    }
+  ],
+  "config_hash": "a0943e2a"
+}
