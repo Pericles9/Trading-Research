@@ -228,6 +228,9 @@ def main() -> int:
                 continue
 
             thr = env["loc"]
+            # threshold expressed in seconds per interval (denormalize by that interval's
+            # own local median), for T2a -- absolute location, comparable to the D7 band.
+            thr_s_per_interval = 10.0 ** (thr + loc_med[ok & np.isfinite(loc_med)])
             below = [p for p in pks if centers[p] <= thr]
             silent = bool(len(below) >= 2 and max(below, key=lambda q: dens[q]) != below[0])
             inb = ok & np.isfinite(norm) & (norm < thr)
@@ -246,6 +249,7 @@ def main() -> int:
                                 "move_share": (mv / tot_move) if tot_move > 0 else np.nan})
             wf["subbursts_total"] += len(runs)
             cell_rows.append({**base, "label": "ok", "threshold_norm": float(thr),
+                              "threshold_seconds_median": float(np.median(thr_s_per_interval)),
                               "void": env["void"], "n_peaks": int(pks.size),
                               "n_subbursts": len(runs), "silent_selection": silent,
                               "move_share_in_subbursts": (in_move / tot_move)

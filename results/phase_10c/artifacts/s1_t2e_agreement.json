@@ -1,0 +1,436 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "T2_anchor_independent",
+  "config_hash": "a0943e2a",
+  "design_note": "T2a-T2d's underlying per-(event,kernel) values never depend on the threshold variant. Variant enters only through which events are members of a segment bucket (segment/anchor availability is variant-dependent). T2e therefore tests population-membership sensitivity, not independent recomputation -- see module docstring.",
+  "T2e_cross_variant_agreement": {
+    "median_instability_diagnostic": {
+      "finding": "The large apparent RTH disagreement at kernel=8min (median 0.058s / 2.659s / 0.028s across 1.25/1.30/1.35) is fully attributable to ONE event, CODX 2020-03-11, occupying a ~90x-wide gap in the sorted rth threshold values (between OCUL 2020-10-07 at 0.058s and PPSI 2020-10-20 at 5.367s). CODX's own segment is variant-dependent -- premarket at 1.25, rth at 1.30/1.35, the same offsetting-swap event Amendment 4 already found moving with VEEE -- so whichever side of that gap the pooled median falls on flips by roughly two orders of magnitude depending on whether CODX and one neighbour land above or below the middle rank. This is a median-of-a-heavy-tailed-sample instability (the threshold_seconds_median distribution spans ~1e-5 to ~2e3 s, 8 orders of magnitude), not evidence that the underlying per-event computation disagrees across variants -- every value in the sorted lists above is IDENTICAL across variants except for which events are members.",
+      "codx_values_by_variant": [
+        {
+          "threshold": 1.25,
+          "segment": "premarket",
+          "threshold_seconds_median": 5.260215183671839
+        },
+        {
+          "threshold": 1.3,
+          "segment": "rth",
+          "threshold_seconds_median": 5.260215183671839
+        },
+        {
+          "threshold": 1.35,
+          "segment": "rth",
+          "threshold_seconds_median": 5.260215183671839
+        }
+      ]
+    },
+    "threshold_location": [
+      {
+        "kernel_min": 2.0,
+        "group": [
+          2.0,
+          "evening"
+        ],
+        "max_minus_min_median": 0.0,
+        "relative_spread": 0.0,
+        "medians_by_variant": {
+          "1.25": null,
+          "1.3": null,
+          "1.35": 8.85513000250714e-06
+        }
+      },
+      {
+        "kernel_min": 2.0,
+        "group": [
+          2.0,
+          "premarket"
+        ],
+        "max_minus_min_median": 1.743822135204793,
+        "relative_spread": 0.7477813200003653,
+        "medians_by_variant": {
+          "1.25": 3.4945428706479498,
+          "1.3": 1.7507207354431569,
+          "1.35": 1.7507207354431569
+        }
+      },
+      {
+        "kernel_min": 2.0,
+        "group": [
+          2.0,
+          "rth"
+        ],
+        "max_minus_min_median": 2.835962267418683,
+        "relative_spread": 0.457601474732815,
+        "medians_by_variant": {
+          "1.25": 5.252129261317403,
+          "1.3": 8.088091528736086,
+          "1.35": 5.252129261317403
+        }
+      },
+      {
+        "kernel_min": 8.0,
+        "group": [
+          8.0,
+          "evening"
+        ],
+        "max_minus_min_median": 0.0,
+        "relative_spread": 0.0,
+        "medians_by_variant": {
+          "1.25": null,
+          "1.3": null,
+          "1.35": 75.96672239133437
+        }
+      },
+      {
+        "kernel_min": 8.0,
+        "group": [
+          8.0,
+          "premarket"
+        ],
+        "max_minus_min_median": 0.0026198238303358577,
+        "relative_spread": 0.7103739029439345,
+        "medians_by_variant": {
+          "1.25": 0.0054344997762321885,
+          "1.3": 0.002814675945896331,
+          "1.35": 0.002814675945896331
+        }
+      },
+      {
+        "kernel_min": 8.0,
+        "group": [
+          8.0,
+          "rth"
+        ],
+        "max_minus_min_median": 2.631596634433653,
+        "relative_spread": 2.8760532457602115,
+        "medians_by_variant": {
+          "1.25": 0.05819485320594205,
+          "1.3": 2.6592050184388905,
+          "1.35": 0.02760838400523707
+        }
+      },
+      {
+        "kernel_min": 32.0,
+        "group": [
+          32.0,
+          "evening"
+        ],
+        "max_minus_min_median": 0.0,
+        "relative_spread": 0.0,
+        "medians_by_variant": {
+          "1.25": null,
+          "1.3": null,
+          "1.35": 0.015858551920584076
+        }
+      },
+      {
+        "kernel_min": 32.0,
+        "group": [
+          32.0,
+          "premarket"
+        ],
+        "max_minus_min_median": 1.6157972852486135e-06,
+        "relative_spread": 0.13963594292347703,
+        "medians_by_variant": {
+          "1.25": 1.2648697987564603e-05,
+          "1.3": 1.103290070231599e-05,
+          "1.35": 1.103290070231599e-05
+        }
+      },
+      {
+        "kernel_min": 32.0,
+        "group": [
+          32.0,
+          "rth"
+        ],
+        "max_minus_min_median": 0.006137989614243097,
+        "relative_spread": 1.1417173925432842,
+        "medians_by_variant": {
+          "1.25": 0.007668541233807688,
+          "1.3": 0.006929214346810088,
+          "1.35": 0.0015305516195645906
+        }
+      }
+    ],
+    "subburst_duration": [
+      {
+        "kernel_min": 2.0,
+        "group": [
+          2.0,
+          "evening"
+        ],
+        "max_minus_min_median": 0.0,
+        "relative_spread": 0.0,
+        "medians_by_variant": {
+          "1.25": null,
+          "1.3": null,
+          "1.35": 0.000143973
+        }
+      },
+      {
+        "kernel_min": 2.0,
+        "group": [
+          2.0,
+          "premarket"
+        ],
+        "max_minus_min_median": 1.0585000000001323e-06,
+        "relative_spread": 0.0010843172318514378,
+        "medians_by_variant": {
+          "1.25": 0.000976896,
+          "1.3": 0.0009758375,
+          "1.35": 0.0009758375
+        }
+      },
+      {
+        "kernel_min": 2.0,
+        "group": [
+          2.0,
+          "rth"
+        ],
+        "max_minus_min_median": 0.0007972009999999991,
+        "relative_spread": 0.15974057617944767,
+        "medians_by_variant": {
+          "1.25": 0.0052348989999999995,
+          "1.3": 0.005267048,
+          "1.35": 0.004469847000000001
+        }
+      },
+      {
+        "kernel_min": 8.0,
+        "group": [
+          8.0,
+          "evening"
+        ],
+        "max_minus_min_median": 0.0,
+        "relative_spread": 0.0,
+        "medians_by_variant": {
+          "1.25": null,
+          "1.3": null,
+          "1.35": 14.545552359
+        }
+      },
+      {
+        "kernel_min": 8.0,
+        "group": [
+          8.0,
+          "premarket"
+        ],
+        "max_minus_min_median": 5.005500000000154e-06,
+        "relative_spread": 0.004302935976903282,
+        "medians_by_variant": {
+          "1.25": 0.0011666125000000002,
+          "1.3": 0.001161607,
+          "1.35": 0.001161607
+        }
+      },
+      {
+        "kernel_min": 8.0,
+        "group": [
+          8.0,
+          "rth"
+        ],
+        "max_minus_min_median": 0.00042870750000000013,
+        "relative_spread": 0.17220743073913808,
+        "medians_by_variant": {
+          "1.25": 0.002629211,
+          "1.3": 0.002633973,
+          "1.35": 0.0022052655
+        }
+      },
+      {
+        "kernel_min": 32.0,
+        "group": [
+          32.0,
+          "evening"
+        ],
+        "max_minus_min_median": 0.0,
+        "relative_spread": 0.0,
+        "medians_by_variant": {
+          "1.25": null,
+          "1.3": null,
+          "1.35": 0.003347137
+        }
+      },
+      {
+        "kernel_min": 32.0,
+        "group": [
+          32.0,
+          "premarket"
+        ],
+        "max_minus_min_median": 8.895800000000004e-05,
+        "relative_spread": 0.1992702667487521,
+        "medians_by_variant": {
+          "1.25": 0.00038711349999999997,
+          "1.3": 0.0004760715,
+          "1.35": 0.0004760715
+        }
+      },
+      {
+        "kernel_min": 32.0,
+        "group": [
+          32.0,
+          "rth"
+        ],
+        "max_minus_min_median": 0.0007826509999999999,
+        "relative_spread": 0.44604639773279264,
+        "medians_by_variant": {
+          "1.25": 0.00208838,
+          "1.3": 0.001869812,
+          "1.35": 0.001305729
+        }
+      }
+    ],
+    "void_parameter": [
+      {
+        "kernel_min": 2.0,
+        "group": [
+          2.0,
+          "evening"
+        ],
+        "max_minus_min_median": 0.0,
+        "relative_spread": 0.0,
+        "medians_by_variant": {
+          "1.25": null,
+          "1.3": null,
+          "1.35": 0.8762294504489447
+        }
+      },
+      {
+        "kernel_min": 2.0,
+        "group": [
+          2.0,
+          "premarket"
+        ],
+        "max_minus_min_median": 0.004622150651839574,
+        "relative_spread": 0.005061484231841403,
+        "medians_by_variant": {
+          "1.25": 0.9162820761332262,
+          "1.3": 0.9116599254813866,
+          "1.35": 0.9116599254813866
+        }
+      },
+      {
+        "kernel_min": 2.0,
+        "group": [
+          2.0,
+          "rth"
+        ],
+        "max_minus_min_median": 0.027330418642864895,
+        "relative_spread": 0.03229006387682075,
+        "medians_by_variant": {
+          "1.25": 0.8321349924136014,
+          "1.3": 0.8476096842328451,
+          "1.35": 0.8594654110564663
+        }
+      },
+      {
+        "kernel_min": 8.0,
+        "group": [
+          8.0,
+          "evening"
+        ],
+        "max_minus_min_median": 0.0,
+        "relative_spread": 0.0,
+        "medians_by_variant": {
+          "1.25": null,
+          "1.3": null,
+          "1.35": 0.7843654066677579
+        }
+      },
+      {
+        "kernel_min": 8.0,
+        "group": [
+          8.0,
+          "premarket"
+        ],
+        "max_minus_min_median": 0.016979934111473582,
+        "relative_spread": 0.019151353413681318,
+        "medians_by_variant": {
+          "1.25": 0.8979379273840342,
+          "1.3": 0.8809579932725606,
+          "1.35": 0.8809579932725606
+        }
+      },
+      {
+        "kernel_min": 8.0,
+        "group": [
+          8.0,
+          "rth"
+        ],
+        "max_minus_min_median": 0.08794368984468204,
+        "relative_spread": 0.09538694322066922,
+        "medians_by_variant": {
+          "1.25": 0.892582768894085,
+          "1.3": 0.8927941615102128,
+          "1.35": 0.9805264587387671
+        }
+      },
+      {
+        "kernel_min": 32.0,
+        "group": [
+          32.0,
+          "evening"
+        ],
+        "max_minus_min_median": 0.0,
+        "relative_spread": 0.0,
+        "medians_by_variant": {
+          "1.25": null,
+          "1.3": null,
+          "1.35": 0.8703415910572094
+        }
+      },
+      {
+        "kernel_min": 32.0,
+        "group": [
+          32.0,
+          "premarket"
+        ],
+        "max_minus_min_median": 0.0036897755352393036,
+        "relative_spread": 0.003921290011753489,
+        "medians_by_variant": {
+          "1.25": 0.9384997634895726,
+          "1.3": 0.942189539024812,
+          "1.35": 0.942189539024812
+        }
+      },
+      {
+        "kernel_min": 32.0,
+        "group": [
+          32.0,
+          "rth"
+        ],
+        "max_minus_min_median": 0.03932167229683792,
+        "relative_spread": 0.045519699179196065,
+        "medians_by_variant": {
+          "1.25": 0.8638385799089191,
+          "1.3": 0.8441777437605001,
+          "1.35": 0.8834994160573381
+        }
+      }
+    ],
+    "spacing_note": "T2c is reported per (variant, kernel) with no segment split. Because spacing is computed once per (event, kernel) and pooled without restricting to a variant's anchored subset, the population and hence the distribution is IDENTICAL across variants by construction -- confirmed below, not assumed.",
+    "spacing_identical_check": {
+      "medians_by_variant_by_kernel": {
+        "1.25": {
+          "2.0": 0.329312256,
+          "8.0": 1.2385114879999999,
+          "32.0": 3.04143232
+        },
+        "1.3": {
+          "2.0": 0.329312256,
+          "8.0": 1.2385114879999999,
+          "32.0": 3.04143232
+        },
+        "1.35": {
+          "2.0": 0.329312256,
+          "8.0": 1.2385114879999999,
+          "32.0": 3.04143232
+        }
+      },
+      "max_abs_diff_across_variants": 0.0,
+      "verdict": "IDENTICAL, as expected"
+    }
+  },
+  "source": "research/phase_10c/s1_t2_anchor_independent.py:main"
+}

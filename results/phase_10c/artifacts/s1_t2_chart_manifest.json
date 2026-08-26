@@ -1,0 +1,33 @@
+{
+  "charts": [
+    {
+      "chart": "s1_02_01_threshold_location.html",
+      "png": "s1_02_01_threshold_location.png",
+      "kaleido_verified": true,
+      "html_bytes": 27367,
+      "png_bytes": 330323
+    },
+    {
+      "chart": "s1_02_02_subburst_duration.html",
+      "png": "s1_02_02_subburst_duration.png",
+      "kaleido_verified": true,
+      "html_bytes": 13310572,
+      "png_bytes": 315512
+    },
+    {
+      "chart": "s1_02_03_subburst_spacing.html",
+      "png": "s1_02_03_subburst_spacing.png",
+      "kaleido_verified": true,
+      "html_bytes": 13543465,
+      "png_bytes": 228849
+    },
+    {
+      "chart": "s1_02_04_void_parameter.html",
+      "png": "s1_02_04_void_parameter.png",
+      "kaleido_verified": true,
+      "html_bytes": 27437,
+      "png_bytes": 327119
+    }
+  ],
+  "config_hash": "a0943e2a"
+}

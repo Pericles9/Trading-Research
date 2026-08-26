@@ -12,5 +12,14 @@
     "no_threshold_share": "0/168 event-kernel cells with sufficient context ever failed to find a trough",
     "escalation_rows_13_16_status": "CANNOT BE EVALUATED -- thresholds are [Cooper], unset. Raw figures reported instead: insufficient_context share ranges 0%-42% across cells (highest at 2-minute kernel RTH, as anticipated by construction); no_threshold share is 0% in every cell. Not an escalation determination -- no number exists to compare against, and none was invented."
   },
-  "note": "T2-T7 not yet run."
+  "note": "T3-T7 not yet run.",
+  "T2_anchor_independent": {
+    "threshold_location": "results/phase_10c/artifacts/s1_t2a_threshold_location.parquet",
+    "subburst_duration": "results/phase_10c/artifacts/s1_t2b_subburst_duration.parquet",
+    "subburst_spacing": "results/phase_10c/artifacts/s1_t2c_subburst_spacing.parquet",
+    "void_parameter": "results/phase_10c/artifacts/s1_t2d_void_parameter.parquet",
+    "cross_variant_agreement": "results/phase_10c/artifacts/s1_t2e_agreement.json",
+    "charts": "results/phase_10c/artifacts/s1_t2_chart_manifest.json",
+    "headline_finding": "T2c (spacing) is IDENTICAL across variants, confirmed by check, as expected since it never depends on the anchor. T2a/T2b/T2d agree closely in most cells but RTH threshold location at kernel=8min shows a large apparent swing (median 0.058s / 2.659s / 0.028s across 1.25/1.30/1.35) traced to ONE event, CODX 2020-03-11, whose segment membership is variant-dependent and which sits alone in a ~90x sorted gap in the rth threshold distribution -- a median-of-a-heavy-tailed-sample instability, not a recomputation difference. See s1_t2e_agreement.json.median_instability_diagnostic."
+  }
 }
