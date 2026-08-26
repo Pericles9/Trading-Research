@@ -1,0 +1,26 @@
+{
+  "charts": [
+    {
+      "chart": "s1_04_08_threshold_vs_kernel.html",
+      "png": "s1_04_08_threshold_vs_kernel.png",
+      "kaleido_verified": true,
+      "html_bytes": 28601,
+      "png_bytes": 888935
+    },
+    {
+      "chart": "s1_04_09_void_vs_kernel.html",
+      "png": "s1_04_09_void_vs_kernel.png",
+      "kaleido_verified": true,
+      "html_bytes": 28446,
+      "png_bytes": 836133
+    },
+    {
+      "chart": "s1_04_10_heterogeneity.html",
+      "png": "s1_04_10_heterogeneity.png",
+      "kaleido_verified": true,
+      "html_bytes": 14876,
+      "png_bytes": 268624
+    }
+  ],
+  "config_hash": "a0943e2a"
+}

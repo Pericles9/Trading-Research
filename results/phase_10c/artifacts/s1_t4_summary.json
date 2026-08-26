@@ -1,0 +1,64 @@
+{
+  "phase": "10c",
+  "stage": "1",
+  "task": "T4_cross_kernel",
+  "config_hash": "a0943e2a",
+  "variant_independence_verified": {
+    "max_threshold_spread_across_variants": 0.0,
+    "max_void_spread_across_variants": 0.0,
+    "note": "both < 1e-9 -- confirms threshold_seconds_median and void never depend on the threshold variant, only on (event, kernel), as designed."
+  },
+  "T4a_slope_distribution": {
+    "n_events": 43,
+    "median_slope": -1.3586540108584884,
+    "p25_slope": -3.142075511844205,
+    "p75_slope": 0.4288378002688811,
+    "share_near_zero_lt_0.2": 0.09302325581395349,
+    "share_near_one_gt_0.8": 0.6976744186046512,
+    "reading": "A slope near 0 means threshold location is FLAT across kernel widths (a real structural interval). A slope near 1 means the threshold scales with the kernel (the local-median window is setting the threshold, the multi-kernel form of the free-parameter problem). Reported as a distribution below; not characterized further -- the read is Cooper's."
+  },
+  "T4b_best_kernel_distribution": {
+    "n_events_with_at_least_one_ok_kernel": 49,
+    "counts": {
+      "32.0": 21,
+      "2.0": 16,
+      "8.0": 12
+    },
+    "n_kernels_ok_distribution": {
+      "1": 6,
+      "2": 5,
+      "3": 38
+    }
+  },
+  "T4c_heterogeneity": {
+    "best_kernel_vs_event_size_n_intervals": {
+      "spearman_rho": -0.052556348836140895,
+      "p_value": 0.7198605455334083,
+      "n": 49
+    },
+    "best_kernel_vs_detection_price_decile": {
+      "spearman_rho": -0.18154570893924835,
+      "p_value": 0.21685897746914318,
+      "n": 48
+    },
+    "best_kernel_by_segment": {
+      "2.0": {
+        "premarket": 7,
+        "rth": 8,
+        "NaN": 1
+      },
+      "8.0": {
+        "premarket": 1,
+        "rth": 11,
+        "NaN": 0
+      },
+      "32.0": {
+        "premarket": 8,
+        "rth": 13,
+        "NaN": 0
+      }
+    },
+    "note": "price_at_detection is the nearest TICK price to the 1.25-variant anchor (not a spine numeric -- D4 quarantine does not apply). Descriptive only, no threshold, no characterization beyond the correlation figures themselves."
+  },
+  "source": "research/phase_10c/s1_t4_cross_kernel.py:main"
+}

@@ -12,7 +12,7 @@
     "no_threshold_share": "0/168 event-kernel cells with sufficient context ever failed to find a trough",
     "escalation_rows_13_16_status": "CANNOT BE EVALUATED -- thresholds are [Cooper], unset. Raw figures reported instead: insufficient_context share ranges 0%-42% across cells (highest at 2-minute kernel RTH, as anticipated by construction); no_threshold share is 0% in every cell. Not an escalation determination -- no number exists to compare against, and none was invented."
   },
-  "note": "T4-T7 not yet run.",
+  "note": "T5-T7 not yet run.",
   "T2_anchor_independent": {
     "threshold_location": "results/phase_10c/artifacts/s1_t2a_threshold_location.parquet",
     "subburst_duration": "results/phase_10c/artifacts/s1_t2b_subburst_duration.parquet",
@@ -29,5 +29,10 @@
     "charts": "results/phase_10c/artifacts/s1_t3_chart_manifest.json",
     "anchor_delta_caption_applied": true,
     "headline_finding": "T3c: the FIRST sub-burst since detection is rarely also the LARGEST by price-move share -- 7.3%/10.8%/9.7% of cells at 1.25/1.30/1.35. Descriptive only; no characterization applied."
+  },
+  "T4_cross_kernel": {
+    "summary": "results/phase_10c/artifacts/s1_t4_summary.json",
+    "charts": "results/phase_10c/artifacts/s1_t4_chart_manifest.json",
+    "headline_finding": "T4a: per-event log-log slope of threshold-location vs kernel-width has median -1.359 (p25 -3.142, p75 0.429, n=43) -- neither flat (0) nor the anticipated ~1:1 scaling; a third, negative pattern the prompt did not name, reported as measured. T4b: best-separated kernel is 32min for 21 events, 2min for 16, 8min for 12 (n=49 with >=1 ok kernel); 38/49 have all 3 kernels ok. T4c: best-kernel vs event size (n_intervals) rho=-0.053 p=0.720; vs detection price decile rho=-0.182 p=0.217 (n=48) -- neither significant. By segment: premarket favors the extremes (2min or 32min, 7 and 8 events) over 8min (1); rth spreads more evenly, favoring 32min (13) over 2min (8) and 8min (11)."
   }
 }
