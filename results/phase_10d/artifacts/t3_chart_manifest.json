@@ -1,0 +1,12 @@
+{
+  "task": "T3e",
+  "charts": [
+    {
+      "chart": "02_void_counterfactual.html",
+      "png": "02_void_counterfactual.png",
+      "kaleido_verified": true,
+      "html_bytes": 19189,
+      "png_bytes": 474719
+    }
+  ]
+}

@@ -1,0 +1,818 @@
+{
+  "phase": "10d",
+  "task": "T3",
+  "config_hash": "9df637c2",
+  "source_artifact": "results/phase_10c/artifacts/s1_t1_cells.parquet",
+  "cutoffs_reported": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9
+  ],
+  "cutoffs_applied": [],
+  "no_cutoff_applied": true,
+  "T3a_void_distribution": {
+    "_basis": "168 distinct (event, kernel) cells -- void is variant-independent; segment cuts are reported per variant because segment membership is the only thing the variant changes",
+    "pooled_by_kernel": {
+      "2min": {
+        "n": 38,
+        "min": 0.2092369069495802,
+        "q25": 0.7081245452785416,
+        "median": 0.8817711082425712,
+        "q75": 0.9852145439456719,
+        "max": 1.0
+      },
+      "8min": {
+        "n": 43,
+        "min": 0.29552955316290697,
+        "q25": 0.6858632436343544,
+        "median": 0.892582768894085,
+        "q75": 0.9939108852393537,
+        "max": 1.0
+      },
+      "32min": {
+        "n": 49,
+        "min": 0.3871037681264665,
+        "q25": 0.7406831821144189,
+        "median": 0.886039423540362,
+        "q75": 1.0,
+        "max": 1.0
+      }
+    },
+    "by_kernel_variant_segment": [
+      {
+        "kernel_min": 2.0,
+        "variant": 1.25,
+        "segment": "premarket",
+        "n": 15,
+        "min": 0.2092369069495802,
+        "q25": 0.4078514363340025,
+        "median": 0.9162820761332262,
+        "q75": 0.9928646845668736,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.25,
+        "segment": "rth",
+        "n": 22,
+        "min": 0.32256259872167503,
+        "q25": 0.7357894193775003,
+        "median": 0.8321349924136014,
+        "q75": 0.9452439058222253,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.25,
+        "segment": "unlabelled",
+        "n": 1,
+        "min": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.3,
+        "segment": "premarket",
+        "n": 14,
+        "min": 0.2092369069495802,
+        "q25": 0.3998726826328123,
+        "median": 0.9116599254813866,
+        "q75": 0.9843883513355216,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.3,
+        "segment": "rth",
+        "n": 23,
+        "min": 0.32256259872167503,
+        "q25": 0.7495814776475128,
+        "median": 0.8476096842328451,
+        "q75": 0.964964185416201,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.3,
+        "segment": "unlabelled",
+        "n": 1,
+        "min": 1.0,
+        "q25": 1.0,
+        "median": 1.0,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.35,
+        "segment": "premarket",
+        "n": 14,
+        "min": 0.2092369069495802,
+        "q25": 0.3998726826328123,
+        "median": 0.9116599254813866,
+        "q75": 0.9843883513355216,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.35,
+        "segment": "rth",
+        "n": 18,
+        "min": 0.32256259872167503,
+        "q25": 0.7357894193775003,
+        "median": 0.8594654110564663,
+        "q75": 0.9743171268988232,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.35,
+        "segment": "evening",
+        "n": 1,
+        "min": 0.8762294504489447,
+        "q25": 0.8762294504489447,
+        "median": 0.8762294504489447,
+        "q75": 0.8762294504489447,
+        "max": 0.8762294504489447
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.35,
+        "segment": "unlabelled",
+        "n": 5,
+        "min": 0.5702636077382195,
+        "q25": 0.7790291308792039,
+        "median": 0.7929803321972937,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.25,
+        "segment": "premarket",
+        "n": 15,
+        "min": 0.29552955316290697,
+        "q25": 0.6858632436343544,
+        "median": 0.8979379273840342,
+        "q75": 0.9687499071199631,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.25,
+        "segment": "rth",
+        "n": 27,
+        "min": 0.30781474318809354,
+        "q25": 0.6643208202425214,
+        "median": 0.892582768894085,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.25,
+        "segment": "unlabelled",
+        "n": 1,
+        "min": 0.746453723581445,
+        "q25": 0.746453723581445,
+        "median": 0.746453723581445,
+        "q75": 0.746453723581445,
+        "max": 0.746453723581445
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.3,
+        "segment": "premarket",
+        "n": 14,
+        "min": 0.29552955316290697,
+        "q25": 0.6799026260726979,
+        "median": 0.8809579932725606,
+        "q75": 0.9640939588534255,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.3,
+        "segment": "rth",
+        "n": 28,
+        "min": 0.30781474318809354,
+        "q25": 0.6988362316148085,
+        "median": 0.8927941615102128,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.3,
+        "segment": "unlabelled",
+        "n": 1,
+        "min": 0.746453723581445,
+        "q25": 0.746453723581445,
+        "median": 0.746453723581445,
+        "q75": 0.746453723581445,
+        "max": 0.746453723581445
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.35,
+        "segment": "premarket",
+        "n": 14,
+        "min": 0.29552955316290697,
+        "q25": 0.6799026260726979,
+        "median": 0.8809579932725606,
+        "q75": 0.9640939588534255,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.35,
+        "segment": "rth",
+        "n": 23,
+        "min": 0.4304499003738208,
+        "q25": 0.780671918051429,
+        "median": 0.9805264587387671,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.35,
+        "segment": "evening",
+        "n": 1,
+        "min": 0.7843654066677579,
+        "q25": 0.7843654066677579,
+        "median": 0.7843654066677579,
+        "q75": 0.7843654066677579,
+        "max": 0.7843654066677579
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.35,
+        "segment": "unlabelled",
+        "n": 5,
+        "min": 0.30781474318809354,
+        "q25": 0.35486046696200646,
+        "median": 0.5381577947882932,
+        "q75": 0.746453723581445,
+        "max": 0.892582768894085
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.25,
+        "segment": "premarket",
+        "n": 16,
+        "min": 0.6663196208328399,
+        "q25": 0.8546768295602856,
+        "median": 0.9384997634895726,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.25,
+        "segment": "rth",
+        "n": 32,
+        "min": 0.3871037681264665,
+        "q25": 0.6692061116935182,
+        "median": 0.8638385799089191,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.25,
+        "segment": "unlabelled",
+        "n": 1,
+        "min": 0.5359922249539182,
+        "q25": 0.5359922249539182,
+        "median": 0.5359922249539182,
+        "q75": 0.5359922249539182,
+        "max": 0.5359922249539182
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.3,
+        "segment": "premarket",
+        "n": 15,
+        "min": 0.7834738776871585,
+        "q25": 0.8704768002455254,
+        "median": 0.942189539024812,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.3,
+        "segment": "rth",
+        "n": 33,
+        "min": 0.3871037681264665,
+        "q25": 0.6663196208328399,
+        "median": 0.8441777437605001,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.3,
+        "segment": "unlabelled",
+        "n": 1,
+        "min": 0.5359922249539182,
+        "q25": 0.5359922249539182,
+        "median": 0.5359922249539182,
+        "q75": 0.5359922249539182,
+        "max": 0.5359922249539182
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.35,
+        "segment": "premarket",
+        "n": 15,
+        "min": 0.7834738776871585,
+        "q25": 0.8704768002455254,
+        "median": 0.942189539024812,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.35,
+        "segment": "rth",
+        "n": 25,
+        "min": 0.44587951518308555,
+        "q25": 0.6976284215926183,
+        "median": 0.8834994160573381,
+        "q75": 1.0,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.35,
+        "segment": "evening",
+        "n": 2,
+        "min": 0.7406831821144189,
+        "q25": 0.8055123865858141,
+        "median": 0.8703415910572094,
+        "q75": 0.9351707955286047,
+        "max": 1.0
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.35,
+        "segment": "unlabelled",
+        "n": 7,
+        "min": 0.3871037681264665,
+        "q25": 0.46262161927744094,
+        "median": 0.5359922249539182,
+        "q75": 0.8220316335514072,
+        "max": 1.0
+      }
+    ],
+    "pooled_all_kernels": {
+      "n": 130,
+      "min": 0.2092369069495802,
+      "q25": 0.7025438181904305,
+      "median": 0.8866760947882799,
+      "q75": 1.0,
+      "max": 1.0
+    }
+  },
+  "T3b_counterfactual": {
+    "artifact": "results/phase_10d/artifacts/t3_void_counterfactual.parquet",
+    "n_rows": 165,
+    "distinct_scope_rows": [
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 2.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.5,
+        "n_ok": 38,
+        "n_would_decline": 6,
+        "would_decline_share": 0.15789473684210525,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 2.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.6,
+        "n_ok": 38,
+        "n_would_decline": 8,
+        "would_decline_share": 0.21052631578947367,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 2.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.7,
+        "n_ok": 38,
+        "n_would_decline": 8,
+        "would_decline_share": 0.21052631578947367,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 2.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.8,
+        "n_ok": 38,
+        "n_would_decline": 14,
+        "would_decline_share": 0.3684210526315789,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 2.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.9,
+        "n_ok": 38,
+        "n_would_decline": 21,
+        "would_decline_share": 0.5526315789473685,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 8.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.5,
+        "n_ok": 43,
+        "n_would_decline": 7,
+        "would_decline_share": 0.16279069767441862,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 8.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.6,
+        "n_ok": 43,
+        "n_would_decline": 10,
+        "would_decline_share": 0.23255813953488372,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 8.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.7,
+        "n_ok": 43,
+        "n_would_decline": 12,
+        "would_decline_share": 0.27906976744186046,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 8.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.8,
+        "n_ok": 43,
+        "n_would_decline": 18,
+        "would_decline_share": 0.4186046511627907,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 8.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.9,
+        "n_ok": 43,
+        "n_would_decline": 25,
+        "would_decline_share": 0.5813953488372093,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 32.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.5,
+        "n_ok": 49,
+        "n_would_decline": 4,
+        "would_decline_share": 0.08163265306122448,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 32.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.6,
+        "n_ok": 49,
+        "n_would_decline": 8,
+        "would_decline_share": 0.16326530612244897,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 32.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.7,
+        "n_ok": 49,
+        "n_would_decline": 12,
+        "would_decline_share": 0.24489795918367346,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 32.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.8,
+        "n_ok": 49,
+        "n_would_decline": 15,
+        "would_decline_share": 0.30612244897959184,
+        "applied": false
+      },
+      {
+        "scope": "distinct_event_kernel",
+        "kernel_min": 32.0,
+        "variant": NaN,
+        "segment": "all",
+        "cutoff": 0.9,
+        "n_ok": 49,
+        "n_would_decline": 27,
+        "would_decline_share": 0.5510204081632653,
+        "applied": false
+      }
+    ]
+  },
+  "T3c_decline_paths": {
+    "labels_present_in_artifact": [
+      "insufficient_context",
+      "ok"
+    ],
+    "no_threshold_count": 0,
+    "no_threshold_share": 0.0,
+    "unimodal_count": 0,
+    "statement": "10c CANNOT DECLINE ON VOID MAGNITUDE. config/phase_10c.json /settled/D13_void_parameter/threshold is null, marked 'deliberate and permanent': the void parameter ranks troughs and never gates. A DECLINE PATH ON PEAK COUNT DOES EXIST -- research/phase_10c/s1_t1_subbursts.py emits no_threshold when fewer than two peaks survive the Poisson floor, or when no valid trough pair exists -- and it fired 0/504 on this cohort. 'unimodal' likewise appears 0 times.",
+    "insufficient_context_by_cell": [
+      {
+        "kernel_min": 2.0,
+        "variant": 1.25,
+        "segment": "premarket",
+        "n_cells": 16,
+        "n_insufficient_context": 1,
+        "share": 0.0625
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.25,
+        "segment": "rth",
+        "n_cells": 38,
+        "n_insufficient_context": 16,
+        "share": 0.42105263157894735
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.25,
+        "segment": "unlabelled",
+        "n_cells": 2,
+        "n_insufficient_context": 1,
+        "share": 0.5
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.3,
+        "segment": "premarket",
+        "n_cells": 15,
+        "n_insufficient_context": 1,
+        "share": 0.06666666666666667
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.3,
+        "segment": "rth",
+        "n_cells": 38,
+        "n_insufficient_context": 15,
+        "share": 0.39473684210526316
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.3,
+        "segment": "unlabelled",
+        "n_cells": 3,
+        "n_insufficient_context": 2,
+        "share": 0.6666666666666666
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.35,
+        "segment": "premarket",
+        "n_cells": 15,
+        "n_insufficient_context": 1,
+        "share": 0.06666666666666667
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.35,
+        "segment": "rth",
+        "n_cells": 28,
+        "n_insufficient_context": 10,
+        "share": 0.35714285714285715
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.35,
+        "segment": "evening",
+        "n_cells": 2,
+        "n_insufficient_context": 1,
+        "share": 0.5
+      },
+      {
+        "kernel_min": 2.0,
+        "variant": 1.35,
+        "segment": "unlabelled",
+        "n_cells": 11,
+        "n_insufficient_context": 6,
+        "share": 0.5454545454545454
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.25,
+        "segment": "premarket",
+        "n_cells": 16,
+        "n_insufficient_context": 1,
+        "share": 0.0625
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.25,
+        "segment": "rth",
+        "n_cells": 38,
+        "n_insufficient_context": 11,
+        "share": 0.2894736842105263
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.25,
+        "segment": "unlabelled",
+        "n_cells": 2,
+        "n_insufficient_context": 1,
+        "share": 0.5
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.3,
+        "segment": "premarket",
+        "n_cells": 15,
+        "n_insufficient_context": 1,
+        "share": 0.06666666666666667
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.3,
+        "segment": "rth",
+        "n_cells": 38,
+        "n_insufficient_context": 10,
+        "share": 0.2631578947368421
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.3,
+        "segment": "unlabelled",
+        "n_cells": 3,
+        "n_insufficient_context": 2,
+        "share": 0.6666666666666666
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.35,
+        "segment": "premarket",
+        "n_cells": 15,
+        "n_insufficient_context": 1,
+        "share": 0.06666666666666667
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.35,
+        "segment": "rth",
+        "n_cells": 28,
+        "n_insufficient_context": 5,
+        "share": 0.17857142857142858
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.35,
+        "segment": "evening",
+        "n_cells": 2,
+        "n_insufficient_context": 1,
+        "share": 0.5
+      },
+      {
+        "kernel_min": 8.0,
+        "variant": 1.35,
+        "segment": "unlabelled",
+        "n_cells": 11,
+        "n_insufficient_context": 6,
+        "share": 0.5454545454545454
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.25,
+        "segment": "premarket",
+        "n_cells": 16,
+        "n_insufficient_context": 0,
+        "share": 0.0
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.25,
+        "segment": "rth",
+        "n_cells": 38,
+        "n_insufficient_context": 6,
+        "share": 0.15789473684210525
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.25,
+        "segment": "unlabelled",
+        "n_cells": 2,
+        "n_insufficient_context": 1,
+        "share": 0.5
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.3,
+        "segment": "premarket",
+        "n_cells": 15,
+        "n_insufficient_context": 0,
+        "share": 0.0
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.3,
+        "segment": "rth",
+        "n_cells": 38,
+        "n_insufficient_context": 5,
+        "share": 0.13157894736842105
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.3,
+        "segment": "unlabelled",
+        "n_cells": 3,
+        "n_insufficient_context": 2,
+        "share": 0.6666666666666666
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.35,
+        "segment": "premarket",
+        "n_cells": 15,
+        "n_insufficient_context": 0,
+        "share": 0.0
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.35,
+        "segment": "rth",
+        "n_cells": 28,
+        "n_insufficient_context": 3,
+        "share": 0.10714285714285714
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.35,
+        "segment": "evening",
+        "n_cells": 2,
+        "n_insufficient_context": 0,
+        "share": 0.0
+      },
+      {
+        "kernel_min": 32.0,
+        "variant": 1.35,
+        "segment": "unlabelled",
+        "n_cells": 11,
+        "n_insufficient_context": 4,
+        "share": 0.36363636363636365
+      }
+    ],
+    "insufficient_context_share_range": [
+      0.0,
+      0.6666666666666666
+    ],
+    "different_quantities": "insufficient_context and no_threshold are NOT comparable and must never be presented as the same measurement. insufficient_context is a DATA-COVERAGE verdict: the centered window held fewer intervals than the per-event derived floor (n >= (sqrt(pi/2)*sigma_log10/log10 1.5)^2), or the cell held fewer than 50 ok intervals. no_threshold is a SHAPE verdict about bimodality. A thin window says nothing about whether the distribution is bimodal, and v4's 10/100 no_threshold share is a shape measurement with no counterpart in 10c's output.",
+    "v4_no_threshold_reference": "v4's 10/100 is NOT read from this phase's artifacts and is not restated as a 10d measurement. It is cited only to say that 10c has no comparable quantity."
+  },
+  "T3d_zaliapin_tension": {
+    "tension": "D9 adopts Zaliapin's reasoning that the share of events where bimodality fails is a HEADLINE RESULT, not an inconvenience -- the whole T=0 session sits in the vicinity of the dominant event, exactly where bimodality is known to break. 10c's argmax-void selection ranks troughs and never gates on void magnitude, so it returns a threshold for every cell that clears the data floor. A method that never declines on shape cannot produce the share D9 calls headline. The counterfactual above is the size of what is not being produced; it is reported and nothing is applied.",
+    "resolved": false,
+    "resolution_owner": "a successor phase, on Cooper's decision; see D20 'Whether an applicability gate should exist is left open'"
+  }
+}
