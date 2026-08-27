@@ -172,24 +172,32 @@ def main() -> int:
                             "Candidate troughs per frame through the session",
                             "Frame labels: how many frames support a ladder at all"])
     f8 = fr_t[(fr_t.kernel_min == KP)]
+    # The subset spans 2020-2024, so a shared absolute clock axis collapses each session
+    # into a vertical line. Panels 1 and 2 use MINUTES FROM SESSION START instead, which is
+    # the only x that lets five different dates be overlaid.
     for i, (t, d, slot) in enumerate(events):
         g = f8[(f8.ticker == t) & (f8.event_date_canonical == d) & (f8.label == "ok")]
         if not len(g):
             continue
+        t0_ns = float(f8[(f8.ticker == t)
+                         & (f8.event_date_canonical == d)].t_ns.min())
+        x_rel = (g.t_ns.to_numpy() - t0_ns) / 6e10
         col = [C.ARM_A, C.ARM_B, C.SIDECAR, C.ROWCAP, "#8d7ee0", "#c0392b", "#16a085"][i]
-        fig.add_trace(go.Scattergl(x=ns_to_et(g.t_ns.to_numpy().astype(np.int64)),
-                                   y=g.n_peaks, mode="markers", name=ev_label(t, d),
+        fig.add_trace(go.Scattergl(x=x_rel, y=g.n_peaks, mode="markers",
+                                   name=ev_label(t, d),
                                    marker=dict(color=col, size=2.6, opacity=0.7),
                                    legendgroup=ev_label(t, d)), row=1, col=1)
-        fig.add_trace(go.Scattergl(x=ns_to_et(g.t_ns.to_numpy().astype(np.int64)),
-                                   y=g.n_troughs, mode="markers", name=ev_label(t, d),
+        fig.add_trace(go.Scattergl(x=x_rel, y=g.n_troughs, mode="markers",
+                                   name=ev_label(t, d),
                                    marker=dict(color=col, size=2.6, opacity=0.7),
                                    legendgroup=ev_label(t, d), showlegend=False),
                       row=2, col=1)
+    fig.update_xaxes(title_text="minutes from session start (04:00 ET)", row=1, col=1)
+    fig.update_xaxes(title_text="minutes from session start (04:00 ET)", row=2, col=1)
     fig.add_hline(y=2, line=dict(color=C.INK, width=1.4, dash="dash"), row=1, col=1)
     fig.add_annotation(text="2 peaks — the bimodal case the void parameter assumes",
-                       xref="x domain", yref="y", x=0.01, y=2, yshift=9, showarrow=False,
-                       xanchor="left", font=dict(size=10, color=C.INK), row=1, col=1)
+                       xref="x domain", yref="y", x=0.015, y=2, yshift=10, showarrow=False,
+                       xanchor="left", font=dict(size=10.5, color=C.INK), row=1, col=1)
     fig.update_yaxes(title_text="surviving peaks", row=1, col=1)
     fig.update_yaxes(title_text="candidate troughs", row=2, col=1)
 

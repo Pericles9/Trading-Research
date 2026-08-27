@@ -22,8 +22,8 @@ Four findings, in the order they answer the prompt's questions.
 **1. The distribution is not bimodal. It is richly multimodal.** At 8-minute frame
 resolution, **99.8% of frames carrying a boundary hold three or more surviving peaks**
 (median **8**, range 2–19). Only **4 of 2,308** frames are the two-peak case the void
-parameter's construction presumes. A frame therefore offers a median of **8 candidate
-troughs** and argmax picks one. *(Chart 03)*
+parameter's construction presumes. A frame therefore offers a median of **7 candidate
+troughs** (q25 5, q75 9, max 18) and argmax picks one. *(Chart 03)*
 
 **2. Candidate boundaries do reach tradeable timescales. The winners mostly do not.**
 Across all kernels, **26.5% of the 66,225 candidate troughs sit at ≥ 100 ms** and 9.9% at

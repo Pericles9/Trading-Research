@@ -7,100 +7,208 @@
   "status": "complete_pending_review",
   "changes_nothing": true,
   "_changes_nothing": "No boundary rule adopted, no parameter tuned, no cutoff applied, no decision appended, no sub-burst re-derived. docs/Universe-Decisions.md not touched.",
-  "escalation": { "criterion": null, "observed": null },
-
+  "escalation": {
+    "criterion": null,
+    "observed": null
+  },
   "gate": {
-    "row": "D1-R1", "name": "frame pipeline reproduces 10c's committed boundary",
-    "testable_cells": 16, "reproduced_exactly": 16, "pass": true,
+    "row": "D1-R1",
+    "name": "frame pipeline reproduces 10c's committed boundary",
+    "testable_cells": 16,
+    "reproduced_exactly": 16,
+    "pass": true,
     "method": "float equality, not a tolerance, at the full-window frame",
     "second_check": "on every one of the 9,605 frames carrying a boundary, the top of the enumerated ladder is asserted equal to 10c's own envelope_boundary() on the same input",
     "artifact": "results/phase_10d_diag1/artifacts/t1d_reconciliation.json"
   },
-
   "headline_metrics": [
-    { "name": "share_of_frames_with_3_or_more_surviving_peaks", "value": 0.9983,
-      "n": 2308, "kernel_min": 8.0, "median_peaks": 8, "peak_range": [2, 19],
+    {
+      "name": "share_of_frames_with_3_or_more_surviving_peaks",
+      "value": 0.9983,
+      "n": 2308,
+      "kernel_min": 8.0,
+      "median_peaks": 8,
+      "peak_range": [
+        2,
+        19
+      ],
       "n_exactly_two_peaks": 4,
-      "interpretation": "The void parameter grades a trough against two flanking peaks, a construction that presumes two modes. At frame resolution the distribution is richly multimodal, so a frame offers a median of 8 candidate troughs and argmax picks one.",
+      "interpretation": "The void parameter grades a trough against two flanking peaks, a construction that presumes two modes. At frame resolution the distribution is richly multimodal, so a frame offers a median of 7 candidate troughs (peaks median 8) and argmax picks one.",
       "source": "research/phase_10d_diag1/t4_tables.py::main",
-      "chart": "results/phase_10d_diag1/charts/03_mode_count.html" },
-
-    { "name": "share_of_candidates_at_or_above_100ms", "value": 0.2653, "n": 66225,
-      "winner_share_at_or_above_100ms": 0.0673, "winner_n": 9621,
-      "at_or_above_1s": { "any_candidate": 0.0990, "winner": 0.0503 },
+      "chart": "results/phase_10d_diag1/charts/03_mode_count.html",
+      "median_candidate_troughs": 7
+    },
+    {
+      "name": "share_of_candidates_at_or_above_100ms",
+      "value": 0.2653,
+      "n": 66225,
+      "winner_share_at_or_above_100ms": 0.0673,
+      "winner_n": 9621,
+      "at_or_above_1s": {
+        "any_candidate": 0.099,
+        "winner": 0.0503
+      },
       "interpretation": "Candidate boundaries DO reach tradeable timescales; the argmax winners mostly do not. Reference lines are read-off guides, never criteria.",
       "source": "research/phase_10d_diag1/t4_tables.py::main",
-      "chart": "results/phase_10d_diag1/charts/01_boundary_track_absolute.html" },
-
-    { "name": "median_absolute_boundary_by_ladder_rank_ms", "kernel_min": 8.0,
-      "value": { "rank0": 4.449, "rank1": 4.544, "rank2": 5.048, "rank3": 6.730,
-                 "rank4": 11.916, "rank5": 28.374, "rank6": 117.695, "rank7": 152.986,
-                 "rank8": 153.887 },
-      "median_void_by_rank": { "rank0": 0.893, "rank5": 0.555, "rank8": 0.488 },
-      "n_by_rank": { "rank0": 2308, "rank5": 1589, "rank8": 661 },
+      "chart": "results/phase_10d_diag1/charts/01_boundary_track_absolute.html"
+    },
+    {
+      "name": "median_absolute_boundary_by_ladder_rank_ms",
+      "kernel_min": 8.0,
+      "value": {
+        "rank0": 4.449,
+        "rank1": 4.544,
+        "rank2": 5.048,
+        "rank3": 6.73,
+        "rank4": 11.916,
+        "rank5": 28.374,
+        "rank6": 117.695,
+        "rank7": 152.986,
+        "rank8": 153.887
+      },
+      "median_void_by_rank": {
+        "rank0": 0.893,
+        "rank5": 0.555,
+        "rank8": 0.488
+      },
+      "n_by_rank": {
+        "rank0": 2308,
+        "rank5": 1589,
+        "rank8": 661
+      },
       "interpretation": "THE COARSE CANDIDATE IS NOT THE RUNNER-UP -- it is rank 5 and below. Median location rises monotonically with rank by a factor of 35 while void falls smoothly. The ladder is a gradient, not a two-horse race.",
       "source": "research/phase_10d_diag1/t4_tables.py::main",
-      "chart": "results/phase_10d_diag1/charts/04_winner_vs_runnerup.html" },
-
-    { "name": "winner_runnerup_relationship", "n_frames": 2304, "kernel_min": 8.0,
-      "median_void_gap": 0.0511, "share_gap_below_0p05": 0.4983,
-      "share_runnerup_coarser": 0.5620,
-      "median_winner_ms": 4.449, "median_runnerup_ms": 4.544,
+      "chart": "results/phase_10d_diag1/charts/04_winner_vs_runnerup.html"
+    },
+    {
+      "name": "winner_runnerup_relationship",
+      "n_frames": 2304,
+      "kernel_min": 8.0,
+      "median_void_gap": 0.0511,
+      "share_gap_below_0p05": 0.4983,
+      "share_runnerup_coarser": 0.562,
+      "median_winner_ms": 4.449,
+      "median_runnerup_ms": 4.544,
       "interpretation": "argmax often chooses between near-ties, but between near-ties AT THE SAME SCALE. The runner-up is coarser barely more often than a coin flip.",
       "source": "research/phase_10d_diag1/t4_tables.py::main",
-      "chart": "results/phase_10d_diag1/charts/04_winner_vs_runnerup.html" },
-
-    { "name": "T4c_stationary_or_shifting", "value": "shifting, and switching not drifting",
-      "n": 2308, "kernel_min": 8.0,
-      "sd_log10_absolute_dec": 1.2571, "sd_log10_local_median_dec": 0.7416,
+      "chart": "results/phase_10d_diag1/charts/04_winner_vs_runnerup.html"
+    },
+    {
+      "name": "T4c_stationary_or_shifting",
+      "value": "shifting, and switching not drifting",
+      "n": 2308,
+      "kernel_min": 8.0,
+      "sd_log10_absolute_dec": 1.2571,
+      "sd_log10_local_median_dec": 0.7416,
       "sd_normalized_dec": 1.4655,
-      "variance_share": { "local_median": 0.348, "normalized_position": 1.359,
-                          "cross_term": -0.707 },
-      "frame_to_frame": { "n_pairs": 2303, "window_overlap": 0.875,
-                          "share_move_over_0p5_dec": 0.2731,
-                          "share_move_over_1p0_dec": 0.1754 },
+      "variance_share": {
+        "local_median": 0.348,
+        "normalized_position": 1.359,
+        "cross_term": -0.707
+      },
+      "frame_to_frame": {
+        "n_pairs": 2303,
+        "window_overlap": 0.875,
+        "share_move_over_0p5_dec": 0.2731,
+        "share_move_over_1p0_dec": 0.1754
+      },
       "interpretation": "The position on the shape moves about twice as much as the normalization denominator, and the two partly cancel. Adjacent frames share 87.5% of their data yet the winner relocates by more than a decade between 17.5% of them -- that is switching between candidates, not tracking a moving shape.",
       "source": "research/phase_10d_diag1/t4_tables.py::main",
-      "chart": "results/phase_10d_diag1/charts/02_boundary_track_normalized.html" }
+      "chart": "results/phase_10d_diag1/charts/02_boundary_track_normalized.html"
+    }
   ],
-
   "supporting_metrics": {
-    "frames": { "total": 21877, "stepped": 21856, "full_window": 21,
-                "ok": 9605, "thin": 12249, "no_threshold": 2,
-                "insufficient_context": 5, "candidates": 66225,
-                "wall_clock_s": 13.1 },
-    "thin_share_by_kernel": { "2min": 0.5705, "8min": 0.5195, "32min": 0.5857 },
-    "ok_share_by_event_kernel8": { "SOS": 1.000, "ZENA": 0.720, "AMCX": 0.413,
-                                   "AEHL": 0.259, "USEG": 0.009 },
+    "frames": {
+      "total": 21877,
+      "stepped": 21856,
+      "full_window": 21,
+      "ok": 9605,
+      "thin": 12249,
+      "no_threshold": 2,
+      "insufficient_context": 5,
+      "candidates": 66225,
+      "wall_clock_s": 13.1
+    },
+    "thin_share_by_kernel": {
+      "2min": 0.5705,
+      "8min": 0.5195,
+      "32min": 0.5857
+    },
+    "ok_share_by_event_kernel8": {
+      "SOS": 1.0,
+      "ZENA": 0.72,
+      "AMCX": 0.413,
+      "AEHL": 0.259,
+      "USEG": 0.009
+    },
     "cross_kernel_partial_read": {
-      "winner_median_ms": { "2min": 1.420, "8min": 4.449, "32min": 5.356 },
-      "local_median_ms": { "2min": 73.845, "8min": 87.451, "32min": 70.319 },
-      "median_peaks": { "2min": 8, "8min": 8, "32min": 8 },
+      "winner_median_ms": {
+        "2min": 1.42,
+        "8min": 4.449,
+        "32min": 5.356
+      },
+      "local_median_ms": {
+        "2min": 73.845,
+        "8min": 87.451,
+        "32min": 70.319
+      },
+      "median_peaks": {
+        "2min": 8,
+        "8min": 8,
+        "32min": 8
+      },
       "loglog_slope_winner_on_kernel": 0.48,
       "interpretation": "3.8x rise across a 16x kernel range -- neither flat (structural) nor 1:1 with the window. The local median does NOT scale with the kernel, so the rise is not the denominator. THREE POINTS CANNOT SEPARATE THESE; labelled partial."
     },
     "T3d_layout": {
-      "layoutA_per_kernel": { "files": 3, "mb_AMCX": 1.90, "mb_ZENA": 2.12,
-                              "frames": "193 native per kernel", "sliders": 3 },
-      "layoutB_combined": { "files": 1, "mb_AMCX": 1.23, "mb_ZENA": 1.39,
-                            "frames": "121, index-resampled", "sliders": 1, "x_axes": 3 },
+      "layoutA_per_kernel": {
+        "files": 3,
+        "mb_AMCX": 1.9,
+        "mb_ZENA": 2.12,
+        "frames": "193 native per kernel",
+        "sliders": 3
+      },
+      "layoutB_combined": {
+        "files": 1,
+        "mb_AMCX": 1.23,
+        "mb_ZENA": 1.39,
+        "frames": "121, index-resampled",
+        "sliders": 1,
+        "x_axes": 3
+      },
       "decisive_fact": "The three kernels do not share a bin grid -- each cell's grid comes from its own full-session normalized range (AMCX 83/79/76 bins, ZENA 86/88/90, all over different ranges). Layout B therefore needs three x-axes and its panels cannot be compared bin-for-bin, which is the one thing a combined layout is for. It also resamples 193 native frames to 121.",
       "note": "Cooper already chose combined_comparative_3_panel at 10c T6c. Nothing is changed; this is recorded for whoever builds the next one."
     }
   },
-
   "decisions_recorded": [
-    { "decision": "frame window width", "options_considered": ["kernel width", "10c's animation width (session_span/n_frames*1.5)"],
+    {
+      "decision": "frame window width",
+      "options_considered": [
+        "kernel width",
+        "10c's animation width (session_span/n_frames*1.5)"
+      ],
       "chose": "kernel width, centered",
-      "why": "It is the window definition 10c's T1 uses for the local median and the one s1_t6_animation.py's docstring states. Cost is the 52-59% thin share, reported rather than engineered away." },
-    { "decision": "bin grid across frames", "options_considered": ["per-frame", "event full-session grid"],
+      "why": "It is the window definition 10c's T1 uses for the local median and the one s1_t6_animation.py's docstring states. Cost is the 52-59% thin share, reported rather than engineered away."
+    },
+    {
+      "decision": "bin grid across frames",
+      "options_considered": [
+        "per-frame",
+        "event full-session grid"
+      ],
       "chose": "event full-session grid, fixed",
-      "why": "It is 10c's own grid, so the full-window frame reproduces 10c exactly (the T1d gate); and a per-frame grid would make a stationary distribution appear to move, the defect T3b bans for the axis range." },
-    { "decision": "frame cap", "options_considered": [1500, 4000],
+      "why": "It is 10c's own grid, so the full-window frame reproduces 10c exactly (the T1d gate); and a per-frame grid would make a stationary distribution appear to move, the defect T3b bans for the axis range."
+    },
+    {
+      "decision": "frame cap",
+      "options_considered": [
+        1500,
+        4000
+      ],
       "chose": 4000,
-      "why": "A cost guard set deliberately above the binding point (3,841 natural frames at the 2-min kernel). A cap that coarsened the 2-min kernel would degrade exactly the kernel where the boundary moves fastest." }
+      "why": "A cost guard set deliberately above the binding point (3,841 natural frames at the 2-min kernel). A cap that coarsened the 2-min kernel would degrade exactly the kernel where the boundary moves fastest."
+    }
   ],
-
   "surprises": [
     "The distribution is not bimodal at frame resolution -- 99.8% of frames carrying a boundary hold 3+ surviving peaks, median 8. Only 4 of 2,308 frames are the two-peak case the void parameter's construction presumes.",
     "Coarse candidates exist in quantity (26.5% of all candidates >= 100 ms) but sit at ladder rank 5+, not at rank 1. The runner-up is coarser than the winner only 56.2% of the time and sits within 2% of it.",
@@ -109,16 +217,26 @@
     "research/phase_10c/s1_t6_animation.py's docstring says the frame window is [t-kernel/2, t+kernel/2] and that peaks are detected per frame. The code uses a ~60-minute window against an 8-minute kernel and detects no peaks per frame at all -- it draws density against a fixed global threshold line.",
     "Third hash-reproducibility defect in this lineage: config/phase_10d_diag1.json hashes differently under cp1252 (2e15b95e) than UTF-8 (0879d61c) because its _why strings are non-ASCII. config/phase_10d.json is pure ASCII and was unaffected. Config hashes here are reproducible only if BOTH encoding and line endings are pinned."
   ],
-
   "escalation_check": {
-    "D1_R1_reconciliation": { "observed": "16/16 exact", "fired": false },
-    "D1_R2_rule_adopted_or_tuned": { "observed": "none; reference lines enter no computation", "fired": false },
-    "D1_R3_frame_cap_binds": { "observed": 0.0, "threshold": 0.0, "fired": false },
-    "D1_R4_full_table_pass": { "observed": 0, "fired": false }
+    "D1_R1_reconciliation": {
+      "observed": "16/16 exact",
+      "fired": false
+    },
+    "D1_R2_rule_adopted_or_tuned": {
+      "observed": "none; reference lines enter no computation",
+      "fired": false
+    },
+    "D1_R3_frame_cap_binds": {
+      "observed": 0.0,
+      "threshold": 0.0,
+      "fired": false
+    },
+    "D1_R4_full_table_pass": {
+      "observed": 0,
+      "fired": false
+    }
   },
-
   "causal_status": "NON-CAUSAL throughout. Centered window; every frame reads forward by half a kernel. Nothing here is a detector, a signal or an operating point. 10c retired 0 of v4's 16 non-causal fields, 10d retired 0, this diagnostic retires 0. Debt parked for Phase 17.",
-
   "artifacts": [
     "results/phase_10d_diag1/artifacts/t1d_reconciliation.json",
     "results/phase_10d_diag1/artifacts/t1_waterfall.json",
@@ -138,7 +256,9 @@
     "results/phase_10d_diag1/charts/05_cross_kernel.html",
     "results/phase_10d_diag1/charts/06_animation/ (5 events + 8 layout files, 77 MB, untracked per 10c convention)"
   ],
-  "commits": ["404c51f"],
+  "commits": [
+    "404c51f"
+  ],
   "reproduce": ".venv/Scripts/python.exe research/phase_10d_diag1/t1_frames.py && .venv/Scripts/python.exe research/phase_10d_diag1/t2_charts.py && .venv/Scripts/python.exe research/phase_10d_diag1/t3_animation.py && .venv/Scripts/python.exe research/phase_10d_diag1/t4_tables.py",
   "report": "results/phase_10d_diag1/REPORT.md",
   "affects_10d": "Nothing. 10d-R0 remains open and unaffected."
