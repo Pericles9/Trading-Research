@@ -1,0 +1,20 @@
+{
+  "control": "C2",
+  "name": "monotonicity",
+  "hard_gate": true,
+  "required": "count non-increasing as K, d and min_prints rise; TOTAL and MAX duration non-decreasing as K and d rise",
+  "sequences": 200,
+  "monotone_checks": 2400,
+  "violations": {
+    "count_vs_K": 0,
+    "count_vs_d": 0,
+    "total_dur_vs_K": 0,
+    "total_dur_vs_d": 0,
+    "max_dur_vs_K": 0,
+    "max_dur_vs_d": 0,
+    "count_vs_min_prints": 0
+  },
+  "median_duration_non_monotone_cases": 0,
+  "median_note": "Reported, NOT gated. Median object duration is not a monotone function of the merge tolerance: [1s,1s,100s,100s] has median 50.5s and merging the two 100s yields [1s,1s,200s], median 1s. The spec's 'merged duration non-decreasing' is gated here on total and max, which are monotone by construction.",
+  "pass": true
+}

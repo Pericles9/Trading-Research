@@ -1,0 +1,12 @@
+{
+  "control": "C5",
+  "name": "floor no-op at min_prints=2",
+  "hard_gate": true,
+  "required": "min_prints = 2 deletes zero objects",
+  "objects_before_floor": 47454,
+  "deleted_at_min_prints_2": 0,
+  "deleted_at_min_prints_3": 5970,
+  "deleted_at_min_prints_5": 16101,
+  "note": "3 and 5 delete a non-zero count by construction -- that is the point of the axis. Only 2 is required to be inert.",
+  "pass": true
+}

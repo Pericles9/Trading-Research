@@ -1,0 +1,41 @@
+{
+  "control": "C3",
+  "name": "depth-tolerance direction",
+  "hard_gate": true,
+  "required": "raising d admits more separators, never fewer",
+  "separator_depths_above_threshold_decades": [
+    0.1,
+    0.3,
+    0.6,
+    0.9
+  ],
+  "rows": [
+    {
+      "d_decades": 0.0,
+      "separators_admitted": 0,
+      "expected_admitted": 0,
+      "n_objects": 5
+    },
+    {
+      "d_decades": 0.25,
+      "separators_admitted": 1,
+      "expected_admitted": 1,
+      "n_objects": 4
+    },
+    {
+      "d_decades": 0.5,
+      "separators_admitted": 2,
+      "expected_admitted": 2,
+      "n_objects": 3
+    },
+    {
+      "d_decades": 1.0,
+      "separators_admitted": 4,
+      "expected_admitted": 4,
+      "n_objects": 1
+    }
+  ],
+  "non_decreasing": true,
+  "matches_construction_exactly": true,
+  "pass": true
+}

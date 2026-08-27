@@ -1,0 +1,12 @@
+{
+  "task": "T2h",
+  "charts": [
+    {
+      "chart": "01_control_assembly.html",
+      "png": "01_control_assembly.png",
+      "kaleido_verified": true,
+      "html_bytes": 14148,
+      "png_bytes": 415252
+    }
+  ]
+}

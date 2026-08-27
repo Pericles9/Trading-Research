@@ -1,0 +1,16 @@
+{
+  "control": "C4",
+  "name": "separator equivalence",
+  "hard_gate": true,
+  "required": "identical output on input containing no ok=False intervals",
+  "sequences": 200,
+  "comparisons": 12000,
+  "differences": 0,
+  "converse_check_reported_not_gated": {
+    "construction": "4 runs of 3, separators at gaps 0 and 2 set ok=False",
+    "hard_break_n_objects": 3,
+    "bridgeable_n_objects": 1,
+    "rules_differ_when_ok_false_present": true
+  },
+  "pass": true
+}
