@@ -1,0 +1,94 @@
+{
+  "_file": "config/phase_10d_diag1.json",
+  "_phase": "10d-diag1",
+  "_type": "diagnostic",
+  "_date": "2026-08-27",
+  "_governing_documents": [
+    "prompts/phase_10d_diag1.md",
+    "prompts/phase_10d.md (r2) and prompts/phase_10d_spec.md (r2) — the baseline this diagnostic sits on",
+    "config/phase_10c.json — the method, reproduced exactly and never re-specified"
+  ],
+  "_note": "THIS DIAGNOSTIC CHANGES NOTHING. No threshold rule is adopted, no parameter tuned, no gate applied, no decision appended, no sub-burst re-derived. Committed BEFORE any frame is computed.",
+
+  "upstream": {
+    "phase_10d_config_hash": "c5dd2fdc",
+    "phase_10c_config_hash_lf": "17124203",
+    "phase_10c_config_hash_raw_crlf": "a0943e2a",
+    "_config_hash_why": "10c's committed config, asserted line-ending-insensitively. NOT 998c2461, which its Stage 1 digest records and which is stale by one commit — see results/phase_10d/REPORT.md section 2.7. Independently corroborated by results/phase_10c/artifacts/s1_t6d_manifest.json, which records a0943e2a.",
+    "cells_artifact": "results/phase_10c/artifacts/s1_t1_cells.parquet",
+    "cell_summary_10d": "results/phase_10d/artifacts/t4_cell_summary.parquet",
+    "variant_context_10d": "results/phase_10d/artifacts/t4_variant_context.parquet",
+    "kernels_min": [2.0, 8.0, 32.0],
+    "kernel_primary_min": 8.0,
+    "variants": [1.25, 1.30, 1.35],
+    "median_precision_factor_F": 1.5,
+    "cell_level_ok_minimum": 50,
+    "sweep_floor_us": 100
+  },
+
+  "event_subset": {
+    "_selection_rule": "PRE-REGISTERED and DETERMINISTIC — no seed, no sampling, no look at any frame. Applied to committed artifacts only (t4_cell_summary.parquet identity cell at kernel 8; segment labels from t4_variant_context.parquet, taken as the UNION across the three variants because segment membership is variant-dependent). Candidate pool: the 43 events holding an `ok` cell at kernel 8. Seven slots, each filled by an argmin/argmax with ticker-alphabetical tie-break: (1) lowest n_prints_session; (2) nearest to the median n_prints_session; (3) highest n_prints_session; (4) lowest identity-cell dur_median; (5) highest identity-cell dur_median; (6) most insufficient_context cells among events that still hold an ok cell somewhere; (7) an evening-labelled event, to complete segment coverage. Duplicates collapse.",
+    "_coverage_check": "premarket (SOS, ZENA), rth (USEG, AMCX, AEHL, ACET, OST), evening (OST at variant 1.35), unlabelled (AMCX, ACET at some variant). All four segments present, as the prompt requires.",
+    "events": [
+      { "ticker": "USEG", "event_date_canonical": "2020-05-15", "slot": "lowest activity",
+        "n_prints_session": 913, "segments_any_variant": ["rth"] },
+      { "ticker": "AMCX", "event_date_canonical": "2021-02-26", "slot": "median activity",
+        "n_prints_session": 25847, "segments_any_variant": ["rth", "unlabelled"] },
+      { "ticker": "SOS", "event_date_canonical": "2021-02-17", "slot": "highest activity",
+        "n_prints_session": 570573, "segments_any_variant": ["premarket"] },
+      { "ticker": "ZENA", "event_date_canonical": "2024-10-11", "slot": "shortest median sub-burst duration",
+        "n_prints_session": 175903, "segments_any_variant": ["premarket"] },
+      { "ticker": "AEHL", "event_date_canonical": "2021-02-19", "slot": "longest median sub-burst duration",
+        "n_prints_session": 13706, "segments_any_variant": ["rth"] },
+      { "ticker": "ACET", "event_date_canonical": "2020-09-18", "slot": "insufficient_context-heavy",
+        "n_prints_session": null, "segments_any_variant": ["rth", "unlabelled"] },
+      { "ticker": "OST", "event_date_canonical": "2024-06-13", "slot": "evening coverage, also insufficient_context-heavy",
+        "n_prints_session": null, "segments_any_variant": ["evening", "rth"] }
+    ],
+    "_why_seven": "Small enough that every event can be read individually, large enough to span the activity range (913 to 570,573 prints — nearly three orders of magnitude), both duration extremes (0.107 ms to 466 s at the identity cell), the insufficient_context population, and all four segments."
+  },
+
+  "frames": {
+    "window_definition": "centered, width = the kernel duration: intervals whose midpoint lies in [t - kernel/2, t + kernel/2]",
+    "_window_why": "This is the window definition 10c's T1 uses for the local median, and the one research/phase_10c/s1_t6_animation.py's docstring states. NOTE, recorded rather than left implicit: that script's CODE uses a different width — `win_ns = (session_span / n_frames) * 1.5`, roughly 60 min against an 8-min kernel — so 10c's committed animation is NOT at kernel resolution. This diagnostic uses the kernel width, per the stated definition, and reports the divergence.",
+    "step_rule": "kernel_duration / step_divisor",
+    "step_divisor": 8,
+    "_step_why": "Prompt T1a: frame step = kernel duration / 8, i.e. 1 min at the 8-min kernel. Eight frames per window means consecutive frames overlap by 7/8, so a moving feature is tracked rather than sampled.",
+    "max_frames_per_event_kernel": 4000,
+    "_max_frames_why": "A COST GUARD, deliberately set above the binding point, not a resolution choice. The extended session runs 04:00-20:00 = 960 min, so the natural frame count is 960/0.25 = 3,840 at the 2-min kernel, 960 at 8 min, 240 at 32 min. 4000 therefore never binds. A cap that silently coarsened the 2-min kernel would degrade exactly the kernel where the boundary moves fastest, which is the opposite of what this diagnostic is for. If it ever binds, the actual step and frame count are recorded per event and the share reported (D1-R3).",
+    "cap_bind_share_report_threshold": 0.0,
+    "_cap_bind_why": "Any binding at all is reported, since by construction the cap should never bind.",
+    "min_intervals_per_frame": 30,
+    "_min_intervals_why": "Below this a 0.1-decade histogram cannot support the Poisson-floor peak rule in any meaningful way — the counting noise sqrt(k) exceeds any prominence. Such frames are labelled `thin`, carried, and given NO candidate ladder and NO fallback boundary, following the programme's decline-rather-than-invent convention. The share of thin frames is a reported number, not a nuisance.",
+    "bin_grid": "the event's FULL-SESSION grid, fixed across every frame of that event",
+    "_bin_grid_why": "Two reasons, both load-bearing. (1) It is 10c's own grid — floor/ceil of the full-session normalized min/max to 0.1, step 0.1 — so the full-window frame reproduces 10c's per-cell computation exactly, which is what the T1d reconciliation gate tests. (2) A grid recomputed per frame would make a stationary distribution appear to move, which is the same defect prompt T3b bans for the axis range.",
+    "include_full_window_frame": true,
+    "_full_window_frame_why": "frame_index -1, window = the whole session. This IS 10c's per-cell computation and is the T1d reconciliation gate."
+  },
+
+  "reference_lines_s": [0.001, 0.01, 0.1, 1.0, 10.0],
+  "_reference_lines_why": "1 ms, 10 ms, 100 ms, 1 s, 10 s on the absolute-units track. Chosen to span from the resolution floor to a plainly tradeable timescale. They are READ-OFF GUIDES ONLY — no threshold, no gate, nothing is compared against them for pass/fail. D13 records that no burst timescale is established at usable precision, so none of these is a criterion.",
+
+  "charts": {
+    "width": 1340,
+    "height_static": 900,
+    "height_animation": 1180,
+    "animation_layout_readings": ["per_kernel_separate", "combined_three_kernel"],
+    "animation_layout_events": [
+      { "ticker": "ZENA", "event_date_canonical": "2024-10-11" },
+      { "ticker": "AMCX", "event_date_canonical": "2021-02-26" }
+    ],
+    "_animation_layout_why": "Prompt T3d asks for both readings on two subset events. The two are pre-registered here: ZENA (highest-density premarket, shortest sub-bursts) and AMCX (median activity, rth). NOTE: results/phase_10c/artifacts/s1_t6d_manifest.json records `layout: combined_comparative_3_panel`, `layout_chosen_by: Cooper (T6c)` — the layout question the prompt describes as deferred was in fact already decided in 10c. This diagnostic reports legibility WITH the new candidate-ladder panel added, which is the part Cooper has not seen.",
+    "animation_max_frames": 240,
+    "_animation_max_frames_why": "The scrubbable HTML embeds one histogram per frame; 240 keeps a file openable in a browser. The ANALYSIS in T1/T2 runs at full frame resolution — this cap applies only to the animation's own frame set, by even decimation of the computed frames, and the decimation factor is stated on every animation."
+  },
+
+  "seeds": {
+    "_none_required": "The event subset is deterministic (argmin/argmax with alphabetical tie-break) and every frame is a full recomputation. Nothing in this diagnostic samples, so no seed exists to pin."
+  },
+
+  "outputs": {
+    "artifacts_dir": "results/phase_10d_diag1/artifacts",
+    "charts_dir": "results/phase_10d_diag1/charts"
+  }
+}
