@@ -86,11 +86,18 @@ citable and none depends on threshold-from-trough being correct.
 operational instruction is what dies. D21 says this in its own text; it is repeated here
 because the distinction determines what a successor phase may reuse.
 
-**No downstream phase is newly blocked.** D13 had already re-anchored Phases 13, 14, 16 and 17
-to detection time, clock time, or price-path events, and that re-anchoring stands. The one
-consequence recorded in the phase map is **row 15 (Burst hazard function)**, whose input was
-burst duration distributions: it is now blocked on a successor object definition rather than
-merely unstarted.
+**D21 blocks nothing.** It closes one method — deriving a boundary by selecting a trough from
+the locally-normalized log-interval histogram — and that is the entire extent of it. No phase,
+no row of the phase map, and no downstream work is blocked by this decision. D13 had already
+re-anchored Phases 13, 14, 16 and 17 to detection time, clock time, or price-path events, and
+that re-anchoring stands.
+
+**Correction, 2026-08-27, same day.** An earlier version of this file and of the phase-map insert
+said row 15 (*Burst hazard function*) was "blocked on a successor object definition" because its
+input was burst duration distributions. **That over-read the decision and is withdrawn.** Row 15 is
+open and unstarted, as it was before D21. The only thing D21 says about it is that this particular
+boundary-detection method is not available for defining its input; any other route to a burst
+object, or a reformulation not needing one, is untouched.
 
 ---
 
@@ -120,7 +127,7 @@ Cooper's stated read is **(b)**, offered in his document as a view rather than a
 | Append **D21** to `docs/Universe-Decisions.md`, append-only | ✅ 57 insertions, **0 deletions** |
 | Digest for the tape review — 10d-R0's firing recorded as the gate | ✅ `results/phase_10d/digest.json`, `status: closed_gate_fired`, `gate_outcome.fired: true` |
 | Digest for the diagnostic | ✅ `results/phase_10d_diag1/digest.json`, `status: complete_reviewed` |
-| `docs/Claude-Code-Operating-Plan.md` §6 — mark the sub-burst line closed, insert only, renumber nothing | ✅ row 10 gate cell extended with a CLOSED annotation mirroring row 10b's existing pattern; one inserted note on row 15. **No row removed, none renumbered** |
+| `docs/Claude-Code-Operating-Plan.md` §6 — mark the sub-burst line closed, insert only, renumber nothing | ✅ row 10 gate cell extended with a CLOSED annotation mirroring row 10b's existing pattern, plus an inserted note stating that **D21 blocks nothing**. **No row removed, none renumbered** |
 | Fix `CLAUDE.md`'s decision pointer list | ✅ see §6.1 |
 | Carry every §4 item forward | ✅ §3 above |
 

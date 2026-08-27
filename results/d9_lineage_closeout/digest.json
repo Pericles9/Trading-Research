@@ -68,7 +68,8 @@
       "file": "docs/Claude-Code-Operating-Plan.md",
       "section": "6 Phase Map",
       "row_10_marked_closed": true,
-      "row_15_note_inserted": true,
+      "scope_note_inserted": true,
+      "_scope_note": "states that D21 blocks nothing; supersedes the withdrawn row-15 blocking claim",
       "rows_removed": 0,
       "rows_renumbered": 0,
       "pattern": "mirrors the CLOSED annotation row 10b already carried"
@@ -85,10 +86,12 @@
     "carry_forward": "8 items, results/d9_lineage_closeout/REPORT.md section 3"
   },
   "downstream": {
+    "blocks_anything": false,
+    "_scope": "D21 closes ONE thing: deriving a boundary by selecting a trough from the locally-normalized log-interval histogram. It blocks no phase, no row of the phase map, and no downstream work.",
     "newly_blocked": [],
     "_why_none": "D13 already re-anchored Phases 13, 14, 16 and 17 to detection time, clock time or price-path events, and that re-anchoring stands.",
-    "consequence_recorded": "Operating Plan row 15 (Burst hazard function) took burst duration distributions as its input and is now blocked on a successor object definition rather than merely unstarted.",
-    "unblocked_and_executable_now": "Phase 11 -- spread and impact by participation"
+    "correction_same_day": "An earlier version of this digest, of results/d9_lineage_closeout/REPORT.md and of the phase-map insert recorded Operating Plan row 15 (Burst hazard function) as 'blocked on a successor object definition'. That over-read the decision and is WITHDRAWN. Row 15 is open and unstarted, as before D21. The only thing D21 says about it is that this particular boundary-detection method is not available for defining its input; any other route to a burst object, or a reformulation not needing one, is untouched.",
+    "executable_now": "Phase 11 -- spread and impact by participation"
   },
   "options_recorded_not_chosen": {
     "a": "latent-state model (hidden semi-Markov point process, Tokdar et al. 2010)",

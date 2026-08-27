@@ -246,12 +246,18 @@ Mapped to §9 of the research program. Each row is one prompt, one session, one 
 | **Opt-A** | T+1 markout grid (optional, long-only) | The single day-2 edge-existence pass retained under D5 | Markout heatmaps | Runs when Cooper calls for it; gates nothing |
 | **Parallel** | Unconditional universe scan | Scope + feasibility; live-screen population vs. archive population | Population comparison | **Gates capital.** Cannot start last |
 
-**Insert, 2026-08-27 — what D21 does to row 15.** Row 10 is closed (see its cell). Row 15,
-*Burst hazard function*, takes burst duration distributions as its input and no such object now
-exists: D21 closes the method that produced it and does not replace it. Row 15 is therefore
-**blocked on a successor object definition**, not merely unstarted. Nothing is renumbered and no row
-is removed. Rows 13, 14, 16 and 17 are unaffected — D13 re-anchored them to detection time, clock
-time or price-path events, and that re-anchoring stands.
+**Insert, 2026-08-27 — the scope of D21, stated so it is not over-read.** Row 10 is closed (see
+its cell). **D21 closes one thing: deriving a boundary by selecting a trough from the
+locally-normalized log-interval histogram. It blocks nothing.** No row in this map is blocked by
+it, row 15 included.
+
+*Corrected 2026-08-27, same day:* an earlier version of this insert said row 15 (*Burst hazard
+function*) was "blocked on a successor object definition". **That was wrong and is withdrawn.**
+Row 15 is open and unstarted, exactly as it was before D21. All D21 says about it is that the
+histogram boundary-detection method is not available as a way to define its input; any other route
+to a burst object, or any reformulation that does not need one, is untouched. Rows 13, 14, 16 and 17
+are likewise unaffected — D13 re-anchored them to detection time, clock time or price-path events,
+and that re-anchoring stands. Nothing is renumbered and no row is removed.
 
 **Numbering, from 2026-08-03 onward.** Rows 8 and up are prompt filenames — row *n* is `prompts/phase_{n}.md`. Rows 0–7 are the original plan slots and are left untouched; they never tracked filenames, because the executed program inserted 0a/0b/0c/1b/1c/2b/5a and re-scoped several phases along the way. The crosswalk for the two plan rows that did get executed under different numbers: the old row 8 (*Measurement 1 — concentration*) ran as **Phase 6**, and the old row 12 (*Event-study grid — T+1*) ran as **Phase 8** in the re-scoped, tradeable-anchor form recorded above.
 

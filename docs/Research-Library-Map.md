@@ -1208,6 +1208,8 @@ with the next free number stated, the register named as the authority, and a sta
 phase appending a decision updates the list in the same commit. And `CLAUDE.md`'s claim that
 `docs/Claude-Code-Operating-Plan.md` has never existed — it exists, added 2026-08-13 at `edfb1ea`.
 
-**No downstream phase is newly blocked**; D13's re-anchoring stands. Operating Plan §6 row 10 is
-marked closed and row 15 (*Burst hazard function*) is recorded as blocked on a successor object
-definition, insert-only, nothing renumbered.
+**D21 blocks nothing** — it closes one method and no more; D13's re-anchoring stands. Operating
+Plan §6 row 10 is marked closed, insert-only, nothing renumbered. *(Corrected 2026-08-27, same day:
+the first version of this entry also recorded row 15 as "blocked on a successor object definition".
+That over-read the decision and is withdrawn in this file and in the phase map. Row 15 is open and
+unstarted, as before.)*
