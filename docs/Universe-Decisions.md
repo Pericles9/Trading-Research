@@ -709,3 +709,50 @@ mechanically compressed relative to the baseline session; and a cost estimate bu
 baseline-session spread therefore overstates detection-time cost in bp.
 
 Guarded by Phase 11 escalation row 27.
+
+## D20 — Sub-bursts are assembled under a merge tolerance and a run-length floor
+
+**Date:** 2026-08-26 · **Gate:** Cooper decision at the Phase 10c close-out
+
+**Numbering note, recorded rather than silently corrected.** `prompts/phase_10d_spec.md` §7 drafts
+this decision as **D15**, on the stated belief that "D1–D14 are taken". They are not: **D15–D19 were
+appended by Phase 11** (D15 coverage-column source, D16 instrument reference convention, D17
+quote-state exclusion, D18 Stage B population, D19 spread/cost units). `CLAUDE.md`'s pointer list
+also stops at D14 and is stale in the same way. Appending a second D15 would collide with a
+committed decision and corrupt the register, and the append-only rule leaves no clean way to
+renumber afterwards. **The number is therefore D20; every other word below is the spec's §7 text
+verbatim.** Confirm or override the renumber.
+
+**Amends:** D9's assembly rule only. D9's operating variable, its normalization and its
+decline-rather-than-invent convention stand, as does 10c's argmax-void threshold selection.
+
+**Decision.** A sub-burst is a maximal run of sub-threshold intervals **under a pre-registered merge
+tolerance and a pre-registered minimum run length**, both reported as grids whose reference cell
+reproduces the prior rule exactly. Whether a merge may bridge an interval excluded by the data floor
+is governed by a pre-registered **separator rule**, reference `hard_break`, with the alternative
+reading reported alongside.
+
+**Why.** Two independent mechanisms fragment the object population, and neither depends on the
+threshold being wrong. Strict consecutiveness splits one sustained burst whenever a single interval
+crosses back over the threshold — or whenever the local window was too thin to normalize against,
+which is a data-quality artifact and not market behaviour. And with no run-length floor, every
+single-interval run is emitted as a sub-burst; a single-interval object is one gap with no internal
+structure and cannot be a burst under any reading. Both deflate duration **by construction**,
+independently of threshold location.
+
+**What does not change.** The operating variable. The centered clock-time window at 10c's
+specification, `trailing` and `anchored_to_detection` still forbidden. The three kernels.
+**argmax-void selection with no cutoff** — `threshold: null` remains deliberate and permanent.
+Histogram, bin grid, peak-survival rule. D4. Segment stratification across all four segments.
+`insufficient_context` carried, labelled, never given a fallback.
+
+**Recorded alongside.** Every grid is reported in full and never selected after seeing results. **The
+phase's deliverable is the attribution** — how much of any duration shift is floor-driven and how
+much merge-driven — not a single improved number. **And separately:** 10c cannot decline on void
+magnitude, so it produces no bimodality-failure share; D9 holds that share to be a headline result.
+10d reports the void distribution and the counterfactual declined share at candidate cutoffs **as
+description, applying none.** Whether an applicability gate should exist is left open.
+
+**How to apply:** cite D20 alongside D9 for any sub-burst assembled after 2026-08-26. **A sub-burst
+figure quoted without its merge tolerance, its run-length floor and its separator rule is
+incomplete**, as a detection-anchored figure quoted without its poll interval is incomplete under D7.

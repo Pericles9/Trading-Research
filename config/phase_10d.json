@@ -1,0 +1,142 @@
+{
+  "_file": "config/phase_10d.json",
+  "_phase": "10d",
+  "_date": "2026-08-26",
+  "_governing_documents": [
+    "prompts/phase_10d.md",
+    "prompts/phase_10d_spec.md",
+    "prompts/phase_10c_closing_note_erratum.md",
+    "docs/Universe-Decisions.md D20 (drafted as D15 in spec 7; renumbered, see D20's numbering note)"
+  ],
+  "_note": "Every grid below is PRE-REGISTERED by the commit that adds this file. Narrowing any of them after seeing results voids the phase (prompt T1d). Nothing here is selected later.",
+
+  "upstream_10c": {
+    "_why": "Read, never re-derived. 10d changes assembly only; every field here is asserted against config/phase_10c.json and the Stage 1 artifacts at run time, and a mismatch is a hard stop.",
+    "config_path": "config/phase_10c.json",
+    "config_hash_expected": "998c2461",
+    "_config_hash_why": "Stage 1's own recorded hash (results/phase_10c/digests/stage1_digest.json). Asserted at T4a.",
+    "cells_artifact": "results/phase_10c/artifacts/s1_t1_cells.parquet",
+    "subbursts_artifact": "results/phase_10c/artifacts/s1_t1_subbursts.parquet",
+    "window_basis": "clock_time",
+    "window_centering": "centered",
+    "window_session_boundary": "clip_at_rth_open_and_close",
+    "_window_why": "config/phase_10c.json /settled/D3_window. 'trailing' and 'anchored_to_detection' are forbidden variants; resolved CENTERED 2026-08-24 on the A2.5 density-inversion reasoning. Not reopened here.",
+    "kernels_min": [2.0, 8.0, 32.0],
+    "kernel_primary_min": 8.0,
+    "_kernels_why": "D6_stage2_kernels_min, with D5_first_kernel_min = 8 primary. Derived per A2.8, not chosen.",
+    "variants": [1.25, 1.30, 1.35],
+    "_variants_why": "Amendment 3 A. All three carried, NONE selected. 10c escalation row 3 makes dropping, promoting or selecting a variant on how its results look a hard stop.",
+    "segments": ["premarket", "rth", "evening", "unlabelled"],
+    "_segments_why": "Four, never collapsed to two. 'unlabelled' is the NULL segment - no anchor exists at that variant. Amendment 4 A2 retired 'post' and 'outside_redefined_day'.",
+    "threshold_rule": "A2.7.D17_burst_envelope_boundary",
+    "_threshold_rule_why": "argmax void across ALL troughs, no cutoff. D13_void_parameter.threshold is null, marked deliberate and permanent. Void ranks, never gates.",
+    "median_precision_factor_F": 1.5,
+    "_F_why": "D4_median_precision_factor. Per-interval data floor is n >= (sqrt(pi/2)*sigma_log10/log10(F))^2 intervals in the window.",
+    "cell_level_ok_minimum": 50,
+    "_cell_level_ok_minimum_why": "The second floor condition, hardcoded at research/phase_10c/s1_t1_subbursts.py:210 as `if ok.sum() < 50`. Carried verbatim as an upstream constant; 10d does not vary it and does not treat it as a 10d tunable.",
+    "sweep_floor_us": 100,
+    "_sweep_floor_why": "D1_sweep_floor_us. Also the timestamp resolution floor used by 10d-R5."
+  },
+
+  "merge_grid": {
+    "K": [0, 1, 2, 3, 5],
+    "_K_why": "Count tolerance - the separating run may contain at most K intervals. 0 is the identity (admits no separator). 1,2,3 cover the single- and few-interval interruptions the strict rule splits on. 5 is the upper bracket: beyond it a 'separator' is a comparable fraction of a short burst and the object stops being one burst under any reading. Spec 3.1.",
+    "d": [0.0, 0.25, 0.5, 1.0],
+    "_d_why": "Depth tolerance in DECADES of normalized log interval, ADDED to the threshold. 0 is the identity (admits no separator, since a separator is at or above threshold by definition). 0.25/0.5/1.0 decades = 1.78x/3.16x/10x the threshold interval in linear terms. Additive, never multiplicative: the threshold is a position on a normalized log axis and is negative, so multiplying tightens the tolerance as the factor grows - the exact inversion of intent. Spec 3.1.",
+    "_units": "decades of normalized log10 interval",
+    "degenerate_cells": [
+      [0, 0.0], [0, 0.25], [0, 0.5], [0, 1.0],
+      [1, 0.0], [2, 0.0], [3, 0.0], [5, 0.0]
+    ],
+    "_degenerate_why": "8 of the 20 (K,d) combinations are bit-identical to the identity: d=0 admits no separator regardless of K, and K=0 admits none regardless of d. Only 12 are distinct. Labelled degenerate in every artifact; the resulting plateau on the merge surface is a parameterization artifact and is captioned as one. Parameter dominance (10d-R3) is computed over the 12 non-degenerate cells ONLY - including 8 identical copies of the reference dilutes any real gradient by construction.",
+    "n_distinct_Kd_cells": 12,
+    "n_degenerate_Kd_cells": 8
+  },
+
+  "min_prints_grid": {
+    "values": [2, 3, 5],
+    "reference": 2,
+    "_why": "2 is the TRUE no-op and therefore the only valid reference. n_prints = n_intervals + 1 and n_intervals >= 1, so 2 is the minimum the data structure can emit and filters nothing. 10c applies NO run-length floor at any point - there is no min_prints variable in research/phase_10c/s1_t1_subbursts.py - so a reference of 3 would delete a majority of the object population inside the baseline (T0b measured 52.3%, 89343/170722) and every before/after comparison would be measuring the floor while appearing to measure the merge. The r1 draft's reference of 3 was wrong on this and was corrected at T0b. 3 and 5 are carried as the grid: 3 is v4's value, 5 brackets it.",
+    "_applies_to": "MERGED objects, after the (K,d,sep) merge, never to raw runs."
+  },
+
+  "separator_grid": {
+    "values": ["hard_break", "bridgeable_count_only"],
+    "reference": "hard_break",
+    "_why": "10c breaks a run on two different conditions and the merge rule must distinguish them: an interval at or above threshold (a real gap, with a valid depth the d test can evaluate), and an interval failing the ok mask (the local window was too thin to normalize against, so there is no trustworthy normalized value at all). hard_break is the conservative reference - an ok=False interval always ends a run and can never be bridged; it preserves insufficient_context semantics, uses no value the floor rejected, and can only make bursts shorter, so a duration increase measured under it is robust. bridgeable_count_only counts an ok=False separator against K and exempts it from the d test. Both are computed because the DIFFERENCE between them is the first measurement in the programme of how much burst fragmentation is a data-quality artifact rather than market behaviour.",
+    "_forbidden": "Testing an ok=False interval's raw norm value against threshold + d. It uses a number the data floor declared untrustworthy. No grid position is offered for it and doing so is escalation row 10d-R8."
+  },
+
+  "cost_allocation": {
+    "mode": "full_cross_all_kernels_all_variants",
+    "_why": "Spec 3.3 drafts a reduced allocation - full cross at D5=8min on '10c's reference variant', reduced sets elsewhere - to avoid 'roughly nine times the surface'. TWO corrections, both pre-registered here rather than discovered at run time. (1) 10c has NO reference variant: Amendment 3 A carries all three and selects none, and 10c escalation row 3 makes selecting one a hard stop. Designating one here would be that act. (2) The 9x cost does not exist. 10c's own design note (research/phase_10c/s1_t1_subbursts.py, DESIGN NOTE) records that sub-burst extraction is a function of (event, kernel) ONLY - the variant determines segment/anchor labelling and nothing in the assembly math. So the variant axis is a cross-join, not a recomputation, and the true cost is 3x (kernels), not 9x. The full cross is therefore run at all three kernels and cross-joined onto all three variants' segment labelling, exactly as 10c does. This WIDENS the drafted allocation and narrows nothing.",
+    "kernels": [2.0, 8.0, 32.0],
+    "variants": "cross-join, all three, no recomputation",
+    "configurations_per_event_kernel": 78,
+    "_configurations_arithmetic": "13 distinct (K,d) cells (12 non-degenerate + 1 identity) x 3 min_prints x 2 sep = 78. Across 56 events x 3 kernels = 13104 assembly calls. Assembly operates on RUNS, not intervals (170722 runs total across 168 event-kernel pairs, median 56 per cell), so the cost is ~1.3e7 run-operations - negligible. The expensive step is the single labelling pass 10d must run anyway."
+  },
+
+  "counterfactual_cutoffs": {
+    "values": [0.50, 0.60, 0.70, 0.80, 0.90],
+    "_why": "Spec 4 / 8.3. A small pre-registered set spanning the observed void range (10c k=8 ok cells: min 0.296, q25 0.674, median 0.893, max 1.0), with 0.70 included because it is v4's retired value and makes the comparison legible. REPORTED ONLY. None is applied to anything. No cutoff enters the computation path at T4 or anywhere downstream - doing so is escalation row 10d-R7.",
+    "applied": false
+  },
+
+  "seeds": {
+    "control_synthetic": 20260826,
+    "_control_synthetic_why": "Single pinned seed for every synthetic control sequence at T2 (C2, C3, C4, C5). Fixed at drafting, never varied to make a control pass.",
+    "tape_review_sample": 20260826,
+    "_tape_review_sample_why": "Chart 05 event selection - drawn to span the activity range and all four segments, pinned so the sample is reproducible."
+  },
+
+  "controls": {
+    "c1_replay_source": "results/phase_10c/artifacts/s1_t1_subbursts.parquet",
+    "_c1_replay_why": "C1's replay reconstructs the labelled index structure from a committed 10c cell's emitted runs and round-trips it through assemble.py. Assembly is a pure function of the label array, so this is a complete validation of the identity claim - and it reads a COMMITTED ARTIFACT, not a real event, so it sits legitimately behind the T2 barrier. Separator counts between runs are not recoverable from the artifact and are reconstructed as exactly one; that is sufficient for the identity cell, where separator width is irrelevant by construction, and C2/C3 exercise separator width on synthetic sequences with known structure.",
+    "c1_replay_n_cells": 8,
+    "_c1_replay_n_cells_why": "Eight committed (event, kernel) cells spanning the run-count range, so the identity claim is not validated on one convenient cell.",
+    "synthetic_n_sequences": 200,
+    "_synthetic_n_sequences_why": "Enough that a monotonicity or direction violation cannot hide in a small draw; cheap at this size."
+  },
+
+  "escalation": {
+    "_note": "10d-R0, R1, R2, R7, R8 and R9 carry no numeric threshold - they are review, reconstruction, control-gate and code-review rows. The rows below are the ones the prompt marks 'Config; propose and justify'.",
+
+    "R3_merge_tolerance_dominance": {
+      "statistic": "abs Spearman rho between (K,d) tolerance rank and per-event median sub-burst duration, over the 12 non-degenerate cells at min_prints=2, sep=hard_break, kernel=8",
+      "compared_against": "max abs Spearman rho between per-event median sub-burst duration and each event characteristic in event_characteristics below, at the identity cell",
+      "fires_if": "tolerance rho > max event-characteristic rho",
+      "event_characteristics": ["n_intervals", "t0_print_count", "session_duration_s", "threshold_norm", "sigma_log10"],
+      "_why": "The row asks whether the answer tracks the parameter more strongly than it tracks the event. That is a comparison, not an absolute level, so no arbitrary constant is needed and none is invented. Tolerance rank is ordered by (K, d) lexicographically within the non-degenerate set - both components loosen in the same direction, so a single rank is well defined."
+    },
+
+    "R4_attribution_not_separable": {
+      "statistic": "abs difference between the floor-only and merge-only shifts in log10 median duration from the identity cell, at kernel=8, sep=hard_break",
+      "floor_only_cell": "K=0, d=0, min_prints in {2,3,5}",
+      "merge_only_cells": "min_prints=2, the 12 non-degenerate (K,d) cells",
+      "separability_min_decades": 0.05,
+      "negligible_max_decades": 0.05,
+      "fires_if": "BOTH shifts exceed negligible_max_decades in magnitude AND their absolute difference is below separability_min_decades",
+      "_why": "0.05 decades is ~12% in linear duration - below that the two mechanisms are not distinguishable at the precision anything downstream reports. The row must NOT fire when neither mechanism moves duration: that is an informative null (the scale is coming from where argmax-void puts the threshold) and the prompt names it as a real answer, so the condition requires both shifts to be non-negligible before it can fire."
+    },
+
+    "R5_degenerate_decomposition": {
+      "session_spanning_share_max": 0.20,
+      "_session_spanning_why": "Fires if more than 20% of events collapse to a single sub-burst covering the whole analysable span - at that share the decomposition is not decomposing. 20% is a fifth of the cohort; below it the outcome is a per-event finding, above it a method outcome.",
+      "resolution_floor_share_max": 0.50,
+      "resolution_floor_s": 0.0001,
+      "_resolution_floor_why": "0.0001 s = D1_sweep_floor_us = 100us, the collection floor and the minimum observed 10c duration. Fires if more than half the emitted objects sit at it - i.e. the objects are the timestamp grid rather than market structure. 10c's observed share at that floor is 0.0%, so the row starts far from firing and a move to it would be a real change."
+    },
+
+    "R6_kernel_or_variant_specific": {
+      "statistic": "sign of the merge-only and floor-only duration shifts at each of the three kernels",
+      "fires_if": "neither the merge-only shift NOR the floor-only shift carries the same sign at 2 or more of the 3 kernels, AND no kernel shows a shift of magnitude >= 0.05 decades",
+      "_why": "The prompt states inconsistency is a finding first, so this row is deliberately strict: it fires only when there is no coherent effect anywhere, not when kernels disagree in magnitude. A shift present at one kernel and absent at another is reported at T5g as a result, not escalated."
+    }
+  },
+
+  "outputs": {
+    "controls_dir": "results/phase_10d/controls",
+    "artifacts_dir": "results/phase_10d/artifacts",
+    "charts_dir": "results/phase_10d/charts"
+  }
+}
