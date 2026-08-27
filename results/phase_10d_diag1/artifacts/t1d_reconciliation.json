@@ -1,0 +1,188 @@
+{
+  "diagnostic": "10d-diag1",
+  "task": "T1d",
+  "config_hash": "0879d61c",
+  "cells_with_a_committed_threshold": 16,
+  "cells_reproduced_exactly": 16,
+  "cells_declined_by_10c_and_by_the_frame_pipeline": 0,
+  "rows": [
+    {
+      "ticker": "OST",
+      "event_date_canonical": "2024-06-13",
+      "kernel_min": 32.0,
+      "committed_threshold_norm": 0.35000000000000187,
+      "committed_void": 1.0,
+      "frame_full_window_norm": 0.35000000000000187,
+      "frame_full_window_void": 1.0,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "AMCX",
+      "event_date_canonical": "2021-02-26",
+      "kernel_min": 2.0,
+      "committed_threshold_norm": 2.6500000000000057,
+      "committed_void": 0.5702636077382195,
+      "frame_full_window_norm": 2.6500000000000057,
+      "frame_full_window_void": 0.5702636077382195,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "AMCX",
+      "event_date_canonical": "2021-02-26",
+      "kernel_min": 8.0,
+      "committed_threshold_norm": -0.7499999999999971,
+      "committed_void": 0.35486046696200646,
+      "frame_full_window_norm": -0.7499999999999971,
+      "frame_full_window_void": 0.35486046696200646,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "AMCX",
+      "event_date_canonical": "2021-02-26",
+      "kernel_min": 32.0,
+      "committed_threshold_norm": -0.5499999999999974,
+      "committed_void": 0.4389355027607381,
+      "frame_full_window_norm": -0.5499999999999974,
+      "frame_full_window_void": 0.4389355027607381,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "SOS",
+      "event_date_canonical": "2021-02-17",
+      "kernel_min": 2.0,
+      "committed_threshold_norm": 2.5500000000000065,
+      "committed_void": 0.9857293691337473,
+      "frame_full_window_norm": 2.5500000000000065,
+      "frame_full_window_void": 0.9857293691337473,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "SOS",
+      "event_date_canonical": "2021-02-17",
+      "kernel_min": 8.0,
+      "committed_threshold_norm": 2.0499999999999776,
+      "committed_void": 0.9620390456164566,
+      "frame_full_window_norm": 2.0499999999999776,
+      "frame_full_window_void": 0.9620390456164566,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "SOS",
+      "event_date_canonical": "2021-02-17",
+      "kernel_min": 32.0,
+      "committed_threshold_norm": 3.2499999999999734,
+      "committed_void": 1.0,
+      "frame_full_window_norm": 3.2499999999999734,
+      "frame_full_window_void": 1.0,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "AEHL",
+      "event_date_canonical": "2021-02-19",
+      "kernel_min": 2.0,
+      "committed_threshold_norm": 3.650000000000006,
+      "committed_void": 1.0,
+      "frame_full_window_norm": 3.650000000000006,
+      "frame_full_window_void": 1.0,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "AEHL",
+      "event_date_canonical": "2021-02-19",
+      "kernel_min": 8.0,
+      "committed_threshold_norm": 4.350000000000008,
+      "committed_void": 1.0,
+      "frame_full_window_norm": 4.350000000000008,
+      "frame_full_window_void": 1.0,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "AEHL",
+      "event_date_canonical": "2021-02-19",
+      "kernel_min": 32.0,
+      "committed_threshold_norm": 1.8500000000000054,
+      "committed_void": 0.5334543279275751,
+      "frame_full_window_norm": 1.8500000000000054,
+      "frame_full_window_void": 0.5334543279275751,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "USEG",
+      "event_date_canonical": "2020-05-15",
+      "kernel_min": 8.0,
+      "committed_threshold_norm": -1.1499999999999995,
+      "committed_void": 1.0,
+      "frame_full_window_norm": -1.1499999999999995,
+      "frame_full_window_void": 1.0,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "USEG",
+      "event_date_canonical": "2020-05-15",
+      "kernel_min": 32.0,
+      "committed_threshold_norm": -3.6499999999999995,
+      "committed_void": 1.0,
+      "frame_full_window_norm": -3.6499999999999995,
+      "frame_full_window_void": 1.0,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "ZENA",
+      "event_date_canonical": "2024-10-11",
+      "kernel_min": 2.0,
+      "committed_threshold_norm": 4.150000000000007,
+      "committed_void": 1.0,
+      "frame_full_window_norm": 4.150000000000007,
+      "frame_full_window_void": 1.0,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "ZENA",
+      "event_date_canonical": "2024-10-11",
+      "kernel_min": 8.0,
+      "committed_threshold_norm": -4.250000000000001,
+      "committed_void": 1.0,
+      "frame_full_window_norm": -4.250000000000001,
+      "frame_full_window_void": 1.0,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "ZENA",
+      "event_date_canonical": "2024-10-11",
+      "kernel_min": 32.0,
+      "committed_threshold_norm": -3.7500000000000044,
+      "committed_void": 0.9605901957808396,
+      "frame_full_window_norm": -3.7500000000000044,
+      "frame_full_window_void": 0.9605901957808396,
+      "committed_label": "ok",
+      "matches": true
+    },
+    {
+      "ticker": "ACET",
+      "event_date_canonical": "2020-09-18",
+      "kernel_min": 32.0,
+      "committed_threshold_norm": 0.5500000000000027,
+      "committed_void": 1.0,
+      "frame_full_window_norm": 0.5500000000000027,
+      "frame_full_window_void": 1.0,
+      "committed_label": "ok",
+      "matches": true
+    }
+  ],
+  "pass": true,
+  "criterion": "the full-window frame must reproduce 10c's committed per-cell threshold_norm EXACTLY (float equality, not a tolerance). D1-R1 fires on any divergence."
+}

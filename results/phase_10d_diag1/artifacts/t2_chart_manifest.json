@@ -1,0 +1,40 @@
+{
+  "task": "T2f",
+  "charts": [
+    {
+      "chart": "01_boundary_track_absolute.html",
+      "png": "01_boundary_track_absolute.png",
+      "kaleido_verified": true,
+      "html_bytes": 791895,
+      "png_bytes": 1712582
+    },
+    {
+      "chart": "02_boundary_track_normalized.html",
+      "png": "02_boundary_track_normalized.png",
+      "kaleido_verified": true,
+      "html_bytes": 814504,
+      "png_bytes": 1570168
+    },
+    {
+      "chart": "03_mode_count.html",
+      "png": "03_mode_count.png",
+      "kaleido_verified": true,
+      "html_bytes": 168942,
+      "png_bytes": 392318
+    },
+    {
+      "chart": "04_winner_vs_runnerup.html",
+      "png": "04_winner_vs_runnerup.png",
+      "kaleido_verified": true,
+      "html_bytes": 166476,
+      "png_bytes": 619713
+    },
+    {
+      "chart": "05_cross_kernel.html",
+      "png": "05_cross_kernel.png",
+      "kaleido_verified": true,
+      "html_bytes": 362793,
+      "png_bytes": 1072205
+    }
+  ]
+}

@@ -1,0 +1,841 @@
+{
+  "diagnostic": "10d-diag1",
+  "task": "T4a/T4c",
+  "config_hash": "0879d61c",
+  "_config_hash_note": "computed with an EXPLICIT UTF-8 read. This config contains non-ASCII characters in its _why strings, so reading it under the Windows default cp1252 gives a different parsed object and the different hash 2e15b95e. config/phase_10d.json is pure ASCII and is unaffected. Third hash-reproducibility defect found in this lineage, after 10c's raw-byte line-ending sensitivity and its stale recorded value.",
+  "causal_status": "NON-CAUSAL throughout. Centered window; every frame reads forward by half a kernel. Nothing here is a detector, a signal or an operating point. No causal debt is retired.",
+  "T4c_verdict": {
+    "question": "is the histogram's shape stationary or shifting, and does the boundary track the shape or jump between modes?",
+    "pooled_sd_log10_absolute_boundary_dec": 1.2571464218856907,
+    "pooled_sd_log10_local_median_dec": 0.7416159560466163,
+    "pooled_sd_normalized_boundary_dec": 1.4655242095011956,
+    "variance_decomposition_pooled": {
+      "var_log10_abs": 1.5797323699395183,
+      "share_local_median": 0.3480057367095743,
+      "share_normalized": 1.3589837601852033,
+      "share_2cov": -0.7072959509463138
+    },
+    "variance_decomposition_per_event": [
+      {
+        "ticker": "AEHL",
+        "event_date_canonical": "2021-02-19",
+        "n": 249,
+        "var_log10_abs": 1.9982110150462196,
+        "share_local_median": 0.3648747862785933,
+        "share_normalized": 1.2806071150169858,
+        "share_2cov": -0.6480846508975772
+      },
+      {
+        "ticker": "AMCX",
+        "event_date_canonical": "2021-02-26",
+        "n": 397,
+        "var_log10_abs": 2.5356558067493467,
+        "share_local_median": 0.12682539584635463,
+        "share_normalized": 1.0729805453533736,
+        "share_2cov": -0.20031050165730357
+      },
+      {
+        "ticker": "SOS",
+        "event_date_canonical": "2021-02-17",
+        "n": 961,
+        "var_log10_abs": 0.7100774048609455,
+        "share_local_median": 0.9307697821871624,
+        "share_normalized": 2.3176342114864372,
+        "share_2cov": -2.250746081167009
+      },
+      {
+        "ticker": "USEG",
+        "event_date_canonical": "2020-05-15",
+        "n": 9,
+        "var_log10_abs": 5.331226049495285e-05,
+        "share_local_median": 1.0,
+        "share_normalized": 0.0,
+        "share_2cov": 0.0
+      },
+      {
+        "ticker": "ZENA",
+        "event_date_canonical": "2024-10-11",
+        "n": 692,
+        "var_log10_abs": 1.8633382701674053,
+        "share_local_median": 0.22362100159762824,
+        "share_normalized": 1.0748783699874316,
+        "share_2cov": -0.2989313533094955
+      }
+    ],
+    "frame_to_frame_hop_median_dec": 0.0,
+    "share_hops_over_0p5_dec": 0.27312201476335213,
+    "share_hops_over_1p0_dec": 0.17542336083369517,
+    "n_consecutive_frame_pairs": 2303,
+    "statement": "NOT STATIONARY AND NOT STABLE, and the movement is not the denominator's. Pooled over 8-min frames the winner's NORMALIZED position has sd 1.466 decades against sd 0.742 decades for the local median, so the position on the shape moves about twice as much as the normalization denominator does. The normalized term accounts for 136% of the variance of the absolute boundary and the cross term is -71% \u2014 the two partly cancel, which is why the absolute track looks calmer than either component. Consecutive frames overlap by 7/8 of their window, yet the winner moves by more than 0.5 decades between 27.3% of adjacent frame pairs and by more than 1.0 decade between 17.5%. A boundary that relocates by a factor of ten between two windows sharing 87.5% of their data is not tracking a slowly-moving shape; it is switching between candidates. Chart 03 shows why there are candidates to switch between.",
+    "_caveat": "USEG contributes 9 ok frames of 961 and its sd is ~0 by having almost no frames; it is included in the pooled figure and reported separately so it cannot be mistaken for stability."
+  },
+  "T4a_per_event_boundary_track": [
+    {
+      "ticker": "AEHL",
+      "event_date_canonical": "2021-02-19",
+      "kernel_min": 8.0,
+      "n_ok_frames": 249,
+      "abs_s": {
+        "n": 249,
+        "q0": 3.1469851667253244e-06,
+        "q25": 0.0005618657801855856,
+        "q50": 0.005503093743223929,
+        "q75": 0.026850832875777567,
+        "q100": 27.250649383500853
+      },
+      "norm_dec": {
+        "n": 249,
+        "q0": -3.4499999999999993,
+        "q25": -2.549999999999999,
+        "q50": -1.0499999999999974,
+        "q75": 0.250000000000004,
+        "q100": 2.2500000000000058
+      },
+      "local_median_s": {
+        "n": 249,
+        "q0": 0.0012451169999999996,
+        "q25": 0.007901238000000001,
+        "q50": 0.110103663,
+        "q75": 0.27847255685311,
+        "q100": 1.14631106317932
+      },
+      "sd_log10_abs": 1.416428013534837,
+      "sd_log10_local_median": 0.8555914466466465,
+      "sd_norm": 1.6028853614832428,
+      "frame_to_frame_hop_median_dec": 0.0,
+      "share_hops_over_0p5_dec": 0.3024193548387097,
+      "share_hops_over_1p0_dec": 0.1935483870967742
+    },
+    {
+      "ticker": "AMCX",
+      "event_date_canonical": "2021-02-26",
+      "kernel_min": 8.0,
+      "n_ok_frames": 397,
+      "abs_s": {
+        "n": 397,
+        "q0": 6.641683328082499e-06,
+        "q25": 0.002489728845581761,
+        "q50": 0.01111529239354319,
+        "q75": 0.032177314159121,
+        "q100": 84.39337895915638
+      },
+      "norm_dec": {
+        "n": 397,
+        "q0": -3.55,
+        "q25": -1.849999999999998,
+        "q50": -0.9499999999999973,
+        "q75": -0.14999999999999658,
+        "q100": 3.650000000000007
+      },
+      "local_median_s": {
+        "n": 397,
+        "q0": 0.0024236649999999993,
+        "q25": 0.04839053514087225,
+        "q50": 0.100965626,
+        "q75": 0.15958094100000003,
+        "q100": 0.5186068465294693
+      },
+      "sd_log10_abs": 1.5943835730395968,
+      "sd_log10_local_median": 0.567800701079969,
+      "sd_norm": 1.651538624589756,
+      "frame_to_frame_hop_median_dec": 0.10000000000000009,
+      "share_hops_over_0p5_dec": 0.4015151515151515,
+      "share_hops_over_1p0_dec": 0.29292929292929293
+    },
+    {
+      "ticker": "SOS",
+      "event_date_canonical": "2021-02-17",
+      "kernel_min": 8.0,
+      "n_ok_frames": 961,
+      "abs_s": {
+        "n": 961,
+        "q0": 8.361136329665918e-06,
+        "q25": 0.0007595461439858009,
+        "q50": 0.0026331987596656795,
+        "q75": 0.0065255308753234455,
+        "q100": 14.342245246944842
+      },
+      "norm_dec": {
+        "n": 961,
+        "q0": -3.950000000000001,
+        "q25": -2.7500000000000053,
+        "q50": -1.3500000000000103,
+        "q75": -0.6500000000000128,
+        "q100": 2.0499999999999776
+      },
+      "local_median_s": {
+        "n": 961,
+        "q0": 0.000902271990920698,
+        "q25": 0.022747904000000003,
+        "q50": 0.08730137600000001,
+        "q75": 0.6027032911061652,
+        "q100": 2.458547968
+      },
+      "sd_log10_abs": 0.8430996790560072,
+      "sd_log10_local_median": 0.8133923089902869,
+      "sd_norm": 1.2835162471958839,
+      "frame_to_frame_hop_median_dec": 0.0,
+      "share_hops_over_0p5_dec": 0.18854166666666666,
+      "share_hops_over_1p0_dec": 0.09166666666666666
+    },
+    {
+      "ticker": "USEG",
+      "event_date_canonical": "2020-05-15",
+      "kernel_min": 8.0,
+      "n_ok_frames": 9,
+      "abs_s": {
+        "n": 9,
+        "q0": 0.00048773917735687403,
+        "q25": 0.0005000962902629131,
+        "q50": 0.0005000962902629131,
+        "q75": 0.0005000962902629131,
+        "q100": 0.000521545356932875
+      },
+      "norm_dec": {
+        "n": 9,
+        "q0": -1.1499999999999995,
+        "q25": -1.1499999999999995,
+        "q50": -1.1499999999999995,
+        "q75": -1.1499999999999995,
+        "q100": -1.1499999999999995
+      },
+      "local_median_s": {
+        "n": 9,
+        "q0": 0.006889499000000001,
+        "q25": 0.007064047859229226,
+        "q50": 0.007064047859229226,
+        "q75": 0.007064047859229226,
+        "q100": 0.007367023978913604
+      },
+      "sd_log10_abs": 0.007744436264623911,
+      "sd_log10_local_median": 0.007744436264623911,
+      "sd_norm": 0.0,
+      "frame_to_frame_hop_median_dec": 0.0,
+      "share_hops_over_0p5_dec": 0.0,
+      "share_hops_over_1p0_dec": 0.0
+    },
+    {
+      "ticker": "ZENA",
+      "event_date_canonical": "2024-10-11",
+      "kernel_min": 8.0,
+      "n_ok_frames": 692,
+      "abs_s": {
+        "n": 692,
+        "q0": 1.1889427310261086e-06,
+        "q25": 0.0013527618232891433,
+        "q50": 0.005081402199370449,
+        "q75": 0.017665469120492563,
+        "q100": 143.36194979716538
+      },
+      "norm_dec": {
+        "n": 692,
+        "q0": -3.950000000000002,
+        "q25": -1.8500000000000094,
+        "q50": -1.150000000000012,
+        "q75": -0.6500000000000137,
+        "q100": 3.7499999999999707
+      },
+      "local_median_s": {
+        "n": 692,
+        "q0": 0.00042464597315293136,
+        "q25": 0.028454360487285273,
+        "q50": 0.07583551250000001,
+        "q75": 0.13249434448464506,
+        "q100": 2.972933136
+      },
+      "sd_log10_abs": 1.3660288621855479,
+      "sd_log10_local_median": 0.6459756827410474,
+      "sd_norm": 1.4162487424198114,
+      "frame_to_frame_hop_median_dec": 0.09999999999999964,
+      "share_hops_over_0p5_dec": 0.3096960926193922,
+      "share_hops_over_1p0_dec": 0.2199710564399421
+    }
+  ],
+  "T4a_reach_by_reference_line": [
+    {
+      "threshold": "1ms",
+      "threshold_s": 0.001,
+      "any_candidate_share": 0.7415665748948658,
+      "any_candidate_n": 49022,
+      "winner_share": 0.6398750650702759,
+      "winner_n": 6146,
+      "any_k2": 0.7407233547925608,
+      "winner_k2": 0.5897241588360109,
+      "any_k8": 0.7437640347150574,
+      "winner_k8": 0.7474003466204506,
+      "any_k32": 0.7418761496014715,
+      "winner_k32": 0.7582260371959942
+    },
+    {
+      "threshold": "10ms",
+      "threshold_s": 0.01,
+      "any_candidate_share": 0.47036577617765407,
+      "any_candidate_n": 31094,
+      "winner_share": 0.21197293076522644,
+      "winner_n": 2036,
+      "any_k2": 0.46823587267525035,
+      "winner_k2": 0.16080630494089118,
+      "any_k8": 0.4726588578017843,
+      "winner_k8": 0.3054592720970537,
+      "any_k32": 0.4821173104434907,
+      "winner_k32": 0.38626609442060084
+    },
+    {
+      "threshold": "100ms",
+      "threshold_s": 0.1,
+      "any_candidate_share": 0.2652860557286782,
+      "any_candidate_n": 17537,
+      "winner_share": 0.06725663716814159,
+      "winner_n": 646,
+      "any_k2": 0.25889663805436336,
+      "winner_k2": 0.05471354956047287,
+      "any_k8": 0.27541421375250347,
+      "winner_k8": 0.09185441941074524,
+      "any_k32": 0.28959738401798485,
+      "winner_k32": 0.1044349070100143
+    },
+    {
+      "threshold": "1s",
+      "threshold_s": 1.0,
+      "any_candidate_share": 0.09903790881311833,
+      "any_candidate_n": 6547,
+      "winner_share": 0.050286309213951066,
+      "winner_n": 483,
+      "any_k2": 0.08335568669527897,
+      "winner_k2": 0.03743558654137617,
+      "any_k8": 0.1258724282332949,
+      "winner_k8": 0.07668977469670711,
+      "any_k32": 0.15205395462906193,
+      "winner_k32": 0.0844062947067239
+    },
+    {
+      "threshold": "10s",
+      "threshold_s": 10.0,
+      "any_candidate_share": 0.013175808549904699,
+      "any_candidate_n": 871,
+      "winner_share": 0.010411244143675169,
+      "winner_n": 100,
+      "any_k2": 0.004470672389127325,
+      "winner_k2": 0.0006062443164595332,
+      "any_k8": 0.025975602354797598,
+      "winner_k8": 0.02339688041594454,
+      "any_k32": 0.04966278356836297,
+      "winner_k32": 0.060085836909871244
+    }
+  ],
+  "T4a_by_ladder_rank_kernel8": [
+    {
+      "rank": 0,
+      "n": 2308,
+      "median_abs_s": 0.0044494710331958506,
+      "q25_abs_s": 0.0009893148663057839,
+      "q75_abs_s": 0.014354655123109135,
+      "median_void": 0.892735551367452,
+      "median_norm_dec": -1.150000000000011,
+      "share_ge_1ms": 0.7474003466204506,
+      "share_ge_10ms": 0.3054592720970537,
+      "share_ge_100ms": 0.09185441941074524,
+      "share_ge_1s": 0.07668977469670711,
+      "share_ge_10s": 0.02339688041594454
+    },
+    {
+      "rank": 1,
+      "n": 2304,
+      "median_abs_s": 0.004543830803337657,
+      "q25_abs_s": 0.0010470330964913437,
+      "q75_abs_s": 0.01779881161463371,
+      "median_void": 0.7817821097640076,
+      "median_norm_dec": -1.2500000000000115,
+      "share_ge_1ms": 0.7604166666666666,
+      "share_ge_10ms": 0.3515625,
+      "share_ge_100ms": 0.08159722222222222,
+      "share_ge_1s": 0.04296875,
+      "share_ge_10s": 0.017361111111111112
+    },
+    {
+      "rank": 2,
+      "n": 2275,
+      "median_abs_s": 0.00504847427196431,
+      "q25_abs_s": 0.0008627629415033213,
+      "q75_abs_s": 0.03229046520445768,
+      "median_void": 0.7038255611204538,
+      "median_norm_dec": -1.2500000000000107,
+      "share_ge_1ms": 0.7274725274725274,
+      "share_ge_10ms": 0.4057142857142857,
+      "share_ge_100ms": 0.13846153846153847,
+      "share_ge_1s": 0.05318681318681319,
+      "share_ge_10s": 0.01978021978021978
+    },
+    {
+      "rank": 3,
+      "n": 2144,
+      "median_abs_s": 0.006729986939174511,
+      "q25_abs_s": 0.0007687461186956512,
+      "q75_abs_s": 0.07358069569328152,
+      "median_void": 0.6414314171996818,
+      "median_norm_dec": -1.100000000000005,
+      "share_ge_1ms": 0.715018656716418,
+      "share_ge_10ms": 0.4519589552238806,
+      "share_ge_100ms": 0.22154850746268656,
+      "share_ge_1s": 0.08162313432835822,
+      "share_ge_10s": 0.02845149253731343
+    },
+    {
+      "rank": 4,
+      "n": 1911,
+      "median_abs_s": 0.011915768959938514,
+      "q25_abs_s": 0.0008544805339286419,
+      "q75_abs_s": 0.18842336701820067,
+      "median_void": 0.5970885179873099,
+      "median_norm_dec": -0.8500000000000121,
+      "share_ge_1ms": 0.7357404500261643,
+      "share_ge_10ms": 0.5128205128205128,
+      "share_ge_100ms": 0.31763474620617477,
+      "share_ge_1s": 0.10204081632653061,
+      "share_ge_10s": 0.02511773940345369
+    },
+    {
+      "rank": 5,
+      "n": 1589,
+      "median_abs_s": 0.028373868084914097,
+      "q25_abs_s": 0.0009086011782937015,
+      "q75_abs_s": 0.338412883597214,
+      "median_void": 0.554564596812626,
+      "median_norm_dec": -0.5499999999999969,
+      "share_ge_1ms": 0.7388294524858402,
+      "share_ge_10ms": 0.5739458779106357,
+      "share_ge_100ms": 0.4065449968533669,
+      "share_ge_1s": 0.16299559471365638,
+      "share_ge_10s": 0.032095657646318436
+    },
+    {
+      "rank": 6,
+      "n": 1269,
+      "median_abs_s": 0.11769506344992046,
+      "q25_abs_s": 0.0015814433266314932,
+      "q75_abs_s": 0.7735077094412914,
+      "median_void": 0.5232687053772038,
+      "median_norm_dec": -0.14999999999999658,
+      "share_ge_1ms": 0.7832939322301025,
+      "share_ge_10ms": 0.6327817178881009,
+      "share_ge_100ms": 0.5169424743892829,
+      "share_ge_1s": 0.2198581560283688,
+      "share_ge_10s": 0.03467297084318361
+    },
+    {
+      "rank": 7,
+      "n": 980,
+      "median_abs_s": 0.15298582901047222,
+      "q25_abs_s": 0.0010747306114652748,
+      "q75_abs_s": 0.9660579804638003,
+      "median_void": 0.49290744716289003,
+      "median_norm_dec": -0.04999999999999649,
+      "share_ge_1ms": 0.7551020408163265,
+      "share_ge_10ms": 0.6285714285714286,
+      "share_ge_100ms": 0.5377551020408163,
+      "share_ge_1s": 0.24693877551020407,
+      "share_ge_10s": 0.02346938775510204
+    },
+    {
+      "rank": 8,
+      "n": 661,
+      "median_abs_s": 0.15388726370958924,
+      "q25_abs_s": 0.0009776100446004144,
+      "q75_abs_s": 1.1120926578947283,
+      "median_void": 0.48810930311100864,
+      "median_norm_dec": 0.14999999999998437,
+      "share_ge_1ms": 0.745839636913767,
+      "share_ge_10ms": 0.6263237518910741,
+      "share_ge_100ms": 0.5355521936459909,
+      "share_ge_1s": 0.2753403933434191,
+      "share_ge_10s": 0.02118003025718608
+    },
+    {
+      "rank": 9,
+      "n": 439,
+      "median_abs_s": 0.06453864169172203,
+      "q25_abs_s": 0.0006057273480165125,
+      "q75_abs_s": 1.0888378725369794,
+      "median_void": 0.4669982091109739,
+      "median_norm_dec": -0.04999999999999649,
+      "share_ge_1ms": 0.715261958997722,
+      "share_ge_10ms": 0.571753986332574,
+      "share_ge_100ms": 0.48519362186788156,
+      "share_ge_1s": 0.28018223234624146,
+      "share_ge_10s": 0.018223234624145785
+    },
+    {
+      "rank": 10,
+      "n": 271,
+      "median_abs_s": 0.2920771835389249,
+      "q25_abs_s": 0.0019179611915024581,
+      "q75_abs_s": 1.7842583389972682,
+      "median_void": 0.4654775161751512,
+      "median_norm_dec": 0.549999999999983,
+      "share_ge_1ms": 0.7822878228782287,
+      "share_ge_10ms": 0.6678966789667896,
+      "share_ge_100ms": 0.5424354243542435,
+      "share_ge_1s": 0.35424354243542433,
+      "share_ge_10s": 0.07011070110701106
+    },
+    {
+      "rank": 11,
+      "n": 157,
+      "median_abs_s": 0.27934504579471925,
+      "q25_abs_s": 0.0029265158291881827,
+      "q75_abs_s": 1.3974315992329533,
+      "median_void": 0.44098300562505255,
+      "median_norm_dec": 0.6500000000000039,
+      "share_ge_1ms": 0.7961783439490446,
+      "share_ge_10ms": 0.6878980891719745,
+      "share_ge_100ms": 0.5732484076433121,
+      "share_ge_1s": 0.3248407643312102,
+      "share_ge_10s": 0.06369426751592357
+    }
+  ],
+  "T4a_winner_vs_runnerup": {
+    "n_frames_with_two_or_more": 2304,
+    "void_gap": {
+      "n": 2304,
+      "q0": 0.0,
+      "q25": 0.0,
+      "q50": 0.0511304075853628,
+      "q75": 0.1336463815069516,
+      "q100": 0.7134797879442091
+    },
+    "median_void_gap": 0.0511304075853628,
+    "share_gap_below_0p05": 0.4982638888888889,
+    "share_gap_below_0p10": 0.6649305555555556,
+    "median_winner_s": 0.0044494710331958506,
+    "median_runnerup_s": 0.004543830803337657,
+    "share_runnerup_coarser": 0.5616319444444444,
+    "statement": "The runner-up is NOT systematically the coarse candidate: it is coarser than the winner in 56.2% of frames, close to a coin flip, and its median location (4.544 ms) is within a few percent of the winner's (4.449 ms). The coarse candidates sit further down the ladder \u2014 see by_rank, where median absolute location rises monotonically with rank."
+  },
+  "T4a_mode_counts_kernel8": {
+    "n_ok_frames": 2308,
+    "peaks": {
+      "n": 2308,
+      "q0": 2.0,
+      "q25": 6.0,
+      "q50": 8.0,
+      "q75": 10.0,
+      "q100": 19.0
+    },
+    "troughs": {
+      "n": 2308,
+      "q0": 1.0,
+      "q25": 5.0,
+      "q50": 7.0,
+      "q75": 9.0,
+      "q100": 18.0
+    },
+    "share_exactly_two_peaks": 0.0017331022530329288,
+    "share_three_or_more_peaks": 0.9982668977469671,
+    "n_exactly_two_peaks": 4,
+    "median_peaks": 8.0,
+    "label_shares": {
+      "thin": 0.5194588969823101,
+      "ok": 0.48033298647242456,
+      "no_threshold": 0.0002081165452653486
+    },
+    "label_counts": {
+      "thin": 2496,
+      "ok": 2308,
+      "no_threshold": 1
+    },
+    "statement": "The void parameter grades a trough against two flanking peaks, a construction that presumes two modes. At 8-min frame resolution 99.8% of frames carrying a boundary hold three or more surviving peaks (median 8, range 2-19); only 4 of 2,308 are the two-peak case."
+  },
+  "T4a_cross_kernel": [
+    {
+      "kernel_min": 2.0,
+      "n_ok_frames": 6598,
+      "winner_abs_s": {
+        "n": 6598,
+        "q0": 3.8048463935439247e-07,
+        "q25": 0.00047166787388574507,
+        "q50": 0.001419509527735241,
+        "q75": 0.005521242666215428,
+        "q100": 81.22711162342904
+      },
+      "local_median_s": {
+        "n": 6598,
+        "q0": 0.0003602774993584808,
+        "q25": 0.020678848000000003,
+        "q50": 0.07384505599994454,
+        "q75": 0.19977714666955482,
+        "q100": 1.395028224
+      },
+      "winner_norm_dec": {
+        "n": 6598,
+        "q0": -3.8499999999999996,
+        "q25": -2.549999999999999,
+        "q50": -1.5499999999999974,
+        "q75": -0.8499999999999968,
+        "q100": 3.3500000000000063
+      },
+      "median_peaks": 8.0,
+      "n_candidates": 44736,
+      "share_any_candidate_ge_100ms": 0.25889663805436336
+    },
+    {
+      "kernel_min": 8.0,
+      "n_ok_frames": 2308,
+      "winner_abs_s": {
+        "n": 2308,
+        "q0": 1.1889427310261086e-06,
+        "q25": 0.0009893148663057839,
+        "q50": 0.0044494710331958506,
+        "q75": 0.014354655123109135,
+        "q100": 143.36194979716538
+      },
+      "local_median_s": {
+        "n": 2308,
+        "q0": 0.00042464597315293136,
+        "q25": 0.02518614399991865,
+        "q50": 0.08745103679965238,
+        "q75": 0.2595037508655584,
+        "q100": 2.972933136
+      },
+      "winner_norm_dec": {
+        "n": 2308,
+        "q0": -3.950000000000002,
+        "q25": -2.1500000000000083,
+        "q50": -1.150000000000011,
+        "q75": -0.550000000000014,
+        "q100": 3.7499999999999707
+      },
+      "median_peaks": 8.0,
+      "n_candidates": 16477,
+      "share_any_candidate_ge_100ms": 0.27541421375250347
+    },
+    {
+      "kernel_min": 32.0,
+      "n_ok_frames": 699,
+      "winner_abs_s": {
+        "n": 699,
+        "q0": 7.381418135301446e-07,
+        "q25": 0.0010229636803520499,
+        "q50": 0.005356496079200735,
+        "q75": 0.022604132786882267,
+        "q100": 263.65106212608936
+      },
+      "local_median_s": {
+        "n": 699,
+        "q0": 0.0007076419632695618,
+        "q25": 0.022493799734732912,
+        "q50": 0.07031900327688584,
+        "q75": 0.23100017771604425,
+        "q100": 10.152842904000002
+      },
+      "winner_norm_dec": {
+        "n": 699,
+        "q0": -4.450000000000002,
+        "q25": -2.1500000000000075,
+        "q50": -1.050000000000014,
+        "q75": -0.5499999999999974,
+        "q100": 3.2500000000000067
+      },
+      "median_peaks": 8.0,
+      "n_candidates": 4893,
+      "share_any_candidate_ge_100ms": 0.28959738401798485
+    }
+  ],
+  "T4a_frame_steps": [
+    {
+      "ticker": "OST",
+      "event_date_canonical": "2024-06-13",
+      "kernel_min": 32.0,
+      "step_ns": 240000000000.0,
+      "step_min": 4.0,
+      "n_frames": 241,
+      "natural_step_min": 4.0,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "AMCX",
+      "event_date_canonical": "2021-02-26",
+      "kernel_min": 2.0,
+      "step_ns": 15000000000.0,
+      "step_min": 0.25,
+      "n_frames": 3841,
+      "natural_step_min": 0.25,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "AMCX",
+      "event_date_canonical": "2021-02-26",
+      "kernel_min": 8.0,
+      "step_ns": 60000000000.0,
+      "step_min": 1.0,
+      "n_frames": 961,
+      "natural_step_min": 1.0,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "AMCX",
+      "event_date_canonical": "2021-02-26",
+      "kernel_min": 32.0,
+      "step_ns": 240000000000.0,
+      "step_min": 4.0,
+      "n_frames": 241,
+      "natural_step_min": 4.0,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "SOS",
+      "event_date_canonical": "2021-02-17",
+      "kernel_min": 2.0,
+      "step_ns": 15000000000.0,
+      "step_min": 0.25,
+      "n_frames": 3841,
+      "natural_step_min": 0.25,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "SOS",
+      "event_date_canonical": "2021-02-17",
+      "kernel_min": 8.0,
+      "step_ns": 60000000000.0,
+      "step_min": 1.0,
+      "n_frames": 961,
+      "natural_step_min": 1.0,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "SOS",
+      "event_date_canonical": "2021-02-17",
+      "kernel_min": 32.0,
+      "step_ns": 240000000000.0,
+      "step_min": 4.0,
+      "n_frames": 241,
+      "natural_step_min": 4.0,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "AEHL",
+      "event_date_canonical": "2021-02-19",
+      "kernel_min": 2.0,
+      "step_ns": 15000000000.0,
+      "step_min": 0.25,
+      "n_frames": 3841,
+      "natural_step_min": 0.25,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "AEHL",
+      "event_date_canonical": "2021-02-19",
+      "kernel_min": 8.0,
+      "step_ns": 60000000000.0,
+      "step_min": 1.0,
+      "n_frames": 961,
+      "natural_step_min": 1.0,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "AEHL",
+      "event_date_canonical": "2021-02-19",
+      "kernel_min": 32.0,
+      "step_ns": 240000000000.0,
+      "step_min": 4.0,
+      "n_frames": 241,
+      "natural_step_min": 4.0,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "USEG",
+      "event_date_canonical": "2020-05-15",
+      "kernel_min": 8.0,
+      "step_ns": 60000000000.0,
+      "step_min": 1.0,
+      "n_frames": 961,
+      "natural_step_min": 1.0,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "USEG",
+      "event_date_canonical": "2020-05-15",
+      "kernel_min": 32.0,
+      "step_ns": 240000000000.0,
+      "step_min": 4.0,
+      "n_frames": 241,
+      "natural_step_min": 4.0,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "ZENA",
+      "event_date_canonical": "2024-10-11",
+      "kernel_min": 2.0,
+      "step_ns": 15000000000.0,
+      "step_min": 0.25,
+      "n_frames": 3841,
+      "natural_step_min": 0.25,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "ZENA",
+      "event_date_canonical": "2024-10-11",
+      "kernel_min": 8.0,
+      "step_ns": 60000000000.0,
+      "step_min": 1.0,
+      "n_frames": 961,
+      "natural_step_min": 1.0,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "ZENA",
+      "event_date_canonical": "2024-10-11",
+      "kernel_min": 32.0,
+      "step_ns": 240000000000.0,
+      "step_min": 4.0,
+      "n_frames": 241,
+      "natural_step_min": 4.0,
+      "cap": 4000,
+      "cap_bound": false
+    },
+    {
+      "ticker": "ACET",
+      "event_date_canonical": "2020-09-18",
+      "kernel_min": 32.0,
+      "step_ns": 240000000000.0,
+      "step_min": 4.0,
+      "n_frames": 241,
+      "natural_step_min": 4.0,
+      "cap": 4000,
+      "cap_bound": false
+    }
+  ],
+  "T4a_frame_labels_by_kernel": [
+    {
+      "kernel_min": 2.0,
+      "n_frames": 15364.0,
+      "thin_share": 0.570489455870867,
+      "ok_share": 0.42944545691226244
+    },
+    {
+      "kernel_min": 8.0,
+      "n_frames": 4805.0,
+      "thin_share": 0.5194588969823101,
+      "ok_share": 0.48033298647242456
+    },
+    {
+      "kernel_min": 32.0,
+      "n_frames": 1687.0,
+      "thin_share": 0.5856550088915234,
+      "ok_share": 0.4143449911084766
+    }
+  ]
+}

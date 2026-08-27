@@ -1,0 +1,25 @@
+{
+  "diagnostic": "10d-diag1",
+  "task": "T1",
+  "config_hash": "0879d61c",
+  "events": 7,
+  "kernels": [
+    2.0,
+    8.0,
+    32.0
+  ],
+  "event_kernel_cells": 16,
+  "frames_total": 21877,
+  "frames_full_window": 21,
+  "frames_stepped": 21856,
+  "frames_ok": 9605,
+  "frames_thin": 12249,
+  "frames_no_threshold": 2,
+  "frames_insufficient_context": 5,
+  "trough_rows": 66225,
+  "cap_bound_share": 0.0,
+  "D1_R3_threshold": 0.0,
+  "D1_R3_fires": false,
+  "wall_clock_s": 13.1,
+  "causal_status": "NON-CAUSAL. Centered window; every frame reads forward in time by half a kernel. Nothing here is a detector, a signal or an operating point."
+}
