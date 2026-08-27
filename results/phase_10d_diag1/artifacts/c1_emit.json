@@ -1,0 +1,23 @@
+{
+  "task": "C1",
+  "events": 45,
+  "tape_review_events": 43,
+  "subset_events": 7,
+  "kernels": [
+    2.0,
+    8.0,
+    32.0
+  ],
+  "cells_ok": 126,
+  "cells_declined": 9,
+  "frame_rows": 15064678,
+  "ladder_rows": 395091,
+  "tape_rows": 157896,
+  "wall_clock_s": 54.4,
+  "megabytes": {
+    "frames": 12.6,
+    "ladder": 6.1,
+    "tape": 1.8
+  },
+  "note": "Same frames and same ladder as Diag1 T1, written in the long form the plotting script consumes. No measurement is recomputed or changed."
+}

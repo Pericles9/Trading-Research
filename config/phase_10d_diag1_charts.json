@@ -1,0 +1,49 @@
+{
+  "_file": "config/phase_10d_diag1_charts.json",
+  "_phase": "10d-diag1-charts",
+  "_type": "charts addendum",
+  "_date": "2026-08-27",
+  "_note": "SEPARATE FILE ON PURPOSE. config/phase_10d_diag1.json and its hash 0879d61c are cited throughout results/phase_10d_diag1/REPORT.md; adding fields there would change that hash and stale the committed record. Nothing here is a measurement parameter -- the frames, the ladder and every number are Diag1's, unchanged.",
+  "_governing_document": "prompts/phase_10d_diag1_charts.md",
+
+  "upstream": {
+    "diag1_config": "config/phase_10d_diag1.json",
+    "diag1_config_hash_utf8": "0879d61c",
+    "tape_review_manifest": "results/phase_10d/artifacts/t4_tape_manifest.json",
+    "_tape_review_why": "The 43 events that received a 10d tape-review chart. CH-R4 makes 8-min coverage of this set a hard stop."
+  },
+
+  "coverage": {
+    "event_set": "union of the 43 tape-review events and Diag1's 7 pre-registered subset events",
+    "n_events_expected": 45,
+    "_union_why": "ACET 2020-09-18 and OST 2024-06-13 are in Diag1's subset but not the tape-review set, because 10c declines both at the 8-min kernel (insufficient_context) so neither received a tape chart. They are emitted anyway and appear at the 32-min kernel, where 10c does resolve them. No event is dropped and none is invented.",
+    "kernels_min": [2.0, 8.0, 32.0],
+    "kernel_primary_min": 8.0,
+    "themes": ["light", "dark"],
+    "dark_theme_scope": "Diag1's 7-event pre-registered subset only, per the addendum's coverage table"
+  },
+
+  "emission": {
+    "emit_all_frames_including_thin": true,
+    "_emit_thin_why": "The addendum is explicit: every frame, boundary or not. Roughly half of all kernel-width frames are thin (<30 in-window intervals) and the chart washes them grey. Suppressing them would flatter the picture by hiding how much of the session cannot support a shape.",
+    "emit_density_for_thin_frames": true,
+    "_emit_density_for_thin_why": "A thin frame still has a histogram -- it is just noisy. Emitting it lets the wash sit ON the drawn field rather than over a hole, which is what makes the caveat legible. has_boundary stays FALSE for those frames, so nothing downstream mistakes a thin frame for a resolved one.",
+    "thin_floor_intervals": 30,
+    "_thin_floor_why": "Identical to config/phase_10d_diag1.json frames.min_intervals_per_frame, and identical to the plotting script's shade_thin() floor. The three must agree or the wash would mark a different set than the one the ladder declined.",
+    "tape_max_points_per_event": 4000,
+    "_tape_why": "The tape panel is orientation only; the addendum says downsample freely. 4000 points is more than an HTML axis can resolve and keeps the parquet small. Even stride, first and last print always kept."
+  },
+
+  "outputs": {
+    "frames": "results/phase_10d_diag1/artifacts/diag1_frames.parquet",
+    "ladder": "results/phase_10d_diag1/artifacts/diag1_ladder.parquet",
+    "tape": "results/phase_10d_diag1/artifacts/diag1_tape.parquet",
+    "charts_dir": "results/phase_10d_diag1/charts/boundary_through_time",
+    "manifest": "results/phase_10d_diag1/artifacts/t_charts_manifest.json"
+  },
+
+  "plotly_js": {
+    "mode": "directory",
+    "_why": "D14, the environment is offline. `directory` writes one shared plotly.min.js beside the charts. A CDN reference renders a blank page here and is escalation row CH-R2."
+  }
+}

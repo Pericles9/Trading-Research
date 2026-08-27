@@ -1,0 +1,1847 @@
+{
+  "task": "C5",
+  "addendum": "10d-diag1 charts",
+  "config": "config/phase_10d_diag1_charts.json",
+  "chart_dir": "results/phase_10d_diag1/charts/boundary_through_time",
+  "n_files": 113,
+  "n_event_charts": 108,
+  "n_contact_sheets": 3,
+  "total_megabytes": 978.4,
+  "global_y_ranges_by_kernel": {
+    "2": {
+      "abs_lo": -7.794116,
+      "abs_hi": 5.275828,
+      "nrm_lo": -4.5,
+      "nrm_hi": 5.4
+    },
+    "8": {
+      "abs_lo": -8.371973,
+      "abs_hi": 5.790679,
+      "nrm_lo": -5.0,
+      "nrm_hi": 5.6
+    },
+    "32": {
+      "abs_lo": -8.450186,
+      "abs_hi": 6.772522,
+      "nrm_lo": -5.5,
+      "nrm_hi": 5.7
+    }
+  },
+  "_y_range_note": "Recomputed here by calling the plotting script's own global_bounds() on the same frames, then cross-checked against the range actually written into each HTML.",
+  "CH_R1_shared_y_range": {
+    "k2_light": {
+      "n_charts": 4,
+      "distinct_y_ranges": 1,
+      "pass": true
+    },
+    "k2_dark": {
+      "n_charts": 4,
+      "distinct_y_ranges": 1,
+      "pass": true
+    },
+    "k8_light": {
+      "n_charts": 43,
+      "distinct_y_ranges": 1,
+      "pass": true
+    },
+    "k8_dark": {
+      "n_charts": 5,
+      "distinct_y_ranges": 1,
+      "pass": true
+    },
+    "k32_light": {
+      "n_charts": 45,
+      "distinct_y_ranges": 1,
+      "pass": true
+    },
+    "k32_dark": {
+      "n_charts": 7,
+      "distinct_y_ranges": 1,
+      "pass": true
+    }
+  },
+  "CH_R1_pass": true,
+  "CH_R4_tape_review_coverage": {
+    "tape_review_events": 43,
+    "with_8min_chart": 43,
+    "missing": [],
+    "pass": true
+  },
+  "CH_R2_cdn": {
+    "http_references_found": 0,
+    "script_src": "plotly.min.js (shared, written beside the charts)",
+    "pass": true
+  },
+  "coverage_note": "8-min per-event charts: ALL 43 tape-review events. 32-min per-event: all events with a resolvable cell. 2-min per-event: Diag1's 7-event subset only -- the full 43-event 2-min set was cut on size at ~24 MB per chart (~1.0 GB), which is the case the addendum section 2 explicitly permits cutting, and its contact sheet is kept. No event was cut from the 8-min set.",
+  "untracked": "charts follow 10c's s1_06_animation_full/ convention: regenerable, not tracked, this manifest is the committed record",
+  "files": [
+    {
+      "file": "ABSI 2023-12-04_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "ABSI 2023-12-04",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1818983,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "ABSI 2023-12-04_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "ABSI 2023-12-04",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5869139,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "ACET 2020-09-18_k32_dark.html",
+      "kind": "event_chart",
+      "event_id": "ACET 2020-09-18",
+      "kernel_min": 32.0,
+      "theme": "dark",
+      "bytes": 1474239,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "ACET 2020-09-18_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "ACET 2020-09-18",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1474239,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "ACRE 2020-04-07_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "ACRE 2020-04-07",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1758251,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "ACRE 2020-04-07_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "ACRE 2020-04-07",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5962333,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "AEHL 2021-02-19_k2_dark.html",
+      "kind": "event_chart",
+      "event_id": "AEHL 2021-02-19",
+      "kernel_min": 2.0,
+      "theme": "dark",
+      "bytes": 22373529,
+      "y_range_absolute_log10s": [
+        -7.794116412526027,
+        5.2758282664512866
+      ],
+      "y_range_normalized_decades": [
+        -4.5,
+        5.4000000000000075
+      ]
+    },
+    {
+      "file": "AEHL 2021-02-19_k2_light.html",
+      "kind": "event_chart",
+      "event_id": "AEHL 2021-02-19",
+      "kernel_min": 2.0,
+      "theme": "light",
+      "bytes": 22373529,
+      "y_range_absolute_log10s": [
+        -7.794116412526027,
+        5.2758282664512866
+      ],
+      "y_range_normalized_decades": [
+        -4.5,
+        5.4000000000000075
+      ]
+    },
+    {
+      "file": "AEHL 2021-02-19_k32_dark.html",
+      "kind": "event_chart",
+      "event_id": "AEHL 2021-02-19",
+      "kernel_min": 32.0,
+      "theme": "dark",
+      "bytes": 1742954,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "AEHL 2021-02-19_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "AEHL 2021-02-19",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1742954,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "AEHL 2021-02-19_k8_dark.html",
+      "kind": "event_chart",
+      "event_id": "AEHL 2021-02-19",
+      "kernel_min": 8.0,
+      "theme": "dark",
+      "bytes": 6019713,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "AEHL 2021-02-19_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "AEHL 2021-02-19",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6019713,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "ALF 2021-05-10_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "ALF 2021-05-10",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1859612,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "ALF 2021-05-10_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "ALF 2021-05-10",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6646887,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "ALGS 2024-10-24_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "ALGS 2024-10-24",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1677155,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "ALGS 2024-10-24_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "ALGS 2024-10-24",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5727993,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "AMC 2020-11-09_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "AMC 2020-11-09",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1779607,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "AMC 2020-11-09_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "AMC 2020-11-09",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6366272,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "AMCX 2021-02-26_k2_dark.html",
+      "kind": "event_chart",
+      "event_id": "AMCX 2021-02-26",
+      "kernel_min": 2.0,
+      "theme": "dark",
+      "bytes": 22907211,
+      "y_range_absolute_log10s": [
+        -7.794116412526027,
+        5.2758282664512866
+      ],
+      "y_range_normalized_decades": [
+        -4.5,
+        5.4000000000000075
+      ]
+    },
+    {
+      "file": "AMCX 2021-02-26_k2_light.html",
+      "kind": "event_chart",
+      "event_id": "AMCX 2021-02-26",
+      "kernel_min": 2.0,
+      "theme": "light",
+      "bytes": 22907211,
+      "y_range_absolute_log10s": [
+        -7.794116412526027,
+        5.2758282664512866
+      ],
+      "y_range_normalized_decades": [
+        -4.5,
+        5.4000000000000075
+      ]
+    },
+    {
+      "file": "AMCX 2021-02-26_k32_dark.html",
+      "kind": "event_chart",
+      "event_id": "AMCX 2021-02-26",
+      "kernel_min": 32.0,
+      "theme": "dark",
+      "bytes": 1713956,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "AMCX 2021-02-26_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "AMCX 2021-02-26",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1713956,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "AMCX 2021-02-26_k8_dark.html",
+      "kind": "event_chart",
+      "event_id": "AMCX 2021-02-26",
+      "kernel_min": 8.0,
+      "theme": "dark",
+      "bytes": 6336507,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "AMCX 2021-02-26_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "AMCX 2021-02-26",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6336507,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "AQB 2022-03-10_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "AQB 2022-03-10",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1753247,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "AQB 2022-03-10_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "AQB 2022-03-10",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6036186,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "ASPI 2023-08-01_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "ASPI 2023-08-01",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1493917,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "ASPI 2023-08-01_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "ASPI 2023-08-01",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5660075,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "BLBX 2023-04-17_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "BLBX 2023-04-17",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1798853,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "BLBX 2023-04-17_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "BLBX 2023-04-17",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6395216,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "CELH 2020-08-06_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "CELH 2020-08-06",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1735221,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "CELH 2020-08-06_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "CELH 2020-08-06",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6337288,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "CODX 2020-03-11_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "CODX 2020-03-11",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1799948,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "CODX 2020-03-11_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "CODX 2020-03-11",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6343997,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "CPSH 2020-05-06_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "CPSH 2020-05-06",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1834388,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "CPSH 2020-05-06_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "CPSH 2020-05-06",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6367960,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "CREX 2022-02-01_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "CREX 2022-02-01",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1754415,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "CREX 2022-02-01_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "CREX 2022-02-01",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6343419,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "CVNA 2020-03-24_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "CVNA 2020-03-24",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1713832,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "CVNA 2020-03-24_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "CVNA 2020-03-24",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6301439,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "DRUG 2023-08-08_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "DRUG 2023-08-08",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1724609,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "DRUG 2023-08-08_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "DRUG 2023-08-08",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6407701,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "EDSA 2020-06-15_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "EDSA 2020-06-15",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1726509,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "EDSA 2020-06-15_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "EDSA 2020-06-15",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6263827,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "EEIQ 2023-05-01_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "EEIQ 2023-05-01",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1490307,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "EEIQ 2023-05-01_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "EEIQ 2023-05-01",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5602105,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "EGHT 2020-12-10_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "EGHT 2020-12-10",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1718014,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "EGHT 2020-12-10_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "EGHT 2020-12-10",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6310432,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "EWTX 2022-01-05_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "EWTX 2022-01-05",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1771789,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "EWTX 2022-01-05_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "EWTX 2022-01-05",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6438938,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "FATBB 2022-03-29_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "FATBB 2022-03-29",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1503625,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "FATBB 2022-03-29_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "FATBB 2022-03-29",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5674534,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "IMTE 2022-09-16_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "IMTE 2022-09-16",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1744366,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "IMTE 2022-09-16_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "IMTE 2022-09-16",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6266397,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "MDIA 2022-08-03_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "MDIA 2022-08-03",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1841074,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "MDIA 2022-08-03_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "MDIA 2022-08-03",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6300143,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "MDIA 2024-04-09_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "MDIA 2024-04-09",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1850478,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "MDIA 2024-04-09_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "MDIA 2024-04-09",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6543509,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "MRSN 2023-05-03_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "MRSN 2023-05-03",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1713689,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "MRSN 2023-05-03_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "MRSN 2023-05-03",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6338215,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "NE 2020-02-12_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "NE 2020-02-12",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1751462,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "NE 2020-02-12_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "NE 2020-02-12",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6280423,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "NEPH 2023-06-01_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "NEPH 2023-06-01",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1560870,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "NEPH 2023-06-01_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "NEPH 2023-06-01",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5730717,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "OCUL 2020-10-07_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "OCUL 2020-10-07",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1735411,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "OCUL 2020-10-07_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "OCUL 2020-10-07",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6348187,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "OCUL 2023-12-04_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "OCUL 2023-12-04",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1761733,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "OCUL 2023-12-04_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "OCUL 2023-12-04",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5960958,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "OST 2024-06-13_k32_dark.html",
+      "kind": "event_chart",
+      "event_id": "OST 2024-06-13",
+      "kernel_min": 32.0,
+      "theme": "dark",
+      "bytes": 1465027,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "OST 2024-06-13_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "OST 2024-06-13",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1465027,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "PAR 2021-04-08_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "PAR 2021-04-08",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1758389,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "PAR 2021-04-08_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "PAR 2021-04-08",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6283879,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "PPSI 2020-10-20_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "PPSI 2020-10-20",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1748105,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "PPSI 2020-10-20_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "PPSI 2020-10-20",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6233930,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "RBC 2022-09-26_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "RBC 2022-09-26",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1748541,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "RBC 2022-09-26_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "RBC 2022-09-26",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5792135,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "SCLX 2022-11-23_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "SCLX 2022-11-23",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1530692,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "SCLX 2022-11-23_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "SCLX 2022-11-23",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5643459,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "SIFY 2023-06-22_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "SIFY 2023-06-22",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1579560,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "SIFY 2023-06-22_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "SIFY 2023-06-22",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5645550,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "SLXN 2024-08-19_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "SLXN 2024-08-19",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1738852,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "SLXN 2024-08-19_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "SLXN 2024-08-19",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5830394,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "SOS 2021-02-17_k2_dark.html",
+      "kind": "event_chart",
+      "event_id": "SOS 2021-02-17",
+      "kernel_min": 2.0,
+      "theme": "dark",
+      "bytes": 25666320,
+      "y_range_absolute_log10s": [
+        -7.794116412526027,
+        5.2758282664512866
+      ],
+      "y_range_normalized_decades": [
+        -4.5,
+        5.4000000000000075
+      ]
+    },
+    {
+      "file": "SOS 2021-02-17_k2_light.html",
+      "kind": "event_chart",
+      "event_id": "SOS 2021-02-17",
+      "kernel_min": 2.0,
+      "theme": "light",
+      "bytes": 25666320,
+      "y_range_absolute_log10s": [
+        -7.794116412526027,
+        5.2758282664512866
+      ],
+      "y_range_normalized_decades": [
+        -4.5,
+        5.4000000000000075
+      ]
+    },
+    {
+      "file": "SOS 2021-02-17_k32_dark.html",
+      "kind": "event_chart",
+      "event_id": "SOS 2021-02-17",
+      "kernel_min": 32.0,
+      "theme": "dark",
+      "bytes": 1796806,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "SOS 2021-02-17_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "SOS 2021-02-17",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1796806,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "SOS 2021-02-17_k8_dark.html",
+      "kind": "event_chart",
+      "event_id": "SOS 2021-02-17",
+      "kernel_min": 8.0,
+      "theme": "dark",
+      "bytes": 6620710,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "SOS 2021-02-17_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "SOS 2021-02-17",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6620710,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "SPCB 2021-10-25_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "SPCB 2021-10-25",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1749033,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "SPCB 2021-10-25_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "SPCB 2021-10-25",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5965966,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "SWVL 2022-04-21_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "SWVL 2022-04-21",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1696493,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "SWVL 2022-04-21_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "SWVL 2022-04-21",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6174369,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "TORO 2023-03-31_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "TORO 2023-03-31",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1764369,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "TORO 2023-03-31_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "TORO 2023-03-31",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6219087,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "UCAR 2024-03-28_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "UCAR 2024-03-28",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1762234,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "UCAR 2024-03-28_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "UCAR 2024-03-28",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6202389,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "USEG 2020-05-15_k32_dark.html",
+      "kind": "event_chart",
+      "event_id": "USEG 2020-05-15",
+      "kernel_min": 32.0,
+      "theme": "dark",
+      "bytes": 1464539,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "USEG 2020-05-15_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "USEG 2020-05-15",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1464539,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "USEG 2020-05-15_k8_dark.html",
+      "kind": "event_chart",
+      "event_id": "USEG 2020-05-15",
+      "kernel_min": 8.0,
+      "theme": "dark",
+      "bytes": 5626395,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "USEG 2020-05-15_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "USEG 2020-05-15",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5626395,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "WGS 2024-01-08_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "WGS 2024-01-08",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1737741,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "WGS 2024-01-08_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "WGS 2024-01-08",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 5964372,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "ZENA 2024-10-11_k2_dark.html",
+      "kind": "event_chart",
+      "event_id": "ZENA 2024-10-11",
+      "kernel_min": 2.0,
+      "theme": "dark",
+      "bytes": 25017808,
+      "y_range_absolute_log10s": [
+        -7.794116412526027,
+        5.2758282664512866
+      ],
+      "y_range_normalized_decades": [
+        -4.5,
+        5.4000000000000075
+      ]
+    },
+    {
+      "file": "ZENA 2024-10-11_k2_light.html",
+      "kind": "event_chart",
+      "event_id": "ZENA 2024-10-11",
+      "kernel_min": 2.0,
+      "theme": "light",
+      "bytes": 25017808,
+      "y_range_absolute_log10s": [
+        -7.794116412526027,
+        5.2758282664512866
+      ],
+      "y_range_normalized_decades": [
+        -4.5,
+        5.4000000000000075
+      ]
+    },
+    {
+      "file": "ZENA 2024-10-11_k32_dark.html",
+      "kind": "event_chart",
+      "event_id": "ZENA 2024-10-11",
+      "kernel_min": 32.0,
+      "theme": "dark",
+      "bytes": 1799457,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "ZENA 2024-10-11_k32_light.html",
+      "kind": "event_chart",
+      "event_id": "ZENA 2024-10-11",
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 1799457,
+      "y_range_absolute_log10s": [
+        -8.450186421273836,
+        6.7725224405555275
+      ],
+      "y_range_normalized_decades": [
+        -5.5,
+        5.700000000000007
+      ]
+    },
+    {
+      "file": "ZENA 2024-10-11_k8_dark.html",
+      "kind": "event_chart",
+      "event_id": "ZENA 2024-10-11",
+      "kernel_min": 8.0,
+      "theme": "dark",
+      "bytes": 6516941,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "ZENA 2024-10-11_k8_light.html",
+      "kind": "event_chart",
+      "event_id": "ZENA 2024-10-11",
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 6516941,
+      "y_range_absolute_log10s": [
+        -8.371972989901959,
+        5.790678686099599
+      ],
+      "y_range_normalized_decades": [
+        -5.0,
+        5.600000000000008
+      ]
+    },
+    {
+      "file": "_contact_k2_light.html",
+      "kind": "contact_sheet",
+      "event_id": null,
+      "kernel_min": 2.0,
+      "theme": "light",
+      "bytes": 292375499,
+      "y_range_absolute_log10s": null,
+      "y_range_normalized_decades": null
+    },
+    {
+      "file": "_contact_k32_light.html",
+      "kind": "contact_sheet",
+      "event_id": null,
+      "kernel_min": 32.0,
+      "theme": "light",
+      "bytes": 22102106,
+      "y_range_absolute_log10s": null,
+      "y_range_normalized_decades": null
+    },
+    {
+      "file": "_contact_k8_light.html",
+      "kind": "contact_sheet",
+      "event_id": null,
+      "kernel_min": 8.0,
+      "theme": "light",
+      "bytes": 83271239,
+      "y_range_absolute_log10s": null,
+      "y_range_normalized_decades": null
+    },
+    {
+      "file": "_verify_SOS_k8_light.png",
+      "kind": "verification_png",
+      "bytes": 475976
+    },
+    {
+      "file": "plotly.min.js",
+      "kind": "shared_plotly_js",
+      "bytes": 4842819
+    }
+  ]
+}
