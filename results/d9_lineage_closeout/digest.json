@@ -1,0 +1,106 @@
+{
+  "record": "d9_lineage_closeout",
+  "type": "close-out",
+  "date": "2026-08-27",
+  "status": "recorded_pending_cooper_confirmation",
+  "_status_why": "The close-out document is marked 'draft for Cooper's confirmation'. Its section 7 mechanics are executed here; the decision text is appended as D21 exactly as D20 was, pending the same confirmation.",
+  "deciding_gate": {
+    "row": "10d-R0",
+    "condition": "Cooper rejects the decomposition on visual review against the tape",
+    "fired": true,
+    "note": "Overrides every other row in either direction. Fired AFTER the mechanical defects were found and fixed. Every numeric escalation row in 10d passed and the phase's own code raised nothing."
+  },
+  "decision": "docs/Universe-Decisions.md D21",
+  "closes": "D9's operational instruction -- threshold derived per event from a trough of the locally-normalized log-interval histogram -- and every version built on it: v4, 10c, 10d. Includes first-trough selection, argmax-void selection, any void cutoff, and any exact-partition replacement.",
+  "does_not_close": "The locally-normalized log-interval representation itself. What is closed is collapsing the field to one boundary per event.",
+  "evidence": {
+    "share_frames_3plus_peaks": 0.9983,
+    "median_peaks": 8,
+    "median_candidate_troughs": 7,
+    "n_frames_bimodal": 4,
+    "n_frames": 2308,
+    "ladder_median_rank0_ms": 4.449,
+    "ladder_median_rank8_ms": 153.887,
+    "ladder_span_factor": 34.6,
+    "void_rank0": 0.893,
+    "void_rank8": 0.488,
+    "median_winner_runnerup_void_gap": 0.0511,
+    "adjacent_frame_overlap": 0.875,
+    "share_relocation_over_0p5_dec": 0.2731,
+    "share_relocation_over_1p0_dec": 0.1754,
+    "candidates_reaching_100ms": 0.2653,
+    "winners_reaching_100ms": 0.0673,
+    "cross_kernel_loglog_slope": 0.48,
+    "run_breaks_that_are_real_gaps": 0.9924,
+    "merge_effect_decades": 0.0838,
+    "_all_reverified": "13 of 13 quoted figures re-checked against their committed artifacts on 2026-08-27 before D21 was appended"
+  },
+  "correction_to_the_draft": {
+    "what": "The draft pairs '349 ns -> 1.75 ms' with 'a factor of ~3,700'. Those are different cells.",
+    "v4_pooled_median_ns": 349.0,
+    "v4_n": 114074,
+    "v4_cohort": "100-event analysis cohort",
+    "c10c_pooled_median_ms": 1.294,
+    "c10c_n": 170722,
+    "c10c_cohort": "56-event dev sample",
+    "phase10d_identity_k8_median_ms": 1.751,
+    "phase10d_n": 46709,
+    "factor_v4_to_10c": 3707,
+    "factor_v4_to_10d_identity": 5017,
+    "resolution": "D21 states both with their n and cohort. Cohorts differ, so none of these is like-for-like. Conclusion unchanged.",
+    "corrected_in": "docs/Universe-Decisions.md D21, results/d9_lineage_closeout/REPORT.md section 2.1"
+  },
+  "mechanics": {
+    "d21_appended": {
+      "file": "docs/Universe-Decisions.md",
+      "insertions": 57,
+      "deletions": 0,
+      "append_only_verified": true
+    },
+    "phase_10d_digest": {
+      "status": "closed_gate_fired",
+      "gate_outcome_recorded": true
+    },
+    "phase_10d_diag1_digest": {
+      "status": "complete_reviewed"
+    },
+    "operating_plan": {
+      "file": "docs/Claude-Code-Operating-Plan.md",
+      "section": "6 Phase Map",
+      "row_10_marked_closed": true,
+      "row_15_note_inserted": true,
+      "rows_removed": 0,
+      "rows_renumbered": 0,
+      "pattern": "mirrors the CLOSED annotation row 10b already carried"
+    },
+    "claude_md_pointer_list": {
+      "action": "fixed, not deleted",
+      "was_stale_at": "D14",
+      "now_complete_through": "D21",
+      "next_free_number_stated": "D22",
+      "authority_statement_added": true,
+      "update_rule_added": "any phase that appends a decision updates this list in the same commit",
+      "second_correction": "the note claiming docs/Claude-Code-Operating-Plan.md never existed in this checkout -- it exists, added 2026-08-13 at commit edfb1ea"
+    },
+    "carry_forward": "8 items, results/d9_lineage_closeout/REPORT.md section 3"
+  },
+  "downstream": {
+    "newly_blocked": [],
+    "_why_none": "D13 already re-anchored Phases 13, 14, 16 and 17 to detection time, clock time or price-path events, and that re-anchoring stands.",
+    "consequence_recorded": "Operating Plan row 15 (Burst hazard function) took burst duration distributions as its input and is now blocked on a successor object definition rather than merely unstarted.",
+    "unblocked_and_executable_now": "Phase 11 -- spread and impact by participation"
+  },
+  "options_recorded_not_chosen": {
+    "a": "latent-state model (hidden semi-Markov point process, Tokdar et al. 2010)",
+    "b": "use the field directly as a state descriptor against forward returns, on Phase 8's markout machinery",
+    "c": "stop -- sub-burst decomposition is optional work, not load-bearing",
+    "cooper_stated_read": "b, offered as a view rather than a finding",
+    "agent_action": "none. No work has begun on any option and this record selects nothing."
+  },
+  "open_and_independent_of_this_closeout": [
+    "three hash-reproducibility defects (stale Stage 1 hash; cfg_hash line-ending sensitivity; config encoding sensitivity)",
+    "10c's s1_t6_animation.py docstring/code divergence",
+    "the eligible-pool gap (15,299 vs D14's 20,951) and the det_ns_* float64 repair, carried from 10c"
+  ],
+  "report": "results/d9_lineage_closeout/REPORT.md"
+}

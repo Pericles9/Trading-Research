@@ -79,13 +79,29 @@
 - All phase prompts follow docs/Agent_Prompt_Standard.md (v1.3, 2026-07-14) — defines the Evidence
   Standard, §9 Chart Contract, §10 Verification Block, §11 Digest Contract, §12 Git Discipline.
 - Strategy context: docs/Mom-DB-Strategy-Research-Program.md (v2.0, 2026-08-03 — re-ranked under D5).
-- Standing decisions: docs/Universe-Decisions.md — D1 analysis universe, D2 `clean_window`, D3 analysis
-  clock, D4 tick-only measurement (**A12: cross-session ratios need the boundary flag**, 2026-08-03),
-  **D5 strategy surface and horizon class** (2026-08-03).
+- **Standing decisions: `docs/Universe-Decisions.md` is the AUTHORITY. The list below is a
+  convenience index and is not to be used to pick the next free decision number** — read the file.
+  A stale index that specs reason from is worse than no index: this one sat at D14 while the register
+  ran to D19, and a Phase 10d spec drafted its decision as D15 straight into a collision with Phase 11's.
+  **Any phase that appends a decision updates this list in the same commit.** Complete as of 2026-08-27:
+  - D1 analysis universe · D2 `clean_window` · D3 analysis clock · **D4 tick-only measurement**
+    (A9 scope, **A12 cross-session ratios need the boundary flag**) · **D5 strategy surface and
+    horizon class** (A11) · D6 burst measurement moves to intensity profiling · D7 detection anchor
+    is derived · D8 sub-burst structure vs. the event's own envelope · **D9 sub-bursts from
+    locally-normalized log inter-trade intervals** · D10 Phase 10b scoping and numbering ·
+    D11 the Allan knee cannot recover a cluster timescale · D12 v3's Allan knee carries
+    scale-dependent uncertainty · **D13 D5's premise fails; downstream phases re-anchor** ·
+    D14 environment is offline · D15 Phase 11 coverage-column source · D16 instrument reference
+    convention · D17 quote-state exclusion · D18 Stage B population and the decision cell ·
+    D19 spreads and costs in both units · D20 sub-bursts assembled under a merge tolerance and a
+    run-length floor · **D21 threshold-from-trough is closed; the log-interval representation is not**
+    (2026-08-27, 10d-R0 fired).
+  - **Next free number: D22.**
 - Repo map: docs/Research-Library-Map.md. Data layout: data/Schema.md.
-- `docs/Claude-Code-Operating-Plan.md` is cited by prompts/phase_0a.md, prompts/phase_0b.md and
-  docs/Research-Library-Map.md but has never existed in this checkout — Cooper holds it externally.
-  Gap confirmed 2026-08-03, `results/redirect_d5/doc_existence_audit.json`.
+- `docs/Claude-Code-Operating-Plan.md` **exists** (added 2026-08-13, commit `edfb1ea`; §6 is the phase
+  map). The note previously here said it had never existed in this checkout — true when written on
+  2026-08-03 per `results/redirect_d5/doc_existence_audit.json`, stale since Phase 10b created it.
+  Corrected 2026-08-27.
 
 ## Environment
 

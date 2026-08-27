@@ -756,3 +756,60 @@ description, applying none.** Whether an applicability gate should exist is left
 **How to apply:** cite D20 alongside D9 for any sub-burst assembled after 2026-08-26. **A sub-burst
 figure quoted without its merge tolerance, its run-length floor and its separator rule is
 incomplete**, as a detection-anchored figure quoted without its poll interval is incomplete under D7.
+
+## D21 — Threshold-from-trough is closed; the log-interval representation is not
+
+**Date:** 2026-08-27 · **Gate:** Cooper's visual review against the tape, **10d-R0 fired**
+
+**Closes:** D9's operational instruction — that a sub-burst threshold is derived per event
+from a trough of its locally-normalized log-interval distribution — and every version built
+on it: v4, 10c, 10d.
+
+**Decision.** No sub-burst boundary is derived by selecting a trough from the
+locally-normalized log-interval histogram. This closes first-trough selection, argmax-void
+selection, any cutoff on the void parameter, and **any exact-partition replacement**, because
+the defect is the premise that a privileged boundary exists rather than the method used to
+locate one.
+
+**Why.** On this data the histogram is richly multimodal, not bimodal: **99.8% of frames
+carrying a boundary hold three or more surviving peaks** (median 8 peaks, median 7 candidate
+troughs), and the two-peak case the void parameter presumes occurs in **4 of 2,308 frames**.
+Candidate troughs form a smooth gradient — median location rising **35×** from rank 0
+(4.449 ms) to rank 8 (153.887 ms) while void falls smoothly from 0.893 to 0.488, median
+winner–runner-up gap **0.0511** — so any selection is a cut on a continuum. The selection is
+unstable across frames sharing **87.5%** of their data: the winner relocates by more than
+0.5 decades between **27.3%** of adjacent frame pairs and by more than a full decade between
+**17.5%**. The rule is systematically biased to the fine end — **26.53%** of candidates reach
+100 ms against **6.73%** of winners. And it is partly an artifact of the window: the winner's
+absolute location scales across kernels with a log-log slope of about **0.48**, roughly the
+square root of window size, so neither a structural interval nor a pure denominator effect.
+The window-basis defect (10c) and the assembly defect (10d) were both real and both fixed,
+and the method still fails.
+
+**On the scale figures, stated as a matched pair.** v4's pooled median sub-burst duration was
+**349 ns** (n = 114,074, v4's 100-event analysis cohort). 10c's pooled median across its three
+kernels is **1.294 ms** (n = 170,722, the 56-event dev sample) — a factor of **≈3,707**. 10d's
+identity cell at the 8-minute primary kernel is **1.751 ms** (n = 46,709), a factor of ≈5,017
+against v4. The close-out draft paired "1.75 ms" with "~3,700"; those are different cells and
+the pair is corrected here. **The cohorts also differ**, so every one of these comparisons is
+across populations, not like-for-like. Either way the result is four orders of magnitude short
+of a tradeable scale and the conclusion is unchanged.
+
+**What is NOT closed.** The locally-normalized log-interval field itself. It is legible and
+carries persistent structure that moves through the session. What is closed is collapsing it
+to one boundary per event. **D9's representation stands; D9's operational instruction does
+not.**
+
+**Consequence.** D5's burst-relative anchor remains unavailable, as D13 already recorded.
+**No downstream phase is newly blocked by this decision** — Phases 13, 14, 16 and 17
+re-anchored to detection time, clock time, or price-path events under D13, and that
+re-anchoring stands.
+
+**Evidence is not retracted by the method being closed**, per the same rule that preserved
+v3's scale-separation result under D9. The carried findings are listed in
+`results/d9_lineage_closeout/REPORT.md` §3 and remain citable.
+
+**Numbering note.** Recorded as D21 because D20 was appended by Phase 10d on 2026-08-26.
+`CLAUDE.md`'s decision pointer list was stale at D14 and is corrected in the same commit as
+this decision; the register in this file, not that list, is the authority for the next free
+number.

@@ -1135,3 +1135,79 @@ run-length floor (52.3% of its objects are single-interval), and Stage 1's recor
 flipped between Stage 0 and Stage 0b. The eligible-pool gap (15,299 vs D14's 20,951) and the
 `det_ns_*` float64 repair, which 10c's map entry carries to Phase 10d, were **not in 10d's prompt
 scope** and remain open.
+
+
+## Phase 10d — Diagnostic 1: The Boundary Through Time (2026-08-27)
+
+Diagnostic, not a phase. Changed nothing, adopted no rule, appended no decision. Plotted the
+candidates argmax-void discards — every chart in the programme before it showed only the winner.
+
+Report: `results/phase_10d_diag1/REPORT.md` (copy at `results/reports/phase_10d_diag1_report.md`).
+Digest: `results/phase_10d_diag1/digest.json`.
+
+**Prompt / config** — `prompts/phase_10d_diag1.md`; `config/phase_10d_diag1.json`, hash
+**`0879d61c`** *(computed with an explicit UTF-8 read — the file has non-ASCII `_why` strings and
+hashes differently under cp1252; see the report §8.4)*.
+
+**Code** — `research/phase_10d_diag1/`: `t1_frames.py` (frames, the full candidate ladder, and the
+T1d reconciliation gate — imports 10c's `peaks_poisson`/`envelope_boundary` and asserts the top of
+its own enumeration against `envelope_boundary()` on every frame); `t2_charts.py` (charts 01–05);
+`t3_animation.py` (chart 06, scrubbable, plus the T3d layout comparison); `t4_tables.py` (all tables
+and the stationary-or-shifting verdict).
+
+**Findings** — the distribution is **not bimodal**: 99.8% of frames carrying a boundary hold ≥3
+surviving peaks, and 4 of 2,308 are the two-peak case the void parameter presumes. Candidates reach
+tradeable timescales far more often than winners do. **The coarse candidate is not the runner-up —
+it is ladder rank 5+.** The selection is not stationary and switches rather than drifts.
+
+**Discrepancies posted** — 10c *did* build the animated histogram (T6a–d, 56 events) and Cooper *did*
+choose its layout at T6c, both of which the prompt described as deferred; and
+`research/phase_10c/s1_t6_animation.py`'s docstring disagrees with its own code on the frame window
+and on per-frame peak detection. Plus a third hash-reproducibility defect, encoding sensitivity.
+
+## Phase 10d — Diagnostic 1, Charts Addendum (2026-08-27)
+
+Pictures, not analysis. One distribution-and-boundaries-through-time chart per event, from the frames
+Diag1 already committed.
+
+**Prompt / config** — `prompts/phase_10d_diag1_charts.md`; `config/phase_10d_diag1_charts.json`
+*(deliberately a separate file: editing `config/phase_10d_diag1.json` would have changed the hash
+Diag1's report cites throughout)*.
+
+**Code** — `research/phase_10d_diag1/`: `c1_emit_parquets.py` (emits `diag1_frames`, `diag1_ladder`,
+`diag1_tape` — same frames and ladder as Diag1 T1, in the long form the plotter consumes);
+`plot_boundary_through_time.py` (Cooper-supplied, installed unmodified except for repairing
+transfer-corrupted characters); `c5_manifest.py` (manifest and gate verification).
+
+**Charts** — `results/phase_10d_diag1/charts/boundary_through_time/`: 108 event charts, 3 contact
+sheets, one shared `plotly.min.js`, 978 MB, **untracked and regenerable** per 10c's convention;
+`results/phase_10d_diag1/artifacts/t_charts_manifest.json` is the committed record. All 43
+tape-review events have an 8-min chart; every chart within a (kernel, theme) run shares one y-range,
+verified by reading the range back out of each written file.
+
+## D9 Lineage Close-Out — threshold-from-trough is closed (2026-08-27)
+
+**10d-R0 fired on Cooper's tape review.** Closes the threshold-from-trough method established by D9
+and carried through v4 → 10c → 10d → Diag1, including any exact-partition replacement, because the
+defect is the premise that a privileged boundary exists rather than the arithmetic used to locate one.
+**Does not close** the locally-normalized log-interval representation.
+
+Record: `results/d9_lineage_closeout/REPORT.md` (copy at
+`results/reports/d9_lineage_closeout_report.md`). Digest: `results/d9_lineage_closeout/digest.json`.
+Decision: `docs/Universe-Decisions.md` **D21**, append-only.
+
+**Carries eight findings forward** — evidence is not retracted by the method being closed, per the
+rule that preserved v3's scale-separation result under D9. Chief among them: 10c's window fix and
+what it demonstrated; 10d's attribution result that assembly is not the cause of the scale; the
+break-cause census; Diag1's reconciled frame pipeline; and `plot_boundary_through_time.py`, which is
+not tied to this method.
+
+**Also corrected in this close-out** — `CLAUDE.md`'s decision pointer list, stale at D14 while the
+register ran to D19, which had already produced one near-collision at D20. Now complete through D21,
+with the next free number stated, the register named as the authority, and a standing rule that any
+phase appending a decision updates the list in the same commit. And `CLAUDE.md`'s claim that
+`docs/Claude-Code-Operating-Plan.md` has never existed — it exists, added 2026-08-13 at `edfb1ea`.
+
+**No downstream phase is newly blocked**; D13's re-anchoring stands. Operating Plan §6 row 10 is
+marked closed and row 15 (*Burst hazard function*) is recorded as blocked on a successor object
+definition, insert-only, nothing renumbered.

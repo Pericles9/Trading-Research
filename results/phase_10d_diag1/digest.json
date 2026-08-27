@@ -4,7 +4,7 @@
   "title": "The Boundary Through Time",
   "config_hash": "0879d61c",
   "_config_hash_note": "computed with an EXPLICIT UTF-8 read; under the Windows default cp1252 the same file hashes to 2e15b95e. See REPORT.md section 8.4.",
-  "status": "complete_pending_review",
+  "status": "complete_reviewed",
   "changes_nothing": true,
   "_changes_nothing": "No boundary rule adopted, no parameter tuned, no cutoff applied, no decision appended, no sub-burst re-derived. docs/Universe-Decisions.md not touched.",
   "escalation": {
@@ -261,5 +261,13 @@
   ],
   "reproduce": ".venv/Scripts/python.exe research/phase_10d_diag1/t1_frames.py && .venv/Scripts/python.exe research/phase_10d_diag1/t2_charts.py && .venv/Scripts/python.exe research/phase_10d_diag1/t3_animation.py && .venv/Scripts/python.exe research/phase_10d_diag1/t4_tables.py",
   "report": "results/phase_10d_diag1/REPORT.md",
-  "affects_10d": "Nothing. 10d-R0 remains open and unaffected."
+  "affects_10d": "Nothing. 10d-R0 remains open and unaffected.",
+  "review_outcome": {
+    "date": "2026-08-27",
+    "gate": "10d-R0 fired on the 10d tape review; this diagnostic supplied the mechanism",
+    "decision": "docs/Universe-Decisions.md D21",
+    "what_this_diagnostic_decided": "Nothing -- it changed nothing and adopted no rule, exactly as specified. But its four measurements are what turned a failed tape review into a closable method: the histogram is richly multimodal (99.8% of frames carry 3+ peaks, 4 of 2,308 are the bimodal case the void parameter presumes), the candidate ladder is a smooth gradient rather than a two-horse race, the selection is unstable across frames sharing 87.5% of their data, and the winner is systematically biased to the fine end. Together those say there is no privileged valley to find, which is why D21 closes the exact-partition replacement too.",
+    "evidence_retained": "Not retracted by the method being closed, per the rule that preserved v3's scale-separation result under D9. Carried in results/d9_lineage_closeout/REPORT.md.",
+    "closeout": "results/d9_lineage_closeout/REPORT.md"
+  }
 }
