@@ -1066,3 +1066,72 @@ work.
 in `s1_verification_block.json`); one population-scope defect found in prior (Amendment 4-6) work
 and flagged, not corrected retroactively (BMR, `docs/Open-Items-Register.md`); the eligible-pool gap
 (15,299 vs. D14's 20,951) and the `det_ns_*` float64 repair remain open, carried to Phase 10d.
+
+
+## Phase 10d — Burst Assembly Under a Merge Tolerance and a Run-Length Floor (2026-08-26)
+
+Changes **one thing** relative to 10c: how labelled intervals become burst objects. Everything
+upstream is 10c's, read and asserted at run time, never re-derived — the centered clock-time window,
+the three kernels with D5 = 8 min primary, the variant grid, the four segments, the per-event derived
+data floor, and argmax-void threshold selection with no cutoff. Deliverable is the **attribution**,
+not a duration number.
+
+Report: `results/phase_10d/REPORT.md` (cross-phase copy at `results/reports/phase_10d_report.md`).
+Digest: `results/phase_10d/digest.json`.
+
+**Prompts** — `prompts/phase_10d.md` (r2, the executable prompt), `prompts/phase_10d_spec.md` (r2,
+the design and reasoning record) and `prompts/phase_10c_closing_note_erratum.md`, which corrects four
+settled points the r1 drafts inherited from 10c's pre-phase outline rather than its committed config
+(window basis, threshold rule, declined-share baseline, causal-debt retirement).
+
+**Config** — `config/phase_10d.json`. Four grids, all pre-registered before any real event was read:
+`K ∈ {0,1,2,3,5}`, `d ∈ {0,0.25,0.5,1.0}` decades **added** to the threshold, `min_prints ∈ {2,3,5}`
+reference **2**, `sep ∈ {hard_break, bridgeable_count_only}` reference `hard_break`. Identity cell
+`K=0, d=0, min_prints=2, sep=hard_break` reproduces 10c bit-exactly.
+
+**Code** — `research/phase_10d/`:
+- `assemble.py` — the merge, the separator rule and the run-length floor. The only place 10d changes
+  anything; a pure function of the label array with no I/O and no config reads.
+- `controls.py` — the T2 control gate, C1–C5, all hard, all passed before any real event was read.
+- `t3_counterfactual.py`, `t3_chart.py` — void distribution and the would-be declined share at
+  candidate cutoffs, **applied nowhere**.
+- `t4_assembly.py` — the grid run. Imports 10c's labelling path (`s1_t1_subbursts.py`,
+  `common.py`) by explicit spec rather than by `sys.path`, because `research/phase_10/common.py` and
+  `research/phase_10c/common.py` share a module name and shadowing them raises a circular import.
+- `t4_descriptive.py`, `t4_tape.py` — break-cause census, per-object/per-event description, timing,
+  and the 43-event tape review.
+- `t5_attribution.py`, `t5_charts.py` — the attribution and escalation-row evaluation.
+- `t6_causal.py` — the causal audit, carried forward unchanged.
+- `t2_chart.py` — the control-gate chart.
+
+**Artifacts** — `results/phase_10d/controls/` (C1–C5 + `gate.json`) and
+`results/phase_10d/artifacts/` (JSON summaries committed; the parquets — `t4_subbursts.parquet` at
+6,811,163 rows, `t4_cell_summary`, `t4_break_cause`, `t5_*`, `causal_audit` — are gitignored and
+regenerable per §12, exactly as 10c's are).
+
+**Charts** — `results/phase_10d/charts/`: `01_control_assembly`, `02_void_counterfactual`,
+`03_break_cause`, `04_duration_spacing_moveshare`, `06_attribution`, `07_nprints_composition`,
+`08_merge_surface`, `09_kernel_variant_consistency`, `10_count_vs_print_count` — 10/10
+Kaleido-verified. `05_tape_review/` (43 events, 270 MB) is **untracked and regenerable**, following
+10c's `s1_07_tape_review/` convention; `results/phase_10d/artifacts/t4_tape_manifest.json` is the
+committed record.
+
+**Decisions** — `docs/Universe-Decisions.md` **D20**, drafted in spec §7 as D15. Renumbered because
+Phase 11 had already appended D15–D19 and `CLAUDE.md`'s pointer list, which stops at D14, is stale.
+Every other word of the decision is the spec's text verbatim; the renumber is recorded inline and is
+open for Cooper.
+
+**Findings** — the run-length floor moves median sub-burst duration **7.17× more** than the merge
+tolerance does (+0.3209 vs +0.0838 decades at kernel 8), and the two are separable and mildly
+super-additive. The first measurement in the programme of run-break cause: **0.761% of run breaks
+involve an `ok=False` interval**, so fragmentation is essentially all real above-threshold gaps and
+the separator axis is nearly inert.
+
+**Escalations / open items** — no row fired in 10d's own code. **10d-R0, Cooper's tape review, is
+open.** Two upstream defects found and recorded, with no 10c artifact edited: 10c applies no
+run-length floor (52.3% of its objects are single-interval), and Stage 1's recorded `config_hash`
+`998c2461` is stale by one commit — `39ec87e` edited `config/phase_10c.json` inside Stage 1 before
+`692d9d0` produced the T1 artifacts. `cfg_hash()` is also line-ending sensitive and its convention
+flipped between Stage 0 and Stage 0b. The eligible-pool gap (15,299 vs D14's 20,951) and the
+`det_ns_*` float64 repair, which 10c's map entry carries to Phase 10d, were **not in 10d's prompt
+scope** and remain open.

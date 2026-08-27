@@ -1,0 +1,788 @@
+{
+  "task": "T4f",
+  "chart": "05_tape_review",
+  "n_events": 43,
+  "kernel_min": 8.0,
+  "reference_cell": {
+    "K": 0,
+    "d": 0.0,
+    "min_prints": 2
+  },
+  "joint_cell": {
+    "K": 5,
+    "d": 1.0,
+    "min_prints": 3
+  },
+  "charts": [
+    {
+      "chart": "OCUL_2020-10-07.html",
+      "png": "OCUL_2020-10-07.png",
+      "kaleido_verified": true,
+      "html_bytes": 2592709,
+      "png_bytes": 1024176,
+      "ticker": "OCUL",
+      "event_date_canonical": "2020-10-07",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "unlabelled"
+      },
+      "segment_varies_with_variant": true,
+      "n_ref": 3764,
+      "n_joint": 1707
+    },
+    {
+      "chart": "PAR_2021-04-08.html",
+      "png": "PAR_2021-04-08.png",
+      "kaleido_verified": true,
+      "html_bytes": 1396410,
+      "png_bytes": 900258,
+      "ticker": "PAR",
+      "event_date_canonical": "2021-04-08",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "unlabelled"
+      },
+      "segment_varies_with_variant": true,
+      "n_ref": 45,
+      "n_joint": 12
+    },
+    {
+      "chart": "SCLX_2022-11-23.html",
+      "png": "SCLX_2022-11-23.png",
+      "kaleido_verified": true,
+      "html_bytes": 179977,
+      "png_bytes": 643087,
+      "ticker": "SCLX",
+      "event_date_canonical": "2022-11-23",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 22,
+      "n_joint": 6
+    },
+    {
+      "chart": "ALF_2021-05-10.html",
+      "png": "ALF_2021-05-10.png",
+      "kaleido_verified": true,
+      "html_bytes": 6732226,
+      "png_bytes": 1073282,
+      "ticker": "ALF",
+      "event_date_canonical": "2021-05-10",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 3954,
+      "n_joint": 1293
+    },
+    {
+      "chart": "AMCX_2021-02-26.html",
+      "png": "AMCX_2021-02-26.png",
+      "kaleido_verified": true,
+      "html_bytes": 2683136,
+      "png_bytes": 924670,
+      "ticker": "AMCX",
+      "event_date_canonical": "2021-02-26",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "unlabelled"
+      },
+      "segment_varies_with_variant": true,
+      "n_ref": 3075,
+      "n_joint": 1583
+    },
+    {
+      "chart": "OCUL_2023-12-04.html",
+      "png": "OCUL_2023-12-04.png",
+      "kaleido_verified": true,
+      "html_bytes": 1057335,
+      "png_bytes": 830142,
+      "ticker": "OCUL",
+      "event_date_canonical": "2023-12-04",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "unlabelled"
+      },
+      "segment_varies_with_variant": true,
+      "n_ref": 145,
+      "n_joint": 6
+    },
+    {
+      "chart": "ASPI_2023-08-01.html",
+      "png": "ASPI_2023-08-01.png",
+      "kaleido_verified": true,
+      "html_bytes": 163263,
+      "png_bytes": 606465,
+      "ticker": "ASPI",
+      "event_date_canonical": "2023-08-01",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 17,
+      "n_joint": 11
+    },
+    {
+      "chart": "CELH_2020-08-06.html",
+      "png": "CELH_2020-08-06.png",
+      "kaleido_verified": true,
+      "html_bytes": 1849861,
+      "png_bytes": 907582,
+      "ticker": "CELH",
+      "event_date_canonical": "2020-08-06",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "evening"
+      },
+      "segment_varies_with_variant": true,
+      "n_ref": 49,
+      "n_joint": 9
+    },
+    {
+      "chart": "EWTX_2022-01-05.html",
+      "png": "EWTX_2022-01-05.png",
+      "kaleido_verified": true,
+      "html_bytes": 2679821,
+      "png_bytes": 891475,
+      "ticker": "EWTX",
+      "event_date_canonical": "2022-01-05",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 699,
+      "n_joint": 301
+    },
+    {
+      "chart": "SOS_2021-02-17.html",
+      "png": "SOS_2021-02-17.png",
+      "kaleido_verified": true,
+      "html_bytes": 51324206,
+      "png_bytes": 913161,
+      "ticker": "SOS",
+      "event_date_canonical": "2021-02-17",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 256,
+      "n_joint": 67
+    },
+    {
+      "chart": "AEHL_2021-02-19.html",
+      "png": "AEHL_2021-02-19.png",
+      "kaleido_verified": true,
+      "html_bytes": 1263240,
+      "png_bytes": 743861,
+      "ticker": "AEHL",
+      "event_date_canonical": "2021-02-19",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 14,
+      "n_joint": 10
+    },
+    {
+      "chart": "NE_2020-02-12.html",
+      "png": "NE_2020-02-12.png",
+      "kaleido_verified": true,
+      "html_bytes": 1620786,
+      "png_bytes": 861139,
+      "ticker": "NE",
+      "event_date_canonical": "2020-02-12",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 441,
+      "n_joint": 146
+    },
+    {
+      "chart": "SIFY_2023-06-22.html",
+      "png": "SIFY_2023-06-22.png",
+      "kaleido_verified": true,
+      "html_bytes": 254550,
+      "png_bytes": 677220,
+      "ticker": "SIFY",
+      "event_date_canonical": "2023-06-22",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 8,
+      "n_joint": 2
+    },
+    {
+      "chart": "UCAR_2024-03-28.html",
+      "png": "UCAR_2024-03-28.png",
+      "kaleido_verified": true,
+      "html_bytes": 4204688,
+      "png_bytes": 726987,
+      "ticker": "UCAR",
+      "event_date_canonical": "2024-03-28",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 16,
+      "n_joint": 12
+    },
+    {
+      "chart": "USEG_2020-05-15.html",
+      "png": "USEG_2020-05-15.png",
+      "kaleido_verified": true,
+      "html_bytes": 118755,
+      "png_bytes": 590764,
+      "ticker": "USEG",
+      "event_date_canonical": "2020-05-15",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 10,
+      "n_joint": 4
+    },
+    {
+      "chart": "ABSI_2023-12-04.html",
+      "png": "ABSI_2023-12-04.png",
+      "kaleido_verified": true,
+      "html_bytes": 1003467,
+      "png_bytes": 781684,
+      "ticker": "ABSI",
+      "event_date_canonical": "2023-12-04",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 9,
+      "n_joint": 6
+    },
+    {
+      "chart": "CREX_2022-02-01.html",
+      "png": "CREX_2022-02-01.png",
+      "kaleido_verified": true,
+      "html_bytes": 10679578,
+      "png_bytes": 1091195,
+      "ticker": "CREX",
+      "event_date_canonical": "2022-02-01",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 11123,
+      "n_joint": 4642
+    },
+    {
+      "chart": "EGHT_2020-12-10.html",
+      "png": "EGHT_2020-12-10.png",
+      "kaleido_verified": true,
+      "html_bytes": 4176114,
+      "png_bytes": 899936,
+      "ticker": "EGHT",
+      "event_date_canonical": "2020-12-10",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 575,
+      "n_joint": 227
+    },
+    {
+      "chart": "TORO_2023-03-31.html",
+      "png": "TORO_2023-03-31.png",
+      "kaleido_verified": true,
+      "html_bytes": 2643191,
+      "png_bytes": 798308,
+      "ticker": "TORO",
+      "event_date_canonical": "2023-03-31",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 80,
+      "n_joint": 16
+    },
+    {
+      "chart": "ALGS_2024-10-24.html",
+      "png": "ALGS_2024-10-24.png",
+      "kaleido_verified": true,
+      "html_bytes": 381913,
+      "png_bytes": 698718,
+      "ticker": "ALGS",
+      "event_date_canonical": "2024-10-24",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 14,
+      "n_joint": 8
+    },
+    {
+      "chart": "AQB_2022-03-10.html",
+      "png": "AQB_2022-03-10.png",
+      "kaleido_verified": true,
+      "html_bytes": 1402349,
+      "png_bytes": 787560,
+      "ticker": "AQB",
+      "event_date_canonical": "2022-03-10",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 207,
+      "n_joint": 99
+    },
+    {
+      "chart": "IMTE_2022-09-16.html",
+      "png": "IMTE_2022-09-16.png",
+      "kaleido_verified": true,
+      "html_bytes": 2718574,
+      "png_bytes": 806296,
+      "ticker": "IMTE",
+      "event_date_canonical": "2022-09-16",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 21,
+      "n_joint": 16
+    },
+    {
+      "chart": "WGS_2024-01-08.html",
+      "png": "WGS_2024-01-08.png",
+      "kaleido_verified": true,
+      "html_bytes": 651568,
+      "png_bytes": 821719,
+      "ticker": "WGS",
+      "event_date_canonical": "2024-01-08",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 501,
+      "n_joint": 185
+    },
+    {
+      "chart": "FATBB_2022-03-29.html",
+      "png": "FATBB_2022-03-29.png",
+      "kaleido_verified": true,
+      "html_bytes": 200338,
+      "png_bytes": 683177,
+      "ticker": "FATBB",
+      "event_date_canonical": "2022-03-29",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 56,
+      "n_joint": 20
+    },
+    {
+      "chart": "MRSN_2023-05-03.html",
+      "png": "MRSN_2023-05-03.png",
+      "kaleido_verified": true,
+      "html_bytes": 5654092,
+      "png_bytes": 878164,
+      "ticker": "MRSN",
+      "event_date_canonical": "2023-05-03",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 6875,
+      "n_joint": 3445
+    },
+    {
+      "chart": "SPCB_2021-10-25.html",
+      "png": "SPCB_2021-10-25.png",
+      "kaleido_verified": true,
+      "html_bytes": 1813186,
+      "png_bytes": 779159,
+      "ticker": "SPCB",
+      "event_date_canonical": "2021-10-25",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 48,
+      "n_joint": 7
+    },
+    {
+      "chart": "ACRE_2020-04-07.html",
+      "png": "ACRE_2020-04-07.png",
+      "kaleido_verified": true,
+      "html_bytes": 788750,
+      "png_bytes": 794177,
+      "ticker": "ACRE",
+      "event_date_canonical": "2020-04-07",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 6,
+      "n_joint": 4
+    },
+    {
+      "chart": "CVNA_2020-03-24.html",
+      "png": "CVNA_2020-03-24.png",
+      "kaleido_verified": true,
+      "html_bytes": 4273990,
+      "png_bytes": 861915,
+      "ticker": "CVNA",
+      "event_date_canonical": "2020-03-24",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 5494,
+      "n_joint": 2747
+    },
+    {
+      "chart": "MDIA_2024-04-09.html",
+      "png": "MDIA_2024-04-09.png",
+      "kaleido_verified": true,
+      "html_bytes": 18767669,
+      "png_bytes": 896085,
+      "ticker": "MDIA",
+      "event_date_canonical": "2024-04-09",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 38,
+      "n_joint": 14
+    },
+    {
+      "chart": "NEPH_2023-06-01.html",
+      "png": "NEPH_2023-06-01.png",
+      "kaleido_verified": true,
+      "html_bytes": 415630,
+      "png_bytes": 667228,
+      "ticker": "NEPH",
+      "event_date_canonical": "2023-06-01",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 17,
+      "n_joint": 2
+    },
+    {
+      "chart": "PPSI_2020-10-20.html",
+      "png": "PPSI_2020-10-20.png",
+      "kaleido_verified": true,
+      "html_bytes": 3071372,
+      "png_bytes": 811331,
+      "ticker": "PPSI",
+      "event_date_canonical": "2020-10-20",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 319,
+      "n_joint": 41
+    },
+    {
+      "chart": "AMC_2020-11-09.html",
+      "png": "AMC_2020-11-09.png",
+      "kaleido_verified": true,
+      "html_bytes": 21707926,
+      "png_bytes": 855928,
+      "ticker": "AMC",
+      "event_date_canonical": "2020-11-09",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 27,
+      "n_joint": 8
+    },
+    {
+      "chart": "CPSH_2020-05-06.html",
+      "png": "CPSH_2020-05-06.png",
+      "kaleido_verified": true,
+      "html_bytes": 3625466,
+      "png_bytes": 916263,
+      "ticker": "CPSH",
+      "event_date_canonical": "2020-05-06",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 634,
+      "n_joint": 162
+    },
+    {
+      "chart": "DRUG_2023-08-08.html",
+      "png": "DRUG_2023-08-08.png",
+      "kaleido_verified": true,
+      "html_bytes": 12034795,
+      "png_bytes": 935646,
+      "ticker": "DRUG",
+      "event_date_canonical": "2023-08-08",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 2058,
+      "n_joint": 549
+    },
+    {
+      "chart": "MDIA_2022-08-03.html",
+      "png": "MDIA_2022-08-03.png",
+      "kaleido_verified": true,
+      "html_bytes": 5061478,
+      "png_bytes": 1004163,
+      "ticker": "MDIA",
+      "event_date_canonical": "2022-08-03",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 5093,
+      "n_joint": 2308
+    },
+    {
+      "chart": "ZENA_2024-10-11.html",
+      "png": "ZENA_2024-10-11.png",
+      "kaleido_verified": true,
+      "html_bytes": 15570597,
+      "png_bytes": 918815,
+      "ticker": "ZENA",
+      "event_date_canonical": "2024-10-11",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 3,
+      "n_joint": 0
+    },
+    {
+      "chart": "BLBX_2023-04-17.html",
+      "png": "BLBX_2023-04-17.png",
+      "kaleido_verified": true,
+      "html_bytes": 8557265,
+      "png_bytes": 953956,
+      "ticker": "BLBX",
+      "event_date_canonical": "2023-04-17",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 19,
+      "n_joint": 4
+    },
+    {
+      "chart": "CODX_2020-03-11.html",
+      "png": "CODX_2020-03-11.png",
+      "kaleido_verified": true,
+      "html_bytes": 16163612,
+      "png_bytes": 787148,
+      "ticker": "CODX",
+      "event_date_canonical": "2020-03-11",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": true,
+      "n_ref": 41,
+      "n_joint": 13
+    },
+    {
+      "chart": "EDSA_2020-06-15.html",
+      "png": "EDSA_2020-06-15.png",
+      "kaleido_verified": true,
+      "html_bytes": 19278527,
+      "png_bytes": 978059,
+      "ticker": "EDSA",
+      "event_date_canonical": "2020-06-15",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 840,
+      "n_joint": 152
+    },
+    {
+      "chart": "EEIQ_2023-05-01.html",
+      "png": "EEIQ_2023-05-01.png",
+      "kaleido_verified": true,
+      "html_bytes": 153971,
+      "png_bytes": 590662,
+      "ticker": "EEIQ",
+      "event_date_canonical": "2023-05-01",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 3,
+      "n_joint": 1
+    },
+    {
+      "chart": "SWVL_2022-04-21.html",
+      "png": "SWVL_2022-04-21.png",
+      "kaleido_verified": true,
+      "html_bytes": 7037080,
+      "png_bytes": 746439,
+      "ticker": "SWVL",
+      "event_date_canonical": "2022-04-21",
+      "segment_v125": "rth",
+      "segment_by_variant": {
+        "1.25": "rth",
+        "1.3": "rth",
+        "1.35": "rth"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 14,
+      "n_joint": 11
+    },
+    {
+      "chart": "SLXN_2024-08-19.html",
+      "png": "SLXN_2024-08-19.png",
+      "kaleido_verified": true,
+      "html_bytes": 765999,
+      "png_bytes": 812629,
+      "ticker": "SLXN",
+      "event_date_canonical": "2024-08-19",
+      "segment_v125": "premarket",
+      "segment_by_variant": {
+        "1.25": "premarket",
+        "1.3": "premarket",
+        "1.35": "premarket"
+      },
+      "segment_varies_with_variant": false,
+      "n_ref": 53,
+      "n_joint": 23
+    },
+    {
+      "chart": "RBC_2022-09-26.html",
+      "png": "RBC_2022-09-26.png",
+      "kaleido_verified": true,
+      "html_bytes": 491856,
+      "png_bytes": 724014,
+      "ticker": "RBC",
+      "event_date_canonical": "2022-09-26",
+      "segment_v125": "unlabelled",
+      "segment_by_variant": {},
+      "segment_varies_with_variant": false,
+      "n_ref": 26,
+      "n_joint": 9
+    }
+  ]
+}

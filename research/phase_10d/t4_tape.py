@@ -56,8 +56,16 @@ def main() -> int:
     cfg10c = c10c.load_cfg()
     F = float(c10c.class_m(cfg10c)["D4_median_precision_factor"])
     d1_us = float(c10c.class_m(cfg10c)["D1_sweep_floor_us"])
-    ctx = pd.read_parquet(os.path.join(ART, "t4_variant_context.parquet"))
-    ctx = ctx[ctx.variant == 1.25].set_index(["ticker", "event_date_canonical"])
+    ctx_all = pd.read_parquet(os.path.join(ART, "t4_variant_context.parquet"))
+    # Segment membership is VARIANT-DEPENDENT for 3 of 56 events (CELH 2020-08-06 and
+    # OST 2024-06-13 are rth at 1.25/1.30 and evening at 1.35; CODX 2020-03-11 is
+    # premarket at 1.25 and rth at 1.30/1.35). Carry all three labels on every chart so
+    # the set demonstrably spans all four segments and no reader is misled by one
+    # variant's labelling.
+    seg_by_variant = ctx_all.pivot_table(
+        index=["ticker", "event_date_canonical"], columns="variant",
+        values="segment", aggfunc="first")
+    ctx = ctx_all[ctx_all.variant == 1.25].set_index(["ticker", "event_date_canonical"])
 
     dev = c10c.load_dev_sample(cfg10c)
     os.makedirs(OUT, exist_ok=True)
@@ -197,14 +205,24 @@ def main() -> int:
                 font=dict(size=11, color=colr))
             fig.update_yaxes(title_text="price", row=rr, col=1)
 
-        seg = ctx.loc[(r.ticker, r.event_date_canonical), "segment"] \
-            if (r.ticker, r.event_date_canonical) in ctx.index else None
+        key_ = (r.ticker, r.event_date_canonical)
+        seg = ctx.loc[key_, "segment"] if key_ in ctx.index else None
         seg = seg if isinstance(seg, str) else "unlabelled"
+        if key_ in seg_by_variant.index:
+            row_ = seg_by_variant.loc[key_]
+            segs_all = {float(v): (row_[v] if isinstance(row_[v], str) else "unlabelled")
+                        for v in seg_by_variant.columns}
+        else:
+            segs_all = {}
+        seg_txt = " · ".join(f"{v:g}: <b>{sg}</b>" for v, sg in sorted(segs_all.items()))
+        seg_varies = len(set(segs_all.values())) > 1
         cap = C.caption(
-            sample=(f"{r.ticker} {r.event_date_canonical} · segment <b>{seg}</b> (variant 1.25) · "
-                    f"kernel {KP:g} min (D5, primary) · {agg_ts.size:,} D1-aggregated prints, "
-                    f"{li.size:,} intervals.<br>Zoom window {span/1e9:.1f} s, chosen as the "
-                    f"densest sub-burst region at the reference cell."),
+            sample=(f"{r.ticker} {r.event_date_canonical} · segment by variant — {seg_txt}"
+                    + ("  <b>(this event changes segment with the variant)</b>"
+                       if seg_varies else "")
+                    + f" · kernel {KP:g} min (D5, primary) · {agg_ts.size:,} D1-aggregated "
+                      f"prints, {li.size:,} intervals.<br>Zoom window {span/1e9:.1f} s, "
+                      f"chosen as the densest sub-burst region at the reference cell."),
             filters=(f"ok mask (window ≥ derived floor {floor:.0f} intervals): "
                      f"{ok.sum():,}/{ok.size:,}. Other kernels and variants are on record in "
                      f"t4_cell_summary.parquet, not re-plotted here."),
@@ -220,7 +238,10 @@ def main() -> int:
         name = f"{r.ticker}_{r.event_date_canonical}"
         manifest.append({**C.write(fig, OUT, name), "ticker": r.ticker,
                          "event_date_canonical": str(r.event_date_canonical),
-                         "segment": seg, "n_ref": a_ref["n_objects"],
+                         "segment_v125": seg,
+                         "segment_by_variant": {str(k): v for k, v in segs_all.items()},
+                         "segment_varies_with_variant": bool(seg_varies),
+                         "n_ref": a_ref["n_objects"],
                          "n_joint": a_jnt["n_objects"]})
         if i % 10 == 0:
             print(f"  {i}/{len(dev)} ({time.perf_counter()-t0:.0f}s)", flush=True)
@@ -229,7 +250,11 @@ def main() -> int:
         json.dump({"task": "T4f", "chart": "05_tape_review", "n_events": len(manifest),
                    "kernel_min": KP, "reference_cell": REF, "joint_cell": JOINT,
                    "charts": manifest}, f, indent=2)
-    segs = pd.DataFrame(manifest).segment.value_counts().to_dict()
+    md = pd.DataFrame(manifest)
+    segs = {"by_variant_1.25": md.segment_v125.value_counts().to_dict(),
+            "any_variant": pd.Series([s_ for m in manifest
+                                      for s_ in m["segment_by_variant"].values()]
+                                     ).value_counts().to_dict()}
     print(f"\n{len(manifest)} tape charts written to {OUT}")
     print(f"segments covered: {segs}")
     print(f"kaleido verified: {sum(m['kaleido_verified'] for m in manifest)}/{len(manifest)}")

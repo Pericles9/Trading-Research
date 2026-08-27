@@ -1,0 +1,22 @@
+{
+  "phase": "10d",
+  "task": "T6a",
+  "config_hash": "c5dd2fdc",
+  "v4_source": "results/phase_10/artifacts/v4_causal_audit.parquet",
+  "v4_fields_total": 18,
+  "v4_non_causal": 16,
+  "v4_causal": 2,
+  "v4_causal_fields": [
+    "detection_anchor_ns",
+    "detection_segment"
+  ],
+  "retired_by_10c": 0,
+  "_retired_by_10c_source": "results/phase_10c/digests/stage1_digest.json /v4_comparison/causal_status_vs_v4_causal_audit: n_retired_by_stage1 = 0, 'window stayed centered, not trailing; causal debt unchanged, still parked for Phase 17'",
+  "retired_by_10d": 0,
+  "fields_added_by_10d": 8,
+  "fields_added_by_10d_causal": 0,
+  "total_fields_after_10d": 26,
+  "total_non_causal_after_10d": 24,
+  "statement": "10d RETIRES NO CAUSAL DEBT AND CLAIMS NONE. All 16 of v4's non-causal fields remain non-causal and all 8 fields 10d adds are non-causal too. The two causal fields -- detection_anchor_ns and detection_segment -- are unchanged. The debt stays parked for Phase 17. The reason is structural, not an oversight: the window is CENTRED (10c's committed D3_window, with 'trailing' a forbidden variant), so every quantity downstream of the local median reads forward in time by half a kernel; and the argmax-void threshold is a property of the completed-session histogram. A merge tolerance and a run-length floor operate on objects that are already non-causal and cannot make them causal.",
+  "artifact": "results/phase_10d/artifacts/causal_audit.parquet"
+}
