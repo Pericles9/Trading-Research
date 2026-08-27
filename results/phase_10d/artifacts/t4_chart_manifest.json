@@ -1,0 +1,19 @@
+{
+  "task": "T4f",
+  "charts": [
+    {
+      "chart": "03_break_cause.html",
+      "png": "03_break_cause.png",
+      "kaleido_verified": true,
+      "html_bytes": 12980,
+      "png_bytes": 363430
+    },
+    {
+      "chart": "04_duration_spacing_moveshare.html",
+      "png": "04_duration_spacing_moveshare.png",
+      "kaleido_verified": true,
+      "html_bytes": 2435570,
+      "png_bytes": 485799
+    }
+  ]
+}

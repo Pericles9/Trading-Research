@@ -13,8 +13,11 @@
   "upstream_10c": {
     "_why": "Read, never re-derived. 10d changes assembly only; every field here is asserted against config/phase_10c.json and the Stage 1 artifacts at run time, and a mismatch is a hard stop.",
     "config_path": "config/phase_10c.json",
-    "config_hash_expected": "998c2461",
-    "_config_hash_why": "Stage 1's own recorded hash (results/phase_10c/digests/stage1_digest.json). Asserted at T4a.",
+    "config_hash_expected_lf": "17124203",
+    "config_hash_expected_raw_crlf": "a0943e2a",
+    "_config_hash_why": "The hash of config/phase_10c.json AS COMMITTED at master 213bd7c, asserted at T4a line-ending-insensitively (raw bytes OR LF-normalised). NOT the value Stage 1's digest records.",
+    "_config_hash_discrepancy": "This field originally pre-registered 998c2461, read from results/phase_10c/digests/stage1_digest.json. The assertion failed at T4 and the cause is an upstream defect, recorded rather than worked around: 998c2461 is the CRLF-byte hash of config/phase_10c.json AS OF COMMIT 0f079a9. The config was then edited by 39ec87e ('phase-10c-stage-1 T0: denominator resolved'), which precedes 692d9d0 ('phase-10c-stage-1 T1'), the commit that produced s1_t1_cells.parquet and s1_t1_subbursts.parquet. So Stage 1's T1 ran under the POST-edit config (17124203 LF / a0943e2a CRLF) while its digest, REPORT.md and s1_t0_denominator.json all carry the PRE-edit hash. The recorded hash is stale by one commit, and the commit that staled it is inside Stage 1 itself. 10d asserts the true value and reports the discrepancy; 10c's artifacts are not edited.",
+    "_config_hash_line_ending_note": "research/phase_10c/common.py cfg_hash() hashes RAW FILE BYTES, so its output depends on the checkout's line endings. Stage 0 recorded 9c739c08, which is the LF-form hash at 9587f10; Stage 0b and Stage 1 recorded CRLF-form hashes. The convention flipped mid-phase and the value is not reproducible across clones with different core.autocrlf settings. 10d asserts against both forms.",
     "cells_artifact": "results/phase_10c/artifacts/s1_t1_cells.parquet",
     "subbursts_artifact": "results/phase_10c/artifacts/s1_t1_subbursts.parquet",
     "window_basis": "clock_time",

@@ -1,0 +1,53 @@
+{
+  "phase": "10d",
+  "task": "T4c-T4e",
+  "config_hash": "c5dd2fdc",
+  "detection_anchor_variant": "poll0",
+  "poll_interval_s": 0,
+  "T4c_break_cause_by_kernel": [
+    {
+      "kernel_min": 2.0,
+      "cells": 38,
+      "runs": 97122,
+      "breaks": 97084,
+      "iv_above": 482659,
+      "iv_okfalse": 173485,
+      "br_above": 96100,
+      "br_okfalse": 984,
+      "break_okfalse_share": 0.010135552717234559,
+      "interval_okfalse_share": 0.2644008022629179
+    },
+    {
+      "kernel_min": 8.0,
+      "cells": 43,
+      "runs": 46709,
+      "breaks": 46666,
+      "iv_above": 643393,
+      "iv_okfalse": 30038,
+      "br_above": 46398,
+      "br_okfalse": 268,
+      "break_okfalse_share": 0.005742939184845498,
+      "interval_okfalse_share": 0.04460442123988946
+    },
+    {
+      "kernel_min": 32.0,
+      "cells": 49,
+      "runs": 26891,
+      "breaks": 26842,
+      "iv_above": 407453,
+      "iv_okfalse": 4143,
+      "br_above": 26795,
+      "br_okfalse": 47,
+      "break_okfalse_share": 0.0017509872587735638,
+      "interval_okfalse_share": 0.010065695487808434
+    }
+  ],
+  "T4c_pooled": {
+    "breaks": 170592,
+    "breaks_ok_false_involved": 1299,
+    "break_okfalse_share": 0.007614659538548115,
+    "interval_okfalse_share": 0.11926800986232829
+  },
+  "T4d_event_summary_artifact": "results/phase_10d/artifacts/t4_event_summary.parquet",
+  "T4e_timing_artifact": "results/phase_10d/artifacts/t4_timing.parquet"
+}

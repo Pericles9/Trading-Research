@@ -1,0 +1,40 @@
+{
+  "task": "T5h",
+  "charts": [
+    {
+      "chart": "06_attribution.html",
+      "png": "06_attribution.png",
+      "kaleido_verified": true,
+      "html_bytes": 3479665,
+      "png_bytes": 452308
+    },
+    {
+      "chart": "07_nprints_composition.html",
+      "png": "07_nprints_composition.png",
+      "kaleido_verified": true,
+      "html_bytes": 20851,
+      "png_bytes": 490174
+    },
+    {
+      "chart": "08_merge_surface.html",
+      "png": "08_merge_surface.png",
+      "kaleido_verified": true,
+      "html_bytes": 20055,
+      "png_bytes": 373053
+    },
+    {
+      "chart": "09_kernel_variant_consistency.html",
+      "png": "09_kernel_variant_consistency.png",
+      "kaleido_verified": true,
+      "html_bytes": 13131,
+      "png_bytes": 336244
+    },
+    {
+      "chart": "10_count_vs_print_count.html",
+      "png": "10_count_vs_print_count.png",
+      "kaleido_verified": true,
+      "html_bytes": 12490,
+      "png_bytes": 345925
+    }
+  ]
+}

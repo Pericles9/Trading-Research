@@ -1,0 +1,292 @@
+{
+  "phase": "10d",
+  "task": "T5",
+  "config_hash": "c5dd2fdc",
+  "prior_version_figures": {
+    "v4_duration_pooled": {
+      "n": 114074,
+      "q25": 2.31e-07,
+      "median": 3.49e-07,
+      "q75": 1.3295749999999999e-05,
+      "max": 1.872646799,
+      "_source": "results/phase_10/artifacts/v4_t5_t6_summary.json /t4_descriptive/pooled/duration_seconds",
+      "_cohort": "v4's 100-event analysis cohort (50 dev_v4_primary + 50 activity_extension), NOT 10c/10d's 56-event dev sample. The populations differ and the comparison is between different cohorts, which is stated wherever the figure appears.",
+      "_prompt_says": "349 ns -- confirmed: q50 = 3.49e-07 s"
+    },
+    "v4_no_threshold": {
+      "pooled": {
+        "n_events": 100,
+        "n_ok": 90,
+        "n_no_threshold": 10,
+        "n_too_few_prints": 0,
+        "share_no_threshold": 0.1,
+        "reasons": {
+          "no trough clears void cutoff 0.7": 10
+        }
+      },
+      "premarket": {
+        "n_events": 28,
+        "n_ok": 25,
+        "n_no_threshold": 3,
+        "n_too_few_prints": 0,
+        "share_no_threshold": 0.10714285714285714,
+        "reasons": {
+          "no trough clears void cutoff 0.7": 3
+        }
+      },
+      "rth": {
+        "n_events": 70,
+        "n_ok": 63,
+        "n_no_threshold": 7,
+        "n_too_few_prints": 0,
+        "share_no_threshold": 0.1,
+        "reasons": {
+          "no trough clears void cutoff 0.7": 7
+        }
+      },
+      "_source": "results/phase_10/artifacts/v4_t5_t6_summary.json /t3_no_threshold",
+      "_prompt_says": "10/100, premarket 3/28, rth 7/70 -- confirmed",
+      "_reason": "v4's own artifact records the reason as 'no trough clears void cutoff 0.7' for all 10. That rule is retired; 10c does not use it."
+    },
+    "v4_count_vs_prints": {
+      "n": 90,
+      "spearman_t0_print_count": 0.8747921448857436,
+      "loglog_slope_t0_print_count": 0.9223826547568074,
+      "spearman_absolute_activity": 0.8649714365930432,
+      "loglog_slope_absolute_activity": 0.9504121224037164,
+      "_source": "results/phase_10/artifacts/v4_t5_t6_summary.json /t5_arm_a_test/pooled",
+      "_prompt_says": "0.87/0.92 -- confirmed (0.8748 / 0.9224)"
+    },
+    "v3_count_vs_prints": {
+      "print_rate_n": 83,
+      "print_rate_spearman": 0.27718447732236096,
+      "print_rate_slope": 0.26046165338581506,
+      "volume_rate_n": 98,
+      "volume_rate_spearman": 0.35307284804119016,
+      "volume_rate_slope": 0.1849112408505339,
+      "_source": "results/phase_10/artifacts/v3_t2_t4_summary.json /t4_arm_a_test/pooled",
+      "_prompt_says": "0.28-0.35 / 0.19-0.26 -- confirmed (0.2772/0.3531 spearman, 0.2605/0.1849 slope)"
+    },
+    "v1_count_vs_prints": {
+      "spearman": 0.96,
+      "loglog_slope": 0.85,
+      "_source": "results/phase_10/REPORT.md line 127, table row '*Arm A, for reference* | *+0.96* | *+0.85*'",
+      "_attribution_caveat": "ATTRIBUTION GAP, recorded rather than papered over: unlike v3 and v4, v1's Arm A pair exists only in REPORT.md prose. No committed JSON artifact under results/phase_10/artifacts/ carries a Spearman in [0.9, 1.0]. The figure is quoted with that provenance and is not re-derived here."
+    },
+    "c10c_duration_pooled": {
+      "n": 170722,
+      "q25": 0.00044436475,
+      "median": 0.001294096,
+      "q75": 0.0041951,
+      "max": 37780.885850826,
+      "_source": "results/phase_10c/artifacts/s1_t1_subbursts.parquet, all 130 ok (event, kernel) cells pooled",
+      "_note": "This is 10c's OWN pooled figure across all three kernels. 10d's reference cell reproduces it bit-exactly (verified: identical start_ns, end_ns, n_prints and duration_s over all 170,722 objects). MAJORITY OF THIS POPULATION IS SINGLE-INTERVAL: 10c applies no run-length floor.",
+      "share_2print": 0.52332446901981,
+      "n_2print": 89343
+    }
+  },
+  "T5a_attribution": {
+    "kernel_min": 8.0,
+    "sep": "hard_break",
+    "identity_median_s": 0.001751286,
+    "identity_n": 46709,
+    "floor_only_max_shift_decades": 0.6013511029621856,
+    "floor_only_at_mp3_decades": 0.32085333189384413,
+    "floor_only_at_mp5_decades": 0.6013511029621856,
+    "merge_only_max_shift_decades": 0.08383648855867465,
+    "merge_only_median_shift_decades": 0.046978353588408434,
+    "joint_max_shift_decades": 0.9061997772784882,
+    "additive_prediction_decades": 0.4046898204525188,
+    "joint_max_at_mp3_decades": 0.516484904860443,
+    "interaction_decades": 0.11179508440792418,
+    "dominant_mechanism": "floor",
+    "ratio_floor_over_merge": 7.172904224648173
+  },
+  "T5b_composition_headline": {
+    "identity": [
+      {
+        "kernel_min": 8.0,
+        "K": 0,
+        "d": 0.0,
+        "min_prints": 2,
+        "read": "identity",
+        "n_objects": 46709,
+        "share_2print": 0.4934166862917211,
+        "n_2print": 23047,
+        "prints_in_bursts": 1751485,
+        "prints_delta_vs_identity": 0,
+        "prints_retained_share": 1.0,
+        "median_n_prints": 3.0
+      }
+    ],
+    "floor_only": [
+      {
+        "kernel_min": 8.0,
+        "K": 0,
+        "d": 0.0,
+        "min_prints": 3,
+        "read": "floor_only",
+        "n_objects": 23662,
+        "share_2print": 0.0,
+        "n_2print": 0,
+        "prints_in_bursts": 1705391,
+        "prints_delta_vs_identity": -46094,
+        "prints_retained_share": 0.973682903364859,
+        "median_n_prints": 4.0
+      },
+      {
+        "kernel_min": 8.0,
+        "K": 0,
+        "d": 0.0,
+        "min_prints": 5,
+        "read": "floor_only",
+        "n_objects": 10990,
+        "share_2print": 0.0,
+        "n_2print": 0,
+        "prints_in_bursts": 1662902,
+        "prints_delta_vs_identity": -88583,
+        "prints_retained_share": 0.9494240601546687,
+        "median_n_prints": 7.0
+      }
+    ],
+    "merge_only_extremes": [
+      {
+        "kernel_min": 8.0,
+        "K": 1,
+        "d": 0.25,
+        "min_prints": 2,
+        "read": "merge_only",
+        "n_objects": 44025,
+        "share_2print": 0.4827030096536059,
+        "n_2print": 21251,
+        "prints_in_bursts": 1751485,
+        "prints_delta_vs_identity": 0,
+        "prints_retained_share": 1.0,
+        "median_n_prints": 3.0
+      },
+      {
+        "kernel_min": 8.0,
+        "K": 5,
+        "d": 1.0,
+        "min_prints": 2,
+        "read": "merge_only",
+        "n_objects": 35435,
+        "share_2print": 0.4387470015521377,
+        "n_2print": 15547,
+        "prints_in_bursts": 1756504,
+        "prints_delta_vs_identity": 5019,
+        "prints_retained_share": 1.0028655683605625,
+        "median_n_prints": 3.0
+      }
+    ]
+  },
+  "T5c_separator": {
+    "n_cells_compared": 111,
+    "n_cells_identical": 3,
+    "max_abs_count_rel_change": 0.005590921671740936,
+    "by_kernel_max": {
+      "2.0": 0.0,
+      "8.0": 0.0,
+      "32.0": 0.0
+    }
+  },
+  "T5d_R3_parameter_dominance": {
+    "n_events_at_identity": 43,
+    "n_nondegenerate_rows": 516,
+    "tolerance_rho_duration": 0.03164127501753644,
+    "tolerance_rho_count": 0.04544087732459274,
+    "max_event_characteristic_rho_duration": 0.9437438673738427,
+    "max_event_characteristic_rho_count": 0.39861038709078855,
+    "event_characteristic_rho": {
+      "n_intervals": {
+        "duration": 0.02265176683781335,
+        "count": 0.39861038709078855
+      },
+      "t0_print_count": {
+        "duration": 0.02265176683781335,
+        "count": 0.39861038709078855
+      },
+      "session_duration_s": {
+        "duration": NaN,
+        "count": NaN,
+        "_note": "not carried on the cell summary"
+      },
+      "threshold_norm": {
+        "duration": 0.9437438673738427,
+        "count": 0.2196374647415306
+      },
+      "sigma_log10": {
+        "duration": 0.07520386590154032,
+        "count": 0.38086248239841736
+      }
+    },
+    "fires": false,
+    "_computed_over": "the twelve non-degenerate (K,d) cells only, kernel 8, min_prints=2, sep=hard_break"
+  },
+  "T5e_count_vs_print_count": {
+    "t0_print_count": {
+      "n": 43,
+      "spearman": 0.39861038709078855,
+      "spearman_pvalue": 0.008107281010332704,
+      "loglog_slope": 0.5547981455663591
+    },
+    "n_intervals": {
+      "n": 43,
+      "spearman": 0.39861038709078855,
+      "spearman_pvalue": 0.008107281010332704,
+      "loglog_slope": 0.5547540454270397
+    },
+    "_note": "DESCRIPTIVE ONLY. No pass/fail, no gate. Retired as a hard stop at 10c on Cooper's call. A positive relation is expected -- a bigger, longer, more active event mechanically produces more sub-bursts under any definition."
+  },
+  "T5f_R5_degeneracy": {
+    "resolution_floor_s": 0.0001,
+    "max_single_subburst_share": 0.06521739130434782,
+    "threshold_single_subburst_share": 0.2,
+    "max_resolution_floor_share": 4.541532313002407e-05,
+    "threshold_resolution_floor_share": 0.5,
+    "fires": false
+  },
+  "T5g_R6_kernel_variant": {
+    "per_kernel": {
+      "2min": {
+        "identity_median_s": 0.001071879,
+        "floor_only_mp3_decades": 0.3428722249236072,
+        "merge_only_max_decades": 0.2473846071106296,
+        "dominant": "floor"
+      },
+      "8min": {
+        "identity_median_s": 0.001751286,
+        "floor_only_mp3_decades": 0.32085333189384413,
+        "merge_only_max_decades": 0.08383648855867465,
+        "dominant": "floor"
+      },
+      "32min": {
+        "identity_median_s": 0.001648951,
+        "floor_only_mp3_decades": 0.2971622637475165,
+        "merge_only_max_decades": 0.06308349921647358,
+        "dominant": "floor"
+      }
+    },
+    "coherent_sign_at_2_of_3": true,
+    "any_kernel_material": true,
+    "dominant_agrees_across_kernels": true,
+    "fires": false
+  },
+  "R4_separability": {
+    "floor_only_shift_decades": 0.32085333189384413,
+    "merge_only_shift_decades": 0.08383648855867465,
+    "abs_difference_decades": 0.23701684333516948,
+    "separability_min_decades": 0.05,
+    "negligible_max_decades": 0.05,
+    "both_non_negligible": true,
+    "fires": false
+  },
+  "artifacts": {
+    "by_kernel": "results/phase_10d/artifacts/t5_attribution_by_kernel.parquet",
+    "by_segment": "results/phase_10d/artifacts/t5_attribution_by_segment.parquet",
+    "composition": "results/phase_10d/artifacts/t5_nprints_composition.parquet",
+    "separator": "results/phase_10d/artifacts/t5_separator_sensitivity.parquet",
+    "degeneracy": "results/phase_10d/artifacts/t5_degeneracy.parquet",
+    "variant": "results/phase_10d/artifacts/t5_variant_consistency.parquet"
+  }
+}

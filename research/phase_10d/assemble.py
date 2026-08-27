@@ -150,7 +150,10 @@ def assemble(norm: np.ndarray, ok: np.ndarray, ts: np.ndarray, thr: float,
         "n_merges": np.array([m["merges"] for m in merged], dtype=np.int64)[keep],
         "start_ns": ts[start[keep]],
         "end_ns": ts[end[keep] + 1],
-        "duration_s": (ts[end[keep] + 1].astype(np.float64) - ts[start[keep]].astype(np.float64)) / 1e9,
+        # int64 subtraction FIRST, then scale -- subtracting two float64-cast nanosecond
+        # epochs loses ~256 ns of precision at 1e18 magnitudes and would stop the identity
+        # cell reproducing 10c's durations exactly.
+        "duration_s": (ts[end[keep] + 1] - ts[start[keep]]).astype(np.float64) / 1e9,
         "n_objects": int(keep.sum()),
         "n_objects_before_floor": int(len(merged)),
         "n_deleted_by_floor": int((~keep).sum()),
