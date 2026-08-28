@@ -1,0 +1,82 @@
+{
+  "task": "reconciliation gate (order of work step 2)",
+  "config_hash": "da05ba40",
+  "cohort_manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
+  "cohort_content_hash": "e1a0ac73a79aa573",
+  "cohort_hash_asserted": true,
+  "target": "results/phase_10/artifacts/v3_t1_gate_curves.parquet",
+  "observable": "print_rate",
+  "window_origin": "the D3 extended session [04:00 ET, post_end); windows tile the full in-window session so empty stretches are real zeros",
+  "min_windows_for_a_rung": 8,
+  "ties": "NOT collapsed -- v3's gate runs on raw prints",
+  "tolerance_rel": 1e-12,
+  "n_events_read": 114,
+  "n_rungs_ladder": 20,
+  "n_cells_v3": 2166,
+  "n_cells_here_finite": 2166,
+  "n_cells_compared": 2166,
+  "n_cells_reproduced": 2166,
+  "n_cells_diverged": 0,
+  "n_cells_v3_only": 0,
+  "n_cells_here_only": 0,
+  "n_rungs_declined_by_both": 114,
+  "rungs_declined_by_both": [
+    8192.0
+  ],
+  "declined_note": "The 2^13 = 8192 s rung. The D3 extended session is 57,600 s, so it holds 7 non-overlapping windows against a floor of 8. Both paths decline it; the agreement is the point.",
+  "n_window_count_mismatches": 0,
+  "max_rel_diff": 0.0,
+  "max_abs_diff": 0.0,
+  "worst_cells": [
+    {
+      "event_id": "AACG_2023-12-27_41.81",
+      "T": 0.015625,
+      "allan": 1.7795035883113048,
+      "allan_here": 1.7795035883113048,
+      "rel_diff": 0.0
+    },
+    {
+      "event_id": "AACG_2023-12-27_41.81",
+      "T": 0.03125,
+      "allan": 1.9068333326599385,
+      "allan_here": 1.9068333326599385,
+      "rel_diff": 0.0
+    },
+    {
+      "event_id": "AACG_2023-12-27_41.81",
+      "T": 0.0625,
+      "allan": 2.0993811599619265,
+      "allan_here": 2.0993811599619265,
+      "rel_diff": 0.0
+    },
+    {
+      "event_id": "AACG_2023-12-27_41.81",
+      "T": 0.125,
+      "allan": 2.096277841139531,
+      "allan_here": 2.096277841139531,
+      "rel_diff": 0.0
+    },
+    {
+      "event_id": "AACG_2023-12-27_41.81",
+      "T": 0.25,
+      "allan": 2.2127425231718596,
+      "allan_here": 2.2127425231718596,
+      "rel_diff": 0.0
+    }
+  ],
+  "reconciled": true,
+  "hard_stop": false,
+  "v3_knees_seconds": {
+    "print_rate": {
+      "rth": 128.0,
+      "premarket": 16.0
+    },
+    "volume_rate": {
+      "rth": 64.0,
+      "premarket": 16.0
+    }
+  },
+  "v3_knees_role": "A PREDICTION for the continuous field, not an input to it. The scale axis should show a change of character near them. If it does not, one of the two measurements is wrong and that is the finding.",
+  "source": "research/scale_field/reconcile_allan.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/scale_field/reconcile_allan.py"
+}
