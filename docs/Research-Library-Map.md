@@ -1213,3 +1213,55 @@ Plan §6 row 10 is marked closed, insert-only, nothing renumbered. *(Corrected 2
 the first version of this entry also recorded row 15 as "blocked on a successor object definition".
 That over-read the decision and is withdrawn in this file and in the phase map. Row 15 is open and
 unstarted, as before.)*
+
+---
+
+## scale_field — continuous scale-space of trade timing (2026-08-28)
+
+**Not a phase.** Spec is `prompts/scale_field_brief.md`, a build brief that explicitly declines to
+become a phase prompt: the method has ~one free parameter, so there is nothing to pre-register, and
+correctness is enforced by `research/scale_field/test_scale_field.py`, which IS the specification.
+What it keeps from the standard: the frozen cohort with its hash asserted, segment stratification,
+D4, the evidence standard, and "the artifact wins". Config `config/scale_field.json`.
+
+**Code** — `research/scale_field/`: `scale_field.py` (the estimator; two channels, exact + Gaussian-
+pyramid paths, Allan factor), `adapter.py` (the data boundary — event id → sorted int64-ns tape;
+imports the Phase 10 read path and D3 clock unchanged rather than reimplementing them),
+`reconcile_allan.py` (the gate), `run_field_one_event.py`, `plot_scale_field.py`, `make_digest.py`,
+and two test modules totalling 39 passing assertions.
+
+**The gate PASSED, bit-exact.** `allan_factor()` reproduces Phase 10 v3's committed Allan curve on
+**2,166 of 2,166** cells (114 events × 19 eligible rungs) with a **maximum relative difference of
+0.000e+00**. Both paths also decline the same 2¹³ s rung for the same reason. Record:
+`results/scale_field/artifacts/reconcile_allan.json`.
+
+**Stopped at order-of-work step 3, as the brief instructs** — one event charted, then stop for
+Cooper. Two events were run, not one: the median rth event's fine band came back **92% masked**
+(at ~2.5 prints/s the `n_eff ≥ 8` floor is never cleared below 1 s), so the median premarket event
+was added to exercise the channel. Step 4 (Cooper's read) and step 5 (matched-null thresholds, then
+the cohort) are not started.
+
+**Two defects found and fixed in the delivered estimator**, both recorded in
+`results/scale_field/REPORT.md` §5. The consequential one: `intervals()` differenced float64 seconds
+since the Unix epoch, where the ULP is **238 ns** against an archive minimum gap of 49 ns — 4 of 899
+strictly-increasing timestamps on `ALXO_2020-08-05_31.58` went non-positive, and the worst gap error
+was 447 ns against a 954 ns scale floor. Every acceptance tape started near t=0, so nothing caught
+it. Now differenced in int64 with an explicit origin, and `_assert_resolved` raises rather than
+returning numbers.
+
+**Charts** — `results/scale_field/charts/{event_id}/`, extending Diag1's
+`plot_boundary_through_time.py` with the kernel-scale axis replacing the boundary track, palette
+imported from it so there is one palette rather than two that drift. Offline `--plotlyjs directory`,
+never a CDN (D14). Chart 03 carries a dispersion-vs-scale row because A(T) is a variance statistic
+and a median comparison would have produced a false negative.
+
+**Descriptive result, n = 2, no null.** Each event's own Allan knee lands exactly on its segment's
+committed v3 knee (AEHL rth 128.0 s; CREX premarket 16.0 s). The continuous field's rate-channel
+dispersion breaks near 200 s on both events regardless of segment, and the interval channel at 16 s
+and 3.1 s. Read the four caveats in REPORT.md §4 before treating that as a finding.
+
+**Untracked by design** — `results/scale_field/artifacts/*.parquet` and
+`results/scale_field/charts/*/*.html` plus the local `plotly.min.js`, per the standing regenerable-
+artifact rule; every JSON manifest is tracked. Report: `results/scale_field/REPORT.md`, copy at
+`results/reports/scale_field_report.md`. Digest: `results/scale_field/digest.json`.
+No decision number appended; next free number remains **D22**.
