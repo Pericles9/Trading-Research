@@ -41,3 +41,16 @@ results/phase_1c/staging/
 .duckdb_spill/
 results/phase_11/artifacts/_t5b_parts/
 run_t5b.sh
+
+# scale_field: same rule as results/phase_*/artifacts/*.parquet above, applied to the
+# non-phase folder. Field artifacts are regenerable from committed config + code
+# (research/scale_field/run_field_one_event.py). The JSON manifests, which carry every
+# n and every provenance field, ARE tracked.
+results/scale_field/artifacts/*.parquet
+
+# Per-event chart HTML plus the 4.8 MB offline plotly.min.js each directory needs
+# (D14 forbids a CDN, so the bundle is local and unavoidable). 53 MB for two events,
+# regenerable via research/scale_field/plot_scale_field.py. chart_manifest.json is
+# tracked so the set is enumerated in git even though the files are not.
+results/scale_field/charts/*/*.html
+results/scale_field/charts/*/plotly.min.js

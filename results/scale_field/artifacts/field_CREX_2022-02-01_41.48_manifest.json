@@ -1,0 +1,116 @@
+{
+  "task": "one event, both bands, both channels (order of work step 3)",
+  "config_hash": "4268dcab",
+  "event_id": "CREX_2022-02-01_41.48",
+  "event_chosen_because": "operator choice",
+  "cohort_group": "dev_v4_primary",
+  "pooled": true,
+  "cohort_content_hash": "e1a0ac73a79aa573",
+  "cohort_hash_asserted": true,
+  "detection_anchor": {
+    "artifact": "results/phase_10/artifacts/v2_r13_detection.parquet",
+    "threshold": 1.3,
+    "poll_interval_seconds": 1,
+    "anchor_ns": 1643725345000000000,
+    "event_segment": "premarket",
+    "rule": "REUSED, NOT RE-DERIVED (D7)"
+  },
+  "tape": {
+    "n_prints": 119149,
+    "n_unique_timestamps": 119149,
+    "n_tied_prints": 0,
+    "min_nonzero_gap_ns": 64,
+    "span_seconds": 39011.026685616,
+    "n_files": 1,
+    "has_repair_sibling": false,
+    "window_start_ns": 1643706000000000000,
+    "window_end_ns": 1643763600000000000
+  },
+  "session_span_seconds": 57600.0,
+  "coarse_cap_seconds": 7200.0,
+  "coarse_cap_rule": "session_span / 8. STATED, not silently applied: at s = 4096 s a regular-hours session (~23,400 s) holds ~2 independent windows, which is where v3's headline A = 1,245 sits. The 2048 s ceiling is below the cap for the extended session (57,600/8 = 7,200 s) and below it for RTH alone (23,400/8 = 2,925 s).",
+  "coarse_ceiling_under_cap": true,
+  "hard_floor_seconds": 9.5367431640625e-07,
+  "bands": [
+    {
+      "band": "coarse",
+      "scale_min_seconds": 1.0,
+      "scale_max_seconds": 2048.0,
+      "n_scales": 89,
+      "scales_per_octave": 8.0,
+      "coverage": "whole T=0 session",
+      "t_grid_points": 900,
+      "t_grid_start_ns": 1643724562023068248,
+      "t_grid_end_ns": 1643763573049753865,
+      "t_grid_span_seconds": 39011.026685617,
+      "tape_margin_seconds": 16384.0,
+      "n_prints_in_read_window": 119149,
+      "read_window_start_ns": 1643724562023068248,
+      "read_window_end_ns": 1643763573049753865,
+      "context_seconds": null,
+      "window_deviation_from_brief": null,
+      "n_arrivals_after_tie_collapse": 119149,
+      "n_ties_collapsed": 0,
+      "n_intervals": 119148,
+      "origin_ns": 1643724562023068248,
+      "seconds_elapsed": 3.27,
+      "seconds_per_event_budgeted": 1.7,
+      "nan_share": {
+        "m": 0.3308614232209738,
+        "dm": 0.3308614232209738,
+        "lograte": 0.1342322097378277,
+        "dlograte": 0.1342322097378277
+      },
+      "n_eff_below_floor_share": 0.2711860174781523,
+      "neff_rule": "field() returns NaN under n_eff >= 8 and MUST NEVER be given a fallback. Same treatment as insufficient_context."
+    },
+    {
+      "band": "fine",
+      "scale_min_seconds": 0.015625,
+      "scale_max_seconds": 1.0,
+      "n_scales": 49,
+      "scales_per_octave": 8.0,
+      "coverage": "+/- 15 s around the D7 detection anchor, read with +/- 15 min of context",
+      "t_grid_points": 1500,
+      "t_grid_start_ns": 1643725330000000000,
+      "t_grid_end_ns": 1643725360000000000,
+      "t_grid_span_seconds": 30.0,
+      "tape_margin_seconds": 900.0,
+      "n_prints_in_read_window": 33236,
+      "read_window_start_ns": 1643724430000000000,
+      "read_window_end_ns": 1643726260000000000,
+      "context_seconds": 900,
+      "window_deviation_from_brief": "THE BRIEF SAYS +/- 15 MIN; THIS RUNS +/- 15 s OF CHARTED WINDOW INSIDE A +/- 15 MIN READ. Recorded, not silently taken. A heatmap column cannot be narrower than its kernel or the panel draws sub-pixel structure as noise. Over 1,800 s a ~1,400-column chart gives 1.3 s per column, against a smallest kernel of 15.6 ms -- so the bottom six octaves of the fine band alias, and the first render duly showed a picket fence. The honest window for a band reaching 15.6 ms is W x 15.6 ms ~ 22 s. At +/- 15 s with 1,500 grid points the spacing is 20 ms, which resolves the floor, and the top scale (1 s) still spans 30 kernel widths. The +/- 15 min of tape is still READ, so the estimator has full context either side and the edge mask never bites inside the charted window. Compute cost is unchanged -- it is set by the pyramid's bin count over the read window, not by the grid -- so the brief's 7 s/event budget still holds.",
+      "n_arrivals_after_tie_collapse": 33236,
+      "n_ties_collapsed": 0,
+      "n_intervals": 33235,
+      "origin_ns": 1643724562023068248,
+      "seconds_elapsed": 8.25,
+      "seconds_per_event_budgeted": 7.0,
+      "nan_share": {
+        "m": 0.4854829931972789,
+        "dm": 0.4854829931972789,
+        "lograte": 0.06590476190476191,
+        "dlograte": 0.06590476190476191
+      },
+      "n_eff_below_floor_share": 0.482734693877551,
+      "neff_rule": "field() returns NaN under n_eff >= 8 and MUST NEVER be given a fallback. Same treatment as insufficient_context."
+    }
+  ],
+  "tie_variant": "collapse_same_timestamp -- consecutive prints sharing a timestamp collapse to one arrival (reference variant, config/phase_10_v4.json)",
+  "thresholds_applied": "NONE. No standardisation against the Poisson null on this data -- see poisson_null in config/scale_field.json. Matched-null thresholds are step 5.",
+  "v3_prediction": {
+    "print_rate": {
+      "rth": 128.0,
+      "premarket": 16.0
+    },
+    "volume_rate": {
+      "rth": 64.0,
+      "premarket": 16.0
+    }
+  },
+  "v3_prediction_role": "A PREDICTION for the continuous field, not an input to it. The scale axis should show a change of character near them. If it does not, one of the two measurements is wrong and that is the finding.",
+  "reconciliation_gate": "results/scale_field/artifacts/reconcile_allan.json",
+  "source": "research/scale_field/run_field_one_event.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/scale_field/run_field_one_event.py --event CREX_2022-02-01_41.48"
+}

@@ -1,0 +1,209 @@
+{
+  "name": "scale_field",
+  "title": "Scale-space field on the momentum cohort",
+  "spec": "prompts/scale_field_brief.md",
+  "config_hash": "4268dcab",
+  "status": "stopped_at_step_3_awaiting_cooper",
+  "order_of_work": [
+    "1. adapter.py, plus a test that loads one known event and asserts monotone, positive, in-session timestamps.",
+    "2. Allan reconciliation against v3. HARD STOP on divergence.",
+    "3. One event, both bands, both channels. Chart it and STOP.",
+    "4. Cooper reads it.",
+    "5. Only then: matched-null thresholds, then the cohort."
+  ],
+  "stop_after": 3,
+  "steps": {
+    "1_adapter": {
+      "done": true,
+      "tests": "research/scale_field/test_adapter.py + test_scale_field.py",
+      "n_assertions_passing": 39,
+      "reproduce": ".venv/Scripts/python.exe -m pytest research/scale_field -q"
+    },
+    "2_reconciliation_gate": {
+      "done": true,
+      "criterion": "allan_factor() must reproduce v3's committed curve rung for rung. HARD STOP on divergence -- any divergence means the point-process handling differs from v3's and everything after it is uninterpretable.",
+      "n_cells_compared": 2166,
+      "n_cells_reproduced": 2166,
+      "n_cells_diverged": 0,
+      "max_rel_diff": 0.0,
+      "tolerance_rel": 1e-12,
+      "rungs_declined_by_both": 114,
+      "reconciled": true,
+      "hard_stop": false,
+      "reproduce": ".venv/Scripts/python.exe research/scale_field/reconcile_allan.py"
+    },
+    "3_one_event_both_bands_both_channels": {
+      "done": true,
+      "n_events": 2,
+      "reproduce": ".venv/Scripts/python.exe research/scale_field/run_field_one_event.py --event {event_id}"
+    },
+    "4_cooper_reads_it": {
+      "done": false,
+      "owner": "Cooper"
+    },
+    "5_matched_null_then_cohort": {
+      "done": false,
+      "gated_on": "step 4",
+      "rule": "Rate-matched inhomogeneous Poisson realisations simulated from each event's own intensity estimate, with that event's duration and timestamp quantisation. Machinery already specified in prompts/phase_10b.md T3c (200 draws, 2.5/97.5 percentile band, reported as a family over the bandwidth rather than one band) and already implemented in research/phase_10b/pipeline.py. REUSE IT; DO NOT REBUILD IT."
+    }
+  },
+  "events": [
+    {
+      "event_id": "AEHL_2021-02-19_37.50",
+      "cohort_group": "dev_v4_primary",
+      "pooled": true,
+      "detection_segment": "rth",
+      "n_t0_prints": 17365,
+      "n_tied_prints": 0,
+      "min_nonzero_gap_ns": 98,
+      "v3_knee_prediction_seconds": 128.0,
+      "allan_first_rung": {
+        "T": 0.015625,
+        "A": 4.539880298610321
+      },
+      "allan_last_rung": {
+        "T": 4096.0,
+        "A": 2785.0560866963633,
+        "n_pairs": 13
+      },
+      "bands": {
+        "coarse": {
+          "scale_range_seconds": [
+            1.0,
+            2048.0
+          ],
+          "n_scales": 89,
+          "t_grid_points": 900,
+          "t_grid_span_seconds": 56798.515521475,
+          "grid_spacing_seconds": 63.109462,
+          "n_cells": 80100,
+          "n_defined_rate": 60806,
+          "n_defined_interval": 38815,
+          "share_masked_rate": 0.2409,
+          "share_masked_interval": 0.5154,
+          "seconds_elapsed": 4.71,
+          "n_arrivals": 17365,
+          "n_intervals": 17364
+        },
+        "fine": {
+          "scale_range_seconds": [
+            0.015625,
+            1.0
+          ],
+          "n_scales": 49,
+          "t_grid_points": 1500,
+          "t_grid_span_seconds": 30.0,
+          "grid_spacing_seconds": 0.02,
+          "n_cells": 73500,
+          "n_defined_rate": 59651,
+          "n_defined_interval": 22756,
+          "share_masked_rate": 0.1884,
+          "share_masked_interval": 0.6904,
+          "seconds_elapsed": 8.88,
+          "n_arrivals": 4495,
+          "n_intervals": 4494
+        }
+      },
+      "charts": [
+        "01_field_coarse_dark.html",
+        "01_field_coarse_light.html",
+        "02_field_fine_dark.html",
+        "02_field_fine_light.html",
+        "03_scale_profile_dark.html",
+        "03_scale_profile_light.html"
+      ]
+    },
+    {
+      "event_id": "CREX_2022-02-01_41.48",
+      "cohort_group": "dev_v4_primary",
+      "pooled": true,
+      "detection_segment": "premarket",
+      "n_t0_prints": 119149,
+      "n_tied_prints": 0,
+      "min_nonzero_gap_ns": 64,
+      "v3_knee_prediction_seconds": 16.0,
+      "allan_first_rung": {
+        "T": 0.015625,
+        "A": 12.755074841247252
+      },
+      "allan_last_rung": {
+        "T": 4096.0,
+        "A": 13176.53571767599,
+        "n_pairs": 13
+      },
+      "bands": {
+        "coarse": {
+          "scale_range_seconds": [
+            1.0,
+            2048.0
+          ],
+          "n_scales": 89,
+          "t_grid_points": 900,
+          "t_grid_span_seconds": 39011.026685617,
+          "grid_spacing_seconds": 43.345585,
+          "n_cells": 80100,
+          "n_defined_rate": 69348,
+          "n_defined_interval": 53598,
+          "share_masked_rate": 0.1342,
+          "share_masked_interval": 0.3309,
+          "seconds_elapsed": 3.27,
+          "n_arrivals": 119149,
+          "n_intervals": 119148
+        },
+        "fine": {
+          "scale_range_seconds": [
+            0.015625,
+            1.0
+          ],
+          "n_scales": 49,
+          "t_grid_points": 1500,
+          "t_grid_span_seconds": 30.0,
+          "grid_spacing_seconds": 0.02,
+          "n_cells": 73500,
+          "n_defined_rate": 68656,
+          "n_defined_interval": 37817,
+          "share_masked_rate": 0.0659,
+          "share_masked_interval": 0.4855,
+          "seconds_elapsed": 8.25,
+          "n_arrivals": 33236,
+          "n_intervals": 33235
+        }
+      },
+      "charts": [
+        "01_field_coarse_dark.html",
+        "01_field_coarse_light.html",
+        "02_field_fine_dark.html",
+        "02_field_fine_light.html",
+        "03_scale_profile_dark.html",
+        "03_scale_profile_light.html"
+      ]
+    }
+  ],
+  "deviations_recorded": [
+    {
+      "what": "allan_factor gained t_start / t_end / min_windows",
+      "why": "v3 tiles the D3 extended session, not the data support; the origin cannot be inferred from the prints. Defaults reproduce the prior behaviour exactly and a test asserts it.",
+      "where": "research/scale_field/scale_field.py:allan_factor"
+    },
+    {
+      "what": "intervals() differences in int64 and takes origin_ns; _assert_resolved raises on an unrebased epoch tape",
+      "why": "float64 seconds since the epoch have a 238 ns ULP against a 49 ns minimum gap. Measured on ALXO_2020-08-05_31.58: 4 of 899 strictly increasing timestamps went non-positive and the worst gap error was 447 ns against a 954 ns scale floor.",
+      "where": "research/scale_field/scale_field.py:intervals"
+    },
+    {
+      "what": "fine band charted over +/- 15 s inside a +/- 15 min read, not +/- 15 min as the brief states",
+      "why": "a heatmap column cannot be narrower than its kernel; at +/- 15 min a chart-width grid gives 1.3 s per column against a 15.6 ms smallest kernel and the panel aliases. Compute cost unchanged.",
+      "where": "config/scale_field.json scale_axis.fine.window_deviation_from_brief"
+    },
+    {
+      "what": "segment assignment uses common.session_window, not the DuckDB ICU extension named in the adapter stub",
+      "why": "the constraint is the ET wall clock, and it is met exactly. The tick path never opens DuckDB because the pass budget over filtered_trades is zero.",
+      "where": "research/scale_field/adapter.py module docstring"
+    }
+  ],
+  "untracked_by_design": {
+    "results/scale_field/artifacts/*.parquet": "regenerable; .gitignore, matching results/phase_*/artifacts/*.parquet",
+    "results/scale_field/charts/*/*.html + plotly.min.js": "53 MB for two events, regenerable; D14 forbids a CDN so the bundle is local"
+  },
+  "source": "research/scale_field/make_digest.py:main"
+}

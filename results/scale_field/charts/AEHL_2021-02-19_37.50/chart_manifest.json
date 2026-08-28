@@ -1,0 +1,15 @@
+{
+  "event_id": "AEHL_2021-02-19_37.50",
+  "theme": "dark",
+  "config_hash": "4268dcab",
+  "field_artifact": "results/scale_field/artifacts/field_AEHL_2021-02-19_37.50.parquet",
+  "charts": [
+    "E:\\Trading Research\\results\\scale_field\\charts\\AEHL_2021-02-19_37.50\\01_field_coarse_dark.html",
+    "E:\\Trading Research\\results\\scale_field\\charts\\AEHL_2021-02-19_37.50\\02_field_fine_dark.html",
+    "E:\\Trading Research\\results\\scale_field\\charts\\AEHL_2021-02-19_37.50\\03_scale_profile_dark.html"
+  ],
+  "plotlyjs": "directory",
+  "offline_rule": "D14 \u2014 never a CDN",
+  "source": "research/scale_field/plot_scale_field.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/scale_field/plot_scale_field.py --event AEHL_2021-02-19_37.50 --theme dark"
+}
