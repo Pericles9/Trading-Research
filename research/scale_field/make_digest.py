@@ -74,6 +74,21 @@ def _floor(art: str) -> dict:
     return out
 
 
+def _restatement(art: str) -> dict:
+    path = os.path.join(art, "subburst_restatement.json")
+    if not os.path.exists(path):
+        return {"run": False}
+    with open(path, encoding="utf-8") as f:
+        d = json.load(f)
+    return {"run": True,
+            "question": d["task"],
+            "verdicts": d.get("verdicts"),
+            "conclusion": d["conclusion"]["reading"],
+            "restatement_supported": d["conclusion"]["restatement_supported"],
+            "power_caveats": d["conclusion"]["power_caveats"],
+            "artifact": "results/scale_field/artifacts/subburst_restatement.json"}
+
+
 def main() -> int:
     cfg = adapter.load_config()
     art = rel(cfg["paths"]["out_artifacts"])
@@ -134,7 +149,7 @@ def main() -> int:
         "title": cfg["title"],
         "spec": cfg["spec"],
         "config_hash": adapter.config_hash(),
-        "status": "cooper_read_done_stopped_after_r2_recovery_grid_not_started",
+        "status": "r1_r2_corrected_after_cooper_read_recovery_grid_not_started",
         "order_of_work": cfg["order_of_work"],
         "stop_after": cfg["stop_after"],
         "steps": {
@@ -171,9 +186,14 @@ def main() -> int:
             "r2_s_min_vs_subbursts": {"done": True,
                                       "reproduce": ".venv/Scripts/python.exe research/"
                                                    "scale_field/s_min_vs_subbursts.py"},
+            "r2b_restatement_test": {"done": True, "outcome": "NOT supported",
+                                     "reproduce": ".venv/Scripts/python.exe research/"
+                                                  "scale_field/subburst_is_a_restatement.py"},
             "r3_recovery_grid": {"done": False, "gated_on": "nothing -- next up",
-                                 "what": "inject tau across a log grid at the two measured "
-                                         "background rates (2.46/s, 17.8/s) across intensity "
+                                 "RE-AIMED": "at 1 s to 300 s at the OBSERVED session rates "
+                                             "(0.30/s rth, 2.11/s premarket), not at "
+                                             "millisecond scales no event supports",
+                                 "what": "inject tau across a log grid across intensity "
                                          "contrast and duty cycle; report bias and spread of "
                                          "whichever summary statistic is proposed"},
             "r4_matched_null": {"done": False, "gated_on": "r3",
@@ -193,6 +213,22 @@ def main() -> int:
                      "results/scale_field/REPORT.md section 8",
         },
         "resolution_floor": _floor(art),
+        "cooper_read_on_r1_r2": {
+            "date": "2026-08-28",
+            "checks_raised": 3,
+            "errors_found_in_published_numbers": 2,
+            "check_1_v4_minimum": "my wording. v4's observed min IS 3 but that is a "
+                                  "CONFIGURED floor (min_prints_reference), not the "
+                                  "structural minimum of 2, so the distribution is "
+                                  "censored and the 54.1% is pile-up on the floor.",
+            "check_2_10d_rows": "REAL ERROR. kernel_min==8 alone left 78 (K,d,min_prints,"
+                                "sep) cells / 1,934,084 rows. Reference cell is 46,709 "
+                                "rows, median 1.75 ms / 3 prints, bit-identical to 10c.",
+            "check_3_denominator": "REAL ERROR. Session coverage understated admissibility "
+                                   "~6x. Re-cut on post-anchor windows.",
+            "restatement_test": "NOT supported -- see resolution_floor.restatement.",
+        },
+        "restatement": _restatement(art),
         "deviations_recorded": [
             {"what": "allan_factor gained t_start / t_end / min_windows",
              "why": "v3 tiles the D3 extended session, not the data support; the origin "

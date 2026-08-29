@@ -3,7 +3,7 @@
   "title": "Scale-space field on the momentum cohort",
   "spec": "prompts/scale_field_brief.md",
   "config_hash": "3306d8ec",
-  "status": "cooper_read_done_stopped_after_r2_recovery_grid_not_started",
+  "status": "r1_r2_corrected_after_cooper_read_recovery_grid_not_started",
   "order_of_work": [
     "1. adapter.py, plus a test that loads one known event and asserts monotone, positive, in-session timestamps.",
     "2. Allan reconciliation against v3. HARD STOP on divergence.",
@@ -51,10 +51,16 @@
       "done": true,
       "reproduce": ".venv/Scripts/python.exe research/scale_field/s_min_vs_subbursts.py"
     },
+    "r2b_restatement_test": {
+      "done": true,
+      "outcome": "NOT supported",
+      "reproduce": ".venv/Scripts/python.exe research/scale_field/subburst_is_a_restatement.py"
+    },
     "r3_recovery_grid": {
       "done": false,
       "gated_on": "nothing -- next up",
-      "what": "inject tau across a log grid at the two measured background rates (2.46/s, 17.8/s) across intensity contrast and duty cycle; report bias and spread of whichever summary statistic is proposed"
+      "RE-AIMED": "at 1 s to 300 s at the OBSERVED session rates (0.30/s rth, 2.11/s premarket), not at millisecond scales no event supports",
+      "what": "inject tau across a log grid across intensity contrast and duty cycle; report bias and spread of whichever summary statistic is proposed"
     },
     "r4_matched_null": {
       "done": false,
@@ -241,7 +247,7 @@
       "rule": "n_eff = 2*sqrt(pi)*s*lambda >= 8  =>  s >= 2.2568/lambda. Derived from the estimator's own effective sample size, not adopted from anywhere.",
       "n_events": 100,
       "inputs": "t0_print_count (frozen cohort manifest) + D3 extended-day span (pinned XNYS calendar). No field computation, no tick pass.",
-      "seconds_elapsed": 5.5,
+      "seconds_elapsed": 5.6,
       "s_min_session_median_by_segment": {
         "no_detection": 248.9495,
         "premarket": 1.0684,
@@ -261,16 +267,73 @@
       "prints_per_subburst_median": {
         "v4": 3.0,
         "10c_s1": 3.0,
-        "10d_t4": 4.0
+        "10d_t4_reference": 3.0
       },
       "share_le_3_prints": {
         "v4": 0.541,
         "10c_s1": 0.669,
-        "10d_t4": 0.4332
+        "10d_t4_reference": 0.669
       },
-      "reading": "The median committed sub-burst is 2-4 prints across all three lineages, with 46-71% of them at 3 prints or fewer. That is read off the artifacts' own n_prints column and requires nothing from this method. Cooper's phrasing -- 'a statement about the two or three fastest prints in a session, not about a market state' -- is therefore not a hypothesis awaiting test; it is what the committed artifacts already say about themselves. The resolution-floor comparison adds that no event in the cohort resolves below 58 ms at its most favourable moment, which is 21x above 10d's median sub-burst duration and 5 orders of magnitude above v4's -- but that comparison is across methods and carries the caveat above, whereas the print count does not.",
+      "reading": "On the UNCENSORED cells -- 10c Stage 1 at kernel 8, and 10d's reference cell, which are the same 46,709 objects -- the MODAL committed sub-burst is exactly 2 prints: 49.3% of them. A 2-print object is a SINGLE INTERVAL. It has no internal structure by construction, and its 'duration' is one inter-trade gap rather than an estimated quantity. 66.9% are 3 prints or fewer. v4's median of 3 is not comparable: config/phase_10_v4.json sets min_prints_reference = 3, so that distribution is censored at 3 and the 54.1% sitting exactly there is pile-up on the floor. All of this is read off the artifacts' own n_prints column and requires nothing from this method. The resolution-floor comparison adds that no event in the cohort resolves below 58 ms at its most favourable moment -- but that comparison is across methods and carries the caveat above, whereas the print count does not. NOTE WHAT THIS DOES NOT SAY: three prints inside 1.75 ms on a tape running at 0.30 prints/s is astronomically improbable under any stationary null, so the CLUSTERS ARE REAL. What is not supported is their DURATION as a measured quantity. Detection needs far fewer prints than rate estimation.",
       "artifact": "results/scale_field/artifacts/s_min_vs_subbursts.json"
     }
+  },
+  "cooper_read_on_r1_r2": {
+    "date": "2026-08-28",
+    "checks_raised": 3,
+    "errors_found_in_published_numbers": 2,
+    "check_1_v4_minimum": "my wording. v4's observed min IS 3 but that is a CONFIGURED floor (min_prints_reference), not the structural minimum of 2, so the distribution is censored and the 54.1% is pile-up on the floor.",
+    "check_2_10d_rows": "REAL ERROR. kernel_min==8 alone left 78 (K,d,min_prints,sep) cells / 1,934,084 rows. Reference cell is 46,709 rows, median 1.75 ms / 3 prints, bit-identical to 10c.",
+    "check_3_denominator": "REAL ERROR. Session coverage understated admissibility ~6x. Re-cut on post-anchor windows.",
+    "restatement_test": "NOT supported -- see resolution_floor.restatement."
+  },
+  "restatement": {
+    "run": true,
+    "question": "is the committed sub-burst duration a restatement of a low interval quantile?",
+    "verdicts": {
+      "10c_s1_kernel8": {
+        "censored": false,
+        "n": 41,
+        "criterion": "slope within 0.25 of 1 AND R^2 >= 0.80 AND R^2 at least 0.10 above the median-interval control (left-tail SPECIFICITY)",
+        "slope": 0.2052,
+        "slope_ci95": [
+          -0.8114,
+          1.2218
+        ],
+        "r2_left_tail": 0.004,
+        "r2_median_control": 0.0166,
+        "r2_advantage_of_left_tail": -0.0126,
+        "slope_near_one": false,
+        "r2_high": false,
+        "left_tail_specific": false,
+        "restatement": false
+      },
+      "v4": {
+        "censored": true,
+        "n": 90,
+        "criterion": "slope within 0.25 of 1 AND R^2 >= 0.80 AND R^2 at least 0.10 above the median-interval control (left-tail SPECIFICITY)",
+        "slope": 1.25,
+        "slope_ci95": [
+          0.8965,
+          1.6034
+        ],
+        "r2_left_tail": 0.3531,
+        "r2_median_control": 0.3769,
+        "r2_advantage_of_left_tail": -0.0238,
+        "slope_near_one": true,
+        "r2_high": false,
+        "left_tail_specific": false,
+        "restatement": false
+      }
+    },
+    "conclusion": "THE RESTATEMENT HYPOTHESIS IS NOT SUPPORTED. On the uncensored source the median sub-burst duration has essentially no relationship to a low quantile of the event's own interval distribution (r = +0.06, R^2 = 0.004, n = 41). On the censored v4 artifact there IS a moderate relationship (R^2 = 0.35, slope 1.25 with a CI that includes 1), but it is NOT specific to the left tail: the median-interval control fits marginally BETTER (R^2 = 0.38), so what it reflects is how fast the event trades overall, not a re-parameterisation of its fastest intervals. So of Cooper's two alternatives -- 'the scale was implausible' versus 'the statistic was a restatement' -- the evidence points to the FIRST. The duration is a real if barely-supported measurement of a real cluster, taken at a scale the tape cannot resolve, rather than a relabelling of the interval distribution.",
+    "restatement_supported": false,
+    "power_caveats": [
+      "n = 41 for the uncensored source. 10c Stage 1 ran on 49 events (dev_v4_primary + 6 sidecar), NOT the 100-event cohort, so this test has limited power and a null is weak evidence.",
+      "10c's per-event median duration spans 6.6 decades and includes events whose median object is 889 prints / 466 s. A per-event median over that mixture is a noisy dependent variable.",
+      "v4's dependent variable is censored: median_prints spans only 3 to 7 because of the configured floor of 3, which compresses the variable being regressed."
+    ],
+    "artifact": "results/scale_field/artifacts/subburst_restatement.json"
   },
   "deviations_recorded": [
     {

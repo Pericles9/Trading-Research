@@ -38,7 +38,8 @@ from adapter import rel  # noqa: E402
 from plot_boundary_through_time import THEMES  # noqa: E402
 
 SEG_COLOR = {"premarket": "#eb6834", "rth": "#256abf", "no_detection": "#898781"}
-SRC_COLOR = {"v4": "#8f300f", "10c_s1": "#c9491d", "10d_t4": "#eb6834"}
+SRC_COLOR = {"v4": "#8f300f", "10c_s1": "#c9491d", "10d_t4_reference": "#eb6834"}
+WIN_COLOR = ["#0d366b", "#256abf", "#3987e5", "#86b6ef"]
 BANDS = {"fine band floor 15.6 ms": 0.015625, "coarse band floor 1 s": 1.0}
 
 
@@ -157,10 +158,14 @@ def chart_vs_subbursts(df, cmp_json, t):
         d = rec["duration_seconds"]
         n = rec["prints_per_subburst"]
         qs = [d[f"q{k:02d}"] for k in (5, 25, 50, 75, 95)]
+        cen = rec.get("floor_note") is not None
         fig.add_trace(go.Scattergl(x=qs, y=[.05, .25, .50, .75, .95], mode="lines+markers",
-                                   line=dict(color=SRC_COLOR[lab], width=2),
-                                   marker=dict(size=7, color=SRC_COLOR[lab]),
-                                   name=f"{lab} sub-burst duration (n={d['n']:,})",
+                                   line=dict(color=SRC_COLOR[lab], width=2,
+                                             dash="dot" if cen else "solid"),
+                                   marker=dict(size=7, color=SRC_COLOR[lab],
+                                               symbol="x" if cen else "circle"),
+                                   name=f"{lab} duration (n={d['n']:,})"
+                                        + (" — CENSORED at 3 prints" if cen else ""),
                                    hovertemplate=f"{lab}<br>%{{x:.3g}} s at %{{y:.0%}}"
                                                  "<extra></extra>"), row=1, col=1)
         fig.add_trace(go.Bar(
@@ -169,14 +174,18 @@ def chart_vs_subbursts(df, cmp_json, t):
                          array=[n["q75"] - n["median"]], arrayminus=[n["median"] - n["q25"]],
                          color=t["ink2"], width=6),
             marker=dict(color=SRC_COLOR[lab]), showlegend=False,
-            customdata=[[n["share_le_3"], n["n"], n["min"]]],
+            customdata=[[n["share_le_3"], n["n"], n["min"], n.get("share_eq_2", 0)]],
             hovertemplate=f"{lab}<br>median %{{y:.0f}} prints<br>"
-                          "%{customdata[0]:.1%} are ≤3 prints<br>"
-                          "n = %{customdata[1]:,} sub-bursts<br>method minimum "
+                          "%{customdata[3]:.1%} are EXACTLY 2 (one interval)<br>"
+                          "%{customdata[0]:.1%} are ≤3<br>"
+                          "n = %{customdata[1]:,} sub-bursts<br>observed minimum "
                           "%{customdata[2]:.0f}<extra></extra>"), row=2, col=1)
+        eq2 = n.get("share_eq_2", 0.0)
         fig.add_annotation(row=2, col=1, x=lab, y=n["median"],
-                           text=f"{n['median']:.0f} prints<br>"
-                                f"<sup>{n['share_le_3']:.0%} are ≤3</sup>",
+                           text=(f"median {n['median']:.0f} prints<br>"
+                                 + (f"<sup><b>{eq2:.0%} are exactly 2 — one interval</b></sup>"
+                                    if eq2 > 0 else
+                                    f"<sup>floored at 3; {n['share_le_3']:.0%} sit on the floor</sup>")),
                            showarrow=False, yanchor="bottom", yshift=6,
                            font=dict(size=10, color=t["ink"]))
 
@@ -199,8 +208,11 @@ def chart_vs_subbursts(df, cmp_json, t):
             "<sup><b>Read the top panel with its caveat:</b> D9's operating variable is the "
             "interval itself and estimates no intensity, so n_eff does not bind that "
             "lineage on its own terms — a gap is a statement about two methods' domains, "
-            "not a retraction of either. <b>The bottom panel needs no such inference:</b> it "
-            "is the artifacts' own n_prints column. "
+            "not a retraction of either, and <b>the clusters are real</b>: three prints "
+            "inside 1.75 ms on a 0.30 prints/s tape is astronomically improbable under any "
+            "stationary null. What is unsupported is their <i>duration</i> as a measured "
+            "quantity. <b>The bottom panel needs no such inference</b> — it is the artifacts' "
+            "own n_prints column. Every source is cut to ONE committed cell. "
             f"No event resolves below {best*1e3:.0f} ms at its best moment.</sup>"),
             font=dict(size=15, color=t["ink"]), x=0.01, xanchor="left"),
         height=880, paper_bgcolor=t["plane"], plot_bgcolor=t["surface"],
@@ -209,6 +221,77 @@ def chart_vs_subbursts(df, cmp_json, t):
         legend=dict(orientation="h", y=1.06, x=1, xanchor="right",
                     bgcolor="rgba(0,0,0,0)"),
         margin=dict(l=70, r=40, t=120, b=50), bargap=0.55)
+    fig.update_xaxes(showgrid=True, gridcolor=t["grid"], linecolor=t["axis"])
+    fig.update_yaxes(gridcolor=t["grid"], linecolor=t["axis"], zeroline=False)
+    for a in fig.layout.annotations[:2]:
+        a.font.update(size=11, color=t["ink2"]); a.update(x=0, xanchor="left")
+    return fig
+
+
+def chart_windows(cohort_json, t):
+    """Admissibility by window. The D3 session is the wrong denominator and this chart
+    exists to say so: what a strategy needs is whether the band is supported WHEN IT
+    WOULD BE TRADING, which is at and after the D7 anchor (D5: intraday post-trigger)."""
+    tw = cohort_json["tick_detail"]["by_window"]
+    names = [k for k in tw if tw[k]["lambda_prints_per_s"].get("n")]
+    fig = make_subplots(rows=2, cols=1, vertical_spacing=0.13, row_heights=[0.52, 0.48],
+                        subplot_titles=(
+                            "s_min within the window — the median moment of each event",
+                            "events whose median moment supports the band (of those with "
+                            "≥25 prints in the window)"))
+
+    for i, w in enumerate(names):
+        sm = tw[w]["s_min_median_seconds"]
+        c = WIN_COLOR[i % len(WIN_COLOR)]
+        qs = [sm[f"q{k:02d}"] for k in (5, 25, 50, 75, 95)]
+        fig.add_trace(go.Scattergl(x=qs, y=[.05, .25, .50, .75, .95], mode="lines+markers",
+                                   line=dict(color=c, width=2), marker=dict(size=7, color=c),
+                                   name=f"{w} (n={sm['n']})",
+                                   hovertemplate=f"{w}<br>s_min %{{x:.3g}} s at %{{y:.0%}}"
+                                                 "<extra></extra>"), row=1, col=1)
+    fig.update_yaxes(title_text="quantile across events", tickformat=".0%", row=1, col=1)
+    fig.update_xaxes(type="log", dtick=1, title_text="s_min at the event's median moment "
+                                                     "in the window (seconds, log)",
+                     row=1, col=1)
+    for lab, v in BANDS.items():
+        fig.add_vline(x=v, row=1, col=1, line=dict(color=t["ink"], width=1.3, dash="dash"))
+        fig.add_annotation(row=1, col=1, x=np.log10(v), y=0.04, yref="y domain", text=lab,
+                           showarrow=False, xanchor="left", yanchor="bottom", xshift=4,
+                           font=dict(size=9, color=t["muted"]),
+                           bgcolor=t["surface"], borderpad=2)
+
+    for band, colr in (("coarse", "#256abf"), ("fine", "#eb6834")):
+        xs, ys, cd = [], [], []
+        for w in names:
+            n_tot = tw[w]["lambda_prints_per_s"]["n"]
+            n_ok = tw[w]["n_events_median_moment_supports_band"][band]
+            xs.append(w); ys.append(n_ok / n_tot if n_tot else 0)
+            cd.append([n_ok, n_tot])
+        fig.add_trace(go.Bar(x=xs, y=ys, name=f"{band} band", marker=dict(color=colr),
+                             customdata=cd,
+                             hovertemplate="%{x}<br>%{customdata[0]}/%{customdata[1]} events"
+                                           "<br>%{y:.0%}<extra></extra>"), row=2, col=1)
+        for x_, y_, c_ in zip(xs, ys, cd):
+            fig.add_annotation(row=2, col=1, x=x_, y=y_, text=f"{c_[0]}/{c_[1]}",
+                               showarrow=False, yanchor="bottom", yshift=4,
+                               font=dict(size=9, color=t["ink2"]))
+    fig.update_yaxes(title_text="share of events", tickformat=".0%", row=2, col=1)
+
+    fig.update_layout(
+        title=dict(text=(
+            "<b>Admissibility by window — the session is the wrong denominator</b><br>"
+            "<sup>The D3 extended session is mostly dead time; what matters is whether the "
+            "band is supported <b>when a strategy would be acting</b>, which under D5 is at "
+            "and after the D7 anchor. n falls with the window because fewer events carry "
+            "≥25 prints in it — that drop is itself reported, not hidden. "
+            "<b>The fine band is 0/n at every window.</b> Description only, no gate.</sup>"),
+            font=dict(size=15, color=t["ink"]), x=0.01, xanchor="left"),
+        height=860, paper_bgcolor=t["plane"], plot_bgcolor=t["surface"],
+        font=dict(family='system-ui, -apple-system, "Segoe UI", sans-serif',
+                  size=11, color=t["ink2"]),
+        legend=dict(orientation="h", y=1.06, x=1, xanchor="right",
+                    bgcolor="rgba(0,0,0,0)"),
+        margin=dict(l=70, r=40, t=118, b=60), barmode="group", bargap=0.30)
     fig.update_xaxes(showgrid=True, gridcolor=t["grid"], linecolor=t["axis"])
     fig.update_yaxes(gridcolor=t["grid"], linecolor=t["axis"], zeroline=False)
     for a in fig.layout.annotations[:2]:
@@ -233,8 +316,11 @@ def main():
 
     out = Path(rel(args.out)); out.mkdir(parents=True, exist_ok=True)
     written = []
-    for name, fig in (("04_s_min_cohort", chart_s_min(df, cmp_json, t)),
-                      ("05_s_min_vs_subbursts", chart_vs_subbursts(df, cmp_json, t))):
+    charts = [("04_s_min_cohort", chart_s_min(df, cmp_json, t)),
+              ("05_s_min_vs_subbursts", chart_vs_subbursts(df, cmp_json, t))]
+    if "tick_detail" in summary and "by_window" in summary.get("tick_detail", {}):
+        charts.append(("06_admissibility_by_window", chart_windows(summary, t)))
+    for name, fig in charts:
         path = out / f"{name}_{args.theme}.html"
         fig.write_html(path, include_plotlyjs=jsmode, full_html=True)
         written.append(str(path)); print(f"wrote {path}")

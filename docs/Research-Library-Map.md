@@ -1294,16 +1294,23 @@ argue about. Measured across the frozen 100-event cohort from `t0_print_count` a
 (no field computation, no tick pass, 0.2 s):
 
 - median `s_min` **7.46 s** for rth events, **1.07 s** premarket, 5.16 s pooled;
-- **15/100** events can support the coarse band's 1 s floor (rth 3/70); **0/100** the fine band's
-  15.6 ms floor;
+- **15/100** events can support the coarse band's 1 s floor session-wide (rth 3/70) — but **the
+  session is the wrong denominator.** Re-cut on the window a strategy would act in (D5: intraday
+  post-trigger), admissibility rises six-fold: **43/49 events at the anchor +10 s horizon**,
+  44/75 at +60 s, 35/93 at +15 min. The n falls with the window because only 49 of 100 events carry
+  25 prints in the 10 s after their own trigger, and that drop is itself a finding;
+- **0/n at the fine band's 15.6 ms floor at every window**;
 - at each event's *most favourable 5% of its session*: 42/100 reach 1 s, 4/100 reach 100 ms,
   **0/100 reach 10 ms**. The best moment of the densest event in the cohort (SOS_2021-02-17,
   831,614 prints) is **58 ms**.
 
 Against the committed sub-burst lineages, and the statement that needs no cross-method inference
-because it is the artifacts' own `n_prints` column: **the median committed sub-burst is 2–4 prints**
-(v4 median 3, 54% at exactly the method minimum of 3; 10c Stage 1 median 3, 67% ≤3; 10d T4 median 4,
-43% ≤3). Cooper's phrasing — *"a statement about the two or three fastest prints in a session, not
+because it is the artifacts' own `n_prints` column: **on the uncensored cells the MODAL committed
+sub-burst is exactly two prints — 49.3% of them — which is a single interval.** 66.9% are ≤3 prints.
+(v4's median of 3 is not comparable: `min_prints_reference: 3` censors that distribution, so its
+54% at 3 is pile-up on a configured floor, not a natural mode. 10d's reference cell — `K=0, d=0,
+min_prints=2, hard_break` — is an identity merge and comes back bit-identical to 10c Stage 1,
+46,709 objects, which is a useful check of the 10d pipeline.) Cooper's phrasing — *"a statement about the two or three fastest prints in a session, not
 about a market state"* — is not a hypothesis awaiting test; it is what the committed artifacts say
 about themselves. **Caveat carried:** D9's operating variable is the interval itself and estimates no
 intensity, so `n_eff` does not bind that lineage on its own terms, and none of this retracts D21 or
@@ -1316,3 +1323,28 @@ an open Cooper decision, and nothing here applies it as one.
 **Stopped after step r2.** The recovery grid (inject τ at the two measured background rates, fix the
 summary statistic on evidence) is next and is not started; the matched null and the cohort run are
 gated behind it.
+
+**Corrections after Cooper's read on the floor result (2026-08-28).** Three checks were raised and
+**two found errors in published numbers**, both fixed in place: (i) filtering 10d's `t4_subbursts`
+on `kernel_min` alone left **78 `(K,d,min_prints,sep)` cells** and 1.93M rows, so the published
+median was taken over a mixture of the assembly grid — the committed reference cell is 46,709 rows,
+median 1.75 ms / 3 prints; (ii) session coverage was the wrong admissibility denominator and
+understated it ~6×. A third check corrected wording: v4's minimum of 3 is a *configured* floor, not
+the structural minimum of 2.
+
+**The restatement test (`subburst_is_a_restatement.py`) came back NOT supported.** Regressing each
+event's median sub-burst duration on a low quantile of its own inter-trade interval distribution,
+log-log: on the uncensored source there is essentially no relationship (R² 0.004, n = 41), and on
+censored v4 the moderate fit (R² 0.353) is *beaten by the median-interval control* (0.377), so it
+reflects overall event pace rather than the left tail specifically. **So the finding is "the scale
+is unmeasurable on this tape", not "the statistic was a restatement"** — the two alternatives are
+distinguished, with the power caveat that 10c Stage 1 ran on 49 events, not 100.
+
+**The constructive half, which the closing must not bury.** `s_min` does not say the field is
+useless on this cohort; it says which band it works in. **The clusters are real** — three prints
+inside 1.75 ms on a 0.30 prints/s tape is astronomically improbable under any stationary null — and
+detection needs far fewer prints than rate estimation, so the burst-*detection* question stays open
+while the burst-*duration* question closes. The band that survives is the second-to-minute band,
+which is both measurable and the one the momentum system actually trades in. The accurate framing is
+**"the tape cannot answer the question the lineage asked"**, not "the tape cannot answer any
+question". Chart `charts/cohort/06_admissibility_by_window_*`.

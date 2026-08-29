@@ -1,10 +1,11 @@
 {
   "charts": [
     "E:\\Trading Research\\results\\scale_field\\charts\\cohort\\04_s_min_cohort_dark.html",
-    "E:\\Trading Research\\results\\scale_field\\charts\\cohort\\05_s_min_vs_subbursts_dark.html"
+    "E:\\Trading Research\\results\\scale_field\\charts\\cohort\\05_s_min_vs_subbursts_dark.html",
+    "E:\\Trading Research\\results\\scale_field\\charts\\cohort\\06_admissibility_by_window_dark.html"
   ],
   "theme": "dark",
-  "config_hash": "4268dcab",
+  "config_hash": "3306d8ec",
   "n_events": 100,
   "offline_rule": "D14 \u2014 never a CDN",
   "source": "research/scale_field/plot_s_min.py:main",
