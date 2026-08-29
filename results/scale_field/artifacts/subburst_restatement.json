@@ -1,0 +1,213 @@
+{
+  "task": "is the committed sub-burst duration a restatement of a low interval quantile?",
+  "config_hash": "3306d8ec",
+  "type": "DESCRIPTION ONLY. No decision, no gate, no retraction.",
+  "method": "per event, log10-log10 OLS of median sub-burst duration on a low quantile of that event's own inter-trade interval distribution. Slope ~1 with high R^2 => restatement.",
+  "quantiles_tested": [
+    0.02,
+    0.03,
+    0.04,
+    0.05
+  ],
+  "headline_quantile": 0.05,
+  "phase_13_boundary": "The interval distribution is computed here as an input and is NOT produced as a characterised finding, a noise floor, or a regime definition. Those remain Phase 13's.",
+  "degrees_of_freedom_note": "A 2-print sub-burst IS one interval, and 49.3% of the uncensored population is exactly that, so for half the objects a slope near 1 is close to arithmetic. The test quantifies how close; it is not a surprise if it fires.",
+  "sources": {
+    "10c_s1_kernel8": {
+      "present": true,
+      "what": "10c Stage 1, kernel 8. No run-length floor -- PRIMARY.",
+      "censored": false,
+      "n_events_joined": 41,
+      "median_subbursts_per_event": 49.0,
+      "fits": {
+        "iq02": {
+          "ok": true,
+          "n": 41,
+          "slope": -0.6364040866245689,
+          "intercept": -5.291217899016397,
+          "r2": 0.03702552609466747,
+          "slope_se": 0.5197056338495017,
+          "slope_ci95": [
+            -1.6550271289695924,
+            0.3822189557204544
+          ],
+          "residual_sd_decades": 2.346640889533974
+        },
+        "iq03": {
+          "ok": true,
+          "n": 41,
+          "slope": -0.21185099476608696,
+          "intercept": -2.532502250362438,
+          "r2": 0.004495687403443638,
+          "slope_se": 0.5048027637586241,
+          "slope_ci95": [
+            -1.2012644117329903,
+            0.7775624222008163
+          ],
+          "residual_sd_decades": 2.3859471475495253
+        },
+        "iq04": {
+          "ok": true,
+          "n": 41,
+          "slope": 0.21552809638532025,
+          "intercept": 0.09132725638436931,
+          "r2": 0.004484806825117205,
+          "slope_se": 0.5141900461084591,
+          "slope_ci95": [
+            -0.7922843939872596,
+            1.2233405867579001
+          ],
+          "residual_sd_decades": 2.3859601863749518
+        },
+        "iq05": {
+          "ok": true,
+          "n": 41,
+          "slope": 0.20519286909849332,
+          "intercept": 0.002807094529118118,
+          "r2": 0.003996785969202721,
+          "slope_se": 0.5186864280445168,
+          "slope_ci95": [
+            -0.8114325298687596,
+            1.2218182680657463
+          ],
+          "residual_sd_decades": 2.3865449366995173
+        },
+        "iq50_control": {
+          "ok": true,
+          "n": 41,
+          "slope": 0.30960868102735434,
+          "intercept": -0.43335009329541807,
+          "r2": 0.016558432039825544,
+          "slope_se": 0.3820722547068636,
+          "slope_ci95": [
+            -0.43925293819809835,
+            1.058470300252807
+          ],
+          "residual_sd_decades": 2.3714475669360393
+        }
+      }
+    },
+    "v4": {
+      "present": true,
+      "what": "v4. CENSORED at 3 prints; reported, not primary.",
+      "censored": true,
+      "n_events_joined": 90,
+      "median_subbursts_per_event": 210.5,
+      "fits": {
+        "iq02": {
+          "ok": true,
+          "n": 90,
+          "slope": 1.3111403850519454,
+          "intercept": 3.394079582400916,
+          "r2": 0.3448994266705524,
+          "slope_se": 0.19262631297718077,
+          "slope_ci95": [
+            0.9335928116166712,
+            1.6886879584872196
+          ],
+          "residual_sd_decades": 1.242521783108144
+        },
+        "iq03": {
+          "ok": true,
+          "n": 90,
+          "slope": 1.3432955515313172,
+          "intercept": 3.3172352807045065,
+          "r2": 0.4070913882094874,
+          "slope_se": 0.1728136973526701,
+          "slope_ci95": [
+            1.0045807047200839,
+            1.6820103983425505
+          ],
+          "residual_sd_decades": 1.1820719195647456
+        },
+        "iq04": {
+          "ok": true,
+          "n": 90,
+          "slope": 1.265897184461211,
+          "intercept": 2.6693197117530523,
+          "r2": 0.3764957052537695,
+          "slope_se": 0.1736588054258764,
+          "slope_ci95": [
+            0.9255259258264933,
+            1.6062684430959289
+          ],
+          "residual_sd_decades": 1.2121873460671435
+        },
+        "iq05": {
+          "ok": true,
+          "n": 90,
+          "slope": 1.2499726059587486,
+          "intercept": 2.38217403843218,
+          "r2": 0.3531337816311714,
+          "slope_se": 0.18034195038676615,
+          "slope_ci95": [
+            0.8965023832006869,
+            1.6034428287168103
+          ],
+          "residual_sd_decades": 1.2346880850895814
+        },
+        "iq50_control": {
+          "ok": true,
+          "n": 90,
+          "slope": 0.7523177477318285,
+          "intercept": -3.3603293569230153,
+          "r2": 0.37689966567161204,
+          "slope_se": 0.10311600697749428,
+          "slope_ci95": [
+            0.5502103740559396,
+            0.9544251214077173
+          ],
+          "residual_sd_decades": 1.211794602143565
+        }
+      }
+    }
+  },
+  "verdicts": {
+    "10c_s1_kernel8": {
+      "censored": false,
+      "n": 41,
+      "criterion": "slope within 0.25 of 1 AND R^2 >= 0.80 AND R^2 at least 0.10 above the median-interval control (left-tail SPECIFICITY)",
+      "slope": 0.2052,
+      "slope_ci95": [
+        -0.8114,
+        1.2218
+      ],
+      "r2_left_tail": 0.004,
+      "r2_median_control": 0.0166,
+      "r2_advantage_of_left_tail": -0.0126,
+      "slope_near_one": false,
+      "r2_high": false,
+      "left_tail_specific": false,
+      "restatement": false
+    },
+    "v4": {
+      "censored": true,
+      "n": 90,
+      "criterion": "slope within 0.25 of 1 AND R^2 >= 0.80 AND R^2 at least 0.10 above the median-interval control (left-tail SPECIFICITY)",
+      "slope": 1.25,
+      "slope_ci95": [
+        0.8965,
+        1.6034
+      ],
+      "r2_left_tail": 0.3531,
+      "r2_median_control": 0.3769,
+      "r2_advantage_of_left_tail": -0.0238,
+      "slope_near_one": true,
+      "r2_high": false,
+      "left_tail_specific": false,
+      "restatement": false
+    }
+  },
+  "conclusion": {
+    "primary_source": "10c_s1_kernel8 (uncensored)",
+    "restatement_supported": false,
+    "reading": "THE RESTATEMENT HYPOTHESIS IS NOT SUPPORTED. On the uncensored source the median sub-burst duration has essentially no relationship to a low quantile of the event's own interval distribution (r = +0.06, R^2 = 0.004, n = 41). On the censored v4 artifact there IS a moderate relationship (R^2 = 0.35, slope 1.25 with a CI that includes 1), but it is NOT specific to the left tail: the median-interval control fits marginally BETTER (R^2 = 0.38), so what it reflects is how fast the event trades overall, not a re-parameterisation of its fastest intervals. So of Cooper's two alternatives -- 'the scale was implausible' versus 'the statistic was a restatement' -- the evidence points to the FIRST. The duration is a real if barely-supported measurement of a real cluster, taken at a scale the tape cannot resolve, rather than a relabelling of the interval distribution.",
+    "power_caveats": [
+      "n = 41 for the uncensored source. 10c Stage 1 ran on 49 events (dev_v4_primary + 6 sidecar), NOT the 100-event cohort, so this test has limited power and a null is weak evidence.",
+      "10c's per-event median duration spans 6.6 decades and includes events whose median object is 889 prints / 466 s. A per-event median over that mixture is a noisy dependent variable.",
+      "v4's dependent variable is censored: median_prints spans only 3 to 7 because of the configured floor of 3, which compresses the variable being regressed."
+    ]
+  },
+  "source": "research/scale_field/subburst_is_a_restatement.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/scale_field/subburst_is_a_restatement.py"
+}
