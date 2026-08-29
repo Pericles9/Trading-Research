@@ -1,6 +1,6 @@
 {
   "task": "step 1 -- resolution floor s_min across the analysis cohort",
-  "config_hash": "4268dcab",
+  "config_hash": "3306d8ec",
   "cohort_content_hash": "e1a0ac73a79aa573",
   "cohort_hash_asserted": true,
   "n_events": 100,
@@ -8,7 +8,7 @@
   "neff_min": 8.0,
   "coefficient": 2.256758334191025,
   "inputs": "t0_print_count (frozen cohort manifest) + D3 extended-day span (pinned XNYS calendar). No field computation, no tick pass.",
-  "seconds_elapsed": 5.5,
+  "seconds_elapsed": 5.6,
   "segment_counts": {
     "rth": 70,
     "premarket": 28,
@@ -428,6 +428,225 @@
           }
         }
       }
-    }
+    },
+    "by_window": {
+      "anchor_pm15min": {
+        "why": "the brief's fine-band read window, symmetric about the anchor.",
+        "offsets_seconds_from_anchor": [
+          -900.0,
+          900.0
+        ],
+        "n_events_with_window": 95,
+        "lambda_prints_per_s": {
+          "n": 95,
+          "min": 0.028888888888888888,
+          "max": 25.336111111111112,
+          "q05": 0.044111111111111115,
+          "q25": 0.32472222222222225,
+          "q50": 1.9722222222222223,
+          "q75": 4.574722222222222,
+          "q95": 13.207833333333326
+        },
+        "s_min_median_seconds": {
+          "n": 95,
+          "min": 0.2074129183178362,
+          "max": 521.1204733164235,
+          "q05": 0.39185457467632767,
+          "q25": 1.0224166770684526,
+          "q50": 2.733257522233931,
+          "q75": 15.26400722770762,
+          "q95": 74.46652137523881
+        },
+        "share_of_window_supporting_band": {
+          "coarse": {
+            "n": 95,
+            "min": 0.0,
+            "max": 0.95,
+            "q05": 0.0,
+            "q25": 0.00925,
+            "q50": 0.18,
+            "q75": 0.49824999999999997,
+            "q95": 0.8015999999999998
+          },
+          "fine": {
+            "n": 95,
+            "min": 0.0,
+            "max": 0.0195,
+            "q05": 0.0,
+            "q25": 0.0,
+            "q50": 0.0,
+            "q75": 0.0005,
+            "q95": 0.004149999999999998
+          }
+        },
+        "n_events_median_moment_supports_band": {
+          "coarse": 24,
+          "fine": 0
+        }
+      },
+      "anchor_post15min": {
+        "why": "post-trigger, D5's actual surface.",
+        "offsets_seconds_from_anchor": [
+          0.0,
+          900.0
+        ],
+        "n_events_with_window": 93,
+        "lambda_prints_per_s": {
+          "n": 93,
+          "min": 0.03222222222222222,
+          "max": 44.21666666666667,
+          "q05": 0.07711111111111112,
+          "q25": 0.39444444444444443,
+          "q50": 2.6755555555555555,
+          "q75": 8.067777777777778,
+          "q95": 21.78422222222218
+        },
+        "s_min_median_seconds": {
+          "n": 93,
+          "min": 0.10297733969589808,
+          "max": 1015.6353350997126,
+          "q05": 0.20435444787177606,
+          "q25": 0.5570550026425668,
+          "q50": 1.9108921649326194,
+          "q75": 12.729837489914294,
+          "q95": 71.51018098706847
+        },
+        "share_of_window_supporting_band": {
+          "coarse": {
+            "n": 93,
+            "min": 0.0,
+            "max": 1.0,
+            "q05": 0.0,
+            "q25": 0.014,
+            "q50": 0.241,
+            "q75": 0.789,
+            "q95": 0.9866999999999999
+          },
+          "fine": {
+            "n": 93,
+            "min": 0.0,
+            "max": 0.0385,
+            "q05": 0.0,
+            "q25": 0.0,
+            "q50": 0.0,
+            "q75": 0.0005,
+            "q95": 0.007699999999999996
+          }
+        },
+        "n_events_median_moment_supports_band": {
+          "coarse": 35,
+          "fine": 0
+        }
+      },
+      "anchor_post60s": {
+        "why": "burst-scale, the horizon class D5 names.",
+        "offsets_seconds_from_anchor": [
+          0.0,
+          60.0
+        ],
+        "n_events_with_window": 75,
+        "lambda_prints_per_s": {
+          "n": 75,
+          "min": 0.48333333333333334,
+          "max": 76.6,
+          "q05": 0.8816666666666667,
+          "q25": 2.0583333333333336,
+          "q50": 4.883333333333334,
+          "q75": 10.666666666666668,
+          "q95": 27.48999999999999
+        },
+        "s_min_median_seconds": {
+          "n": 75,
+          "min": 0.0420798866283012,
+          "max": 68.4330844821899,
+          "q05": 0.12447343533220191,
+          "q25": 0.3500150519479284,
+          "q50": 0.7585195688526098,
+          "q75": 1.5445787311197745,
+          "q95": 4.559238874733767
+        },
+        "share_of_window_supporting_band": {
+          "coarse": {
+            "n": 75,
+            "min": 0.0,
+            "max": 1.0,
+            "q05": 0.0,
+            "q25": 0.275,
+            "q50": 0.676,
+            "q75": 1.0,
+            "q95": 1.0
+          },
+          "fine": {
+            "n": 75,
+            "min": 0.0,
+            "max": 0.0885,
+            "q05": 0.0,
+            "q25": 0.0,
+            "q50": 0.0,
+            "q75": 0.00175,
+            "q95": 0.006399999999999992
+          }
+        },
+        "n_events_median_moment_supports_band": {
+          "coarse": 44,
+          "fine": 0
+        }
+      },
+      "anchor_post10s": {
+        "why": "the momentum system's own holding period, order ten seconds.",
+        "offsets_seconds_from_anchor": [
+          0.0,
+          10.0
+        ],
+        "n_events_with_window": 49,
+        "lambda_prints_per_s": {
+          "n": 49,
+          "min": 2.6,
+          "max": 53.2,
+          "q05": 3.24,
+          "q25": 4.5,
+          "q50": 8.4,
+          "q75": 17.4,
+          "q95": 36.33999999999999
+        },
+        "s_min_median_seconds": {
+          "n": 49,
+          "min": 0.06201931674770573,
+          "max": 3.7295440780152544,
+          "q05": 0.09054743620997965,
+          "q25": 0.17858460192816236,
+          "q50": 0.3569809535389302,
+          "q75": 0.7048727399936119,
+          "q95": 1.174538044697997
+        },
+        "share_of_window_supporting_band": {
+          "coarse": {
+            "n": 49,
+            "min": 0.0415,
+            "max": 1.0,
+            "q05": 0.18090000000000003,
+            "q25": 0.893,
+            "q50": 1.0,
+            "q75": 1.0,
+            "q95": 1.0
+          },
+          "fine": {
+            "n": 49,
+            "min": 0.0,
+            "max": 0.04,
+            "q05": 0.0,
+            "q25": 0.0,
+            "q50": 0.0,
+            "q75": 0.0025,
+            "q95": 0.022699999999999988
+          }
+        },
+        "n_events_median_moment_supports_band": {
+          "coarse": 43,
+          "fine": 0
+        }
+      }
+    },
+    "window_note": "The D3 session is NOT the admissibility denominator. It is mostly dead time and understates admissibility for the only period a strategy would act in. The post-anchor windows are the operative ones under D5."
   }
 }

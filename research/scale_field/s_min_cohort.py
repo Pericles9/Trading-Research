@@ -65,6 +65,30 @@ OUT_PARQUET = "results/scale_field/artifacts/s_min_cohort.parquet"
 
 # The floors each band would have to clear, from config/scale_field.json.
 BANDS = {"coarse": 1.0, "fine": 0.015625}
+
+# WINDOWS. The D3 extended session is the WRONG denominator for admissibility and the
+# first version of this script used it anyway. "The median event supports the coarse
+# band over 2.8% of its session" is dominated by the dead premarket hours; what a
+# strategy needs to know is whether the band is supported WHEN IT WOULD BE TRADING,
+# which is at and after the D7 detection anchor. D5 fixes that as intraday
+# post-trigger, long-only, burst-scale horizons -- so the post-anchor windows are the
+# operative ones and the symmetric one is carried for comparison with the fine band's
+# read window. Offsets are seconds relative to the anchor; None means the session.
+WINDOWS = {
+    "session":        None,
+    "anchor_pm15min": (-900.0, 900.0),
+    "anchor_post15min": (0.0, 900.0),
+    "anchor_post60s": (0.0, 60.0),
+    "anchor_post10s": (0.0, 10.0),
+}
+WINDOW_WHY = {
+    "session": "the D3 extended day. Conservative and mostly dead time; kept as the "
+               "artifact-only baseline, NOT as the admissibility denominator.",
+    "anchor_pm15min": "the brief's fine-band read window, symmetric about the anchor.",
+    "anchor_post15min": "post-trigger, D5's actual surface.",
+    "anchor_post60s": "burst-scale, the horizon class D5 names.",
+    "anchor_post10s": "the momentum system's own holding period, order ten seconds.",
+}
 # Reference marks for the report: the committed sub-burst duration medians (step 2).
 SUBBURST_MARKS = {"v4 median": 3.48e-7, "10c s1 median": 1.2941e-3, "10d T4 median": 2.755e-3}
 
@@ -102,6 +126,8 @@ def main() -> int:
     cfg = adapter.load_config()
     cohort = load_cohort(cfg)                  # asserts the frozen hash
     det = load_detection(cfg)
+    anchors = {r.event_id: r.anchor_ns for r in det.itertuples(index=False)
+               if np.isfinite(r.anchor_ns)}
     c = cohort.merge(det[["event_id", "segment"]], on="event_id", how="left")
     pooled = c[c["pooled"]].copy()
     print(f"cohort {len(cohort)} events, {len(pooled)} pooled, hash asserted OK")
@@ -124,6 +150,29 @@ def main() -> int:
         }
         if args.tick_detail:
             ts, meta = load_event_prints_meta(r.event_id, None, cfg)
+            anchor = anchors.get(r.event_id)
+            for wname, off in WINDOWS.items():
+                if off is None or anchor is None or ts.size <= 25:
+                    continue
+                lo = int(anchor + off[0] * 1e9)
+                hi = int(anchor + off[1] * 1e9)
+                w = ts[(ts >= lo) & (ts < hi)]
+                if w.size <= 25:
+                    row[f"{wname}__lambda"] = np.nan
+                    row[f"{wname}__s_min_median"] = np.nan
+                    for b in BANDS:
+                        row[f"{wname}__share_{b}"] = np.nan
+                    row[f"{wname}__n_prints"] = int(w.size)
+                    continue
+                grid = np.linspace(lo, hi, args.grid_points).astype(np.int64)
+                smw = s_min_for_rate(knn_rate(ts, grid))     # kNN over the FULL tape,
+                # evaluated on the window: a window edge must not manufacture a rate drop.
+                row[f"{wname}__n_prints"] = int(w.size)
+                row[f"{wname}__lambda"] = float(w.size / ((hi - lo) / 1e9))
+                row[f"{wname}__s_min_median"] = float(np.nanmedian(smw))
+                row[f"{wname}__s_min_q05"] = float(np.nanquantile(smw, 0.05))
+                for b, fl in BANDS.items():
+                    row[f"{wname}__share_{b}"] = float(np.nanmean(smw <= fl))
             if ts.size > 25:
                 active = (ts[-1] - ts[0]) / 1e9
                 lam_active = ts.size / active if active > 0 else np.nan
@@ -206,6 +255,28 @@ def main() -> int:
                 band: {"pooled": q(df[f"share_session_below_{band}"]),
                        "by_segment": by_segment(f"share_session_below_{band}")}
                 for band in BANDS},
+            "by_window": {
+                wname: {
+                    "why": WINDOW_WHY[wname],
+                    "offsets_seconds_from_anchor": off,
+                    "n_events_with_window": int(df[f"{wname}__lambda"].notna().sum())
+                    if f"{wname}__lambda" in df.columns else 0,
+                    "lambda_prints_per_s": q(df[f"{wname}__lambda"])
+                    if f"{wname}__lambda" in df.columns else {"n": 0},
+                    "s_min_median_seconds": q(df[f"{wname}__s_min_median"])
+                    if f"{wname}__s_min_median" in df.columns else {"n": 0},
+                    "share_of_window_supporting_band": {
+                        b: q(df[f"{wname}__share_{b}"])
+                        for b in BANDS if f"{wname}__share_{b}" in df.columns},
+                    "n_events_median_moment_supports_band": {
+                        b: int((df[f"{wname}__s_min_median"] <= fl).sum())
+                        for b, fl in BANDS.items()
+                        if f"{wname}__s_min_median" in df.columns},
+                } for wname, off in WINDOWS.items() if off is not None},
+            "window_note": "The D3 session is NOT the admissibility denominator. It is "
+                           "mostly dead time and understates admissibility for the only "
+                           "period a strategy would act in. The post-anchor windows are "
+                           "the operative ones under D5.",
         }
 
     os.makedirs(os.path.dirname(rel(OUT_JSON)), exist_ok=True)
@@ -234,6 +305,16 @@ def main() -> int:
         for band in BANDS:
             sh = summary["tick_detail"]["share_of_session_supporting_band"][band]["pooled"]
             print(f"  share of session supporting {band:7s}: median {sh['q50']:.1%}")
+        print("\nBY WINDOW -- the session is the wrong denominator:")
+        print(f"  {'window':18s} {'n':>4s} {'lam med':>9s} {'s_min med':>10s} "
+              f"{'coarse ok':>10s} {'fine ok':>8s}")
+        for wname, w in summary["tick_detail"]["by_window"].items():
+            lam = w["lambda_prints_per_s"]; sm2 = w["s_min_median_seconds"]
+            nb = w["n_events_median_moment_supports_band"]
+            if not lam.get("n"):
+                continue
+            print(f"  {wname:18s} {lam['n']:4d} {lam['q50']:9.2f} {sm2['q50']:10.3g} "
+                  f"{nb['coarse']:6d}/{lam['n']:<3d} {nb['fine']:4d}/{lam['n']:<3d}")
     print(f"\nwrote {OUT_JSON}")
     return 0
 
