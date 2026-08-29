@@ -1,0 +1,267 @@
+{
+  "question": "Is the ~200 s break in the rate channel's dispersion in the data or in the pyramid's decimation schedule?",
+  "sigma_lo_is_not_the_knob": {
+    "claim": "sigma_lo does NOT move the decimation boundaries; they sit at 4 * scales.min() * 2^k. sigma_lo cancels in s/dt > 4*sigma_lo with dt = scales.min()/sigma_lo.",
+    "boundaries_by_sigma_lo": {
+      "5.0": [
+        4.362,
+        8.724,
+        17.448,
+        32.0,
+        69.792
+      ],
+      "8.0": [
+        4.362,
+        8.724,
+        17.448,
+        32.0,
+        69.792
+      ],
+      "12.0": [
+        4.362,
+        8.724,
+        17.448,
+        32.0,
+        69.792
+      ]
+    },
+    "boundaries_by_band_min": {
+      "1.0": [
+        4.362,
+        8.724,
+        17.448,
+        32.0,
+        69.792
+      ],
+      "1.4142135623730951": [
+        6.169,
+        12.338,
+        24.675,
+        45.255,
+        98.701
+      ]
+    }
+  },
+  "events": {
+    "AEHL_2021-02-19_37.50": {
+      "segment": "rth",
+      "n_arrivals": 17365,
+      "band_min_1.0": {
+        "scales": [
+          1.0,
+          2048.0
+        ],
+        "first_decimations": [
+          4.362,
+          8.724,
+          17.448,
+          32.0
+        ],
+        "dlograte": {
+          "ok": true,
+          "knee_seconds": 215.27,
+          "delta_bic": 59.6,
+          "slope_before": -0.124,
+          "slope_after": 0.118,
+          "n_scales_used": 89
+        },
+        "dm": {
+          "ok": true,
+          "knee_seconds": 16.0,
+          "delta_bic": 133.5,
+          "slope_before": 0.187,
+          "slope_after": -0.192,
+          "n_scales_used": 89
+        }
+      },
+      "band_min_sqrt2": {
+        "scales": [
+          1.4142,
+          2896.3
+        ],
+        "first_decimations": [
+          6.169,
+          12.338,
+          24.675,
+          45.255
+        ],
+        "dlograte": {
+          "ok": true,
+          "knee_seconds": 279.17,
+          "delta_bic": 80.9,
+          "slope_before": -0.103,
+          "slope_after": 0.172,
+          "n_scales_used": 89
+        },
+        "dm": {
+          "ok": true,
+          "knee_seconds": 19.03,
+          "delta_bic": 117.9,
+          "slope_before": 0.148,
+          "slope_after": -0.198,
+          "n_scales_used": 89
+        }
+      },
+      "exact_no_pyramid": {
+        "scale_range": [
+          8.0,
+          2048.0
+        ],
+        "n_scales": 25,
+        "t_grid_points": 150,
+        "dlograte": {
+          "ok": true,
+          "knee_seconds": 64.0,
+          "delta_bic": 68.7,
+          "slope_before": -1.792,
+          "slope_after": -0.145,
+          "n_scales_used": 25
+        },
+        "dm": {
+          "ok": true,
+          "knee_seconds": 40.32,
+          "delta_bic": 4.3,
+          "slope_before": 0.07,
+          "slope_after": -0.163,
+          "n_scales_used": 25
+        }
+      },
+      "pyramid_same_grid": {
+        "dlograte": {
+          "ok": true,
+          "knee_seconds": 1290.16,
+          "delta_bic": 8.4,
+          "slope_before": -0.075,
+          "slope_after": 1.035,
+          "n_scales_used": 25
+        },
+        "dm": {
+          "ok": true,
+          "knee_seconds": 256.0,
+          "delta_bic": 9.1,
+          "slope_before": -0.067,
+          "slope_after": -0.349,
+          "n_scales_used": 25
+        }
+      }
+    },
+    "CREX_2022-02-01_41.48": {
+      "segment": "premarket",
+      "n_arrivals": 119149,
+      "band_min_1.0": {
+        "scales": [
+          1.0,
+          2048.0
+        ],
+        "first_decimations": [
+          4.362,
+          8.724,
+          17.448,
+          32.0
+        ],
+        "dlograte": {
+          "ok": true,
+          "knee_seconds": 234.75,
+          "delta_bic": 127.0,
+          "slope_before": -0.176,
+          "slope_after": 0.092,
+          "n_scales_used": 89
+        },
+        "dm": {
+          "ok": true,
+          "knee_seconds": 3.08,
+          "delta_bic": 69.5,
+          "slope_before": 0.302,
+          "slope_after": -0.224,
+          "n_scales_used": 89
+        }
+      },
+      "band_min_sqrt2": {
+        "scales": [
+          1.4142,
+          2896.3
+        ],
+        "first_decimations": [
+          6.169,
+          12.338,
+          24.675,
+          45.255
+        ],
+        "dlograte": {
+          "ok": true,
+          "knee_seconds": 215.27,
+          "delta_bic": 130.3,
+          "slope_before": -0.181,
+          "slope_after": 0.068,
+          "n_scales_used": 89
+        },
+        "dm": {
+          "ok": true,
+          "knee_seconds": 4.0,
+          "delta_bic": 13.6,
+          "slope_before": 0.091,
+          "slope_after": -0.221,
+          "n_scales_used": 89
+        }
+      },
+      "exact_no_pyramid": {
+        "scale_range": [
+          8.0,
+          2048.0
+        ],
+        "n_scales": 25,
+        "t_grid_points": 150,
+        "dlograte": {
+          "ok": true,
+          "knee_seconds": 256.0,
+          "delta_bic": 48.8,
+          "slope_before": -0.354,
+          "slope_after": 0.214,
+          "n_scales_used": 25
+        },
+        "dm": {
+          "ok": true,
+          "knee_seconds": 16.0,
+          "delta_bic": 16.9,
+          "slope_before": 0.659,
+          "slope_after": -0.302,
+          "n_scales_used": 25
+        }
+      },
+      "pyramid_same_grid": {
+        "dlograte": {
+          "ok": true,
+          "knee_seconds": 256.0,
+          "delta_bic": 18.1,
+          "slope_before": -0.175,
+          "slope_after": 0.082,
+          "n_scales_used": 25
+        },
+        "dm": {
+          "ok": true,
+          "knee_seconds": 16.0,
+          "delta_bic": 10.0,
+          "slope_before": 0.635,
+          "slope_after": -0.285,
+          "n_scales_used": 25
+        }
+      }
+    }
+  },
+  "verdicts": {
+    "AEHL_2021-02-19_37.50": {
+      "shift_ratio_band_min": 1.297,
+      "tracks_the_schedule_would_be": 1.414,
+      "exact_vs_pyramid_ratio": 0.297,
+      "verdict": "pyramid or inconclusive"
+    },
+    "CREX_2022-02-01_41.48": {
+      "shift_ratio_band_min": 0.917,
+      "tracks_the_schedule_would_be": 1.414,
+      "exact_vs_pyramid_ratio": 1.091,
+      "verdict": "data"
+    }
+  },
+  "source": "research/scale_field/test_break_is_not_the_pyramid.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/scale_field/test_break_is_not_the_pyramid.py"
+}

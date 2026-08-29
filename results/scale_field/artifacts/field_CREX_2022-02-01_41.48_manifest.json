@@ -2,6 +2,8 @@
   "task": "one event, both bands, both channels (order of work step 3)",
   "config_hash": "4268dcab",
   "event_id": "CREX_2022-02-01_41.48",
+  "sigma_lo": 8.0,
+  "suffix": "",
   "event_chosen_because": "operator choice",
   "cohort_group": "dev_v4_primary",
   "pooled": true,
@@ -53,14 +55,18 @@
       "n_ties_collapsed": 0,
       "n_intervals": 119148,
       "origin_ns": 1643724562023068248,
-      "seconds_elapsed": 3.27,
+      "sigma_lo": 8.0,
+      "seconds_elapsed": 3.7,
       "seconds_per_event_budgeted": 1.7,
       "nan_share": {
         "m": 0.3308614232209738,
         "dm": 0.3308614232209738,
-        "lograte": 0.1342322097378277,
-        "dlograte": 0.1342322097378277
+        "lograte": 0.3308614232209738,
+        "dlograte": 0.3308614232209738
       },
+      "local_rate_prints_per_s": 3.0542,
+      "s_min_seconds_at_mean_rate": 0.7389,
+      "s_min_rule": "n_eff = 2*sqrt(pi)*s*lambda >= 8  =>  s >= 2.257/lambda. A DATA limit, not a rendering one: nothing below it is measurable at any output resolution, on any chart.",
       "n_eff_below_floor_share": 0.2711860174781523,
       "neff_rule": "field() returns NaN under n_eff >= 8 and MUST NEVER be given a fallback. Same treatment as insufficient_context."
     },
@@ -85,14 +91,18 @@
       "n_ties_collapsed": 0,
       "n_intervals": 33235,
       "origin_ns": 1643724562023068248,
-      "seconds_elapsed": 8.25,
+      "sigma_lo": 8.0,
+      "seconds_elapsed": 9.53,
       "seconds_per_event_budgeted": 7.0,
       "nan_share": {
         "m": 0.4854829931972789,
         "dm": 0.4854829931972789,
-        "lograte": 0.06590476190476191,
-        "dlograte": 0.06590476190476191
+        "lograte": 0.4854829931972789,
+        "dlograte": 0.4854829931972789
       },
+      "local_rate_prints_per_s": 18.1617,
+      "s_min_seconds_at_mean_rate": 0.1243,
+      "s_min_rule": "n_eff = 2*sqrt(pi)*s*lambda >= 8  =>  s >= 2.257/lambda. A DATA limit, not a rendering one: nothing below it is measurable at any output resolution, on any chart.",
       "n_eff_below_floor_share": 0.482734693877551,
       "neff_rule": "field() returns NaN under n_eff >= 8 and MUST NEVER be given a fallback. Same treatment as insufficient_context."
     }
