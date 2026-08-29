@@ -1,6 +1,6 @@
 {
   "task": "reconciliation gate (order of work step 2)",
-  "config_hash": "4268dcab",
+  "config_hash": "3306d8ec",
   "cohort_manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
   "cohort_content_hash": "e1a0ac73a79aa573",
   "cohort_hash_asserted": true,
@@ -76,7 +76,7 @@
       "premarket": 16.0
     }
   },
-  "v3_knees_role": "A PREDICTION for the continuous field, not an input to it. The scale axis should show a change of character near them. If it does not, one of the two measurements is wrong and that is the finding.",
+  "v3_knees_role": "WITHDRAWN AS AN ACCEPTANCE CRITERION, 2026-08-28, by Cooper at the step-4 read. The brief made v3's knees a prediction the continuous field had to change character near. Cooper tested both candidate summary statistics against known injected truth and neither recovers a timescale at the scales this cohort lives at: pooled amplitude vs scale does not select scale at all (pins to the finest grid point for every tau over a 25x span); the local ridge tracks then degrades (recovered/injected 1.55, 0.99, 0.59, 0.18 for tau = 2, 8, 32, 128 s); the Allan knee has no stable conversion (tau-to-knee 8, 12.8, 5.1 over the same span). So a knee disagreement is two uncalibrated statistics being compared, not a finding. The knees remain recorded as v3's committed measurement. What the brief should have asked for is a recovery test against known truth -- Cooper's step 3, not started.",
   "source": "research/scale_field/reconcile_allan.py:main",
   "reproduce": ".venv/Scripts/python.exe research/scale_field/reconcile_allan.py"
 }
