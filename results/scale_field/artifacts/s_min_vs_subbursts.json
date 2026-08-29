@@ -1,7 +1,7 @@
 {
   "task": "step 2 -- resolution floor vs the committed sub-burst durations",
   "type": "DESCRIPTION ONLY. No decision, no gate, nothing appended to the register.",
-  "config_hash": "4268dcab",
+  "config_hash": "3306d8ec",
   "caveat_first": "D9's operating variable is the inter-trade interval and the lineage deliberately estimates no intensity, so n_eff does NOT bind D9's construction on its own terms. Nothing here says a committed sub-burst is wrong. The load-bearing statement is the print count, which is read off the committed artifacts' own columns and needs no cross-method inference.",
   "s_min_reference": {
     "best_anywhere_seconds": 0.05802113833737388,
@@ -17,8 +17,11 @@
     "v4": {
       "present": true,
       "path": "results/phase_10/artifacts/v4_subbursts.parquet",
-      "what": "the v1->v4 sub-burst lineage, threshold-from-trough on log intervals",
-      "n_subbursts_all": 128818,
+      "what": "v1->v4 lineage, threshold-from-trough on log intervals",
+      "cell": "the committed v4 artifact. config/phase_10_v4.json min_prints_reference = 3, so this distribution is CENSORED at 3 prints -- see floor_note.",
+      "n_subbursts_before_cell_cut": 128818,
+      "cell_selector": {},
+      "n_subbursts_in_cell": 128818,
       "prints_per_subburst": {
         "n": 128818,
         "min": 3,
@@ -26,10 +29,13 @@
         "q25": 3.0,
         "median": 3.0,
         "q75": 4.0,
+        "share_eq_2": 0.0,
         "share_le_3": 0.541,
         "share_le_5": 0.8808,
         "share_le_10": 0.9561
       },
+      "floor_note": "CENSORED: a run-length floor of 3 prints is configured for this cell, so the distribution cannot show anything below it. The share sitting exactly at 3 is pile-up ON the floor, not a natural mode, and the true distribution below it is not observable here. Read the uncensored sources instead.",
+      "share_at_floor": 0.541,
       "duration_seconds": {
         "n": 128818,
         "min": 1.22e-07,
@@ -50,9 +56,12 @@
       "present": true,
       "path": "results/phase_10c/artifacts/s1_t1_subbursts.parquet",
       "what": "10c Stage 1, after the window fix",
-      "n_subbursts_all": 170722,
-      "kernel_filter": "kernel_min == 8.0 (10c/10d primary)",
-      "n_subbursts_primary_kernel": 46709,
+      "cell": "kernel_min = 8. 10c applies NO run-length floor at any point (there is no min_prints variable in research/phase_10c/s1_t1_subbursts.py), so this distribution is UNCENSORED and is the one to read.",
+      "n_subbursts_before_cell_cut": 170722,
+      "cell_selector": {
+        "kernel_min": 8.0
+      },
+      "n_subbursts_in_cell": 46709,
       "prints_per_subburst": {
         "n": 46709,
         "min": 2,
@@ -60,6 +69,7 @@
         "q25": 2.0,
         "median": 3.0,
         "q75": 4.0,
+        "share_eq_2": 0.4934,
         "share_le_3": 0.669,
         "share_le_5": 0.8215,
         "share_le_10": 0.9363
@@ -80,42 +90,50 @@
       "share_shorter_than_own_event_floor__session_mean_rate": 0.9891,
       "median_ratio_floor_over_duration": 294.0
     },
-    "10d_t4": {
+    "10d_t4_reference": {
       "present": true,
       "path": "results/phase_10d/artifacts/t4_subbursts.parquet",
-      "what": "10d assembly grid (merge tolerance x run-length floor, D20)",
-      "n_subbursts_all": 6811163,
-      "kernel_filter": "kernel_min == 8.0 (10c/10d primary)",
-      "n_subbursts_primary_kernel": 1934084,
+      "what": "10d assembly grid at its committed REFERENCE cell (D20)",
+      "cell": "kernel_min=8, K=0, d=0.0, min_prints=2, sep=hard_break. Identity merge and no-op floor, so bit-identical to 10c Stage 1 at kernel 8 by construction.",
+      "n_subbursts_before_cell_cut": 6811163,
+      "cell_selector": {
+        "kernel_min": 8.0,
+        "K": 0.0,
+        "d": 0.0,
+        "min_prints": 2.0,
+        "sep": "hard_break"
+      },
+      "n_subbursts_in_cell": 46709,
       "prints_per_subburst": {
-        "n": 1934084,
+        "n": 46709,
         "min": 2,
-        "max": 241230,
+        "max": 228842,
         "q25": 2.0,
-        "median": 4.0,
-        "q75": 7.0,
-        "share_le_3": 0.4332,
-        "share_le_5": 0.6405,
-        "share_le_10": 0.8618
+        "median": 3.0,
+        "q75": 4.0,
+        "share_eq_2": 0.4934,
+        "share_le_3": 0.669,
+        "share_le_5": 0.8215,
+        "share_le_10": 0.9363
       },
       "duration_seconds": {
-        "n": 1934084,
+        "n": 46709,
         "min": 0.000100007,
-        "max": 37844.20914816,
-        "q05": 0.000195155,
-        "q25": 0.000845192,
-        "q50": 0.00336891,
-        "q75": 0.012734919,
-        "q95": 0.200695816
+        "max": 33368.090980608,
+        "q05": 0.0001362696,
+        "q25": 0.0004685,
+        "q50": 0.001751286,
+        "q75": 0.006209472,
+        "q95": 0.06649902879999997
       },
-      "n_joined_to_cohort": 1930750,
-      "share_shorter_than_own_event_floor__best_5pct_of_session": 0.9679,
-      "share_shorter_than_own_event_floor__median_moment_of_session": 0.9907,
-      "share_shorter_than_own_event_floor__session_mean_rate": 0.9828,
-      "median_ratio_floor_over_duration": 147.6
+      "n_joined_to_cohort": 46630,
+      "share_shorter_than_own_event_floor__best_5pct_of_session": 0.9809,
+      "share_shorter_than_own_event_floor__median_moment_of_session": 0.9937,
+      "share_shorter_than_own_event_floor__session_mean_rate": 0.9891,
+      "median_ratio_floor_over_duration": 294.0
     }
   },
-  "reading": "The median committed sub-burst is 2-4 prints across all three lineages, with 46-71% of them at 3 prints or fewer. That is read off the artifacts' own n_prints column and requires nothing from this method. Cooper's phrasing -- 'a statement about the two or three fastest prints in a session, not about a market state' -- is therefore not a hypothesis awaiting test; it is what the committed artifacts already say about themselves. The resolution-floor comparison adds that no event in the cohort resolves below 58 ms at its most favourable moment, which is 21x above 10d's median sub-burst duration and 5 orders of magnitude above v4's -- but that comparison is across methods and carries the caveat above, whereas the print count does not.",
+  "reading": "On the UNCENSORED cells -- 10c Stage 1 at kernel 8, and 10d's reference cell, which are the same 46,709 objects -- the MODAL committed sub-burst is exactly 2 prints: 49.3% of them. A 2-print object is a SINGLE INTERVAL. It has no internal structure by construction, and its 'duration' is one inter-trade gap rather than an estimated quantity. 66.9% are 3 prints or fewer. v4's median of 3 is not comparable: config/phase_10_v4.json sets min_prints_reference = 3, so that distribution is censored at 3 and the 54.1% sitting exactly there is pile-up on the floor. All of this is read off the artifacts' own n_prints column and requires nothing from this method. The resolution-floor comparison adds that no event in the cohort resolves below 58 ms at its most favourable moment -- but that comparison is across methods and carries the caveat above, whereas the print count does not. NOTE WHAT THIS DOES NOT SAY: three prints inside 1.75 ms on a tape running at 0.30 prints/s is astronomically improbable under any stationary null, so the CLUSTERS ARE REAL. What is not supported is their DURATION as a measured quantity. Detection needs far fewer prints than rate estimation.",
   "source": "research/scale_field/s_min_vs_subbursts.py:main",
   "reproduce": ".venv/Scripts/python.exe research/scale_field/s_min_vs_subbursts.py"
 }

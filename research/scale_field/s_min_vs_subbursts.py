@@ -44,16 +44,38 @@ from adapter import rel  # noqa: E402
 OUT = "results/scale_field/artifacts/s_min_vs_subbursts.json"
 PRIMARY_KERNEL = 8.0        # config/phase_10d.json upstream_10c.kernel_primary_min
 
+# EVERY SOURCE IS CUT TO ONE CELL. An earlier version of this script filtered 10d on
+# kernel_min alone, which left 78 distinct (K, d, min_prints, sep) cells in the frame
+# and took a median over a mixture of 1.93M rows across the whole assembly grid. The
+# reference cell is committed in config/phase_10d.json: K=0 and d=0 are the identity
+# merge (merge_grid.degenerate_cells), min_prints=2 is the TRUE no-op
+# (min_prints_grid.reference, with the note that "the r1 draft's reference of 3 was
+# wrong on this and was corrected at T0b"), and sep=hard_break is
+# separator_grid.reference. Cut that way it is bit-identical to 10c Stage 1 at the same
+# kernel -- 46,709 rows, same n_prints histogram -- which is what an identity merge over
+# 10c's own runs should be, and is a useful internal check of the 10d pipeline.
 SOURCES = [
     {"label": "v4", "path": "results/phase_10/artifacts/v4_subbursts.parquet",
-     "dur": "duration_seconds", "kernel": None,
-     "what": "the v1->v4 sub-burst lineage, threshold-from-trough on log intervals"},
+     "dur": "duration_seconds", "select": None,
+     "floor": 3,
+     "what": "v1->v4 lineage, threshold-from-trough on log intervals",
+     "cell": "the committed v4 artifact. config/phase_10_v4.json min_prints_reference = 3, "
+             "so this distribution is CENSORED at 3 prints -- see floor_note."},
     {"label": "10c_s1", "path": "results/phase_10c/artifacts/s1_t1_subbursts.parquet",
-     "dur": "duration_s", "kernel": "kernel_min",
-     "what": "10c Stage 1, after the window fix"},
-    {"label": "10d_t4", "path": "results/phase_10d/artifacts/t4_subbursts.parquet",
-     "dur": "duration_s", "kernel": "kernel_min",
-     "what": "10d assembly grid (merge tolerance x run-length floor, D20)"},
+     "dur": "duration_s", "select": {"kernel_min": PRIMARY_KERNEL},
+     "floor": None,
+     "what": "10c Stage 1, after the window fix",
+     "cell": "kernel_min = 8. 10c applies NO run-length floor at any point (there is no "
+             "min_prints variable in research/phase_10c/s1_t1_subbursts.py), so this "
+             "distribution is UNCENSORED and is the one to read."},
+    {"label": "10d_t4_reference", "path": "results/phase_10d/artifacts/t4_subbursts.parquet",
+     "dur": "duration_s",
+     "select": {"kernel_min": PRIMARY_KERNEL, "K": 0, "d": 0.0, "min_prints": 2,
+                "sep": "hard_break"},
+     "floor": None,
+     "what": "10d assembly grid at its committed REFERENCE cell (D20)",
+     "cell": "kernel_min=8, K=0, d=0.0, min_prints=2, sep=hard_break. Identity merge and "
+             "no-op floor, so bit-identical to 10c Stage 1 at kernel 8 by construction."},
 ]
 
 
@@ -107,16 +129,17 @@ def main() -> int:
         if not os.path.exists(path):
             out["sources"][src["label"]] = {"present": False, "path": src["path"]}
             continue
-        cols = key + [src["dur"], "n_prints"] + ([src["kernel"]] if src["kernel"] else [])
+        sel = src["select"] or {}
+        cols = key + [src["dur"], "n_prints"] + [c for c in sel if c not in key]
         d = pd.read_parquet(path, columns=cols)
         d["event_date_canonical"] = d["event_date_canonical"].astype(str)
         rec = {"present": True, "path": src["path"], "what": src["what"],
-               "n_subbursts_all": int(len(d))}
-
-        if src["kernel"]:
-            d = d[np.isclose(d[src["kernel"]], PRIMARY_KERNEL)]
-            rec["kernel_filter"] = f"{src['kernel']} == {PRIMARY_KERNEL} (10c/10d primary)"
-            rec["n_subbursts_primary_kernel"] = int(len(d))
+               "cell": src["cell"], "n_subbursts_before_cell_cut": int(len(d))}
+        for col, val in sel.items():
+            d = d[np.isclose(d[col], val)] if isinstance(val, (int, float)) else d[d[col] == val]
+        rec["cell_selector"] = {k: (float(v) if isinstance(v, (int, float)) else v)
+                                for k, v in sel.items()}
+        rec["n_subbursts_in_cell"] = int(len(d))
 
         # ---- THE FINDING: how many prints is a sub-burst made of?
         n = d["n_prints"].to_numpy()
@@ -124,10 +147,19 @@ def main() -> int:
             "n": int(n.size), "min": int(n.min()), "max": int(n.max()),
             "q25": float(np.quantile(n, .25)), "median": float(np.median(n)),
             "q75": float(np.quantile(n, .75)),
+            "share_eq_2": round(float((n == 2).mean()), 4),
             "share_le_3": round(float((n <= 3).mean()), 4),
             "share_le_5": round(float((n <= 5).mean()), 4),
             "share_le_10": round(float((n <= 10).mean()), 4),
         }
+        if src["floor"]:
+            rec["floor_note"] = (
+                f"CENSORED: a run-length floor of {src['floor']} prints is configured for "
+                f"this cell, so the distribution cannot show anything below it. The share "
+                f"sitting exactly at {src['floor']} is pile-up ON the floor, not a natural "
+                f"mode, and the true distribution below it is not observable here. Read the "
+                f"uncensored sources instead.")
+            rec["share_at_floor"] = round(float((n == src["floor"]).mean()), 4)
         rec["duration_seconds"] = q(d[src["dur"]])
 
         # ---- context: against each sub-burst's OWN event's floor
@@ -144,27 +176,35 @@ def main() -> int:
         out["sources"][src["label"]] = rec
 
         p = rec["prints_per_subburst"]
-        print(f"\n{src['label']:8s} n={rec.get('n_subbursts_primary_kernel', rec['n_subbursts_all']):,}"
-              f"   median duration {rec['duration_seconds']['q50']*1e3:.3g} ms")
-        print(f"         prints per sub-burst: median {p['median']:.0f}  "
+        lab = src["label"]
+        cens = f"   [CENSORED at {src['floor']} prints]" if src["floor"] else ""
+        print("")
+        print(f"{lab:18s} n={rec['n_subbursts_in_cell']:,}"
+              f"   median duration {rec['duration_seconds']['q50']*1e3:.4g} ms{cens}")
+        print(f"                   prints: min {p['min']}  median {p['median']:.0f}  "
               f"(q25 {p['q25']:.0f}, q75 {p['q75']:.0f})   "
-              f"<=3 prints: {p['share_le_3']:.1%}   <=5: {p['share_le_5']:.1%}")
+              f"=2: {p['share_eq_2']:.1%}   <=3: {p['share_le_3']:.1%}")
         if len(m):
-            print(f"         shorter than its own event's BEST-case floor: "
+            print(f"                   shorter than its own event's BEST-case floor: "
                   f"{rec['share_shorter_than_own_event_floor__best_5pct_of_session']:.1%}"
                   f"   median floor/duration ratio {rec['median_ratio_floor_over_duration']:,.0f}x")
 
     out["reading"] = (
-        "The median committed sub-burst is 2-4 prints across all three lineages, with "
-        "46-71% of them at 3 prints or fewer. That is read off the artifacts' own "
-        "n_prints column and requires nothing from this method. Cooper's phrasing -- 'a "
-        "statement about the two or three fastest prints in a session, not about a market "
-        "state' -- is therefore not a hypothesis awaiting test; it is what the committed "
-        "artifacts already say about themselves. The resolution-floor comparison adds "
-        "that no event in the cohort resolves below 58 ms at its most favourable moment, "
-        "which is 21x above 10d's median sub-burst duration and 5 orders of magnitude "
-        "above v4's -- but that comparison is across methods and carries the caveat above, "
-        "whereas the print count does not.")
+        "On the UNCENSORED cells -- 10c Stage 1 at kernel 8, and 10d's reference cell, "
+        "which are the same 46,709 objects -- the MODAL committed sub-burst is exactly "
+        "2 prints: 49.3% of them. A 2-print object is a SINGLE INTERVAL. It has no "
+        "internal structure by construction, and its 'duration' is one inter-trade gap "
+        "rather than an estimated quantity. 66.9% are 3 prints or fewer. v4's median of 3 "
+        "is not comparable: config/phase_10_v4.json sets min_prints_reference = 3, so "
+        "that distribution is censored at 3 and the 54.1% sitting exactly there is "
+        "pile-up on the floor. All of this is read off the artifacts' own n_prints column "
+        "and requires nothing from this method. The resolution-floor comparison adds that "
+        "no event in the cohort resolves below 58 ms at its most favourable moment -- but "
+        "that comparison is across methods and carries the caveat above, whereas the print "
+        "count does not. NOTE WHAT THIS DOES NOT SAY: three prints inside 1.75 ms on a "
+        "tape running at 0.30 prints/s is astronomically improbable under any stationary "
+        "null, so the CLUSTERS ARE REAL. What is not supported is their DURATION as a "
+        "measured quantity. Detection needs far fewer prints than rate estimation.")
     out["source"] = "research/scale_field/s_min_vs_subbursts.py:main"
     out["reproduce"] = ".venv/Scripts/python.exe research/scale_field/s_min_vs_subbursts.py"
 
