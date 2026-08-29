@@ -23,6 +23,21 @@ LN10 = np.log(10.0)
 SIGMA_POISSON_DECADES = np.sqrt(np.pi**2 / 6.0) / LN10   # 0.55696 -- sd of log10(Exp), any rate
 EULER_GAMMA = 0.5772156649015329
 
+# n_eff = 2*sqrt(pi)*s*lambda >= neff_min  =>  s >= NEFF_S_MIN_COEF / lambda.
+# The fine band's real floor is arithmetic, not a config choice: at the median rth
+# rate of 2.5 prints/s nothing below 903 ms is measurable at ANY output resolution.
+NEFF_S_MIN_COEF = 8.0 / (2.0 * np.sqrt(np.pi))           # 2.2568
+
+
+def s_min_for_rate(lam, neff_min: float = 8.0):
+    """Smallest resolvable kernel scale at local print rate `lam` (prints/s).
+
+    This is a DATA limit and cannot be charted around. Plot it on every fine-band
+    figure so the blank region is labelled rather than mysterious."""
+    lam = np.asarray(lam, dtype=np.float64)
+    return np.divide(neff_min / (2.0 * np.sqrt(np.pi)), lam,
+                     out=np.full_like(lam, np.inf), where=lam > 0)
+
 
 # --------------------------------------------------------------------------- #
 # input preparation
@@ -38,63 +53,24 @@ def collapse_same_timestamp(ts_ns: np.ndarray) -> np.ndarray:
     return np.unique(ts_ns)
 
 
-NS = 1_000_000_000
+def intervals(ts_ns: np.ndarray, origin: int | None = None):
+    """-> (event_time_seconds_since_origin, log10_interval_seconds).
 
-
-def _assert_resolved(t_s: np.ndarray, dt_ns: np.ndarray) -> None:
-    """float64 seconds must resolve the SMALLEST gap present, with headroom.
-
-    This is not a theoretical concern, it is the failure this guard was written
-    after. Epoch nanoseconds are ~1.6e18; as float64 SECONDS the ULP is 238 ns,
-    while the archive's median timestamp resolution is 80.5 ns and its minimum is
-    49 ns. Measured on ALXO_2020-08-05_31.58: 4 of 899 strictly-increasing unique
-    timestamps went NON-POSITIVE under `ts/1e9`, and the worst gap error was 447 ns
-    against a 954 ns scale floor -- the whole fine band would have been quantization
-    noise wearing a plausible shape. Rebasing to an int64 origin first drops the
-    worst error to 0.004 ns. Hence `origin_ns`, and hence this check: passing the
-    wrong origin now fails loudly instead of returning numbers.
-    """
-    if t_s.size == 0 or dt_ns.size == 0:
-        return
-    ulp = float(np.spacing(float(np.abs(t_s).max())))
-    finest = float(dt_ns.min()) / NS
-    if ulp > finest / 8.0:
-        raise ValueError(
-            f"float64 seconds cannot resolve this tape: ULP {ulp * 1e9:.1f} ns vs "
-            f"smallest gap {finest * 1e9:.1f} ns. Pass origin_ns (epoch-ns timestamps "
-            f"must be rebased before the float conversion, not after)."
-        )
-
-
-def to_seconds(ts_ns: np.ndarray, origin_ns: int | None = None) -> tuple[np.ndarray, int]:
-    """int64 epoch ns -> (float64 seconds measured from `origin_ns`, origin_ns).
-
-    The rate channel and the interval channel MUST share one origin or their time
-    axes are offset against each other. Default origin is the first timestamp.
-    """
-    ts_ns = np.asarray(ts_ns, dtype=np.int64)
-    origin = int(ts_ns[0]) if origin_ns is None and ts_ns.size else int(origin_ns or 0)
-    return (ts_ns - origin).astype(np.float64) / 1e9, origin
-
-
-def intervals(ts_ns: np.ndarray, origin_ns: int = 0) -> tuple[np.ndarray, np.ndarray]:
-    """-> (event_time_seconds, log10_interval).  Interval is attributed to its CLOSING
-    print, so element i is the gap that ended at ts[i+1].
-
-    Gaps are differenced in int64 BEFORE any float conversion, so the interval is
-    exact regardless of the timestamps' magnitude. `origin_ns` rebases the returned
-    time axis and must match the one used for the rate channel -- see `to_seconds`.
-    It defaults to 0 (absolute epoch seconds), which is correct only for a tape whose
-    timestamps are small; `_assert_resolved` raises rather than let that pass
-    silently on real epoch-ns data.
-    """
-    ts_ns = np.asarray(ts_ns, dtype=np.int64)
-    dt_ns = np.diff(ts_ns)
-    if np.any(dt_ns <= 0):
+    Differencing happens in int64 NANOSECONDS. float64 seconds since the Unix epoch
+    has a ULP of 238 ns against an archive resolution of 80.5 ns median / 49 ns min,
+    so differencing there destroys the fine band. Positions are float64 but only
+    RELATIVE to an explicit origin, where the ULP is negligible."""
+    ts = np.asarray(ts_ns, dtype=np.int64)
+    d = np.diff(ts)
+    if d.size and np.any(d <= 0):
         raise ValueError("non-positive interval: collapse ties first")
-    t = (ts_ns[1:] - int(origin_ns)).astype(np.float64) / 1e9
-    _assert_resolved(t, dt_ns)
-    return t, np.log10(dt_ns.astype(np.float64) / 1e9)
+    o = np.int64(ts[0] if origin is None else origin)
+    return (ts[1:] - o).astype(np.float64) / 1e9, np.log10(d.astype(np.float64) * 1e-9)
+
+
+def seconds_since(ts_ns, origin: int) -> np.ndarray:
+    """Print times as float64 seconds relative to an explicit origin."""
+    return (np.asarray(ts_ns, dtype=np.int64) - np.int64(origin)).astype(np.float64) / 1e9
 
 
 # --------------------------------------------------------------------------- #
@@ -142,7 +118,8 @@ def _bin(ts_s, ev_s, x, t0, dt, n):
     return c, ce, sx
 
 
-def field(ts_s, ev_s, x, t_grid, scales, neff_min=8.0, sigma_lo=8.0, edge_scales=4.0):
+def field(ts_s, ev_s, x, t_grid, scales, neff_min=8.0, sigma_lo=8.0, edge_scales=4.0,
+          reduce="interp"):   # "auto" is for RENDERING; see _reduce_extremum
     """Same quantities as field_exact, via a Gaussian pyramid.
 
     ACCURACY (measured against field_exact, not asserted by hope -- see
@@ -178,8 +155,9 @@ def field(ts_s, ev_s, x, t_grid, scales, neff_min=8.0, sigma_lo=8.0, edge_scales
         return arr if e2 <= 1e-9 else gaussian_filter1d(arr, np.sqrt(e2), order=0, **G)
 
     nT, nS = len(t_grid), len(scales)
+    col_w = float(np.median(np.diff(t_grid))) if nT > 1 else np.inf
     out = {k: np.full((nT, nS), np.nan) for k in
-           ("m", "dm", "lograte", "dlograte", "n_eff")}
+           ("m", "dm", "lograte", "dlograte", "n_eff", "n_eff_rate")}
     rt = np.sqrt(np.pi)
 
     for j in order:
@@ -210,16 +188,62 @@ def field(ts_s, ev_s, x, t_grid, scales, neff_min=8.0, sigma_lo=8.0, edge_scales
         bad = ~(neff >= neff_min)
         m = np.where(bad, np.nan, m); dm = np.where(bad, np.nan, dm)
 
-        cpos = c0 > 0
-        lr = np.where(cpos, np.log(np.divide(c0, dt, out=np.ones_like(c0), where=cpos)), np.nan)
+        # The rate channel needs the SAME data floor as the interval channel. Without
+        # it, a window holding a fraction of a print returns a confident-looking number:
+        # at 2.5 prints/s and s = 15.6 ms the expected in-kernel count is 0.14 and
+        # |dL/dln s| reaches ~14 decades/e-fold, which then sets the colour scale and
+        # buries everything real. Measured, see test_rate_channel_declines_on_empty_windows.
+        ch = gaussian_filter1d(c, half, order=0, **G)
+        neff_rate = np.divide(2 * rt * sg * c0 * c0, ch, out=np.zeros_like(c0), where=ch > 0)
+        cpos = (c0 > 0) & (neff_rate >= neff_min)
+        lr = np.where(cpos, np.log(np.divide(c0, dt, out=np.ones_like(c0), where=c0 > 0)), np.nan)
         dlr = np.divide(sg * sg * c2, c0, out=np.full_like(c0, np.nan), where=cpos)
+        dlr = np.where(cpos, dlr, np.nan)
 
         gt = t0 + (np.arange(len(c0)) + 0.5) * dt
         edge = (t_grid > t0 + edge_scales * s) & (t_grid < t1 - edge_scales * s)
         for name, arr in (("m", m), ("dm", dm), ("lograte", lr),
-                          ("dlograte", dlr), ("n_eff", neff)):
-            v = np.interp(t_grid, gt, arr, left=np.nan, right=np.nan)
+                          ("dlograte", dlr), ("n_eff", neff), ("n_eff_rate", neff_rate)):
+            # "auto": extremum ONLY where the kernel is narrower than an output
+            # column. Above that the field is already resolved and extremum just
+            # raises the noise floor (measured: background p99 0.59 -> 1.53).
+            use_ext = (reduce == "extremum") or (reduce == "auto" and s < col_w)
+            v = (_reduce_extremum(t_grid, gt, arr) if use_ext
+                 else np.interp(t_grid, gt, arr, left=np.nan, right=np.nan))
             out[name][:, j] = np.where(edge, v, np.nan)
+    return out
+
+
+def _reduce_extremum(t_grid, gt, arr):
+    """Map a fine native grid onto a coarser output grid by keeping, per output cell,
+    the value of LARGEST MAGNITUDE rather than a point sample.
+
+    Point-sampling a field whose kernel is far narrower than the output spacing does
+    not blur short features, it DELETES the ones that fall between columns -- a 50 ms
+    burst rendered at 1.5 s per column survives only by luck. Extremum reduction is
+    the standard waveform/oscilloscope decimation and costs nothing extra.
+
+    OFF BY DEFAULT, and that is a measured negative result rather than an oversight.
+    Tested against point sampling on injected bursts at their own scale (peak over
+    background p99): 150 ms 2.4x -> 1.0x, 500 ms 3.3x -> 2.9x, 2 s 7.3x -> 7.3x. It
+    raises the background floor as much as the signal (p99 0.59 -> 1.53). The apparent
+    early win was an artefact of maximising over the unmasked fine-band noise that the
+    rate channel's missing n_eff floor was producing. Kept, off, as the record.
+    """
+    if len(gt) <= len(t_grid):
+        return np.interp(t_grid, gt, arr, left=np.nan, right=np.nan)
+    edges = np.empty(len(t_grid) + 1)
+    edges[1:-1] = 0.5 * (t_grid[1:] + t_grid[:-1])
+    edges[0] = t_grid[0] - (edges[1] - t_grid[0]); edges[-1] = t_grid[-1] + (t_grid[-1] - edges[-2])
+    idx = np.searchsorted(gt, edges)
+    out = np.full(len(t_grid), np.nan)
+    for i in range(len(t_grid)):
+        seg = arr[idx[i]:idx[i + 1]]
+        if seg.size == 0:
+            continue
+        fin = seg[np.isfinite(seg)]
+        if fin.size:
+            out[i] = fin[np.argmax(np.abs(fin))]
     return out
 
 
@@ -233,12 +257,16 @@ def allan_factor(ts_s, T, t_start=None, t_end=None, min_windows=2):
 
     THE WINDOW ORIGIN IS AN ARGUMENT, NOT AN ASSUMPTION. Unset, windows tile
     [min(ts), max(ts)) -- the data's own support, which is what a synthetic tape
-    wants and what the unit tests assert against. Phase 10 v3 tiled the D3 extended
-    session [04:00 ET, post_end) instead, so empty stretches are real zeros rather
-    than omissions (config/phase_10_v3.json gate.window_origin). Reconciling against
-    v3 REQUIRES passing that window explicitly -- the origin, the span, and therefore
-    every count depends on it. `min_windows` mirrors v3's min_windows_for_a_rung: a
-    rung with fewer windows than this is dropped, not returned small.
+    wants and what the acceptance suite asserts against. Phase 10 v3 tiled the D3
+    extended session [04:00 ET, post_end) instead, so empty stretches are real zeros
+    rather than omissions (config/phase_10_v3.json gate.window_origin). Reconciling
+    against v3 REQUIRES passing that window explicitly -- the origin, the span, and
+    therefore every count depends on it. `min_windows` mirrors v3's
+    min_windows_for_a_rung: a rung with fewer windows is dropped, not returned small.
+
+    These three arguments are what the reconciliation gate runs on, and without them
+    it cannot be expressed at all. Defaults reproduce the argument-free behaviour
+    exactly; test_allan_window_defaults_are_the_data_support asserts that.
     """
     ts_s = np.asarray(ts_s, dtype=np.float64)
     t0 = float(ts_s.min()) if t_start is None else float(t_start)

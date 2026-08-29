@@ -17,7 +17,7 @@ import adapter
 from adapter import (SEGMENTS, load_cohort, load_detection, load_event_prints,
                      load_event_prints_meta, make_event_id, parse_event_id,
                      segment_bounds_ns)
-from scale_field import collapse_same_timestamp, intervals, to_seconds
+from scale_field import collapse_same_timestamp, intervals, seconds_since
 
 CFG = adapter.load_config()
 HAVE_DATA = os.path.isdir(adapter.rel(CFG["paths"]["filtered_root"]))
@@ -126,13 +126,16 @@ def test_ties_are_returned_uncollapsed_and_collapse_makes_intervals_positive():
     assert meta["n_tied_prints"] == ts.size - meta["n_unique_timestamps"]
     c = collapse_same_timestamp(ts)
     assert c.size == meta["n_unique_timestamps"]
-    tsec, origin = to_seconds(c)
-    ev, x = intervals(c, origin_ns=origin)
+    ev, x = intervals(c, origin=c[0])
     assert np.all(np.isfinite(x))
     assert np.all(np.diff(ev) > 0)
-    # And the naive conversion this event actually broke, pinned as a real case.
-    with pytest.raises(ValueError, match="cannot resolve"):
-        intervals(c)
+    # The gaps this event carries are far below what float64 epoch SECONDS can
+    # resolve (238 ns ULP vs a 103 ns minimum gap here), so a float-differenced
+    # path would produce non-positive intervals. int64 differencing does not.
+    assert np.all(np.diff(c) > 0)
+    assert np.any(np.diff(c.astype(np.float64) / 1e9) <= 0), (
+        "float64 epoch seconds no longer lose ns gaps on this event?")
+    assert np.allclose(10 ** x * 1e9, np.diff(c), rtol=0, atol=1e-3)
 
 
 @needs_data

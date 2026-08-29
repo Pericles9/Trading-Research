@@ -4,8 +4,8 @@ This file IS the specification -- if it passes, the estimator is correct.
 Run: python -m pytest test_scale_field.py -q
 """
 import numpy as np, pytest
-from scale_field import (collapse_same_timestamp, intervals, to_seconds, field, field_exact,
-                         allan_factor, SIGMA_POISSON_DECADES)
+from scale_field import (collapse_same_timestamp, intervals, seconds_since, field,
+                         field_exact, allan_factor, SIGMA_POISSON_DECADES)
 
 RNG = lambda s=0: np.random.default_rng(s)
 
@@ -37,7 +37,7 @@ def test_log_interval_null_is_pure_location_shift(rate):
 # --- 2. the analytic scale-derivative ----------------------------------------
 def test_analytic_scale_derivative_matches_finite_difference():
     ts = collapse_same_timestamp((poisson_tape(20, 300, 2) * 1e9).astype(np.int64))
-    ev, x = intervals(ts); tsec = ts / 1e9
+    ev, x = intervals(ts, origin=ts[0]); tsec = seconds_since(ts, ts[0])
     tg = np.linspace(40, 260, 120); sc = np.geomspace(0.5, 20, 14); h = 1e-3
     f0 = field_exact(tsec, ev, x, tg, sc)
     fp = field_exact(tsec, ev, x, tg, sc * np.exp(h))
@@ -51,9 +51,9 @@ def test_analytic_scale_derivative_matches_finite_difference():
 # --- 3. sign convention (this caught a real bug) -----------------------------
 def test_sign_a_rate_burst_is_positive_on_both_channels():
     ts = collapse_same_timestamp((burst_tape(3, 120, 150, 4, 300, 3) * 1e9).astype(np.int64))
-    ev, x = intervals(ts)
+    ev, x = intervals(ts, origin=ts[0])
     tg = np.array([152.0]); sc = np.geomspace(1, 30, 12)
-    f = field_exact(ts / 1e9, ev, x, tg, sc)
+    f = field_exact(seconds_since(ts, ts[0]), ev, x, tg, sc)
     assert np.nanmax(f["dm"]) > 0          # window faster than surroundings -> m rises with s
     assert np.nanmax(-f["dlograte"]) > 0   # intensity falls as the window widens
 
@@ -61,7 +61,7 @@ def test_sign_a_rate_burst_is_positive_on_both_channels():
 # --- 4. fast path reproduces the exact path ----------------------------------
 def test_pyramid_matches_exact():
     ts = collapse_same_timestamp((burst_tape(4, 90, 200, 6, 500, 4) * 1e9).astype(np.int64))
-    ev, x = intervals(ts); tsec = ts / 1e9
+    ev, x = intervals(ts, origin=ts[0]); tsec = seconds_since(ts, ts[0])
     tg = np.linspace(60, 440, 200); sc = np.geomspace(0.4, 40, 20)
     a = field_exact(tsec, ev, x, tg, sc); b = field(tsec, ev, x, tg, sc)
     # The pyramid's accuracy floor is set by bin width, so it is worst in the FIRST
@@ -87,9 +87,9 @@ def test_pyramid_matches_exact():
 def test_rate_channel_recovers_burst_duration(dur, amp):
     T = max(600.0, 20 * dur)
     ts = collapse_same_timestamp((burst_tape(4, 4 * amp, T / 2, dur, T, 5) * 1e9).astype(np.int64))
-    ev, x = intervals(ts)
+    ev, x = intervals(ts, origin=ts[0])
     sc = np.geomspace(dur / 12, dur * 12, 40)
-    f = field(ts / 1e9, ev, x, np.array([T / 2 + dur / 2]), sc)
+    f = field(seconds_since(ts, ts[0]), ev, x, np.array([T / 2 + dur / 2]), sc)
     est = sc[np.nanargmin(f["dlograte"][0])]
     assert 0.45 < est / dur < 2.2, f"true {dur}s, recovered {est:.2f}s"
 
@@ -100,8 +100,10 @@ def test_scale_free_under_time_rescaling():
     for c in (0.1, 10.0):
         out = []
         for tape, sc in ((base, np.geomspace(.5, 50, 30)), (base * c, np.geomspace(.5, 50, 30) * c)):
-            ts = collapse_same_timestamp((tape * 1e9).astype(np.int64)); ev, x = intervals(ts)
-            f = field(ts / 1e9, ev, x, np.array([252.5 * (1 if tape is base else c)]), sc)
+            ts = collapse_same_timestamp((tape * 1e9).astype(np.int64))
+            ev, x = intervals(ts, origin=ts[0])
+            f = field(seconds_since(ts, ts[0]), ev, x,
+                      np.array([252.5 * (1 if tape is base else c)]), sc)
             out.append(sc[np.nanargmin(f["dlograte"][0])] / (1 if tape is base else c))
         assert abs(np.log2(out[1] / out[0])) < 0.30, out
 
@@ -136,14 +138,21 @@ def test_zero_interval_raises_rather_than_imputing():
 
 def test_sparse_region_is_masked_not_guessed():
     ts = collapse_same_timestamp((poisson_tape(0.05, 3000, 9) * 1e9).astype(np.int64))
-    ev, x = intervals(ts)
-    f = field(ts / 1e9, ev, x, np.linspace(300, 2700, 60), np.geomspace(0.05, 2.0, 10))
+    ev, x = intervals(ts, origin=ts[0])
+    f = field(seconds_since(ts, ts[0]), ev, x, np.linspace(300, 2700, 60),
+              np.geomspace(0.05, 2.0, 10))
     assert np.isnan(f["dm"]).mean() > 0.5      # below the n_eff floor -> NaN, never a number
 
 
-# --- 9. the explicit window, added for the v3 reconciliation ------------------
+# --- 9. the explicit Allan window, which the reconciliation gate runs on -------
+# allan_factor's t_start / t_end / min_windows exist because Phase 10 v3 tiles the D3
+# extended session, not the data's own support, and the origin cannot be inferred from
+# the prints. Without them the gate cannot be expressed. These three tests pin that the
+# arguments are additive, that they are load-bearing, and that the eligibility rule
+# drops a rung rather than returning it small.
+
 def test_allan_window_defaults_are_the_data_support():
-    """The added t_start/t_end arguments must not have moved the default answer."""
+    """The added arguments must not have moved the default answer."""
     ts = poisson_tape(50, 4000, 7)
     for T in (0.5, 2.0, 8.0, 32.0):
         a, na = allan_factor(ts, T)
@@ -151,8 +160,8 @@ def test_allan_window_defaults_are_the_data_support():
         assert (a, na) == (b, nb), (T, a, b)
 
 def test_allan_window_origin_changes_the_answer():
-    """Padding the window with genuinely empty time is a different measurement, not
-    a rounding difference -- which is exactly why v3's session origin must be passed
+    """Padding the window with genuinely empty time is a different measurement, not a
+    rounding difference -- which is exactly why v3's session origin must be passed
     rather than inferred."""
     ts = poisson_tape(50, 2000, 7)
     a, _ = allan_factor(ts, 32.0)
@@ -161,45 +170,7 @@ def test_allan_window_origin_changes_the_answer():
 
 def test_allan_min_windows_drops_a_rung_rather_than_returning_it():
     ts = poisson_tape(50, 4000, 7)
-    A, n = allan_factor(ts, 1000.0, min_windows=8)     # only ~4 windows fit
+    A, n = allan_factor(ts, 1000.0, min_windows=8)     # only ~3 windows fit
     assert np.isnan(A) and n == 0
     A2, n2 = allan_factor(ts, 1000.0, min_windows=2)
-    assert np.isfinite(A2) and n2 == 2      # 3 windows fit in the span, so 2 adjacent pairs
-
-
-# --- 10. epoch-scale timestamps ----------------------------------------------
-# Every tape above starts near t=0, so nothing here exercised float64 precision at
-# epoch magnitude. Real prints do. See _assert_resolved for the measured failure.
-def test_epoch_ns_without_an_origin_raises_rather_than_returning_noise():
-    epoch = 1596631099071280910                       # ALXO 2020-08-05, first print
-    ts = epoch + np.array([0, 103, 240, 5_000, 1_000_000], dtype=np.int64)
-    with pytest.raises(ValueError, match="cannot resolve"):
-        intervals(ts)
-
-
-def test_epoch_ns_with_an_origin_is_exact():
-    epoch = 1596631099071280910
-    gaps = np.array([103, 137, 4760, 995_000], dtype=np.int64)
-    ts = epoch + np.concatenate(([0], np.cumsum(gaps)))
-    t, x = intervals(ts, origin_ns=epoch)
-    assert np.all(np.diff(t) > 0)
-    assert np.allclose(10 ** x * 1e9, gaps, rtol=0, atol=1e-3)   # sub-picosecond
-    assert t[0] == pytest.approx(gaps[0] / 1e9, abs=1e-12)
-
-
-def test_to_seconds_shares_its_origin_with_the_interval_channel():
-    epoch = 1596631099071280910
-    ts = epoch + np.cumsum(np.array([0, 103, 137, 4760, 995_000], dtype=np.int64))
-    tsec, origin = to_seconds(ts)
-    ev, _ = intervals(ts, origin_ns=origin)
-    assert origin == epoch
-    assert np.array_equal(tsec[1:], ev)          # same axis, not merely close
-
-
-def test_the_naive_conversion_really_does_break_on_this_data():
-    """Pins the reason the origin argument exists, so a future simplification that
-    drops it fails here instead of in a chart nobody can check."""
-    epoch = 1596631099071280910
-    ts = epoch + np.cumsum(np.array([0, 103, 137, 4760], dtype=np.int64))
-    naive = np.diff(ts.astype(np.float64) / 1e9)
-    assert np.any(naive <= 0), "float64 epoch seconds no longer lose ns gaps?"
+    assert np.isfinite(A2) and n2 == 2                 # 3 windows -> 2 adjacent pairs
