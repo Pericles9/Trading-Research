@@ -1,0 +1,121 @@
+{
+  "task": "step 2 -- resolution floor vs the committed sub-burst durations",
+  "type": "DESCRIPTION ONLY. No decision, no gate, nothing appended to the register.",
+  "config_hash": "4268dcab",
+  "caveat_first": "D9's operating variable is the inter-trade interval and the lineage deliberately estimates no intensity, so n_eff does NOT bind D9's construction on its own terms. Nothing here says a committed sub-burst is wrong. The load-bearing statement is the print count, which is read off the committed artifacts' own columns and needs no cross-method inference.",
+  "s_min_reference": {
+    "best_anywhere_seconds": 0.05802113833737388,
+    "best_anywhere_event": "SOS_2021-02-17_34.12",
+    "best_anywhere_meaning": "the most favourable 5% of the session of the single densest event in the cohort. No event, at any moment, resolves below this.",
+    "pooled_within_session_median_seconds": 49.25657548375513,
+    "n_events_reaching_10ms_at_best": 0,
+    "n_events_reaching_100ms_at_best": 4,
+    "n_events_reaching_1s_at_best": 42,
+    "n_events": 100
+  },
+  "sources": {
+    "v4": {
+      "present": true,
+      "path": "results/phase_10/artifacts/v4_subbursts.parquet",
+      "what": "the v1->v4 sub-burst lineage, threshold-from-trough on log intervals",
+      "n_subbursts_all": 128818,
+      "prints_per_subburst": {
+        "n": 128818,
+        "min": 3,
+        "max": 176,
+        "q25": 3.0,
+        "median": 3.0,
+        "q75": 4.0,
+        "share_le_3": 0.541,
+        "share_le_5": 0.8808,
+        "share_le_10": 0.9561
+      },
+      "duration_seconds": {
+        "n": 128818,
+        "min": 1.22e-07,
+        "max": 1.872646799,
+        "q05": 1.59e-07,
+        "q25": 2.29e-07,
+        "q50": 3.48e-07,
+        "q75": 1.2958e-05,
+        "q95": 0.006137302199999991
+      },
+      "n_joined_to_cohort": 114074,
+      "share_shorter_than_own_event_floor__best_5pct_of_session": 1.0,
+      "share_shorter_than_own_event_floor__median_moment_of_session": 1.0,
+      "share_shorter_than_own_event_floor__session_mean_rate": 1.0,
+      "median_ratio_floor_over_duration": 295183.7
+    },
+    "10c_s1": {
+      "present": true,
+      "path": "results/phase_10c/artifacts/s1_t1_subbursts.parquet",
+      "what": "10c Stage 1, after the window fix",
+      "n_subbursts_all": 170722,
+      "kernel_filter": "kernel_min == 8.0 (10c/10d primary)",
+      "n_subbursts_primary_kernel": 46709,
+      "prints_per_subburst": {
+        "n": 46709,
+        "min": 2,
+        "max": 228842,
+        "q25": 2.0,
+        "median": 3.0,
+        "q75": 4.0,
+        "share_le_3": 0.669,
+        "share_le_5": 0.8215,
+        "share_le_10": 0.9363
+      },
+      "duration_seconds": {
+        "n": 46709,
+        "min": 0.000100007,
+        "max": 33368.090980608,
+        "q05": 0.0001362696,
+        "q25": 0.0004685,
+        "q50": 0.001751286,
+        "q75": 0.006209472,
+        "q95": 0.06649902879999997
+      },
+      "n_joined_to_cohort": 46630,
+      "share_shorter_than_own_event_floor__best_5pct_of_session": 0.9809,
+      "share_shorter_than_own_event_floor__median_moment_of_session": 0.9937,
+      "share_shorter_than_own_event_floor__session_mean_rate": 0.9891,
+      "median_ratio_floor_over_duration": 294.0
+    },
+    "10d_t4": {
+      "present": true,
+      "path": "results/phase_10d/artifacts/t4_subbursts.parquet",
+      "what": "10d assembly grid (merge tolerance x run-length floor, D20)",
+      "n_subbursts_all": 6811163,
+      "kernel_filter": "kernel_min == 8.0 (10c/10d primary)",
+      "n_subbursts_primary_kernel": 1934084,
+      "prints_per_subburst": {
+        "n": 1934084,
+        "min": 2,
+        "max": 241230,
+        "q25": 2.0,
+        "median": 4.0,
+        "q75": 7.0,
+        "share_le_3": 0.4332,
+        "share_le_5": 0.6405,
+        "share_le_10": 0.8618
+      },
+      "duration_seconds": {
+        "n": 1934084,
+        "min": 0.000100007,
+        "max": 37844.20914816,
+        "q05": 0.000195155,
+        "q25": 0.000845192,
+        "q50": 0.00336891,
+        "q75": 0.012734919,
+        "q95": 0.200695816
+      },
+      "n_joined_to_cohort": 1930750,
+      "share_shorter_than_own_event_floor__best_5pct_of_session": 0.9679,
+      "share_shorter_than_own_event_floor__median_moment_of_session": 0.9907,
+      "share_shorter_than_own_event_floor__session_mean_rate": 0.9828,
+      "median_ratio_floor_over_duration": 147.6
+    }
+  },
+  "reading": "The median committed sub-burst is 2-4 prints across all three lineages, with 46-71% of them at 3 prints or fewer. That is read off the artifacts' own n_prints column and requires nothing from this method. Cooper's phrasing -- 'a statement about the two or three fastest prints in a session, not about a market state' -- is therefore not a hypothesis awaiting test; it is what the committed artifacts already say about themselves. The resolution-floor comparison adds that no event in the cohort resolves below 58 ms at its most favourable moment, which is 21x above 10d's median sub-burst duration and 5 orders of magnitude above v4's -- but that comparison is across methods and carries the caveat above, whereas the print count does not.",
+  "source": "research/scale_field/s_min_vs_subbursts.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/scale_field/s_min_vs_subbursts.py"
+}

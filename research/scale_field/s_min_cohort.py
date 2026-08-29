@@ -1,0 +1,242 @@
+"""
+Step 1 of Cooper's recommended order: the resolution floor across all 100 events.
+
+    n_eff = 2*sqrt(pi) * s * lambda >= 8   =>   s >= 2.2568 / lambda
+
+That is not adopted from anywhere. It is the effective-sample-size definition already
+in the estimator, rearranged. Below s_min(t) nothing is measurable at any output
+resolution, on any chart, by this method.
+
+WHY THIS RUN IS CHEAP. It needs a print count and a session span, and both are already
+in committed artifacts: `t0_print_count` on the frozen cohort manifest and the D3
+extended-day span from the pinned XNYS calendar. **No field computation. No tick pass.
+No new dependency.** It answers, for all 100 events at once, which band each event can
+support.
+
+THREE RATES, AND THEY ARE NOT INTERCHANGEABLE. A single lambda per event hides the
+thing that matters, so all three are reported side by side and every table says which
+one it is on:
+
+  lambda_session   t0_print_count / extended-day span (57,600 s, or less on an early
+                   close). ARTIFACT-ONLY -- this is the figure Cooper's step 1 asks
+                   for. Conservative: it counts the dead premarket hours, so it
+                   understates lambda and overstates s_min.
+  lambda_active    t0_print_count / (last print - first print). Needs the timestamps.
+  s_min quantiles  from a k-NN local rate (k=20) evaluated on a uniform grid across
+                   the session. This is the honest object -- s_min is a FUNCTION of
+                   time, not a scalar, and an event can support a band over part of
+                   its session and not the rest.
+
+The last two need a targeted per-event read (`--tick-detail`), which is the same read
+the reconciliation gate already does: zero passes over filtered_trades / filtered_quotes,
+measured at ~20 s for all 114 events. It is off by default so the artifact-only figure
+Cooper specified stands on its own.
+
+ADMISSIBILITY, stated as an arithmetic consequence and not a decision. An event can
+support a band only where s_min(t) clears the band's floor. The shares below are
+descriptive. Whether a share becomes a pre-registered gate is Cooper's call, not this
+script's.
+
+Usage:
+    .venv/Scripts/python.exe research/scale_field/s_min_cohort.py
+    .venv/Scripts/python.exe research/scale_field/s_min_cohort.py --tick-detail
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+import time
+
+import numpy as np
+import pandas as pd
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+
+import adapter  # noqa: E402
+from adapter import (load_cohort, load_detection, load_event_prints_meta,  # noqa: E402
+                     load_event_prints, rel, segment_bounds_ns)
+from scale_field import NEFF_S_MIN_COEF, s_min_for_rate  # noqa: E402
+
+OUT_JSON = "results/scale_field/artifacts/s_min_cohort.json"
+OUT_PARQUET = "results/scale_field/artifacts/s_min_cohort.parquet"
+
+# The floors each band would have to clear, from config/scale_field.json.
+BANDS = {"coarse": 1.0, "fine": 0.015625}
+# Reference marks for the report: the committed sub-burst duration medians (step 2).
+SUBBURST_MARKS = {"v4 median": 3.48e-7, "10c s1 median": 1.2941e-3, "10d T4 median": 2.755e-3}
+
+
+def knn_rate(ts_ns: np.ndarray, grid_ns: np.ndarray, k: int = 20) -> np.ndarray:
+    """Local print rate by k-nearest-neighbour spacing. Same estimator the charts use:
+    a fixed-width count on a sparse tape swings between zero and a large number, and
+    lambda here feeds n_eff, which needs about 8 effective prints."""
+    if ts_ns.size < k + 1:
+        return np.full(grid_ns.size, np.nan)
+    i = np.searchsorted(ts_ns, grid_ns)
+    lo = np.clip(i - k // 2, 0, ts_ns.size - 1 - k)
+    span = (ts_ns[lo + k] - ts_ns[lo]).astype(np.float64) / 1e9
+    return np.where(span > 0, k / span, np.nan)
+
+
+def q(a, qs=(0.05, 0.25, 0.5, 0.75, 0.95)) -> dict:
+    a = np.asarray(a, float)
+    a = a[np.isfinite(a)]
+    if a.size == 0:
+        return {"n": 0}
+    return {"n": int(a.size), "min": float(a.min()), "max": float(a.max()),
+            **{f"q{int(x*100):02d}": float(np.quantile(a, x)) for x in qs}}
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(description=__doc__,
+                                formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("--tick-detail", action="store_true",
+                   help="also compute lambda_active and the within-session s_min(t) "
+                        "distribution. Targeted per-event read, zero full-table passes.")
+    p.add_argument("--grid-points", type=int, default=2000)
+    args = p.parse_args()
+
+    cfg = adapter.load_config()
+    cohort = load_cohort(cfg)                  # asserts the frozen hash
+    det = load_detection(cfg)
+    c = cohort.merge(det[["event_id", "segment"]], on="event_id", how="left")
+    pooled = c[c["pooled"]].copy()
+    print(f"cohort {len(cohort)} events, {len(pooled)} pooled, hash asserted OK")
+
+    rows, t0 = [], time.perf_counter()
+    for r in pooled.itertuples(index=False):
+        b = segment_bounds_ns(r.event_date_canonical)
+        span_s = (b["post"][1] - b["premarket"][0]) / 1e9
+        n_prints = int(r.t0_print_count)
+        lam_session = n_prints / span_s if span_s > 0 else np.nan
+        row = {
+            "event_id": r.event_id, "ticker": r.ticker,
+            "event_date_canonical": r.event_date_canonical,
+            "cohort_group": r.cohort_group,
+            "segment": r.segment if isinstance(r.segment, str) else "no_detection",
+            "t0_print_count": n_prints,
+            "session_span_seconds": span_s,
+            "lambda_session": lam_session,
+            "s_min_session": float(s_min_for_rate(lam_session)),
+        }
+        if args.tick_detail:
+            ts, meta = load_event_prints_meta(r.event_id, None, cfg)
+            if ts.size > 25:
+                active = (ts[-1] - ts[0]) / 1e9
+                lam_active = ts.size / active if active > 0 else np.nan
+                grid = np.linspace(int(ts[0]), int(ts[-1]), args.grid_points).astype(np.int64)
+                sm = s_min_for_rate(knn_rate(ts, grid))
+                row.update(
+                    n_prints_measured=int(ts.size),
+                    active_span_seconds=float(active),
+                    lambda_active=float(lam_active),
+                    s_min_active=float(s_min_for_rate(lam_active)),
+                    s_min_q05=float(np.nanquantile(sm, 0.05)),
+                    s_min_q25=float(np.nanquantile(sm, 0.25)),
+                    s_min_median=float(np.nanmedian(sm)),
+                    s_min_q75=float(np.nanquantile(sm, 0.75)),
+                    s_min_q95=float(np.nanquantile(sm, 0.95)),
+                    **{f"share_session_below_{k}": float(np.nanmean(sm <= v))
+                       for k, v in BANDS.items()},
+                )
+        rows.append(row)
+    df = pd.DataFrame(rows)
+    elapsed = time.perf_counter() - t0
+    print(f"{len(df)} events in {elapsed:.1f}s")
+
+    # ---------------- summaries
+    def by_segment(col):
+        return {str(s): q(g[col]) for s, g in df.groupby("segment") if g[col].notna().any()}
+
+    summary = {
+        "task": "step 1 -- resolution floor s_min across the analysis cohort",
+        "config_hash": adapter.config_hash(),
+        "cohort_content_hash": cfg["cohort"]["content_hash"],
+        "cohort_hash_asserted": True,
+        "n_events": int(len(df)),
+        "rule": "n_eff = 2*sqrt(pi)*s*lambda >= 8  =>  s >= 2.2568/lambda. Derived from "
+                "the estimator's own effective sample size, not adopted from anywhere.",
+        "neff_min": cfg["field"]["neff_min"],
+        "coefficient": float(NEFF_S_MIN_COEF),
+        "inputs": "t0_print_count (frozen cohort manifest) + D3 extended-day span "
+                  "(pinned XNYS calendar). No field computation, no tick pass.",
+        "seconds_elapsed": round(elapsed, 1),
+        "segment_counts": {str(k): int(v) for k, v in df["segment"].value_counts().items()},
+        "lambda_session_prints_per_s": {"pooled": q(df["lambda_session"]),
+                                        "by_segment": by_segment("lambda_session")},
+        "s_min_session_seconds": {"pooled": q(df["s_min_session"]),
+                                  "by_segment": by_segment("s_min_session")},
+        "band_floors_seconds": BANDS,
+        "admissibility_on_lambda_session": {
+            band: {
+                "rule": f"s_min_session <= {floor} s, i.e. the event's session-mean rate "
+                        f"supports the band's own floor",
+                "n_admissible": int((df["s_min_session"] <= floor).sum()),
+                "share": round(float((df["s_min_session"] <= floor).mean()), 4),
+                "by_segment": {str(s): {"n": int(len(g)),
+                                        "n_admissible": int((g["s_min_session"] <= floor).sum()),
+                                        "share": round(float((g["s_min_session"] <= floor).mean()), 4)}
+                               for s, g in df.groupby("segment")},
+            } for band, floor in BANDS.items()},
+        "caveat": "lambda_session counts the whole extended day including its dead hours, "
+                  "so it UNDERSTATES lambda and OVERSTATES s_min. It is the conservative "
+                  "bound and the artifact-only one. Run --tick-detail for lambda_active "
+                  "and the within-session distribution.",
+        "subburst_reference_marks_seconds": SUBBURST_MARKS,
+        "source": "research/scale_field/s_min_cohort.py:main",
+        "reproduce": ".venv/Scripts/python.exe research/scale_field/s_min_cohort.py"
+                     + (" --tick-detail" if args.tick_detail else ""),
+    }
+    if args.tick_detail and "lambda_active" in df.columns:
+        summary["tick_detail"] = {
+            "read": "targeted per-event parquet read, zero passes over filtered_trades",
+            "lambda_active_prints_per_s": {"pooled": q(df["lambda_active"]),
+                                           "by_segment": by_segment("lambda_active")},
+            "s_min_active_seconds": {"pooled": q(df["s_min_active"]),
+                                     "by_segment": by_segment("s_min_active")},
+            "s_min_within_session_median_seconds": {
+                "pooled": q(df["s_min_median"]), "by_segment": by_segment("s_min_median")},
+            "s_min_within_session_q05_seconds": {
+                "note": "the event's BEST 5% of the session -- its most favourable moment",
+                "pooled": q(df["s_min_q05"]), "by_segment": by_segment("s_min_q05")},
+            "share_of_session_supporting_band": {
+                band: {"pooled": q(df[f"share_session_below_{band}"]),
+                       "by_segment": by_segment(f"share_session_below_{band}")}
+                for band in BANDS},
+        }
+
+    os.makedirs(os.path.dirname(rel(OUT_JSON)), exist_ok=True)
+    with open(rel(OUT_JSON), "w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2)
+    df.to_parquet(rel(OUT_PARQUET), index=False)
+
+    # ---------------- console
+    s = summary["s_min_session_seconds"]
+    print(f"\ns_min on lambda_session (artifact-only), seconds:")
+    print(f"  pooled n={s['pooled']['n']}  q05={s['pooled']['q05']:.3g}  "
+          f"median={s['pooled']['q50']:.3g}  q95={s['pooled']['q95']:.3g}  "
+          f"max={s['pooled']['max']:.3g}")
+    for seg, v in s["by_segment"].items():
+        print(f"  {seg:12s} n={v['n']:3d}  q25={v['q25']:.3g}  median={v['q50']:.3g}  "
+              f"q75={v['q75']:.3g}")
+    print("\nadmissible on lambda_session:")
+    for band, a in summary["admissibility_on_lambda_session"].items():
+        print(f"  {band:7s} floor {BANDS[band]:g} s: {a['n_admissible']}/{len(df)} "
+              f"({a['share']:.0%})   " +
+              "  ".join(f"{k} {vv['n_admissible']}/{vv['n']}" for k, vv in a["by_segment"].items()))
+    if args.tick_detail:
+        t = summary["tick_detail"]["s_min_within_session_median_seconds"]["pooled"]
+        print(f"\nwithin-session median s_min: q05={t['q05']:.3g}  median={t['q50']:.3g}  "
+              f"q95={t['q95']:.3g}")
+        for band in BANDS:
+            sh = summary["tick_detail"]["share_of_session_supporting_band"][band]["pooled"]
+            print(f"  share of session supporting {band:7s}: median {sh['q50']:.1%}")
+    print(f"\nwrote {OUT_JSON}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

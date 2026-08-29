@@ -36,6 +36,44 @@ def _sensitivity(art: str) -> dict:
             "artifact": "results/scale_field/artifacts/break_pyramid_sensitivity.json"}
 
 
+def _floor(art: str) -> dict:
+    """Steps r1/r2: the resolution floor across the cohort, and the sub-burst comparison."""
+    out = {}
+    for key, name in (("cohort", "s_min_cohort.json"), ("vs_subbursts", "s_min_vs_subbursts.json")):
+        path = os.path.join(art, name)
+        if not os.path.exists(path):
+            out[key] = {"run": False}
+            continue
+        with open(path, encoding="utf-8") as f:
+            d = json.load(f)
+        if key == "cohort":
+            out[key] = {
+                "run": True, "rule": d["rule"], "n_events": d["n_events"],
+                "inputs": d["inputs"], "seconds_elapsed": d["seconds_elapsed"],
+                "s_min_session_median_by_segment": {
+                    k: round(v["q50"], 4) for k, v in
+                    d["s_min_session_seconds"]["by_segment"].items()},
+                "admissibility": {b: a["n_admissible"] for b, a in
+                                  d["admissibility_on_lambda_session"].items()},
+                "artifact": f"results/scale_field/artifacts/{name}",
+            }
+        else:
+            out[key] = {
+                "run": True, "caveat": d["caveat_first"],
+                "best_reachable_anywhere_seconds": d["s_min_reference"]["best_anywhere_seconds"],
+                "n_events_reaching_10ms_at_best": d["s_min_reference"]["n_events_reaching_10ms_at_best"],
+                "prints_per_subburst_median": {
+                    k: v["prints_per_subburst"]["median"] for k, v in d["sources"].items()
+                    if v.get("present")},
+                "share_le_3_prints": {
+                    k: v["prints_per_subburst"]["share_le_3"] for k, v in d["sources"].items()
+                    if v.get("present")},
+                "reading": d["reading"],
+                "artifact": f"results/scale_field/artifacts/{name}",
+            }
+    return out
+
+
 def main() -> int:
     cfg = adapter.load_config()
     art = rel(cfg["paths"]["out_artifacts"])
@@ -96,7 +134,7 @@ def main() -> int:
         "title": cfg["title"],
         "spec": cfg["spec"],
         "config_hash": adapter.config_hash(),
-        "status": "stopped_at_step_3_awaiting_cooper",
+        "status": "cooper_read_done_stopped_after_r2_recovery_grid_not_started",
         "order_of_work": cfg["order_of_work"],
         "stop_after": cfg["stop_after"],
         "steps": {
@@ -125,15 +163,36 @@ def main() -> int:
                 "reproduce": ".venv/Scripts/python.exe research/scale_field/"
                              "run_field_one_event.py --event {event_id}",
             },
-            "4_cooper_reads_it": {"done": False, "owner": "Cooper"},
-            "5_matched_null_then_cohort": {
-                "done": False,
-                "gated_on": "step 4",
-                "rule": cfg["poisson_null"]["replacement"],
-            },
+            "4_cooper_reads_it": {"done": True, "owner": "Cooper", "date": "2026-08-28",
+                                  "outcome": "knee criterion withdrawn; new order issued"},
+            "r1_s_min_cohort": {"done": True,
+                                "reproduce": ".venv/Scripts/python.exe research/scale_field/"
+                                             "s_min_cohort.py --tick-detail"},
+            "r2_s_min_vs_subbursts": {"done": True,
+                                      "reproduce": ".venv/Scripts/python.exe research/"
+                                                   "scale_field/s_min_vs_subbursts.py"},
+            "r3_recovery_grid": {"done": False, "gated_on": "nothing -- next up",
+                                 "what": "inject tau across a log grid at the two measured "
+                                         "background rates (2.46/s, 17.8/s) across intensity "
+                                         "contrast and duty cycle; report bias and spread of "
+                                         "whichever summary statistic is proposed"},
+            "r4_matched_null": {"done": False, "gated_on": "r3",
+                                "rule": cfg["poisson_null"]["replacement"],
+                                "note": "on the same s_min mask so null and data share a support"},
+            "r5_cohort": {"done": False, "gated_on": "r3, r4"},
         },
         "events": events,
         "break_pyramid_sensitivity": _sensitivity(art),
+        "cooper_step_4_read": {
+            "date": "2026-08-28",
+            "knee_criterion": "WITHDRAWN. Neither candidate summary statistic recovers a "
+                              "known timescale at the scales this cohort lives at. The "
+                              "bit-exact Allan reproduction stands as a gate on the "
+                              "point-process plumbing, which is what it tests.",
+            "where": "config/scale_field.json reconciliation.v3_knees_role; "
+                     "results/scale_field/REPORT.md section 8",
+        },
+        "resolution_floor": _floor(art),
         "deviations_recorded": [
             {"what": "allan_factor gained t_start / t_end / min_windows",
              "why": "v3 tiles the D3 extended session, not the data support; the origin "

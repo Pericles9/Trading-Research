@@ -2,8 +2,8 @@
   "name": "scale_field",
   "title": "Scale-space field on the momentum cohort",
   "spec": "prompts/scale_field_brief.md",
-  "config_hash": "4268dcab",
-  "status": "stopped_at_step_3_awaiting_cooper",
+  "config_hash": "3306d8ec",
+  "status": "cooper_read_done_stopped_after_r2_recovery_grid_not_started",
   "order_of_work": [
     "1. adapter.py, plus a test that loads one known event and asserts monotone, positive, in-session timestamps.",
     "2. Allan reconciliation against v3. HARD STOP on divergence.",
@@ -11,7 +11,7 @@
     "4. Cooper reads it.",
     "5. Only then: matched-null thresholds, then the cohort."
   ],
-  "stop_after": 3,
+  "stop_after": "r2",
   "steps": {
     "1_adapter": {
       "done": true,
@@ -38,13 +38,33 @@
       "reproduce": ".venv/Scripts/python.exe research/scale_field/run_field_one_event.py --event {event_id}"
     },
     "4_cooper_reads_it": {
-      "done": false,
-      "owner": "Cooper"
+      "done": true,
+      "owner": "Cooper",
+      "date": "2026-08-28",
+      "outcome": "knee criterion withdrawn; new order issued"
     },
-    "5_matched_null_then_cohort": {
+    "r1_s_min_cohort": {
+      "done": true,
+      "reproduce": ".venv/Scripts/python.exe research/scale_field/s_min_cohort.py --tick-detail"
+    },
+    "r2_s_min_vs_subbursts": {
+      "done": true,
+      "reproduce": ".venv/Scripts/python.exe research/scale_field/s_min_vs_subbursts.py"
+    },
+    "r3_recovery_grid": {
       "done": false,
-      "gated_on": "step 4",
-      "rule": "Rate-matched inhomogeneous Poisson realisations simulated from each event's own intensity estimate, with that event's duration and timestamp quantisation. Machinery already specified in prompts/phase_10b.md T3c (200 draws, 2.5/97.5 percentile band, reported as a family over the bandwidth rather than one band) and already implemented in research/phase_10b/pipeline.py. REUSE IT; DO NOT REBUILD IT."
+      "gated_on": "nothing -- next up",
+      "what": "inject tau across a log grid at the two measured background rates (2.46/s, 17.8/s) across intensity contrast and duty cycle; report bias and spread of whichever summary statistic is proposed"
+    },
+    "r4_matched_null": {
+      "done": false,
+      "gated_on": "r3",
+      "rule": "Rate-matched inhomogeneous Poisson realisations simulated from each event's own intensity estimate, with that event's duration and timestamp quantisation. Machinery already specified in prompts/phase_10b.md T3c (200 draws, 2.5/97.5 percentile band, reported as a family over the bandwidth rather than one band) and already implemented in research/phase_10b/pipeline.py. REUSE IT; DO NOT REBUILD IT.",
+      "note": "on the same s_min mask so null and data share a support"
+    },
+    "r5_cohort": {
+      "done": false,
+      "gated_on": "r3, r4"
     }
   },
   "events": [
@@ -209,6 +229,48 @@
     },
     "sigma_lo_is_not_the_knob": "sigma_lo does NOT move the decimation boundaries; they sit at 4 * scales.min() * 2^k. sigma_lo cancels in s/dt > 4*sigma_lo with dt = scales.min()/sigma_lo.",
     "artifact": "results/scale_field/artifacts/break_pyramid_sensitivity.json"
+  },
+  "cooper_step_4_read": {
+    "date": "2026-08-28",
+    "knee_criterion": "WITHDRAWN. Neither candidate summary statistic recovers a known timescale at the scales this cohort lives at. The bit-exact Allan reproduction stands as a gate on the point-process plumbing, which is what it tests.",
+    "where": "config/scale_field.json reconciliation.v3_knees_role; results/scale_field/REPORT.md section 8"
+  },
+  "resolution_floor": {
+    "cohort": {
+      "run": true,
+      "rule": "n_eff = 2*sqrt(pi)*s*lambda >= 8  =>  s >= 2.2568/lambda. Derived from the estimator's own effective sample size, not adopted from anywhere.",
+      "n_events": 100,
+      "inputs": "t0_print_count (frozen cohort manifest) + D3 extended-day span (pinned XNYS calendar). No field computation, no tick pass.",
+      "seconds_elapsed": 5.5,
+      "s_min_session_median_by_segment": {
+        "no_detection": 248.9495,
+        "premarket": 1.0684,
+        "rth": 7.46
+      },
+      "admissibility": {
+        "coarse": 15,
+        "fine": 0
+      },
+      "artifact": "results/scale_field/artifacts/s_min_cohort.json"
+    },
+    "vs_subbursts": {
+      "run": true,
+      "caveat": "D9's operating variable is the inter-trade interval and the lineage deliberately estimates no intensity, so n_eff does NOT bind D9's construction on its own terms. Nothing here says a committed sub-burst is wrong. The load-bearing statement is the print count, which is read off the committed artifacts' own columns and needs no cross-method inference.",
+      "best_reachable_anywhere_seconds": 0.05802113833737388,
+      "n_events_reaching_10ms_at_best": 0,
+      "prints_per_subburst_median": {
+        "v4": 3.0,
+        "10c_s1": 3.0,
+        "10d_t4": 4.0
+      },
+      "share_le_3_prints": {
+        "v4": 0.541,
+        "10c_s1": 0.669,
+        "10d_t4": 0.4332
+      },
+      "reading": "The median committed sub-burst is 2-4 prints across all three lineages, with 46-71% of them at 3 prints or fewer. That is read off the artifacts' own n_prints column and requires nothing from this method. Cooper's phrasing -- 'a statement about the two or three fastest prints in a session, not about a market state' -- is therefore not a hypothesis awaiting test; it is what the committed artifacts already say about themselves. The resolution-floor comparison adds that no event in the cohort resolves below 58 ms at its most favourable moment, which is 21x above 10d's median sub-burst duration and 5 orders of magnitude above v4's -- but that comparison is across methods and carries the caveat above, whereas the print count does not.",
+      "artifact": "results/scale_field/artifacts/s_min_vs_subbursts.json"
+    }
   },
   "deviations_recorded": [
     {
