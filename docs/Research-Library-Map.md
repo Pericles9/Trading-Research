@@ -1228,7 +1228,8 @@ D4, the evidence standard, and "the artifact wins". Config `config/scale_field.j
 pyramid paths, Allan factor), `adapter.py` (the data boundary — event id → sorted int64-ns tape;
 imports the Phase 10 read path and D3 clock unchanged rather than reimplementing them),
 `reconcile_allan.py` (the gate), `run_field_one_event.py`, `plot_scale_field.py`, `make_digest.py`,
-and two test modules totalling 39 passing assertions.
+`test_break_is_not_the_pyramid.py`, and three test modules totalling **43** passing assertions —
+including `test_verification.py`, Cooper's independent adversarial suite, which found defect (2).
 
 **The gate PASSED, bit-exact.** `allan_factor()` reproduces Phase 10 v3's committed Allan curve on
 **2,166 of 2,166** cells (114 events × 19 eligible rungs) with a **maximum relative difference of
@@ -1241,13 +1242,17 @@ Cooper. Two events were run, not one: the median rth event's fine band came back
 was added to exercise the channel. Step 4 (Cooper's read) and step 5 (matched-null thresholds, then
 the cohort) are not started.
 
-**Two defects found and fixed in the delivered estimator**, both recorded in
-`results/scale_field/REPORT.md` §5. The consequential one: `intervals()` differenced float64 seconds
-since the Unix epoch, where the ULP is **238 ns** against an archive minimum gap of 49 ns — 4 of 899
+**Three defects found and fixed in the delivered estimator**, all recorded in
+`results/scale_field/REPORT.md` §5. (1) `intervals()` differenced float64 seconds since the Unix
+epoch, where the ULP is **238 ns** against an archive minimum gap of 49 ns — 4 of 899
 strictly-increasing timestamps on `ALXO_2020-08-05_31.58` went non-positive, and the worst gap error
 was 447 ns against a 954 ns scale floor. Every acceptance tape started near t=0, so nothing caught
-it. Now differenced in int64 with an explicit origin, and `_assert_resolved` raises rather than
-returning numbers.
+it. Now differenced in int64 with an explicit origin. (2) **The rate channel had no data floor** —
+found by Cooper's independent verification (`results/scale_field/VERIFICATION.md`, V5). It masked
+only on `c0 > 0`, so a 15.6 ms kernel holding 0.14 expected prints still returned `|dL/dln s| ≈ 14`
+against 0.4–1.1 where there is real data, and those values set the colour scale. Both channels now
+share the `n_eff ≥ 8` floor and mask identically. (3) `allan_factor` tiled the data's own support
+rather than an explicit window, which the reconciliation gate cannot be expressed without.
 
 **Charts** — `results/scale_field/charts/{event_id}/`, extending Diag1's
 `plot_boundary_through_time.py` with the kernel-scale axis replacing the boundary track, palette
@@ -1256,12 +1261,21 @@ never a CDN (D14). Chart 03 carries a dispersion-vs-scale row because A(T) is a 
 and a median comparison would have produced a false negative.
 
 **Descriptive result, n = 2, no null.** Each event's own Allan knee lands exactly on its segment's
-committed v3 knee (AEHL rth 128.0 s; CREX premarket 16.0 s). The continuous field's rate-channel
-dispersion breaks near 200 s on both events regardless of segment, and the interval channel at 16 s
-and 3.1 s. Read the four caveats in REPORT.md §4 before treating that as a finding.
+committed v3 knee (AEHL rth 128.0 s; CREX premarket 16.0 s). On the continuous side, **an earlier
+claim was withdrawn**: the rate-channel dispersion does *not* break near 200 s "on both events".
+It is robust only on the dense premarket event (215–256 s across four configurations, including
+`field_exact` with the pyramid removed entirely); on the sparse rth event it spans 64–1290 s and is
+**not identified**. The mechanism is the resolution floor `s ≥ 2.26/λ` — AEHL at 2.46 prints/s has
+s_min = 0.919 s, so its coarse band's first three octaves sit at or below its own floor. That floor
+was expected to be a fine-band caveat and turns out to govern whether a *coarse*-band break is
+identifiable at all; it is now drawn on every field panel. Sensitivity run:
+`research/scale_field/test_break_is_not_the_pyramid.py`, which also records that the `sigma_lo` knob
+proposed for the test is a no-op — decimation boundaries sit at `4·scales.min()·2^k` and `sigma_lo`
+cancels. Read the four caveats in REPORT.md §4.2 before treating any of it as a finding.
 
 **Untracked by design** — `results/scale_field/artifacts/*.parquet` and
 `results/scale_field/charts/*/*.html` plus the local `plotly.min.js`, per the standing regenerable-
 artifact rule; every JSON manifest is tracked. Report: `results/scale_field/REPORT.md`, copy at
-`results/reports/scale_field_report.md`. Digest: `results/scale_field/digest.json`.
+`results/reports/scale_field_report.md`. Verification note: `results/scale_field/VERIFICATION.md`,
+copy at `results/reports/scale_field_verification.md`. Digest: `results/scale_field/digest.json`.
 No decision number appended; next free number remains **D22**.
