@@ -25,6 +25,17 @@ from adapter import rel  # noqa: E402
 OUT = "results/scale_field/digest.json"
 
 
+def _sensitivity(art: str) -> dict:
+    path = os.path.join(art, "break_pyramid_sensitivity.json")
+    if not os.path.exists(path):
+        return {"run": False}
+    with open(path, encoding="utf-8") as f:
+        d = json.load(f)
+    return {"run": True, "verdicts": d.get("verdicts"),
+            "sigma_lo_is_not_the_knob": d["sigma_lo_is_not_the_knob"]["claim"],
+            "artifact": "results/scale_field/artifacts/break_pyramid_sensitivity.json"}
+
+
 def main() -> int:
     cfg = adapter.load_config()
     art = rel(cfg["paths"]["out_artifacts"])
@@ -34,6 +45,8 @@ def main() -> int:
 
     events = []
     for path in sorted(glob.glob(os.path.join(art, "field_*_manifest.json"))):
+        if "_sig12_" in os.path.basename(path):
+            continue                      # sensitivity run, not a primary result
         with open(path, encoding="utf-8") as f:
             mf = json.load(f)
         fld = pd.read_parquet(os.path.join(art, f"field_{mf['event_id']}.parquet"))
@@ -52,6 +65,9 @@ def main() -> int:
                 "share_masked_rate": round(float(g["dlograte"].isna().mean()), 4),
                 "share_masked_interval": round(float(g["dm"].isna().mean()), 4),
                 "seconds_elapsed": b["seconds_elapsed"],
+                "sigma_lo": b.get("sigma_lo"),
+                "local_rate_prints_per_s": b.get("local_rate_prints_per_s"),
+                "s_min_seconds_at_mean_rate": b.get("s_min_seconds_at_mean_rate"),
                 "n_arrivals": b["n_arrivals_after_tie_collapse"],
                 "n_intervals": b["n_intervals"],
             }
@@ -86,8 +102,8 @@ def main() -> int:
         "steps": {
             "1_adapter": {
                 "done": True,
-                "tests": "research/scale_field/test_adapter.py + test_scale_field.py",
-                "n_assertions_passing": 39,
+                "tests": "test_scale_field.py (19) + test_adapter.py (16) + test_verification.py (8, independent adversarial suite)",
+                "n_assertions_passing": 43,
                 "reproduce": ".venv/Scripts/python.exe -m pytest research/scale_field -q",
             },
             "2_reconciliation_gate": {
@@ -117,19 +133,32 @@ def main() -> int:
             },
         },
         "events": events,
+        "break_pyramid_sensitivity": _sensitivity(art),
         "deviations_recorded": [
             {"what": "allan_factor gained t_start / t_end / min_windows",
              "why": "v3 tiles the D3 extended session, not the data support; the origin "
                     "cannot be inferred from the prints. Defaults reproduce the prior "
                     "behaviour exactly and a test asserts it.",
              "where": "research/scale_field/scale_field.py:allan_factor"},
-            {"what": "intervals() differences in int64 and takes origin_ns; "
-                     "_assert_resolved raises on an unrebased epoch tape",
+            {"what": "intervals() differences in int64 and takes an explicit origin; "
+                     "seconds_since() requires one positionally",
              "why": "float64 seconds since the epoch have a 238 ns ULP against a 49 ns "
                     "minimum gap. Measured on ALXO_2020-08-05_31.58: 4 of 899 strictly "
                     "increasing timestamps went non-positive and the worst gap error was "
                     "447 ns against a 954 ns scale floor.",
              "where": "research/scale_field/scale_field.py:intervals"},
+            {"what": "the RATE channel gained the same n_eff >= 8 floor as the interval "
+                     "channel (found by independent verification, V5)",
+             "why": "it masked only on c0 > 0, so a window holding a fraction of a print "
+                    "returned |dL/dln s| ~ 14 against 0.4-1.1 where there is real data -- "
+                    "and those values then set the colour scale. Masked share on the "
+                    "coarse band moved 0.24 -> 0.52 for AEHL once fixed.",
+             "where": "research/scale_field/scale_field.py:field"},
+            {"what": "_reduce_extremum added but OFF by default",
+             "why": "recorded NEGATIVE result. Extremum decimation raises the background "
+                    "floor as much as the signal (p99 0.59 -> 1.53); the apparent win was "
+                    "an artefact of the unfloored rate channel above.",
+             "where": "research/scale_field/scale_field.py:_reduce_extremum"},
             {"what": "fine band charted over +/- 15 s inside a +/- 15 min read, not "
                      "+/- 15 min as the brief states",
              "why": "a heatmap column cannot be narrower than its kernel; at +/- 15 min "

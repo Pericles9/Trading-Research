@@ -15,8 +15,8 @@
   "steps": {
     "1_adapter": {
       "done": true,
-      "tests": "research/scale_field/test_adapter.py + test_scale_field.py",
-      "n_assertions_passing": 39,
+      "tests": "test_scale_field.py (19) + test_adapter.py (16) + test_verification.py (8, independent adversarial suite)",
+      "n_assertions_passing": 43,
       "reproduce": ".venv/Scripts/python.exe -m pytest research/scale_field -q"
     },
     "2_reconciliation_gate": {
@@ -77,11 +77,14 @@
           "t_grid_span_seconds": 56798.515521475,
           "grid_spacing_seconds": 63.109462,
           "n_cells": 80100,
-          "n_defined_rate": 60806,
+          "n_defined_rate": 38815,
           "n_defined_interval": 38815,
-          "share_masked_rate": 0.2409,
+          "share_masked_rate": 0.5154,
           "share_masked_interval": 0.5154,
-          "seconds_elapsed": 4.71,
+          "seconds_elapsed": 5.46,
+          "sigma_lo": 8.0,
+          "local_rate_prints_per_s": 0.3057,
+          "s_min_seconds_at_mean_rate": 7.3815,
           "n_arrivals": 17365,
           "n_intervals": 17364
         },
@@ -95,11 +98,14 @@
           "t_grid_span_seconds": 30.0,
           "grid_spacing_seconds": 0.02,
           "n_cells": 73500,
-          "n_defined_rate": 59651,
+          "n_defined_rate": 22756,
           "n_defined_interval": 22756,
-          "share_masked_rate": 0.1884,
+          "share_masked_rate": 0.6904,
           "share_masked_interval": 0.6904,
-          "seconds_elapsed": 8.88,
+          "seconds_elapsed": 10.25,
+          "sigma_lo": 8.0,
+          "local_rate_prints_per_s": 2.4563,
+          "s_min_seconds_at_mean_rate": 0.9188,
           "n_arrivals": 4495,
           "n_intervals": 4494
         }
@@ -142,11 +148,14 @@
           "t_grid_span_seconds": 39011.026685617,
           "grid_spacing_seconds": 43.345585,
           "n_cells": 80100,
-          "n_defined_rate": 69348,
+          "n_defined_rate": 53598,
           "n_defined_interval": 53598,
-          "share_masked_rate": 0.1342,
+          "share_masked_rate": 0.3309,
           "share_masked_interval": 0.3309,
-          "seconds_elapsed": 3.27,
+          "seconds_elapsed": 3.7,
+          "sigma_lo": 8.0,
+          "local_rate_prints_per_s": 3.0542,
+          "s_min_seconds_at_mean_rate": 0.7389,
           "n_arrivals": 119149,
           "n_intervals": 119148
         },
@@ -160,11 +169,14 @@
           "t_grid_span_seconds": 30.0,
           "grid_spacing_seconds": 0.02,
           "n_cells": 73500,
-          "n_defined_rate": 68656,
+          "n_defined_rate": 37817,
           "n_defined_interval": 37817,
-          "share_masked_rate": 0.0659,
+          "share_masked_rate": 0.4855,
           "share_masked_interval": 0.4855,
-          "seconds_elapsed": 8.25,
+          "seconds_elapsed": 9.53,
+          "sigma_lo": 8.0,
+          "local_rate_prints_per_s": 18.1617,
+          "s_min_seconds_at_mean_rate": 0.1243,
           "n_arrivals": 33236,
           "n_intervals": 33235
         }
@@ -179,6 +191,25 @@
       ]
     }
   ],
+  "break_pyramid_sensitivity": {
+    "run": true,
+    "verdicts": {
+      "AEHL_2021-02-19_37.50": {
+        "shift_ratio_band_min": 1.297,
+        "tracks_the_schedule_would_be": 1.414,
+        "exact_vs_pyramid_ratio": 0.297,
+        "verdict": "pyramid or inconclusive"
+      },
+      "CREX_2022-02-01_41.48": {
+        "shift_ratio_band_min": 0.917,
+        "tracks_the_schedule_would_be": 1.414,
+        "exact_vs_pyramid_ratio": 1.091,
+        "verdict": "data"
+      }
+    },
+    "sigma_lo_is_not_the_knob": "sigma_lo does NOT move the decimation boundaries; they sit at 4 * scales.min() * 2^k. sigma_lo cancels in s/dt > 4*sigma_lo with dt = scales.min()/sigma_lo.",
+    "artifact": "results/scale_field/artifacts/break_pyramid_sensitivity.json"
+  },
   "deviations_recorded": [
     {
       "what": "allan_factor gained t_start / t_end / min_windows",
@@ -186,9 +217,19 @@
       "where": "research/scale_field/scale_field.py:allan_factor"
     },
     {
-      "what": "intervals() differences in int64 and takes origin_ns; _assert_resolved raises on an unrebased epoch tape",
+      "what": "intervals() differences in int64 and takes an explicit origin; seconds_since() requires one positionally",
       "why": "float64 seconds since the epoch have a 238 ns ULP against a 49 ns minimum gap. Measured on ALXO_2020-08-05_31.58: 4 of 899 strictly increasing timestamps went non-positive and the worst gap error was 447 ns against a 954 ns scale floor.",
       "where": "research/scale_field/scale_field.py:intervals"
+    },
+    {
+      "what": "the RATE channel gained the same n_eff >= 8 floor as the interval channel (found by independent verification, V5)",
+      "why": "it masked only on c0 > 0, so a window holding a fraction of a print returned |dL/dln s| ~ 14 against 0.4-1.1 where there is real data -- and those values then set the colour scale. Masked share on the coarse band moved 0.24 -> 0.52 for AEHL once fixed.",
+      "where": "research/scale_field/scale_field.py:field"
+    },
+    {
+      "what": "_reduce_extremum added but OFF by default",
+      "why": "recorded NEGATIVE result. Extremum decimation raises the background floor as much as the signal (p99 0.59 -> 1.53); the apparent win was an artefact of the unfloored rate channel above.",
+      "where": "research/scale_field/scale_field.py:_reduce_extremum"
     },
     {
       "what": "fine band charted over +/- 15 s inside a +/- 15 min read, not +/- 15 min as the brief states",

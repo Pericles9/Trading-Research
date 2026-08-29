@@ -77,6 +77,7 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(REPO_ROOT, "research", "phase_10d_diag1"))
 
 import adapter  # noqa: E402
+from scale_field import NEFF_S_MIN_COEF, s_min_for_rate  # noqa: E402
 from plot_boundary_through_time import THEMES  # noqa: E402  -- one palette, imported
 
 # Diverging ramp for a SIGNED field. The warm half is the Diag1 accent (#eb6834)
@@ -165,6 +166,49 @@ def add_channel(fig, row, x, y, Z, t, theme, title, cbar_y, reverse, hover):
     return lo, hi
 
 
+def knn_rate(tape_ns, x_ns, k=20):
+    """Local print rate by k-nearest-neighbour spacing: lambda(t) = k / (span of the k
+    prints bracketing t). Adaptive, never divides by an empty window, and matched to the
+    quantity it feeds -- n_eff >= 8 needs about 8 effective prints, so a k=20 estimator
+    is the right scale. A fixed-width count would swing between 0 and a large number on
+    a sparse tape and draw the floor as noise instead of a floor."""
+    ts = np.asarray(tape_ns, dtype=np.int64)
+    if ts.size < k + 1:
+        return np.full(len(x_ns), np.nan)
+    i = np.searchsorted(ts, np.asarray(x_ns, dtype=np.int64))
+    lo = np.clip(i - k // 2, 0, ts.size - 1 - k)
+    span = (ts[lo + k] - ts[lo]).astype(np.float64) / 1e9
+    return np.where(span > 0, k / span, np.nan)
+
+
+def add_resolution_floor(fig, rows, x, rate, t, lo2, hi2, label_row=None):
+    """s_min(t) = 2.26 / lambda(t), drawn on the field panels.
+
+    n_eff = 2*sqrt(pi)*s*lambda >= 8  =>  s >= 2.257/lambda. This is a DATA limit, not
+    a rendering one: nothing below the line is measurable at any output resolution, on
+    any chart. Drawing it turns the blank region from something mysterious into
+    something labelled, and makes the band's lower limit a per-event fact rather than
+    a config constant. At the median rth rate of 2.5 prints/s the floor is 903 ms --
+    which is most of the fine band."""
+    smin = s_min_for_rate(rate)
+    y = np.where(np.isfinite(smin) & (smin > 0), np.log2(np.maximum(smin, 1e-12)), np.nan)
+    if not np.isfinite(y).any():
+        return
+    for r in rows:
+        fig.add_trace(
+            go.Scattergl(x=x, y=np.where((y >= lo2) & (y <= hi2), y, np.nan), mode="lines",
+                         line=dict(color=t["ink"], width=1.6),
+                         name="resolution floor", showlegend=False,
+                         hovertemplate="%{x}<br>s_min %{y:.2f} (log2 s)<extra></extra>"),
+            row=r, col=1)
+    if label_row is not None:
+        i = int(np.nanargmax(np.isfinite(y)))
+        fig.add_annotation(row=label_row, col=1, x=x.iloc[i], y=float(y[i]),
+                           text="resolution floor  s<sub>min</sub> = 2.26/\u03bb",
+                           showarrow=False, xanchor="left", yanchor="bottom", xshift=4,
+                           font=dict(size=9, color=t["ink"]))
+
+
 def knee_lines(fig, rows, knee_s, label, t, x_end, lo2, hi2):
     y = float(np.log2(knee_s))
     if not (lo2 <= y <= hi2):
@@ -213,12 +257,12 @@ def band_figure(ev, band, df, tape, mf, t, theme, seg_knees):
                   row=1, col=1)
     fig.update_yaxes(title_text="price", row=1, col=1)
 
+    lo2, hi2 = float(y.min()), float(y.max())
     r_lo, r_hi = add_channel(fig, 2, x, y, Zr, t, theme,
                              "dL/dln s<br>(asinh scale)", 0.55, True, "dL/dln s")
     m_lo, m_hi = add_channel(fig, 3, x, y, Zm, t, theme,
                              "dm/dln s<br>(asinh scale)", 0.20, False, "dm/dln s")
 
-    lo2, hi2 = float(y.min()), float(y.max())
     xe = et(x).iloc[-1]
     shown = [k for k, (s, lab) in seg_knees.items()
              if knee_lines(fig, (2, 3), s, lab, t, xe, lo2, hi2)]
@@ -231,6 +275,10 @@ def band_figure(ev, band, df, tape, mf, t, theme, seg_knees):
                            text="D7 detection anchor", showarrow=False,
                            xanchor="left", yanchor="top", xshift=4,
                            font=dict(size=9, color=t["winner"]))
+
+    # lambda(t) for the resolution floor, by kNN spacing -- see knn_rate.
+    rate_floor = knn_rate(tape["ts_ns"].to_numpy(), x)
+    add_resolution_floor(fig, (2, 3), et(x), rate_floor, t, lo2, hi2, label_row=2)
 
     rate = local_rate(tape["ts_ns"].to_numpy(), x, max(1.0, pv["scale_max_seconds"]))
     fig.add_trace(go.Scattergl(x=et(x), y=np.where(rate > 0, rate, np.nan),
@@ -255,6 +303,10 @@ def band_figure(ev, band, df, tape, mf, t, theme, seg_knees):
             f"{pv['n_intervals']:,} intervals. "
             f"Blank = n_eff &lt; 8, masked not guessed: rate {nan_r:.0%}, "
             f"interval {nan_m:.0%} of cells. "
+            f"Black line = resolution floor s<sub>min</sub> = 2.26/\u03bb, a DATA limit "
+            f"(mean \u03bb here {pv['local_rate_prints_per_s']:.2f} prints/s \u2192 "
+            f"{pv['s_min_seconds_at_mean_rate']:.3g} s): nothing below it is measurable at "
+            f"any output resolution. "
             f"Colour is asinh, unclipped; ticks in original units. "
             f"Dashed = {knee_txt} (v3 prediction, not a cutoff). "
             f"No threshold applied — the Poisson null does not fit this tape.</sup>"),
@@ -389,6 +441,19 @@ def profile_figure(ev, df, allan, mf, t, seg_knees):
     # (57,600 s -> cap 7,200 s); the brief reasons about an RTH session (23,400 s ->
     # cap 2,925 s). v3's headline rung at 4,096 s is under the first and over the
     # second, which is exactly why the pair count is quoted beside it.
+    for b in mf["bands"]:
+        sm = b.get("s_min_seconds_at_mean_rate")
+        if not sm or not np.isfinite(sm):
+            continue
+        xv = float(np.log2(sm))
+        for r in (2, 3, 4, 5):
+            fig.add_vline(x=xv, row=r, col=1,
+                          line=dict(color=colors[b["band"]], width=1.4, dash="dashdot"))
+        fig.add_annotation(row=4, col=1, x=xv, y=0.0, yref="y domain", xshift=3,
+                           text=f"s<sub>min</sub> {b['band']} = {sm:.3g} s",
+                           showarrow=False, xanchor="left", yanchor="bottom",
+                           font=dict(size=9, color=colors[b["band"]]))
+
     cap_ext = mf["coarse_cap_seconds"]
     cap_rth = 23400.0 / 8.0
     fig.add_vrect(x0=float(np.log2(cap_rth)), x1=13.9, line_width=0,
@@ -412,7 +477,10 @@ def profile_figure(ev, df, allan, mf, t, seg_knees):
             f"<b>Read rows 2–3 with the n_eff mask in mind:</b> at fine scales only the "
             f"denser stretches clear n_eff ≥ 8, so each scale's median is taken over a "
             f"different subset of time — row 4 is how much time that is, and a trend "
-            f"across scale is partly a trend in which time survives.</sup>"),
+            f"across scale is partly a trend in which time survives. "
+            f"<b>Dash-dot = s<sub>min</sub> = 2.26/\u03bb</b>, the resolution floor at "
+            f"this event\u2019s mean rate: a band whose lower end sits near its own floor "
+            f"cannot identify a break there.</sup>"),
             font=dict(size=15, color=t["ink"]), x=0.01, xanchor="left"),
         height=1320, hovermode="x unified",
         paper_bgcolor=t["plane"], plot_bgcolor=t["surface"],

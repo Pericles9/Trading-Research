@@ -63,7 +63,7 @@ sys.path.insert(0, HERE)
 import adapter  # noqa: E402
 from adapter import load_cohort, load_detection, load_event_prints_meta, rel  # noqa: E402
 from scale_field import (allan_factor, collapse_same_timestamp, field,  # noqa: E402
-                         intervals, to_seconds)
+                         intervals, s_min_for_rate, seconds_since)
 
 DEFAULT_EVENT = "AEHL_2021-02-19_37.50"
 DEFAULT_EVENT_WHY = (
@@ -79,7 +79,7 @@ def band_scales(spec: dict) -> np.ndarray:
     return np.geomspace(spec["min_seconds"], spec["max_seconds"], spec["n_scales"])
 
 
-def run_band(ts_ns, name, spec, cfg, window_ns=None):
+def run_band(ts_ns, name, spec, cfg, window_ns=None, sigma_lo=None):
     """One band of the field. Returns (long-form DataFrame, provenance dict).
 
     `window_ns` restricts the REPORTED time grid; the tape is still read with a
@@ -108,20 +108,22 @@ def run_band(ts_ns, name, spec, cfg, window_ns=None):
     if arr.size < 3:
         raise SystemExit(f"band {name}: only {arr.size} arrivals in window -- nothing to do")
 
-    # One int64 origin shared by both channels. Rebasing BEFORE the float divide is
+    # One int64 origin shared by both channels, and it must be the SAME one or the
+    # two time axes sit offset against each other. Rebasing before the float divide is
     # not cosmetic: at epoch magnitude float64 seconds have a 238 ns ULP against a
-    # 49 ns minimum gap, and scale_field._assert_resolved raises rather than let that
-    # through silently.
+    # 49 ns minimum gap. intervals() differences in int64 so the gap itself is exact;
+    # seconds_since() requires the origin positionally so it cannot be forgotten.
     origin = int(arr[0])
-    ts_s, _ = to_seconds(arr, origin)
-    ev_s, x = intervals(arr, origin_ns=origin)
+    ts_s = seconds_since(arr, origin)
+    ev_s, x = intervals(arr, origin=origin)
 
     n_grid = fcfg["t_grid_points_fine"] if window_ns is not None else fcfg["t_grid_points_coarse"]
     t_grid = np.linspace((grid_ns[0] - origin) / 1e9, (grid_ns[1] - origin) / 1e9, n_grid)
 
     t0 = time.perf_counter()
+    sig = float(fcfg["sigma_lo"] if sigma_lo is None else sigma_lo)
     f = field(ts_s, ev_s, x, t_grid, scales,
-              neff_min=fcfg["neff_min"], sigma_lo=fcfg["sigma_lo"],
+              neff_min=fcfg["neff_min"], sigma_lo=sig,
               edge_scales=fcfg["edge_scales"])
     elapsed = time.perf_counter() - t0
 
@@ -137,6 +139,7 @@ def run_band(ts_ns, name, spec, cfg, window_ns=None):
         "lograte": f["lograte"].ravel(),
         "dlograte": f["dlograte"].ravel(),
         "n_eff": f["n_eff"].ravel(),
+        "n_eff_rate": f["n_eff_rate"].ravel(),
     })
 
     prov = {
@@ -160,9 +163,16 @@ def run_band(ts_ns, name, spec, cfg, window_ns=None):
         "n_ties_collapsed": int(n_raw - arr.size),
         "n_intervals": int(ev_s.size),
         "origin_ns": origin,
+        "sigma_lo": sig,
         "seconds_elapsed": round(elapsed, 2),
         "seconds_per_event_budgeted": spec.get("measured_cost_seconds_per_event"),
         "nan_share": {k: float(np.isnan(f[k]).mean()) for k in ("m", "dm", "lograte", "dlograte")},
+        "local_rate_prints_per_s": round(float(arr.size / max((keep_ns[1] - keep_ns[0]) / 1e9, 1e-9)), 4),
+        "s_min_seconds_at_mean_rate": round(float(s_min_for_rate(
+            arr.size / max((keep_ns[1] - keep_ns[0]) / 1e9, 1e-9), fcfg["neff_min"])), 4),
+        "s_min_rule": "n_eff = 2*sqrt(pi)*s*lambda >= 8  =>  s >= 2.257/lambda. A DATA "
+                      "limit, not a rendering one: nothing below it is measurable at any "
+                      "output resolution, on any chart.",
         "n_eff_below_floor_share": float((f["n_eff"] < fcfg["neff_min"]).mean()),
         "neff_rule": fcfg["neff_rule"],
     }
@@ -174,6 +184,13 @@ def main() -> int:
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--event", default=DEFAULT_EVENT)
     p.add_argument("--out", default="results/scale_field/artifacts")
+    p.add_argument("--sigma-lo", type=float, default=None,
+                   help="override field()'s base-grid oversampling. Moves every pyramid "
+                        "octave boundary WITHOUT changing the estimator -- the decisive "
+                        "test for whether a reported break is a pyramid artefact.")
+    p.add_argument("--suffix", default="",
+                   help="artifact filename suffix, so a sensitivity run does not "
+                        "overwrite the primary one.")
     args = p.parse_args()
 
     cfg = adapter.load_config()
@@ -202,13 +219,14 @@ def main() -> int:
     half = cfg["scale_axis"]["fine"]["coverage_seconds"]
 
     frames, prov = [], []
-    df_c, pv_c = run_band(ts, "coarse", sa["coarse"], cfg, None)
+    df_c, pv_c = run_band(ts, "coarse", sa["coarse"], cfg, None, args.sigma_lo)
     frames.append(df_c); prov.append(pv_c)
     print(f"  coarse {pv_c['n_scales']} scales  {pv_c['seconds_elapsed']}s  "
           f"NaN share dlograte {pv_c['nan_share']['dlograte']:.2f} / dm {pv_c['nan_share']['dm']:.2f}")
 
     df_f, pv_f = run_band(ts, "fine", sa["fine"], cfg,
-                          (anchor_ns - int(half * 1e9), anchor_ns + int(half * 1e9)))
+                          (anchor_ns - int(half * 1e9), anchor_ns + int(half * 1e9)),
+                          args.sigma_lo)
     frames.append(df_f); prov.append(pv_f)
     print(f"  fine   {pv_f['n_scales']} scales  {pv_f['seconds_elapsed']}s  "
           f"NaN share dlograte {pv_f['nan_share']['dlograte']:.2f} / dm {pv_f['nan_share']['dm']:.2f}")
@@ -216,7 +234,7 @@ def main() -> int:
     out_dir = rel(args.out)
     os.makedirs(out_dir, exist_ok=True)
     field_df = pd.concat(frames, ignore_index=True)
-    field_df.to_parquet(os.path.join(out_dir, f"field_{args.event}.parquet"), index=False)
+    field_df.to_parquet(os.path.join(out_dir, f"field_{args.event}{args.suffix}.parquet"), index=False)
     adapter.load_event_tape(args.event, None, cfg).to_parquet(
         os.path.join(out_dir, f"tape_{args.event}.parquet"), index=False)
 
@@ -239,6 +257,8 @@ def main() -> int:
         "task": "one event, both bands, both channels (order of work step 3)",
         "config_hash": chash,
         "event_id": args.event,
+        "sigma_lo": float(args.sigma_lo) if args.sigma_lo else cfg["field"]["sigma_lo"],
+        "suffix": args.suffix,
         "event_chosen_because": DEFAULT_EVENT_WHY if args.event == DEFAULT_EVENT else "operator choice",
         "cohort_group": str(row["cohort_group"]),
         "pooled": bool(row["pooled"]),
@@ -272,7 +292,7 @@ def main() -> int:
         "source": "research/scale_field/run_field_one_event.py:main",
         "reproduce": f".venv/Scripts/python.exe research/scale_field/run_field_one_event.py --event {args.event}",
     }
-    with open(os.path.join(out_dir, f"field_{args.event}_manifest.json"), "w",
+    with open(os.path.join(out_dir, f"field_{args.event}{args.suffix}_manifest.json"), "w",
               encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
 
