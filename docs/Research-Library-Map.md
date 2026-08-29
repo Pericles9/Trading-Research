@@ -1260,6 +1260,14 @@ imported from it so there is one palette rather than two that drift. Offline `--
 never a CDN (D14). Chart 03 carries a dispersion-vs-scale row because A(T) is a variance statistic
 and a median comparison would have produced a false negative.
 
+**The knee criterion itself was withdrawn at Cooper's step-4 read (2026-08-28).** The brief made
+v3's knees a prediction the continuous field had to change character near. Neither candidate summary
+statistic recovers a known timescale at the scales this cohort lives at: pooled amplitude vs scale
+does not select scale at all; the local ridge degrades to 0.18x recovered/injected by τ = 128 s; the
+Allan knee has no stable conversion (8, 12.8, 5.1 over a 25× τ span). A knee disagreement is
+therefore two uncalibrated statistics being compared. The **bit-exact Allan reproduction stands** —
+as a gate on the point-process plumbing, which is what it actually tests.
+
 **Descriptive result, n = 2, no null.** Each event's own Allan knee lands exactly on its segment's
 committed v3 knee (AEHL rth 128.0 s; CREX premarket 16.0 s). On the continuous side, **an earlier
 claim was withdrawn**: the rate-channel dispersion does *not* break near 200 s "on both events".
@@ -1279,3 +1287,32 @@ artifact rule; every JSON manifest is tracked. Report: `results/scale_field/REPO
 `results/reports/scale_field_report.md`. Verification note: `results/scale_field/VERIFICATION.md`,
 copy at `results/reports/scale_field_verification.md`. Digest: `results/scale_field/digest.json`.
 No decision number appended; next free number remains **D22**.
+
+**The resolution floor, and it is the finding.** `n_eff = 2√π·s·λ ≥ 8` rearranges to **`s ≥ 2.26/λ`** —
+derived from the estimator's own effective sample size, not adopted from anywhere, no parameter to
+argue about. Measured across the frozen 100-event cohort from `t0_print_count` and the D3 span alone
+(no field computation, no tick pass, 0.2 s):
+
+- median `s_min` **7.46 s** for rth events, **1.07 s** premarket, 5.16 s pooled;
+- **15/100** events can support the coarse band's 1 s floor (rth 3/70); **0/100** the fine band's
+  15.6 ms floor;
+- at each event's *most favourable 5% of its session*: 42/100 reach 1 s, 4/100 reach 100 ms,
+  **0/100 reach 10 ms**. The best moment of the densest event in the cohort (SOS_2021-02-17,
+  831,614 prints) is **58 ms**.
+
+Against the committed sub-burst lineages, and the statement that needs no cross-method inference
+because it is the artifacts' own `n_prints` column: **the median committed sub-burst is 2–4 prints**
+(v4 median 3, 54% at exactly the method minimum of 3; 10c Stage 1 median 3, 67% ≤3; 10d T4 median 4,
+43% ≤3). Cooper's phrasing — *"a statement about the two or three fastest prints in a session, not
+about a market state"* — is not a hypothesis awaiting test; it is what the committed artifacts say
+about themselves. **Caveat carried:** D9's operating variable is the interval itself and estimates no
+intensity, so `n_eff` does not bind that lineage on its own terms, and none of this retracts D21 or
+the sub-burst artifacts. Scripts `s_min_cohort.py`, `s_min_vs_subbursts.py`, `plot_s_min.py`;
+artifacts `s_min_cohort.json`, `s_min_vs_subbursts.json`; charts `charts/cohort/04`, `05`.
+**No decision appended; next free number remains D22.** Cooper's §4(a) notes `s ≥ 2.26/λ` is a
+candidate for the applicability gate that 10c open item 4 and 10d §4 both leave open — that remains
+an open Cooper decision, and nothing here applies it as one.
+
+**Stopped after step r2.** The recovery grid (inject τ at the two measured background rates, fix the
+summary statistic on evidence) is next and is not started; the matched null and the cohort run are
+gated behind it.

@@ -6,6 +6,10 @@
 **Revised 2026-08-28** after independent verification (`VERIFICATION.md`). One defect
 fixed in the estimator (the rate channel had no data floor) and **one headline number
 withdrawn** — see §4. The reconciliation gate re-ran after both and is unchanged.
+**Revised again 2026-08-28** after Cooper's step-4 read. The knee comparison is
+**withdrawn as an acceptance criterion** (§8), and steps 1–2 of Cooper's recommended
+order are run and reported (§9). Both are described below; nothing is appended to the
+decision register.
 
 This is not a phase and does not carry a phase's escalation table. The brief carries one
 gate (the Allan reconciliation) and one stopping point (chart it and stop). Both are
@@ -194,13 +198,20 @@ each other, and a ΔBIC as low as 8.4. Its break location is not identified.
 
 > `n_eff = 2√π·s·λ ≥ 8`  ⟹  **`s ≥ 2.26/λ`**
 
-| event | λ | s_min | coarse band starts at | masked share, coarse |
-|---|---:|---:|---|---:|
-| AEHL | 2.46 prints/s | **0.919 s** | 1 s — *at its own floor* | 52% |
-| CREX | 17.8 prints/s | **0.127 s** | 1 s — clear of it | 33% |
+| event | λ near the anchor (±15 min) | s_min there | λ session-mean | **s_min session-mean** | masked share, coarse |
+|---|---:|---:|---:|---:|---:|
+| AEHL | 2.46 prints/s | 0.919 s | 0.30 prints/s | **7.48 s** — coarse band starts *below its own floor* | 52% |
+| CREX | 18.2 prints/s | 0.124 s | 2.07 prints/s | **1.09 s** — coarse band starts at it | 33% |
 
-AEHL's coarse band spends its first three octaves at or below its own floor, so the subset
-of time that survives the mask changes with every grid choice, and the fitted break moves
+*(Corrected 2026-08-28. The first version of this table quoted the **near-anchor** λ and
+then reasoned from it about the **coarse** band, which is session-wide. The two differ by
+an order of magnitude because the near-anchor window excludes the dead hours. The
+session-mean column is the one the coarse-band claim rests on, and it is the more
+adverse of the two — AEHL's coarse band begins three octaves below its own floor, not at
+it.)*
+
+AEHL's coarse band spends its first three octaves below its own floor, so the subset of
+time that survives the mask changes with every grid choice, and the fitted break moves
 with it. This was expected to be a fine-band caveat; it turns out to govern whether a
 **coarse**-band break is identifiable at all. `s_min(t) = 2.26/λ̂(t)` is now drawn on every
 field panel (λ̂ by k-nearest-neighbour spacing, k = 20) and each band's mean-rate `s_min` is
@@ -348,3 +359,150 @@ cohort — is gated on it and has not been started.
 
 No decision number was appended. Nothing here settles anything that belongs in
 `docs/Universe-Decisions.md`; next free number remains **D22**.
+
+---
+
+## 8. Cooper's step-4 read — the knee comparison is withdrawn as a criterion
+
+Cooper read the step-3 output on 2026-08-28 and withdrew the brief's own gate. Recorded
+here because the report's §4 was written against it.
+
+**The knee reconciliation gated nothing.** Cooper tested both candidate summary statistics
+against known injected truth, at fixed intensity contrast (5×) and duty cycle (0.20):
+
+- **Pooled amplitude versus scale does not select scale at all.** Median |dL/dln s| across
+  a session pins to the finest grid point for every injected τ over a 25× span. Fitting a
+  broken stick to a session-pooled curve is the v3 machinery being re-imported into the
+  method that exists to avoid it — which is exactly what §4 of this report did.
+- **The local ridge tracks, then degrades:** ratio of recovered to injected τ runs 1.55,
+  0.99, 0.59, **0.18** for τ = 2, 8, 32, 128 s, with the IQR widening from 0.86 to 2.25
+  decades.
+- **The Allan knee has no stable conversion:** τ-to-knee ratios of 8, 12.8 and 5.1 across
+  a 25× τ span.
+
+So CREX's 16 s Allan knee against its ~235 s field break is **not a disagreement to
+explain** — it is two uncalibrated statistics being compared. §4.2's "the prediction is
+partly met" over-claims in the same direction the withdrawn "~200 s on both events" did,
+and the right reading is that **no summary statistic in play has been shown to recover a
+known timescale at the scales this cohort lives at.**
+
+What survives: the bit-exact Allan reproduction in §2 was a good gate **on the
+point-process plumbing**, which is what it actually tests. And the field's *local*
+behaviour at an isolated burst is clean and already pinned in the acceptance suite —
+3.4 s recovered for a 3 s burst, 38.3 s for 40 s.
+
+Cooper also named three errors as their own: the `allan_factor` regression, the σ_lo test
+that cannot discriminate, and the knee criterion itself. All three are recorded in
+`VERIFICATION.md` and in the commit history; none required a change here beyond this
+section.
+
+---
+
+## 9. Steps 1 and 2 of the recommended order
+
+Cooper's order: (1) `s_min` across the cohort, (2) compare it to the committed sub-burst
+durations, (3) recovery grid, (4) matched null, (5) cohort. **Steps 1 and 2 are run and
+reported here. Step 3 is not started.**
+
+### 9.1 Step 1 — the resolution floor across all 100 events
+
+`research/scale_field/s_min_cohort.py` · `results/scale_field/artifacts/s_min_cohort.json`
+Chart: `charts/cohort/04_s_min_cohort_{light,dark}.html`
+
+Inputs are `t0_print_count` from the frozen manifest and the D3 extended-day span from
+the pinned XNYS calendar. **No field computation, no tick pass** — 0.2 s for all 100
+events. The `--tick-detail` figures below add a targeted per-event read (5.5 s, zero
+full-table passes) for the within-session distribution, which is the honest object:
+`s_min` is a function of time, not a scalar.
+
+**Session-mean rate** (the artifact-only figure Cooper specified), s_min in seconds:
+
+| segment | n | q25 | median | q75 |
+|---|---:|---:|---:|---:|
+| premarket | 28 | 0.455 | **1.07** | 4.41 |
+| rth | 70 | 3.19 | **7.46** | 76.4 |
+| no_detection | 2 | 246 | 249 | 252 |
+| **pooled** | 100 | 1.66 | **5.16** | 38.4 |
+
+**Which band can each event support**, on that rate:
+
+| band | floor | admissible | premarket | rth |
+|---|---:|---:|---:|---:|
+| coarse | 1 s | **15 / 100** | 12 / 28 | 3 / 70 |
+| fine | 15.6 ms | **0 / 100** | 0 / 28 | 0 / 70 |
+
+**Within-session, and at each event's most favourable moment.** The strongest form of the
+question is not the mean but the best: can any event, at any point in its session, reach
+the fine band?
+
+| reachable scale | events reaching it at their **best 5%** of session |
+|---|---:|
+| 1 s | 42 / 100 |
+| 100 ms | 4 / 100 |
+| **10 ms** | **0 / 100** |
+| 10d median sub-burst, 2.76 ms | 0 / 100 |
+| v4 median sub-burst, 348 ns | 0 / 100 |
+
+**The best moment of the densest event in the cohort is 58.0 ms**
+(SOS_2021-02-17_34.12, 100-event cohort, 831,614 prints,
+λ_active 14.4/s). No event in the analysis cohort resolves below that, ever.
+
+The median event supports the coarse band over **2.8%
+of its session** and the fine band over **0.0%**.
+
+Cooper's hypothesis — *"if most regular-hours events sit near `s_min ≈ 1 s`, then the
+millisecond sub-burst question is not answerable on this cohort"* — is met and exceeded:
+the rth median is **7.46 s**, not 1 s.
+
+### 9.2 Step 2 — against the committed sub-burst durations
+
+`research/scale_field/s_min_vs_subbursts.py` ·
+`results/scale_field/artifacts/s_min_vs_subbursts.json`
+Chart: `charts/cohort/05_s_min_vs_subbursts_{light,dark}.html`
+
+**The caveat comes first because it bounds everything else.** D9's operating variable is
+the inter-trade interval and the lineage deliberately estimates no intensity, so `n_eff`
+is a property of a kernel-smoothed rate estimator and **does not bind D9's construction on
+its own terms**. Nothing here says a committed sub-burst is wrong.
+
+So the load-bearing statement is the one that needs no cross-method inference at all,
+because it is read straight off the committed artifacts' own `n_prints` column:
+
+| lineage | n sub-bursts | median duration | **median prints** | ≤ 3 prints | ≤ 5 prints |
+|---|---:|---:|---:|---:|---:|
+| v4 | 128,818 | 348 ns | **3** | 54.1% | 88.1% |
+| 10c Stage 1 (kernel 8) | 46,709 | 1.75 ms | **3** | 66.9% | 82.2% |
+| 10d T4 (kernel 8) | 1,934,084 | 3.37 ms | **4** | 43.3% | 64.0% |
+
+**The median committed sub-burst is 2–4 prints, and 43–67% of them are three prints or
+fewer.** v4's minimum is 3 prints and 54% of its sub-bursts sit exactly at that minimum;
+10c's minimum is 2 and 70% are at 3 or below.
+
+Cooper's phrasing — *"a sub-burst at that scale is a statement about the two or three
+fastest prints in a session, not about a market state"* — is therefore **not a hypothesis
+awaiting test. It is what the committed artifacts already say about themselves.** It needs
+nothing from this method, and it stands whether or not `n_eff` binds D9.
+
+The cross-method comparison, carrying the caveat above: the share of committed sub-bursts
+shorter than the resolution floor of **their own event at that event's best moment** is
+100.0% (v4), 98.1% (10c), 96.8% (10d); median ratio of floor to duration 295,184× / 294× /
+148×.
+
+### 9.3 What this does not say
+
+- **No decision is appended.** Next free number remains **D22**.
+- **No gate is proposed.** Cooper's §4(a) observes that `s ≥ 2.26/λ` is derived rather than
+  adopted and could serve as the applicability gate 10c open item 4 and 10d §4 both leave
+  open. That remains Cooper's call; this report only supplies the distribution.
+- **This is not a retraction of D21 or of the sub-burst lineage.** D21 closed the
+  threshold-from-trough method on other grounds. §9.2 describes what the committed
+  artifacts contain; it does not re-open or re-litigate them.
+- **n = 100 events, one cohort, one method's floor.** The floor is a property of a
+  kernel-smoothed rate estimator at `n_eff ≥ 8`. A different estimator has a different
+  floor, and a method that estimates no intensity has none of this form at all.
+
+### 9.4 Stopped here
+
+Step 3 — the recovery grid on synthetic tapes at the two measured background rates — is
+**not started**. It needs no data access and no tick pass, and per Cooper it is what should
+fix the summary statistic before any cohort run. Steps 4 and 5 remain gated behind it.

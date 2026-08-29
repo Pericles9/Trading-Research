@@ -92,7 +92,8 @@
         "premarket": 16.0
       }
     },
-    "v3_knees_role": "A PREDICTION for the continuous field, not an input to it. The scale axis should show a change of character near them. If it does not, one of the two measurements is wrong and that is the finding."
+    "v3_knees_role": "WITHDRAWN AS AN ACCEPTANCE CRITERION, 2026-08-28, by Cooper at the step-4 read. The brief made v3's knees a prediction the continuous field had to change character near. Cooper tested both candidate summary statistics against known injected truth and neither recovers a timescale at the scales this cohort lives at: pooled amplitude vs scale does not select scale at all (pins to the finest grid point for every tau over a 25x span); the local ridge tracks then degrades (recovered/injected 1.55, 0.99, 0.59, 0.18 for tau = 2, 8, 32, 128 s); the Allan knee has no stable conversion (tau-to-knee 8, 12.8, 5.1 over the same span). So a knee disagreement is two uncalibrated statistics being compared, not a finding. The knees remain recorded as v3's committed measurement. What the brief should have asked for is a recovery test against known truth -- Cooper's step 3, not started.",
+    "what_the_gate_actually_tested": "The bit-exact Allan reproduction stands and was a good gate -- on the POINT-PROCESS PLUMBING, which is what it tests. That is unaffected by the withdrawal above."
   },
   "scale_axis": {
     "rule": "The scale axis is a continuum; these arrays are quadrature for plotting, not a kernel grid in the method.",
@@ -155,6 +156,37 @@
     "4. Cooper reads it.",
     "5. Only then: matched-null thresholds, then the cohort."
   ],
-  "stop_after": 3,
-  "forward_returns": "NOT TOUCHED. The moment anything here touches forward returns, the full Agent_Prompt_Standard applies again, pre-registered, no exceptions."
+  "stop_after": "r2",
+  "forward_returns": "NOT TOUCHED. The moment anything here touches forward returns, the full Agent_Prompt_Standard applies again, pre-registered, no exceptions.",
+  "resolution_floor": {
+    "rule": "n_eff = 2*sqrt(pi)*s*lambda >= neff_min  =>  s >= 2.2568/lambda at neff_min = 8.",
+    "derived_not_adopted": "This is the estimator's own effective sample size rearranged. It is not a literature-adopted cutoff and there is no parameter in it to argue about.",
+    "measured_2026_08_28": {
+      "cohort": "the frozen 100-event analysis cohort",
+      "s_min_session_median_seconds": {
+        "pooled": 5.16,
+        "premarket": 1.07,
+        "rth": 7.46
+      },
+      "admissible_coarse_band_1s": "15/100 (premarket 12/28, rth 3/70)",
+      "admissible_fine_band_15_6ms": "0/100",
+      "best_reachable_anywhere_seconds": 0.058,
+      "best_reachable_event": "SOS_2021-02-17_34.12, 831,614 prints, at its best 5% of session",
+      "events_reaching_10ms_at_their_best": "0/100"
+    },
+    "status": "DESCRIPTIVE. No gate is proposed and none is applied. Whether an applicability gate should exist is an open Cooper decision (10c open item 4, 10d s4).",
+    "artifacts": [
+      "results/scale_field/artifacts/s_min_cohort.json",
+      "results/scale_field/artifacts/s_min_vs_subbursts.json"
+    ]
+  },
+  "order_of_work_revised_2026_08_28": [
+    "DONE 1-3 (build): adapter, Allan reconciliation, one event charted.",
+    "DONE 4: Cooper's read. Knee criterion withdrawn.",
+    "DONE r1: s_min across all 100 events. No tick pass.",
+    "DONE r2: s_min vs the committed sub-burst durations. Description only.",
+    "NOT STARTED r3: recovery grid on synthetic tapes at the two measured background rates (2.46/s and 17.8/s), across intensity contrast and duty cycle. Fixes the summary statistic on evidence before any cohort run.",
+    "NOT STARTED r4: matched null (research/phase_10b/pipeline.py), on the same s_min mask so null and data share a support.",
+    "NOT STARTED r5: the cohort."
+  ]
 }
