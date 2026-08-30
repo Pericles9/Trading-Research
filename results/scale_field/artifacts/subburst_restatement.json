@@ -19,6 +19,26 @@
       "censored": false,
       "n_events_joined": 41,
       "median_subbursts_per_event": 49.0,
+      "spread": {
+        "predictor_iq05": {
+          "n": 41,
+          "log10_iqr_decades": 1.471627299158902,
+          "log10_p5_p95_decades": 1.967710724761858,
+          "log10_sd_decades": 0.727502912189667
+        },
+        "predictor_iq50_control": {
+          "n": 41,
+          "log10_iqr_decades": 0.9027170146854435,
+          "log10_p5_p95_decades": 3.056330481137114,
+          "log10_sd_decades": 0.9813818683243656
+        },
+        "response_median_duration": {
+          "n": 41,
+          "log10_iqr_decades": 4.424816572429157,
+          "log10_p5_p95_decades": 6.3376006765118325,
+          "log10_sd_decades": 2.36124773375333
+        }
+      },
       "fits": {
         "iq02": {
           "ok": true,
@@ -93,6 +113,26 @@
       "censored": true,
       "n_events_joined": 90,
       "median_subbursts_per_event": 210.5,
+      "spread": {
+        "predictor_iq05": {
+          "n": 90,
+          "log10_iqr_decades": 1.398849227429256,
+          "log10_p5_p95_decades": 2.1022253989576027,
+          "log10_sd_decades": 0.7257139838275302
+        },
+        "predictor_iq50_control": {
+          "n": 90,
+          "log10_iqr_decades": 1.4798833548089325,
+          "log10_p5_p95_decades": 3.737784680871637,
+          "log10_sd_decades": 1.2456841056264714
+        },
+        "response_median_duration": {
+          "n": 90,
+          "log10_iqr_decades": 2.7053975492371056,
+          "log10_p5_p95_decades": 4.217884734033637,
+          "log10_sd_decades": 1.5264984028618442
+        }
+      },
       "fits": {
         "iq02": {
           "ok": true,
@@ -178,7 +218,12 @@
       "slope_near_one": false,
       "r2_high": false,
       "left_tail_specific": false,
-      "restatement": false
+      "predictor_log10_iqr_decades": 1.471627299158902,
+      "response_log10_iqr_decades": 4.424816572429157,
+      "predictor_range_sufficient_for_a_null": true,
+      "response_pinned_by_object_definition": false,
+      "restatement": false,
+      "outcome": "no restatement detected, predictor did vary"
     },
     "v4": {
       "censored": true,
@@ -195,17 +240,32 @@
       "slope_near_one": true,
       "r2_high": false,
       "left_tail_specific": false,
-      "restatement": false
+      "predictor_log10_iqr_decades": 1.398849227429256,
+      "response_log10_iqr_decades": 2.7053975492371056,
+      "predictor_range_sufficient_for_a_null": true,
+      "response_pinned_by_object_definition": false,
+      "restatement": false,
+      "outcome": "no restatement detected, predictor did vary"
     }
   },
   "conclusion": {
     "primary_source": "10c_s1_kernel8 (uncensored)",
     "restatement_supported": false,
-    "reading": "THE RESTATEMENT HYPOTHESIS IS NOT SUPPORTED. On the uncensored source the median sub-burst duration has essentially no relationship to a low quantile of the event's own interval distribution (r = +0.06, R^2 = 0.004, n = 41). On the censored v4 artifact there IS a moderate relationship (R^2 = 0.35, slope 1.25 with a CI that includes 1), but it is NOT specific to the left tail: the median-interval control fits marginally BETTER (R^2 = 0.38), so what it reflects is how fast the event trades overall, not a re-parameterisation of its fastest intervals. So of Cooper's two alternatives -- 'the scale was implausible' versus 'the statistic was a restatement' -- the evidence points to the FIRST. The duration is a real if barely-supported measurement of a real cluster, taken at a scale the tape cannot resolve, rather than a relabelling of the interval distribution.",
+    "status": "NOT LOAD-BEARING. Two of the three concerns raised against it were checked and do not apply; the third does, and is decisive for one arm.",
+    "range_check_requested_by_cooper": {
+      "concern": "R^2 ~ 0 is not evidence of no relationship until the predictor's range is reported; if the left-tail quantile spans less than ~0.5 decades the null is uninformative regardless of n.",
+      "result": "DOES NOT APPLY. The predictor varied by 1.472 decades (log10 IQR) on the uncensored arm and 1.399 on v4 -- roughly three times the 0.5-decade bar. The 10c null is therefore not an artifact of a static predictor.",
+      "third_possibility_response_pinned": "ALSO DOES NOT APPLY. A near-constant response would mean the duration is pinned by the object definition rather than by the data, which would be a stronger finding than either alternative. The response spans 4.425 decades (log10 IQR) on 10c and 2.705 on v4. It is not pinned.",
+      "what_does_apply": "The COLLINEARITY objection, and it is decisive for the v4 arm. An event's low interval quantile and its median interval both scale with 1/lambda, so left-tail R^2 0.353 against control 0.377 -- a gap of 0.024 on 90 points -- cannot separate them. The earlier wording 'so it tracks overall event pace, not the left tail' claimed more than the design delivers and is WITHDRAWN. What v4 supports is only that duration tracks event pace, with this design unable to say which aspect of pace."
+    },
+    "reading": "The uncensored arm is a genuine null on the 41 events it covers, and the range check confirms the predictor moved enough for that null to mean something. But it rests on n = 41 with a response spanning 4.4 decades across a heterogeneous population -- including events whose median object is 889 prints -- so it is weak evidence, not a settled result. The v4 arm is uninformative about the left tail for the collinearity reason above. ADOPTED: this test is reported and then left alone. It goes in no load-bearing sentence, and nothing further is spent on it. The resolution-floor result and the 2-print composition close the object without it.",
+    "what_still_stands": "The floor result settles 'the scale is unmeasurable on this tape' on its own terms and without this test: no event resolves below 58 ms at its most favourable moment, against a 1.75 ms median object. Whether the statistic was ALSO a restatement is not established either way, and does not need to be.",
     "power_caveats": [
-      "n = 41 for the uncensored source. 10c Stage 1 ran on 49 events (dev_v4_primary + 6 sidecar), NOT the 100-event cohort, so this test has limited power and a null is weak evidence.",
-      "10c's per-event median duration spans 6.6 decades and includes events whose median object is 889 prints / 466 s. A per-event median over that mixture is a noisy dependent variable.",
-      "v4's dependent variable is censored: median_prints spans only 3 to 7 because of the configured floor of 3, which compresses the variable being regressed."
+      "n = 41 for the uncensored source. 10c Stage 1 ran on 49 events (dev_v4_primary + 6 sidecar), NOT the 100-event cohort.",
+      "The predictor range is NOT a limitation here -- 1.472 decades log10 IQR, checked because a small range would have made the null vacuous.",
+      "v4's predictors are collinear (both ~ 1/lambda); a 0.024 R^2 gap on n=90 cannot separate them.",
+      "10c's per-event median duration spans 6.6 decades full-range and includes events whose median object is 889 prints / 466 s -- a heterogeneous population under one median.",
+      "v4's response is censored at 3 prints, compressing the regressed variable."
     ]
   },
   "source": "research/scale_field/subburst_is_a_restatement.py:main",

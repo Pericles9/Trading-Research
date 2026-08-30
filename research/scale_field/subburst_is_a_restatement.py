@@ -162,9 +162,29 @@ def main() -> int:
         m["source"] = label
         per_event_frames.append(m)
 
+        def spread(v):
+            v = np.asarray(v, float); v = np.log10(v[np.isfinite(v) & (v > 0)])
+            if v.size < 4:
+                return {"n": int(v.size)}
+            return {"n": int(v.size),
+                    "log10_iqr_decades": float(np.quantile(v, .75) - np.quantile(v, .25)),
+                    "log10_p5_p95_decades": float(np.quantile(v, .95) - np.quantile(v, .05)),
+                    "log10_sd_decades": float(v.std(ddof=1))}
+
         rec = {"present": True, "what": src["what"], "censored": src["censored"],
                "n_events_joined": int(len(m)),
                "median_subbursts_per_event": float(m["n_subbursts"].median()),
+               # WITHOUT THESE, R^2 CANNOT BE READ. A regression whose predictor barely
+               # varies returns R^2 ~ 0 whether or not a relationship exists, so a null is
+               # uninformative until the predictor's range is on the page. And a RESPONSE
+               # that barely varies would mean the duration is pinned by the object
+               # definition rather than by the data -- a third possibility, and a stronger
+               # finding than either of the two the test was set up to separate.
+               "spread": {
+                   "predictor_iq05": spread(m[f"iq{int(HEADLINE_Q*100):02d}"]),
+                   "predictor_iq50_control": spread(m["iq50"]),
+                   "response_median_duration": spread(m["median_duration_s"]),
+               },
                "fits": {}}
         for qq in QUANTILES:
             col = f"iq{int(qq*100):02d}"
@@ -176,6 +196,9 @@ def main() -> int:
 
         h = rec["fits"][f"iq{int(HEADLINE_Q*100):02d}"]
         c50 = rec["fits"]["iq50_control"]
+        sp = rec["spread"]
+        print(f"   ranges (log10 IQR): predictor {sp['predictor_iq05'].get('log10_iqr_decades', float('nan')):.3f} dec"
+              f"   response {sp['response_median_duration'].get('log10_iqr_decades', float('nan')):.3f} dec")
         print(f"\n{label:16s} n={rec['n_events_joined']}  "
               f"{'[CENSORED]' if src['censored'] else '[uncensored]'}")
         if h.get("ok"):
@@ -208,6 +231,15 @@ def main() -> int:
         near_one = abs(f["slope"] - 1.0) < 0.25
         high_r2 = f["r2"] >= 0.80
         specific = f["r2"] - c50.get("r2", 0.0) >= 0.10 if c50.get("ok") else None
+        sp = rec["spread"]
+        pred_iqr = sp["predictor_iq05"].get("log10_iqr_decades")
+        resp_iqr = sp["response_median_duration"].get("log10_iqr_decades")
+        # A null is only informative if the predictor actually moved. 0.5 decades is the
+        # bar, named here rather than after the fact.
+        informative = bool(pred_iqr is not None and pred_iqr >= 0.5)
+        # And if the RESPONSE barely moves, the statistic is pinned by the object
+        # definition, which is a different and stronger finding than either alternative.
+        response_pinned = bool(resp_iqr is not None and resp_iqr < 0.3)
         verdicts[label] = {
             "censored": rec["censored"], "n": f["n"],
             "criterion": "slope within 0.25 of 1 AND R^2 >= 0.80 AND R^2 at least 0.10 "
@@ -218,43 +250,84 @@ def main() -> int:
             "r2_advantage_of_left_tail": round(f["r2"] - c50["r2"], 4) if c50.get("ok") else None,
             "slope_near_one": bool(near_one), "r2_high": bool(high_r2),
             "left_tail_specific": specific,
+            "predictor_log10_iqr_decades": pred_iqr,
+            "response_log10_iqr_decades": resp_iqr,
+            "predictor_range_sufficient_for_a_null": informative,
+            "response_pinned_by_object_definition": response_pinned,
             "restatement": bool(near_one and high_r2 and bool(specific)),
+            "outcome": ("restatement" if (near_one and high_r2 and bool(specific))
+                        else "response pinned by the object definition" if response_pinned
+                        else "UNDETERMINED -- predictor range too small for a null to inform"
+                        if not informative else "no restatement detected, predictor did vary"),
         }
     out["verdicts"] = verdicts
     prim = verdicts.get("10c_s1_kernel8")
+    v4v = verdicts.get("v4")
     out["conclusion"] = {
         "primary_source": "10c_s1_kernel8 (uncensored)",
         "restatement_supported": bool(prim and prim["restatement"]),
+        "status": "NOT LOAD-BEARING. Two of the three concerns raised against it were "
+                  "checked and do not apply; the third does, and is decisive for one arm.",
+        "range_check_requested_by_cooper": {
+            "concern": "R^2 ~ 0 is not evidence of no relationship until the predictor's "
+                       "range is reported; if the left-tail quantile spans less than ~0.5 "
+                       "decades the null is uninformative regardless of n.",
+            "result": "DOES NOT APPLY. The predictor varied by 1.472 decades (log10 IQR) "
+                      "on the uncensored arm and 1.399 on v4 -- roughly three times the "
+                      "0.5-decade bar. The 10c null is therefore not an artifact of a "
+                      "static predictor.",
+            "third_possibility_response_pinned": "ALSO DOES NOT APPLY. A near-constant "
+                       "response would mean the duration is pinned by the object "
+                       "definition rather than by the data, which would be a stronger "
+                       "finding than either alternative. The response spans 4.425 decades "
+                       "(log10 IQR) on 10c and 2.705 on v4. It is not pinned.",
+            "what_does_apply": "The COLLINEARITY objection, and it is decisive for the v4 "
+                       "arm. An event's low interval quantile and its median interval both "
+                       "scale with 1/lambda, so left-tail R^2 0.353 against control 0.377 "
+                       "-- a gap of 0.024 on 90 points -- cannot separate them. The earlier "
+                       "wording 'so it tracks overall event pace, not the left tail' claimed "
+                       "more than the design delivers and is WITHDRAWN. What v4 supports is "
+                       "only that duration tracks event pace, with this design unable to say "
+                       "which aspect of pace.",
+        },
         "reading": (
-            "THE RESTATEMENT HYPOTHESIS IS NOT SUPPORTED. On the uncensored source the "
-            "median sub-burst duration has essentially no relationship to a low quantile "
-            "of the event's own interval distribution (r = +0.06, R^2 = 0.004, n = 41). "
-            "On the censored v4 artifact there IS a moderate relationship (R^2 = 0.35, "
-            "slope 1.25 with a CI that includes 1), but it is NOT specific to the left "
-            "tail: the median-interval control fits marginally BETTER (R^2 = 0.38), so "
-            "what it reflects is how fast the event trades overall, not a "
-            "re-parameterisation of its fastest intervals. "
-            "So of Cooper's two alternatives -- 'the scale was implausible' versus 'the "
-            "statistic was a restatement' -- the evidence points to the FIRST. The "
-            "duration is a real if barely-supported measurement of a real cluster, taken "
-            "at a scale the tape cannot resolve, rather than a relabelling of the "
-            "interval distribution."),
+            "The uncensored arm is a genuine null on the 41 events it covers, and the range "
+            "check confirms the predictor moved enough for that null to mean something. But "
+            "it rests on n = 41 with a response spanning 4.4 decades across a heterogeneous "
+            "population -- including events whose median object is 889 prints -- so it is "
+            "weak evidence, not a settled result. The v4 arm is uninformative about the left "
+            "tail for the collinearity reason above. "
+            "ADOPTED: this test is reported and then left alone. It goes in no load-bearing "
+            "sentence, and nothing further is spent on it. The resolution-floor result and "
+            "the 2-print composition close the object without it."),
+        "what_still_stands": (
+            "The floor result settles 'the scale is unmeasurable on this tape' on its own "
+            "terms and without this test: no event resolves below 58 ms at its most "
+            "favourable moment, against a 1.75 ms median object. Whether the statistic was "
+            "ALSO a restatement is not established either way, and does not need to be."),
         "power_caveats": [
             "n = 41 for the uncensored source. 10c Stage 1 ran on 49 events "
-            "(dev_v4_primary + 6 sidecar), NOT the 100-event cohort, so this test has "
-            "limited power and a null is weak evidence.",
-            "10c's per-event median duration spans 6.6 decades and includes events whose "
-            "median object is 889 prints / 466 s. A per-event median over that mixture is "
-            "a noisy dependent variable.",
-            "v4's dependent variable is censored: median_prints spans only 3 to 7 because "
-            "of the configured floor of 3, which compresses the variable being regressed.",
+            "(dev_v4_primary + 6 sidecar), NOT the 100-event cohort.",
+            "The predictor range is NOT a limitation here -- 1.472 decades log10 IQR, "
+            "checked because a small range would have made the null vacuous.",
+            "v4's predictors are collinear (both ~ 1/lambda); a 0.024 R^2 gap on n=90 "
+            "cannot separate them.",
+            "10c's per-event median duration spans 6.6 decades full-range and includes "
+            "events whose median object is 889 prints / 466 s -- a heterogeneous "
+            "population under one median.",
+            "v4's response is censored at 3 prints, compressing the regressed variable.",
         ],
     }
-    verdict_word = ("SUPPORTED" if out["conclusion"]["restatement_supported"]
-                    else "NOT supported")
     print("")
-    print(f"CONCLUSION: restatement {verdict_word}"
-          f"  -- n=41 on the uncensored source; see power caveats")
+    print("CONCLUSION: reported, then left alone. Not load-bearing.")
+    print("  range check: predictor moved 1.47 dec (bar 0.5) -> the null is not vacuous;")
+    print("  response moved 4.43 dec -> not pinned by the object definition;")
+    print("  v4 arm: predictors collinear (both ~1/lambda) -> uninformative on the left tail.")
+    for lab, vv in verdicts.items():
+        print(f"  {lab:18s} outcome: {vv['outcome']}")
+        print(f"                     predictor log10 IQR "
+              f"{vv['predictor_log10_iqr_decades']:.3f} dec"
+              f"   response {vv['response_log10_iqr_decades']:.3f} dec")
 
     out["source"] = "research/scale_field/subburst_is_a_restatement.py:main"
     out["reproduce"] = (".venv/Scripts/python.exe research/scale_field/"
