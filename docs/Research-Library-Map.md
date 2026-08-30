@@ -1348,3 +1348,45 @@ while the burst-*duration* question closes. The band that survives is the second
 which is both measurable and the one the momentum system actually trades in. The accurate framing is
 **"the tape cannot answer the question the lineage asked"**, not "the tape cannot answer any
 question". Chart `charts/cohort/06_admissibility_by_window_*`.
+
+**The operating envelope (2026-08-28).** The detection-window re-cut raised `s_min`, but a window
+bounds the scale axis from **above** too: the 4-kernel-width edge mask admits only `s < W/8`. Usable
+range at the median λ — anchor+10 s **0.67 decades (2.2 octaves)**, +60 s 1.21 (4.0), +300 s 1.71
+(5.7), full session 2.59 (8.6). **Inside the operational window the field has about one decade of
+usable scale, and two octaves in the first ten seconds.** That is recorded as an open **challenge to
+this build's own premise**: a continuum is bought for automatic scale *selection*, which needs
+decades to select across, and at 2–4 octaves three or four fixed kernels with matched-null bands
+would carry almost the same information for far less machinery. What the field still earns: `s_min(t)`
+fell out of the construction and produced the cohort finding; time-localisation is unaffected by a
+short scale range; and the floor is time-varying, so a fixed-kernel scheme would need `s_min(t)`
+anyway. **Step 3 (the recovery grid) is re-aimed and pre-registered in `config/scale_field.json`
+`step_3_recovery_grid` — τ over 0.3–10 s at λ ∈ {2.5, 5, 8.4}/s in 10 s and 60 s windows, with a
+fixed-kernel control arm — and must answer that question rather than assume it.** Not started.
+
+**Half the cohort is inactive at a ten-second horizon — a universe result, not a caveat.** Only
+**49 of 100** events carry ≥25 prints in the 10 s after their own detection anchor. Joined to Phase
+11's quote-staleness table on the 49 events overlapping on their own detection segment:
+**corr(log₁₀ T=0 print count, share of trades on quotes >1 s old) = −0.697**; events measurable at
++10 s are 44.8% stale (median 50,228 prints) against 56.1% for those that are not (7,188 prints).
+Premarket's own figures point the same way — median event 62.3% stale but trade-weighted 31.6%, and
+median quoted spread 760.3 bp at T=0 (both verified against `results/phase_11/artifacts/`). **The
+measurable subset and the tradeable subset look like the same subset, and it is about half the
+cohort.** Mechanically unsurprising — more prints means more quote updates — so it is a confirmation
+that two independent constraints coincide, not a discovery.
+
+**Audit: did the pooled-basis error reach 10d's own record? No.** `audit_10d_basis.py` — all 8 of
+10d's digest headline metrics are accounted for (5 name their assembly cell; 3 are computed upstream
+of the `(K,d,min_prints,sep)` grid, each exemption recorded with its reason), the T5 attribution
+artifacts are keyed per cell by construction, and the REPORT's identity figure of 1.7513 ms over
+46,709 objects reproduces exactly. **The pooled figure was mine and lived only in
+`results/scale_field/`** — not a second instance of the 10c erratum class. The audit also produced a
+free corroboration: 10d's own `share_2print` at the identity cell is 0.4934 against an independent
+recomputation of 0.4934, so the two-print composition is corroborated rather than repeated.
+
+**The restatement test is downgraded** to reported-and-left-alone. Two of the three concerns raised
+against it were checked and do not apply — the predictor moved 1.47 decades (log₁₀ IQR), so the null
+is not vacuous, and the response spans 4.43 decades, so it is not pinned by the object definition —
+but the collinearity objection stands and is decisive for the v4 arm (both predictors scale with 1/λ;
+a 0.024 R² gap on n=90 cannot separate them). The earlier claim that duration "tracks overall event
+pace, not the left tail" is withdrawn as more than the design delivers. It enters no load-bearing
+sentence; the floor result closes the object without it.

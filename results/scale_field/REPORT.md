@@ -9,6 +9,9 @@ withdrawn** — see §4. The reconciliation gate re-ran after both and is unchan
 **Revised again 2026-08-28** after Cooper's step-4 read. The knee comparison is
 **withdrawn as an acceptance criterion** (§8), and steps 1–2 of Cooper's recommended
 order are run and reported (§9).
+**Revised a fourth time 2026-08-28** after Cooper's read on the corrected steps 1–2:
+§11 is the operating envelope and the challenge it puts to this build's own premise,
+§12 promotes the 49/100 to a finding, and §10.4 is downgraded.
 **Revised a third time 2026-08-28** after Cooper's read on steps 1–2. Three checks were
 raised against §9 and **two of them found errors in numbers published here** — §10 has
 the corrections, which are applied in place in §9 as well. §10 also carries the
@@ -534,6 +537,27 @@ corrected at T0b".
 | median prints | 4 | **3** |
 | ≤3 prints | 43.3% | **66.9%** |
 
+**Did the pooled basis reach 10d's own record?** Audited, because this would have been
+the second committed 10-series number on the wrong population after the 10c closing-note
+erratum. `research/scale_field/audit_10d_basis.py` ·
+`results/scale_field/artifacts/audit_10d_basis.json`
+
+**It did not. 10d's committed record is clean.** All 8 digest headline metrics are
+accounted for — 5 name their assembly cell explicitly, and 3 are computed *upstream* of
+the `(K, d, min_prints, sep)` grid (the run-level break-cause census, the T3b void
+counterfactual, the T3c 10c threshold share), so having no cell is correct rather than
+missing; each exemption is recorded with its reason. The T5 attribution artifacts — 10d's
+stated deliverable — are keyed per cell by construction (117 / 117 / 237 distinct cells).
+The REPORT's identity figure of **1.7513 ms over 46,709 objects reproduces from the
+artifact exactly**. **The pooled figure was introduced by me and lived only in
+`results/scale_field/`.** 10d's headline never moved and its floor-over-merge attribution
+(7.17×) was always per cell.
+
+**And the audit produced a free corroboration.** 10d computed `share_2print` per cell in
+`t4_cell_summary.parquet` by a different code path. Its identity-cell value is
+**0.4934** against my independent recomputation of **0.4934** off `t4_subbursts.parquet`.
+The two-print composition finding is corroborated, not merely repeated.
+
 ### 10.3 Check 3 — session coverage was the wrong denominator (a real error)
 
 Also correct. "The median event supports the coarse band over 2.8% of its session" is
@@ -542,38 +566,43 @@ picture changes by a factor of six on admissibility — see the window table in 
 session figure is kept as the conservative artifact-only baseline and is explicitly no
 longer the admissibility denominator.
 
-### 10.4 The restatement test (Cooper §3) — **not supported**
+### 10.4 The restatement test — reported, then left alone
 
 `research/scale_field/subburst_is_a_restatement.py` ·
 `results/scale_field/artifacts/subburst_restatement.json`
 
 Per event, log–log OLS of median sub-burst duration on a low quantile of that event's own
-inter-trade interval distribution. Two conditions were named before the numbers were seen:
-slope within 0.25 of 1 **and** R² ≥ 0.80 **and** the left-tail fit beating the
-median-interval control by ≥ 0.10 R² — because "restatement of the *left tail*" requires
-specificity, not just that fast events have short everything.
+inter-trade interval distribution, against three pre-named conditions: slope within 0.25
+of 1, R² ≥ 0.80, and the left-tail fit beating a median-interval control by ≥ 0.10 R².
 
-| source | n | slope vs 5th pct | R² left tail | R² median-interval control | restatement? |
-|---|---:|---:|---:|---:|---|
-| 10c Stage 1 (uncensored) | 41 | 0.205 | **0.004** | 0.017 | **no** |
-| v4 (censored) | 90 | 1.250 | 0.353 | **0.377** | no |
+| source | n | slope vs 5th pct | R² left tail | R² median control | predictor log₁₀ IQR | response log₁₀ IQR |
+|---|---:|---:|---:|---:|---:|---:|
+| 10c Stage 1 (uncensored) | 41 | 0.205 | 0.004 | 0.017 | 1.47 dec | 4.42 dec |
+| v4 (censored) | 90 | 1.250 | 0.353 | 0.377 | 1.40 dec | 2.71 dec |
 
-On the uncensored source there is **essentially no relationship** (r = +0.06). On v4 there
-is a moderate one, but the median-interval control fits *marginally better* (0.377 vs
-0.353), so it reflects **how fast the event trades overall**, not a re-parameterisation of
-its fastest intervals.
+**The previous wording — "NOT supported", stated as a null — is withdrawn.** Three
+concerns were raised against it; two were checked here and do not apply, and the third
+does and is decisive for one arm.
 
-**So of Cooper's two alternatives — "the scale was implausible" versus "the statistic was a
-restatement" — the evidence points to the first.** The duration is a real if
-barely-supported measurement of a real cluster, taken at a scale the tape cannot resolve,
-rather than a relabelling of the interval distribution.
+- **"R² ≈ 0 is not evidence until the predictor's range is reported."** Checked, and it
+  **does not apply**: the predictor moved **1.47 decades** (log₁₀ IQR) on the uncensored
+  arm, roughly three times the 0.5-decade bar. That null is not an artifact of a static
+  predictor.
+- **"A near-constant response would mean the statistic is pinned by the object
+  definition"** — a third possibility, and a stronger finding than either alternative.
+  Checked, and it **does not apply**: the response spans **4.43 decades**.
+- **Collinearity does apply, and it kills the v4 arm.** An event's low interval quantile
+  and its median interval both scale with 1/λ. R² 0.353 against 0.377 is a gap of 0.024
+  on 90 points, which cannot separate collinear predictors. My earlier sentence — *"so it
+  tracks overall event pace, not the left tail"* — claimed more than the design delivers
+  and is withdrawn. What v4 supports is only that duration tracks event **pace**.
 
-**Power caveats, which are not small.** n = 41 on the uncensored source, because 10c Stage
-1 ran on 49 events (`dev_v4_primary` plus 6 sidecar), **not** the 100-event cohort — a null
-here is weak evidence. 10c's per-event median duration spans 6.6 decades and includes
-events whose median object is 889 prints / 466 s, so the dependent variable is noisy.
-v4's is censored. Per the Phase 13 boundary, the interval distribution was computed as an
-**input** and is not produced here as a characterised finding.
+So the uncensored arm is a real null on the 41 events it covers, with an adequate
+predictor range — but n = 41, over a response spanning 4.4 decades of a heterogeneous
+population. **Weak evidence, not a settled result.** It is recorded and then left alone:
+it enters no load-bearing sentence, and nothing further is spent on it. The floor result
+settles "the scale is unmeasurable on this tape" on its own terms — 58 ms best case
+against a 1.75 ms median object — and does not need this test.
 
 ### 10.5 Stopped here
 
@@ -582,3 +611,95 @@ admissibility on the detection window — **done, §9.1**; (3) the recovery grid
 at 1 s to 300 s at the observed session rates (0.30 /s rth, 2.11 /s premarket)** rather
 than at millisecond scales no event supports — **not started**; (4) matched null on the
 same mask; (5) cohort last, and only for the band that survives (3).
+
+---
+
+## 11. The operating envelope — and a challenge to this build's premise
+
+§9.1 showed the detection window raising `s_min`. **The window also bounds the scale axis
+from above**, and that was missing: the estimator masks within `edge_scales = 4` kernel
+widths of each end, so a window of length W admits only **s < W/8**. Improving the floor
+inside a short window buys less than it appears to, because the ceiling comes down with it.
+
+| window | λ median | s_min | s_max = W/8 | **usable decades** | octaves | coarse admissible |
+|---|---:|---:|---:|---:|---:|---:|
+| anchor ±15 min | 1.97 /s | 1.14 s | 225 s | **2.29** | 7.6 | 24 / 95 |
+| anchor → +15 min | 2.68 /s | 0.843 s | 112.5 s | **2.13** | 7.1 | 35 / 93 |
+| anchor → +300 s | 3.06 /s | 0.738 s | 37.5 s | **1.71** | 5.7 | 38 / 90 |
+| anchor → +60 s | 4.88 /s | 0.462 s | 7.5 s | **1.21** | 4.0 | 44 / 75 |
+| **anchor → +10 s** | 8.40 /s | 0.269 s | 1.25 s | **0.67** | 2.2 | 43 / 49 |
+| full session | 0.30 /s | 7.52 s | 2925 s | 2.59 | 8.6 | 15 / 100 |
+
+*(`s_min` here is taken at the median λ. The median of the per-event `s_min` differs —
+Jensen — and both are in the artifact; quoting one as the other would overstate the range.)*
+
+**Inside the operational window the field has about one decade of usable scale. In the
+first ten seconds it has two-thirds of a decade — roughly two octaves.**
+
+**This is a challenge to the recommendation this work started from, and it should be
+recorded as one rather than buried.** The case for a continuous scale axis over a handful
+of fixed kernels rests on having decades to select across; automatic scale selection is
+what a continuum buys. **At 2–4 octaves there is very little to select over, and three or
+four fixed kernels with matched-null bands would carry almost the same information at a
+fraction of the machinery.**
+
+What the field still earns in that band, and it is not nothing:
+
+- **`s_min(t)` fell out of the construction**, and it produced the entire cohort finding
+  in §9 and §12. That alone paid for the build.
+- **Localisation in time** is unaffected by the scale range being short.
+- **The floor is time-varying**, so a fixed-kernel scheme would need `s_min(t)` anyway —
+  and at that point most of the machinery already exists.
+
+**So step 3's brief widens: the recovery grid must also answer whether the continuum beats
+three fixed kernels in a one-decade band.** If it does not, the deliverable is the floor
+plus a small fixed-kernel rate statistic — a cheaper and more defensible object than a
+scale-space field.
+
+**Step 3 re-aimed** (superseding both earlier aims; 1–300 s was wrong at both ends —
+300 s does not fit inside a tradeable window, and 1 s is below the floor for a large share
+of events at the shorter windows):
+
+> Inject τ over **0.3 – 10 s**, at **λ ∈ {2.5, 5, 8.4} /s**, in windows of **10 s and
+> 60 s** — the observed near-anchor regime, not the session-mean one — across intensity
+> contrast and duty cycle. **Include a fixed-kernel arm as the control.** Report bias and
+> spread of whichever summary statistic is proposed.
+
+---
+
+## 12. Half the cohort is inactive when a ten-second horizon would be trading
+
+**Only 49 of 100 events carry 25 or more prints in the 10 s after their own detection
+anchor.** This was first reported as a caveat on the window table. It is not a caveat; it
+is a statement about the opportunity set, and it was produced for free.
+
+Set beside Phase 11's premarket cost figures — both verified against the committed
+artifacts rather than quoted from memory:
+
+| quantity | value | source |
+|---|---:|---|
+| premarket median time-weighted quoted spread at T=0 | **760.3 bp** | `results/phase_11/artifacts/t2e_i_implied_price.json` |
+| premarket median share of trades on quotes > 1 s old | **62.3%** | `t2c_trade_age.parquet`, median across 48 events |
+| events with ≥ 25 prints in anchor → +10 s | **49 / 100** | `s_min_cohort.parquet` |
+
+**And the two subsets coincide — measured, not asserted.** Joining the resolution floor to
+Phase 11's quote-staleness table on the 49 events that overlap on their own detection
+segment:
+
+- **corr(log₁₀ T=0 print count, share of trades on quotes > 1 s old) = −0.697** (n = 49).
+- Events **measurable** at the +10 s horizon: median **44.8%** stale, median 50,228 prints.
+- Events **not** measurable there: median **56.1%** stale, median 7,188 prints.
+
+The same reading shows in premarket's own numbers: median event 62.3% stale but
+**trade-weighted only 31.6%**, because staleness concentrates in the thin events.
+
+**The events that are measurable and the events that are tradeable look like the same
+subset, and it is about half the cohort.** The mechanism is not mysterious — more prints
+means more quote updates — so this is a confirmation that two independent constraints
+coincide, not a discovery. It bears directly on what the momentum system's real
+opportunity set is.
+
+**Caveats.** n = 49, being the overlap between this cohort and Phase 11's dev sample v3;
+a correlation across events, not a causal claim; and "measurable" here means the event's
+median moment in the window clears the coarse band's 1 s floor, which is this method's
+criterion and not a trading one.
