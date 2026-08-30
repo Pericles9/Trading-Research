@@ -78,14 +78,23 @@ WINDOWS = {
     "session":        None,
     "anchor_pm15min": (-900.0, 900.0),
     "anchor_post15min": (0.0, 900.0),
+    "anchor_post300s": (0.0, 300.0),
     "anchor_post60s": (0.0, 60.0),
     "anchor_post10s": (0.0, 10.0),
 }
+# A window bounds the scale axis from ABOVE as well as improving it from below. The
+# estimator masks within edge_scales = 4 kernel widths of each end, so a window of length
+# W admits only s < W / 8. That upper bound is what turns "s_min improved six-fold" into
+# a USABLE RANGE, which is the quantity that decides whether a continuum buys anything
+# over a handful of fixed kernels.
+EDGE_SCALES = 4.0
 WINDOW_WHY = {
     "session": "the D3 extended day. Conservative and mostly dead time; kept as the "
                "artifact-only baseline, NOT as the admissibility denominator.",
     "anchor_pm15min": "the brief's fine-band read window, symmetric about the anchor.",
     "anchor_post15min": "post-trigger, D5's actual surface.",
+    "anchor_post300s": "five minutes -- included because it was tabulated, though it "
+                       "does not fit inside a tradeable window at this horizon class.",
     "anchor_post60s": "burst-scale, the horizon class D5 names.",
     "anchor_post10s": "the momentum system's own holding period, order ten seconds.",
 }
@@ -103,6 +112,41 @@ def knn_rate(ts_ns: np.ndarray, grid_ns: np.ndarray, k: int = 20) -> np.ndarray:
     lo = np.clip(i - k // 2, 0, ts_ns.size - 1 - k)
     span = (ts_ns[lo + k] - ts_ns[lo]).astype(np.float64) / 1e9
     return np.where(span > 0, k / span, np.nan)
+
+
+def _usable(df, wname, off) -> dict:
+    """s_min .. s_max for the window, and how many decades that leaves.
+
+    s_max = W / (2 * edge_scales): the estimator blanks within edge_scales kernel widths
+    of each end, so a kernel wider than W/8 has no interior left to report. Reported two
+    ways because they differ and the difference is not noise:
+      * from the MEDIAN EVENT's s_min (the typical event's range)
+      * from s_min at the MEDIAN lambda (2.2568 / median lambda) -- Jensen's inequality
+        makes these disagree, and quoting one as if it were the other overstates the range.
+    """
+    W = float(off[1] - off[0])
+    s_max = W / (2.0 * EDGE_SCALES)
+    col = f"{wname}__s_min_median"
+    lam = f"{wname}__lambda"
+    if col not in df.columns or not df[col].notna().any():
+        return {"n": 0}
+    s_min_med_event = float(np.nanmedian(df[col]))
+    lam_med = float(np.nanmedian(df[lam]))
+    s_min_at_med_lam = float(s_min_for_rate(lam_med))
+    out = {"window_seconds": W, "s_max_seconds": s_max,
+           "s_max_rule": "W / (2 * edge_scales) = W/8",
+           "lambda_median": lam_med,
+           "s_min_at_median_lambda": s_min_at_med_lam,
+           "s_min_median_across_events": s_min_med_event}
+    for tag, smn in (("at_median_lambda", s_min_at_med_lam),
+                     ("median_event", s_min_med_event)):
+        if smn > 0 and s_max > smn:
+            out[f"usable_decades__{tag}"] = float(np.log10(s_max / smn))
+            out[f"usable_octaves__{tag}"] = float(np.log2(s_max / smn))
+        else:
+            out[f"usable_decades__{tag}"] = 0.0
+            out[f"usable_octaves__{tag}"] = 0.0
+    return out
 
 
 def q(a, qs=(0.05, 0.25, 0.5, 0.75, 0.95)) -> dict:
@@ -272,7 +316,16 @@ def main() -> int:
                         b: int((df[f"{wname}__s_min_median"] <= fl).sum())
                         for b, fl in BANDS.items()
                         if f"{wname}__s_min_median" in df.columns},
+                    "usable_range": _usable(df, wname, off),
                 } for wname, off in WINDOWS.items() if off is not None},
+            "usable_range_note": "A window bounds the scale axis from ABOVE as well: "
+                                 "s < W/8 after the 4-kernel-width edge mask. Inside the "
+                                 "operational window the field has roughly ONE DECADE of "
+                                 "usable scale range, and in the first ten seconds about "
+                                 "two-thirds of a decade -- two octaves. That is the number "
+                                 "that decides whether a continuum buys anything over three "
+                                 "or four fixed kernels, and it is a challenge to the "
+                                 "premise this build started from. See REPORT section 11.",
             "window_note": "The D3 session is NOT the admissibility denominator. It is "
                            "mostly dead time and understates admissibility for the only "
                            "period a strategy would act in. The post-anchor windows are "
@@ -306,15 +359,20 @@ def main() -> int:
             sh = summary["tick_detail"]["share_of_session_supporting_band"][band]["pooled"]
             print(f"  share of session supporting {band:7s}: median {sh['q50']:.1%}")
         print("\nBY WINDOW -- the session is the wrong denominator:")
-        print(f"  {'window':18s} {'n':>4s} {'lam med':>9s} {'s_min med':>10s} "
-              f"{'coarse ok':>10s} {'fine ok':>8s}")
+        print(f"  {'window':18s} {'n':>4s} {'lam med':>8s} {'s_min':>8s} "
+              f"{'s_max':>8s} {'decades':>8s} {'octaves':>8s} {'coarse ok':>10s}")
         for wname, w in summary["tick_detail"]["by_window"].items():
-            lam = w["lambda_prints_per_s"]; sm2 = w["s_min_median_seconds"]
+            lam = w["lambda_prints_per_s"]
             nb = w["n_events_median_moment_supports_band"]
-            if not lam.get("n"):
+            u = w.get("usable_range", {})
+            if not lam.get("n") or not u.get("window_seconds"):
                 continue
-            print(f"  {wname:18s} {lam['n']:4d} {lam['q50']:9.2f} {sm2['q50']:10.3g} "
-                  f"{nb['coarse']:6d}/{lam['n']:<3d} {nb['fine']:4d}/{lam['n']:<3d}")
+            print(f"  {wname:18s} {lam['n']:4d} {lam['q50']:8.2f} "
+                  f"{u['s_min_at_median_lambda']:8.3g} {u['s_max_seconds']:8.3g} "
+                  f"{u['usable_decades__at_median_lambda']:8.2f} "
+                  f"{u['usable_octaves__at_median_lambda']:8.1f} "
+                  f"{nb['coarse']:6d}/{lam['n']:<3d}")
+        print("  (s_min quoted at the MEDIAN lambda; s_max = W/8 after the edge mask)")
     print(f"\nwrote {OUT_JSON}")
     return 0
 

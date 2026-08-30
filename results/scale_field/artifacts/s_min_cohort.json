@@ -8,7 +8,7 @@
   "neff_min": 8.0,
   "coefficient": 2.256758334191025,
   "inputs": "t0_print_count (frozen cohort manifest) + D3 extended-day span (pinned XNYS calendar). No field computation, no tick pass.",
-  "seconds_elapsed": 5.6,
+  "seconds_elapsed": 5.0,
   "segment_counts": {
     "rth": 70,
     "premarket": 28,
@@ -482,6 +482,18 @@
         "n_events_median_moment_supports_band": {
           "coarse": 24,
           "fine": 0
+        },
+        "usable_range": {
+          "window_seconds": 1800.0,
+          "s_max_seconds": 225.0,
+          "s_max_rule": "W / (2 * edge_scales) = W/8",
+          "lambda_median": 1.9722222222222223,
+          "s_min_at_median_lambda": 1.1442718314208014,
+          "s_min_median_across_events": 2.733257522233931,
+          "usable_decades__at_median_lambda": 2.293653311082255,
+          "usable_octaves__at_median_lambda": 7.619351374015566,
+          "usable_decades__median_event": 1.9155019661053827,
+          "usable_octaves__median_event": 6.363159797017451
         }
       },
       "anchor_post15min": {
@@ -536,6 +548,84 @@
         "n_events_median_moment_supports_band": {
           "coarse": 35,
           "fine": 0
+        },
+        "usable_range": {
+          "window_seconds": 900.0,
+          "s_max_seconds": 112.5,
+          "s_max_rule": "W / (2 * edge_scales) = W/8",
+          "lambda_median": 2.6755555555555555,
+          "s_min_at_median_lambda": 0.8434727993238882,
+          "s_min_median_across_events": 1.9108921649326194,
+          "usable_decades__at_median_lambda": 2.1250814406129477,
+          "usable_octaves__at_median_lambda": 7.059367741495861,
+          "usable_decades__median_event": 1.769916342716338,
+          "usable_octaves__median_event": 5.879534824469693
+        }
+      },
+      "anchor_post300s": {
+        "why": "five minutes -- included because it was tabulated, though it does not fit inside a tradeable window at this horizon class.",
+        "offsets_seconds_from_anchor": [
+          0.0,
+          300.0
+        ],
+        "n_events_with_window": 90,
+        "lambda_prints_per_s": {
+          "n": 90,
+          "min": 0.10333333333333333,
+          "max": 57.02,
+          "q05": 0.2315,
+          "q25": 0.7616666666666667,
+          "q50": 3.0583333333333336,
+          "q75": 7.654999999999999,
+          "q95": 22.01816666666666
+        },
+        "s_min_median_seconds": {
+          "n": 90,
+          "min": 0.06383769018425722,
+          "max": 366.38897120228484,
+          "q05": 0.16942367359611882,
+          "q25": 0.47859052235217775,
+          "q50": 1.2491293365234268,
+          "q75": 5.703464998784267,
+          "q95": 35.49162594411231
+        },
+        "share_of_window_supporting_band": {
+          "coarse": {
+            "n": 90,
+            "min": 0.0,
+            "max": 1.0,
+            "q05": 0.0,
+            "q25": 0.0465,
+            "q50": 0.3725,
+            "q75": 0.88325,
+            "q95": 1.0
+          },
+          "fine": {
+            "n": 90,
+            "min": 0.0,
+            "max": 0.0425,
+            "q05": 0.0,
+            "q25": 0.0,
+            "q50": 0.0,
+            "q75": 0.0005,
+            "q95": 0.005
+          }
+        },
+        "n_events_median_moment_supports_band": {
+          "coarse": 38,
+          "fine": 0
+        },
+        "usable_range": {
+          "window_seconds": 300.0,
+          "s_max_seconds": 37.5,
+          "s_max_rule": "W / (2 * edge_scales) = W/8",
+          "lambda_median": 3.0583333333333336,
+          "s_min_at_median_lambda": 0.7379046324330327,
+          "s_min_median_across_events": 1.2491293365234268,
+          "usable_decades__at_median_lambda": 1.7060310309512878,
+          "usable_octaves__at_median_lambda": 5.6673124124667345,
+          "usable_decades__median_event": 1.4774238595934819,
+          "usable_octaves__median_event": 4.907895827240509
         }
       },
       "anchor_post60s": {
@@ -590,6 +680,18 @@
         "n_events_median_moment_supports_band": {
           "coarse": 44,
           "fine": 0
+        },
+        "usable_range": {
+          "window_seconds": 60.0,
+          "s_max_seconds": 7.5,
+          "s_max_rule": "W / (2 * edge_scales) = W/8",
+          "lambda_median": 4.883333333333334,
+          "s_min_at_median_lambda": 0.4621348124623259,
+          "s_min_median_across_events": 0.7585195688526098,
+          "usable_decades__at_median_lambda": 1.2102925783812704,
+          "usable_octaves__at_median_lambda": 4.020504919158407,
+          "usable_decades__median_event": 0.9950944738720127,
+          "usable_octaves__median_event": 3.305632289822597
         }
       },
       "anchor_post10s": {
@@ -644,9 +746,22 @@
         "n_events_median_moment_supports_band": {
           "coarse": 43,
           "fine": 0
+        },
+        "usable_range": {
+          "window_seconds": 10.0,
+          "s_max_seconds": 1.25,
+          "s_max_rule": "W / (2 * edge_scales) = W/8",
+          "lambda_median": 8.4,
+          "s_min_at_median_lambda": 0.2686617064513125,
+          "s_min_median_across_events": 0.3569809535389302,
+          "usable_decades__at_median_lambda": 0.6677042440890427,
+          "usable_octaves__at_median_lambda": 2.21806548751492,
+          "usable_decades__median_event": 0.5442649677462994,
+          "usable_octaves__median_event": 1.808009087419396
         }
       }
     },
+    "usable_range_note": "A window bounds the scale axis from ABOVE as well: s < W/8 after the 4-kernel-width edge mask. Inside the operational window the field has roughly ONE DECADE of usable scale range, and in the first ten seconds about two-thirds of a decade -- two octaves. That is the number that decides whether a continuum buys anything over three or four fixed kernels, and it is a challenge to the premise this build started from. See REPORT section 11.",
     "window_note": "The D3 session is NOT the admissibility denominator. It is mostly dead time and understates admissibility for the only period a strategy would act in. The post-anchor windows are the operative ones under D5."
   }
 }

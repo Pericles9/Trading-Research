@@ -89,6 +89,36 @@ def _restatement(art: str) -> dict:
             "artifact": "results/scale_field/artifacts/subburst_restatement.json"}
 
 
+def _audit(art: str) -> dict:
+    path = os.path.join(art, "audit_10d_basis.json")
+    if not os.path.exists(path):
+        return {"run": False}
+    with open(path, encoding="utf-8") as f:
+        d = json.load(f)
+    return {"run": True, "verdict": d["verdict"],
+            "two_print_cross_check": d["checks"]["two_print_share_cross_check"],
+            "artifact": "results/scale_field/artifacts/audit_10d_basis.json"}
+
+
+def _envelope(art: str) -> dict:
+    path = os.path.join(art, "s_min_cohort.json")
+    if not os.path.exists(path):
+        return {"run": False}
+    with open(path, encoding="utf-8") as f:
+        d = json.load(f)
+    bw = d.get("tick_detail", {}).get("by_window", {})
+    return {"run": True,
+            "rule": "s_max = W/8 after the 4-kernel-width edge mask; usable = log10(s_max/s_min)",
+            "by_window": {k: {"lambda_median": v["usable_range"].get("lambda_median"),
+                              "s_min": v["usable_range"].get("s_min_at_median_lambda"),
+                              "s_max": v["usable_range"].get("s_max_seconds"),
+                              "usable_decades": v["usable_range"].get("usable_decades__at_median_lambda"),
+                              "usable_octaves": v["usable_range"].get("usable_octaves__at_median_lambda")}
+                          for k, v in bw.items() if v.get("usable_range", {}).get("window_seconds")},
+            "premise_challenge": "at 2-4 octaves inside the operational window a continuum "
+                                 "buys little over three fixed kernels; step 3 must answer it"}
+
+
 def main() -> int:
     cfg = adapter.load_config()
     art = rel(cfg["paths"]["out_artifacts"])
@@ -149,7 +179,7 @@ def main() -> int:
         "title": cfg["title"],
         "spec": cfg["spec"],
         "config_hash": adapter.config_hash(),
-        "status": "r1_r2_corrected_after_cooper_read_recovery_grid_not_started",
+        "status": "envelope_measured_step_3_pre_registered_not_started",
         "order_of_work": cfg["order_of_work"],
         "stop_after": cfg["stop_after"],
         "steps": {
@@ -229,6 +259,8 @@ def main() -> int:
             "restatement_test": "NOT supported -- see resolution_floor.restatement.",
         },
         "restatement": _restatement(art),
+        "audit_10d_basis": _audit(art),
+        "operating_envelope": _envelope(art),
         "deviations_recorded": [
             {"what": "allan_factor gained t_start / t_end / min_windows",
              "why": "v3 tiles the D3 extended session, not the data support; the origin "

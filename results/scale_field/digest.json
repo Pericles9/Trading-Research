@@ -2,8 +2,8 @@
   "name": "scale_field",
   "title": "Scale-space field on the momentum cohort",
   "spec": "prompts/scale_field_brief.md",
-  "config_hash": "3306d8ec",
-  "status": "r1_r2_corrected_after_cooper_read_recovery_grid_not_started",
+  "config_hash": "93de1fd7",
+  "status": "envelope_measured_step_3_pre_registered_not_started",
   "order_of_work": [
     "1. adapter.py, plus a test that loads one known event and asserts monotone, positive, in-session timestamps.",
     "2. Allan reconciliation against v3. HARD STOP on divergence.",
@@ -11,7 +11,7 @@
     "4. Cooper reads it.",
     "5. Only then: matched-null thresholds, then the cohort."
   ],
-  "stop_after": "r2",
+  "stop_after": "r2c",
   "steps": {
     "1_adapter": {
       "done": true,
@@ -247,7 +247,7 @@
       "rule": "n_eff = 2*sqrt(pi)*s*lambda >= 8  =>  s >= 2.2568/lambda. Derived from the estimator's own effective sample size, not adopted from anywhere.",
       "n_events": 100,
       "inputs": "t0_print_count (frozen cohort manifest) + D3 extended-day span (pinned XNYS calendar). No field computation, no tick pass.",
-      "seconds_elapsed": 5.6,
+      "seconds_elapsed": 5.0,
       "s_min_session_median_by_segment": {
         "no_detection": 248.9495,
         "premarket": 1.0684,
@@ -306,7 +306,12 @@
         "slope_near_one": false,
         "r2_high": false,
         "left_tail_specific": false,
-        "restatement": false
+        "predictor_log10_iqr_decades": 1.471627299158902,
+        "response_log10_iqr_decades": 4.424816572429157,
+        "predictor_range_sufficient_for_a_null": true,
+        "response_pinned_by_object_definition": false,
+        "restatement": false,
+        "outcome": "no restatement detected, predictor did vary"
       },
       "v4": {
         "censored": true,
@@ -323,17 +328,85 @@
         "slope_near_one": true,
         "r2_high": false,
         "left_tail_specific": false,
-        "restatement": false
+        "predictor_log10_iqr_decades": 1.398849227429256,
+        "response_log10_iqr_decades": 2.7053975492371056,
+        "predictor_range_sufficient_for_a_null": true,
+        "response_pinned_by_object_definition": false,
+        "restatement": false,
+        "outcome": "no restatement detected, predictor did vary"
       }
     },
-    "conclusion": "THE RESTATEMENT HYPOTHESIS IS NOT SUPPORTED. On the uncensored source the median sub-burst duration has essentially no relationship to a low quantile of the event's own interval distribution (r = +0.06, R^2 = 0.004, n = 41). On the censored v4 artifact there IS a moderate relationship (R^2 = 0.35, slope 1.25 with a CI that includes 1), but it is NOT specific to the left tail: the median-interval control fits marginally BETTER (R^2 = 0.38), so what it reflects is how fast the event trades overall, not a re-parameterisation of its fastest intervals. So of Cooper's two alternatives -- 'the scale was implausible' versus 'the statistic was a restatement' -- the evidence points to the FIRST. The duration is a real if barely-supported measurement of a real cluster, taken at a scale the tape cannot resolve, rather than a relabelling of the interval distribution.",
+    "conclusion": "The uncensored arm is a genuine null on the 41 events it covers, and the range check confirms the predictor moved enough for that null to mean something. But it rests on n = 41 with a response spanning 4.4 decades across a heterogeneous population -- including events whose median object is 889 prints -- so it is weak evidence, not a settled result. The v4 arm is uninformative about the left tail for the collinearity reason above. ADOPTED: this test is reported and then left alone. It goes in no load-bearing sentence, and nothing further is spent on it. The resolution-floor result and the 2-print composition close the object without it.",
     "restatement_supported": false,
     "power_caveats": [
-      "n = 41 for the uncensored source. 10c Stage 1 ran on 49 events (dev_v4_primary + 6 sidecar), NOT the 100-event cohort, so this test has limited power and a null is weak evidence.",
-      "10c's per-event median duration spans 6.6 decades and includes events whose median object is 889 prints / 466 s. A per-event median over that mixture is a noisy dependent variable.",
-      "v4's dependent variable is censored: median_prints spans only 3 to 7 because of the configured floor of 3, which compresses the variable being regressed."
+      "n = 41 for the uncensored source. 10c Stage 1 ran on 49 events (dev_v4_primary + 6 sidecar), NOT the 100-event cohort.",
+      "The predictor range is NOT a limitation here -- 1.472 decades log10 IQR, checked because a small range would have made the null vacuous.",
+      "v4's predictors are collinear (both ~ 1/lambda); a 0.024 R^2 gap on n=90 cannot separate them.",
+      "10c's per-event median duration spans 6.6 decades full-range and includes events whose median object is 889 prints / 466 s -- a heterogeneous population under one median.",
+      "v4's response is censored at 3 prints, compressing the regressed variable."
     ],
     "artifact": "results/scale_field/artifacts/subburst_restatement.json"
+  },
+  "audit_10d_basis": {
+    "run": true,
+    "verdict": {
+      "committed_10d_record_clean": true,
+      "reading": "10d's committed record is CLEAN. Every digest headline metric names its cell explicitly; the T5 attribution artifacts are keyed on (kernel_min, K, d, min_prints) by design; and the REPORT's identity-cell figure of 1.7513 ms over 46,709 objects reproduces from the artifact exactly. THE POOLED FIGURE WAS INTRODUCED BY ME and existed only in my own step-2 artifact. It is an erratum in results/scale_field/, not a second instance of the 10c class of defect. 10d's headline never moved: the report always said 1.7513 ms at the identity cell, and read the +0.3209 decade shift as the FLOOR's doing, per cell, which is what the artifacts support.",
+      "free_validation": "The reference cell (K=0, d=0, min_prints=2, hard_break) is bit-identical to 10c Stage 1 at kernel 8 -- 46,709 objects, same histogram. An identity merge over 10c's own runs should reproduce them, and it does. Recorded as a validation of the 10d assembly pipeline."
+    },
+    "two_print_cross_check": {
+      "what": "10d computed share_2print / n_2print per cell in t4_cell_summary.parquet by a different code path from my recomputation off t4_subbursts.parquet.",
+      "tenD_own_object_weighted": 0.493417,
+      "recomputed_here": 0.493417,
+      "abs_difference": 0.0,
+      "agree": true,
+      "n_events_at_identity": 43,
+      "n_objects": 46709,
+      "reading": "Agreement means the 2-print composition finding is CORROBORATED by 10d's own committed column, not merely repeated by me."
+    },
+    "artifact": "results/scale_field/artifacts/audit_10d_basis.json"
+  },
+  "operating_envelope": {
+    "run": true,
+    "rule": "s_max = W/8 after the 4-kernel-width edge mask; usable = log10(s_max/s_min)",
+    "by_window": {
+      "anchor_pm15min": {
+        "lambda_median": 1.9722222222222223,
+        "s_min": 1.1442718314208014,
+        "s_max": 225.0,
+        "usable_decades": 2.293653311082255,
+        "usable_octaves": 7.619351374015566
+      },
+      "anchor_post15min": {
+        "lambda_median": 2.6755555555555555,
+        "s_min": 0.8434727993238882,
+        "s_max": 112.5,
+        "usable_decades": 2.1250814406129477,
+        "usable_octaves": 7.059367741495861
+      },
+      "anchor_post300s": {
+        "lambda_median": 3.0583333333333336,
+        "s_min": 0.7379046324330327,
+        "s_max": 37.5,
+        "usable_decades": 1.7060310309512878,
+        "usable_octaves": 5.6673124124667345
+      },
+      "anchor_post60s": {
+        "lambda_median": 4.883333333333334,
+        "s_min": 0.4621348124623259,
+        "s_max": 7.5,
+        "usable_decades": 1.2102925783812704,
+        "usable_octaves": 4.020504919158407
+      },
+      "anchor_post10s": {
+        "lambda_median": 8.4,
+        "s_min": 0.2686617064513125,
+        "s_max": 1.25,
+        "usable_decades": 0.6677042440890427,
+        "usable_octaves": 2.21806548751492
+      }
+    },
+    "premise_challenge": "at 2-4 octaves inside the operational window a continuum buys little over three fixed kernels; step 3 must answer it"
   },
   "deviations_recorded": [
     {

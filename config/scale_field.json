@@ -156,7 +156,7 @@
     "4. Cooper reads it.",
     "5. Only then: matched-null thresholds, then the cohort."
   ],
-  "stop_after": "r2",
+  "stop_after": "r2c",
   "forward_returns": "NOT TOUCHED. The moment anything here touches forward returns, the full Agent_Prompt_Standard applies again, pre-registered, no exceptions.",
   "resolution_floor": {
     "rule": "n_eff = 2*sqrt(pi)*s*lambda >= neff_min  =>  s >= 2.2568/lambda at neff_min = 8.",
@@ -178,15 +178,51 @@
     "artifacts": [
       "results/scale_field/artifacts/s_min_cohort.json",
       "results/scale_field/artifacts/s_min_vs_subbursts.json"
-    ]
+    ],
+    "usable_range_rule": "A window bounds the scale axis from ABOVE as well as from below: the estimator masks within edge_scales = 4 kernel widths of each end, so a window of length W admits only s < W/8. Usable range = log10(s_max / s_min). Measured 2026-08-28 at the median lambda: anchor+10s 0.67 decades (2.2 octaves), anchor+60s 1.21 (4.0), anchor+300s 1.71 (5.7), full session 2.59 (8.6).",
+    "premise_challenge": "OPEN, and it is a challenge to the premise this build started from. A continuous scale axis is bought for automatic scale SELECTION, which needs decades to select across. At 2-4 octaves inside the operational window there is very little to select over, and three or four fixed kernels with matched-null bands would carry almost the same information at a fraction of the machinery. What the field still earns: s_min(t) fell out of the construction and produced the cohort finding; localisation in time is unaffected by a short scale range; and the floor is time-varying, so a fixed-kernel scheme would need s_min(t) anyway. Step 3 must answer this, not assume it."
   },
   "order_of_work_revised_2026_08_28": [
     "DONE 1-3 (build): adapter, Allan reconciliation, one event charted.",
     "DONE 4: Cooper's read. Knee criterion withdrawn.",
-    "DONE r1: s_min across all 100 events. No tick pass.",
-    "DONE r2: s_min vs the committed sub-burst durations. Description only.",
-    "NOT STARTED r3: recovery grid on synthetic tapes at the two measured background rates (2.46/s and 17.8/s), across intensity contrast and duty cycle. Fixes the summary statistic on evidence before any cohort run.",
-    "NOT STARTED r4: matched null (research/phase_10b/pipeline.py), on the same s_min mask so null and data share a support.",
-    "NOT STARTED r5: the cohort."
-  ]
+    "DONE r1: s_min across all 100 events, re-cut on the detection window.",
+    "DONE r2: s_min vs the committed sub-burst durations, at one committed cell each.",
+    "DONE r2b: restatement test -- reported, not load-bearing.",
+    "DONE r2c: audit of whether the pooled basis reached 10d's record. It did not.",
+    "NOT STARTED r3: recovery grid, re-aimed -- see step_3_recovery_grid.",
+    "NOT STARTED r4: matched null on the same s_min mask.",
+    "NOT STARTED r5: the cohort, and only for the band that survives r3."
+  ],
+  "step_3_recovery_grid": {
+    "status": "PRE-REGISTERED, NOT STARTED.",
+    "supersedes": "both earlier aims. 1-300 s was wrong at both ends: 300 s does not fit inside a tradeable window at this horizon class, and 1 s is below the floor for a large share of events at the shorter windows.",
+    "tau_seconds": [
+      0.3,
+      10.0
+    ],
+    "lambda_prints_per_s": [
+      2.5,
+      5.0,
+      8.4
+    ],
+    "lambda_why": "the OBSERVED near-anchor regime (anchor+300s, +60s, +10s median lambda), not the session-mean one.",
+    "windows_seconds": [
+      10.0,
+      60.0
+    ],
+    "vary": [
+      "intensity contrast",
+      "duty cycle"
+    ],
+    "arms": [
+      "continuous scale field",
+      "FIXED-KERNEL CONTROL"
+    ],
+    "must_answer": [
+      "bias and spread of whichever summary statistic is proposed",
+      "whether the continuum beats three fixed kernels in a one-decade band"
+    ],
+    "consequence_if_it_does_not": "the deliverable is the resolution floor plus a small fixed-kernel rate statistic -- cheaper and more defensible than a scale-space field.",
+    "data_access": "none. Synthetic tapes only."
+  }
 }
