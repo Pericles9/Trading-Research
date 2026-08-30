@@ -1,0 +1,290 @@
+{
+  "task": "Task 1 -- lead time of the parameter-free field boolean against a level detector",
+  "config_hash": "93de1fd7",
+  "window": "anchor -> +60 s",
+  "scale_rule": "smallest ladder scale >= 2 * s_min(t); ladder 0.05..7.5 s (33 scales, 7.5 = W/8)",
+  "level_detector": "lambda_hat(t,s*) above its own trailing q90 over a causal 300 s lookback",
+  "sign_note": "The work order specifies dL/dln s > 0. On this estimator that selects VOIDS: dL/dln s = E_w[z^2] - 1, which goes to -1 inside a cluster and positive in a gap. Measured on a synthetic 120/s burst in a 3/s background: negative at 14 of 14 scales inside the burst (min -0.884). Since LEVEL is a high-activity detector, the comparable orientation is dL/dln s < 0. BOTH are reported; 'burst' is primary.",
+  "read_fixed_before_the_run": "Jaccard above ~0.9 with lead centred on zero means the field restates the level detector. A positive median lead of an appreciable fraction of s makes it a signal.",
+  "n_events": 75,
+  "n_matched_onsets": 531,
+  "median_s_star_seconds": 1.5668692044640666,
+  "on_share": {
+    "field_burst": {
+      "n": 75,
+      "q25": 0.3067689229743248,
+      "q50": 0.3431143714571524,
+      "q75": 0.3735621318217184,
+      "mean": 0.35113330094861606
+    },
+    "field_void": {
+      "n": 75,
+      "q25": 0.6264378681782816,
+      "q50": 0.6568856285428476,
+      "q75": 0.6932310770256753,
+      "mean": 0.6488666990513839
+    },
+    "level": {
+      "n": 75,
+      "q25": 0.09013610597471886,
+      "q50": 0.1770590196732244,
+      "q75": 0.3207735911970657,
+      "mean": 0.2156941685408764
+    }
+  },
+  "burst_orientation_PRIMARY": {
+    "jaccard": {
+      "n": 75,
+      "q25": 0.1701743230197979,
+      "q50": 0.26263736263736265,
+      "q75": 0.35172037817618274,
+      "mean": 0.2592079652233701
+    },
+    "only_field": {
+      "n": 75,
+      "q25": 0.3211021059065635,
+      "q50": 0.5593406593406594,
+      "q75": 0.7402249522467748,
+      "mean": 0.5466984898462974
+    },
+    "only_level": {
+      "n": 75,
+      "q25": 0.09123592493297587,
+      "q50": 0.17802197802197803,
+      "q75": 0.29142230174376466,
+      "mean": 0.1940935449303323
+    },
+    "lead_seconds_per_event_median": {
+      "n": 45,
+      "q25": -0.31999999999970896,
+      "q50": -0.07999999999992724,
+      "q75": 0.03999999999996362,
+      "mean": -0.19444444444419434
+    },
+    "lead_in_s_units_per_event_median": {
+      "n": 45,
+      "q25": -0.3909257842091657,
+      "q50": -0.20417652416943557,
+      "q75": 0.08934084610526043,
+      "mean": -0.18233458043041711
+    },
+    "n_events_with_matches": 45,
+    "match_tol_seconds": {
+      "n": 75,
+      "q25": 1.9649999999982128,
+      "q50": 4.08999999999628,
+      "q75": 8.202234094717003,
+      "mean": 5.5709501522680185
+    },
+    "onset_spacing_field_seconds": {
+      "n": 75,
+      "q25": 3.9299999999964257,
+      "q50": 8.17999999999256,
+      "q75": 16.450122167106507,
+      "mean": 11.14661522362003
+    },
+    "matched_share_of_level_onsets": {
+      "n": 59,
+      "q25": 0.16666666666666666,
+      "q50": 0.5,
+      "q75": 0.6720430107526881,
+      "mean": 0.4550977220209759
+    },
+    "circular_shift_null": {
+      "what": "field onsets shifted circularly inside the window, count and spacing preserved, timing relationship destroyed; 200 draws per event. If the observed lead sits inside this band the match is chance pairing and the lead statistic is empty.",
+      "null_lead_median_seconds": {
+        "n": 58,
+        "q25": -0.09573272828743029,
+        "q50": 0.01201665308462907,
+        "q75": 0.11883695039719555,
+        "mean": -0.010673594542204205
+      },
+      "null_share_field_first": {
+        "n": 58,
+        "q25": 0.5,
+        "q50": 0.5,
+        "q75": 0.5,
+        "mean": 0.5127641643158884
+      },
+      "null_matched_share": {
+        "n": 58,
+        "q25": 0.5873035714285715,
+        "q50": 0.6688888888888889,
+        "q75": 0.7840467171717171,
+        "mean": 0.7064431959971602
+      }
+    },
+    "lead_seconds_all_onsets": {
+      "n": 239,
+      "q25": -0.1999999999998181,
+      "q50": -0.05999999999994543,
+      "q75": 0.03999999999996362,
+      "mean": -0.11380753138065058
+    },
+    "lead_in_s_units_all_onsets": {
+      "n": 239,
+      "q25": -0.488719925800941,
+      "q50": -0.21382012738537418,
+      "q75": 0.10123217046681096,
+      "mean": -0.1831693145274804
+    },
+    "share_of_onsets_field_first": 0.29707112970711297
+  },
+  "void_orientation_literal_work_order": {
+    "jaccard": {
+      "n": 75,
+      "q25": 0.04538478105597588,
+      "q50": 0.0942299709422997,
+      "q75": 0.1691590843581754,
+      "mean": 0.11379749626202199
+    },
+    "only_field": {
+      "n": 75,
+      "q25": 0.6133272740621405,
+      "q50": 0.770239710538218,
+      "q75": 0.8700447828034035,
+      "mean": 0.7379051487717464
+    },
+    "only_level": {
+      "n": 75,
+      "q25": 0.09548338010005245,
+      "q50": 0.1366742596810934,
+      "q75": 0.2026827005100196,
+      "mean": 0.14829735496623178
+    },
+    "lead_seconds_per_event_median": {
+      "n": 58,
+      "q25": -0.6899999999993724,
+      "q50": 0.0649999999999693,
+      "q75": 1.184999999999107,
+      "mean": 0.20534482758626785
+    },
+    "lead_in_s_units_per_event_median": {
+      "n": 58,
+      "q25": -1.0812566953940577,
+      "q50": 0.1651087950252052,
+      "q75": 0.9934557108894237,
+      "mean": 0.01262484776076669
+    },
+    "n_events_with_matches": 58,
+    "match_tol_seconds": {
+      "n": 75,
+      "q25": 1.414999999998713,
+      "q50": 3.359999999996944,
+      "q75": 6.147499999994409,
+      "mean": 4.787763684627844
+    },
+    "onset_spacing_field_seconds": {
+      "n": 75,
+      "q25": 2.829999999997426,
+      "q50": 6.719999999993888,
+      "q75": 12.294999999988818,
+      "mean": 9.575527369255688
+    },
+    "matched_share_of_level_onsets": {
+      "n": 59,
+      "q25": 0.6666666666666666,
+      "q50": 0.8,
+      "q75": 1.0,
+      "mean": 0.7952066304070562
+    },
+    "circular_shift_null": {
+      "what": "field onsets shifted circularly inside the window, count and spacing preserved, timing relationship destroyed; 200 draws per event. If the observed lead sits inside this band the match is chance pairing and the lead statistic is empty.",
+      "null_lead_median_seconds": {
+        "n": 59,
+        "q25": -0.034782295773254646,
+        "q50": 0.0024288329999535563,
+        "q75": 0.04074940417740436,
+        "mean": 0.010901450623490443
+      },
+      "null_share_field_first": {
+        "n": 59,
+        "q25": 0.5,
+        "q50": 0.5,
+        "q75": 0.5,
+        "mean": 0.5070621468926553
+      },
+      "null_matched_share": {
+        "n": 59,
+        "q25": 0.7290000000000001,
+        "q50": 0.7837096774193549,
+        "q75": 0.86875,
+        "mean": 0.8025114240676829
+      }
+    },
+    "lead_seconds_all_onsets": {
+      "n": 292,
+      "q25": -0.504999999999967,
+      "q50": 0.08999999999991815,
+      "q75": 0.5399999999995089,
+      "mean": 0.06732876712330538
+    },
+    "lead_in_s_units_all_onsets": {
+      "n": 292,
+      "q25": -1.3376716237206607,
+      "q50": 0.6139245292349355,
+      "q75": 1.2936814815545818,
+      "mean": 0.018926806053967855
+    },
+    "share_of_onsets_field_first": 0.523972602739726
+  },
+  "r2_ridge_on_loglambda": {
+    "n": 75,
+    "q25": 0.10200599368814907,
+    "q50": 0.1795660661811197,
+    "q75": 0.3518423087202575,
+    "mean": 0.2480775032162333
+  },
+  "by_segment": {
+    "premarket": {
+      "n": 21,
+      "jaccard_burst": {
+        "n": 21,
+        "q25": 0.3123342175066313,
+        "q50": 0.37011173184357543,
+        "q75": 0.42384887839433294,
+        "mean": 0.37042735439606167
+      },
+      "lead_median_s_burst": {
+        "n": 19,
+        "q25": -0.5649999999998556,
+        "q50": -0.07999999999992724,
+        "q75": -0.020000000000010232,
+        "mean": -0.013157894736656616
+      },
+      "lead_in_s_units_burst": {
+        "n": 19,
+        "q25": -0.3959915822697697,
+        "q50": -0.21382012738537418,
+        "q75": -0.039865472954659184,
+        "mean": -0.045530717732535156
+      }
+    },
+    "rth": {
+      "n": 54,
+      "jaccard_burst": {
+        "n": 54,
+        "q25": 0.1497950925305428,
+        "q50": 0.22542043421016608,
+        "q75": 0.29383645417857274,
+        "mean": 0.21595598054510118
+      },
+      "lead_median_s_burst": {
+        "n": 26,
+        "q25": -0.3049999999997226,
+        "q50": -0.06999999999993634,
+        "q75": 0.0474999999999568,
+        "mean": -0.3269230769227796
+      },
+      "lead_in_s_units_burst": {
+        "n": 26,
+        "q25": -0.2897291147951312,
+        "q50": -0.17354260354616258,
+        "q75": 0.0939526008710247,
+        "mean": -0.28230663394040767
+      }
+    }
+  },
+  "source": "research/scale_field/t1_lead_time.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/scale_field/t1_lead_time.py"
+}

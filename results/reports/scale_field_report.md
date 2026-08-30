@@ -9,6 +9,9 @@ withdrawn** — see §4. The reconciliation gate re-ran after both and is unchan
 **Revised again 2026-08-28** after Cooper's step-4 read. The knee comparison is
 **withdrawn as an acceptance criterion** (§8), and steps 1–2 of Cooper's recommended
 order are run and reported (§9).
+**Revised a fifth time 2026-08-28** — work-order Task 1 run and reported in §13. It was
+specified as the task that decides the rest, and it came back negative on the operational
+claim, so Tasks 2–5 are not started.
 **Revised a fourth time 2026-08-28** after Cooper's read on the corrected steps 1–2:
 §11 is the operating envelope and the challenge it puts to this build's own premise,
 §12 promotes the 49/100 to a finding, and §10.4 is downgraded.
@@ -703,3 +706,101 @@ opportunity set is.
 a correlation across events, not a causal claim; and "measurable" here means the event's
 median moment in the window clears the coarse band's 1 s floor, which is this method's
 criterion and not a trading one.
+
+---
+
+## 13. Task 1 — the field boolean does not lead a level detector. It lags.
+
+`research/scale_field/t1_lead_time.py` · `results/scale_field/artifacts/t1_lead_time.json`
+Chart: `charts/cohort/07_lead_time_{light,dark}.html`
+
+**The concession first, because it stands.** The boolean this produces has no free
+parameter. `dL/dln s` crossing zero is a *sign*, and the boundary it is read against,
+`s_min = 2.26/λ̂(t)`, is arithmetic. Zero is not a tunable and 2.26 is not a cutoff. After
+a lineage that died on a literature-adopted 0.70, that is a real structural gain and it is
+independent of everything below.
+
+### 13.1 The sign in the work order selects voids, not bursts
+
+The task specifies `dL/dln s > 0`. On this estimator
+
+> `dL/dln s = E_w[z²] − 1`,  `z = (t − tᵢ)/s`
+
+so at the centre of a cluster narrow compared with `s` every `z ≈ 0` and the quantity goes
+to **−1**; in a gap the nearest prints sit at `|z| ≫ 1` and it goes **positive**. Measured
+on a synthetic 120/s burst in a 3/s background: negative at **14 of 14** scales inside the
+burst (min −0.884), positive at wide scales in the quiet stretch.
+
+Since LEVEL is a *high-activity* detector, comparing it against a void detector would pit
+two anti-correlated things against each other and the lead time would be meaningless.
+**Both orientations are reported**; `dL/dln s < 0` is primary.
+
+### 13.2 The matching needed a null before any lead could be read
+
+The first run matched **100% of LEVEL onsets** to a FIELD partner. That is not agreement —
+FIELD fires ~2.8× as often as LEVEL, so with a ±7.8 s tolerance essentially any onset
+finds a neighbour by chance, and a median lead near zero is exactly what chance pairing
+produces.
+
+Two corrections, both non-tunable:
+
+- **Debounce at one kernel width**, applied to *both* booleans so neither is advantaged.
+  An ON run shorter than the kernel that produced it has not been resolved by that kernel.
+  That is arithmetic, not a threshold.
+- **Tolerance tied to FIELD's own onset spacing** (half the median gap), not to `s` —
+  matching cannot be allowed a window wider than the thing it is matching within.
+- **A circular-shift null**: FIELD onsets shifted circularly inside the window, 200 draws
+  per event, preserving count and spacing while destroying any timing relationship.
+
+### 13.3 Result — neither of the two pre-named outcomes
+
+n = 75 events, 531 matched onsets, anchor → +60 s,
+median `s*` = 1.567 s.
+
+| quantity | observed | null / bar |
+|---|---:|---:|
+| Jaccard of the two ON-sets | **0.263** (IQR 0.170–0.352) | restatement bar ~0.9 |
+| R² of ridge strength on log λ̂ | **0.180** (IQR 0.102–0.352) | — |
+| median signed lead | **-0.060 s** (-0.214 in units of `s`) | null +0.012 s |
+| share of onsets where FIELD fired first | **29.7%** | **50%** chance baseline |
+| share of LEVEL onsets matched at all | 50% | 67% under the null |
+
+**It is not a restatement.** Jaccard 0.26 is nowhere near the 0.9 bar,
+and R² 0.18 says the field's magnitude is mostly *not* explained by rate. The
+field is measuring something the level detector is not.
+
+**And it does not lead. It lags, and significantly.** The field fires first on
+29.7% of matched onsets against a **50%** chance
+baseline — the circular-shift null is symmetric by construction, so 50% is exactly what no
+relationship looks like. Observed is well below it. The median lead is
+-0.060 s, about 0.21 of a kernel width **behind** LEVEL. Consistent
+across segments: premarket -0.214,
+rth -0.174 in units of `s`.
+
+The literal `> 0` orientation, for completeness: Jaccard 0.094 (near-disjoint,
+as a void detector against a busy detector should be), field-first
+52.4% against the same 50% null — i.e. indistinguishable
+from chance.
+
+### 13.4 What this decides
+
+Cooper's own read, fixed before the run: *"If it turns on at the same instants, the
+parameter-free construction is elegant but adds nothing operationally."* The measured
+answer is worse than "same instants" — **it turns on later**.
+
+**This is a null on the tradeable claim and it is not being softened.** The parameter-free
+construction remains a genuine structural gain (§13's opening) and the field remains
+distinct from a rate detector (Jaccard 0.26, R² 0.18) — but "distinct" and "earlier" are
+different properties, and only the second was the one that would have made it a signal.
+
+**Tasks 2–5 are not started.** Task 1 was specified as the task that decides the rest, and
+what it decided is that the lead-time premise does not hold. Task 3's fixed-kernel control
+arm is now the more interesting of the remaining work, not less: a field that lags a level
+detector in a 2-octave band has a weaker case against three fixed kernels than it did
+before this ran. That is Cooper's call, not this report's.
+
+**Caveats.** n = 75 events with enough data in the +60 s window, which is the
+same admissibility limit §12 describes. The LEVEL detector's trailing q90 over a 300 s
+causal lookback is one choice among several; a faster or slower baseline would move its
+onsets. And "lags by 0.2 of a kernel width" is a small absolute time — the finding is that
+it is *not early*, not that the lag itself is exploitable.

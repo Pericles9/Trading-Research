@@ -1390,3 +1390,29 @@ but the collinearity objection stands and is decisive for the v4 arm (both predi
 a 0.024 R² gap on n=90 cannot separate them). The earlier claim that duration "tracks overall event
 pace, not the left tail" is withdrawn as more than the design delivers. It enters no load-bearing
 sentence; the floor result closes the object without it.
+
+**Task 1 — the field boolean does not lead a level detector; it lags (2026-08-28).** The work order
+made this the task that decides the rest. `FIELD` = sign of `dL/dln s` at the smallest scale clearing
+`2·s_min(t)`; `LEVEL` = λ̂ above its own trailing q90 at that scale; window anchor → +60 s, n = 75.
+**Two of the three pre-named readings do not apply and the third is a null.** It is *not* a
+restatement — Jaccard **0.263** against a 0.9 bar, and R² of ridge strength on log λ̂ is **0.180**, so
+the field is largely not rate. But it does *not* lead: the field fires first on **29.7%** of matched
+onsets against a **50%** chance baseline, median lead **−0.060 s** (−0.21 kernel widths), consistent
+across segments. Cooper's pre-fixed read was that firing at the same instants means the construction
+adds nothing operationally; the measured answer is worse — it fires later.
+
+Three controls were needed before any lead could be read, and the first run lacked them: the field
+chatters at ~2.8× the level detector's onset rate, so a ±7.8 s nearest-onset match paired **100%** of
+level onsets by chance. Added: debounce at one kernel width applied to *both* booleans (arithmetic,
+not a threshold — a run shorter than its own kernel is unresolved), a tolerance tied to the field's
+own onset spacing, and a **circular-shift null** (200 draws/event, count and spacing preserved).
+Also corrected: the work order's `dL/dln s > 0` selects **voids** on this estimator
+(`dL/dln s = E_w[z²] − 1` → −1 inside a cluster; negative at 14/14 scales inside a synthetic burst),
+so the orientation comparable to a high-activity level detector is `< 0`. Both are reported.
+
+**What survives:** the parameter-free construction is a genuine structural gain — zero is not a
+tunable and 2.26 is not a cutoff — and the field remains distinct from a rate detector. Distinct and
+earlier are different properties and only the second was tradeable. **Tasks 2–5 not started**;
+Task 3's fixed-kernel control arm is now more important, not less. Script `t1_lead_time.py`, chart
+`charts/cohort/07_lead_time_*`, artifact `t1_lead_time.json`. **No decision appended; next free
+number remains D22.**

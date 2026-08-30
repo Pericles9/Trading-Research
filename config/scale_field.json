@@ -156,7 +156,7 @@
     "4. Cooper reads it.",
     "5. Only then: matched-null thresholds, then the cohort."
   ],
-  "stop_after": "r2c",
+  "stop_after": "task_1",
   "forward_returns": "NOT TOUCHED. The moment anything here touches forward returns, the full Agent_Prompt_Standard applies again, pre-registered, no exceptions.",
   "resolution_floor": {
     "rule": "n_eff = 2*sqrt(pi)*s*lambda >= neff_min  =>  s >= 2.2568/lambda at neff_min = 8.",
@@ -224,5 +224,31 @@
     ],
     "consequence_if_it_does_not": "the deliverable is the resolution floor plus a small fixed-kernel rate statistic -- cheaper and more defensible than a scale-space field.",
     "data_access": "none. Synthetic tapes only."
+  },
+  "task_1_lead_time": {
+    "status": "DONE 2026-08-28. Negative on the operational claim.",
+    "question": "does the parameter-free field boolean LEAD a level detector, or restate it?",
+    "field": "sign of dL/dln s at the smallest ladder scale clearing 2*s_min(t)",
+    "level": "lambda_hat(t,s*) above its own trailing q90 over a causal 300 s lookback",
+    "sign_correction": "the work order specifies dL/dln s > 0, which on this estimator selects VOIDS (dL/dln s = E_w[z^2]-1 -> -1 inside a cluster). Measured: negative at 14/14 scales inside a synthetic burst. Both orientations reported; < 0 is primary because LEVEL is a high-activity detector.",
+    "controls_added": [
+      "debounce at one kernel width, applied to BOTH booleans",
+      "match tolerance tied to FIELD's own onset spacing, not to s",
+      "circular-shift null, 200 draws/event, count and spacing preserved"
+    ],
+    "result": {
+      "n_events": 75,
+      "n_matched_onsets": 239,
+      "jaccard_median": 0.263,
+      "restatement_bar": 0.9,
+      "r2_ridge_on_loglambda_median": 0.18,
+      "lead_median_seconds": -0.06,
+      "lead_median_in_s_units": -0.214,
+      "share_onsets_field_first": 0.297,
+      "chance_baseline": 0.5
+    },
+    "reading": "NOT a restatement (Jaccard 0.26 vs a 0.9 bar; R^2 0.18) and NOT a lead -- it LAGS. Field fires first on 29.7% of matched onsets against a 50% chance baseline. Cooper's pre-fixed read was that firing at the same instants means the construction adds nothing operationally; the measured answer is worse than that.",
+    "what_survives": "the parameter-free construction is still a real structural gain -- zero is not a tunable and 2.26 is not a cutoff -- and the field is still distinct from a rate detector. Distinct and earlier are different properties and only the second was tradeable.",
+    "consequence": "Tasks 2-5 NOT STARTED. Task 1 was specified as deciding the rest. Task 3's fixed-kernel control arm is now MORE important, not less."
   }
 }

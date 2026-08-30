@@ -1,6 +1,6 @@
 {
   "task": "reconciliation gate (order of work step 2)",
-  "config_hash": "93de1fd7",
+  "config_hash": "fd886388",
   "cohort_manifest": "results/phase_10/artifacts/t1_cohort_manifest.parquet",
   "cohort_content_hash": "e1a0ac73a79aa573",
   "cohort_hash_asserted": true,
