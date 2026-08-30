@@ -9,6 +9,8 @@ withdrawn** — see §4. The reconciliation gate re-ran after both and is unchan
 **Revised again 2026-08-28** after Cooper's step-4 read. The knee comparison is
 **withdrawn as an acceptance criterion** (§8), and steps 1–2 of Cooper's recommended
 order are run and reported (§9).
+**CLOSED 2026-08-28 — D22.** The scale-space field closes as a detector; the resolution
+floor survives and is the deliverable. §14 is the close-out. Tasks 2–5 not run.
 **Revised a fifth time 2026-08-28** — work-order Task 1 run and reported in §13. It was
 specified as the task that decides the rest, and it came back negative on the operational
 claim, so Tasks 2–5 are not started.
@@ -804,3 +806,97 @@ same admissibility limit §12 describes. The LEVEL detector's trailing q90 over 
 causal lookback is one choice among several; a faster or slower baseline would move its
 onsets. And "lags by 0.2 of a kernel width" is a small absolute time — the finding is that
 it is *not early*, not that the lag itself is exploitable.
+
+---
+
+## 14. Close-out — D22
+
+### 14.1 The sign lives in code now
+
+`dL/dln s = E_w[z²] − 1` goes to **−1** at a cluster centre and positive in a gap, so
+`< 0` is burst-like. **The suite always had this right** — `argmin` in the duration-recovery
+test, `-nanmin` in the amplitude-monotonicity test, `max(-dlograte) > 0` in the sign test.
+The error was in prose restating the convention, not in code.
+
+Fixed structurally rather than by correction: `scale_field.burst_on(f, scales, s_min_t,
+factor=2.0)` and `divergence_on(...)` now define the booleans **once**, with
+`scale_index_at()` doing the `factor · s_min` selection. Prose references the helper
+instead of restating the condition, so this class of error cannot recur. Three new tests
+pin it — the sign inside a burst, the **−1 lower bound**, and the Poisson identity of `D`.
+**46 assertions pass.**
+
+### 14.2 Why it lags, and why the bound matters — both structural
+
+Two properties of the estimator, not two unlucky runs:
+
+- **Bounded below by −1**, because `E_w[z²] ≥ 0`. The burst signal *saturates*. Under a
+  sign condition it fires constantly (ON 34% of the window, 2.8× the level
+  detector's onset rate); under a magnitude condition it barely fires. Poor discrimination
+  in either direction.
+- **Centred**, so it cannot go negative until the burst is centred in the kernel, while a
+  level statistic responds as soon as burst mass enters at all — roughly `s` earlier. The
+  lag was derivable in advance and the measured **-0.214** kernel widths sits
+  exactly there.
+
+Task 1 aimed the harness at what this statistic is structurally worst at. That is a
+specification error, and it does not change the result: **the field is not an onset
+detector.**
+
+### 14.3 The one test left — `D` fails on real tape, and the kill condition is met
+
+`D = m + lograte/ln10 + γ/ln10` is identically zero under a locally Poisson process at any
+rate path. It is a level difference between two channels at one scale, so it has neither
+the centring nor the boundedness that sank `dL/dln s`. Run in the Task 1 harness with one
+channel swapped — nothing new built.
+
+| form | ON share | onsets | Jaccard vs LEVEL | lead | vs chance |
+|---|---:|---:|---:|---:|---:|
+| `D < 0` — **parameter-free** | **100%** | 4 | 0.177 | — | unreadable |
+| `D <` trailing q10 — *not* parameter-free | 2.1% | 41 | 0.018 | +0.229 `s` | **p = 0.349** |
+
+**The parameter-free form is degenerate.** `D`'s zero is the *Poisson* identity, and this
+tape sits **1.29 decades below it** at the read scale — the build brief's
+opening warning, applying here too. `D < 0` is ON essentially always and emits
+4 onsets across 75 events. A permanently-ON boolean is not a detector.
+
+**The relative form does not clear the bar.** Point estimate +0.229 kernel widths,
+but the share of onsets on which `D` fires first is **not distinguishable from chance** —
+binomial **p = 0.349** on n = 41, from only
+20 of 75 events, Wilcoxon p = 0.444, lead IQR
+-0.76..+0.84 s straddling zero. And it is not
+parameter-free, which was the property `D` was proposed for. For contrast the field's
+*lag* is real at p = 3.05e-10 on n = 239.
+
+**A point estimate is not a lead. The kill condition is met.**
+
+### 14.4 The caveat that binds every lead time in this line
+
+Both booleans use a **centred** kernel, so both read forward by about `s`. A detector
+firing 3 s "before" a synthetic onset is that, not prescience. **Relative ordering
+survives — both cheat equally — but no absolute timing claim does.** Nothing here is
+tradeable until the construction is re-derived on a **one-sided kernel** and the comparison
+re-run. This has been standing since the first verification note and was never discharged;
+it is now recorded in D22 as the precondition on any future attempt rather than left as
+work in progress.
+
+### 14.5 What survives — the deliverable
+
+- **The resolution floor `s ≥ 2.26/λ`.** The first applicability criterion this programme
+  has had that is **derived rather than adopted**.
+- **49.3% of committed sub-bursts are exactly two prints** — one interval — corroborated
+  independently by 10d's own `share_2print` column.
+- **Measurable and tradeable are the same ~half of the cohort** (49/100 at the 10 s
+  horizon; corr(log print count, quote staleness) = −0.697).
+- **The D9 lineage's timescales sit ~4.8 orders of magnitude below what the tape
+  supports**, floor relaxed all the way to three prints.
+
+### 14.6 Tasks 2–5 not run, and why that is the right call
+
+Task 2 (emit `D` as a panel) is superseded — `D` is now emitted and tested, and §14.3 is
+the answer. Tasks 3–5 are not run. At 2–4 usable octaves, with the onset test negative and
+the statistic bounded, **the fixed-kernel control arm is no longer a control — it is the
+likely winner**, and Task 3 would mostly be paying to confirm that. The finding is the
+deliverable; the detector was the part we were hoping for.
+
+**D22 appended to `docs/Universe-Decisions.md`; `CLAUDE.md`'s pointer list updated in the
+same commit. Next free number: D23.**

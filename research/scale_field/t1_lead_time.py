@@ -39,6 +39,38 @@ restates the level detector and the machinery is not earning its keep. A positiv
 lead of an appreciable fraction of s is the result that makes this a signal rather than a
 description. BOTH OUTCOMES ARE REPORTABLE AND A NULL WILL NOT BE SOFTENED.
 
+THE D CHANNEL, ADDED AS THE ONE TEST LEFT. Same harness, one channel swapped:
+
+    D(t,s) = m + lograte/ln10 + gamma/ln10
+
+D is identically 0 at every scale under a locally Poisson process AT ANY RATE PATH, so
+its sign needs no null. Crucially it is NOT a scale-derivative -- it is a level difference
+between two channels at one scale -- so it has neither the centring nor the boundedness
+that make dL/dln s a poor onset detector. Mechanism: the geometric-mean rate moves on the
+FIRST FEW SHORT GAPS while the count needs ACCUMULATED MASS, so D should respond to a
+burst before lambda_hat does.
+
+KILL CONDITION, PRE-REGISTERED BEFORE THE RUN: if D does not lead LEVEL by a POSITIVE
+MEDIAN in units of s on real tape, the whole construction closes as a detector and only
+s_min survives. No re-aiming, no second look.
+
+TWO D DETECTORS, BECAUSE THE SIGN ONE IS DEGENERATE ON REAL TAPE AND THAT IS ITSELF THE
+RESULT. D's zero is the POISSON identity, and this tape is nowhere near Poisson -- the
+build brief opened with that warning and it applies here too. Measured: median D at s* is
+-1.29 decades, so `D < 0` is ON 100% of the time and produces 4 onsets across 75 events.
+A permanently-ON boolean is not a detector. So:
+
+  d_sign  D < 0                          parameter-free, and DEGENERATE on real tape
+  d_rel   D below its own trailing q10    the exact mirror of LEVEL (lambda_hat above its
+                                          own trailing q90), same lookback, same debounce
+                                          -- a like-for-like head-to-head, but NO LONGER
+                                          PARAMETER-FREE, which is the whole thing D was
+                                          supposed to buy
+
+The synthetic that motivated this thresholded D at +3 sd of its own pre-onset
+distribution, which on a Poisson-background tape nearly coincides with the sign. On real
+tape it does not, and only the relative form is testable.
+
 Usage: .venv/Scripts/python.exe research/scale_field/t1_lead_time.py
 """
 from __future__ import annotations
@@ -50,14 +82,15 @@ import time
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 import adapter  # noqa: E402
 from adapter import load_cohort, load_detection, load_event_prints_meta, rel  # noqa: E402
-from scale_field import (collapse_same_timestamp, field, intervals,  # noqa: E402
-                         s_min_for_rate, seconds_since)
+from scale_field import (LN10, EULER_GAMMA, collapse_same_timestamp,  # noqa: E402
+                         divergence, field, intervals, s_min_for_rate, seconds_since)
 
 OUT = "results/scale_field/artifacts/t1_lead_time.json"
 OUT_EVENTS = "results/scale_field/artifacts/t1_lead_time_events.parquet"
@@ -85,7 +118,7 @@ def knn_rate(ts_ns, grid_ns, k=KNN_K):
     return np.where(span > 0, k / span, np.nan)
 
 
-def trailing_q90(x, t, lookback):
+def trailing_quantile(x, t, lookback, qq=TRAIL_Q):
     """Causal trailing quantile: at each t, the q90 of x over [t-lookback, t).
     Uses only the past. O(n log n) via a sorted-window walk is overkill here; the grids
     are ~20k points and a strided argpartition per point is fast enough, so this is the
@@ -100,7 +133,7 @@ def trailing_q90(x, t, lookback):
         seg = x[a:i]
         seg = seg[np.isfinite(seg)]
         if seg.size >= 30:
-            out[i] = np.quantile(seg, TRAIL_Q)
+            out[i] = np.quantile(seg, qq)
     return out
 
 
@@ -260,14 +293,22 @@ def main() -> int:
         ii = np.arange(tg.size)
         dlr = np.where(ok, f["dlograte"][ii, np.clip(jstar, 0, None)], np.nan)
         lgr = np.where(ok, f["lograte"][ii, np.clip(jstar, 0, None)], np.nan)
+        Dfull = divergence(f)
+        dvg = np.where(ok, Dfull[ii, np.clip(jstar, 0, None)], np.nan)
         s_at = np.where(ok, scales[np.clip(jstar, 0, None)], np.nan)
 
         # booleans, restricted to the reported window [anchor, anchor+60]
         in_win = tg >= (anchor_ns - origin) / 1e9
-        thr = trailing_q90(lgr, tg, LOOKBACK_S)
+        thr = trailing_quantile(lgr, tg, LOOKBACK_S, TRAIL_Q)
         b_burst = ok & in_win & np.isfinite(dlr) & (dlr < 0)
         b_void = ok & in_win & np.isfinite(dlr) & (dlr > 0)
         b_level = ok & in_win & np.isfinite(lgr) & np.isfinite(thr) & (lgr > thr)
+        # D < 0 = more clustered than Poisson. Parameter-free in the same way the sign of
+        # dL/dln s is: zero is the Poisson identity, not a chosen quantile.
+        b_div = ok & in_win & np.isfinite(dvg) & (dvg < 0)
+        # the mirror of LEVEL: D below its own causal trailing q10, same lookback.
+        thr_d = trailing_quantile(dvg, tg, LOOKBACK_S, 1.0 - TRAIL_Q)
+        b_drel = ok & in_win & np.isfinite(dvg) & np.isfinite(thr_d) & (dvg < thr_d)
         defined = ok & in_win & np.isfinite(dlr) & np.isfinite(thr)
         if defined.sum() < 200:
             continue
@@ -279,9 +320,13 @@ def main() -> int:
                "median_lambda_knn": float(np.nanmedian(lam_knn[in_win])),
                "on_share_field_burst": float(b_burst[defined].mean()),
                "on_share_field_void": float(b_void[defined].mean()),
+               "on_share_divergence": float(b_div[defined].mean()),
                "on_share_level": float(b_level[defined].mean())}
 
-        for tag, bf in (("burst", b_burst), ("void", b_void)):
+        rec["median_divergence"] = float(np.nanmedian(dvg[in_win]))
+        rec["on_share_divergence_rel"] = float(b_drel[defined].mean())
+        for tag, bf in (("burst", b_burst), ("void", b_void), ("divergence", b_div),
+                        ("divergence_rel", b_drel)):
             inter = float((bf & b_level)[defined].sum())
             union = float((bf | b_level)[defined].sum())
             rec[f"jaccard_{tag}"] = inter / union if union > 0 else np.nan
@@ -394,9 +439,45 @@ def main() -> int:
         "n_matched_onsets": int(len(on_df)),
         "median_s_star_seconds": float(ev_df["median_s_star"].median()) if len(ev_df) else None,
         "on_share": {k: q(ev_df[f"on_share_{k}"]) for k in
-                     ("field_burst", "field_void", "level")} if len(ev_df) else {},
+                     ("field_burst", "field_void", "level", "divergence")} if len(ev_df) else {},
         "burst_orientation_PRIMARY": pooled_stats("burst") if len(ev_df) else {},
         "void_orientation_literal_work_order": pooled_stats("void") if len(ev_df) else {},
+        "divergence_channel_sign": pooled_stats("divergence") if len(ev_df) else {},
+        "divergence_channel_relative": pooled_stats("divergence_rel") if len(ev_df) else {},
+        "divergence_kill_condition": {
+            "pre_registered": "if D does not lead LEVEL by a POSITIVE MEDIAN in units of s "
+                              "on real tape, the construction closes as a detector and only "
+                              "s_min survives.",
+            "min_onsets_to_read": 30,
+            "how_the_condition_is_read": "A POINT ESTIMATE IS NOT A LEAD. The condition is "
+                "read against a two-sided binomial test of the share of matched onsets on "
+                "which D fired first, versus the 50% the circular-shift null gives by "
+                "construction. A positive median that a binomial cannot separate from "
+                "chance does not clear it.",
+            "sign_form": {
+                "on_share_median": float(ev_df["on_share_divergence"].median()) if len(ev_df) else None,
+                "n_onsets": int((on_df["orientation"] == "divergence").sum()) if len(on_df) else 0,
+                "median_lead_in_s_units": (
+                    float(np.nanmedian(on_df.loc[on_df["orientation"] == "divergence",
+                                                 "lead_in_s_units"]))
+                    if len(on_df) and (on_df["orientation"] == "divergence").any() else None),
+                "verdict": "DEGENERATE. ON ~100% of the time on real tape, so it emits almost "
+                           "no onsets and no lead is measurable. D's zero is the POISSON "
+                           "identity and this tape sits 1.29 decades below it. The lead figure "
+                           "on a handful of onsets is not a result and is not read.",
+            },
+            "relative_form": {
+                "on_share_median": float(ev_df["on_share_divergence_rel"].median()) if len(ev_df) else None,
+                "n_onsets": int((on_df["orientation"] == "divergence_rel").sum()) if len(on_df) else 0,
+                "median_lead_in_s_units": (
+                    float(np.nanmedian(on_df.loc[on_df["orientation"] == "divergence_rel",
+                                                 "lead_in_s_units"]))
+                    if len(on_df) and (on_df["orientation"] == "divergence_rel").any() else None),
+                "note": "the mirror of LEVEL, and NOT parameter-free -- which was the property "
+                        "D was supposed to buy.",
+            },
+            "median_D_at_s_star": float(ev_df["median_divergence"].median()) if len(ev_df) else None,
+        },
         "r2_ridge_on_loglambda": q(ev_df["r2_ridge_on_loglambda"]) if "r2_ridge_on_loglambda" in ev_df else {},
         "by_segment": {str(s): {"n": int(len(g)),
                                 "jaccard_burst": q(g["jaccard_burst"]),
@@ -406,6 +487,42 @@ def main() -> int:
         "source": "research/scale_field/t1_lead_time.py:main",
         "reproduce": ".venv/Scripts/python.exe research/scale_field/t1_lead_time.py",
     }
+    # ---- the pre-registered condition, read against a test rather than a point estimate
+    kc = out["divergence_kill_condition"]
+    for form, tag in (("sign_form", "divergence"), ("relative_form", "divergence_rel")):
+        sub = on_df[on_df["orientation"] == tag] if len(on_df) else on_df
+        n = int(len(sub)); k = int((sub["lead_s"] > 0).sum()) if n else 0
+        kc[form]["n_matched_onsets"] = n
+        kc[form]["n_events_contributing"] = int(sub["event_id"].nunique()) if n else 0
+        kc[form]["share_D_first"] = (k / n) if n else None
+        kc[form]["binomial_p_vs_chance"] = (float(stats.binomtest(k, n, 0.5).pvalue)
+                                            if n >= 5 else None)
+        kc[form]["wilcoxon_p_lead_ne_zero"] = (float(stats.wilcoxon(sub["lead_s"]).pvalue)
+                                               if n >= 10 else None)
+        kc[form]["lead_iqr_seconds"] = ([float(sub["lead_s"].quantile(.25)),
+                                         float(sub["lead_s"].quantile(.75))] if n >= 4 else None)
+    rf = kc["relative_form"]
+    lead = rf.get("median_lead_in_s_units")
+    pval = rf.get("binomial_p_vs_chance")
+    enough = rf["n_matched_onsets"] >= kc["min_onsets_to_read"]
+    if not enough or lead is None or pval is None:
+        kc["met"] = True
+        kc["verdict"] = ("KILL CONDITION MET -- too few onsets to read a lead at all. "
+                         "The construction closes as a detector; s_min survives.")
+    elif lead > 0 and pval < 0.05:
+        kc["met"] = False
+        kc["verdict"] = (f"D LEADS by {lead:+.3f} s-units, binomial p={pval:.3f} -- kill "
+                         f"condition NOT met.")
+    else:
+        kc["met"] = True
+        kc["verdict"] = (f"KILL CONDITION MET. The point estimate is {lead:+.3f} s-units but "
+                         f"the share of onsets on which D fires first is not distinguishable "
+                         f"from chance (binomial p={pval:.3f} on n={rf['n_matched_onsets']}, "
+                         f"from {rf['n_events_contributing']} of {len(ev_df)} events). A "
+                         f"point estimate is not a lead. And it comes from the RELATIVE form, "
+                         f"which is not parameter-free -- the property D was proposed for. "
+                         f"The construction closes as a detector; only s_min survives.")
+
     with open(rel(OUT), "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=2)
 
@@ -434,6 +551,30 @@ def main() -> int:
                   f"{p['share_of_onsets_field_first']:.1%}"
                   f"   NULL {nl['null_share_field_first']['q50']:.1%}")
             print(f"  null lead median (per event): {nl['null_lead_median_seconds']['q50']:+.3f} s")
+        kc = out["divergence_kill_condition"]
+        print(f"\nD CHANNEL (the one test left):")
+        print(f"  median D at s*  {kc['median_D_at_s_star']:+.4f} decades "
+              f"(0 = the Poisson identity)")
+        for form, key in (("sign  D<0", "divergence_channel_sign"),
+                          ("relative D<q10", "divergence_channel_relative")):
+            dv = out[key]
+            nn = dv.get("lead_seconds_all_onsets", {}).get("n", 0)
+            share = (out['on_share']['divergence']['q50'] if "sign" in form
+                     else ev_df["on_share_divergence_rel"].median())
+            print(f"  [{form:16s}] ON {share:6.1%}  Jaccard {dv['jaccard']['q50']:.3f}  "
+                  f"onsets {nn}")
+            if nn >= kc["min_onsets_to_read"]:
+                dl = dv["lead_seconds_all_onsets"]; du = dv["lead_in_s_units_all_onsets"]
+                dn = dv["circular_shift_null"]
+                print(f"                       lead {dl['q50']:+.3f} s "
+                      f"({du['q50']:+.3f} s-units)   D first "
+                      f"{dv['share_of_onsets_field_first']:.1%} vs null "
+                      f"{dn['null_share_field_first']['q50']:.0%}")
+            else:
+                print(f"                       too few onsets to read "
+                      f"(< {kc['min_onsets_to_read']})")
+        print(f"  KILL CONDITION: {kc['verdict']}")
+
         r2 = out["r2_ridge_on_loglambda"]
         if r2.get("n"):
             print(f"  R2 of ridge strength on log lambda: median {r2['q50']:.3f}")

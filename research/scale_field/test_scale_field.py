@@ -5,7 +5,8 @@ Run: python -m pytest test_scale_field.py -q
 """
 import numpy as np, pytest
 from scale_field import (collapse_same_timestamp, intervals, seconds_since, field,
-                         field_exact, allan_factor, SIGMA_POISSON_DECADES)
+                         field_exact, allan_factor, burst_on, divergence,
+                         SIGMA_POISSON_DECADES)
 
 RNG = lambda s=0: np.random.default_rng(s)
 
@@ -174,3 +175,50 @@ def test_allan_min_windows_drops_a_rung_rather_than_returning_it():
     assert np.isnan(A) and n == 0
     A2, n2 = allan_factor(ts, 1000.0, min_windows=2)
     assert np.isfinite(A2) and n2 == 2                 # 3 windows -> 2 adjacent pairs
+
+
+# --- 11. the booleans, so the sign lives in code and not in prose -------------
+def test_burst_on_fires_inside_a_burst_and_not_in_the_quiet_stretch():
+    """The sign convention, asserted on the helper the rest of the codebase calls.
+    A work order once restated this in English and inverted it; this is the guard."""
+    from scale_field import burst_on, seconds_since
+    ts = collapse_same_timestamp((burst_tape(3, 120, 150, 4, 300, 3) * 1e9).astype(np.int64))
+    ev, x = intervals(ts, origin=ts[0])
+    tg = np.array([152.0, 80.0])                    # inside the burst, then quiet
+    sc = np.geomspace(0.5, 20, 14)
+    f = field_exact(seconds_since(ts, ts[0]), ev, x, tg, sc)
+    on, s_star, j = burst_on(f, sc, np.array([0.25, 0.25]), factor=2.0)
+    assert on[0], "burst_on must be True inside a rate burst"
+    assert np.isfinite(s_star[0]) and s_star[0] >= 0.5
+
+
+def test_burst_on_is_bounded_below_which_is_why_it_saturates():
+    """dL/dln s = E_w[z^2] - 1 >= -1. The burst signal SATURATES, which is the structural
+    reason a magnitude threshold on it barely fires."""
+    ts = collapse_same_timestamp((burst_tape(3, 200, 150, 3, 300, 12) * 1e9).astype(np.int64))
+    ev, x = intervals(ts, origin=ts[0])
+    f = field_exact(seconds_since(ts, ts[0]), ev, x,
+                    np.linspace(140, 160, 40), np.geomspace(0.5, 20, 12))
+    d = f["dlograte"][np.isfinite(f["dlograte"])]
+    assert d.min() >= -1.0 - 1e-9, d.min()
+    assert d.min() < -0.5, "a real burst should approach the bound"
+
+
+def test_divergence_is_zero_on_poisson_and_negative_when_clustered():
+    """D = m + lograte/ln10 + gamma/ln10 is identically 0 under a locally Poisson process
+    at ANY rate path, so its sign is readable without a null."""
+    from scale_field import divergence
+    ts = collapse_same_timestamp((poisson_tape(200, 400, 31) * 1e9).astype(np.int64))
+    ev, x = intervals(ts, origin=ts[0])
+    f = field_exact(seconds_since(ts, ts[0]), ev, x,
+                    np.linspace(60, 340, 60), np.geomspace(0.5, 20, 10))
+    D = divergence(f)
+    assert abs(np.nanmedian(D)) < 0.05, np.nanmedian(D)
+
+    r = RNG(32); parents = np.sort(r.uniform(0, 400, 2000))
+    cl = np.sort(np.concatenate([p + r.exponential(0.002, 6) for p in parents]))
+    tsc = collapse_same_timestamp((cl * 1e9).astype(np.int64))
+    ev2, x2 = intervals(tsc, origin=tsc[0])
+    f2 = field_exact(seconds_since(tsc, tsc[0]), ev2, x2,
+                     np.linspace(60, 340, 60), np.geomspace(0.5, 20, 10))
+    assert np.nanmedian(divergence(f2)) < -0.5, np.nanmedian(divergence(f2))

@@ -813,3 +813,82 @@ v3's scale-separation result under D9. The carried findings are listed in
 `CLAUDE.md`'s decision pointer list was stale at D14 and is corrected in the same commit as
 this decision; the register in this file, not that list, is the authority for the next free
 number.
+
+---
+
+## D22 — The scale-space field closes as a detector; the resolution floor survives
+
+**Date:** 2026-08-28 · **Gate:** work-order Task 1 and its pre-registered kill condition,
+both met. Cooper's close-out recommendation.
+
+**Closes.** The continuous scale-space field as an **onset detector**. Not the field as a
+description, not `s_min`, and nothing in the D9/D21 lineage that D21 did not already close.
+
+**Decision.** No detector, boolean, or entry/exit signal is derived from the sign or
+magnitude of `dL/dln s`, or from the sign of the two-channel divergence `D`, on this
+cohort. Any future proposal to do so must first clear the two structural facts below,
+which are properties of the estimators and not of the run.
+
+**Why — two structural facts, not two disappointing runs.**
+
+1. **`dL/dln s` is bounded below by −1 and therefore saturates.**
+   `dL/dln s = E_w[z²] − 1` with `z = (t − tᵢ)/s`, and `E_w[z²] ≥ 0`. So under a *sign*
+   condition it fires constantly — measured at **2.8×** the level detector's onset rate,
+   ON 34% of the window — and under a *magnitude*
+   condition it barely fires at all. A bounded, saturating statistic discriminates poorly
+   in either direction.
+2. **It is a *centred* concentration statistic, so it cannot lead.** It cannot go negative
+   until the burst is centred in the kernel, whereas a level statistic responds as soon as
+   burst mass enters the kernel at all — roughly `s` earlier. The lag is derivable in
+   advance. Measured: **29.7%** of matched onsets have the field first
+   against a **50%** circular-shift chance baseline (binomial p = 3.05e-10, n = 239),
+   median lead **-0.214** kernel widths.
+
+**The divergence `D` was the one test left, and it fails on real tape.**
+`D = m + lograte/ln10 + γ/ln10` is identically zero under a locally Poisson process at any
+rate path, so its sign needs no null — that was the appeal. But **this tape sits
+1.29 decades below the Poisson identity at the read scale**, so
+`D < 0` is ON **100%** of the time and emits 4 onsets across 75 events. A
+permanently-ON boolean is not a detector. Its relative form (`D` below its own trailing
+q10, the mirror of the level detector) does emit onsets, and its lead is
+**+0.229** kernel widths — **not distinguishable from chance**
+(binomial p = **0.349** on n = 41, from
+20 of 75 events; Wilcoxon p = 0.444). And it is
+**not parameter-free**, which was the property `D` was proposed for. A point estimate is
+not a lead.
+
+**What survives, and it is the deliverable.**
+
+- **The resolution floor `s ≥ 2.26/λ`**, from `n_eff = 2√π·s·λ ≥ 8` rearranged. It is the
+  **first applicability criterion this programme has had that is derived rather than
+  adopted** — no quantile, no multiple, nothing chosen by anyone. Whether it becomes a
+  *binding* gate on a given phase remains that phase's decision; what is settled here is
+  that it exists, is computable in advance from a print count and a span, and is the
+  candidate that 10c open item 4 and 10d §4 left open.
+- **Half the cohort is inactive when a ten-second horizon would be trading.** 49 of 100
+  events carry ≥25 prints in the 10 s after their own anchor; measurable and tradeable are
+  the same ~half (corr(log print count, quote staleness) = −0.697, n = 49).
+- **49.3% of committed sub-bursts are exactly two prints** — a single interval — on the
+  uncensored cells, corroborated by 10d's own `share_2print` column (0.4934 vs an
+  independent 0.4934).
+- **The D9 lineage's reported timescales sit ~4.8 orders of magnitude below what the tape
+  supports**, with the floor relaxed all the way to three prints.
+
+**A caveat that binds every lead time measured in this line, and was never discharged.**
+Both booleans use a **centred** kernel, so both read forward by about `s`. The level
+detector firing 3.0 s "before" a synthetic onset is that, not prescience. **Relative
+ordering survives** — both cheat equally — **but no absolute timing claim does.** Nothing
+in this line is tradeable until the construction is re-derived on a **one-sided kernel**
+and the comparison re-run there. That is recorded as the standing precondition on any
+future attempt, not as work in progress.
+
+**What is NOT closed.** `s_min` and everything in the list above. The field as a
+*description* of a tape — it is legible, and localisation in time was never the problem.
+And the open question of whether a continuum earns its keep at all: inside the operational
+window the usable scale range is **0.67 decades (2.2 octaves) at the 10 s horizon** and
+1.21 decades at 60 s, so three fixed kernels at `s_min`, `2·s_min`, `4·s_min` are the
+live alternative. That comparison (work-order Task 3's control arm) is **not run**, and on
+these results the fixed-kernel arm is the likely winner rather than a control.
+
+**Numbering note.** Recorded as D22; the register in this file is the authority and
+`CLAUDE.md`'s pointer list is updated in the same commit. Next free number: **D23**.

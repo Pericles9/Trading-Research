@@ -2,7 +2,7 @@
   "name": "scale_field",
   "title": "Scale-space field on the momentum cohort",
   "spec": "prompts/scale_field_brief.md",
-  "config_hash": "fd886388",
+  "config_hash": "ec88e798",
   "status": "envelope_measured_step_3_pre_registered_not_started",
   "order_of_work": [
     "1. adapter.py, plus a test that loads one known event and asserts monotone, positive, in-session timestamps.",
@@ -11,7 +11,7 @@
     "4. Cooper reads it.",
     "5. Only then: matched-null thresholds, then the cohort."
   ],
-  "stop_after": "task_1",
+  "stop_after": "CLOSED",
   "steps": {
     "1_adapter": {
       "done": true,

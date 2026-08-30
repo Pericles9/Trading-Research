@@ -248,6 +248,87 @@ def _reduce_extremum(t_grid, gt, arr):
 
 
 # --------------------------------------------------------------------------- #
+# the booleans -- defined ONCE, in code, so prose can reference them
+# --------------------------------------------------------------------------- #
+
+def scale_index_at(scales, s_min_t, factor=2.0, defined=None):
+    """Per time point, the index of the smallest ladder scale >= factor * s_min(t).
+
+    `factor` keeps the read off the boundary itself: s_min moves with lambda, so a read
+    taken AT the boundary is partly definitional -- the boundary dropping and the tape
+    speeding up are the same event. -1 where no ladder scale qualifies or the field is
+    undefined there."""
+    scales = np.asarray(scales, float)
+    s_target = factor * np.asarray(s_min_t, float)
+    out = np.full(s_target.size, -1, dtype=np.int64)
+    for i in range(s_target.size):
+        if not np.isfinite(s_target[i]):
+            continue
+        ok = scales >= s_target[i]
+        if defined is not None:
+            ok = ok & np.asarray(defined[i], bool)
+        c = np.flatnonzero(ok)
+        if c.size:
+            out[i] = c[0]
+    return out
+
+
+def burst_on(f, scales, s_min_t, factor=2.0):
+    """THE BURST BOOLEAN. Defined once, here, so that prose never restates the condition.
+
+    ON where dL/dln s < 0 at the smallest ladder scale clearing `factor * s_min(t)`.
+
+    THE SIGN, AND WHY THIS FUNCTION EXISTS. dL/dln s = E_w[z^2] - 1 with z = (t-t_i)/s.
+    At a cluster centre the kernel's mass sits at z ~ 0 and it goes to -1; in a gap the
+    nearest prints are at |z| >> 1 and it goes positive. So NEGATIVE is burst-like and
+    POSITIVE selects voids. The acceptance suite always had this right -- it takes argmin
+    and -nanmin throughout -- but a work order restated it in English and inverted it.
+    Restating a sign convention in prose is the failure mode; referencing this helper is
+    the fix.
+
+    NOTE THE BOUND: dL/dln s >= -1 because E_w[z^2] >= 0, so the burst signal SATURATES.
+    Under a sign condition it fires often; under a magnitude condition it barely fires at
+    all. That is structural and is why this is a poor detector in either direction.
+
+    Returns (on, s_star, jstar).
+    """
+    dlr = f["dlograte"]
+    j = scale_index_at(scales, s_min_t, factor, defined=np.isfinite(dlr))
+    ok = j >= 0
+    ii = np.arange(dlr.shape[0])
+    v = np.where(ok, dlr[ii, np.clip(j, 0, None)], np.nan)
+    s_star = np.where(ok, np.asarray(scales, float)[np.clip(j, 0, None)], np.nan)
+    return (ok & np.isfinite(v) & (v < 0)), s_star, j
+
+
+def divergence(f):
+    """D(t,s) = m + lograte/ln10 + gamma/ln10.
+
+    IDENTICALLY ZERO at every scale under a locally Poisson process AT ANY RATE PATH,
+    because m -> -log10(lambda) - gamma/ln10 while lograte -> ln(lambda). So its sign
+    needs no null to read, and unlike dL/dln s it is a LEVEL DIFFERENCE BETWEEN TWO
+    CHANNELS at one scale -- it has neither the centring nor the boundedness that make
+    the scale-derivative a poor onset detector.
+
+    The acceptance suite asserts the identity (test_cross_channel_identity_on_poisson);
+    this promotes it from a unit-test fixture to an emitted field.
+    """
+    return f["m"] + f["lograte"] / LN10 + EULER_GAMMA / LN10
+
+
+def divergence_on(f, scales, s_min_t, factor=2.0):
+    """ON where D < 0 at the smallest ladder scale clearing factor * s_min(t).
+    Negative = more clustered than Poisson. Returns (on, s_star, jstar)."""
+    D = divergence(f)
+    j = scale_index_at(scales, s_min_t, factor, defined=np.isfinite(D))
+    ok = j >= 0
+    ii = np.arange(D.shape[0])
+    v = np.where(ok, D[ii, np.clip(j, 0, None)], np.nan)
+    s_star = np.where(ok, np.asarray(scales, float)[np.clip(j, 0, None)], np.nan)
+    return (ok & np.isfinite(v) & (v < 0)), s_star, j
+
+
+# --------------------------------------------------------------------------- #
 # reconciliation target: Allan factor (phase 10 v3 / 10b)
 # --------------------------------------------------------------------------- #
 

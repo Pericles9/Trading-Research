@@ -1416,3 +1416,36 @@ earlier are different properties and only the second was tradeable. **Tasks 2–
 Task 3's fixed-kernel control arm is now more important, not less. Script `t1_lead_time.py`, chart
 `charts/cohort/07_lead_time_*`, artifact `t1_lead_time.json`. **No decision appended; next free
 number remains D22.**
+
+**CLOSED 2026-08-28 — D22. The scale-space field closes as a detector; the resolution floor
+survives.** Two structural properties of the estimator, not two unlucky runs: `dL/dln s = E_w[z²] − 1`
+is **bounded below by −1** and therefore saturates (ON 34% of the window under a sign condition, 2.8×
+the level detector's onset rate; almost never under a magnitude one), and it is a **centred**
+concentration statistic that cannot go negative until the burst is centred in the kernel — so a lag of
+a fraction of `s` was derivable in advance, and the measured −0.21 kernel widths sits there
+(29.7% field-first against a 50% chance baseline, binomial p = 3.05e-10, n = 239).
+
+**The one test left, the two-channel divergence `D = m + lograte/ln10 + γ/ln10`, fails on real tape.**
+Its zero is the *Poisson* identity, and this tape sits **1.29 decades below it** — so the
+parameter-free form `D < 0` is ON ~100% of the time and emits 4 onsets across 75 events. A
+permanently-ON boolean is not a detector. The relative form (`D` below its own trailing q10, the
+mirror of the level detector) gives a point estimate of +0.23 kernel widths but **binomial p = 0.349
+on n = 41 from 20 of 75 events** — not distinguishable from chance — and is no longer parameter-free,
+which was the property `D` was proposed for. **The pre-registered kill condition is met.**
+
+**The sign now lives in code once.** `scale_field.burst_on()` / `divergence_on()` / `scale_index_at()`
+define the booleans, so prose references the helper instead of restating the condition — the error was
+always in prose, never in the suite, which used `argmin` and `-nanmin` correctly throughout. Three new
+tests pin the sign, the −1 bound, and the Poisson identity. **46 assertions pass.**
+
+**Standing, undischarged precondition, recorded in D22:** both booleans use a **centred** kernel and
+read forward by ~`s`. Relative ordering survives; **no absolute timing claim does.** Nothing in this
+line is tradeable until it is re-derived on a one-sided kernel.
+
+**What survives is the deliverable** — the resolution floor `s ≥ 2.26/λ` (the first applicability
+criterion the programme has had that is derived rather than adopted), the 49.3% two-print composition,
+measurable ≈ tradeable ≈ half the cohort, and the ~4.8-orders-of-magnitude gap between the D9
+lineage's timescales and what the tape supports. **Tasks 2–5 not run:** at 2–4 usable octaves with the
+onset test negative, the fixed-kernel arm is the likely winner rather than a control. Decision:
+`docs/Universe-Decisions.md` **D22**; `CLAUDE.md` pointer list updated in the same commit; **next free
+number D23**.

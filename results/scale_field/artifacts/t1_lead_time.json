@@ -1,13 +1,13 @@
 {
   "task": "Task 1 -- lead time of the parameter-free field boolean against a level detector",
-  "config_hash": "93de1fd7",
+  "config_hash": "fd886388",
   "window": "anchor -> +60 s",
   "scale_rule": "smallest ladder scale >= 2 * s_min(t); ladder 0.05..7.5 s (33 scales, 7.5 = W/8)",
   "level_detector": "lambda_hat(t,s*) above its own trailing q90 over a causal 300 s lookback",
   "sign_note": "The work order specifies dL/dln s > 0. On this estimator that selects VOIDS: dL/dln s = E_w[z^2] - 1, which goes to -1 inside a cluster and positive in a gap. Measured on a synthetic 120/s burst in a 3/s background: negative at 14 of 14 scales inside the burst (min -0.884). Since LEVEL is a high-activity detector, the comparable orientation is dL/dln s < 0. BOTH are reported; 'burst' is primary.",
   "read_fixed_before_the_run": "Jaccard above ~0.9 with lead centred on zero means the field restates the level detector. A positive median lead of an appreciable fraction of s makes it a signal.",
   "n_events": 75,
-  "n_matched_onsets": 531,
+  "n_matched_onsets": 576,
   "median_s_star_seconds": 1.5668692044640666,
   "on_share": {
     "field_burst": {
@@ -30,6 +30,13 @@
       "q50": 0.1770590196732244,
       "q75": 0.3207735911970657,
       "mean": 0.2156941685408764
+    },
+    "divergence": {
+      "n": 75,
+      "q25": 1.0,
+      "q50": 1.0,
+      "q75": 1.0,
+      "mean": 0.9960457961654773
     }
   },
   "burst_orientation_PRIMARY": {
@@ -227,6 +234,240 @@
       "mean": 0.018926806053967855
     },
     "share_of_onsets_field_first": 0.523972602739726
+  },
+  "divergence_channel_sign": {
+    "jaccard": {
+      "n": 75,
+      "q25": 0.08886295431810604,
+      "q50": 0.1770590196732244,
+      "q75": 0.3207735911970657,
+      "mean": 0.21561548155880017
+    },
+    "only_field": {
+      "n": 75,
+      "q25": 0.6792264088029343,
+      "q50": 0.8229409803267755,
+      "q75": 0.9098638940252811,
+      "mean": 0.7837296283076366
+    },
+    "only_level": {
+      "n": 75,
+      "q25": 0.0,
+      "q50": 0.0,
+      "q75": 0.0,
+      "mean": 0.0006548901335631193
+    },
+    "lead_seconds_per_event_median": {
+      "n": 3,
+      "q25": -0.2949999999997317,
+      "q50": 0.0,
+      "q75": 3.5299999999967895,
+      "mean": 2.156666666664705
+    },
+    "lead_in_s_units_per_event_median": {
+      "n": 3,
+      "q25": -0.7705750402650812,
+      "q50": 0.0,
+      "q75": 0.5504479946087618,
+      "mean": -0.14675136377087958
+    },
+    "n_events_with_matches": 3,
+    "match_tol_seconds": {
+      "n": 75,
+      "q25": 1.7904347336193682,
+      "q50": 3.9171730111601666,
+      "q75": 7.949050118692496,
+      "mean": 5.455740061730489
+    },
+    "onset_spacing_field_seconds": {
+      "n": 75,
+      "q25": 3.5808694672387364,
+      "q50": 7.834346022320333,
+      "q75": 15.898100237384991,
+      "mean": 10.990169325751786
+    },
+    "matched_share_of_level_onsets": {
+      "n": 59,
+      "q25": 0.0,
+      "q50": 0.0,
+      "q75": 0.0,
+      "mean": 0.02598870056497175
+    },
+    "circular_shift_null": {
+      "what": "field onsets shifted circularly inside the window, count and spacing preserved, timing relationship destroyed; 200 draws per event. If the observed lead sits inside this band the match is chance pairing and the lead statistic is empty.",
+      "null_lead_median_seconds": {
+        "n": 9,
+        "q25": -0.11647111388924714,
+        "q50": -0.00913092403425253,
+        "q75": 0.09436610885381924,
+        "mean": -0.1682110753201012
+      },
+      "null_share_field_first": {
+        "n": 9,
+        "q25": 0.5,
+        "q50": 0.5,
+        "q75": 0.5,
+        "mean": 0.5
+      },
+      "null_matched_share": {
+        "n": 9,
+        "q25": 0.31451612903225806,
+        "q50": 0.3333333333333333,
+        "q75": 0.41362530413625304,
+        "mean": 0.41025112781836254
+      }
+    },
+    "lead_seconds_all_onsets": {
+      "n": 4,
+      "q25": -0.4399999999995998,
+      "q50": 0.28999999999973625,
+      "q75": 2.199999999997999,
+      "mean": 1.469999999998663
+    },
+    "lead_in_s_units_all_onsets": {
+      "n": 4,
+      "q25": -1.1493322634462229,
+      "q50": 0.5504479946087618,
+      "q75": 1.2044292150942844,
+      "mean": -0.4953510429607004
+    },
+    "share_of_onsets_field_first": 0.5
+  },
+  "divergence_channel_relative": {
+    "jaccard": {
+      "n": 73,
+      "q25": 0.0,
+      "q50": 0.01818181818181818,
+      "q75": 0.09687034277198212,
+      "mean": 0.07572110427830808
+    },
+    "only_field": {
+      "n": 75,
+      "q25": 0.0,
+      "q50": 0.0375,
+      "q75": 0.20376156477421428,
+      "mean": 0.1636415522550768
+    },
+    "only_level": {
+      "n": 75,
+      "q25": 0.5442807621483622,
+      "q50": 0.8767885532591415,
+      "q75": 0.995741056218058,
+      "mean": 0.73598990624737
+    },
+    "lead_seconds_per_event_median": {
+      "n": 20,
+      "q25": -0.3974999999998303,
+      "q50": 0.10999999999989996,
+      "q75": 0.41249999999962483,
+      "mean": 0.07499999999980247
+    },
+    "lead_in_s_units_per_event_median": {
+      "n": 20,
+      "q25": -0.5570591245671191,
+      "q50": 0.16695163591891526,
+      "q75": 0.6530867779233167,
+      "mean": 0.10063980741349157
+    },
+    "n_events_with_matches": 20,
+    "match_tol_seconds": {
+      "n": 75,
+      "q25": 2.266963040295863,
+      "q50": 3.9171730111601666,
+      "q75": 7.013411291143932,
+      "mean": 5.616117870866685
+    },
+    "onset_spacing_field_seconds": {
+      "n": 75,
+      "q25": 4.93386135677459,
+      "q50": 9.162323067410654,
+      "q75": 16.179999999985284,
+      "mean": 11.70524296596382
+    },
+    "matched_share_of_level_onsets": {
+      "n": 59,
+      "q25": 0.0,
+      "q50": 0.0,
+      "q75": 0.16666666666666666,
+      "mean": 0.12337295472888693
+    },
+    "circular_shift_null": {
+      "what": "field onsets shifted circularly inside the window, count and spacing preserved, timing relationship destroyed; 200 draws per event. If the observed lead sits inside this band the match is chance pairing and the lead statistic is empty.",
+      "null_lead_median_seconds": {
+        "n": 27,
+        "q25": -0.13486126161183165,
+        "q50": -0.021883792386688583,
+        "q75": 0.0633014912463139,
+        "mean": -0.015280540353280444
+      },
+      "null_share_field_first": {
+        "n": 27,
+        "q25": 0.41666666666666663,
+        "q50": 0.5,
+        "q75": 0.5,
+        "mean": 0.441358024691358
+      },
+      "null_matched_share": {
+        "n": 27,
+        "q25": 0.20804740957966766,
+        "q50": 0.3333333333333333,
+        "q75": 0.42710380561014827,
+        "mean": 0.3678520093544748
+      }
+    },
+    "lead_seconds_all_onsets": {
+      "n": 41,
+      "q25": -0.7599999999993088,
+      "q50": 0.13999999999987267,
+      "q75": 0.8399999999998613,
+      "mean": 0.08585365853639637
+    },
+    "lead_in_s_units_all_onsets": {
+      "n": 41,
+      "q25": -0.9106048049110754,
+      "q50": 0.22917564590307068,
+      "q75": 0.9167025836122827,
+      "mean": 0.13107057212636877
+    },
+    "share_of_onsets_field_first": 0.5853658536585366
+  },
+  "divergence_kill_condition": {
+    "pre_registered": "if D does not lead LEVEL by a POSITIVE MEDIAN in units of s on real tape, the construction closes as a detector and only s_min survives.",
+    "min_onsets_to_read": 30,
+    "how_the_condition_is_read": "A POINT ESTIMATE IS NOT A LEAD. The condition is read against a two-sided binomial test of the share of matched onsets on which D fired first, versus the 50% the circular-shift null gives by construction. A positive median that a binomial cannot separate from chance does not clear it.",
+    "sign_form": {
+      "on_share_median": 1.0,
+      "n_onsets": 4,
+      "median_lead_in_s_units": 0.5504479946087618,
+      "verdict": "DEGENERATE. ON ~100% of the time on real tape, so it emits almost no onsets and no lead is measurable. D's zero is the POISSON identity and this tape sits 1.29 decades below it. The lead figure on a handful of onsets is not a result and is not read.",
+      "n_matched_onsets": 4,
+      "n_events_contributing": 3,
+      "share_D_first": 0.5,
+      "binomial_p_vs_chance": null,
+      "wilcoxon_p_lead_ne_zero": null,
+      "lead_iqr_seconds": [
+        -0.4399999999995998,
+        2.199999999997999
+      ]
+    },
+    "relative_form": {
+      "on_share_median": 0.02100700233411137,
+      "n_onsets": 41,
+      "median_lead_in_s_units": 0.22917564590307068,
+      "note": "the mirror of LEVEL, and NOT parameter-free -- which was the property D was supposed to buy.",
+      "n_matched_onsets": 41,
+      "n_events_contributing": 20,
+      "share_D_first": 0.5853658536585366,
+      "binomial_p_vs_chance": 0.34888887944907765,
+      "wilcoxon_p_lead_ne_zero": 0.4435538225304114,
+      "lead_iqr_seconds": [
+        -0.7599999999993088,
+        0.8399999999998613
+      ]
+    },
+    "median_D_at_s_star": -1.2894031940158668,
+    "met": true,
+    "verdict": "KILL CONDITION MET. The point estimate is +0.229 s-units but the share of onsets on which D fires first is not distinguishable from chance (binomial p=0.349 on n=41, from 20 of 75 events). A point estimate is not a lead. And it comes from the RELATIVE form, which is not parameter-free -- the property D was proposed for. The construction closes as a detector; only s_min survives."
   },
   "r2_ridge_on_loglambda": {
     "n": 75,

@@ -95,8 +95,10 @@
     convention · D17 quote-state exclusion · D18 Stage B population and the decision cell ·
     D19 spreads and costs in both units · D20 sub-bursts assembled under a merge tolerance and a
     run-length floor · **D21 threshold-from-trough is closed; the log-interval representation is not**
-    (2026-08-27, 10d-R0 fired).
-  - **Next free number: D22.**
+    (2026-08-27, 10d-R0 fired) · **D22 the scale-space field closes as a detector; the resolution
+    floor `s >= 2.26/lambda` survives and is the first derived-not-adopted applicability criterion**
+    (2026-08-28).
+  - **Next free number: D23.**
 - Repo map: docs/Research-Library-Map.md. Data layout: data/Schema.md.
 - `docs/Claude-Code-Operating-Plan.md` **exists** (added 2026-08-13, commit `edfb1ea`; §6 is the phase
   map). The note previously here said it had never existed in this checkout — true when written on

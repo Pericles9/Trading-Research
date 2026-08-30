@@ -156,7 +156,7 @@
     "4. Cooper reads it.",
     "5. Only then: matched-null thresholds, then the cohort."
   ],
-  "stop_after": "task_1",
+  "stop_after": "CLOSED",
   "forward_returns": "NOT TOUCHED. The moment anything here touches forward returns, the full Agent_Prompt_Standard applies again, pre-registered, no exceptions.",
   "resolution_floor": {
     "rule": "n_eff = 2*sqrt(pi)*s*lambda >= neff_min  =>  s >= 2.2568/lambda at neff_min = 8.",
@@ -249,6 +249,14 @@
     },
     "reading": "NOT a restatement (Jaccard 0.26 vs a 0.9 bar; R^2 0.18) and NOT a lead -- it LAGS. Field fires first on 29.7% of matched onsets against a 50% chance baseline. Cooper's pre-fixed read was that firing at the same instants means the construction adds nothing operationally; the measured answer is worse than that.",
     "what_survives": "the parameter-free construction is still a real structural gain -- zero is not a tunable and 2.26 is not a cutoff -- and the field is still distinct from a rate detector. Distinct and earlier are different properties and only the second was tradeable.",
-    "consequence": "Tasks 2-5 NOT STARTED. Task 1 was specified as deciding the rest. Task 3's fixed-kernel control arm is now MORE important, not less."
-  }
+    "consequence": "Tasks 2-5 NOT STARTED. Task 1 was specified as deciding the rest. Task 3's fixed-kernel control arm is now MORE important, not less.",
+    "divergence_test": {
+      "sign_form": "DEGENERATE on real tape: median D at s* is -1.29 decades below the Poisson identity, so D<0 is ON ~100% and emits 4 onsets over 75 events.",
+      "relative_form": "D below its own trailing q10. Lead +0.229 s-units but binomial p=0.349 on n=41 from 20/75 events -- not distinguishable from chance -- and not parameter-free.",
+      "kill_condition": "MET. The construction closes as a detector; only s_min survives."
+    }
+  },
+  "status": "CLOSED 2026-08-28 -- D22. The field closes as a detector; s_min survives.",
+  "closing_decision": "D22, docs/Universe-Decisions.md. Next free number D23.",
+  "one_sided_kernel_precondition": "STANDING, UNDISCHARGED. Both booleans use a CENTRED kernel and read forward by ~s. Relative ordering survives; NO ABSOLUTE TIMING CLAIM DOES. Nothing in this line is tradeable until the construction is re-derived on a one-sided kernel and the comparison re-run. Recorded in D22."
 }
