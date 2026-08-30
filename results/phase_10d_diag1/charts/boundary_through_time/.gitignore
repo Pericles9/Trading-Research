@@ -1,0 +1,8 @@
+# Diag1 boundary-through-time: per-event distribution/boundary HTML, light and dark,
+# regenerable from committed config + code (Agent_Prompt_Standard §12). 934 MB.
+# Regenerate: .venv/Scripts/python.exe research/phase_10d_diag1/plot_boundary_through_time.py \
+#   --frames results/phase_10d_diag1/artifacts/diag1_frames.parquet \
+#   --ladder results/phase_10d_diag1/artifacts/diag1_ladder.parquet \
+#   --tape   results/phase_10d_diag1/artifacts/diag1_tape.parquet \
+#   --out    results/phase_10d_diag1/charts/boundary_through_time --kernel 8
+*

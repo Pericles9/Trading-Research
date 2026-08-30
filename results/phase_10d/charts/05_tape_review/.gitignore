@@ -1,0 +1,4 @@
+# Phase 10d chart 05: per-event tape review HTML+PNG (the 10d-R0 set), regenerable
+# from committed config + code (Agent_Prompt_Standard §12). 270 MB.
+# Regenerate: .venv/Scripts/python.exe research/phase_10d/t4_tape.py
+*
