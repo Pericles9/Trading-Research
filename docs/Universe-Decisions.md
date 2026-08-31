@@ -940,9 +940,12 @@ contributors are a strict subset of the centred 45, so the comparison runs withi
 centred **3/19** lead (median −0.187 s-units), causal **19/19** (median +1.515); paired
 difference median **+1.906 s-units**, **18/19 positive, Wilcoxon p = 1.9e−05**. The 19 are
 not a special subpopulation — the centred arm's median on them (−0.187) matches its median
-on the other 26 (−0.209). Same frozen cohort and hash, same anchors, same ladder, same
-debounce, same tolerance rule, same 200-draw circular-shift null, same window. One thing
-changed.
+on the other 26 (−0.209), **Mann-Whitney p = 0.954**; had these been events where the field
+leads under any kernel, the centred arm would already show it on them. Dropping the largest
+causal contributor (36% of onsets) leaves causal 18/18 and the paired difference 17/18
+positive. Same frozen cohort and hash, same anchors, same ladder, same debounce, same
+tolerance rule, same 200-draw circular-shift null, same window. One thing changed. Code
+path: `research/scale_field/t1_paired_control.py` → `t1_paired_control.json`.
 
 **The mechanism, which is why D22's assumption failed.** `LEVEL` is a *level* (`λ̂` above a
 trailing q90) and under a centred kernel it sees burst mass arrive from the future, so it

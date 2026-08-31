@@ -1464,7 +1464,9 @@ median **+1.180 s**, both segments agreeing in sign.
 subset of the centred 45, so it runs within event: centred 3/19 lead (−0.187), causal 19/19
 (+1.515), paired difference **+1.906 s-units, 18/19 positive, Wilcoxon p = 1.9e−05**. The
 19 are not a special subpopulation — centred median on them (−0.187) ≈ on the other 26
-(−0.209). Same frozen cohort and hash, same anchors, ladder, debounce, tolerance rule,
+(−0.209), Mann-Whitney p = 0.954; dropping the largest causal contributor (36% of onsets)
+leaves causal 18/18 and the paired difference 17/18 positive. Code path
+`t1_paired_control.py` → `t1_paired_control.json`. Same frozen cohort and hash, same anchors, ladder, debounce, tolerance rule,
 200-draw circular-shift null and window; one thing changed.
 
 **What did NOT change, and it is deliberate.** `dw/dln s = w·z²` regardless of the support

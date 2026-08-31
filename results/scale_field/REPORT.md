@@ -1036,8 +1036,13 @@ run within event:
 - paired difference: median **+1.906** s-units, **18/19 positive, Wilcoxon p = 1.9e−05**
 
 And the 19 are not a special subpopulation: the centred arm's median on the shared 19
-(**−0.187**) is indistinguishable from its median on the other 26 (**−0.209**). The
-reversal is caused by the kernel.
+(**−0.187**) is indistinguishable from its median on the other 26 (**−0.209**),
+**Mann-Whitney p = 0.954**. If these were events where the field leads under any kernel,
+the centred arm would already show it on them. It does not. **The reversal is caused by
+the kernel.** Code path and artifact: `research/scale_field/t1_paired_control.py` →
+`results/scale_field/artifacts/t1_paired_control.json`. Dropping the largest causal
+contributor (VCIG_2024-12-13_39.13, 36% of onsets) leaves causal 18/18 leading and the
+paired difference 17/18 positive.
 
 **Why it reverses, and D22 could not have known this without running it.** D22 assumed
 both booleans read forward by about `s`, so both cheat equally. They do not. `LEVEL` is
