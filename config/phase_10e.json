@@ -9,8 +9,9 @@
     "_who": "landed from the handoff paste; corrections are factual only, no threshold filled",
     "scale_field_module": "was 'research/scale_space/scale_field.py' -- that path does not exist and neither does research/scale_space/. Corrected to research/scale_field/scale_field.py, which is where the module actually lives and what Arm 2 T5b would have failed to import.",
     "branch_base": "the prompt said 'cut from main'. There is no main branch in this repo; origin/HEAD points to master. Corrected to master in prompts/phase_10e.md.",
-    "arm2_max_events": "NOT changed -- it is a tunable and therefore Cooper's. Flagged instead: the causal arm of the scale-space run covered 78 events, so a cap of 75 makes escalation row 5 fire, and row 5 also forbids silently reducing the cohort. Resolve before Arm 2 is authorised.",
-    "det_anchor": "NOT changed. Flagged: this config reads the D7 anchor from results/phase_8/artifacts/a102_detection_anchors.parquet, while the scale-space arc read it from results/phase_10/artifacts/v2_r13_detection.parquet. Both are cited as D7 and they are different files with different scopes. Confirm which Arm 2 is meant to use."
+    "arm2_max_events": "RESOLVED 2026-08-31 by Cooper: the integer is retired (null) and replaced by arm2_cohort_artifact + arm2_cohort_expected_n. 75 vs 78 was a SET-IDENTITY problem, not a cap problem - 75 was the centred +60s admissible count and 78 is the causal cohort, two different sets. A bare integer cannot express which one is authorised, which is exactly what row 5 exists to protect.",
+    "det_anchor": "RESOLVED 2026-08-31 by Cooper: a102 for BOTH arms. See frozen_inputs.det_anchor_single_source_rule and escalation row 25.",
+    "_resolutions_date": "2026-08-31"
   },
   "universe": {
     "analysis_universe": "in_scope = TRUE AND source_file = 'file1'",
@@ -38,7 +39,9 @@
     "minute_bars": "event_minute_bars_v2",
     "minute_bars_expected_rows": 45925350,
     "scale_field_module": "research/scale_field/scale_field.py",
-    "scale_field_note": "Reused UNCHANGED. Do not fork it. Channels per arm2.signal, amended 2026-08-30 under D23."
+    "scale_field_note": "Reused UNCHANGED. Do not fork it. Channels per arm2.signal, amended 2026-08-30 under D23.",
+    "det_anchor_single_source_rule": "ONE ANCHOR, BOTH ARMS: a102_detection_anchors.parquet, the artifact D7 was taken on and the one Phase 11 reuses frozen. results/phase_10/artifacts/v2_r13_detection.parquet is Phase 10's own detection artifact and is NOT used here. If Arm 1 and Arm 2 resolve det_anchor differently the two arms are not on the same clock - escalation row 25. Phase 10 v2 produced results/phase_10/artifacts/v2_r14_phase8_crosscheck.json specifically to reconcile the two: READ it and report agreement on the Arm 2 cohort (T1a-i); do not re-derive the comparison. Disagreement on any cohort event is a finding for the register and a stop.",
+    "det_anchor_crosscheck": "results/phase_10/artifacts/v2_r14_phase8_crosscheck.json"
   },
   "cost": {
     "_source": "results/reports/phase_11_report.md - named cell, RTH, latency 5 min. NOT recomputed here.",
@@ -98,8 +101,10 @@
     "authorised": false,
     "authorisation_note": "Set true ONLY by Cooper in writing after the T4 gate. The agent does not set this.",
     "arm2_cohort": "scale-space admissible set, anchor +60s window",
-    "arm2_max_events": 75,
-    "arm2_max_events_flag": "The causal arm of the scale-space run covered 78 events (results/scale_field/artifacts/t1_lead_time_onesided.json). 78 > 75 fires escalation row 5, and row 5 also forbids silently reducing the cohort. Cooper resolves before Arm 2 is authorised.",
+    "arm2_cohort_artifact": "[Cooper] - repo path to the committed cohort manifest the causal run produced",
+    "arm2_cohort_expected_n": "[Cooper] - the row count of that artifact, asserted at load",
+    "arm2_max_events": null,
+    "arm2_cohort_note": "The cohort is a NAMED FROZEN ARTIFACT, not a count. Row 5 fires if the loaded manifest's row count differs from arm2_cohort_expected_n in EITHER direction - silent expansion and silent reduction are the same defect. The centred +60s admissible set (n=75) and the causal cohort (n=78) are different sets, possibly not nested; do not substitute one for the other, and do not reconstruct either from a count.",
     "pass_budget": {
       "method": "targeted per-event folder reads only",
       "equivalence_proof": "Phase 10 v1 T0d"
@@ -208,7 +213,8 @@
     "row_13_ceiling": "[Cooper]",
     "row_13_proposal": "lower bound of the event-clustered CI on p_clear(oracle) - p_clear(control) <= 0 at the best cell",
     "row_13_scope": "THE CEILING. Firing means an oracle with full lookahead does not beat random entry inside the same event, and the timing-detector line closes.",
-    "row_13_reasoning": "Non-causality only helps the oracle, so a null here is decisive in a way a null on a causal detector would not be."
+    "row_13_reasoning": "Non-causality only helps the oracle, so a null here is decisive in a way a null on a causal detector would not be.",
+    "row_1_amendment": "AMENDED 2026-08-31 by Cooper. The original row 1 stopped on 'phase-11-approved absent OR master moved since it'. master being ahead is the expected state - the scale-space arc happened after Phase 11 and touched nothing this phase consumes - and clearing the row by fiat would have thrown away the check it was meant to make. Split into: row 1 (tag absent -> stop), row 1a (any of the five frozen inputs differs in content hash from its state at the tag -> stop, post both hashes and the commits that touched it), row 1b (master moved AND 1a passes -> NOT a stop; record the commit count in decisions_log and proceed). An unconditional branch check replaced by a real integrity test."
   },
   "runtime_ceilings": {
     "runtime_ceiling_seconds_arm1": 3600,

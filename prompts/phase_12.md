@@ -8,9 +8,29 @@ no shared artifact, no dependency in either direction.
 **Standard:** `docs/Agent_Prompt_Standard.md` §§7–12 apply in full.
 
 > **Landing correction, 2026-08-30** — the branch base read `main`; there is no `main` in this repo
-> (`origin/HEAD -> origin/master`), so it reads `master` throughout. **Nothing else was changed.** Every
-> `[Cooper]` slot, including the entire LULD band table, is exactly as handed over, and escalation
-> row 2 therefore hard-stops this phase at T0c until Cooper fills them.
+> (`origin/HEAD -> origin/master`), so it reads `master` throughout.
+>
+> **Cooper's resolution, 2026-08-31 — the LULD band table is now DRAFTED, and it is not yet authority.**
+> The 16 `[Cooper]` slots were never thresholds to set from judgement; they are **exchange mechanics the
+> offline environment cannot fetch**, which is a sourcing task. `config.luld_bands` now carries a draft
+> (Tier 2 brackets, the closing-period doubling window, the 15 s limit state and 300 s pause) drafted
+> from the LULD plan operator site and the Nasdaq FAQ, marked `_STATUS: DRAFT`. **`source_document`
+> remains `[Cooper]` deliberately — the config must cite a document Cooper has verified, not a URL —
+> so escalation row 2 still hard-stops this phase at T0c, and row 4 still bars any parameter that does
+> not cite a key in that block.**
+>
+> **Two questions are recorded as OPEN in `luld_bands._open_verification_questions` and both bite on
+> exactly this population:** whether the closing-period doubling applies to a Tier 2 security that
+> crossed $3.00 *during* the session or is set from the previous close, and whether the brackets key
+> off previous close or the live reference price.
+>
+> **The bracket crossing is a prediction, not a caveat.** Phase 11 A2-6 puts implied price at ~$2.21
+> (T−3) rising to ~$4.52 (T=0), so the median event crosses $3.00 mid-event: the band goes 20% → 10%
+> *and* the security loses its closing-period doubling. In dollars the band is near-constant
+> ($0.442 → $0.452) while price roughly doubles, so **the relative move required to trigger a halt
+> approximately halves as the event runs.** If halt risk rises through an event, part of that rise is
+> mechanical. T4b must carry `price_bracket` and `doubling_window_active` as state variables or it will
+> attribute a guardrail effect to the tape.
 
 ---
 
@@ -110,7 +130,9 @@ the same failure that blocked 10b's global envelope test; it is anticipated here
   - [ ] T4b — P(halt in the next `config.hazard_windows_minutes` | state), where every state variable is
         **knowable at decision time and lagged by realistic pipeline latency** — `CLAUDE.md` standing
         constraint. Candidate states from config; distance to the band edge is the obvious one and must
-        be causal.
+        be causal. **`price_bracket` and `doubling_window_active` are REQUIRED, not optional** — the
+        band tightens mechanically as the event runs (see the landing note), and a model without them
+        attributes a guardrail effect to the tape.
   - [ ] T4c — Report as distributions and empirical hazards. **No fitted hazard model, no parametric
         survival family** — that is not this phase. Chart 04.
   - [ ] T4d — Commit.

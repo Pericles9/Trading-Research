@@ -14,19 +14,21 @@ design; the agent fills none of them.
 > taken** — appended earlier the same day as *"The causal re-derivation reverses D22's lead result"*
 > (`docs/Universe-Decisions.md` line 904, commits `d026a1d` / `f0c1039`). The register was read to
 > confirm, per this file's own instruction and Phase 10e escalation row 22. **The drafts are now
-> D24–D27** in `docs/decisions_draft_D24_D27.md`, and cross-references here and in
+> D24–D26** in `docs/decisions_draft_D24_D26.md`, and cross-references here and in
 > `docs/operating_plan_s6_replacement.md` were shifted to match. **References to D23 inside
 > `prompts/phase_10e.md` and `config/phase_10e.json` were NOT touched** — those point at the real,
 > taken D23 and are correct.
 >
-> **2. Draft D25 (was D24, "fast detection and ride") cannot be appended as written.** Its first bullet
-> closes onset prediction partly because `dL/dln s` *"necessarily **lags** a level statistic … measured
-> at −0.21 in units of `s`."* That is the centred-kernel number and **D23 reversed it**: under a
-> one-sided kernel the field **leads** by +1.515 kernel widths on 19/19 events, paired within event,
-> Wilcoxon p = 1.9e−05. The *conclusion* may well survive — saturation is untouched, the base is 19 of
-> 100 events, and the fixed-kernel control is unrun — but the stated reason does not. Flagged in place,
-> **not rewritten**; the wording is Cooper's. Draft D27's *"derivable and not yet applied"* is stale for
-> the same reason and is annotated too.
+>
+> **RESOLVED 2026-08-31 — the entry-signal draft is WITHDRAWN, not repaired.** It closed onset
+> prediction on three reasons and **D23 removed two**: the *"necessarily lags"* clause is reversed
+> (+1.515 kernel widths, 19/19 events, Wilcoxon p = 1.9e−05) and *"LEVEL is the only channel that fired
+> reliably"* is false. Only saturation survives, and saturation speaks to *discrimination*, not to
+> *onset versus confirmation* — it does not carry the conclusion alone. Repairing the wording would have
+> preserved a conclusion whose support was gone. **No decision is taken on entry-signal class and no
+> number is consumed;** the open item is annotated in `docs/Open-Items-Register.md` with the three tests
+> that now decide it. The `s_min` draft's *"not yet applied"* now reads as applied, with the measured
+> coefficient in code.
 >
 > **3. Corrected, factual only:** `config/phase_10e.json` pointed `scale_field_module` at
 > `research/scale_space/scale_field.py`, which does not exist and neither does that directory — the
@@ -34,10 +36,20 @@ design; the agent fills none of them.
 > three prompts said "cut from `main`"; there is no `main` branch (`origin/HEAD -> origin/master`), so
 > they read `master`.
 >
-> **4. Flagged, not changed, because they are Cooper's:** `arm2_max_events = 75` against a causal cohort
-> of **78** — that fires escalation row 5, which also forbids silently reducing the cohort. And the two
-> different D7 anchor artifacts (`phase_8/a102_detection_anchors.parquet` here vs.
-> `phase_10/v2_r13_detection.parquet` in the scale-space arc), both cited as D7.
+>
+> **4. RESOLVED 2026-08-31 — all four flagged items came back with rulings.**
+> **(a) `arm2_max_events` is retired.** 75 vs 78 was a *set-identity* problem, not a cap problem, and a
+> bare integer cannot express which set is authorised. Replaced by `arm2_cohort_artifact` +
+> `arm2_cohort_expected_n`; **row 5 now fires on a difference in either direction** — silent expansion
+> and silent reduction are the same defect.
+> **(b) One anchor, `a102`, both arms** — new row 25, new task T1a-i, and
+> `v2_r14_phase8_crosscheck.json` is *read*, not re-derived. Disagreement on any cohort event is a
+> register finding and a stop.
+> **(c) Row 1 is amended, not cleared** — split into 1 / 1a / 1b, where 1a tests the frozen inputs'
+> content hashes against their state at `phase-11-approved` and 1b records branch movement without
+> stopping. A blanket branch check replaced by the integrity test it was a proxy for.
+> **(d) The LULD table is drafted** but `source_document` stays `[Cooper]`, so Phase 12 is still
+> row-2 blocked. Two verification questions are recorded as open.
 >
 > **Also observed, read-only:** `claude/scale_space_lessons.md`, cited in §3 as the authority for a
 > closed item, **does not exist in this checkout.**
@@ -47,8 +59,11 @@ design; the agent fills none of them.
 > `event_minute_bars_v2` = **45,925,350**, matching row 7 exactly. All five frozen artifacts present.
 > Working tree clean. `results/phase_11/digest.json` has **no `status` field** — T0a asks for it.
 >
-> **Neither Phase 10e nor Phase 12 can begin:** every `[Cooper]` slot is unfilled and both row 2s
-> hard-stop. `prompts/universe_scan_scoping.md` carries no `[Cooper]` slot and is not blocked.
+> **Neither Phase 10e nor Phase 12 can begin:** 8 real `[Cooper]` slots remain in 10e (cohort artifact
+> and its expected n, the named cell's barrier pair, and rows 10–13) and 7 in 12 (`source_document`,
+> gap threshold, dictionary path, latency lag, ruin thresholds, rows 10–11). Both row 2s hard-stop.
+> **`prompts/universe_scan_scoping.md` was authorised on 2026-08-31 and run** — see
+> `results/scope_universe_scan/REPORT.md`.
 
 ---
 
@@ -159,7 +174,7 @@ any new "free" criterion before building on it.
 | `config/phase_12.json` | Same. LULD band table entirely unfilled. | Draft |
 | `prompts/universe_scan_scoping.md` | Scope and feasibility only. **Executes no scan.** **No `[Cooper]` slot — not blocked.** | Draft |
 | `docs/operating_plan_s6_replacement.md` | Replacement §6 phase map + the superseding note. | Draft |
-| `docs/decisions_draft_D24_D27.md` | Four decision texts for Cooper to take, amend, or reject. | **Drafts. Not decisions. Renumbered on landing.** |
+| `docs/decisions_draft_D24_D26.md` | **Three** decision texts. The entry-signal draft was withdrawn 2026-08-31 and consumes no number. | **Drafts. Not decisions. Renumbered twice.** |
 
 **Decision numbering was not verified when this was written, and it was wrong.** D23 had already been
 taken. The drafts are now **D24–D27**. **First task of any session that appends a decision: read the tail
@@ -180,7 +195,7 @@ It has now been stale twice — near-collision at D20, real collision at D23.
 | 6 | Phase 19 | everything | Unchanged. |
 
 Rows 13, 15 and 16 do not appear as phases. See `docs/operating_plan_s6_replacement.md` for why, and
-`docs/decisions_draft_D24_D27.md` **D26** for the disposition text.
+`docs/decisions_draft_D24_D26.md` **D25** for the disposition text.
 
 ---
 

@@ -10,9 +10,16 @@ definable as an object. This asks whether any of it predicts price. It is the la
 > `main`; there is no `main` in this repo (`origin/HEAD -> origin/master`), so it reads `master`
 > throughout. (2) `config.frozen_inputs.scale_field_module` pointed at `research/scale_space/scale_field.py`,
 > which does not exist and neither does that directory; corrected to `research/scale_field/scale_field.py`.
-> (3) Flagged but **not** changed, because they are Cooper's: `arm2_max_events = 75` against a causal
-> cohort of 78 (fires row 5, which also forbids silently reducing the cohort), and the two different
-> D7 anchor artifacts named in the config's `_corrections_on_landing` block.
+>
+> **Cooper's resolutions, 2026-08-31.** (a) **Row 1 is amended, not cleared.** The blanket
+> *"`master` moved"* stop was a poor proxy for the check it was meant to make; it is now rows 1 / 1a / 1b,
+> where **1a tests the frozen inputs' content hashes against their state at `phase-11-approved`** and 1b
+> records the branch movement without stopping. (b) **`arm2_max_events` is retired.** 75 vs 78 was a
+> set-identity problem, not a cap problem — the cohort is now a **named frozen artifact** plus an asserted
+> row count, and row 5 fires on a difference in *either* direction. (c) **One anchor, and it is `a102`,
+> for both arms**; new row 25 and new task T1a-i. (d) The entry-signal draft decision is **withdrawn**,
+> so no decision closes onset prediction and the open item stays open — see
+> `docs/decisions_draft_D24_D26.md`.
 
 ---
 
@@ -58,8 +65,11 @@ signal, or an operating point.** Same relationship Phase 10's offline segmentati
 - **D21 and D13 stand.** No burst object, no burst timescale, no burst-vs-quiet split appears anywhere in
   this phase. If a task appears to need one, stop and post.
 - **Pass budget.** Arm 1: **zero** passes over `filtered_trades` or `filtered_quotes`. Arm 2: targeted
-  per-event folder reads only, cohort capped in config; the equivalence licensing this was proven in
-  Phase 10 v1 T0d.
+  per-event folder reads only, over the **named frozen cohort manifest** in
+  `config.arm2.arm2_cohort_artifact`; the equivalence licensing this was proven in Phase 10 v1 T0d.
+- **One detection anchor across both arms.** `results/phase_8/artifacts/a102_detection_anchors.parquet`,
+  the artifact D7 was taken on. If Arm 1 measures path position from one anchor and Arm 2 from another,
+  the two arms are not on the same clock and the comparison between them is uninterpretable. Row 25.
 - **Flag, never delete.** Any candidate entry or event failing a coverage or definedness condition is
   carried with a label and reported as its own row. Never pooled, never dropped.
 - **Every tunable lives in `config/phase_10e.json`.** No magic numbers in code. Where this prompt does
@@ -96,6 +106,10 @@ denominator degenerated on the majority of its population and the gate could not
       clean; the `status` field of `results/phase_11/digest.json`; whether `event_minute_bars_v2` exists
       and its row count; which of the frozen artifacts named in T1a are present. **Post the table before
       anything else.**
+- [ ] **T0a-i — Frozen-input integrity (row 1a).** For each of the five frozen inputs, compare its
+      content hash now against its content at `phase-11-approved`. Post artifact, both hashes, and — on
+      any difference — the commits that touched it. `master` having moved is **not** a stop (row 1b);
+      a frozen input having *changed* is.
 - [ ] **T0b — Branch and prompt.** Cut `phase/10e` from `master`. Commit `prompts/phase_10e.md` as the
       first commit on the branch.
 - [ ] **T0c — Config.** Author and commit `config/phase_10e.json` before any run. Every `[Cooper]` slot
@@ -113,6 +127,14 @@ denominator degenerated on the majority of its population and the gate could not
         Reuse **frozen**: `det_anchor` from `results/phase_8/artifacts/a102_detection_anchors.parquet`
         (D7); `pq_rth_open` from `results/phase_8/artifacts/t3_participation.parquet` (**not** the
         anchors file — Phase 11 A1-7); the Phase 9 flags. **Do not re-derive any of them.**
+  - [ ] T1a-i — **ONE ANCHOR, AND IT IS `a102`. BOTH ARMS.** `a102_detection_anchors.parquet` is the
+        artifact D7 was taken on and the one Phase 11 reuses frozen. `results/phase_10/artifacts/
+        v2_r13_detection.parquet` is Phase 10's own detection artifact and is **not** used here.
+        **Read `results/phase_10/artifacts/v2_r14_phase8_crosscheck.json`** — Phase 10 v2 produced it
+        specifically to reconcile the two — and report whether they agree on the Arm 2 cohort. **Do not
+        re-derive the comparison.** If the crosscheck shows disagreement on any event in the cohort,
+        that is a finding for the register and a **stop**, not something to reconcile inside this phase.
+        Escalation row 25.
   - [ ] T1b — One candidate entry per minute bar at or after `det_anchor`, per event. Carry:
         `minutes_since_anchor`, `n_prints`, `pq_rth_open`, `det_segment`, `era`, and every Phase 9 flag.
   - [ ] T1c — **Per-minute λ̂ and `s_min = 2.26/λ̂`** from the bar's print count. This is the scale-space
@@ -158,9 +180,12 @@ denominator degenerated on the majority of its population and the gate could not
 ### ARM 2 — The oracle ceiling *(only after the T4 gate; targeted tick reads)*
 
 - [ ] **T5 — Cohort and signal**
-  - [ ] T5a — Cohort: the scale-space admissible set at the anchor +60 s window
-        (`config.arm2_cohort`), capped at `config.arm2_max_events`. `collapse_same_timestamp` applies
-        and is a precondition, not a detail.
+  - [ ] T5a — Cohort: load `config.arm2.arm2_cohort_artifact` — **a named frozen manifest, not a
+        count** — and assert its row count equals `config.arm2.arm2_cohort_expected_n` (row 5 fires on a
+        difference in **either** direction). The centred `+60 s` admissible set (n = 75) and the causal
+        cohort (n = 78) are **different sets, possibly not nested**; do not substitute one for the other,
+        and do not reconstruct either from a count. `collapse_same_timestamp` applies and is a
+        precondition, not a detail.
   - [ ] T5b — **Three channels, not one. AMENDED 2026-08-30 under D23 — see the note below.**
         (i) **LEVEL centred** — `λ̂(t,s)` above its own trailing q90 at `s = 2·s_min(t)`, full lookahead.
         This is the **oracle ceiling** arm and is what the original prompt specified.
@@ -225,11 +250,13 @@ Do not adjust a parameter to make a criterion pass. Table order is priority orde
 
 | # | Condition | Threshold | Action |
 |---|---|---|---|
-| 1 | `phase-11-approved` absent, or `master` moved since it | any | Hard stop at T0a — post tag/SHA state, do not proceed on assumption |
+| 1 | `phase-11-approved` tag absent | any | Hard stop at T0a — post tag/SHA state |
+| 1a | **Any of the five frozen inputs differs in content hash from its state at `phase-11-approved`** | any | Hard stop — post the artifact, both hashes, and the commits that touched it |
+| 1b | `master` has moved since `phase-11-approved` **and** row 1a passes | any | **Not a stop.** Record the commit count in `decisions_log` and proceed |
 | 2 | Any `[Cooper]` config slot unfilled at T0c | any | Hard stop — the agent fills none of them |
 | 3 | T0d satisfiability audit fails any check | any | Hard stop |
 | 4 | Any pass over `filtered_trades` / `filtered_quotes` in Arm 1 | any (> 0) | Hard stop |
-| 5 | Arm 2 tick reads exceed `config.arm2_max_events` | any | Hard stop — do not silently reduce the cohort either |
+| 5 | Arm 2's loaded cohort manifest has a row count **differing from `config.arm2.arm2_cohort_expected_n` in either direction** | any | Hard stop — silent expansion and silent reduction are the same defect |
 | 6 | Spine numeric column on a computation path | any (> 0) | Hard stop |
 | 7 | `event_minute_bars_v2` row count ≠ 45,925,350 | any | Hard stop |
 | 8 | A first-passage number reported from Arm 1 without both R1 bounds | any | Hard stop before posting |
@@ -249,6 +276,7 @@ Do not adjust a parameter to make a criterion pass. Table order is priority orde
 | 22 | A decision appended to `docs/Universe-Decisions.md` at a number not confirmed free by reading the file | any | Hard stop — the pointer list has been stale before and caused a near-collision at D20, and again at D23 on 2026-08-30 |
 | 23 | Any onset compared across channels before T5b-i null-rate matching | any | Hard stop — the lead and the noise are not separable until the channels fire at equal rates on null tape |
 | 24 | A causal kernel run against the **centred** floor `2.26/λ` | any | Hard stop — a one-sided kernel keeps half the mass, so `n_eff = √π·s·λ` and the causal floor is `4.51/λ`. Using `2.26/λ` puts every read at `n_eff = 4.00`, exactly half the target |
+| 25 | **Arm 1 and Arm 2 resolve `det_anchor` to different artifacts** | any | Hard stop — the two arms are not on the same clock and the comparison between them is uninterpretable |
 
 ---
 
@@ -307,7 +335,7 @@ On completion, post, in this order:
 7. *(Arm 1 stops here at the T4 gate.)*
 8. Arm 2 cohort and control-matching table
 9. **The ceiling table — oracle − control, per cell, with clustered CIs**
-10. Escalation check table — all 24 rows, observed against threshold, pass / fail
+10. Escalation check table — all 25 rows (1, 1a, 1b, 2–25), observed against threshold, pass / fail
 11. Verification block per §10 — every headline number with source, n, effective n, repro command
 12. Output file table with status
 13. Commit list

@@ -1576,3 +1576,38 @@ Phase 10e T0a asks for.
 
 **State observed read-only at landing:** `event_minute_bars_v2` = **45,925,350** rows, matching escalation
 row 7 exactly; all five frozen artifacts present; working tree clean.
+
+### Handoff resolutions (2026-08-31)
+
+Cooper returned rulings on all four flagged items and named four defects of drafting, one of them
+systematic. **The systematic one is worth carrying forward:** the chat layer sees Project docs and the
+repo through one interface, the executor sees only the repo, so **any prompt or config drafted for the
+executor must cite repo paths only**; where a Project doc is the source of a fact, the fact is restated
+in the prompt rather than pointed at. That is what produced the `claude/scale_space_lessons.md` citation.
+Alongside it: an invented path presented as fact is a fabrication rather than a defect, and the correct
+behaviour was to mark it `[verify]`.
+
+**Rulings applied.** (1) **The entry-signal draft decision is WITHDRAWN and consumes no number** — D23
+removed two of its three stated reasons, and saturation, the only survivor, speaks to discrimination
+rather than to onset-versus-confirmation. The remaining drafts shift to **D24–D26**
+(`docs/decisions_draft_D24_D26.md`, renumbered a second time); the open item is annotated in
+`docs/Open-Items-Register.md` with the three tests that now decide it (null-rate matching, the
+fixed-kernel control, price conversion of the lead). *"A decision that says still-undecided is not a
+decision and should not consume a number."* (2) **Escalation row 1 amended, not cleared** — split into
+1 / 1a / 1b, where **1a compares the five frozen inputs' content hashes against their state at
+`phase-11-approved`** and 1b records branch movement without stopping; new task T0a-i. An unconditional
+branch check became the integrity test it was a poor proxy for. (3) **`arm2_max_events` retired** in
+favour of `arm2_cohort_artifact` + `arm2_cohort_expected_n`, with row 5 firing on a difference in
+**either** direction — 75 vs 78 was set identity, not a cap. (4) **One detection anchor, `a102`, across
+both arms**, new escalation row 25 and task T1a-i; `results/phase_10/artifacts/v2_r14_phase8_crosscheck.json`
+is read rather than re-derived. (5) **Phase 12's LULD band table drafted** from public sources and marked
+`_STATUS: DRAFT`, with `source_document` deliberately left `[Cooper]` — the config must cite a verified
+document, not a URL, so row 2 still blocks the phase. Two questions recorded open: whether the
+closing-period doubling applies to a Tier 2 security that crossed $3.00 mid-session, and whether the
+brackets key off previous close or the live reference price. `price_bracket` and `doubling_window_active`
+are promoted to **required** T4b state variables, because the median event crosses $3.00 during the event
+and its band goes 20% -> 10% while price roughly doubles — **the relative move needed to halt roughly
+halves as the event runs, mechanically**, and a hazard model without the bracket would attribute that to
+the tape.
+
+**Still blocked:** 8 real `[Cooper]` slots in `config/phase_10e.json`, 7 in `config/phase_12.json`.

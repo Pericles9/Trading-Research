@@ -5,10 +5,12 @@
 17, 18, 19, Opt-A and Parallel are unchanged in substance** — 10e is an insert, exactly as 10b was under
 D10, and **nothing is renumbered.** The row-*n*-is-`prompts/phase_{n}.md` contract is preserved.
 
-> **Landing note, 2026-08-30.** Draft-decision cross-references below were shifted by one
-> (draft D25 → **D26**) because **D23 was already taken** by the causal re-derivation and the handoff's
-> drafts renumbered to D24–D27. See `docs/decisions_draft_D24_D27.md`. References to the real D5, D10,
-> D11, D13 and D21 are unchanged.
+> **Landing notes.** **2026-08-30:** the handoff's drafts were renumbered D23–D26 → D24–D27, because
+> D23 had already been taken by the causal re-derivation. **2026-08-31:** Cooper withdrew the
+> entry-signal draft without consuming a number (D23 removed two of its three stated reasons), so the
+> remaining three shifted down again — **the rows-13/15/16 disposition is now draft D25**. See
+> `docs/decisions_draft_D24_D26.md`. References to the real D5, D10, D11, D13 and D21 are unchanged,
+> and draft numbers are provisional until confirmed against the register at append time.
 
 ---
 
@@ -36,8 +38,8 @@ Replace rows 13, 15 and 16 with:
 
 | Phase | Name | Produces | Charts | Gate |
 |---|---|---|---|---|
-| **13** | ~~Noise floor & tape characterization~~ — **FOLDED into 10e** | Its stated deliverable was interval and print-size distributions *"inside bursts vs. outside"*. **D11/D13 closed the burst/quiet split and `config/phase_10b.json` lists two-state segmentation as closed-do-not-reopen, so half of it has no object.** The remainder — interval distributions, the resolution floor, sub-burst composition, Allan structure — was delivered by the scale-space arc. What survives enters 10e as the `s_min` stratifier | — | **Does not run as a phase.** See D26 |
-| **15** | ~~Burst hazard function~~ — **DEAD AS WRITTEN, absorbed** | Specified as *"duration distributions — P(death \| age)"*. **D13 and D21 leave no defensible burst durations, so its input does not exist.** The exit prior remains wanted and D5 budgets it at least equally with entry work — but its conditioning variable is now **time since entry**, not burst age, and it falls out of 10e's first-passage labels rather than needing its own phase | — | **Does not run as written.** See D26 |
+| **13** | ~~Noise floor & tape characterization~~ — **FOLDED into 10e** | Its stated deliverable was interval and print-size distributions *"inside bursts vs. outside"*. **D11/D13 closed the burst/quiet split and `config/phase_10b.json` lists two-state segmentation as closed-do-not-reopen, so half of it has no object.** The remainder — interval distributions, the resolution floor, sub-burst composition, Allan structure — was delivered by the scale-space arc. What survives enters 10e as the `s_min` stratifier | — | **Does not run as a phase.** See D25 |
+| **15** | ~~Burst hazard function~~ — **DEAD AS WRITTEN, absorbed** | Specified as *"duration distributions — P(death \| age)"*. **D13 and D21 leave no defensible burst durations, so its input does not exist.** The exit prior remains wanted and D5 budgets it at least equally with entry work — but its conditioning variable is now **time since entry**, not burst age, and it falls out of 10e's first-passage labels rather than needing its own phase | — | **Does not run as written.** See D25 |
 | **16** | Regime labeling + stability | Unchanged in construction. **Deferred, not cancelled.** Its question is whether offline labels are stable under perturbation; if 10e's ceiling is flat there are no labels worth testing, and if it is not, the test belongs on **causal** labels, which do not exist until the detector phase | Label-set overlap under perturbation | Foundation solid, or sand — **evaluated after 10e, on causal labels** |
 
 Row **12** is unchanged and is authorised to run **in parallel with 10e** — independent data path, no

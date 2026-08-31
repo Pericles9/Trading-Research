@@ -247,3 +247,33 @@ created per Phase 2's T8 addendum instruction to "log verbatim to the register."
 - **Standing decision recorded:** `docs/Universe-Decisions.md` D3 gained an amendment for the
   session-boundary and auction-print assignment rule this phase established, for reuse by any
   future intraday segment work.
+
+
+### Entry-signal class — annotated 2026-08-31, still open
+
+The item above ("Entry-signal class undecided — onset prediction vs. fast detection and ride", logged
+D5 redirect T5, 2026-08-03) **remains open.** A draft decision closing it in favour of *fast detection
+and ride* was prepared on 2026-08-30 and **withdrawn on 2026-08-31 without consuming a number**, because
+D23 removed two of its three stated reasons the day after it was written.
+
+**What changed.** The draft argued that `dL/dln s` (i) saturates at −1, (ii) *"necessarily lags"* a level
+statistic, measured at −0.21 in units of `s`, and (iii) that LEVEL was the only channel that ever fired
+reliably. **D23 reversed (ii) and falsified (iii):** under a one-sided kernel the field boolean *leads*
+by +1.515 kernel widths on 19/19 contributing events, paired within event, Wilcoxon p = 1.9e−05. Only
+(i) survives, and saturation is a statement about *discrimination*, not about *onset versus
+confirmation* — it does not carry the conclusion alone.
+
+**The three tests that now decide this item**, none of them run:
+
+1. **Null-rate matching** — Phase 10e T5b-i, escalation row 23. Until all channels fire at equal rates on
+   burst-free tape, "FIELD leads" and "FIELD is noisier" are the same statement. D22 measured FIELD
+   firing at 2.8× LEVEL's rate.
+2. **The fixed-kernel control** — under a causal kernel `dL/dln s` weights recent lags while `λ̂` averages
+   the whole half-kernel (centroid `0.80·s`), so a shorter level kernel may buy the same lead. The
+   measured +1.52 against a 0.80 centroid gap is suggestive, not separating. This is Task 3 of the
+   scale-space work order, promoted by D23 from declined formality to the decisive test, and unrun.
+3. **Price conversion** — +1.180 s of lead is not yet a number in basis points. Phase 10e Arm 2 is where
+   it becomes one, or does not.
+
+**A decision that says "still undecided" is not a decision and should not consume a number.** Cooper
+decision, unassigned. Still blocking Phase 17 specification per `docs/Claude-Code-Operating-Plan.md` §6.
