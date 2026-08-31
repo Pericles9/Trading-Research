@@ -1,0 +1,94 @@
+{
+  "task": "T4 + T5 - routes to an unconditional population, and what each would cost",
+  "constraints_binding_this_section": [
+    "NO route is proposed, recommended, or characterised as best / cheapest / obvious (escalation row 9).",
+    "NO estimate of the live false-positive rate appears here, bounded or hedged (escalation row 4). Route R4 DESCRIBES a bound; it does not compute one.",
+    "The environment is offline (D14). External data is NAMED and COSTED, never fetched."
+  ],
+  "cost_basis": {
+    "_rule": "Order-of-magnitude, from the programme's own measured throughput rather than a guess.",
+    "measured_daily_glob": "1,836 ticker-parquet files, 144,026 rows, full scan in 11.6 s (this pass, T3)",
+    "measured_targeted_tick_read": "scale-space causal run: 78 events, anchor +/-1,260 s of tape each, 515 s wall total, i.e. ~6.6 s per event-window including the estimator",
+    "measured_minute_bar_table": "event_minute_bars_v2 holds 45,925,350 rows for the 20,951-event in-scope archive",
+    "archive_scale": "20,951 in-scope events, 2,930 tickers, 1,465 sessions, 2020-01-03 to 2025-10-31"
+  },
+  "routes": [
+    {
+      "id": "R1",
+      "route": "Universe-wide daily bar source",
+      "what_it_needs": "Daily OHLCV for every NMS common stock on XNYS/XNAS across 1,465 sessions, 2020-01-03 to 2025-10-31. Roughly 4,000-6,000 symbols x 1,465 sessions is order 10^7 rows.",
+      "on_disk": "NO. data/daily holds 1,836 tickers over 82 sessions (5.6% of the archive's sessions), and whether those 1,836 are a market-wide set or themselves selected is not established.",
+      "what_it_would_establish": "How many names cleared a >=30%-from-previous-close move on a DAILY basis, per session, across the archive span. That is a denominator for daily-resolution admission.",
+      "what_it_would_NOT_establish": "Anything about intraday or extended-hours firing. A daily bar cannot express a screen that polls every 20 s and admits at all hours (screen_definition.json elements 2 and 5). It answers a different question from the one the live screen asks.",
+      "failure_mode": "Silently substituting a daily close-to-close move for the live screen's intraday, pre/post-inclusive trigger, and reporting the result as the live rate.",
+      "cost": {
+        "passes": "1 full pass over an external daily source, order 10^7 rows",
+        "wall_time": "minutes, by analogy with the 11.6 s measured for 1.4x10^5 rows - the scan is not the cost",
+        "storage": "order 1-3 GB as parquet",
+        "blocked_by_offline": "YES - the data is not on disk and D14 bars fetching it"
+      }
+    },
+    {
+      "id": "R2",
+      "route": "Intraday scan replay over a historical window",
+      "what_it_needs": "Minute or tick data for the WHOLE market over the replay window, not the ~1,848 already-filtered tickers. Plus the reference-price rule that ambiguity A1 leaves unresolved.",
+      "on_disk": "NO. data/filtered holds only tickers that already passed selection; Phase 8 A10.2d confirmed the rejected-candidate population is absent from it.",
+      "what_it_would_establish": "The only route that reproduces the live screen AS SPECIFIED - 20 s poll, all hours, common stock on XNYS/XNAS - and therefore the only one that can produce a fire-rate rather than a proxy.",
+      "what_it_would_NOT_establish": "Nothing further is needed for the fire-rate question, but the result is conditional on A1 being settled first; a replay run against the wrong reference price answers a different screen.",
+      "failure_mode": "Running the replay on the tickers that are on disk. That reproduces the archive, not the market, and would return a fire rate near 1 by construction.",
+      "cost": {
+        "passes": "1 pass over whole-market intraday data for the window; at the archive's own density this is order 10^11-10^12 rows for the full span, and materially less for a short window",
+        "wall_time": "the measured 6.6 s per event-window is for ONE ticker-session; a market-wide replay is 3-4 orders of magnitude more ticker-sessions",
+        "storage": "order 10-100 TB for the full span; a single quarter is order 1 TB",
+        "blocked_by_offline": "YES - the data is not on disk and D14 bars fetching it"
+      }
+    },
+    {
+      "id": "R3",
+      "route": "Flanking-day pseudo-controls",
+      "what_it_needs": "Nothing new. The T-3..T+3 flanking sessions of events already in data/filtered.",
+      "on_disk": "YES, subject to flag_window_calendar_bug per damaged offset (CLAUDE.md universe rules) and to the 17 residual flagged sessions.",
+      "what_it_would_establish": "A WITHIN-TICKER contrast: how often a ticker that produced one qualifying event also cleared the screen on adjacent days. Already noted in the register as a partial patch.",
+      "what_it_would_NOT_establish": "The cross-ticker false-positive rate, which is the quantity risk rows 3, 4 and 9 are about. Every ticker in this route is already a selected ticker, so the population it samples is the archive's, not the market's. It bounds a different thing from the one being scoped.",
+      "failure_mode": "Reporting a within-ticker rate as if it were the live screen's fire rate.",
+      "cost": {
+        "passes": "0 new external passes; targeted per-event folder reads over existing data/filtered",
+        "wall_time": "order 20,951 events x a few seconds of tape read, i.e. tens of hours single-threaded, less if restricted to a cohort",
+        "storage": "negligible - artifacts only",
+        "blocked_by_offline": "NO"
+      }
+    },
+    {
+      "id": "R4",
+      "route": "A bound rather than a rate, from the 82-session daily window",
+      "what_it_needs": "Nothing new, IF and only if the 1,836 tickers in data/daily can first be established as a market-wide set for that window - which T3 explicitly did NOT establish.",
+      "on_disk": "PARTIALLY. The bars are there for 2024-12-02..2025-04-01; the market-wide claim is not.",
+      "what_it_would_establish": "For that window only - 5.6% of archive sessions, containing 2,165 in-scope events - a bound on the ratio between names clearing a daily-resolution screen and names present in the archive. A bound, on a 4-month slice, at daily resolution.",
+      "what_it_would_NOT_establish": "A rate, any intraday or extended-hours behaviour, or anything about the other 94.4% of the archive's sessions. And if the 1,836 are themselves a selected set, the bound is not a bound.",
+      "failure_mode": "Treating a 4-month, daily-resolution bound as the programme-wide false-positive rate. This is the cheapest route and therefore the one most likely to be over-read.",
+      "cost": {
+        "passes": "1 pass over data/daily, measured at 11.6 s",
+        "wall_time": "minutes including the market-wide-set audit, which is the real work",
+        "storage": "negligible",
+        "blocked_by_offline": "NO for the arithmetic; YES for the market-wide-set audit, which needs a reference list of NMS common stock for the window that is not on disk"
+      },
+      "NOT_COMPUTED_HERE": "Escalation row 4 bars this pass from producing the bound. The route is described; the number is not produced."
+    }
+  ],
+  "sequencing_facts": {
+    "_rule": "Facts about ordering, not a proposal. Row 9 bars proposing a route.",
+    "A1_gates_R2": "Ambiguity A1 - the reference price of todaysChangePerc - must be settled before R2 can be specified, because a replay is a reproduction of a screen and the screen is not fully defined without it.",
+    "market_wide_audit_gates_R4": "R4's validity depends on an audit R4 does not itself perform.",
+    "R1_and_R2_are_both_offline_blocked": "Neither can start under D14 without an external acquisition, which is a procurement decision rather than a research one.",
+    "R3_is_the_only_route_that_can_start_today": "Stated as a fact about blockers, not as a recommendation. R3 also answers a different question from the one being scoped, per its own row."
+  },
+  "questions_this_pass_could_not_answer": [
+    "What todaysChangePerc is referenced to, and whether its numerator includes extended-hours trades (A1). Settling it requires an external field definition; D14 bars the fetch.",
+    "Where the >=X% momentum threshold is actually applied - the producer of the two momentum scan files is not in this checkout, so the archive's own momentum screen is still unread. Risk row 2 is only half-closed by this pass.",
+    "Whether data/daily's 1,836 tickers are a market-wide set or a selected one. T3 measured breadth; it did not establish provenance.",
+    "Which strategy defines the intended live universe for research purposes (A2).",
+    "The size of the rejected-candidate population, which Phase 8 A10.2d established is absent from data/filtered and which no route above recovers from disk."
+  ],
+  "source": "research/none - this pass wrote no code that touches data beyond read-only queries",
+  "reproduce": "see results/scope_universe_scan/REPORT.md sections 4 and 5"
+}
