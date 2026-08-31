@@ -1525,3 +1525,54 @@ Artifacts `t1_lead_time_onesided.{json,parquet}`; charts
 `charts/cohort/08_onesided_{light,dark}.html`. Decision: `docs/Universe-Decisions.md`
 **D23**, with a forward pointer added to D22 so it is not cited standalone; `CLAUDE.md`
 pointer list updated in the same commit. **Next free number D24.**
+
+
+## Handoff landing — Phase 10e, Phase 12, universe-scan scoping (2026-08-30)
+
+**Not phases yet. Specs only, nothing run.** Seven files landed from a chat-layer handoff paste. Both
+measurement phases are hard-stopped by their own escalation row 2 (`[Cooper]` slots unfilled: 8 in
+`config/phase_10e.json`, 16 in `config/phase_12.json`, including the entire LULD band table). The agent
+fills none of them.
+
+**Files** — `prompts/phase_10e.md` + `config/phase_10e.json` (forward excursion and the detector ceiling;
+two arms, Arm 1 gates Arm 2; 24 escalation rows); `prompts/phase_12.md` + `config/phase_12.json` (halts
+and LULD; Stage A is a feasibility gate; 17 rows); `prompts/universe_scan_scoping.md` (**the only
+unblocked item** — no `[Cooper]` slot, read-only on data, produces a written feasibility assessment and
+no measurement); `docs/operating_plan_s6_replacement.md` (proposed §6 map: 10e inserted, rows 13/15/16
+disposed, nothing renumbered); `docs/decisions_draft_D24_D27.md` (four draft decision texts);
+`README_HANDOFF.md`.
+
+**The numbering collision the handoff predicted, and it happened.** The drafts arrived numbered D23–D26
+on the belief that D22 was the last decision taken. **D23 was already taken the same day** — the causal
+re-derivation. The register was read to confirm (the handoff's own instruction, and Phase 10e escalation
+row 22), and the drafts were renumbered **D24–D27**, with cross-references in `README_HANDOFF.md` and
+`operating_plan_s6_replacement.md` shifted to match. **References to D23 inside `prompts/phase_10e.md`
+and `config/phase_10e.json` were left alone** — those cite the real D23 and are correct. The pointer list
+has now been stale twice: near-collision at D20, real collision at D23.
+
+**Draft D25 cannot be appended as written, and it is flagged in place rather than rewritten.** Its
+justification for closing onset prediction rests partly on `dL/dln s` *"necessarily lagging"* a level
+statistic at −0.21 kernel widths — the centred-kernel number, which **D23 reversed** (+1.515 under a
+one-sided kernel, 19/19 events, paired, Wilcoxon p = 1.9e−05). Saturation and the `D` degeneracy survive
+and still support the conclusion; the stated reason does not. Draft D27's *"derivable and not yet
+applied"* is stale for the same reason and is annotated. Both notes say what the minimum repair is and
+leave the wording to Cooper.
+
+**Two factual corrections made on landing.** `config/phase_10e.json` pointed `scale_field_module` at
+`research/scale_space/scale_field.py` — that path and that directory do not exist, the module is at
+`research/scale_field/scale_field.py`, and Arm 2 T5b would have failed to import. All three prompts said
+"cut from `main`"; there is no `main` branch (`origin/HEAD -> origin/master`), so they read `master`.
+
+**Three flagged and deliberately not changed, because they are Cooper's:** `arm2_max_events = 75`
+against a causal cohort of **78** (fires row 5, which also forbids silently reducing the cohort); the two
+different artifacts both cited as the D7 anchor (`phase_8/a102_detection_anchors.parquet` in this config
+vs. `phase_10/v2_r13_detection.parquet` in the scale-space arc); and Phase 10e escalation **row 1, which
+fires as written** — `phase-11-approved` is at `05ccbfc` and `master` is 70 commits ahead of it.
+
+**Also recorded:** `claude/scale_space_lessons.md`, cited by the handoff as the authority for a
+closed-do-not-reopen item, does not exist in this checkout; the standing record is D22/D23 and
+`results/scale_field/REPORT.md`. And `results/phase_11/digest.json` carries no `status` field, which
+Phase 10e T0a asks for.
+
+**State observed read-only at landing:** `event_minute_bars_v2` = **45,925,350** rows, matching escalation
+row 7 exactly; all five frozen artifacts present; working tree clean.

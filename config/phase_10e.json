@@ -1,0 +1,248 @@
+{
+  "phase": "10e",
+  "name": "Does the path pay? Forward excursion, and the ceiling on timing detection",
+  "branch": "phase/10e",
+  "committed_before_any_run": true,
+  "_note": "Every [Cooper] value below is UNFILLED BY DESIGN. The agent proposes none of them and fills none of them. T1 hard-stops (escalation row 2) if any remain unfilled in the committed file.",
+  "_corrections_on_landing": {
+    "_date": "2026-08-30",
+    "_who": "landed from the handoff paste; corrections are factual only, no threshold filled",
+    "scale_field_module": "was 'research/scale_space/scale_field.py' -- that path does not exist and neither does research/scale_space/. Corrected to research/scale_field/scale_field.py, which is where the module actually lives and what Arm 2 T5b would have failed to import.",
+    "branch_base": "the prompt said 'cut from main'. There is no main branch in this repo; origin/HEAD points to master. Corrected to master in prompts/phase_10e.md.",
+    "arm2_max_events": "NOT changed -- it is a tunable and therefore Cooper's. Flagged instead: the causal arm of the scale-space run covered 78 events, so a cap of 75 makes escalation row 5 fire, and row 5 also forbids silently reducing the cohort. Resolve before Arm 2 is authorised.",
+    "det_anchor": "NOT changed. Flagged: this config reads the D7 anchor from results/phase_8/artifacts/a102_detection_anchors.parquet, while the scale-space arc read it from results/phase_10/artifacts/v2_r13_detection.parquet. Both are cited as D7 and they are different files with different scopes. Confirm which Arm 2 is meant to use."
+  },
+  "universe": {
+    "analysis_universe": "in_scope = TRUE AND source_file = 'file1'",
+    "decision": "D1",
+    "session": "T=0",
+    "segments_computed": [
+      "premarket",
+      "rth",
+      "post"
+    ],
+    "segment_carrying_the_gate": "rth",
+    "gate_segment_decision": "D18"
+  },
+  "frozen_inputs": {
+    "_rule": "Reused frozen. NOT re-derived. Re-deriving any of these is escalation row 6 territory.",
+    "det_anchor": "results/phase_8/artifacts/a102_detection_anchors.parquet",
+    "det_anchor_decision": "D7",
+    "participation_quintile": "results/phase_8/artifacts/t3_participation.parquet",
+    "participation_note": "pq_rth_open is read HERE, not from a102_detection_anchors.parquet. Phase 11 A1-7 correction.",
+    "phase_9_flags": [
+      "flag_cross_session_extreme",
+      "flag_possible_row_cap",
+      "flag_has_dup_prints"
+    ],
+    "minute_bars": "event_minute_bars_v2",
+    "minute_bars_expected_rows": 45925350,
+    "scale_field_module": "research/scale_field/scale_field.py",
+    "scale_field_note": "Reused UNCHANGED. Do not fork it. Channels per arm2.signal, amended 2026-08-30 under D23."
+  },
+  "cost": {
+    "_source": "results/reports/phase_11_report.md - named cell, RTH, latency 5 min. NOT recomputed here.",
+    "round_trip_bp": 70.98,
+    "round_trip_cents": 2.512,
+    "effective_spread_bp_at_lat5_rth": 75.8,
+    "effective_spread_cents_at_lat5_rth": 2.385,
+    "reporting_units": [
+      "bp",
+      "cents"
+    ],
+    "reporting_rule": "D19 - both units always, neither alone",
+    "standing_qualifier_verbatim": "Effective spread measures the cost of the average print, not the cost of a specific order. Depth, queue position and fill probability are not measured. The cost stack is a LOWER BOUND."
+  },
+  "arm1": {
+    "_description": "Excursion base rate. Zero passes over filtered_trades / filtered_quotes.",
+    "pass_budget": {
+      "filtered_trades": 0,
+      "filtered_quotes": 0
+    },
+    "latency_minutes": [
+      0,
+      1,
+      5
+    ],
+    "latency_0_note": "Physical impossibility. Labelled the upper bound on every chart and table. D7.",
+    "latency_axis_caveat": "Minute resolution cannot express a 1-3 second execution lag, so Arm 1's latency axis is PESSIMISTIC relative to achievable execution. State this in the report. Arm 2 carries the real axis.",
+    "horizons_minutes": [
+      1,
+      5,
+      15,
+      30,
+      60
+    ],
+    "entries_per_event": 40,
+    "entry_subsample_seed": 42,
+    "entry_denominators": {
+      "print_weighted": "every bar with n_prints >= 1",
+      "event_equalised": "seeded uniform subsample of entries_per_event bars per event, equal weight per event",
+      "rule": "Both carried. Never blended. Phase 11 T7b pattern."
+    },
+    "smin_coefficient": 2.26,
+    "smin_formula": "s_min = 2.26 / lambda_hat, from n_eff = 2*sqrt(pi)*s*lambda >= 8",
+    "smin_note": "The one surviving criterion of the 10-series. Enters here as a STRATIFIER only. No field is computed in Arm 1.",
+    "smin_bands_seconds": [
+      0.5,
+      1,
+      2,
+      5,
+      10,
+      30,
+      100
+    ]
+  },
+  "arm2": {
+    "_description": "Oracle ceiling. Non-causal by construction and that is the point. Gated behind T4.",
+    "authorised": false,
+    "authorisation_note": "Set true ONLY by Cooper in writing after the T4 gate. The agent does not set this.",
+    "arm2_cohort": "scale-space admissible set, anchor +60s window",
+    "arm2_max_events": 75,
+    "arm2_max_events_flag": "The causal arm of the scale-space run covered 78 events (results/scale_field/artifacts/t1_lead_time_onesided.json). 78 > 75 fires escalation row 5, and row 5 also forbids silently reducing the cohort. Cooper resolves before Arm 2 is authorised.",
+    "pass_budget": {
+      "method": "targeted per-event folder reads only",
+      "equivalence_proof": "Phase 10 v1 T0d"
+    },
+    "collapse_same_timestamp": true,
+    "collapse_note": "Precondition, not a detail. Real tape carries same-timestamp prints (log 0).",
+    "signal": {
+      "channels": [
+        "LEVEL_centred (oracle ceiling)",
+        "LEVEL_causal",
+        "FIELD_causal"
+      ],
+      "amended": "2026-08-30 under D23 - the original LEVEL-only instruction is withdrawn",
+      "level_definition": "lambda_hat(t,s) above its own trailing q90",
+      "centred_scale": "s = 2 * s_min(t), s_min = 2.26/lam",
+      "causal_scale": "s = 2 * s_min_causal(t), s_min_causal = 4.51/lam",
+      "trailing_window_seconds": 60,
+      "quantile": 0.9,
+      "null_rate_matching": "REQUIRED before any cross-channel onset comparison. T5b-i, escalation row 23.",
+      "null_rate_matching_why": "An onset is a first-passage event. First passage of a noisier series occurs EARLIER with no information content. D22 measured FIELD firing at 2.8x the LEVEL rate. Until thresholds are matched on burst-free tape, \"FIELD leads\" and \"FIELD is noisier\" are the same statement."
+    },
+    "channels_closed_do_not_build": {
+      "D": "m + lograte/ln10 + gamma/ln10 - degenerate against the Poisson reference. Fired its kill condition again under the CAUSAL kernel: 3 and 2 onsets over 78 events. Remains closed."
+    },
+    "control_draws": 200,
+    "control_seed": 42,
+    "control_matching": "stratified on seconds_since_anchor so the control shares the oracle's position-in-path distribution",
+    "control_note": "Intraday drift is real and large. An unmatched control measures drift, not selection.",
+    "latency_seconds": [
+      0.25,
+      0.5,
+      1,
+      2,
+      5
+    ],
+    "horizons_seconds": [
+      10,
+      30,
+      60,
+      300
+    ],
+    "smin_causal_coefficient": 4.5135,
+    "smin_causal_note": "A one-sided kernel keeps half the mass, so n_eff = sqrt(pi)*s*lam and the causal floor is exactly TWICE the centred one. Using 2.26/lam under a causal kernel puts every read at n_eff = 4.00. Escalation row 24. Implemented as scale_field.s_min_onesided / s_min_for_rate(kernel='onesided').",
+    "field_status_note": "D22 closed FIELD as a detector on two facts. Fact 1 (saturation, dL/dln s >= -1) is UNCHANGED and survives the causal kernel - dw/dln s = w*z^2 regardless of support. Fact 2 (FIELD lags LEVEL) was REVERSED by D23 under a one-sided kernel. Only fact 2 is reopened."
+  },
+  "barrier_grid": {
+    "_units": "multiples of round_trip_bp",
+    "profit_k": [
+      1.5,
+      2,
+      3
+    ],
+    "stop_m": [
+      1,
+      2
+    ],
+    "expiry": "the horizon H of the cell",
+    "breakeven_formula": "p_breakeven = (m + 1) / (k + m)",
+    "breakeven_note": "Arithmetic, not a choice. One round trip is charged on every outcome. Do NOT assume 0.5.",
+    "expiry_in_dollars_note": "model_selection_session_notes s6 prefers a dollar expiry over a clock expiry. NOT adopted here - Arm 1 is bar-based and has no dollar clock. Logged as an open item for the feature phase."
+  },
+  "reading_rules": {
+    "R1_intrabar_ordering": "Compute BOTH bounds (optimistic / pessimistic). Never a single Arm 1 first-passage number. Report ambiguous share.",
+    "R2_expiry_class": "Three outcome classes sum to 1 per cell. A win rate on touched-only entries is a BANNED output.",
+    "R3_no_fill": "Own row, own share. Never dropped, never forward-filled.",
+    "R4_dead_tape": "Entries with MFE and MAE both below the smallest barrier at every horizon - own share per cell.",
+    "R5_event_dominance": "Every pooled cell reports raw n, distinct events, and effective n under event-equal weighting.",
+    "R6_breakeven": "p_clear reported against p_breakeven per cell, always.",
+    "R7_thin_cells": "Cells below min_cell_n hatched, carry no claim, appear in no summary sentence."
+  },
+  "inference": {
+    "bootstrap_reps": 2000,
+    "bootstrap_seed": 42,
+    "clustering": [
+      "event",
+      "ticker"
+    ],
+    "clustering_precedent": "Phase 9 ticker-block bootstrap",
+    "ci_level": 0.95,
+    "min_cell_n": 100,
+    "max_event_share": 0.05
+  },
+  "named_cell": {
+    "_description": "The single cell escalation rows 10, 11 and 12 are evaluated on. Chosen before the run.",
+    "arm": "arm1",
+    "denominator": "print_weighted",
+    "det_segment": "rth",
+    "latency_minutes": 5,
+    "horizon_minutes": 30,
+    "profit_k": "[Cooper]",
+    "stop_m": "[Cooper]",
+    "cell_rationale": "latency 5 / hold 30 / RTH matches the Phase 11 named cell exactly, so the two phases are directly comparable. The barrier pair is Cooper's."
+  },
+  "cooper_thresholds": {
+    "_note": "UNFILLED. Escalation row 2 hard-stops T1 if any remain [Cooper] in the committed file.",
+    "row_10_r1_ambiguous_share_max": "[Cooper]",
+    "row_10_proposal": 0.25,
+    "row_10_scope": "R1 ambiguous share on the named cell. Above this, Arm 1 cannot carry a first-passage conclusion; MFE/MAE distributions still stand.",
+    "row_11_no_fill_share_max": "[Cooper]",
+    "row_11_proposal": 0.1,
+    "row_11_scope": "R3 no-fill share on the named cell.",
+    "row_12_arm1_gate": "[Cooper]",
+    "row_12_proposal": "pessimistic p_clear below p_breakeven at EVERY cell in the grid",
+    "row_12_scope": "THE ARM 1 GATE. Firing means the path does not pay at minute scale. Arm 2 does not run.",
+    "row_12_reasoning": "Expressed as a SHARE against an arithmetic break-even, defined on every candidate entry. Phase 11's row 11 was a median ratio and could not see a denominator that was non-positive on 52.86% of its cell. This is the direct correction.",
+    "row_13_ceiling": "[Cooper]",
+    "row_13_proposal": "lower bound of the event-clustered CI on p_clear(oracle) - p_clear(control) <= 0 at the best cell",
+    "row_13_scope": "THE CEILING. Firing means an oracle with full lookahead does not beat random entry inside the same event, and the timing-detector line closes.",
+    "row_13_reasoning": "Non-causality only helps the oracle, so a null here is decisive in a way a null on a causal detector would not be."
+  },
+  "runtime_ceilings": {
+    "runtime_ceiling_seconds_arm1": 3600,
+    "runtime_ceiling_seconds_arm2": 7200,
+    "on_breach": "hard stop; do not silently reduce the cohort, the grid, or the ladder"
+  },
+  "closed_do_not_reopen": [
+    "D6 no within-session quiet state",
+    "D8 event-relative reference",
+    "D9 interval-based, no intensity curve as operating variable",
+    "D13 no burst timescale established",
+    "D21 threshold-from-trough and every repair inside it, including exact partition",
+    "Hawkes calibration",
+    "constant-reference thresholding",
+    "two-state segmentation",
+    "burst vs quiet as a split",
+    "envelope fitting",
+    "print aggregation",
+    "any free parameter referenced to a Poisson null"
+  ],
+  "write_allowlist": [
+    "prompts/",
+    "config/",
+    "research/phase_10e/",
+    "results/phase_10e/",
+    "results/reports/phase_10e_report.md",
+    "docs/Universe-Decisions.md (APPEND-ONLY, number confirmed by reading the file)",
+    "docs/Open-Items-Register.md (APPEND-ONLY)",
+    "docs/Research-Library-Map.md (APPEND-ONLY)"
+  ],
+  "reporting": {
+    "n_rule": "Every posted table carries n AND effective n per row. Every prose claim carries its chart filename.",
+    "description_only": "No recommendations, no causal language, no 'suggests / confirms / indicates / therefore'.",
+    "escalation_report_order": "Report in table order - the table is the priority order.",
+    "units_rule": "D19 - bp and cents, never one alone"
+  }
+}
