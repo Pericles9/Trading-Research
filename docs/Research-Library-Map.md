@@ -1449,3 +1449,77 @@ lineage's timescales and what the tape supports. **Tasks 2–5 not run:** at 2�
 onset test negative, the fixed-kernel arm is the likely winner rather than a control. Decision:
 `docs/Universe-Decisions.md` **D22**; `CLAUDE.md` pointer list updated in the same commit; **next free
 number D23**.
+**REOPENED IN PART 2026-08-30 — D23. The causal re-derivation reverses D22's lead result.**
+D22's own standing precondition (both booleans centred, so both read forward by ~`s`;
+"relative ordering survives — both cheat equally") was discharged by re-deriving the
+estimator on a causal half-Gaussian, `w(u) = exp(−u²/2s²)·1[u ≥ 0]`. **The parenthesis is
+false.** `LEVEL` is a level statistic that a centred kernel advances by seeing future mass;
+`FIELD` is a centred concentration statistic that cannot respond until the burst is
+centred. They do not cheat equally, and removing the forward read from both flips the
+ordering: the field goes from **−0.204** kernel widths (12/45 events leading) to **+1.515**
+(**19/19** events, sign test p = 3.8e−06; 18/18 with the largest contributor dropped),
+median **+1.180 s**, both segments agreeing in sign.
+
+**The paired control is what makes it a finding.** The 19 causal contributors are a strict
+subset of the centred 45, so it runs within event: centred 3/19 lead (−0.187), causal 19/19
+(+1.515), paired difference **+1.906 s-units, 18/19 positive, Wilcoxon p = 1.9e−05**. The
+19 are not a special subpopulation — centred median on them (−0.187) ≈ on the other 26
+(−0.209). Same frozen cohort and hash, same anchors, ladder, debounce, tolerance rule,
+200-draw circular-shift null and window; one thing changed.
+
+**What did NOT change, and it is deliberate.** `dw/dln s = w·z²` regardless of the support
+restriction, so `dL/dln s = E_w[z²] − 1 ≥ −1` under the causal kernel too. **D22's
+structural fact 1 — saturation — survives untouched** (still ON 23.4% vs LEVEL's 11.9%),
+and `test_onesided_is_still_bounded_below_by_minus_one` exists so the causal work cannot be
+misread as having repaired it. The Poisson cross-channel identity survives too. The D
+channel fires its kill condition again (median D −1.284 decades, 3 and 2 onsets over 78
+events).
+
+**The derived price.** `n_eff` halves (`2√π·s·λ` → `√π·s·λ`), so **`s_min` doubles to
+`4.514/λ`** and the bottom octave of the usable range is gone; median `s*` 1.567 → 2.506 s.
+Against that, the centred field needs 4 kernel widths of *future*, so in a live window it is
+undefined above `W/8` and **not computable until `T + 4·s*`** — median **6.27 s**, q75
+**12.72 s**, against the ten-second horizon at which half this cohort is inactive. The
+`W/8` ceiling that bounded §11's usable range was never a property of the data.
+
+**Two defects found in the same run, both reported not silently fixed.** (1) `knn_rate()`
+used `lo = i − k//2` — k/2 prints on *each* side of `t` — so `λ̂` → `s_min(t)` → the scale
+`s*` the booleans are read at depended on prints that had not happened; swapping only the
+estimator would have left the scale selection cheating while the estimator looked clean.
+(2) A coordinate bug in the first draft of the causality test (`prep` re-origins to the
+first print, so truncating the raw tape cut 26 ms off-target) — caught by the test failing
+against itself, which is the defect class `test_verification.py` exists for.
+
+**Code** — `scale_field.py` gains `field_onesided()` (explicit FFT convolution, **no
+pyramid**: half-Gaussians do not compose in quadrature and the pyramid's symmetric
+pre-decimation low-pass would leak future into past, so the causal path carries strictly
+*fewer* approximations than the centred one it is compared against), `s_min_onesided()`,
+`kernel=` on `field_exact()` and `s_min_for_rate()`. `t1_lead_time.py` takes
+`--kernel centred|onesided` and counts event attrition by reason. New
+`test_onesided.py` (13 assertions); new `plot_onesided.py`.
+
+**Tests** — 59 passing (16 acceptance + 8 verification + 13 causal + adapter,
+pyramid-sensitivity, sign/bound/identity pins). Causality is asserted for **bit equality**
+by *rewriting* the future rather than deleting it, so array lengths match and numpy's
+pairwise summation associates identically; the deletion variant is 4e-15 and the reason is
+recorded rather than absorbed. The closed-form causal rate ramp
+`dL/dln s = k²s² − 2a·e^{−a²}/(√π·erfc(a))`, `a = ks/√2`, matches to < 0.03 across 14
+scales and is *negative* where the centred form is positive.
+
+**Allan hard-stop gate re-run after the estimator change: 2,166/2,166 cells, max relative
+difference 0.000e+00.** The only diff in `reconcile_allan.json` is the config-hash key.
+
+**What this does not settle.** Saturation stands. Only **19 of 100** cohort events
+contribute a matched onset, and the two booleans are temporally segregated on most (matched
+share of LEVEL onsets 20.0% against a 65.1% null; the null gives 50.0% field-first so the
+*sign* is not a selection artifact, but the base is 19 events). And under a causal kernel
+`dL/dln s` weights recent lags while `λ̂` averages the half-kernel, centroid `0.80·s` — so
+**a shorter level kernel might buy the same lead**. The measured +1.52 is about twice the
+0.80 centroid gap, so it is not purely that, but only a fixed-kernel control separates them.
+**Task 3 is therefore promoted from declined formality to the decisive test, and is unrun** —
+D22 declined it because the onset test was negative, and it is no longer negative.
+
+Artifacts `t1_lead_time_onesided.{json,parquet}`; charts
+`charts/cohort/08_onesided_{light,dark}.html`. Decision: `docs/Universe-Decisions.md`
+**D23**, with a forward pointer added to D22 so it is not cited standalone; `CLAUDE.md`
+pointer list updated in the same commit. **Next free number D24.**

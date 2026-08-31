@@ -890,5 +890,107 @@ window the usable scale range is **0.67 decades (2.2 octaves) at the 10 s horizo
 live alternative. That comparison (work-order Task 3's control arm) is **not run**, and on
 these results the fixed-kernel arm is the likely winner rather than a control.
 
+**AMENDED BY D23 (2026-08-30).** The precondition below was discharged and **structural
+fact 2 did not survive it** — with a causal kernel the field LEADS by +1.515 kernel widths
+on 19/19 contributing events (paired within event against this run: 3/19 → 19/19, Wilcoxon
+p = 1.9e-05). Fact 1 (saturation) and everything in "what survives" are untouched. Do not
+cite D22's lead result without D23.
+
 **Numbering note.** Recorded as D22; the register in this file is the authority and
 `CLAUDE.md`'s pointer list is updated in the same commit. Next free number: **D23**.
+
+---
+
+## D23 — The causal re-derivation reverses D22's lead result; D22's second structural fact does not survive
+
+**Date:** 2026-08-30 · **Gate:** D22's own standing, undischarged precondition, now
+discharged. · **Supersedes in part:** D22.
+
+**What D22 recorded as the precondition.** "Both booleans use a **centred** kernel and
+read forward by ~`s`. **Relative ordering survives** — both cheat equally — **but no
+absolute timing claim does.** Nothing in this line is tradeable until the construction is
+re-derived on a **one-sided kernel** and the comparison re-run there."
+
+**The parenthesis is false, and that is this decision.** They do not cheat equally.
+
+**Decision.**
+
+1. **D22's structural fact 2 — "it is a *centred* concentration statistic, so it cannot
+   lead" — does not survive the causal re-derivation.** With a causal half-Gaussian the
+   field leads the level detector by a median **+1.515 kernel widths (+1.180 s)** on
+   **19 of 19** contributing events (sign test p = 3.8e−06; 18/18 with the largest
+   contributor dropped), in both segments separately.
+2. **The closure of the field as an onset detector is reopened to the extent of fact 2
+   only.** It is *not* reopened as "the field is a detector". No detector, boolean, or
+   entry/exit signal is authorised on this basis; what is authorised is the fixed-kernel
+   control that now decides it (below).
+3. **D22's structural fact 1 is untouched and stands in full.** `dw/dln s = w·z²`
+   regardless of the support restriction, so `dL/dln s = E_w[z²] − 1 ≥ −1` under the
+   causal kernel too. The statistic still saturates and is still ON 23.4% of the window
+   against LEVEL's 11.9%. Going causal does not repair it, and a test
+   (`test_onesided_is_still_bounded_below_by_minus_one`) exists so this cannot be misread.
+4. **Everything in D22's "what survives" list is untouched** — `s_min`, the half-inactive
+   cohort at a ten-second horizon, the 49.3% two-print composition, the D9 lineage gap.
+5. **The D channel stays dead.** Under the causal kernel as under the centred one, median
+   `D` at `s*` is **−1.284 decades** below the Poisson identity, `D < 0` is ON ~100%, and
+   the two forms emit **3** and **2** onsets across 78 events. D22 §14.3 is undisturbed.
+
+**Why this is the kernel and not the population — the paired control.** The 19 causal
+contributors are a strict subset of the centred 45, so the comparison runs within event:
+centred **3/19** lead (median −0.187 s-units), causal **19/19** (median +1.515); paired
+difference median **+1.906 s-units**, **18/19 positive, Wilcoxon p = 1.9e−05**. The 19 are
+not a special subpopulation — the centred arm's median on them (−0.187) matches its median
+on the other 26 (−0.209). Same frozen cohort and hash, same anchors, same ladder, same
+debounce, same tolerance rule, same 200-draw circular-shift null, same window. One thing
+changed.
+
+**The mechanism, which is why D22's assumption failed.** `LEVEL` is a *level* (`λ̂` above a
+trailing q90) and under a centred kernel it sees burst mass arrive from the future, so it
+rises early. `FIELD` is a *centred concentration* statistic that cannot go negative until
+the burst is centred. The centred kernel therefore advances `LEVEL` more than it advances
+`FIELD` — the two do not cheat equally — and removing the forward read from both flips the
+ordering.
+
+**The derived price, and it is not free.** `n_eff = 2√π·s·λ` becomes `√π·s·λ`, exactly
+half, so **`s_min` doubles to `4.514/λ`** and the bottom octave of the usable scale range
+is gone. Median `s*` moved 1.567 s → 2.506 s. Against this the causal kernel gains the top
+of the axis in any live setting: the centred field needs 4 kernel widths of *future*, so it
+is undefined above `W/8` in a window of length `W` and is **not computable until
+`T + 4·s*`** — median **6.27 s**, q75 **12.72 s**, against the ten-second horizon at which
+D22 measured half this cohort inactive. The causal kernel's latency is zero.
+
+**What now decides it — Task 3, promoted.** Under a causal kernel `dL/dln s` is dominated
+by the most recent lags while `λ̂` averages the whole half-kernel, whose centroid sits at
+`s·√(2/π) = 0.80·s` in the past. So the field is a *faster* statistic at the same nominal
+`s`, and **a shorter level kernel might buy the same lead.** The measured lead (+1.52
+kernel widths) is about twice the centroid gap (0.80), so it is not purely that asymmetry
+— but it is the same order, and only a fixed-kernel control separates them. D22 declined
+Task 3 because "with the onset test negative, the fixed-kernel arm is the likely winner
+rather than a control." **The onset test is no longer negative, so that reasoning lapses.**
+Task 3 is hereby the decisive test and is unrun.
+
+**Standing limits carried forward.**
+- Only **19 of 100** cohort events contribute a matched onset; the two booleans are
+  temporally segregated on most events (matched share of LEVEL onsets **20.0%** against a
+  circular-shift null of **65.1%**). The null gives 50.0% field-first so the *sign* is not
+  a product of that selection, but the base is 19 events and must be reported as such
+  wherever this result is cited.
+- **No forward-return claim is made or implied.** The brief's line is unchanged: the
+  moment this line touches forward returns, the full Agent_Prompt_Standard applies again,
+  pre-registered, no exceptions.
+
+**A second forward read was found and fixed in the same run**, and it is recorded because
+it would have survived a careless re-run: `knn_rate()` used `lo = i − k//2`, taking k/2
+prints from *each* side of `t`, so `λ̂` → `s_min(t)` → the scale `s*` the booleans are read
+at depended on prints that had not happened. Swapping only the estimator would have left
+the scale selection cheating while the estimator looked clean.
+
+**Evidence.** `results/scale_field/REPORT.md` §15;
+`results/scale_field/artifacts/t1_lead_time_onesided.{json,parquet}`;
+chart `results/scale_field/charts/cohort/08_onesided_{light,dark}.html`;
+`research/scale_field/test_onesided.py` (13 assertions; full suite 59 passing);
+Allan hard-stop gate re-run after the estimator change — 2,166/2,166 cells, max relative
+difference 0.000e+00.
+
+**Numbering note.** Recorded as D23; the register in this file is the authority and
+`CLAUDE.md`'s pointer list is updated in the same commit. Next free number: **D24**.

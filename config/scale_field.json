@@ -194,7 +194,7 @@
     "NOT STARTED r5: the cohort, and only for the band that survives r3."
   ],
   "step_3_recovery_grid": {
-    "status": "PRE-REGISTERED, NOT STARTED.",
+    "status": "PRE-REGISTERED, NOT STARTED -- AND NOW DECISIVE (D23). D22 declined it on the grounds that the onset test was negative and the fixed-kernel arm was the likely winner rather than a control. The onset test is no longer negative, so that reasoning lapses.",
     "supersedes": "both earlier aims. 1-300 s was wrong at both ends: 300 s does not fit inside a tradeable window at this horizon class, and 1 s is below the floor for a large share of events at the shorter windows.",
     "tau_seconds": [
       0.3,
@@ -256,7 +256,88 @@
       "kill_condition": "MET. The construction closes as a detector; only s_min survives."
     }
   },
-  "status": "CLOSED 2026-08-28 -- D22. The field closes as a detector; s_min survives.",
-  "closing_decision": "D22, docs/Universe-Decisions.md. Next free number D23.",
-  "one_sided_kernel_precondition": "STANDING, UNDISCHARGED. Both booleans use a CENTRED kernel and read forward by ~s. Relative ordering survives; NO ABSOLUTE TIMING CLAIM DOES. Nothing in this line is tradeable until the construction is re-derived on a one-sided kernel and the comparison re-run. Recorded in D22."
+  "status": "REOPENED IN PART 2026-08-30 -- D23. D22's structural fact 2 does not survive the causal re-derivation; fact 1 (saturation) and the s_min deliverable do.",
+  "closing_decision": "D22 (2026-08-28), amended by D23 (2026-08-30). Next free number D24.",
+  "one_sided_kernel_precondition": "STANDING, UNDISCHARGED. Both booleans use a CENTRED kernel and read forward by ~s. Relative ordering survives; NO ABSOLUTE TIMING CLAIM DOES. Nothing in this line is tradeable until the construction is re-derived on a one-sided kernel and the comparison re-run. Recorded in D22.",
+  "one_sided_kernel": {
+    "status": "RUN 2026-08-30. Discharges D22's standing precondition.",
+    "supersedes_field": "one_sided_kernel_precondition, which stated it as UNDISCHARGED.",
+    "kernel": "half-Gaussian w(u) = exp(-u^2/2s^2) * 1[u >= 0], u = t - t_i",
+    "nothing_to_pre_register": "The causal variant introduces NO new tunable. It is a support restriction; every constant that changes is derived from it, not chosen: Z(s) = s*sqrt(pi/2), n_eff = sqrt(pi)*s*lambda, s_min = 4.5135/lambda. The brief's 'there is nothing to pre-register' therefore still holds, and this block is a RECORD of what ran, written after the run, not a parameter committed before it.",
+    "derived_constants": {
+      "neff_coefficient_centred": 3.5449077018110318,
+      "neff_coefficient_onesided": 1.7724538509055159,
+      "s_min_coefficient_centred": 2.2567583341910247,
+      "s_min_coefficient_onesided": 4.513516668382049,
+      "relation": "one-sided n_eff is EXACTLY half, so s_min is EXACTLY double"
+    },
+    "unchanged_by_the_swap": "dw/dln s = w*z^2 (the indicator does not depend on s), so dL/dln s = E_w[z^2] - 1 and the -1 BOUND SURVIVES. D22 structural fact 1 is NOT repaired by going causal -- only fact 2, the centring, is addressed. The Poisson cross-channel identity also survives.",
+    "implementation": "scale_field.field_onesided -- explicit FFT convolution, NO pyramid. Half-Gaussians do not compose in quadrature, and the pyramid's symmetric pre-decimation low-pass would leak future into past by ~1 bin. The causal path therefore carries STRICTLY FEWER approximations than the centred path it is compared against.",
+    "causality_convention": "field evaluated at bin RIGHT edges, so a print in bin b' reaches output bin b only when b' <= b and every lag is strictly positive. Exact at any dt. Bin CENTRES -- the centred path's convention -- would be anti-causal by up to dt/2.",
+    "second_forward_read_found_and_fixed": "knn_rate() used lo = i - k//2, i.e. k/2 prints on EACH side of t, so lambda_hat and therefore s_min(t) and therefore which scale s* the booleans are read at depended on prints that had not happened yet. Swapping only the estimator would have left a forward read in the scale selection. causal=True uses k/(t - t_{i-k}). Reported, not silently fixed.",
+    "comparison_discipline": "same frozen cohort and hash, same D7 anchors, same ladder, same debounce, same tolerance rule, same 200-draw circular-shift null, same window. ONE THING CHANGES AT A TIME. Event attrition between arms is counted by reason and reported.",
+    "tests": "research/scale_field/test_onesided.py -- 13 assertions. The causality assertion is checked for BIT EQUALITY by rewriting the future (same array length, so numpy's pairwise summation associates identically); the deletion variant is 4e-15 and the reason is recorded.",
+    "artifacts": [
+      "results/scale_field/artifacts/t1_lead_time_onesided.json",
+      "results/scale_field/artifacts/t1_lead_time_events_onesided.parquet",
+      "results/scale_field/artifacts/t1_lead_time_onsets_onesided.parquet"
+    ],
+    "chart": "results/scale_field/charts/cohort/08_onesided_{theme}.html",
+    "reproduce": ".venv/Scripts/python.exe research/scale_field/t1_lead_time.py --kernel onesided",
+    "result": {
+      "verdict": "D22's structural fact 2 DOES NOT SURVIVE. The ordering reverses.",
+      "n_events_run": 78,
+      "n_events_contributing_matched_onsets": 19,
+      "n_matched_onsets": 58,
+      "per_event_median_lead_s": 1.18,
+      "per_event_median_lead_in_s_units": 1.515,
+      "events_with_positive_median_lead": "19/19",
+      "sign_test_p": 3.8147e-06,
+      "robustness_drop_largest_contributor": "18/18 positive",
+      "by_segment": {
+        "premarket": {
+          "n": 11,
+          "median_lead_s": 1.18,
+          "all_positive": true
+        },
+        "rth": {
+          "n": 8,
+          "median_lead_s": 1.46,
+          "all_positive": true
+        }
+      },
+      "paired_control": {
+        "why": "the 19 causal contributors are a STRICT SUBSET of the centred 45, so the comparison runs WITHIN event and the population explanation is excluded",
+        "centred_on_the_same_19": "3/19 lead, median -0.187 s-units",
+        "causal_on_the_same_19": "19/19 lead, median +1.515 s-units",
+        "paired_difference_median_s_units": 1.906,
+        "paired_positive": "18/19",
+        "wilcoxon_p": 1.907e-05,
+        "not_a_special_subpopulation": "centred median on the shared 19 is -0.187 vs -0.209 on its other 26"
+      },
+      "centred_arm_for_comparison": {
+        "n_events": 75,
+        "contributing": 45,
+        "matched_onsets": 239,
+        "per_event_median_lead_in_s_units": -0.204,
+        "events_positive": "12/45"
+      },
+      "unchanged": "saturation (dL/dln s >= -1) holds under the causal kernel too; ON 23.4% vs LEVEL 11.9%. D channel fires its kill condition again: median D -1.284 decades, 3 and 2 onsets over 78 events.",
+      "median_s_star_seconds": {
+        "centred": 1.567,
+        "causal": 2.506
+      },
+      "jaccard_median": {
+        "centred": 0.263,
+        "causal": 0.18
+      },
+      "r2_ridge_on_loglambda_median": {
+        "centred": 0.18,
+        "causal": 0.077
+      },
+      "decisive_open_gap": "Under a causal kernel dL/dln s weights RECENT lags while lambda_hat averages the whole half-kernel, centroid s*sqrt(2/pi) = 0.80*s. So a SHORTER LEVEL KERNEL might buy the same lead. Measured lead +1.52 is ~2x the 0.80 centroid gap, so not purely that -- but only the FIXED-KERNEL CONTROL (step_3_recovery_grid, Task 3) separates them. D22 declined Task 3 because the onset test was negative; it is no longer negative, so that reasoning lapses and Task 3 is now DECISIVE.",
+      "limits_that_must_be_cited_with_the_result": "only 19 of 100 cohort events contribute a matched onset; matched share of LEVEL onsets 20.0% against a 65.1% circular-shift null, so the two booleans are temporally segregated on most events. The null gives 50.0% field-first, so the SIGN is not a selection artifact, but the base is 19 events.",
+      "decision": "D23"
+    }
+  }
 }

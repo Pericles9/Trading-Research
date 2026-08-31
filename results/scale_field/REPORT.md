@@ -11,6 +11,8 @@ withdrawn** — see §4. The reconciliation gate re-ran after both and is unchan
 order are run and reported (§9).
 **CLOSED 2026-08-28 — D22.** The scale-space field closes as a detector; the resolution
 floor survives and is the deliverable. §14 is the close-out. Tasks 2–5 not run.
+**Revised a sixth time 2026-08-30** — D22's standing precondition discharged in §15. The causal re-derivation REVERSES D22's lead result: paired within event, the field goes from 3/19 leading to 19/19 (paired difference +1.906 kernel widths, Wilcoxon p = 1.9e−05). D22's second structural fact does not survive; its first (saturation) does. See D23.
+
 **Revised a fifth time 2026-08-28** — work-order Task 1 run and reported in §13. It was
 specified as the task that decides the rest, and it came back negative on the operational
 claim, so Tasks 2–5 are not started.
@@ -900,3 +902,216 @@ deliverable; the detector was the part we were hoping for.
 
 **D22 appended to `docs/Universe-Decisions.md`; `CLAUDE.md`'s pointer list updated in the
 same commit. Next free number: D23.**
+
+---
+
+## 15. The causal re-derivation — D22's precondition discharged, and it reverses D22
+
+**Run 2026-08-30.** D22 closed the field as a detector and recorded one thing it could
+not settle:
+
+> Both booleans use a **centred** kernel, so both read forward by about `s`. […]
+> **Relative ordering survives** — both cheat equally — **but no absolute timing claim
+> does.** Nothing in this line is tradeable until the construction is re-derived on a
+> **one-sided kernel** and the comparison re-run there.
+
+That re-derivation is done. **The parenthesis is false.** They do not cheat equally, and
+when the forward read is removed from both, the ordering reverses.
+
+Reproduce: `.venv/Scripts/python.exe research/scale_field/t1_lead_time.py --kernel onesided`
+Chart: `results/scale_field/charts/cohort/08_onesided_{light,dark}.html`
+
+### 15.1 The kernel, and what the algebra does *not* change
+
+Half-Gaussian, `w(u) = exp(−u²/2s²)·1[u ≥ 0]`, `u = t − tᵢ`. The minimal change — same
+family, half the support — chosen so every closed form the acceptance suite already pins
+has a computable one-sided analogue rather than a new constant nobody can check.
+
+**Unchanged, and this matters more than what changed.** The indicator does not depend on
+`s`, so `dw/dln s = w·z²` exactly as before, hence `dL/dln s = E_w[z²] − 1` with
+`E_w[z²] ≥ 0` **still**. `dL/dln s ≥ −1` under the causal kernel too.
+**D22's structural fact 1 — the statistic saturates, so it discriminates poorly under
+either a sign or a magnitude condition — survives untouched.** Only fact 2, the centring,
+is addressed here. `test_onesided_is_still_bounded_below_by_minus_one` exists so that
+nobody reads this section as having repaired the bound. The Poisson cross-channel identity
+`m + L/ln10 = −γ/ln10` also survives, since `E[log₁₀Δ]` is a property of the interval law
+and not of the weighting.
+
+**Changed — all three derived, none chosen:**
+
+| | centred | one-sided |
+|---|---|---|
+| normaliser `Z(s)` | `s√(2π)` | `s√(π/2)` |
+| `n_eff` | `2√π·s·λ` | `√π·s·λ` — **exactly half** |
+| `s_min` at `n_eff ≥ 8` | `2.257/λ` | `4.514/λ` — **exactly double** |
+
+Half the support is half the effective sample. Causality is not free and the bill is
+payable in resolution: the bottom octave of the usable scale range is gone. Measured on
+the run, median `s*` moved 1.567 s → 2.506 s.
+
+### 15.2 No pyramid — the causal path is the more exact of the two
+
+Half-Gaussians do not compose in quadrature, so the incremental-smoothing trick the
+centred `field()` uses is unavailable — and that path's symmetric low-pass before each
+decimation would leak future into past by about a bin, which is precisely the defect being
+removed. `field_onesided()` convolves explicitly by FFT: O(n log n) per scale, **no
+decimation and no pyramid error**, so the causal result carries strictly fewer
+approximations than the centred one it is compared against. Cost is ~10× per event (515 s
+for 78 events); the causal path also reads 900 s of trailing context it provably cannot
+use, which is a free ~40% saving left on the table and recorded here rather than taken
+mid-run.
+
+The binned path is causal **exactly at any `dt`**, not approximately: the field is
+evaluated at bin *right edges*, so a print in bin `b'` reaches output bin `b` only when
+`b' ≤ b`, and every such lag is strictly positive. Bin *centres* — the centred path's
+convention — would represent a print up to `dt/2` later than it happened, which is
+anti-causal by construction.
+
+### 15.3 A second forward read, in the scale selection rather than the estimator
+
+`knn_rate()` used `lo = i − k//2` — **k/2 prints on each side of `t`**. So `λ̂`, therefore
+`s_min(t)`, therefore *which scale `s*` the booleans are read at*, depended on prints that
+had not happened yet. Swapping the estimator alone would have left a forward read in the
+machinery selecting the scale, and the re-run would have looked clean while still cheating.
+Fixed: `causal=True` uses the k most recent prints at or before `t`, `rate = k/(t − t_{i−k})`.
+
+Reported, not silently fixed. It is D22's caveat one layer down, and it is the reason a
+causal re-run has to be audited rather than declared.
+
+### 15.4 The suite grew by 13; the whole suite is 59
+
+`test_onesided.py`. The two that could not be faked:
+
+- **Causality, asserted for bit equality.** The future is *rewritten* — same print count,
+  entirely different times — so both arrays have the same length, numpy's pairwise
+  summation associates identically, and any difference at all is a real forward read.
+  `np.array_equal` passes on all five outputs. The *deletion* variant is 4e-15, and the
+  reason (a shorter array reorders the summation) is recorded rather than absorbed into a
+  tolerance.
+- **The closed-form rate ramp, with a term only the causal kernel has.** For `λ = λ₀e^{kt}`,
+
+  `λ̂ = λ₀e^{kt}·e^{k²s²/2}·erfc(ks/√2)`  ⇒  `dL/dln s = k²s² − 2a·e^{−a²}/(√π·erfc(a))`, `a = ks/√2`
+
+  The centred kernel gives just `k²s²` (V3). The extra term is the causal kernel paying
+  for looking only backwards: on a rising rate, widening a backward-looking window reaches
+  further into slower tape, so the estimate **falls**. Measured value is negative —
+  opposite in sign to the centred case — and matches to < 0.03 across 14 scales. It
+  reduces to `k²s²` as `k → 0`, where looking backward and looking both ways coincide.
+
+Also pinned: the forward read of the *centred* kernel, measured rather than asserted — at
+times strictly before a synthetic burst, the centred field departs by **1.87** from the
+identical tape with that burst deleted, against a field whose own sd is ~0.3. The causal
+field is identical to 1e-12. That is D22's fact 2 as a number.
+
+### 15.5 The result — the ordering reverses, and it is the kernel, not the population
+
+78 of 100 cohort events ran (attrition: 13 too few prints, 4 too few defined cells, 3 no
+ladder scale clears `2·s_min`, 2 no anchor). Same frozen cohort and hash, same D7 anchors,
+same ladder, same debounce, same tolerance rule, same 200-draw circular-shift null, same
+window.
+
+| | centred (D22) | **causal** |
+|---|---|---|
+| events run | 75 | **78** |
+| events contributing a matched onset | 45 | **19** |
+| matched onsets | 239 | **58** |
+| per-event median lead | **−0.204** s-units | **+1.515** s-units (+1.180 s) |
+| events with a positive median lead | 12/45 | **19/19** |
+| sign test | p = 0.0025 | **p = 3.8e−06** |
+| dropping the largest contributing event | 12/44 | **18/18** |
+| Jaccard vs LEVEL | 0.263 | 0.180 |
+| R² of ridge strength on log λ̂ | 0.180 | **0.077** |
+| median `s*` | 1.567 s | 2.506 s |
+
+Both segments agree in sign and neither carries the result alone: premarket 11 events,
+median **+1.180 s** (+1.515 s-units), all positive; rth 8 events, median **+1.460 s**
+(+1.315 s-units), all positive.
+
+**The paired control, which is what makes this a finding rather than a coincidence.** The
+19 causal contributors are a **strict subset** of the centred 45, so the comparison can be
+run within event:
+
+- centred, on those same 19: **3/19** lead, median **−0.187** s-units
+- causal, on those same 19: **19/19** lead, median **+1.515** s-units
+- paired difference: median **+1.906** s-units, **18/19 positive, Wilcoxon p = 1.9e−05**
+
+And the 19 are not a special subpopulation: the centred arm's median on the shared 19
+(**−0.187**) is indistinguishable from its median on the other 26 (**−0.209**). The
+reversal is caused by the kernel.
+
+**Why it reverses, and D22 could not have known this without running it.** D22 assumed
+both booleans read forward by about `s`, so both cheat equally. They do not. `LEVEL` is
+`λ̂` above a trailing q90 — a *level*, which under a centred kernel sees burst mass arrive
+from the future and rises early. `FIELD` is a *centred concentration* statistic that
+cannot go negative until the burst is centred. The centred kernel therefore advances
+`LEVEL` more than it advances `FIELD`, which is exactly why the field appeared to lag.
+Remove the forward read from both and `LEVEL` loses its head start while `FIELD` loses
+little, so the ordering flips.
+
+**The D channel fires its kill condition again**, under the causal kernel as under the
+centred one: median `D` at `s*` is **−1.284 decades** below the Poisson identity, so
+`D < 0` is ON 100% of the window and emits **3** onsets across 78 events; the relative form
+emits **2**. Too few to read a lead at all. Nothing in §14.3 is disturbed.
+
+### 15.6 What this does *not* establish, and one of these is decisive
+
+1. **Saturation is untouched.** `dL/dln s ≥ −1` under the causal kernel too, and it is ON
+   23.4% of the window against LEVEL's 11.9% — still roughly 2× the firing rate. D22's
+   structural fact 1 stands in full.
+2. **Only 19 of 100 cohort events contribute a matched onset.** The two booleans are
+   temporally segregated on most events: the matched share of LEVEL onsets is **20.0%**
+   against a circular-shift null of **65.1%**, so real field onsets sit *further* from
+   level onsets than randomly-shifted ones do. The lead is measured on the minority where
+   both fire near each other. The null gives 50.0% field-first, so the *sign* is not a
+   product of that selection — but the base is thin and it is 19 events, not 100.
+3. **A shorter level kernel might buy the same lead, and this is the decisive gap.** Under
+   a causal kernel `dL/dln s = E_w[z²] − 1` is dominated by the most recent lags, while
+   `λ̂` averages the whole half-kernel, whose centroid sits at `s·√(2/π) = 0.80·s` in the
+   past. So the field is a *faster* statistic at the same nominal `s`, and part of the
+   measured lead is that asymmetry rather than any information the field carries. The
+   measured lead (**+1.52** kernel widths) is about twice the centroid gap (**0.80**), so
+   it is not *purely* the asymmetry — but it is the same order of magnitude, and only a
+   fixed-kernel control can separate them.
+
+   **This makes Task 3's fixed-kernel control arm the decisive test rather than a
+   formality.** D22 declined it on the grounds that "at 2–4 usable octaves with the onset
+   test negative, the fixed-kernel arm is the likely winner rather than a control." The
+   onset test is no longer negative, so that reasoning no longer applies.
+4. **No forward-return claim is made or implied.** The brief's line stands: the moment
+   this touches forward returns the full standard applies again, pre-registered.
+
+### 15.7 The operational number the centred arm was hiding
+
+The centred field at time `T` is not defined until tape exists out to `T + edge_scales·s`.
+It is not merely late — **it is not computable until `T + 4s`.** At the `s*` the centred
+arm actually read at (n = 75):
+
+| | `s*` | availability latency `4·s*` |
+|---|---|---|
+| q25 | 0.716 s | 2.87 s |
+| **median** | **1.567 s** | **6.27 s** |
+| q75 | 3.180 s | 12.72 s |
+| q95 | 6.739 s | 26.96 s |
+
+Against §12's own finding that half the cohort is inactive when a **ten-second** horizon
+would be trading, a median availability latency of 6.27 s consumes 63% of that horizon and
+the upper quartile exceeds it outright. The causal kernel's latency is zero by
+construction.
+
+The same arithmetic bounds the scale axis from above in a live setting, and here the causal
+kernel *gains* range. Measured on a 60 s window with 1,200 s of prior tape: the centred
+field is 50% masked at `s = 7.5 s` and **completely undefined above it**, because it needs
+4 kernel widths of future a live window does not have; the causal field is 100% defined at
+every scale tested to 240 s. **The `W/8` ceiling that bounded §11's usable range was never
+a property of the data — it was the cost of needing to see the future.** (Inside the
+offline harness both arms are padded with ±900 s of context, so both are fully defined and
+the head-to-head is unaffected. The ceiling relaxation is a live-setting property, which is
+the setting that matters.)
+
+### 15.8 What this decides — D23
+
+Recorded as **D23** in `docs/Universe-Decisions.md`. In short: D22's precondition is
+discharged; D22's **second** structural fact does not survive it and the closure that
+rested on it is reopened *to that extent only*; D22's first structural fact and everything
+in its "what survives" list are untouched; and the fixed-kernel control is promoted from
+declined formality to the decisive next test.

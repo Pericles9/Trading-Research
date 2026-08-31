@@ -90,11 +90,26 @@ sys.path.insert(0, HERE)
 import adapter  # noqa: E402
 from adapter import load_cohort, load_detection, load_event_prints_meta, rel  # noqa: E402
 from scale_field import (LN10, EULER_GAMMA, collapse_same_timestamp,  # noqa: E402
-                         divergence, field, intervals, s_min_for_rate, seconds_since)
+                         divergence, field, field_onesided, intervals,
+                         s_min_for_rate, seconds_since)
 
-OUT = "results/scale_field/artifacts/t1_lead_time.json"
-OUT_EVENTS = "results/scale_field/artifacts/t1_lead_time_events.parquet"
-OUT_ONSETS = "results/scale_field/artifacts/t1_lead_time_onsets.parquet"
+# THE CAUSAL RE-RUN (D22's standing precondition). `--kernel onesided` swaps the
+# centred Gaussian for the causal half-Gaussian and changes NOTHING ELSE: same cohort,
+# same anchors, same ladder, same debounce, same tolerance rule, same circular-shift
+# null, same window. One thing changes at a time or the comparison is not a comparison.
+#
+# Three things follow automatically from the swap rather than being set by hand:
+#   * s_min doubles (n_eff halves), so s* moves up and some events lose the window
+#     entirely. That attrition is REPORTED, not filtered away.
+#   * lambda_hat, and therefore LEVEL, becomes causal too -- it is read off the same
+#     field. Both booleans go causal together or neither comparison means anything.
+#   * the kNN rate that sets s_min(t) must ALSO stop reading forward; see knn_rate.
+KERNEL = "centred"
+
+
+def _out(stem: str, ext: str) -> str:
+    sfx = "" if KERNEL == "centred" else "_onesided"
+    return f"results/scale_field/artifacts/{stem}{sfx}.{ext}"
 
 WINDOW_S = 60.0            # anchor -> +60 s, the work order's window
 LOOKBACK_S = 300.0         # causal history for the trailing q90
@@ -108,11 +123,29 @@ N_SHIFT_DRAWS = 200        # circular-shift null for the onset matching
 SHIFT_SEED = 42
 
 
-def knn_rate(ts_ns, grid_ns, k=KNN_K):
+def knn_rate(ts_ns, grid_ns, k=KNN_K, causal=False):
+    """Local print rate from the k nearest prints.
+
+    THE CENTRED VARIANT READS FORWARD AND THAT MATTERS HERE. `lo = i - k//2` takes
+    k/2 prints on each side of t, so lambda_hat -- and therefore s_min(t), and
+    therefore which scale s* the booleans are read at -- depends on prints that have
+    not happened yet. Under the causal kernel that would leave a forward read in the
+    machinery selecting the scale even after the estimator itself stopped reading
+    forward, which is exactly the kind of residual leak D22's precondition is about.
+
+    `causal=True` uses the k most recent prints strictly at or before t:
+    rate = k / (t - t_{i-k}), which is defined from history alone."""
     ts = np.asarray(ts_ns, dtype=np.int64)
+    g = np.asarray(grid_ns, dtype=np.int64)
     if ts.size < k + 1:
-        return np.full(len(grid_ns), np.nan)
-    i = np.searchsorted(ts, np.asarray(grid_ns, dtype=np.int64))
+        return np.full(len(g), np.nan)
+    i = np.searchsorted(ts, g, side="right")        # ts[i-1] <= t < ts[i]
+    if causal:
+        ok = i >= k
+        lo = np.clip(i - k, 0, ts.size - 1)
+        span = (g - ts[lo]).astype(np.float64) / 1e9
+        return np.where(ok & (span > 0), k / np.where(span > 0, span, 1.0), np.nan)
+    i = np.searchsorted(ts, g)
     lo = np.clip(i - k // 2, 0, ts.size - 1 - k)
     span = (ts[lo + k] - ts[lo]).astype(np.float64) / 1e9
     return np.where(span > 0, k / span, np.nan)
@@ -248,8 +281,16 @@ def main() -> int:
     scales = np.geomspace(SCALE_LO, SCALE_HI, N_SCALES)
 
     rows, onset_rows, t0 = [], [], time.perf_counter()
+    # ATTRITION IS REPORTED, NOT FILTERED AWAY. Under the causal kernel s_min doubles,
+    # so an event whose rate cannot lift 2*s_min onto the ladder loses the window
+    # entirely. If the two arms run on different populations the lead comparison is
+    # confounded, so every drop is counted by reason and the surviving populations are
+    # intersected before the head-to-head is read.
+    dropped = {"no_anchor": 0, "too_few_prints": 0, "grid_too_short": 0,
+               "no_scale_clears_2_s_min": 0, "too_few_defined_cells": 0}
     for r in pooled.itertuples(index=False):
         if r.event_id not in anchors:
+            dropped["no_anchor"] += 1
             continue
         anchor_ns, segment = anchors[r.event_id]
         anchor_ns = int(anchor_ns)
@@ -259,6 +300,7 @@ def main() -> int:
         sel = ts[(ts >= lo_ns) & (ts < hi_ns)]
         arr = collapse_same_timestamp(sel)
         if arr.size < 200:
+            dropped["too_few_prints"] += 1
             continue
         origin = int(arr[0])
         ts_s = seconds_since(arr, origin)
@@ -269,14 +311,16 @@ def main() -> int:
         g_hi = (anchor_ns + int(WINDOW_S * 1e9) - origin) / 1e9
         tg = np.arange(g_lo, g_hi, GRID_DT)
         if tg.size < 500:
+            dropped["grid_too_short"] += 1
             continue
-        f = field(ts_s, ev_s, x, tg, scales, neff_min=cfg["field"]["neff_min"],
-                  sigma_lo=cfg["field"]["sigma_lo"],
+        fk = dict(neff_min=cfg["field"]["neff_min"], sigma_lo=cfg["field"]["sigma_lo"],
                   edge_scales=cfg["field"]["edge_scales"])
+        f = (field_onesided(ts_s, ev_s, x, tg, scales, **fk) if KERNEL == "onesided"
+             else field(ts_s, ev_s, x, tg, scales, **fk))
 
         grid_ns = (origin + tg * 1e9).astype(np.int64)
-        lam_knn = knn_rate(arr, grid_ns)
-        s_target = S_MIN_FACTOR * s_min_for_rate(lam_knn)
+        lam_knn = knn_rate(arr, grid_ns, causal=(KERNEL == "onesided"))
+        s_target = S_MIN_FACTOR * s_min_for_rate(lam_knn, kernel=KERNEL)
 
         # per t: index of the smallest ladder scale >= s_target AND defined there
         jstar = np.full(tg.size, -1, dtype=np.int64)
@@ -289,6 +333,7 @@ def main() -> int:
                 jstar[i] = cand[0]
         ok = jstar >= 0
         if ok.sum() < 200:
+            dropped["no_scale_clears_2_s_min"] += 1
             continue
         ii = np.arange(tg.size)
         dlr = np.where(ok, f["dlograte"][ii, np.clip(jstar, 0, None)], np.nan)
@@ -311,6 +356,7 @@ def main() -> int:
         b_drel = ok & in_win & np.isfinite(dvg) & np.isfinite(thr_d) & (dvg < thr_d)
         defined = ok & in_win & np.isfinite(dlr) & np.isfinite(thr)
         if defined.sum() < 200:
+            dropped["too_few_defined_cells"] += 1
             continue
 
         tw = tg[in_win]
@@ -379,9 +425,9 @@ def main() -> int:
     ev_df = pd.DataFrame(rows)
     on_df = pd.DataFrame(onset_rows)
     ev_df.drop(columns=[c for c in ev_df.columns if c.startswith("null_")]
-               ).to_parquet(rel(OUT_EVENTS), index=False)
+               ).to_parquet(rel(_out("t1_lead_time_events", "parquet")), index=False)
     if len(on_df):
-        on_df.to_parquet(rel(OUT_ONSETS), index=False)
+        on_df.to_parquet(rel(_out("t1_lead_time_onsets", "parquet")), index=False)
     print(f"\n{len(ev_df)} events, {len(on_df)} matched onsets, "
           f"{time.perf_counter()-t0:.0f}s")
 
@@ -420,6 +466,13 @@ def main() -> int:
 
     out = {
         "task": "Task 1 -- lead time of the parameter-free field boolean against a level detector",
+        "kernel": KERNEL,
+        "kernel_note": (
+            "centred = the original run (D22). onesided = the causal half-Gaussian, "
+            "D22's standing undischarged precondition. Under 'onesided' the estimator, "
+            "the level detector read off it, and the kNN rate that sets s_min(t) are ALL "
+            "causal; s_min doubles because n_eff halves; nothing else differs."),
+        "event_attrition": dropped,
         "config_hash": adapter.config_hash(),
         "window": f"anchor -> +{WINDOW_S:g} s",
         "scale_rule": f"smallest ladder scale >= {S_MIN_FACTOR:g} * s_min(t); "
@@ -523,7 +576,7 @@ def main() -> int:
                          f"which is not parameter-free -- the property D was proposed for. "
                          f"The construction closes as a detector; only s_min survives.")
 
-    with open(rel(OUT), "w", encoding="utf-8") as fh:
+    with open(rel(_out("t1_lead_time", "json")), "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=2)
 
     if len(ev_df):
@@ -578,9 +631,14 @@ def main() -> int:
         r2 = out["r2_ridge_on_loglambda"]
         if r2.get("n"):
             print(f"  R2 of ridge strength on log lambda: median {r2['q50']:.3f}")
-    print(f"wrote {OUT}")
+    print(f'wrote {_out("t1_lead_time", "json")}')
     return 0
 
 
 if __name__ == "__main__":
+    if "--kernel" in sys.argv:
+        KERNEL = sys.argv[sys.argv.index("--kernel") + 1]
+        if KERNEL not in ("centred", "onesided"):
+            raise SystemExit(f"--kernel must be centred|onesided, got {KERNEL!r}")
+    print(f"kernel = {KERNEL}")
     raise SystemExit(main())

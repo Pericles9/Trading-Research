@@ -97,8 +97,10 @@
     run-length floor · **D21 threshold-from-trough is closed; the log-interval representation is not**
     (2026-08-27, 10d-R0 fired) · **D22 the scale-space field closes as a detector; the resolution
     floor `s >= 2.26/lambda` survives and is the first derived-not-adopted applicability criterion**
-    (2026-08-28).
-  - **Next free number: D23.**
+    (2026-08-28, **amended by D23**) · **D23 the causal re-derivation reverses D22's lead
+    result; D22's structural fact 2 does not survive a one-sided kernel, fact 1 does**
+    (2026-08-30).
+  - **Next free number: D24.**
 - Repo map: docs/Research-Library-Map.md. Data layout: data/Schema.md.
 - `docs/Claude-Code-Operating-Plan.md` **exists** (added 2026-08-13, commit `edfb1ea`; §6 is the phase
   map). The note previously here said it had never existed in this checkout — true when written on

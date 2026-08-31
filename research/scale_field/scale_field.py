@@ -29,13 +29,18 @@ EULER_GAMMA = 0.5772156649015329
 NEFF_S_MIN_COEF = 8.0 / (2.0 * np.sqrt(np.pi))           # 2.2568
 
 
-def s_min_for_rate(lam, neff_min: float = 8.0):
+def s_min_for_rate(lam, neff_min: float = 8.0, kernel: str = "centred"):
     """Smallest resolvable kernel scale at local print rate `lam` (prints/s).
 
     This is a DATA limit and cannot be charted around. Plot it on every fine-band
-    figure so the blank region is labelled rather than mysterious."""
+    figure so the blank region is labelled rather than mysterious.
+
+    `kernel` selects the coefficient: 2*sqrt(pi) for the centred Gaussian, sqrt(pi)
+    for the causal half-Gaussian, so the one-sided floor is exactly DOUBLE. The
+    formula lives here once and is never restated at a call site -- the same rule
+    CLAUDE.md applies to universe flags (A9.3), for the same reason."""
     lam = np.asarray(lam, dtype=np.float64)
-    return np.divide(neff_min / (2.0 * np.sqrt(np.pi)), lam,
+    return np.divide(neff_min / _neff_coef(kernel), lam,
                      out=np.full_like(lam, np.inf), where=lam > 0)
 
 
@@ -77,15 +82,26 @@ def seconds_since(ts_ns, origin: int) -> np.ndarray:
 # reference implementation -- exact, slow, used by tests
 # --------------------------------------------------------------------------- #
 
-def field_exact(ts_s, ev_s, x, t_grid, scales, neff_min=8.0):
+def field_exact(ts_s, ev_s, x, t_grid, scales, neff_min=8.0, kernel="centred"):
     """Direct pairwise evaluation. ts_s = all print times (rate channel);
-    ev_s, x = interval-carrying times and their log10 intervals (interval channel)."""
+    ev_s, x = interval-carrying times and their log10 intervals (interval channel).
+
+    `kernel="onesided"` restricts the support to u = t - t_i >= 0 and renormalises.
+    NOTHING ELSE CHANGES: dw/dln s = w*z^2 either way, because the indicator does not
+    depend on s. That is why the causal variant is a support restriction rather than a
+    new estimator, and why every closed form the suite pins has a one-sided analogue.
+    This path is the pairwise reference -- no binning, no FFT -- so it is what the
+    causality assertions are checked against."""
+    lam_norm = _lam_norm(kernel)
+    one = kernel == "onesided"
     nT, nS = len(t_grid), len(scales)
     out = {k: np.full((nT, nS), np.nan) for k in
            ("m", "dm", "lograte", "dlograte", "n_eff")}
     for j, s in enumerate(scales):
         z = (t_grid[:, None] - ev_s[None, :]) / s
         w = np.exp(-0.5 * z * z)
+        if one:
+            w = np.where(z >= 0, w, 0.0)
         dw = w * (z * z)                                   # dw/dln s, unnormalised kernel
         B = w.sum(1)
         neff = np.divide(B * B, (w * w).sum(1), out=np.zeros_like(B), where=B > 0)
@@ -98,7 +114,10 @@ def field_exact(ts_s, ev_s, x, t_grid, scales, neff_min=8.0):
             out["dm"][ok, j] = ((dw[ok] @ x) - m * dw[ok].sum(1)) / Bo
 
         zz = (t_grid[:, None] - ts_s[None, :]) / s
-        g = np.exp(-0.5 * zz * zz) / (s * np.sqrt(2 * np.pi))
+        g = np.exp(-0.5 * zz * zz)
+        if one:
+            g = np.where(zz >= 0, g, 0.0)
+        g = g / (s * lam_norm)
         lam = g.sum(1)
         good = lam > 0
         out["lograte"][good, j] = np.log(lam[good])
@@ -361,3 +380,156 @@ def allan_factor(ts_s, T, t_start=None, t_end=None, min_windows=2):
     d = np.diff(N)
     mu = N.mean()
     return (np.nan, len(d)) if mu <= 0 else ((d * d).mean() / (2 * mu), len(d))
+
+
+# --------------------------------------------------------------------------- #
+# ONE-SIDED (CAUSAL) KERNEL -- D22's standing, undischarged precondition
+# --------------------------------------------------------------------------- #
+#
+# WHY THIS EXISTS. Everything above uses a CENTRED Gaussian, so the field at time t
+# is a function of prints on BOTH sides of t. D22 recorded the consequence as a
+# precondition binding every lead time this line has measured: both booleans read
+# forward by about s, relative ordering survives because both cheat equally, but NO
+# ABSOLUTE TIMING CLAIM DOES. Nothing here is tradeable until the construction is
+# re-derived on a kernel that cannot see the future. This is that re-derivation.
+#
+# THE KERNEL. Half-Gaussian: w(u) = exp(-u^2 / 2s^2) * 1[u >= 0], u = t - t_i. The
+# minimal change -- same family, half the support -- chosen so every closed form the
+# acceptance suite pins has a computable one-sided analogue rather than a new
+# constant nobody can check. What changes, exactly:
+#
+#   normaliser      Z = s*sqrt(pi/2)          was s*sqrt(2pi)
+#   n_eff           sqrt(pi)*s*lambda         was 2*sqrt(pi)*s*lambda  -- EXACTLY HALF
+#   s_min           4.514 / lambda            was 2.257 / lambda       -- EXACTLY DOUBLE
+#
+# and what does NOT change:
+#
+#   dW/dln s = W*z^2 still, because the indicator does not depend on s. So
+#   dL/dln s = E_w[z^2] - 1 with the SAME algebra, and E_w[z^2] >= 0 still, so the
+#   statistic is STILL BOUNDED BELOW BY -1. D22's first structural fact survives the
+#   causal re-derivation untouched; only the second one (centring) is addressed here.
+#   Anyone reading this as a reopening should read that sentence twice.
+#
+#   The Poisson cross-channel identity m + L/ln10 == -gamma/ln10 also survives, since
+#   E[log10 dt] is a property of the interval law and not of the weighting.
+#
+# THE PRICE, AND IT IS DERIVED NOT ARGUED. Half the support is half the effective
+# sample, so the resolution floor doubles. At D22's measured usable range of 0.67
+# decades (2.2 octaves) inside a 10 s window, doubling s_min removes exactly one
+# octave from the bottom and leaves ~1.2. Causality is not free and the bill is
+# payable in resolution.
+#
+# NO PYRAMID. Half-Gaussians do not compose in quadrature, so the incremental-
+# smoothing trick above is unavailable -- and the symmetric low-pass the pyramid
+# applies before each decimation would leak future into past by about a bin, which
+# is precisely the defect being removed. The causal path convolves explicitly by FFT
+# instead: O(n log n) per scale, and EXACT up to binning rather than pyramid-
+# approximate. The causal result therefore carries strictly fewer approximations
+# than the centred one it is compared against.
+
+NEFF_S_MIN_COEF_ONESIDED = 8.0 / np.sqrt(np.pi)          # 4.5135 -- exactly 2x centred
+KERNELS = ("centred", "onesided")
+
+
+def _neff_coef(kernel: str) -> float:
+    """n_eff = coef * s * lambda. 2*sqrt(pi) centred, sqrt(pi) one-sided."""
+    if kernel not in KERNELS:
+        raise ValueError(f"kernel must be one of {KERNELS}, got {kernel!r}")
+    return 2.0 * np.sqrt(np.pi) if kernel == "centred" else np.sqrt(np.pi)
+
+
+def _lam_norm(kernel: str) -> float:
+    """Z(s) = norm * s, the kernel's integral. sqrt(2pi) centred, sqrt(pi/2) one-sided."""
+    return np.sqrt(2.0 * np.pi) if kernel == "centred" else np.sqrt(np.pi / 2.0)
+
+
+def s_min_onesided(lam, neff_min: float = 8.0):
+    """Smallest resolvable scale under the causal kernel. Exactly 2x s_min_for_rate."""
+    return s_min_for_rate(lam, neff_min, kernel="onesided")
+
+
+def _causal_kernels(s, dt, truncate=4.0):
+    """Half-Gaussian FIR taps for lag bin j, evaluated at the MIDPOINT of that bin's
+    lag interval.
+
+    THE CAUSALITY ARGUMENT, WHICH IS THE POINT OF THE OFFSET. A print falling in bin
+    b' has a true time somewhere in [t0 + b'*dt, t0 + (b'+1)*dt). Evaluate the field
+    at that bin's RIGHT EDGE, t0 + (b+1)*dt. Then every bin b' <= b contributes a lag
+    u = tau_b - t_i strictly inside ((b-b')*dt, (b-b'+1)*dt], which is positive for
+    every b' <= b -- and bins b' > b cannot contribute at all, because a causal FIR
+    only indexes backwards. So the binned path is causal EXACTLY, at any dt, not
+    approximately. Using bin centres instead would let a print be represented up to
+    dt/2 later than it happened, which is anti-causal by construction.
+
+    Returns (k0, k2, kh): the kernel, its d/dln s partner w*z^2, and the squared
+    kernel used for n_eff."""
+    m = int(np.ceil(truncate * s / dt)) + 1
+    u = (np.arange(m) + 0.5) * dt
+    z = u / s
+    k0 = np.exp(-0.5 * z * z)
+    return k0, k0 * z * z, np.exp(-z * z)
+
+
+def _causal_bank(F, kern, nfft, n):
+    """One causal FIR applied to pre-transformed inputs. F is a list of rfft arrays."""
+    K = np.fft.rfft(kern, nfft)
+    return [np.fft.irfft(f * K, nfft)[:n] for f in F]
+
+
+def field_onesided(ts_s, ev_s, x, t_grid, scales, neff_min=8.0, sigma_lo=8.0,
+                   edge_scales=4.0, truncate=4.0):
+    """Same six outputs as `field`, under the causal half-Gaussian.
+
+    EDGE MASKING IS LEFT-ONLY, and that is a second gain rather than an oversight.
+    The centred field needs edge_scales kernel widths of tape on BOTH sides and is
+    therefore undefined for the last 4s of any window; a causal kernel needs history
+    only, so the one-sided field stays defined right up to the final print. At the
+    right-hand edge of a window -- which is where a live detector always sits -- the
+    centred field is not merely late, it is absent.
+    """
+    ts_s = np.asarray(ts_s, float); ev_s = np.asarray(ev_s, float)
+    x = np.asarray(x, float); t_grid = np.asarray(t_grid, float)
+    scales = np.asarray(scales, float)
+    t0 = float(min(ts_s.min(), ev_s.min()))
+    t1 = float(max(ts_s.max(), ev_s.max(), t_grid.max()))
+    dt = float(scales.min()) / sigma_lo
+    n = int(np.ceil((t1 - t0) / dt)) + 2
+    c, ce, sx = _bin(ts_s, ev_s, x, t0, dt, n)
+
+    mmax = int(np.ceil(truncate * scales.max() / dt)) + 1
+    nfft = int(2 ** np.ceil(np.log2(n + mmax)))
+    F = [np.fft.rfft(a, nfft) for a in (c, ce, sx)]
+
+    # bin RIGHT edges: the evaluation times for which the FIR above is exactly causal
+    gt = t0 + (np.arange(n) + 1.0) * dt
+    lam_norm = _lam_norm("onesided")
+    out = {k: np.full((len(t_grid), len(scales)), np.nan) for k in
+           ("m", "dm", "lograte", "dlograte", "n_eff", "n_eff_rate")}
+
+    for j, s in enumerate(scales):
+        k0, k2, kh = _causal_kernels(s, dt, truncate)
+        S0, E0, X0 = _causal_bank(F, k0, nfft, n)
+        S2, E2, X2 = _causal_bank(F, k2, nfft, n)
+        Sh, Eh, _ = _causal_bank(F, kh, nfft, n)
+
+        # interval channel
+        neff = np.divide(E0 * E0, Eh, out=np.zeros_like(E0), where=Eh > 0)
+        okE = (E0 > 0) & (neff >= neff_min)
+        m = np.divide(X0, E0, out=np.full_like(E0, np.nan), where=okE)
+        dm = np.divide(X2 - m * E2, E0, out=np.full_like(E0, np.nan), where=okE)
+        m = np.where(okE, m, np.nan); dm = np.where(okE, dm, np.nan)
+
+        # rate channel, same n_eff floor (the defect V5 found, kept fixed here)
+        neff_r = np.divide(S0 * S0, Sh, out=np.zeros_like(S0), where=Sh > 0)
+        okS = (S0 > 0) & (neff_r >= neff_min)
+        lr = np.where(okS, np.log(np.divide(S0, lam_norm * s, out=np.ones_like(S0),
+                                            where=S0 > 0)), np.nan)
+        dlr = np.where(okS, np.divide(S2, S0, out=np.full_like(S0, np.nan),
+                                      where=okS) - 1.0, np.nan)
+
+        keep = t_grid > t0 + edge_scales * s          # LEFT ONLY -- see docstring
+        for name, arr in (("m", m), ("dm", dm), ("lograte", lr), ("dlograte", dlr),
+                          ("n_eff", neff), ("n_eff_rate", neff_r)):
+            v = np.interp(t_grid, gt, arr, left=np.nan, right=np.nan)
+            out[name][:, j] = np.where(keep, v, np.nan)
+    return out
