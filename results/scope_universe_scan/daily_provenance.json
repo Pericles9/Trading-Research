@@ -1,0 +1,53 @@
+{
+  "task": "Cooper's read section 5 - is data/daily a market-wide pull or a selected one?",
+  "why": "A bound built on a selected control set is not a bound. T3 measured breadth and explicitly did not establish provenance; this settles it.",
+  "cooper_test": "'the ticker count PER SESSION, distributed. A market-wide daily pull has a stable count near the listed-universe size and moves only with listings and delistings. A selected pull varies with whatever selected it.'",
+  "result_1_per_session_count": {
+    "sessions": 82,
+    "first": "2024-12-02",
+    "last": "2025-04-01",
+    "min": 1706,
+    "q25": 1743,
+    "median": 1758,
+    "q75": 1771,
+    "max": 1787,
+    "mean": 1756.4,
+    "sd": 18.1,
+    "coefficient_of_variation": 0.0103,
+    "range_over_median": 0.046,
+    "corr_session_index_vs_count": 0.891,
+    "reading": "STABLE, and what movement there is is MONOTONE IN TIME rather than in market activity. CV 1.03% and a +0.891 correlation with the session INDEX is the signature of a roster that grows with net listings. A pull selected on activity would vary with activity - spiky, and correlated with volatility or volume, not with the calendar. So it is NOT activity-selected."
+  },
+  "result_2_overlap_with_the_archive": {
+    "_why_this_was_added": "The per-session test rules out activity-selection but cannot distinguish a market-wide pull from any other stable roster - including one derived from the archive itself. Ticker overlap settles that, and it changes the answer.",
+    "daily_tickers": 1836,
+    "archive_tickers_all_rows": 3366,
+    "daily_in_archive": 841,
+    "daily_NOT_in_archive": 995,
+    "daily_not_in_archive_share": 0.542,
+    "examples_absent_from_archive": [
+      "A",
+      "AAPL",
+      "AAON",
+      "AAT",
+      "AADR",
+      "AAPD",
+      "AAM.WS",
+      "AAM.U"
+    ],
+    "archive_window_tickers": 904,
+    "archive_window_tickers_NOT_in_daily": 688,
+    "archive_window_coverage_by_daily": 0.239,
+    "reading": "54.2% of daily/ tickers are absent from the archive entirely - including AAPL, A, AAON. Large caps that a micro-cap momentum archive would never contain. So daily/ is NOT derived from the archive; it is an independent pull. It also contains ETFs (AADR, AAPD), warrants (AAM.WS) and units (AAM.U), so it is not filtered to common stock."
+  },
+  "verdict": {
+    "is_it_activity_selected": "NO - CV 1.03%, drift monotone in time not activity.",
+    "is_it_derived_from_the_archive": "NO - 54.2% of its tickers are absent from the archive.",
+    "is_it_market_wide": "NO. 1,836 tickers is well below the US listed common-stock universe, and it mixes instrument types. It is a stable, independent, BROAD roster - but not the market.",
+    "is_it_fit_for_the_control_set_purpose": "NO, AND THIS IS THE DECIDING NUMBER: it holds only 216 of the 904 archive tickers in its own window. 688 are missing - 76.1%. A resource meant to bound how often a screen fires on names the archive does not contain cannot do so while omitting three quarters of the names the archive DOES contain in the same window."
+  },
+  "consequence_for_route_R4": "R4 in routes_and_costs.json was conditioned on data/daily being establishable as a market-wide set. It is not. R4 as written does not produce a bound. What it could still produce is a statement about a stable 1,836-name roster over four months, which is a different and much weaker object, and the routes table should be read with that correction.",
+  "cost": "minutes, as predicted. Two duckdb queries plus a set comparison.",
+  "source": "read-only over data/daily/*_daily.parquet and momentum_events_canonical",
+  "reproduce": "see results/scope_universe_scan/REPORT.md section 12"
+}

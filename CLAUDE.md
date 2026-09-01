@@ -4,7 +4,20 @@
 - NEVER write to D:. Confirmed failing hardware, migrated off 2026-07-12.
 - Data root: E:\Trading Research\data. DuckDB: E:\Trading Research\data\duckdb\main.duckdb.
 - Env override precedence per src/data/paths.py: MOM_DB_DUCKDB_PATH > MOM_DB_DATABASE_ROOT > default.
-- Live D:\ hardcodes exist in: research/phase_1_context/build_scanner_context.py, research/phase_2_signal_forge/build_signal_forge.py, research/phase_2_signal_forge/build_signal_forge_v2.py, research/phase_3_alpha_hunter/build_alpha_hunter.py, research/phase_4_campaign/build_campaign.py, research/phase_4_campaign/build_campaign_hpc.py, results/rebuild_stage1/collect_massive_data_v2.py, results/rebuild_stage1/run_validation_sample.py, notebooks/ITT.ipynb, notebooks/VIsualize 5 random (filtered).ipynb, notebooks/regime.ipynb. Never execute those files until a remediation phase clears them.
+- **The D:\ hardcode list below is GENERATED, not hand-maintained.** Regenerate and verify with
+  `.venv/Scripts/python.exe tools/verify_claude_md_indices.py` (exit 1 on drift). **Run it in T0 of
+  every phase.** Hand-maintained indices in this file have gone stale three times — the decision
+  pointer sat at D14 against a register at D19 (near-collision at D20), the same pointer said D22 was
+  last when D23 had been taken (actual collision, 2026-08-30), and this list carried 11 entries
+  against 24 live hardcodes while omitting a file that WRITES to D: (2026-08-31). A list a human
+  maintains by hand in a repo this size will be stale again. **Any enumerated list in this file is
+  either generated and verified by that script, or it is deleted and replaced by the command that
+  produces it.**
+- Live D:\ hardcodes exist in: data/collection_scripts/collect_massive_data.py, data/collection_scripts/filter_events_power_law.py, data/collection_scripts/inspect_parquet_columns.py, notebooks/Analysis_Rolling_Hawkes.ipynb, notebooks/Power_Law_Audit.ipynb, notebooks/Regime_Analysis.ipynb, notebooks/Signal_Analysis.ipynb, notebooks/Signal_Lab_Report.ipynb, notebooks/VIsualize 5 random (filtered).ipynb, notebooks/regime.ipynb, notebooks/tps_backup_grid.ipynb, notebooks/univariate_kernel_hawkes.ipynb, research/phase_10c/s1_verification_block.py, research/phase_1_context/build_scanner_context.py, research/phase_1c/fetch_pair.py, research/phase_2_signal_forge/build_signal_forge.py, research/phase_2_signal_forge/build_signal_forge_v2.py, research/phase_3_alpha_hunter/build_alpha_hunter.py, research/phase_4_campaign/build_campaign.py, research/phase_4_campaign/build_campaign_hpc.py, research/phase_7/t1_d4_sweep.py, results/rebuild_stage1/collect_massive_data_v2.py, results/rebuild_stage1/run_validation_sample.py, src/data/prepare_database_split.py. Never execute those files until a remediation phase clears them.
+  Regenerated 2026-08-31: **24 live hardcodes, 13 of them previously unlisted, 7 of those write to
+  D:.** Excluded by the generator and correctly so — `src/data/{db,ingest,paths}.py`, whose only D:
+  mention is a Phase 0b provenance header, and 27 reports/JSON that quote a path as a record.
+  `notebooks/ITT.ipynb` was dropped: it carries no D: path.
 
 ## Provenance quarantine
 - filtered/ and momentum_events: Confirmed → the primary research surface.

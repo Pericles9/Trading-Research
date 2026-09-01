@@ -284,3 +284,52 @@ carried information beyond the table in §3.
 
 This pass gates nothing and unblocks nothing on its own. It exists so the scan can be **scheduled against
 a real cost**. Cooper reads this and decides whether, when, and by which route.
+
+---
+
+## 12. Follow-up, 2026-08-31 — `daily/` provenance settled, and R4 does not survive it
+
+Cooper's read §5 proposed the deciding test: *"the ticker count per session, distributed. A market-wide
+daily pull has a stable count near the listed-universe size and moves only with listings and delistings.
+A selected pull varies with whatever selected it."* Run, plus one follow-up. Artifact:
+`daily_provenance.json`.
+
+**Per-session count — stable, and drifting with the calendar rather than with activity.**
+
+| quantity | value |
+|---|---|
+| sessions | 82 |
+| min / median / max | 1,706 / 1,758 / 1,787 |
+| mean ± sd | 1,756.4 ± 18.1 |
+| **coefficient of variation** | **1.03%** |
+| range ÷ median | 4.6% |
+| **corr(session index, count)** | **+0.891** |
+
+The count is flat to ~1% and what movement there is is **monotone in time**, not in market activity — the
+signature of a roster growing with net listings. **So it is not activity-selected.**
+
+**But that test cannot separate a market-wide pull from any other stable roster, including one derived
+from the archive.** Ticker overlap settles it, and it changes the answer:
+
+| quantity | value |
+|---|---|
+| `daily/` tickers | 1,836 |
+| **absent from the archive entirely** | **995 — 54.2%** |
+| examples absent | `A`, `AAPL`, `AAON`, `AAT`, plus ETFs (`AADR`, `AAPD`), warrants (`AAM.WS`), units (`AAM.U`) |
+| **archive tickers in the same window that `daily/` does NOT hold** | **688 of 904 — 76.1%** |
+
+**Verdict.** Not activity-selected. **Not** derived from the archive — 54% of its names never appear
+there, and large caps like `AAPL` would never enter a micro-cap momentum archive. But **not market-wide
+either**: 1,836 is well below the US listed common-stock universe and the roster mixes ETFs, warrants and
+units. It is a stable, independent, broad pull that is **not the market**.
+
+**The deciding number is the last row.** `daily/` holds only **216 of the 904** archive tickers present in
+its own window. A resource meant to bound how often a screen fires on names the archive does *not* contain
+cannot do that while omitting **three quarters of the names the archive does contain** over the same
+dates.
+
+**Correction to §5's route table:** **R4 was conditioned on `daily/` being establishable as market-wide.
+It is not, so R4 as written does not produce a bound.** What it could still produce is a statement about a
+stable 1,836-name roster over four months — a different and much weaker object. The routes table should be
+read with that correction; nothing else in §5 changes.
+
