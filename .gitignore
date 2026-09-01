@@ -54,3 +54,4 @@ results/scale_field/artifacts/*.parquet
 # tracked so the set is enumerated in git even though the files are not.
 results/scale_field/charts/*/*.html
 results/scale_field/charts/*/plotly.min.js
+results/scope_universe_scan/*.parquet

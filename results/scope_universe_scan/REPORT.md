@@ -333,3 +333,101 @@ It is not, so R4 as written does not produce a bound.** What it could still prod
 stable 1,836-name roster over four months — a different and much weaker object. The routes table should be
 read with that correction; nothing else in §5 changes.
 
+---
+
+## 13. Follow-up, 2026-09-01 — the selection variable's session scope
+
+Cooper's read §4. Artifacts: `basis_test.json`, `basis_test_stage2.json`, `basis_test.parquet`.
+Code: `research/scope_universe_scan/basis_test.py`, `basis_test_stage2.py`.
+
+### 13.1 What could not be tested, stated first
+
+The read asks for **the screen's field** — Polygon's `todaysChangePerc` — to be compared against tick data
+computed two ways. **That field is not stored anywhere in this checkout.** It cannot be tested here at
+all, and claiming otherwise would be the fabrication class named on 2026-08-31.
+
+What *is* testable is the **archive half** of the same question, and it turns out to be worth doing on its
+own account. CLAUDE.md carries a standing qualifier on every premarket/extended-hours finding in the
+programme:
+
+> `momentum_pct` "inherits the vendor's RTH-scoped, adjusted-basis high forever, so every
+> premarket/extended-hours finding is conditional on that selection boundary"
+
+**Asserted 2026-07-24, never verified against tick data.** Below it is.
+
+### 13.2 Stage 1 — how much an RTH-scoped boundary costs (within-session, A12 does not apply)
+
+Seeded sample of 400 in-scope events with `trades_ingested`; **301** returned tick highs in at least one
+segment. Highs are tick-derived from `filtered/` prints. No previous close is needed, so no cross-session
+ratio is formed.
+
+**Where the T=0 extended-session high actually sits:**
+
+| segment | n | share |
+|---|---|---|
+| RTH | 205 | **68.1%** |
+| post | 48 | 15.9% |
+| premarket | 48 | 15.9% |
+| **outside RTH** | **96** | **31.9%** |
+
+**By how much an RTH-only high understates the session high** (`session_high / rth_high`, n = 301):
+
+| | |
+|---|---|
+| share > 1 | **31.9%** |
+| share > 1.05 | 21.6% |
+| median | 1.000 |
+| q90 / q95 / q99 | 1.127 / 1.242 / **1.593** |
+| max | **2.385** |
+
+**Roughly a third of these events reach their session high outside regular hours**, and the tail is large
+— at q99 the extended high is 59% above the RTH high, and one event reaches 2.39×. Notably the miss is
+**not** a premarket story: post-session highs are exactly as common (15.9% each).
+
+### 13.3 Stage 2 — which high does `momentum_pct` track? (cross-session, **A12 applies**)
+
+`momentum_pct = (H − P)/P`, so `H = P·(1 + momentum_pct/100)`. `P` is the tick-derived T−1 close taken
+from `price_earlier` on the `tm1_t0` pair of `results/phase_9/artifacts/t1_cross_session_flags.parquet`
+— a committed artifact, reused rather than rebuilt, **which also carries the A12 flag this comparison
+needs**. The implied `H` is compared in log distance against the tick RTH high and the tick
+extended-session high.
+
+**A12 is in force here**: `P` is T−1 and `H` is T=0, so every ratio spans a session boundary and
+denominators count. Untrimmed is primary; the flagged set is reported as its own row and never dropped.
+
+95 of 301 events are **discriminating** (extended high exceeds RTH high by >0.1%); on the other 206 the
+two candidates coincide and the test is uninformative by construction.
+
+| set | n | closer to **RTH** high | closer to extended high | median implied/RTH | median implied/extended |
+|---|---|---|---|---|---|
+| **untrimmed (primary)** | **95** | **64.2%** | 35.8% | **1.0138** | 0.9517 |
+| A12-flagged removed | 83 | 60.2% | 39.8% | 1.0152 | 0.9734 |
+| A12-flagged only | 12 | **91.7%** | 8.3% | 1.0025 | 0.8564 |
+
+**Reading: the evidence supports the standing claim, and does not clinch it.** The implied high sits
+within **1.4%** of the RTH high against **4.8%** from the extended high — RTH wins by roughly 3.5× in log
+distance, and the majority verdict is RTH in every cut. So `momentum_pct` behaving as an RTH-scoped
+quantity is the better-supported reading, and the qualifier CLAUDE.md attaches to every extended-hours
+finding stands.
+
+**But 35.8% land closer to the extended high, and that dispersion is not explained here.** Three
+candidates, none eliminated: our tick T−1 close may not be the vendor's previous close (RTH close vs
+extended close); our tick max may not be the vendor's official high; and **D4's adjustment-basis
+inconsistency bites this ratio directly** — `implied_H` and the tick highs can sit on different bases for
+the same ticker, which is exactly the AMC defect. The first two are settleable; the third is D4, and it is
+not settleable from disk.
+
+**A12 earned its keep visibly.** The flagged subset behaves differently from the rest — 91.7% RTH against
+60.2% — which is precisely the divergence A12 exists to stop being averaged away silently.
+
+### 13.4 What this changes
+
+- The standing qualifier on extended-hours findings is **supported by measurement** rather than asserted,
+  for the first time since 2026-07-24.
+- Its cost is now a number: an RTH-scoped selection variable does not see the session high on **31.9%** of
+  events, and understates it by more than 5% on **21.6%**.
+- It is **not** a premarket-only boundary. Post-session highs are equally common (15.9% each), and the
+  register's framing of the gap as a premarket issue is narrower than the data.
+- It does **not** settle what the live screen's field does. That remains open item A1, and D14 bars the
+  fetch that would close it.
+
