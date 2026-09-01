@@ -1,0 +1,59 @@
+{
+  "task": "T3 - data/daily breadth audit. BREADTH ONLY. No control set constructed, no populations compared (escalation row 7).",
+  "risk_row_5_status": "Risk row 5 recorded 'daily/ universe breadth for control-set construction' as an open audit item. Audited below.",
+  "layout": "one parquet per ticker, data/daily/{TICKER}_daily.parquet; columns volume, vw, open, close, high, low, timestamp, n, date",
+  "files_on_disk": 1848,
+  "files_carrying_rows": 1836,
+  "empty_files": 12,
+  "distinct_tickers": 1836,
+  "total_rows": 144026,
+  "date_range": {
+    "min": "2024-12-02",
+    "max": "2025-04-01"
+  },
+  "distinct_sessions": 82,
+  "rows_per_ticker": {
+    "min": 3,
+    "q25": 82,
+    "median": 82,
+    "q75": 82,
+    "max": 82
+  },
+  "coverage_shape": {
+    "tickers_starting_at_global_min": 1731,
+    "share_starting_at_min": 0.943,
+    "tickers_ending_at_global_max": 1774,
+    "share_ending_at_max": 0.966,
+    "tickers_spanning_full_range": 1695,
+    "busiest_session": "2025-03-31",
+    "busiest_session_ticker_count": 1787
+  },
+  "the_finding": "BREADTH IS WIDE, DEPTH IS NOT. 1,836 tickers is a real cross-section and 1,695 of them span the whole window - but the window is 82 sessions in a single four-month block, 2024-12-02 to 2025-04-01.",
+  "span_the_routes_would_have_to_cover": {
+    "_note": "Stated as a coverage fact about the on-disk resource, per T3's instruction to say what a comparison would REQUIRE. No population comparison is drawn and no rate is estimated.",
+    "archive_in_scope_events": 20951,
+    "archive_distinct_tickers": 2930,
+    "archive_date_range": {
+      "min": "2020-01-03",
+      "max": "2025-10-31"
+    },
+    "archive_distinct_sessions": 1465,
+    "daily_sessions_as_share_of_archive_sessions": 0.056,
+    "archive_events_falling_inside_the_daily_window": 2165,
+    "archive_tickers_falling_inside_the_daily_window": 904,
+    "archive_events_share_inside_the_window": 0.103
+  },
+  "what_a_comparison_would_require": [
+    "Daily bars for the WHOLE market, not only the 1,836 tickers already on disk. Whether those tickers are a market-wide set or themselves a selected one is NOT established by this audit, and establishing it is part of the work.",
+    "Coverage of 2020-01-03 to 2025-10-31, against the 82 sessions present.",
+    "A stated rule for what 'previous close' means on each session - ambiguity A1 in screen_definition.json, unresolved."
+  ],
+  "not_done_here": [
+    "No control set was constructed.",
+    "No population was compared.",
+    "No false-positive rate, bounded or otherwise, was estimated."
+  ],
+  "source": "duckdb read_parquet over data/daily/*_daily.parquet, read-only; momentum_events_canonical for the archive span",
+  "measured_cost": "the full 1,836-file glob scan ran in 11.6 s",
+  "reproduce": "see results/scope_universe_scan/REPORT.md section 3"
+}

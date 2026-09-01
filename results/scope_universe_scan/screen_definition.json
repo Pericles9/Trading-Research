@@ -1,0 +1,74 @@
+{
+  "task": "T1 - the intended live screen, pinned from committed sources only",
+  "rule": "Every element cites a file and a line. Where a source is silent or two disagree, the AMBIGUITY IS RECORDED, not resolved (escalation row 6).",
+  "elements": [
+    {
+      "element": "gap threshold",
+      "value": "0.30 (decimal)",
+      "citation": "scanner-epg-momentum/live/strategy.json:25",
+      "verbatim": "\"gap_threshold\": 0.30"
+    },
+    {
+      "element": "intraday evaluation frequency",
+      "value": "20 s poll",
+      "citation": "scanner-epg-momentum/live/strategy.json:26",
+      "verbatim": "\"poll_interval_s\": 20"
+    },
+    {
+      "element": "admission rule",
+      "value": "todaysChangePerc >= gap_threshold*100 AND ticker is common stock on XNYS/XNAS (TickerClassifier)",
+      "citation": "scanner-epg-momentum/live/CLAUDE.md:143 and :268"
+    },
+    {
+      "element": "unit conversion",
+      "value": "Polygon todaysChangePerc is in PERCENT units (30.0 = 30%); strategy.json stores 0.30 decimal; monitor multiplies by 100",
+      "citation": "scanner-epg-momentum/live/build_log.md:262",
+      "note": "flagged in that source as a non-obvious conversion"
+    },
+    {
+      "element": "sessions included",
+      "value": "all hours - every eligible name clearing the gap is admitted at all hours; no quartile gate",
+      "citation": "scanner-epg-momentum/live/strategy.json:29 and live/CLAUDE.md:143"
+    },
+    {
+      "element": "universe pre-filter",
+      "value": "common stock on XNYS/XNAS only, via TickerClassifier",
+      "citation": "scanner-epg-momentum/live/CLAUDE.md:143 and :268"
+    },
+    {
+      "element": "programme-level statement of the same screen",
+      "value": "real-time >=30% from previous close, pre- and post-market inclusive",
+      "citation": "docs/Universe-Decisions.md:321 (D5 consequence d); docs/Open-Items-Register.md:34; docs/Mom-DB-Strategy-Research-Program.md:345 (risk row 9)"
+    }
+  ],
+  "ambiguities_recorded_not_resolved": [
+    {
+      "id": "A1",
+      "severity": "HIGH - bears directly on the extended-hours question this pass exists for",
+      "ambiguity": "The REFERENCE PRICE of the screen is not established by any committed source in this checkout. The programme docs say '>=30% from previous close'. The implementation tests Polygon's todaysChangePerc (live/CLAUDE.md:143). No committed file here states what todaysChangePerc is referenced to, nor whether its numerator uses the last extended-hours trade or the last RTH trade.",
+      "why_it_matters": "The screen is specified as pre/post inclusive. If the field's numerator is RTH-scoped, the live screen does not fire on the extended-hours moves it is meant to fire on, and the live-vs-archive gap is different in kind from the one currently recorded.",
+      "what_would_settle_it": "The Polygon snapshot field definition, or a committed unit test asserting the basis. Neither is in this checkout; the first is an external fetch and is barred by D14."
+    },
+    {
+      "id": "A2",
+      "severity": "MEDIUM",
+      "ambiguity": "Which strategy is the live one. live/strategy.json:6 sets active_strategy = 'scanner_vwap', while docs/Research-Library-Map.md:293 describes the repo's strategy as 'EPG rising edge + gap >= 30%'.",
+      "why_it_matters": "Admission is shared, but if the two differ in any pre-filter the 'intended live universe' is under-specified.",
+      "what_would_settle_it": "A committed statement of which strategy defines the intended live universe for research purposes. Not present."
+    },
+    {
+      "id": "A3",
+      "severity": "LOW - resolved by citation, recorded for completeness",
+      "ambiguity": "Whether a TOD midday exclusion (11:30-13:30 ET) filters admission.",
+      "resolution": "It does NOT. scanner-epg-momentum/live/CLAUDE.md:286-291 lists it under 'Phase H - Do Not Implement Without Explicit Approval', i.e. identified in research but not active. Resolved by reading the source, not by inference."
+    },
+    {
+      "id": "A4",
+      "severity": "LOW - resolved by citation",
+      "ambiguity": "Two strategy configs exist (live/strategy.json and backtest/config/strategy.json). Which carries admission?",
+      "resolution": "backtest/config/strategy.json contains no gap_threshold, poll_interval_s or active_strategy key. live/strategy.json is the only source of admission parameters in this checkout."
+    }
+  ],
+  "source": "research read-only; scanner-epg-momentum is an independent repo, read here and not modified",
+  "reproduce": "grep -n 'gap_threshold\\|poll_interval_s' scanner-epg-momentum/live/strategy.json; sed -n '140,145p;266,270p;283,295p' scanner-epg-momentum/live/CLAUDE.md"
+}

@@ -1,0 +1,88 @@
+{
+  "task": "T2 - the archive selection function, read rather than assumed",
+  "risk_row_2_status": "Risk row 2 recorded the filter's exact mechanics as OPEN, SCRIPT UNREAD. The script is now read. It is 86 lines.",
+  "script": "data/collection_scripts/filter_events_power_law.py",
+  "headline": "THE q05 POWER-LAW FILTER DOES NOT SELECT ON MOMENTUM. It selects on VOLUME, conditional on momentum. The momentum threshold is upstream, in the scan files it reads, and the producer of those files is NOT in this repo.",
+  "what_it_actually_does": [
+    {
+      "step": 1,
+      "line": "8-9",
+      "detail": "reads two scan files - full_2020_2024_momentum_scan_20251122_000515.parquet and momentum_scan_2025.parquet - and concatenates them"
+    },
+    {
+      "step": 2,
+      "line": "27-29",
+      "detail": "drops rows with null momentum_pct or event_volume, and requires event_volume > 0 and momentum_pct > 0"
+    },
+    {
+      "step": 3,
+      "line": "31-32",
+      "detail": "log_mom = log10(momentum_pct); log_vol = log10(event_volume)"
+    },
+    {
+      "step": 4,
+      "line": "35-36",
+      "detail": "training set = events at or below the 99.5th percentile of momentum_pct"
+    },
+    {
+      "step": 5,
+      "line": "42-43",
+      "detail": "fits QUANTILE REGRESSION at q=0.05 of log_vol on log_mom (statsmodels quantreg)"
+    },
+    {
+      "step": 6,
+      "line": "56",
+      "detail": "predicts a per-event log-volume threshold from that fitted line, for ALL valid events including the high-momentum tail excluded from training"
+    },
+    {
+      "step": 7,
+      "line": "62",
+      "detail": "KEEPS events where log_vol > log_vol_threshold - volume above the 5th-percentile volume line for that event's momentum"
+    },
+    {
+      "step": 8,
+      "line": "78-83",
+      "detail": "writes filtered_events_power_law_q05.parquet and a CSV backup"
+    }
+  ],
+  "selection_variables": [
+    "event_volume - the thing selected on",
+    "momentum_pct - the conditioning regressor only"
+  ],
+  "three_properties_that_make_it_non_reproducible_live": [
+    {
+      "id": "P1",
+      "property": "POPULATION-DEPENDENT THRESHOLD",
+      "detail": "The cutoff is a quantile line FITTED OVER THE POOLED 2020-2025 POPULATION (line 42-43). Membership is therefore not a property of an event; it depends on every other event in the file. This is stronger than the open item's current wording, 'the selection variable is only knowable after the session ends' - the threshold is knowable only after the entire multi-year population is assembled.",
+      "consequence": "No real-time screen can reproduce archive membership even in principle, because the threshold does not exist until the population does."
+    },
+    {
+      "id": "P2",
+      "property": "SELECTS ON A D4-QUARANTINED COLUMN",
+      "detail": "event_volume is one of the spine numeric columns D4 permanently quarantines from computation, and D4 Amendment A9.2 extends that quarantine to pre-ingestion candidate_scan_inputs files prospectively. The universe's own selection function ran on that column, before the quarantine existed.",
+      "consequence": "Recorded, not actionable here - A9.2 is prospective and the universe is frozen. Stated so that no future work treats archive membership as a D4-clean quantity."
+    },
+    {
+      "id": "P3",
+      "property": "USES A COMPLETED-SESSION AGGREGATE",
+      "detail": "event_volume is a whole-session total and is unknowable at any intraday decision time."
+    }
+  ],
+  "extended_hours_question_asked_by_T2": {
+    "question": "Can the RTH-scoped momentum_pct construction (D4's universe-selection exception) observe the extended-hours moves the live screen is meant to fire on?",
+    "answer_from_the_script": "The script never touches session boundaries. It consumes momentum_pct as given from the upstream scan files and uses it only as a regressor. It neither introduces nor corrects the RTH scoping.",
+    "answer_from_the_standing_record": "CLAUDE.md's D4 note states momentum_pct inherits the vendor's RTH-scoped, adjusted-basis high forever, so every premarket/extended-hours finding is conditional on that selection boundary.",
+    "conclusion": "The RTH scoping enters UPSTREAM of this script, in the scan files. Confirming exactly where requires the scan producer.",
+    "status": "OPEN - the producer of full_2020_2024_momentum_scan_*.parquet and momentum_scan_2025.parquet was searched for across the checkout and not found."
+  },
+  "defect_found_while_reading": {
+    "id": "D-1",
+    "severity": "standing-constraint gap",
+    "finding": "filter_events_power_law.py carries LIVE D-drive hardcodes. Line 7 sets base_dir to a path on D:, and lines 78 and 83 WRITE a parquet and a CSV there.",
+    "why_it_matters": "CLAUDE.md's hard data rule is NEVER write to D: - confirmed failing hardware, migrated off 2026-07-12. CLAUDE.md also enumerates the files carrying live D-drive hardcodes and instructs that they never be executed until a remediation phase clears them. THIS FILE IS NOT ON THAT LIST. The list is incomplete, and the omitted file is one that WRITES.",
+    "action_taken": "Reported. Not executed, not modified - modifying it is outside this pass's write allowlist.",
+    "citation": "data/collection_scripts/filter_events_power_law.py lines 7, 78, 83, against CLAUDE.md Hard data rules"
+  },
+  "source": "read-only; the script was not executed",
+  "reproduce": "cat -n data/collection_scripts/filter_events_power_law.py"
+}

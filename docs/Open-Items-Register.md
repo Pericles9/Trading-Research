@@ -277,3 +277,69 @@ confirmation* — it does not carry the conclusion alone.
 
 **A decision that says "still undecided" is not a decision and should not consume a number.** Cooper
 decision, unassigned. Still blocking Phase 17 specification per `docs/Claude-Code-Operating-Plan.md` §6.
+
+
+### Universe-scan scoping pass — risk rows 2, 3, 4, 5, 9 annotated (2026-08-31)
+
+Scoping pass run under `prompts/universe_scan_scoping.md`, authorised by Cooper 2026-08-31. **No scan was
+executed, no measurement produced, no false-positive rate estimated.** Full record:
+`results/scope_universe_scan/REPORT.md`. What it established, against the rows it was aimed at:
+
+- **Row 2 — the q05 filter's exact mechanics: HALF-CLOSED, not closed.** The script was read
+  (`data/collection_scripts/filter_events_power_law.py`, 86 lines). **It does not select on momentum at
+  all.** It fits a quantile regression at q=0.05 of `log10(event_volume)` on `log10(momentum_pct)` over
+  events at or below the 99.5th momentum percentile, then keeps events whose volume exceeds that fitted
+  line. Momentum is the regressor, not the criterion. **The >=X% momentum screen is upstream, in the two
+  scan files the script reads, and the producer of those files is not in this checkout** — searched for
+  and not found. The row stays open for that reason: its mechanics are now specified, but the screen the
+  row was implicitly about is still unread.
+
+- **A property stronger than the register's current wording, affecting rows 3, 4 and 9.** The open item
+  says the archive's selection variable is "only knowable after the session ends." The threshold is in
+  fact a quantile line **fitted over the pooled 2020-2025 population**, so archive membership is not a
+  property of an event — it depends on every other event in the file. **No real-time screen can reproduce
+  it even in principle**, because the criterion does not exist until the population does. That is a
+  difference in kind rather than in degree, and it is the agent's characterisation rather than the
+  script's (REPORT.md section 9a).
+
+- **Recorded alongside:** the filter selects on `event_volume`, one of the spine numeric columns D4
+  permanently quarantines, and D4 Amendment A9.2 extends that quarantine to pre-ingestion scan inputs
+  prospectively. The universe's own selection function ran on that column before the quarantine existed.
+  Not actionable — A9.2 is prospective and the universe is frozen — but stated so no future work treats
+  archive membership as a D4-clean quantity.
+
+- **Row 5 — `daily/` breadth for control-set construction: AUDITED.** 1,848 files on disk, **12 empty**;
+  1,836 distinct tickers; 144,026 rows; **date range 2024-12-02 to 2025-04-01, 82 sessions**; 1,695
+  tickers span the full window. **Breadth is wide, depth is not.** Against the archive's 20,951 in-scope
+  events over 1,465 sessions (2020-01-03 to 2025-10-31), `daily/` covers **5.6% of sessions** and the
+  window contains **10.3%** of in-scope events. **Whether the 1,836 tickers are a market-wide set or
+  themselves a selected one was NOT established** — breadth was measured, provenance was not, and any
+  bound built on this resource turns on it.
+
+- **The live screen is more precisely specified than this register records.** It carries a **20 s poll
+  interval** (`scanner-epg-momentum/live/strategy.json:26`) and an explicit instrument pre-filter
+  (common stock on XNYS/XNAS, `live/CLAUDE.md:143`), neither of which appears in the row-9 summary.
+
+- **NEW OPEN ITEM — the reference price of the live screen is not established by any committed source.**
+  The docs say ">=30% from previous close"; the implementation tests Polygon's `todaysChangePerc`
+  (`scanner-epg-momentum/live/CLAUDE.md:143`). **No committed file in this checkout states what that
+  field is referenced to, nor whether its numerator uses the last extended-hours trade or the last RTH
+  trade.** This bites exactly where it matters: the screen is specified as pre/post inclusive, so if the
+  field is RTH-scoped then the live screen does not fire on the extended-hours moves it is meant to fire
+  on, and the live-vs-archive mismatch is different **in kind** from the one recorded above. Settling it
+  needs an external field definition and **D14 bars the fetch**. **Unassigned.**
+
+- **Four routes to an unconditional population are enumerated and costed** in
+  `results/scope_universe_scan/routes_and_costs.json`, each with what it would and would not establish
+  and its specific over-reading failure mode. **No route is proposed** — that is Cooper's. Sequencing
+  facts only: the reference-price ambiguity gates the intraday-replay route; the market-wide-set audit
+  gates the bound route; the two whole-market routes are both offline-blocked under D14; flanking-day
+  pseudo-controls are the only route that can start today, and they answer a **different** question from
+  the one being scoped (within-ticker, not cross-ticker).
+
+- **Defect found while reading, outside the pass's remit to fix.**
+  `data/collection_scripts/filter_events_power_law.py` carries live `D:\` hardcodes and **writes** a
+  parquet and a CSV there (lines 7, 78, 83). CLAUDE.md's hard rule is never to write to D:, and it
+  enumerates the files carrying live D: hardcodes with an instruction never to execute them until a
+  remediation phase clears them. **This file is not on that list.** The list is incomplete and the
+  omitted file is one that writes. Reported, not modified, not executed. **Unassigned.**
