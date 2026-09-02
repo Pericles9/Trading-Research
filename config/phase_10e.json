@@ -11,7 +11,8 @@
     "branch_base": "the prompt said 'cut from main'. There is no main branch in this repo; origin/HEAD points to master. Corrected to master in prompts/phase_10e.md.",
     "arm2_max_events": "RESOLVED 2026-08-31 by Cooper: the integer is retired (null) and replaced by arm2_cohort_artifact + arm2_cohort_expected_n. 75 vs 78 was a SET-IDENTITY problem, not a cap problem - 75 was the centred +60s admissible count and 78 is the causal cohort, two different sets. A bare integer cannot express which one is authorised, which is exactly what row 5 exists to protect.",
     "det_anchor": "RESOLVED 2026-08-31 by Cooper: a102 for BOTH arms. See frozen_inputs.det_anchor_single_source_rule and escalation row 25.",
-    "_resolutions_date": "2026-08-31"
+    "_resolutions_date": "2026-08-31",
+    "_cooper_fills_2026_08_31": "Arm 1's five slots filled: named_cell k=3/m=2, row_10 (role changed to reporting trigger; the stop is now a straddle), row_11 = 0.10, row_12 (bound reversed to optimistic). p_randomwalk added as a third reported number per cell. Arm 2's three slots remain [Cooper] and are gated behind T4."
   },
   "universe": {
     "analysis_universe": "in_scope = TRUE AND source_file = 'file1'",
@@ -41,7 +42,9 @@
     "scale_field_module": "research/scale_field/scale_field.py",
     "scale_field_note": "Reused UNCHANGED. Do not fork it. Channels per arm2.signal, amended 2026-08-30 under D23.",
     "det_anchor_single_source_rule": "ONE ANCHOR, BOTH ARMS: a102_detection_anchors.parquet, the artifact D7 was taken on and the one Phase 11 reuses frozen. results/phase_10/artifacts/v2_r13_detection.parquet is Phase 10's own detection artifact and is NOT used here. If Arm 1 and Arm 2 resolve det_anchor differently the two arms are not on the same clock - escalation row 25. Phase 10 v2 produced results/phase_10/artifacts/v2_r14_phase8_crosscheck.json specifically to reconcile the two: READ it and report agreement on the Arm 2 cohort (T1a-i); do not re-derive the comparison. Disagreement on any cohort event is a finding for the register and a stop.",
-    "det_anchor_crosscheck": "results/phase_10/artifacts/v2_r14_phase8_crosscheck.json"
+    "det_anchor_crosscheck": "results/phase_10/artifacts/v2_r14_phase8_crosscheck.json",
+    "frozen_baseline": "results/phase_10e/artifacts/frozen_baseline.json",
+    "frozen_baseline_note": "Row 1a compares against THIS FILE, not against the state at phase-11-approved, because that state was never recorded: three of the five frozen inputs are gitignored parquet and no digest carries artifact content hashes. The baseline was established 2026-08-31 and VERIFIES FORWARD FROM THAT POINT ONLY. The tag period is covered by circumstantial evidence stated in full in REPORT.md -- no commit since the tag touched the producing code, config or src/, and all three parquet mtimes predate the tag by 15-17 days. The durable fix is in the Agent_Prompt_Standard v1.4 draft: every artifact listed in a digest carries its sha256."
   },
   "cost": {
     "_source": "results/reports/phase_11_report.md - named cell, RTH, latency 5 min. NOT recomputed here.",
@@ -164,7 +167,10 @@
     "expiry": "the horizon H of the cell",
     "breakeven_formula": "p_breakeven = (m + 1) / (k + m)",
     "breakeven_note": "Arithmetic, not a choice. One round trip is charged on every outcome. Do NOT assume 0.5.",
-    "expiry_in_dollars_note": "model_selection_session_notes s6 prefers a dollar expiry over a clock expiry. NOT adopted here - Arm 1 is bar-based and has no dollar clock. Logged as an open item for the feature phase."
+    "expiry_in_dollars_note": "model_selection_session_notes s6 prefers a dollar expiry over a clock expiry. NOT adopted here - Arm 1 is bar-based and has no dollar clock. Logged as an open item for the feature phase.",
+    "randomwalk_formula": "p_randomwalk = m / (k + m)",
+    "randomwalk_note": "COOPER 2026-08-31, added to the spec. Report THREE numbers per cell: p_clear, p_breakeven and p_randomwalk. They answer different questions and both matter. p_clear above p_randomwalk => DRIFT EXISTS, the path has directional structure. p_clear above p_breakeven => IT PAYS, the drift exceeds the cost. A result that clears the first and fails the second is a real finding -- there is a signal and it is smaller than the cost stack -- and it is a completely different disposition from no signal at all. With only two numbers reported those two outcomes look identical.",
+    "drift_needed_is_the_gap": "p_breakeven - p_randomwalk = 1/(k+m) exactly. That is the whole economics of scalping this universe in one line: the cost is fixed, so it is a larger share of a narrower barrier span."
   },
   "reading_rules": {
     "R1_intrabar_ordering": "Compute BOTH bounds (optimistic / pessimistic). Never a single Arm 1 first-passage number. Report ambiguous share.",
@@ -172,7 +178,7 @@
     "R3_no_fill": "Own row, own share. Never dropped, never forward-filled.",
     "R4_dead_tape": "Entries with MFE and MAE both below the smallest barrier at every horizon - own share per cell.",
     "R5_event_dominance": "Every pooled cell reports raw n, distinct events, and effective n under event-equal weighting.",
-    "R6_breakeven": "p_clear reported against p_breakeven per cell, always.",
+    "R6_breakeven": "p_clear reported against BOTH p_breakeven and p_randomwalk = m/(k+m), per cell, always.",
     "R7_thin_cells": "Cells below min_cell_n hatched, carry no claim, appear in no summary sentence."
   },
   "inference": {
@@ -194,27 +200,34 @@
     "det_segment": "rth",
     "latency_minutes": 5,
     "horizon_minutes": 30,
-    "profit_k": "[Cooper]",
-    "stop_m": "[Cooper]",
-    "cell_rationale": "latency 5 / hold 30 / RTH matches the Phase 11 named cell exactly, so the two phases are directly comparable. The barrier pair is Cooper's."
+    "profit_k": 3,
+    "stop_m": 2,
+    "cell_rationale": "latency 5 / hold 30 / RTH matches the Phase 11 named cell exactly, so the two phases are directly comparable. The barrier pair is Cooper's.",
+    "barrier_pair_rationale": "COOPER 2026-08-31. Chosen on the NOISE FLOOR and the COST DRAG, in that order. (1) The stop is decided by the noise floor: barriers are measured on TRADE prices, which bounce the full spread. Against Phase 11's T=0 RTH figures (quoted spread 3.79c, effective 2.385c, round trip 2.512c), an m=1 stop is 2.512c = 0.66 of ONE QUOTED SPREAD -- a single print on the other side breaches it. That is not a stop, it is the bid-ask bounce with a name. m=2 is 5.024c = 1.33 quoted spreads. (2) Then k, on how much drift each cell demands: the gap between p_breakeven and p_randomwalk is EXACTLY 1/(k+m), the fixed 71bp cost as a share of the barrier span. k=1.5,m=1 needs 0.400 of drift over a random walk; k=3,m=2 needs 0.200. The cost does not scale, so tight barriers are mostly cost. A 212.9bp target is 9.6c on a $4.52 name that moved 30%+ that day -- modest against the daily range.",
+    "barrier_pair_what_it_was_NOT_chosen_on": "k=3,m=2 also has the WIDEST barriers and therefore the LOWEST R1 ambiguity, since both barriers are least likely to sit inside one bar's range. That is convenient and it is NOT a reason. Choosing the pair to make row 10 pass would be adjusting a parameter to make a criterion pass, which this prompt forbids. The ambiguity share falls where it falls and is reported as an outcome, never as a justification.",
+    "p_breakeven": 0.6,
+    "p_randomwalk": 0.4
   },
   "cooper_thresholds": {
-    "_note": "UNFILLED. Escalation row 2 hard-stops T1 if any remain [Cooper] in the committed file.",
-    "row_10_r1_ambiguous_share_max": "[Cooper]",
+    "_note": "FILLED 2026-08-31 by Cooper for ARM 1. Arm 2's three slots remain unfilled and are gated behind the T4 gate regardless.",
+    "row_10_r1_ambiguous_share_max": 0.25,
     "row_10_proposal": 0.25,
-    "row_10_scope": "R1 ambiguous share on the named cell. Above this, Arm 1 cannot carry a first-passage conclusion; MFE/MAE distributions still stand.",
-    "row_11_no_fill_share_max": "[Cooper]",
+    "row_10_scope": "CORRECTED 2026-08-31 by Cooper. A fixed 25% ambiguity threshold is a proxy, and the same class of error as row 1's branch check: THE AMBIGUITY ONLY MATTERS WHEN IT CHANGES THE ANSWER. If 40% of entries are ambiguous but both bounds sit below break-even, the conclusion holds and the share is irrelevant. THE STOP IS NOW A STRADDLE: row 10 fires when the optimistic and pessimistic p_clear fall on OPPOSITE SIDES of p_breakeven on the named cell, so the bounds straddle the decision and Arm 1 cannot resolve it. 0.25 is retained as a REPORTING trigger -- above it the ambiguity gets its own report section and chart 03 carries the headline -- but it does not stop the phase.",
+    "row_11_no_fill_share_max": 0.1,
     "row_11_proposal": 0.1,
-    "row_11_scope": "R3 no-fill share on the named cell.",
-    "row_12_arm1_gate": "[Cooper]",
+    "row_11_scope": "R3 no-fill share on the named cell. Confirmed at 0.10 by Cooper 2026-08-31 -- a data-quality check on fills, independent of barriers, with no reason to move it.",
+    "row_12_arm1_gate": "optimistic p_clear below p_breakeven at EVERY cell in the grid",
     "row_12_proposal": "pessimistic p_clear below p_breakeven at EVERY cell in the grid",
-    "row_12_scope": "THE ARM 1 GATE. Firing means the path does not pay at minute scale. Arm 2 does not run.",
+    "row_12_scope": "THE ARM 1 GATE. Firing means the path does not pay at minute scale and Arm 2 does not run.",
     "row_12_reasoning": "Expressed as a SHARE against an arithmetic break-even, defined on every candidate entry. Phase 11's row 11 was a median ratio and could not see a denominator that was non-positive on 52.86% of its cell. This is the direct correction.",
     "row_13_ceiling": "[Cooper]",
     "row_13_proposal": "lower bound of the event-clustered CI on p_clear(oracle) - p_clear(control) <= 0 at the best cell",
     "row_13_scope": "THE CEILING. Firing means an oracle with full lookahead does not beat random entry inside the same event, and the timing-detector line closes.",
     "row_13_reasoning": "Non-causality only helps the oracle, so a null here is decisive in a way a null on a causal detector would not be.",
-    "row_1_amendment": "AMENDED 2026-08-31 by Cooper. The original row 1 stopped on 'phase-11-approved absent OR master moved since it'. master being ahead is the expected state - the scale-space arc happened after Phase 11 and touched nothing this phase consumes - and clearing the row by fiat would have thrown away the check it was meant to make. Split into: row 1 (tag absent -> stop), row 1a (any of the five frozen inputs differs in content hash from its state at the tag -> stop, post both hashes and the commits that touched it), row 1b (master moved AND 1a passes -> NOT a stop; record the commit count in decisions_log and proceed). An unconditional branch check replaced by a real integrity test."
+    "row_1_amendment": "AMENDED 2026-08-31 by Cooper. The original row 1 stopped on 'phase-11-approved absent OR master moved since it'. master being ahead is the expected state - the scale-space arc happened after Phase 11 and touched nothing this phase consumes - and clearing the row by fiat would have thrown away the check it was meant to make. Split into: row 1 (tag absent -> stop), row 1a (any of the five frozen inputs differs in content hash from its state at the tag -> stop, post both hashes and the commits that touched it), row 1b (master moved AND 1a passes -> NOT a stop; record the commit count in decisions_log and proceed). An unconditional branch check replaced by a real integrity test.",
+    "row_10_role": "REPORTING TRIGGER, NOT THE STOP",
+    "row_10_action_on_firing": "unchanged: MFE/MAE distributions stand, and the first-passage label comes from Arm 2's tick data where ordering is exact.",
+    "row_12_correction_2026_08_31": "COOPER REVERSED HIS OWN SPEC. It read 'PESSIMISTIC p_clear below p_breakeven at every cell', and that is wrong and kills too easily: pessimistic is the LOWER bound, and its failing does not mean the truth fails -- the truth sits between the bounds, so a strategy whose real value clears break-even would be killed on its worst reading. Corrected to the OPTIMISTIC bound: if even the most favourable resolution of the ordering ambiguity cannot clear break-even anywhere, the path definitively does not pay. THAT is a kill condition. The pessimistic bound is reported alongside throughout -- it is the honest floor -- but it does not carry the gate."
   },
   "runtime_ceilings": {
     "runtime_ceiling_seconds_arm1": 3600,
