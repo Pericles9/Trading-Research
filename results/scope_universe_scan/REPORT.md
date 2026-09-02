@@ -431,3 +431,113 @@ not settleable from disk.
 - It does **not** settle what the live screen's field does. That remains open item A1, and D14 bars the
   fetch that would close it.
 
+---
+
+## 14. Follow-up, 2026-08-31 — the selection audit under A13, and a hard stop
+
+D4 Amendment **A13** granted. Artifact: `selection_audit.json`. Code:
+`research/scope_universe_scan/selection_audit.py`. **A13(a) honoured: no per-event artifact and no spine
+numeric column under any name — JSON aggregates only, no parquet.**
+
+### 14.1 HARD STOP — the vintage-churn test cannot be run, and it is the data, not the rule
+
+`momentum_events` carries **`min_volume_threshold`** — the column
+`filter_events_power_law.py` writes onto its **own output** (line 65).
+
+| check | result |
+|---|---|
+| rows | 23,268 |
+| null threshold | **0** |
+| **above the line** | **23,268** |
+| **below the line** | **0** |
+| any other table holding a rejected event | **none** |
+
+**The spine IS the filter's survivors.** A `q = 0.05` quantile line cannot be refit from the ~95% of the
+population that lies above it — the 5th percentile of the survivors is not the 5th percentile of the
+original — and **all three arms** of the design need the rejected mass. It is not on disk.
+
+This is Phase 8 A10.2d's finding one level up: rejected candidates are absent from `data/filtered/`, and
+they are absent from the **spine** too.
+
+### 14.2 The selection function, recovered exactly
+
+    log10(min_volume_threshold) = 2.126137 + 0.584556 · log10(momentum_pct)
+
+**R² = 1.0000000000, max |residual| = 3.6e−15 decades.** Machine precision, so the threshold column is
+provably the fitted line evaluated per event, and the function that was actually applied is now pinned.
+A13(a) names fitted coefficients as a permitted output.
+
+### 14.3 Residual spread — reported first, per Cooper's ordering
+
+`margin = log10(event_volume) − log10(min_volume_threshold)`, **censored at zero** (survivors only), so
+the observed spread understates the true one.
+
+| quantity | decades |
+|---|---|
+| q01 / q05 / q10 | 0.222 / 0.814 / 1.276 |
+| **median** | **2.967** |
+| q90 / q99 | 4.360 / 5.073 |
+| observed sd (censored) | 1.145 |
+| **uncensored σ estimate** | **1.737** |
+| per-quantile σ spread (max/min) | 2.03 — so the residual is **not** normal |
+
+The censoring point is known exactly — the line *is* the 5th percentile by construction — so σ is
+estimated by matching each observed quantile against a normal truncated at its own 5th percentile. The
+2.03× disagreement across quantiles is the departure from normality, reported rather than smoothed.
+
+**σ̂ = 1.74 decades sits above the top row of the read's table** (which ran to 1.5). At the AMC anchor
+that is `0.283 / 1.737 = 0.163` standard deviations — below the most conservative row.
+
+### 14.4 Basis perturbation — measured, and it is small
+
+A per-ticker volume factor is an **additive shift in `log10(event_volume)`**, moving a point vertically
+against the line. For a shift δ, the survivors a −δ shift pushes below the line are those with
+`margin < δ`.
+
+| δ (decades) | factor | pushed below | n |
+|---|---|---|---|
+| 0.05 | 1.12× | 0.27% | 62 |
+| 0.15 | 1.41× | 0.68% | 158 |
+| **0.283** | **1.92× — AMC anchor** | **1.44%** | **335** |
+| 0.50 | 3.16× | 2.70% | 629 |
+| 1.00 | 10.0× | 6.77% | 1,575 |
+| 1.50 | 31.6× | 12.90% | 3,002 |
+
+**One-sided, and therefore a lower bound.** It counts survivors a −δ shift would exclude. Events below
+the line that a +δ shift would **promote** are invisible, because they are not on disk. Total basis churn
+is larger by an unmeasurable amount.
+
+### 14.5 Why both numbers come out small — the geometry
+
+| | |
+|---|---|
+| threshold at momentum 30% / 42.86% / 100% | 976 / **1,203** / 1,974 shares |
+| median survivor `event_volume` | **1,202,800** shares |
+| **median volume ÷ its own threshold** | **926×** |
+| **survivors within 2× of their threshold** | **1.51%** |
+
+**The q05 line is an extraordinarily permissive constraint on the surviving population.** The median
+survivor trades nearly a thousand times its own threshold, and fewer than one in sixty sits within a
+factor of two of exclusion. That is why a 1.92× basis error moves only 1.44%, and it is the same geometry
+that would make a modest vintage-refit coefficient shift move very few **survivors**.
+
+**The read's conditional resolves the other way.** It expected basis churn "in double figures" if the
+residual spread came back below ~0.6 decades. It came back at **1.74**, and basis churn at the AMC anchor
+is **1.44%**. So the two effects are **not** the same order, and had the lookahead arm been runnable its
+number would not have been swamped.
+
+### 14.6 What is settled and what is not
+
+- **Settled:** the selection function, exactly. Basis sensitivity of *surviving* membership — small,
+  1.44% at the AMC anchor, lower bound. The residual spread, 1.74 decades uncensored.
+- **Not settled, and not settleable from disk:** the lookahead. Its magnitude is unmeasurable because the
+  population it would be measured against does not exist here.
+- **The asymmetry that remains.** Everything above concerns events we can see, all of which are
+  survivors. The uncertainty lives entirely on the side that is missing: events *below* the line, which a
+  different vintage or a basis shift could have promoted. For those, nothing in this checkout constrains
+  anything.
+- **Consequence for the correction the read proposed.** A point-in-time refit was to be the byproduct
+  that repaired the universe. **It cannot be produced.** A13(b) — the sentence a corrected population
+  would have had to carry — has nothing to attach to, and the register should record the lookahead as
+  *unmeasurable from disk* rather than as *pending measurement*.
+

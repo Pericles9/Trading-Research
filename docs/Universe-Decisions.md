@@ -293,6 +293,60 @@ session-pair) — parallel to `flag_possible_row_cap` (Phase 8) and `flag_has_du
 **How to apply:** any phase computing a quantity across a session boundary cites A12, states which
 pairs it spans, and reports the with/without-flag pair. Within-day quantities are unaffected.
 
+
+### D4 Amendment A13 — reading spine numerics to audit the selection function
+
+**Date:** 2026-08-31 · **Gate:** Cooper's ruling on the amendment proposed when the vintage-churn
+test was found to require `event_volume`, which D4 bars. Granted as amended below.
+
+**Why granting this is the conservative option, not the permissive one.** The instinct that a
+spine-numeric exemption loosens D4 has it backwards. **The contamination is already in the universe** —
+`event_volume` was used to build the population every phase since has run on. D4 quarantined the column
+going forward and grandfathered the population it had already shaped. **A13 adds no contamination path;
+it makes an existing one auditable.** Refusing it would make the universe-selection function
+*permanently unauditable*, because the function is defined on the column — you cannot reproduce or check
+a function without reading its inputs. That is worse than what D4 exists to prevent: D4 guards against a
+contaminated *measurement*, and refusal would guarantee a contaminated *population* nobody is allowed to
+look at.
+
+**Decision.** Spine numeric columns may be **read** for the sole purpose of reproducing, auditing, or
+causally re-deriving the **universe-selection function**, whose output is a membership set and never a
+measured market quantity.
+
+**(a) Write boundary — a read/write test, not an intent test.** Intent tests are unenforceable at review
+time. No committed artifact that a downstream phase reads may carry a spine numeric column, **under any
+name, including a transform of one**. The permitted outputs are a **membership boolean**, a **vintage
+label**, and the **fitted coefficients of the selection function itself**. Nothing relating a spine
+numeric to a market outcome. This is checkable against artifact schemas.
+
+**(b) Inherited contamination, stated wherever the population is used.** A point-in-time refit is
+causally valid and **not basis-clean**. It fixes the lookahead and not the adjustment-basis
+inconsistency D4 documents. Any population produced under this amendment carries that sentence.
+
+**(c) Basis sensitivity is measured, not asserted.** Any use under this amendment reports membership
+churn under a basis perturbation at the scale of the observed per-ticker factor discrepancies, alongside
+the churn it was run to measure, **on the same axis**. Where the two are the same order, no conclusion is
+drawn about either without the residual spread reported. This converts a disclosure into a measurement,
+and this programme's record is that disclosures get read past and measurements do not.
+
+**Why (c) is load-bearing, with the arithmetic.** A per-ticker volume factor is a per-ticker **additive
+shift in `log10(event_volume)`**, which moves a point **vertically against the fitted line** — straight
+across the membership boundary. D4's own AMC evidence puts the discrepancy at 10.06 / 5.24 = **1.92×**,
+i.e. **0.283 decades**. Against a plausible residual spread that is 0.19–0.71 standard deviations, so
+**basis churn is plausibly the same order as, or larger than, lookahead churn**. A two-arm test therefore
+cannot separate the thing it was designed to measure, and a bare churn number would be uninterpretable.
+
+**Scope.** This amendment authorises no other use of spine numerics. D4 and A9.2 are otherwise unchanged.
+It consumes no decision number: it is a D4 amendment, continuing A12. **Next free decision number remains
+D24.**
+
+**First use, and it produced a hard stop — see `results/scope_universe_scan/REPORT.md` §14.** The test
+A13 was granted for cannot be run: `momentum_events` carries `min_volume_threshold`, the column the
+filter writes onto its *own output*, and all 23,268 rows sit above the line with no nulls. The table is
+the filter's **survivors only**; the rejected population is on no table in this checkout. A `q=0.05`
+quantile line cannot be refit from the ~95% above it. What A13 *did* make possible is recorded in the
+same section.
+
 ---
 
 ## D5 — Strategy surface and horizon class

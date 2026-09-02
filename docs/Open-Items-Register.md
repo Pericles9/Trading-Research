@@ -343,3 +343,47 @@ executed, no measurement produced, no false-positive rate estimated.** Full reco
   enumerates the files carrying live D: hardcodes with an instruction never to execute them until a
   remediation phase clears them. **This file is not on that list.** The list is incomplete and the
   omitted file is one that writes. Reported, not modified, not executed. **Unassigned.**
+
+
+### Universe-selection audit under A13 — a hard stop, and three items (2026-08-31)
+
+Run under **D4 Amendment A13**, granted the same day. Full record:
+`results/scope_universe_scan/REPORT.md` section 14, artifact `selection_audit.json`.
+
+- **THE VINTAGE-CHURN TEST CANNOT BE RUN, AND THE LOOKAHEAD IS UNMEASURABLE FROM DISK.**
+  `momentum_events` carries `min_volume_threshold`, the column `filter_events_power_law.py` writes onto
+  its own output. All 23,268 rows are non-null and **all 23,268 sit above the line; zero below**. No table
+  in this checkout holds a rejected event. **The spine IS the filter's survivors**, a q=0.05 line cannot
+  be refit from the ~95% above it, and all three arms need the rejected mass. This is Phase 8 A10.2d
+  (rejected candidates absent from `data/filtered/`) one level up. **Record the lookahead as unmeasurable
+  from disk, not as pending measurement** — and the point-in-time refit that was to repair the universe
+  cannot be produced, so A13(b) has nothing to attach to.
+
+- **What was recovered instead.** The selection function exactly —
+  `log10(threshold) = 2.126137 + 0.584556·log10(momentum_pct)`, R² = 1.0000000000, max residual
+  3.6e−15 decades. The residual spread, censored at zero, **uncensored σ = 1.737 decades** with a 2.03×
+  per-quantile disagreement (so it is not normal). And the basis-perturbation arm, measured per A13(c):
+  **1.44% of survivors (335) are pushed below the line by the AMC-anchor 1.92× volume-factor
+  discrepancy** — one-sided, a lower bound, because events the shift would promote are not on disk.
+
+- **The geometry that explains both, and it is a finding in its own right.** The q05 threshold is ~1,200
+  shares at median momentum; the median survivor trades 1,202,800 — **926× its own threshold** — and only
+  **1.51%** of survivors sit within 2× of exclusion. **The q05 line is an extraordinarily permissive
+  constraint on the surviving population**, which is why a near-2× basis error moves only 1.44%, and why
+  the expectation of double-figure basis churn resolved the other way.
+
+- **Risk row 5 / the universe scan is now blocked on DATA ACQUISITION, not on method.** `data/daily/`
+  holds 216 of the 904 archive tickers present in its own window (**76.1% missing**), so it cannot bound
+  anything about names the archive does not contain. No method will fix that. The disposition is a
+  procurement decision — obtain a genuine market-wide daily universe, or accept that the live
+  false-positive rate stays unmeasured and size for it. **Recorded here explicitly because a
+  blocked-on-method item invites more method, and this one will not yield to any.**
+
+- **HAZARD, not a documentation defect: seven committed files write to `D:`.** The regenerated
+  enumeration (`tools/verify_claude_md_indices.py`) found 24 live `D:\` hardcodes against 11 listed, and
+  **seven of the previously unlisted files write** — `data/collection_scripts/collect_massive_data.py`,
+  `data/collection_scripts/filter_events_power_law.py`, `research/phase_1c/fetch_pair.py`,
+  `research/phase_7/t1_d4_sweep.py`, and three notebooks. CLAUDE.md's hard rule is never to write to D:
+  (confirmed failing hardware, migrated off 2026-07-12). **Anyone who runs one of these writes outside the
+  repo, onto known-bad hardware.** Reported, not modified — remediation is its own decision. **Unassigned,
+  and it should not sit at the same priority as a stale index.**
