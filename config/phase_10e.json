@@ -210,9 +210,6 @@
   },
   "cooper_thresholds": {
     "_note": "FILLED 2026-08-31 by Cooper for ARM 1. Arm 2's three slots remain unfilled and are gated behind the T4 gate regardless.",
-    "row_10_r1_ambiguous_share_max": 0.25,
-    "row_10_proposal": 0.25,
-    "row_10_scope": "CORRECTED 2026-08-31 by Cooper. A fixed 25% ambiguity threshold is a proxy, and the same class of error as row 1's branch check: THE AMBIGUITY ONLY MATTERS WHEN IT CHANGES THE ANSWER. If 40% of entries are ambiguous but both bounds sit below break-even, the conclusion holds and the share is irrelevant. THE STOP IS NOW A STRADDLE: row 10 fires when the optimistic and pessimistic p_clear fall on OPPOSITE SIDES of p_breakeven on the named cell, so the bounds straddle the decision and Arm 1 cannot resolve it. 0.25 is retained as a REPORTING trigger -- above it the ambiguity gets its own report section and chart 03 carries the headline -- but it does not stop the phase.",
     "row_11_no_fill_share_max": 0.1,
     "row_11_proposal": 0.1,
     "row_11_scope": "R3 no-fill share on the named cell. Confirmed at 0.10 by Cooper 2026-08-31 -- a data-quality check on fills, independent of barriers, with no reason to move it.",
@@ -225,9 +222,13 @@
     "row_13_scope": "THE CEILING. Firing means an oracle with full lookahead does not beat random entry inside the same event, and the timing-detector line closes.",
     "row_13_reasoning": "Non-causality only helps the oracle, so a null here is decisive in a way a null on a causal detector would not be.",
     "row_1_amendment": "AMENDED 2026-08-31 by Cooper. The original row 1 stopped on 'phase-11-approved absent OR master moved since it'. master being ahead is the expected state - the scale-space arc happened after Phase 11 and touched nothing this phase consumes - and clearing the row by fiat would have thrown away the check it was meant to make. Split into: row 1 (tag absent -> stop), row 1a (any of the five frozen inputs differs in content hash from its state at the tag -> stop, post both hashes and the commits that touched it), row 1b (master moved AND 1a passes -> NOT a stop; record the commit count in decisions_log and proceed). An unconditional branch check replaced by a real integrity test.",
-    "row_10_role": "REPORTING TRIGGER, NOT THE STOP",
     "row_10_action_on_firing": "unchanged: MFE/MAE distributions stand, and the first-passage label comes from Arm 2's tick data where ordering is exact.",
-    "row_12_correction_2026_08_31": "COOPER REVERSED HIS OWN SPEC. It read 'PESSIMISTIC p_clear below p_breakeven at every cell', and that is wrong and kills too easily: pessimistic is the LOWER bound, and its failing does not mean the truth fails -- the truth sits between the bounds, so a strategy whose real value clears break-even would be killed on its worst reading. Corrected to the OPTIMISTIC bound: if even the most favourable resolution of the ordering ambiguity cannot clear break-even anywhere, the path definitively does not pay. THAT is a kill condition. The pessimistic bound is reported alongside throughout -- it is the honest floor -- but it does not carry the gate."
+    "row_12_correction_2026_08_31": "COOPER REVERSED HIS OWN SPEC. It read 'PESSIMISTIC p_clear below p_breakeven at every cell', and that is wrong and kills too easily: pessimistic is the LOWER bound, and its failing does not mean the truth fails -- the truth sits between the bounds, so a strategy whose real value clears break-even would be killed on its worst reading. Corrected to the OPTIMISTIC bound: if even the most favourable resolution of the ordering ambiguity cannot clear break-even anywhere, the path definitively does not pay. THAT is a kill condition. The pessimistic bound is reported alongside throughout -- it is the honest floor -- but it does not carry the gate.",
+    "row_10a_r1_ambiguous_share_max": 0.25,
+    "row_10a_proposal": 0.25,
+    "row_10a_scope": "CORRECTED 2026-08-31 by Cooper. A fixed 25% ambiguity threshold is a proxy, and the same class of error as row 1's branch check: THE AMBIGUITY ONLY MATTERS WHEN IT CHANGES THE ANSWER. If 40% of entries are ambiguous but both bounds sit below break-even, the conclusion holds and the share is irrelevant. THE STOP IS NOW A STRADDLE: row 10 fires when the optimistic and pessimistic p_clear fall on OPPOSITE SIDES of p_breakeven on the named cell, so the bounds straddle the decision and Arm 1 cannot resolve it. 0.25 is retained as a REPORTING trigger -- above it the ambiguity gets its own report section and chart 03 carries the headline -- but it does not stop the phase.",
+    "row_10a_role": "REPORTING TRIGGER, NOT THE STOP",
+    "row_10_straddle_has_no_parameter": "ROW 10 CARRIES NO CONFIG KEY, DELIBERATELY. The straddle test is structural -- sign(optimistic - p_breakeven) != sign(pessimistic - p_breakeven) -- so there is nothing to fill. Cooper's amendment of 2026-08-31 listed 'cooper_thresholds.row_10_r1_straddle' in cooper_slots_by_arm.arm1; that key does not exist and was NOT created, because a slot that can never be filled would make row 2 unevaluable -- the same defect class T0d exists to catch. The arm1 list below names the five keys that really do carry fillable values."
   },
   "runtime_ceilings": {
     "runtime_ceiling_seconds_arm1": 3600,
@@ -263,5 +264,62 @@
     "description_only": "No recommendations, no causal language, no 'suggests / confirms / indicates / therefore'.",
     "escalation_report_order": "Report in table order - the table is the priority order.",
     "units_rule": "D19 - bp and cents, never one alone"
-  }
+  },
+  "cooper_slots_by_arm": {
+    "arm1": [
+      "named_cell.profit_k",
+      "named_cell.stop_m",
+      "cooper_thresholds.row_10a_r1_ambiguous_share_max",
+      "cooper_thresholds.row_11_no_fill_share_max",
+      "cooper_thresholds.row_12_arm1_gate"
+    ],
+    "arm2": [
+      "arm2.arm2_cohort_artifact",
+      "arm2.arm2_cohort_expected_n",
+      "cooper_thresholds.row_13_ceiling"
+    ],
+    "_rule": "The agent fills none of these. Row 2 evaluates arm1 at T0c; row 2a evaluates arm2 at T5a. The mapping lives here rather than inline in the rows, so the escalation table cannot drift from it -- which is exactly how row 20 broke.",
+    "_row_10_note": "Row 10 is absent from arm1 by design: the straddle test has no parameter. See cooper_thresholds.row_10_straddle_has_no_parameter."
+  },
+  "t4_verdict": {
+    "_why": "Rows 10 and 12 are mutually exclusive but they DO NOT PARTITION THE OUTCOME SPACE. 'Neither fired' collapses two opposite results -- the named cell paying, and the named cell failing while some other cell clears. A gate that returns the same summary for its best and its second-worst outcome is the Phase 11 row 11 defect again: a criterion that cannot see the state it most needs to report.",
+    "states": [
+      "both_below",
+      "straddle",
+      "both_above"
+    ],
+    "classification": "T4a classifies the NAMED CELL into exactly one of the three states against p_breakeven, using the optimistic and pessimistic bounds, and reports it as the phase's headline verdict alongside the grid-wide row-12 condition.",
+    "the_four_outcomes": [
+      {
+        "named_cell": "both_below",
+        "grid": "optimistic below p_breakeven at EVERY cell",
+        "verdict": "THE PATH DOES NOT PAY",
+        "row_fired": "12",
+        "disposition": "Stop. Arm 2 does not run."
+      },
+      {
+        "named_cell": "both_below",
+        "grid": "some other cell clears",
+        "verdict": "NAMED CELL FAILS, GRID DOES NOT",
+        "row_fired": "none",
+        "disposition": "The edge, if any, is not where the named cell looked."
+      },
+      {
+        "named_cell": "straddle",
+        "grid": "n/a",
+        "verdict": "UNRESOLVABLE ON BARS",
+        "row_fired": "10",
+        "disposition": "MFE/MAE distributions stand; the label comes from Arm 2's tick data."
+      },
+      {
+        "named_cell": "both_above",
+        "grid": "n/a",
+        "verdict": "THE PATH PAYS AT THE NAMED CELL",
+        "row_fired": "none",
+        "disposition": "The good outcome. It fires no row, so it must be stated by the verdict."
+      }
+    ],
+    "rule": "The escalation table records which rows fired; THE VERDICT IS STATED SEPARATELY AND ALWAYS, because two of the four outcomes fire no row at all."
+  },
+  "write_allowlist_note": "Row 20 REFERENCES this list and never restates it. Restating it is how it drifted: the prompt's inline copy was narrower than this list and narrower than the Output Files table, so T8b's required report copy would have fired the row. Fourth list in this programme to drift from its source, after the decision pointer, the D: hardcode enumeration and the commit staging scope."
 }

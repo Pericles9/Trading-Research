@@ -203,8 +203,25 @@ denominator degenerated on the majority of its population and the gate could not
   - [ ] T3d — `p_clear` and `p_breakeven` per cell per R6, both bounds per R1, with CIs. Commit.
 
 - [ ] **T4 — THE ARM 1 GATE.** Post the gate table and **stop**. Do not begin Arm 2.
-  - [ ] T4a — Report the three gate quantities on the named cell (`config.named_cell`): the R1
-        **ambiguous share**; `p_clear` (both bounds) against `p_breakeven`; and the expiry share.
+  - [ ] T4a — **Classify the named cell into exactly one of `{both_below, straddle, both_above}`
+        against `p_breakeven`, using the optimistic and pessimistic bounds, and report that as the
+        phase's HEADLINE VERDICT** alongside the grid-wide row-12 condition. Then the three gate
+        quantities: the R1 **ambiguous share**; `p_clear` (both bounds) against `p_breakeven` **and
+        `p_randomwalk`**; and the expiry share.
+
+        **THE VERDICT IS STATED SEPARATELY AND ALWAYS, because two of the four outcomes fire no row
+        at all.** Rows 10 and 12 are mutually exclusive but they do **not** partition the outcome
+        space — "neither fired" collapses two opposite results:
+
+        | named cell | grid | verdict | row |
+        |---|---|---|---|
+        | both below BE | optimistic below BE at **every** cell | **the path does not pay** | 12 |
+        | both below BE | some other cell clears | **named cell fails, grid does not** — the edge, if any, is not where the named cell looked | **none** |
+        | straddle | — | **unresolvable on bars** — MFE/MAE stand, the label comes from Arm 2 | 10 |
+        | both above BE | — | **the path pays at the named cell** — the good outcome | **none** |
+
+        A gate that returns the same summary for its best and its second-worst outcome is the
+        Phase 11 row-11 defect again: a criterion that cannot see the state it most needs to report.
   - [ ] T4b — Report the same for every cell, so the named cell is visible as one point in a grid and
         not as a cherry-pick.
   - [ ] T4c — **Cooper reads charts 01–04 and decides.** Escalation rows 10, 11 and 12 are evaluated
@@ -288,11 +305,14 @@ Do not adjust a parameter to make a criterion pass. Table order is priority orde
 | 1a | Any of the five frozen inputs differs in content hash from `results/phase_10e/artifacts/frozen_baseline.json` | any | Hard stop — post the artifact, both hashes, and the commits that touched it |
 | 1a-i | The baseline was established **after** `phase-11-approved` and **verifies forward from that point only**. The tag period is covered by circumstantial evidence, stated in full in REPORT.md: no commit since the tag touched the producing code, config or `src/`, and all three parquet mtimes predate the tag by 15–17 days | any | **Not a stop.** Any conclusion that would change if a frozen input had silently moved in that window says so explicitly |
 | 1b | `master` has moved since `phase-11-approved` **and** row 1a passes | any | **Not a stop.** Record the commit count in `decisions_log` and proceed |
-| 2 | Any `[Cooper]` config slot unfilled at T0c | any | Hard stop — the agent fills none of them |
+| 2 | Any slot in `config.cooper_slots_by_arm.arm1` still `[Cooper]` at T0c | any | Hard stop — the agent fills none of them |
+| 2a | Any slot in `config.cooper_slots_by_arm.arm2` still `[Cooper]` at T5a | any | Hard stop. **Not evaluated at T0c** — Arm 2 is gated behind T4 and its slots are not needed to run Arm 1 |
 | 3 | T0d satisfiability audit fails any check | any | Hard stop |
 | 4 | Any pass over `filtered_trades` / `filtered_quotes` in Arm 1 | any (> 0) | Hard stop |
 | 5 | Arm 2's loaded cohort manifest has a row count **differing from `config.arm2.arm2_cohort_expected_n` in either direction** | any | Hard stop — silent expansion and silent reduction are the same defect |
-| 6 | Spine numeric column on a computation path | any (> 0) | Hard stop |
+| 6 | Spine numeric column on a computation path, **other than** (i) `momentum_pct` as a **grouping key** for stratification — D4's sole exception — and (ii) a read permitted by D4 Amendment A13 | any (> 0) | Hard stop |
+| 6a | `momentum_pct` appearing in a **numerator, denominator, or any computed quantity** rather than as a grouping key | any | Hard stop — the D4 exception is **stratification, not measurement** |
+| 6b | Any spine numeric **written into a committed artifact**, under any name including a transform, other than a membership boolean, a vintage label, or a selection-function coefficient | any | Hard stop — **A13(a)** |
 | 7 | `event_minute_bars_v2` row count ≠ 45,925,350 | any | Hard stop |
 | 8 | A first-passage number reported from Arm 1 without both R1 bounds | any | Hard stop before posting |
 | 9 | A win rate reported on touched-only entries (R2 violation) | any | Hard stop before posting |
@@ -307,7 +327,7 @@ Do not adjust a parameter to make a criterion pass. Table order is priority orde
 | 17 | Any burst object, burst duration, burst timescale, or burst/quiet split appears in code or output | any | Hard stop — D13, D21 |
 | 18 | Any output of Arm 2 described as a detector, entry signal, or operating point | any | Hard stop |
 | 19 | Runtime exceeds `config.runtime_ceilings.runtime_ceiling_seconds_arm1` or `..._arm2` on its arm | any | Hard stop — do not reduce the cohort or the grid to fit |
-| 20 | Write outside `results/phase_10e/`, `prompts/`, `config/`, `research/phase_10e/` | any | Hard stop — post intended path |
+| 20 | Write outside **`config.write_allowlist`** | any | Hard stop — post intended path. **The row references the list and never restates it**; the inline copy it replaces was narrower than both the allowlist and the Output Files table, so T8b's required report copy would have fired it |
 | 21 | Agent states a recommendation, or characterises a result as good / weak / promising / disappointing | any | Report sent back |
 | 22 | A decision appended to `docs/Universe-Decisions.md` at a number not confirmed free by reading the file | any | Hard stop — the pointer list has been stale before and caused a near-collision at D20, and again at D23 on 2026-08-30 |
 | 23 | Any onset compared across channels before T5b-i null-rate matching | any | Hard stop — the lead and the noise are not separable until the channels fire at equal rates on null tape |
@@ -371,7 +391,8 @@ On completion, post, in this order:
 7. *(Arm 1 stops here at the T4 gate.)*
 8. Arm 2 cohort and control-matching table
 9. **The ceiling table — oracle − control, per cell, with clustered CIs**
-10. Escalation check table — all 27 rows (1, 1a, 1a-i, 1b, 2–10, 10a, 11–25), observed against threshold, pass / fail
+10. **The T4 verdict — one of `{both_below, straddle, both_above}` on the named cell, stated always**
+11. Escalation check table — all 30 rows (1, 1a, 1a-i, 1b, 2, 2a, 3–6, 6a, 6b, 7–10, 10a, 11–25), observed against threshold, pass / fail
 11. Verification block per §10 — every headline number with source, n, effective n, repro command
 12. Output file table with status
 13. Commit list

@@ -7,11 +7,11 @@
     "iii": "does any other row make it unreachable",
     "iv": "is its scope unambiguous"
   },
-  "n_rows_audited": 29,
-  "n_pass": 24,
-  "n_deferred": 2,
-  "n_fail": 3,
-  "VERDICT": "HARD STOP -- row 3 fires. Three rows fail a check.",
+  "n_rows_audited": 32,
+  "n_pass": 29,
+  "n_deferred": 3,
+  "n_fail": 0,
+  "VERDICT": "PASS -- row 3 does not fire. All evaluable rows satisfy all four checks; three are deferred by design -- rows 2a, 5 and 13, all Arm 2, behind the T4 gate.",
   "cross_row_note_rows_10_and_12": "MUTUALLY EXCLUSIVE, and this is a good property rather than a conflict. If row 12 fires (optimistic below break-even everywhere) then on the named cell pessimistic <= optimistic < break-even, so both bounds sit below and there is no straddle -- row 10 cannot fire. If row 10 fires (pessimistic < break-even < optimistic) then optimistic exceeds break-even on the named cell, so row 12 cannot fire. They partition the failure modes cleanly.",
   "rows": [
     {
@@ -56,13 +56,23 @@
     },
     {
       "row": "2",
-      "condition": "any [Cooper] config slot unfilled at T0c",
+      "condition": "any slot in config.cooper_slots_by_arm.arm1 still [Cooper] at T0c",
       "i_computed_by_a_task": true,
       "ii_reachable_both_directions": true,
       "iii_not_blocked_by_another_row": true,
-      "iv_scope_unambiguous": false,
-      "verdict": "**FAIL (iv)**",
-      "note": "THREE SLOTS REMAIN UNFILLED -- arm2_cohort_artifact, arm2_cohort_expected_n, row_13_ceiling. Read literally, row 2 FIRES and Arm 1 cannot start. But Cooper's fills of 2026-08-31 say Arm 2's slots 'stay [Cooper] and are gated behind T4 regardless', which is the opposite intent. THE ROW'S SCOPE IS AMBIGUOUS between 'any slot' and 'any slot the arm being run needs'."
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "AMENDED 2026-08-31 -- scoped to the arm being run, with the mapping in config so the row cannot drift from it. Observed: all five arm1 slots filled (profit_k=3, stop_m=2, row_10a=0.25, row_11=0.10, row_12=optimistic-bound). NOTE Cooper's amendment listed 'cooper_thresholds.row_10_r1_straddle' in arm1; that key does not exist and was not created -- the straddle test is structural and has no parameter, so a slot that can never be filled would make this row unevaluable. The five real keys are listed instead."
+    },
+    {
+      "row": "2a",
+      "condition": "any slot in config.cooper_slots_by_arm.arm2 still [Cooper] at T5a",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "DEFERRED BY DESIGN",
+      "note": "Explicitly NOT evaluated at T0c. All three arm2 slots are unfilled and that is intended; Arm 2 is gated behind T4 and its slots are not needed to run Arm 1."
     },
     {
       "row": "3",
@@ -96,13 +106,33 @@
     },
     {
       "row": "6",
-      "condition": "spine numeric column on a computation path",
+      "condition": "spine numeric on a computation path, other than momentum_pct as a GROUPING KEY and other than an A13-permitted read",
       "i_computed_by_a_task": true,
       "ii_reachable_both_directions": true,
       "iii_not_blocked_by_another_row": true,
-      "iv_scope_unambiguous": false,
-      "verdict": "**FAIL (iv)**",
-      "note": "SCOPE OMITS TWO STANDING CARVE-OUTS. (1) momentum_pct is D4's sole exception and this phase's own Constraints permit it for stratification -- T1c and T3b both use it, so read literally the row fires on its own tasks. (2) D4 Amendment A13 (2026-08-31) permits READING spine numerics to audit the universe-selection function. Neither carve-out appears in the row."
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "AMENDED 2026-08-31 -- both standing carve-outs now named in the row."
+    },
+    {
+      "row": "6a",
+      "condition": "momentum_pct in a numerator, denominator or any computed quantity rather than as a grouping key",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "The important half of the amendment. 'Permitted for stratification' is the kind of clause that erodes; a GROUPING KEY is checkable and an intent is not. Arm 1 uses momentum_pct only as part of event identity (ticker, date, momentum_pct), which is a key, not a measurement."
+    },
+    {
+      "row": "6b",
+      "condition": "any spine numeric written into a committed artifact under any name, other than a membership boolean, vintage label or selection-function coefficient",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "A13(a) made enforceable. The only part of A13 that can actually leak, so it is the part that gets a row."
     },
     {
       "row": "7",
@@ -246,13 +276,13 @@
     },
     {
       "row": "20",
-      "condition": "write outside results/phase_10e/, prompts/, config/, research/phase_10e/",
+      "condition": "write outside config.write_allowlist",
       "i_computed_by_a_task": true,
       "ii_reachable_both_directions": true,
-      "iii_not_blocked_by_another_row": false,
-      "iv_scope_unambiguous": false,
-      "verdict": "**FAIL (iii)+(iv)**",
-      "note": "ROW 20 IS NARROWER THAN THE CONFIG'S OWN write_allowlist, and narrower than the phase's own tasks. config.write_allowlist additionally permits results/reports/phase_10e_report.md and append-only writes to docs/Universe-Decisions.md, docs/Open-Items-Register.md and docs/Research-Library-Map.md. T8b REQUIRES the cross-phase report copy and the Output Files table lists all four docs. So the phase cannot complete T8b without firing row 20."
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "AMENDED 2026-08-31 -- the row now REFERENCES the allowlist instead of restating it. The inline copy was narrower than both the allowlist and the Output Files table, so T8b's required report copy would have fired it. Fourth list in this programme to drift from its source; the generalising rule went into the v1.4 draft."
     },
     {
       "row": "21",
@@ -305,7 +335,14 @@
       "note": "T1a-i. Both resolve to a102; v2_r14 crosscheck is read, not re-derived."
     }
   ],
-  "FAILURES_REQUIRING_COOPER": [
+  "amendments_applied_2026_08_31": [
+    "row 2 scoped to the arm being run, mapping in config.cooper_slots_by_arm; row 2a added",
+    "row 6 gained the momentum_pct and A13 carve-outs; rows 6a and 6b added, making the grouping-key restriction and the A13(a) write boundary separately checkable",
+    "row 20 now references config.write_allowlist instead of restating it",
+    "T4a now reports a VERDICT in {both_below, straddle, both_above}, because rows 10 and 12 are mutually exclusive but do not partition the outcome space -- two of the four outcomes fire no row at all"
+  ],
+  "t4_verdict_gap_closed": "Rows 10 and 12 being mutually exclusive is correct but insufficient: 'neither fired' collapsed the named cell PAYING and the named cell FAILING WHILE ANOTHER CELL CLEARS -- opposite findings. A gate returning the same summary for its best and second-worst outcome is the Phase 11 row-11 defect again. T4a now states the verdict always, separately from the row-firing table.",
+  "_resolved_failures_kept_for_the_record": [
     {
       "row": "2",
       "problem": "Read literally it fires now -- three [Cooper] slots are unfilled -- which contradicts Cooper's own 2026-08-31 statement that Arm 2's slots are gated behind T4 regardless.",
