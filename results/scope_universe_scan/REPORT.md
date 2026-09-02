@@ -541,3 +541,63 @@ number would not have been swamped.
   would have had to carry — has nothing to attach to, and the register should record the lookahead as
   *unmeasurable from disk* rather than as *pending measurement*.
 
+---
+
+## 15. The churn-versus-displacement curve — the universe-lookahead item, closed as bounded
+
+The substitute deliverable for the dead vintage-churn test. Artifact:
+`selection_audit.json` -> `4_churn_vs_displacement_EXACT`.
+
+**It needs no fit and no assumed family.** Membership loss under a line displacement δ is
+`P(margin < δ)`; inverted, **the displacement required to churn a share `c` is exactly the `c`-th
+quantile of the margin.** The empirical quantile function *is* the curve.
+
+| membership churn | line must move | factor | lognormal approximation |
+|---|---|---|---|
+| 0.5% | 0.110 dec | 1.3× | — |
+| **1%** | **0.222 dec** | **1.7×** | 0.11 — **2× low** |
+| 2% | 0.385 dec | 2.4× | 0.44 |
+| **5%** | **0.814 dec** | **6.5×** | 0.94 |
+| 10% | 1.276 dec | 18.9× | 1.39 |
+| 25% | 2.139 dec | 137.7× | — |
+| 50% | 2.967 dec | 926.3× | — |
+
+**The approximation is scored, not replaced.** The lognormal fitted from two summary numbers
+(median 926×, 1.51% within 2×) came within ~15% at 2%, 5% and 10%, and was **2× low at 1%** where the
+distribution's left tail departs from lognormal. Its qualitative call — *a q05 line would have to move
+roughly nine-fold to churn 5%* — is right in kind; the exact figure is **6.5×**.
+
+**Reading.** For a two-parameter quantile fit that is well-powered from its first vintage (3,439 events in
+2020 alone), a **6.5× displacement is not a plausible refit movement**. The pooled-line lookahead is real
+in principle and negligible in practice.
+
+**And the reason is geometric, not statistical.** The line is not *stable* — it is *irrelevant*. Almost
+nothing lives near it: the median survivor sits 926× above its own threshold and only 1.51% sit within 2×.
+That is a stronger closure than a vintage refit would have given, because it does not depend on one
+counterfactual fit being representative.
+
+**One-sided, and the caveat is unchanged.** This counts membership a displacement would **lose**. Events a
+displacement would **admit** are not on disk, and nothing here constrains them.
+
+### 15.1 Disposition
+
+**The universe-lookahead item closes as BOUNDED, NOT MEASURED**, with this curve as its artifact and the
+geometry as its reasoning. The remaining half — the live false-positive rate — is blocked on **data
+acquisition**, already registered in those words, and no further method will move it.
+
+### 15.2 The rule that would have predicted this before the test was specified
+
+> **On an archive that retains only selected records, sensitivity analyses are runnable and
+> counterfactual re-selection analyses are not.** A sensitivity question — *how much would the answer move
+> if this input were wrong?* — needs only what was kept. A counterfactual question — *which records would
+> a different rule have chosen?* — needs what was discarded, and the archive does not have it.
+
+A13's clause (c) survived contact with the data because it was a **sensitivity**. Clauses (a) and (b) died
+because they were **counterfactuals**. That the archive stores only survivors was established at Phase 8
+A10.2d for `data/filtered/` and was knowable before this test was specified. Applying the test at
+specification time is one line and would have re-aimed the whole design.
+
+It is the same shape as `s_min`'s survival: *references about sample size survive; references about process
+shape do not.* Both are questions about what the data can support, asked before the method is chosen
+rather than after it fails. Recorded as a standing rule in `CLAUDE.md`.
+

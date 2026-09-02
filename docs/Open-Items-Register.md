@@ -387,3 +387,30 @@ Run under **D4 Amendment A13**, granted the same day. Full record:
   (confirmed failing hardware, migrated off 2026-07-12). **Anyone who runs one of these writes outside the
   repo, onto known-bad hardware.** Reported, not modified — remediation is its own decision. **Unassigned,
   and it should not sit at the same priority as a stale index.**
+
+
+### Universe-lookahead item — CLOSED as bounded, not measured (2026-08-31)
+
+Artifact: `results/scope_universe_scan/selection_audit.json` ->
+`4_churn_vs_displacement_EXACT`. Full record: `results/scope_universe_scan/REPORT.md` section 15.
+
+**The vintage-churn test is dead and was not salvaged.** The rejected population is on no table, so the
+counterfactual cannot be run and a partial reconstruction would be circular — the surviving asymmetry
+(events the pooled line kept that a vintage line would have rejected are on disk; the reverse are not)
+still needs a vintage line, which still needs the rejected mass.
+
+**Its question is nonetheless answered, from survivors alone.** Membership loss under a line displacement
+delta is P(margin < delta); inverted, the displacement required to churn a share c is **exactly the c-th
+quantile of the margin** — no fit, no assumed family. **A q05 line would have to move 6.5x to churn 5% of
+membership, and 1.7x to churn 1%.** For a two-parameter quantile fit well-powered from its first vintage
+(3,439 events in 2020 alone), a 6.5x displacement is not a plausible refit movement.
+
+**So the pooled-line lookahead is real in principle and negligible in practice, and the reason is
+geometric rather than statistical: the line is not stable, it is irrelevant.** The median survivor sits
+926x above its own threshold and only 1.51% sit within 2x. This is a stronger closure than a vintage
+refit would have given, because it does not rest on one counterfactual fit being representative.
+
+**One-sided.** It counts membership a displacement would LOSE; events it would ADMIT are not on disk.
+
+**What remains open is the other half only:** the live false-positive rate, blocked on **data
+acquisition**, not method. No further method will move it.

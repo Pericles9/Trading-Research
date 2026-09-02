@@ -133,6 +133,58 @@
       }
     ]
   },
+  "4_churn_vs_displacement_EXACT": {
+    "_what": "THE SUBSTITUTE DELIVERABLE. Membership loss under a line displacement delta is P(margin < delta); inverted, the displacement required to churn a share c is exactly the c-th quantile of the margin. No fit, no assumed family -- the empirical quantile function IS the curve.",
+    "_why_this_is_the_honest_object": "It converts 'we cannot know how far the vintage line moved' into 'here is how far it would have to move to matter'. A bound rather than a measurement, which is what the data supports, and it does not depend on one counterfactual fit being representative.",
+    "one_sided": "survivors only, so this counts membership LOST to a displacement. Events a displacement would ADMIT are not on disk.",
+    "curve": [
+      {
+        "membership_churn": 0.005,
+        "required_displacement_decades": 0.11001862248584902,
+        "required_factor": 1.2883047928357367
+      },
+      {
+        "membership_churn": 0.01,
+        "required_displacement_decades": 0.22190531296431557,
+        "required_factor": 1.66688375067278
+      },
+      {
+        "membership_churn": 0.02,
+        "required_displacement_decades": 0.38494437128537856,
+        "required_factor": 2.4262992908675396
+      },
+      {
+        "membership_churn": 0.05,
+        "required_displacement_decades": 0.8138984034021807,
+        "required_factor": 6.5147597332417355
+      },
+      {
+        "membership_churn": 0.1,
+        "required_displacement_decades": 1.276384591791303,
+        "required_factor": 18.896640103978154
+      },
+      {
+        "membership_churn": 0.25,
+        "required_displacement_decades": 2.138789311257404,
+        "required_factor": 137.6541507011706
+      },
+      {
+        "membership_churn": 0.5,
+        "required_displacement_decades": 2.9667707851127076,
+        "required_factor": 926.3407839145115
+      }
+    ],
+    "read_lognormal_approximation": {
+      "method": "lognormal fitted to median 926x and 1.51% within 2x, from the read of 2026-08-31",
+      "sigma_decades": 1.23,
+      "predicted_displacement_decades": {
+        "1%": 0.11,
+        "2%": 0.44,
+        "5%": 0.94,
+        "10%": 1.39
+      }
+    }
+  },
   "source": "research/scope_universe_scan/selection_audit.py:main",
   "reproduce": ".venv/Scripts/python.exe research/scope_universe_scan/selection_audit.py",
   "a13_write_boundary": "no per-event artifact and no spine numeric column under any name is written by this script; JSON aggregates only, no parquet"

@@ -27,6 +27,16 @@
 - src/data/ files vendored from D:\Trading Research\src\data\ — uncommitted/untracked working-tree state on that drive (no clean commit hash applies), mtimes 2026-03-14 to 2026-07-13. Provenance in file headers.
 
 ## Standing methodology
+- **On an archive that retains only selected records, sensitivity analyses are runnable and
+  counterfactual re-selection analyses are not.** A *sensitivity* question — how much would the
+  answer move if this input were wrong? — needs only what was kept. A *counterfactual* question —
+  which records would a different rule have chosen? — needs what was discarded, and this archive
+  does not have it (Phase 8 A10.2d for `data/filtered/`; A13's first use for the spine). **Apply
+  this test when the method is chosen, not after it fails.** It is one line, and it would have
+  re-aimed the vintage-churn design before it was specified: A13 clause (c) survived because it was
+  a sensitivity, clauses (a) and (b) died because they were counterfactuals. Same shape as `s_min`'s
+  survival — references about *sample size* survive, references about *process shape* do not.
+  Added 2026-08-31.
 - Event-study before backtest.
 - Effective spread, not quoted. Always cross the spread. Halts = forced hold through the reopen.
 - Lag every feature by realistic pipeline latency at decision time.
@@ -37,6 +47,13 @@
 - DuckDB SQL over pandas. Never materialize filtered_trades (4.9B rows) or filtered_quotes (3.8B rows) into a dataframe.
 
 ## Code & repo layout
+- **Commits stage explicitly named paths. `git add -A`, `git add .` and `git commit -a` are not
+  used.** The paths staged in a commit are that phase's Output Files table and nothing else. Added
+  2026-08-31 after a wildcard stage captured an uncommitted human-authored draft of
+  `docs/Agent_Prompt_Standard.md` and put it in an unrelated commit. In a repo that carries
+  uncommitted human work, a wildcard stage will eventually capture some of it, and the audit trail
+  then says what happened to be dirty rather than what was intended. This mirrors the
+  `write_allowlist` discipline that already bounds which paths a phase may write.
 - Exploratory code: research/phase_{x}/. Promoted code only: src/. Nothing in src/ changes mid-phase.
 - Deterministic, config-driven runs. Every tunable lives in config/phase_{x}.json, committed before the
   run that uses it. Outputs keyed by config hash.

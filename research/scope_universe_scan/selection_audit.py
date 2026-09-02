@@ -111,6 +111,23 @@ def main() -> int:
               "n_pushed_below_line": int((margin < x).sum()),
               "is_amc_anchor": abs(x - AMC_DECADES) < 1e-9} for x in deltas]
 
+    # --- 4. churn vs displacement -- EXACT, and it is the margin's own quantile fn ---
+    # Membership loss under a line displacement delta is P(margin < delta). Inverting it,
+    # the displacement required to churn a share c is EXACTLY the c-th quantile of the
+    # margin. No fit and no assumed family: the empirical quantile function IS the curve.
+    targets = [0.005, 0.01, 0.02, 0.05, 0.10, 0.25, 0.50]
+    curve = [{"membership_churn": t,
+              "required_displacement_decades": float(np.quantile(margin, t)),
+              "required_factor": float(10 ** np.quantile(margin, t))} for t in targets]
+    # The read's lognormal approximation, fitted from the two summary numbers available at
+    # the time. Kept so the approximation can be SCORED against the exact answer rather
+    # than silently replaced by it.
+    approx = {"method": ("lognormal fitted to median 926x and 1.51% within 2x, from the "
+                         "read of 2026-08-31"),
+              "sigma_decades": 1.23,
+              "predicted_displacement_decades": {"1%": 0.11, "2%": 0.44, "5%": 0.94,
+                                                 "10%": 1.39}}
+
     out = {
         "task": "Audit of the universe-selection function under D4 Amendment A13",
         "HARD_STOP": {
@@ -178,6 +195,21 @@ def main() -> int:
             "sweep": sweep,
         },
 
+        "4_churn_vs_displacement_EXACT": {
+            "_what": ("THE SUBSTITUTE DELIVERABLE. Membership loss under a line displacement "
+                      "delta is P(margin < delta); inverted, the displacement required to "
+                      "churn a share c is exactly the c-th quantile of the margin. No fit, "
+                      "no assumed family -- the empirical quantile function IS the curve."),
+            "_why_this_is_the_honest_object": (
+                "It converts 'we cannot know how far the vintage line moved' into 'here is "
+                "how far it would have to move to matter'. A bound rather than a "
+                "measurement, which is what the data supports, and it does not depend on "
+                "one counterfactual fit being representative."),
+            "one_sided": ("survivors only, so this counts membership LOST to a "
+                          "displacement. Events a displacement would ADMIT are not on disk."),
+            "curve": curve,
+            "read_lognormal_approximation": approx,
+        },
         "source": "research/scope_universe_scan/selection_audit.py:main",
         "reproduce": ".venv/Scripts/python.exe research/scope_universe_scan/selection_audit.py",
         "a13_write_boundary": ("no per-event artifact and no spine numeric column under any "
@@ -214,6 +246,16 @@ def main() -> int:
         print(f"   delta {s['delta_decades']:.3f} dec ({s['factor']:6.2f}x): "
               f"{s['share_pushed_below_line']:6.2%} pushed below "
               f"({s['n_pushed_below_line']:,}){tag}")
+    cv = out["4_churn_vs_displacement_EXACT"]
+    ap = cv["read_lognormal_approximation"]["predicted_displacement_decades"]
+    print("\nCHURN vs DISPLACEMENT (exact -- the margin's own quantile function):")
+    for row in cv["curve"]:
+        key = f"{row['membership_churn']:.0%}"
+        pred = ap.get(key)
+        tag = f"   approx said {pred:.2f}" if pred else ""
+        print(f"   churn {row['membership_churn']:6.1%} needs "
+              f"{row['required_displacement_decades']:6.3f} decades "
+              f"({row['required_factor']:>10,.1f}x){tag}")
     print(f"\nwrote {OUT}")
     return 0
 
