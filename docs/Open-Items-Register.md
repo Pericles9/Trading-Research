@@ -414,3 +414,30 @@ refit would have given, because it does not rest on one counterfactual fit being
 
 **What remains open is the other half only:** the live false-positive rate, blocked on **data
 acquisition**, not method. No further method will move it.
+
+
+### Phase 10e escalation row 1a is unsatisfiable as written (2026-08-31, pre-flight)
+
+Row 1a, added the same day when row 1 was split, stops if any frozen input **"differs in content hash
+from its state at `phase-11-approved`"**. **That comparison cannot be made.** Three of the five frozen
+inputs are parquet artifacts, **gitignored** under the standing regenerable-artifact rule, so git holds
+no record of their content at the tag — and no digest records artifact content hashes either
+(`phase_8`, `phase_9` and `phase_11` digests carry `config_hash` and artifact **paths** only).
+
+**It would have fired at T0d**, satisfiability check (ii) — threshold not reachable in either direction —
+*after* the branch, prompt and config commits were already made. Caught in pre-flight instead.
+
+**Substitute evidence for the tag period, strong but circumstantial:** zero commits since
+`phase-11-approved` touched `research/phase_{8,9,10}/`, `config/phase_{8,9,10}.json` or `src/`, and all
+three artifact mtimes predate the tag by 15–17 days. Provenance, not a hash, and recorded as such.
+
+**A forward baseline now exists:** `results/scope_universe_scan/frozen_input_baseline.json` — sha256 for
+each of the five, established 2026-08-31. It makes row 1a evaluable **from here on**; it does **not**
+verify the tag-period state, which was never recorded and cannot be reconstructed.
+
+**`event_minute_bars_v2` needs no hash** — row 7 already hard-stops on an exact row-count mismatch
+against 45,925,350, verified at landing.
+
+**The rewording of row 1a is Cooper's**, because it changes an escalation row and the agent does not.
+Recommended: compare against the baseline file, and state in the phase report that the tag-period state
+is attested by provenance rather than by hash. **Unassigned.**

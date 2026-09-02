@@ -1,0 +1,68 @@
+{
+  "task": "Phase 10e pre-flight -- baseline content hashes for the frozen inputs",
+  "WHY_THIS_EXISTS": "Phase 10e escalation row 1a, as amended 2026-08-31, stops if any frozen input 'differs in content hash from its state at phase-11-approved'. THAT COMPARISON CANNOT BE MADE: three of the frozen inputs are parquet artifacts, gitignored under the standing regenerable-artifact rule, so git holds no record of their content at the tag, and no digest records artifact content hashes either (phase_8, phase_9 and phase_11 digests carry config_hash and artifact PATHS only). Row 1a would have fired at T0d's satisfiability audit -- check (ii), threshold not reachable in either direction -- after the branch, prompt and config commits were already made.",
+  "WHAT_THIS_IS_AND_IS_NOT": "This is a FORWARD baseline established 2026-08-31. It does NOT verify the inputs are unchanged since phase-11-approved; that state was never recorded and cannot be reconstructed. It makes row 1a evaluable from here on.",
+  "substitute_evidence_for_the_tag_period": {
+    "_strength": "strong but circumstantial -- provenance and mtime, not a hash",
+    "commits_since_tag_touching_producing_code": 0,
+    "paths_checked": [
+      "research/phase_8/",
+      "research/phase_9/",
+      "research/phase_10/",
+      "config/phase_8.json",
+      "config/phase_9.json",
+      "config/phase_10.json",
+      "src/"
+    ],
+    "commits_since_tag_touching_tracked_results": 0,
+    "tag_date": "2026-08-18T19:16:44-04:00",
+    "artifact_mtimes_all_predate_tag_by_days": "15 to 17",
+    "reading": "no commit since the tag touched the code, config or src/ that produces these artifacts, and every artifact mtime predates the tag by more than two weeks. They are very likely unchanged. That is provenance evidence, not a content hash, and it is recorded as such."
+  },
+  "minute_bars_note": "event_minute_bars_v2 is a 45,925,350-row DuckDB table. A full content hash is impractical and unnecessary: escalation row 7 already hard-stops on an exact row-count mismatch against that figure, and the count was verified at landing.",
+  "baseline": [
+    {
+      "name": "det_anchor",
+      "path": "results/phase_8/artifacts/a102_detection_anchors.parquet",
+      "sha256": "ea63770b8b13d6e2a6b23a9cff8066826244945ea616fee7c669fbb3743c98e3",
+      "size_bytes": 918251,
+      "mtime": "2026-08-02T16:04:18",
+      "git_tracked": false
+    },
+    {
+      "name": "participation_quintile",
+      "path": "results/phase_8/artifacts/t3_participation.parquet",
+      "sha256": "8abc4d97e2b2985c8a3b5520683c80fcd955401c07a1c6ec0d5a9489de452db0",
+      "size_bytes": 3191645,
+      "mtime": "2026-08-01T20:46:35",
+      "git_tracked": false
+    },
+    {
+      "name": "phase_9_flags",
+      "path": "results/phase_9/artifacts/t1_cross_session_flags.parquet",
+      "sha256": "afe045678186608c7ba94401ffda2581cc9594289f2e4eba303eff85ae432ae1",
+      "size_bytes": 1678636,
+      "mtime": "2026-08-03T21:09:24",
+      "git_tracked": false
+    },
+    {
+      "name": "det_anchor_crosscheck",
+      "path": "results/phase_10/artifacts/v2_r14_phase8_crosscheck.json",
+      "sha256": "8c7cbe27bdc6ee0b083567650ff60f2be55a0cac6a1321905d57fc434e307701",
+      "size_bytes": 5794,
+      "mtime": "2026-08-06T15:40:57",
+      "git_tracked": true
+    },
+    {
+      "name": "scale_field_module",
+      "path": "research/scale_field/scale_field.py",
+      "sha256": "3eff83a71d777473a720f2fdfd9aca69c8e7a84d76e72aee19408c6567972f37",
+      "size_bytes": 27667,
+      "mtime": "2026-08-30T20:50:11",
+      "git_tracked": true
+    }
+  ],
+  "recommended_row_1a_rewording": "'differs in content hash from the baseline in results/scope_universe_scan/frozen_input_baseline.json' -- and state in the phase report that the tag-period state is attested by provenance rather than by hash. THE REWORDING IS COOPER'S: it changes an escalation row, and the agent does not.",
+  "source": "Phase 10e pre-flight, session of 2026-08-31",
+  "reproduce": "sha256 of each path above; git log phase-11-approved..master -- <paths>"
+}
