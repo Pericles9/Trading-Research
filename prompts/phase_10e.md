@@ -11,6 +11,40 @@ definable as an object. This asks whether any of it predicts price. It is the la
 > throughout. (2) `config.frozen_inputs.scale_field_module` pointed at `research/scale_space/scale_field.py`,
 > which does not exist and neither does that directory; corrected to `research/scale_field/scale_field.py`.
 >
+> **Cooper's fills and corrections, 2026-08-31 — Arm 1 is unblocked.**
+> **The named cell is `k = 3, m = 2`**, chosen on the noise floor and the cost drag *in that order*.
+> Barriers are read on **trade** prices, which bounce the full spread: against Phase 11's T=0 RTH quoted
+> spread of 3.79 c, an `m = 1` stop is 2.512 c — **0.66 of one quoted spread**, so a single print on the
+> other side breaches it. That is the bid-ask bounce with a name, not a stop. `m = 2` is 1.33 spreads.
+> Then `k`, on how much drift each cell demands: `p_breakeven − p_randomwalk = 1/(k+m)` **exactly**, the
+> fixed 71 bp cost as a share of the barrier span. `k=1.5, m=1` needs 0.400 of drift over a random walk;
+> `k=3, m=2` needs 0.200. **The cost does not scale, so tight barriers are mostly cost.**
+> **What the choice was NOT made on:** `k=3, m=2` also has the widest barriers and therefore the *lowest*
+> R1 ambiguity. That is convenient and it is **not a reason** — choosing the pair to make row 10 pass
+> would be adjusting a parameter to make a criterion pass, which this prompt forbids. The ambiguity share
+> is an outcome, never a justification.
+>
+> **Row 12's bound was backwards and is corrected.** It read *pessimistic* `p_clear` below break-even at
+> every cell. Pessimistic is the **lower** bound; its failing does not mean the truth fails, since the
+> truth sits between the bounds — a strategy whose real value clears break-even would have been killed on
+> its worst reading. **The gate is now the OPTIMISTIC bound:** if even the most favourable resolution of
+> the ordering ambiguity clears break-even nowhere, the path definitively does not pay. The pessimistic
+> bound is reported throughout as the honest floor, but it does not carry the gate.
+>
+> **Row 10 now fires on a straddle, not a share.** A fixed 25% ambiguity threshold is a proxy — the same
+> class of error as row 1's branch check. **Ambiguity only matters when it changes the answer:** if 40% of
+> entries are ambiguous but both bounds sit below break-even, the conclusion holds. The stop is now the
+> bounds falling on **opposite sides of `p_breakeven`** on the named cell; 0.25 survives as **row 10a**, a
+> reporting trigger.
+>
+> **Three numbers per cell, never two** (R6): `p_clear`, `p_breakeven`, and `p_randomwalk = m/(k+m)`.
+> Above `p_randomwalk` means **drift exists**; above `p_breakeven` means **it pays**. A cell clearing the
+> first and failing the second is a real finding — signal smaller than the cost stack — and with two
+> numbers it is indistinguishable from no signal at all.
+>
+> **Row 1a was unsatisfiable and is reworded** — see the row table and `frozen_baseline.json`.
+> **Arm 2's three slots stay `[Cooper]`** and are gated behind T4 regardless.
+>
 > **Cooper's resolutions, 2026-08-31.** (a) **Row 1 is amended, not cleared.** The blanket
 > *"`master` moved"* stop was a poor proxy for the check it was meant to make; it is now rows 1 / 1a / 1b,
 > where **1a tests the frozen inputs' content hashes against their state at `phase-11-approved`** and 1b
@@ -90,7 +124,7 @@ denominator degenerated on the majority of its population and the gate could not
 | **R3** | Entries with no fill — no print in the fill bar. | Own row, own share. Never silently dropped, never forward-filled. |
 | **R4** | Entries whose MFE and MAE are both below the smallest barrier at every horizon (a dead tape). | Own share, reported per cell. This is a real outcome, not missing data. |
 | **R5** | A pooled statistic dominated by few events. | Every pooled cell reports raw n, distinct events, and **effective n** under event-equal weighting. Cells where one event contributes > `config.max_event_share` are flagged on the chart. |
-| **R6** | `p_clear` compared against break-even. | Break-even is arithmetic, not a choice: for a profit barrier at `k`× and a stop at `m`× round-trip cost, with one round trip charged, `p_breakeven = (m+1)/(k+m)`. **Compute and report it per cell alongside `p_clear`.** Do not assume 0.5. |
+| **R6** | `p_clear` compared against break-even **and against chance**. | **Three numbers per cell, never two.** `p_breakeven = (m+1)/(k+m)` is arithmetic, not a choice — one round trip is charged on every outcome; do not assume 0.5. `p_randomwalk = m/(k+m)` is the driftless-walk touch probability. **`p_clear` above `p_randomwalk` means drift exists; above `p_breakeven` means it pays.** A cell clearing the first and failing the second is a real finding — signal smaller than the cost stack — and with only two numbers it is indistinguishable from no signal at all. |
 | **R7** | Any cell with n < `config.min_cell_n`. | Hatched on every chart, carries no claim, appears in no summary sentence. |
 
 ---
@@ -251,7 +285,8 @@ Do not adjust a parameter to make a criterion pass. Table order is priority orde
 | # | Condition | Threshold | Action |
 |---|---|---|---|
 | 1 | `phase-11-approved` tag absent | any | Hard stop at T0a — post tag/SHA state |
-| 1a | **Any of the five frozen inputs differs in content hash from its state at `phase-11-approved`** | any | Hard stop — post the artifact, both hashes, and the commits that touched it |
+| 1a | Any of the five frozen inputs differs in content hash from `results/phase_10e/artifacts/frozen_baseline.json` | any | Hard stop — post the artifact, both hashes, and the commits that touched it |
+| 1a-i | The baseline was established **after** `phase-11-approved` and **verifies forward from that point only**. The tag period is covered by circumstantial evidence, stated in full in REPORT.md: no commit since the tag touched the producing code, config or `src/`, and all three parquet mtimes predate the tag by 15–17 days | any | **Not a stop.** Any conclusion that would change if a frozen input had silently moved in that window says so explicitly |
 | 1b | `master` has moved since `phase-11-approved` **and** row 1a passes | any | **Not a stop.** Record the commit count in `decisions_log` and proceed |
 | 2 | Any `[Cooper]` config slot unfilled at T0c | any | Hard stop — the agent fills none of them |
 | 3 | T0d satisfiability audit fails any check | any | Hard stop |
@@ -261,9 +296,10 @@ Do not adjust a parameter to make a criterion pass. Table order is priority orde
 | 7 | `event_minute_bars_v2` row count ≠ 45,925,350 | any | Hard stop |
 | 8 | A first-passage number reported from Arm 1 without both R1 bounds | any | Hard stop before posting |
 | 9 | A win rate reported on touched-only entries (R2 violation) | any | Hard stop before posting |
-| 10 | **R1 ambiguous share on the named cell** | `[Cooper]` — proposed **> 25%** | Hard stop at T4 — Arm 1 cannot carry a first-passage conclusion; MFE/MAE distributions stand, the label must come from Arm 2 |
+| 10 | **THE BOUNDS STRADDLE THE DECISION.** Optimistic and pessimistic `p_clear` fall on **opposite sides of `p_breakeven`** on the named cell | any | Hard stop at T4 — Arm 1 cannot resolve it. MFE/MAE distributions stand; the first-passage label comes from Arm 2's tick data, where ordering is exact |
+| 10a | R1 ambiguous share on the named cell — **a reporting trigger, not a stop** | **> 0.25** | **Not a stop.** The ambiguity gets its own report section and chart 03 carries the headline |
 | 11 | **No-fill share (R3) on the named cell** | `[Cooper]` — proposed **> 10%** | Hard stop at T4 — post the distribution by segment |
-| 12 | **THE ARM 1 GATE.** `p_clear` on the named cell, **pessimistic bound**, against `p_breakeven` | `[Cooper]` — proposed: pessimistic `p_clear` below `p_breakeven` at **every** cell in the grid | Hard stop — **the path does not pay at minute scale. Post and stop. Do not run Arm 2.** |
+| 12 | **THE ARM 1 GATE.** `p_clear`, **optimistic bound**, against `p_breakeven` | **optimistic `p_clear` below `p_breakeven` at EVERY cell in the grid** | Hard stop — **the path does not pay at minute scale. Post and stop. Do not run Arm 2.** |
 | 13 | **THE CEILING.** `p_clear(oracle) − p_clear(control)`, best cell, lower bound of the event-clustered CI | `[Cooper]` — proposed **≤ 0** | Hard stop — **an oracle with lookahead does not beat random entry inside the same event. The timing-detector line closes.** |
 | 14 | Any cell where one event contributes more than `config.max_event_share` presented without a flag | any | Hard stop before posting |
 | 15 | Any cell with n < `config.min_cell_n` presented unhatched or carrying a claim | any | Hard stop before posting |
@@ -335,7 +371,7 @@ On completion, post, in this order:
 7. *(Arm 1 stops here at the T4 gate.)*
 8. Arm 2 cohort and control-matching table
 9. **The ceiling table — oracle − control, per cell, with clustered CIs**
-10. Escalation check table — all 25 rows (1, 1a, 1b, 2–25), observed against threshold, pass / fail
+10. Escalation check table — all 27 rows (1, 1a, 1a-i, 1b, 2–10, 10a, 11–25), observed against threshold, pass / fail
 11. Verification block per §10 — every headline number with source, n, effective n, repro command
 12. Output file table with status
 13. Commit list
