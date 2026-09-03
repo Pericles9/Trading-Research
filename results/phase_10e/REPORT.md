@@ -103,22 +103,23 @@ would have to rise by 21 percentage points.
 
 Chart 02 shows every bar below its own red break-even line in every panel.
 
-### A caveat on `p_randomwalk`, and it cuts against reading too much into it
+### A caveat on `p_randomwalk` — RESOLVED IN §12, kept here as the reasoning that motivated it
 
 `p_randomwalk = m/(k+m)` is the touch probability for a driftless walk run **until a barrier is hit**.
 This phase imposes an expiry, and **11.34%** of named-cell entries expire untouched. Expiry censors the
-**far** barrier more than the near one, so `p_clear` is mechanically depressed relative to `m/(k+m)` by
-an amount that grows with the barrier span.
+**far** barrier more than the near one, so `p_clear` is mechanically depressed relative to `m/(k+m)` by an
+amount that grows with the barrier span. The comparison is therefore conservative in one direction only:
+a cell *clearing* `p_randomwalk` despite expiry is evidence of drift, but a cell falling below it is not
+evidence against.
 
-**Consequence: `p_clear < p_randomwalk` does NOT establish absence of drift.** The comparison is
-conservative in one direction only — a cell *clearing* `p_randomwalk` despite expiry is evidence of
-drift, but a cell falling below it is not evidence against. Observed: optimistic `p_clear` exceeds
-`p_randomwalk` in **27 of 90** cells, and **all 27 have `m = 1`** — the barrier pair with the smaller
-span and therefore the smaller expiry censoring. Expiry share by horizon (median): H=1 **0.479**, H=5
+Under the naive comparator, optimistic `p_clear` exceeds `p_randomwalk` in **27 of 90** cells and **all 27
+have `m = 1`** — the smaller span, and therefore the smaller censoring. That pattern is what identified
+the comparator rather than the tape as the problem. Expiry share by horizon (median): H=1 **0.479**, H=5
 0.257, H=15 0.113, H=30 0.059, H=60 0.031.
 
-Constructing an expiry-matched driftless baseline would settle it. **It was not built** — that is beyond
-Arm 1 as specified, and it is logged as an open item rather than improvised at a gate.
+> **RESOLVED IN §12.** An expiry-matched baseline was built. The matched comparator is **0.3867** against
+> an observed **0.3621**, and `p_clear` sits below the driftless baseline in **0 of 30 cells**. The
+> corrected reading is stronger than "does not pay": **there is no drift here to pay with.**
 
 ---
 
@@ -266,3 +267,153 @@ no fix was attempted.
    bars, 27.28% for entries whose fill minute lands in post. The universe as specified runs to the end of
    the extended day.
 3. **`results/phase_11/digest.json` carries no `status` field**, which T0a asks for.
+
+---
+
+## 12. T3c — the expiry-matched baseline, and a miscalibration I caught in my own null
+
+Ordered before the close-out because §5's drift sentence rested on a comparator known to be wrong in a
+known direction. Artifact: `t3c_null_baseline.json`.
+
+**The simulation.** A driftless walk matched on the barrier distances, the expiry horizon, and the
+**minute-bar discretisation** — stepped at 10 s and reduced to a per-minute high and low, so first passage
+is judged on bars exactly as it is on tape. Synthetic; no data pass beyond reading a volatility
+distribution; no gate touched and no threshold moved.
+
+### 12.1 The first pass was wrong, and its own diagnostic said so
+
+Calibrating σ from the raw Parkinson estimator `ln(high/low)/(2√ln2)` gave a null that **expired 23.70% of
+the time against the tape's 11.34%**. A null that quiet under-reaches its barriers, which depresses its
+`p_profit_first` and therefore **overstates** the drift it exists to measure. It would have reported
+*drift in 30 of 30 cells*.
+
+The cause is known rather than mysterious: **Parkinson from a sparse minute bar is downward-biased**,
+because with few prints the observed high–low range understates the true one. These are minute bars on
+micro-cap tape; many carry a handful of prints.
+
+**So the null is matched on the quantity that actually governs this comparison — the censoring.** A
+volatility scale is swept and, per cell, interpolated to the scale that reproduces *that cell's own*
+observed expiry share. Matched by construction rather than assumed.
+
+### 12.2 The calibrated result — and it reverses the intermediate one
+
+| named cell, k=3 m=2 H=30 L=5 | value |
+|---|---|
+| observed `p_clear` optimistic | 0.3621 |
+| `p_randomwalk` **naive** `m/(k+m)` | 0.4000 |
+| **`p_randomwalk` expiry-matched** | **0.3867** |
+| `p_breakeven` | 0.6000 |
+| expiry share, observed vs null | 0.1134 vs **0.1134** — matched by construction |
+| ambiguity, observed vs null | 0.0249 vs **0.0291** — *not* calibrated on, agrees to 0.4 pp |
+
+**Drift: no.** Observed sits **below** the expiry-matched baseline, and does so in **0 of 30 cells** —
+against 9 of 30 under the naive comparator.
+
+**The ambiguity agreement is an independent validation.** The null was calibrated on expiry share alone,
+yet reproduces the observed R1 tie rate to within 0.4 pp. That is evidence the bar-discretisation and the
+tie mechanism are modelled correctly, and it was not fitted.
+
+### 12.3 What this corrects, stated plainly
+
+Cooper's prior — *"it moves the comparator a few points and does not change the verdict"* — is **correct**
+for the properly calibrated null: 0.4000 → 0.3867, a move of **1.33 points**, verdict unchanged. My
+uncalibrated intermediate suggested the opposite and was wrong. The self-check that caught it was the
+null's own expiry share disagreeing with the tape's, which is why the diagnostic was worth printing
+alongside the result rather than only the result.
+
+**The corrected §5 sentence:** `p_clear` is below the driftless baseline at every cell under a comparator
+matched on censoring. Not merely "does not pay" — **on this unconditional entry universe, at minute
+resolution, there is no drift to pay with.**
+
+---
+
+## 13. The RTH-fill restricted cut
+
+The named cell is labelled by **detection** segment, so RTH-detected entries can fill in the post session
+where the tape is thinner, and the headline averages two tapes.
+
+| fill bar sits in | `p_clear` opt | `p_clear` pess | n | events |
+|---|---|---|---|---|
+| **rth** | **0.3624** | 0.3426 | 1,932,241 | 10,410 |
+| post | 0.2895 | 0.2775 | 675,101 | 10,201 |
+
+**Restricting to RTH fills moves the headline by +0.0003** — from 0.3621 to 0.3624 — because RTH fills are
+74% of the cell. The two tapes do differ from each other by 7.3 points, so the concern was well founded;
+it simply does not move the aggregate. **Row 12 is unaffected**, and this is a robustness line rather than
+a re-read of a gate that fired.
+
+---
+
+## 14. A specification defect in this phase, recorded as one
+
+**Arm 1's finest horizon is 1 minute and its finest latency is 1 minute. The strategy class this
+programme is pursuing holds for seconds to a few minutes and acts in 1–3 seconds. That regime is not in
+Arm 1's grid at all.**
+
+The prompt says so itself — *"Arm 1's latency axis is coarser than achievable execution and therefore
+pessimistic — Arm 2 carries the real axis"* — and Arm 2's grid is specified in **seconds** (latency
+0.25–5 s, horizons 10–300 s). The second-scale question was then gated behind a minute-scale null.
+
+**A gate of that shape is only valid if the cheap arm's negative implies the expensive arm's negative.**
+Here it does not, because the two arms cover different regimes. The cost logic — gate the tick pass behind
+the free pass — was sound; the horizon mismatch inside it was not.
+
+This is a defect in the phase's design, not a limitation of its finding, and it is recorded as such.
+
+**Two further bounds on what Arm 1 establishes:**
+
+- It measures the **unconditional** base rate: entry at every bar. Beating that base rate is a detector's
+  entire function, so row 12 firing on the null is not by itself evidence that conditioning cannot clear
+  it. §7's two stratifiers already move `p_clear` monotonically without any detector at all.
+- Everything here is minute-resolution. Nothing in it speaks to the second scale.
+
+---
+
+## 15. The bar Arm 2 would have to clear, stated before it runs
+
+| quantity | value |
+|---|---|
+| named cell, optimistic | 0.3621 |
+| break-even | 0.6000 |
+| **required conditional lift** | **+23.8 points** |
+| best single observed stratum (0–14 min since anchor) | 0.4268 — still **17.3 short** |
+| naive additive stack of both stratifiers | 0.5043 — still **9.6 short** |
+
+The stack assumes independence *and* zero overlap between the two conditioners. Early bars are plausibly
+also faster-resolving bars, so they overlap and **0.5043 is an upper bound on a stack that will not be
+achieved**.
+
+**So: Arm 2 must find roughly 24 points of lift where crude stratification found 8, with full lookahead to
+find it.** Stating that in advance is what stops a marginal Arm 2 result being read as vindication — and
+it is what an oracle ceiling is for. If an oracle with lookahead cannot close a 24-point gap, nothing
+causal will, and the timing-detector line closes on evidence rather than on a horizon mismatch.
+
+---
+
+## 16. Close-out
+
+**Established.** On the archive's RTH events, **unconditional minute-resolution entry**, at 1–5 minute
+latency and 1–60 minute holds, under a 3:2 barrier scheme against a 71 bp round trip: `p_clear` does not
+reach break-even at any of 90 cells, closest gap −0.210, both denominators on the same side. Under a
+driftless null matched on censoring, `p_clear` is below the baseline at every cell — **there is no drift
+to pay with at this resolution on this entry universe.**
+
+**Not established.** Anything at the second scale. Anything conditional. The two are the same gap, and
+Arm 2 is where both live.
+
+**Two positive findings that should not be lost in a negative phase:**
+
+1. **Conditioning moves `p_clear` monotonically in both stratifiers** — +8.5 points across path position,
+   +7.8 points across `s_min`, with non-overlapping CIs at the extremes in each.
+2. **`s_min` relates to forward excursion.** Chart 05's pre-registered failure appearance was a flat line,
+   meaning `s_min` is an estimability gate only. It is not flat. This is the first time in this programme
+   that a timing statistic has been connected to price at all — six versions of Phase 10 did not get
+   there.
+
+**The stop stands.** Arm 2 is unauthorised. Authorising it is a numbered decision with its reasoning on
+the record, in the manner of D21, D22 and D23 — not a re-read of a gate that has already fired.
+
+**What must not happen:** re-running Arm 1 with different barriers to find a cell that clears. 90 cells is
+already a wide sweep, the closest gap is 21 points, and searching for a passing cell after a gate fires is
+the failure this programme has spent six phases learning to avoid.
+

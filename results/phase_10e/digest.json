@@ -55,6 +55,14 @@
       "n": 2607342,
       "source": "research/phase_10e/t3b_stratification.py:main",
       "chart": "results/phase_10e/charts/05_smin_stratification.html"
+    },
+    {
+      "name": "p_randomwalk_expiry_matched_named_cell",
+      "value": 0.3866945936989134,
+      "n": 400000,
+      "source": "research/phase_10e/t3c_null_baseline.py:simulate",
+      "chart": "results/phase_10e/charts/02_outcome_shares.html",
+      "note": "driftless null matched on barrier distances, expiry horizon, bar discretisation and the OBSERVED EXPIRY SHARE per cell"
     }
   ],
   "passes_spent": {
@@ -81,9 +89,13 @@
   ],
   "surprises": [
     "row 11 fires at 15.19% but WITHIN RTH BARS the no-fill share is 5.27% -- the named-cell figure is driven by entries whose fill minute lands in post (27.28%), i.e. by the entry universe's reach rather than by RTH tape",
-    "p_randomwalk is not directly comparable to p_clear under an expiry: expiry censors the far barrier more, so p_clear < p_randomwalk does NOT establish absence of drift. All 27 cells clearing p_randomwalk have m=1, the smaller span",
     "s_min is NOT flat against forward excursion -- p_clear falls 7.8pp from the fastest-resolving tape to the slowest",
-    "latency 0 has a 0.00% no-fill share BY CONSTRUCTION, since the fill bar is the entry bar"
+    "latency 0 has a 0.00% no-fill share BY CONSTRUCTION, since the fill bar is the entry bar",
+    "CORRECTED: the expiry-matched null was built and it settles the drift question -- observed 0.3621 sits BELOW the matched baseline 0.3867, in 0 of 30 cells does p_clear exceed it. Not merely 'does not pay': there is no drift to pay with at this resolution.",
+    "I MISCALIBRATED THE NULL FIRST TIME and its own diagnostic caught it: raw Parkinson sigma gave a null expiring 23.70% against the tape's 11.34%, too quiet, which would have reported drift in 30 of 30 cells. Parkinson from a sparse minute bar is downward-biased. Recalibrated by matching the observed expiry share per cell.",
+    "INDEPENDENT VALIDATION, not fitted: the null was calibrated on expiry share alone yet reproduces the observed R1 ambiguity to within 0.4pp (0.0291 vs 0.0249), which is evidence the bar-discretisation and tie mechanism are modelled correctly.",
+    "SPECIFICATION DEFECT OF THIS PHASE, recorded as one: Arm 1's finest horizon and latency are both 1 MINUTE, while the strategy class holds for seconds and acts in 1-3 seconds. Arm 2's grid is in SECONDS. The second-scale question was gated behind a minute-scale null, and that gate is only valid if the cheap arm's negative implies the expensive arm's -- which it does not, because they cover different regimes.",
+    "RTH-fill restriction moves the headline by +0.0003 (0.3621 -> 0.3624): the two tapes differ by 7.3 points but RTH fills are 74% of the cell."
   ],
   "artifacts": [
     {
@@ -142,6 +154,11 @@
       "size_bytes": 13222
     },
     {
+      "path": "results/phase_10e/artifacts/t3c_null_baseline.json",
+      "sha256": "2ee2cb6ce260a543c215b7b137023b7008216fdea3d4f7062b2d5a04a7620cde",
+      "size_bytes": 24886
+    },
+    {
       "path": "results/phase_10e/artifacts/t4_gate.json",
       "sha256": "b6552a6ff18e99f2ef361ff12845071747dbbfcd10d8b6e16a9d5fe8fd02863e",
       "size_bytes": 56225
@@ -154,5 +171,15 @@
     "results/phase_10e/charts/04_path_position.html",
     "results/phase_10e/charts/05_smin_stratification.html"
   ],
-  "reproduce": "python research/phase_10e/{t1_candidate_entries,t2_excursion,t3_shares,t3b_stratification,t4_gate,t8_charts}.py"
+  "reproduce": "python research/phase_10e/{t1_candidate_entries,t2_excursion,t3_shares,t3b_stratification,t4_gate,t8_charts}.py",
+  "arm2_bar_stated_before_it_runs": {
+    "named_cell_optimistic": 0.3621,
+    "p_breakeven": 0.6,
+    "required_lift_points": 23.8,
+    "best_single_stratum": 0.4268,
+    "short_by_points": 17.3,
+    "naive_additive_stack_of_both_stratifiers": 0.5043,
+    "still_short_by_points": 9.6,
+    "note": "the stack assumes independence AND zero overlap; early bars are plausibly also faster-resolving bars, so 0.5043 is an upper bound on a stack that will not be achieved"
+  }
 }
