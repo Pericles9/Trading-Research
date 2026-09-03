@@ -144,8 +144,10 @@
     floor `s >= 2.26/lambda` survives and is the first derived-not-adopted applicability criterion**
     (2026-08-28, **amended by D23**) · **D23 the causal re-derivation reverses D22's lead
     result; D22's structural fact 2 does not survive a one-sided kernel, fact 1 does**
-    (2026-08-30).
-  - **Next free number: D24.**
+    (2026-08-30) · **D24 Arm 2 declined and the timing-detector line closes, on a derived
+    cost-scaling argument (fixed cost against sqrt(H) movement -- 13.4x the drag at 10 s) and
+    an observed horizon gradient running the wrong way in 6 of 6 barrier pairs** (2026-09-02).
+  - **Next free number: D25.**
 - Repo map: docs/Research-Library-Map.md. Data layout: data/Schema.md.
 - `docs/Claude-Code-Operating-Plan.md` **exists** (added 2026-08-13, commit `edfb1ea`; §6 is the phase
   map). The note previously here said it had never existed in this checkout — true when written on

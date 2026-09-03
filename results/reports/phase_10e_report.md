@@ -417,3 +417,63 @@ the record, in the manner of D21, D22 and D23 — not a re-read of a gate that h
 already a wide sweep, the closest gap is 21 points, and searching for a passing cell after a gate fires is
 the failure this programme has spent six phases learning to avoid.
 
+---
+
+## 17. T4b — the horizon gradient, and it refutes the argument for Arm 2
+
+Run at Cooper's instruction **before** D24 was taken, because §14's horizon-mismatch defect was used as an
+argument *for* spending a tick pass and the evidence for or against it was already on disk. Artifact:
+`t4b_horizon_gradient.json`. No new computation, no data pass, no gate touched — a re-cut of the committed
+grid with latency, segment, denominator and barrier pair held fixed.
+
+### 17.1 The derived cost argument
+
+Round-trip cost is **fixed at 70.98 bp** and does not scale with the horizon. Typical price movement scales
+roughly as **√H**. So the cost drag relative to the 30-minute named cell is `√(30/H)`:
+
+| horizon | 30 min | 5 min | 60 s | 30 s | **10 s** |
+|---|---|---|---|---|---|
+| relative cost drag | 1.0× | 2.4× | 5.5× | 7.7× | **13.4×** |
+
+**A 10-second hold faces roughly thirteen times the cost drag of the 30-minute hold that just failed.**
+Shorter horizons are structurally *harder* against a fixed cost — so the minute-scale null was **generous**
+to the second-scale case, not irrelevant to it. §14's defect is real in that the regimes differ; the
+consequence runs the opposite way from how it was first stated.
+
+### 17.2 The measured gradient
+
+Named cell's barrier pair (k=3, m=2), latency 5, RTH, print-weighted:
+
+| horizon | 60 min | 30 min | 15 min | 5 min | 1 min |
+|---|---|---|---|---|---|
+| `p_clear` optimistic | 0.3745 | 0.3436 | 0.2973 | 0.2110 | 0.1192 |
+| **gap to break-even** | **−0.2255** | −0.2564 | −0.3027 | −0.3890 | **−0.4808** |
+| expiry share | 0.0814 | 0.1440 | 0.2425 | 0.4404 | **0.6716** |
+
+**The gap more than doubles as the horizon shortens from 60 minutes to 1**, and the gradient runs the same
+way in **6 of 6 barrier pairs**. The expiry share reaching 67% at one minute is the same effect seen from
+the other side: at short horizons against a fixed cost, most cells carry no outcome at all.
+
+**Extrapolating toward 10–300 seconds runs against Arm 2, not for it.** The free test refuted the argument
+it was run to check, which is why it was run before the decision rather than after.
+
+### 17.3 Two corrections to what Arm 2 would have been
+
+1. **`s_min` is a rate statistic.** `s_min = 2.26/λ̂` is `λ̂` inverted, so §7's `s_min` stratification is
+   **already a coarse, minute-resolution version of the rate-based selection Arm 2 would perform** — and it
+   delivered **+7.8 points against a required +23.8**. A second-scale rate detector would need to be about
+   **three times as selective**. Finer resolution should help; three-fold is a large ask.
+2. **Arm 2's lookahead is in the rate channel, not in price.** It would see future *arrivals*, not future
+   returns, so it bounds **this family of rate-based timing detectors** rather than what any strategy could
+   achieve. A narrower ceiling than the phase prompt claimed, and the record now says so.
+
+### 17.4 Disposition
+
+**D24 taken: Arm 2 is declined and the timing-detector line closes** — on the derived cost-scaling argument
+and the observed gradient, not on budget. Full text in `docs/Universe-Decisions.md`. Next free number:
+**D25**.
+
+**What is not closed:** the *conditional* question at the second scale is untested, and D24 does not assert
+it is untestable. It asserts the available evidence says the extrapolation runs the wrong way. Reopening
+requires a numbered decision, so a seventh attempt cannot arrive under a new name.
+

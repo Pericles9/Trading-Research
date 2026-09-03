@@ -1051,3 +1051,88 @@ difference 0.000e+00.
 
 **Numbering note.** Recorded as D23; the register in this file is the authority and
 `CLAUDE.md`'s pointer list is updated in the same commit. Next free number: **D24**.
+
+---
+
+## D24 — Arm 2 is declined and the timing-detector line closes, on a derived cost argument and an observed gradient
+
+**Date:** 2026-09-02 · **Gate:** Cooper's conditional disposition of 2026-08-31, whose free test was run
+before the decision was taken and resolved against Arm 2. · **Closes:** the 10-series.
+
+**Decision.** **Phase 10e Arm 2 is not run, and the timing-detector line closes.** Not on budget — on a
+cost-scaling argument that is derived rather than asserted, and on a gradient measured inside an artifact
+that already existed.
+
+**What was established first, so this is a close on evidence.** Arm 1 measured, on the archive's RTH
+events, unconditional minute-resolution entry at 1–5 minute latency and 1–60 minute holds against a
+70.98 bp round trip: `p_clear` reaches break-even at **none of 90 cells**, closest gap **−0.210**, both
+denominators on the same side. Against a driftless null **matched on the censoring**, `p_clear` sits below
+the baseline in **0 of 30 cells** — so the finding is not "the path does not pay" but **"there is no drift
+here to pay with."**
+
+**The argument that nearly saved Arm 2, and why it reversed.** Arm 1's finest horizon and latency are both
+one minute, while the strategy class holds for seconds and acts in 1–3 seconds; Arm 2's grid is specified
+in seconds. So the minute-scale gate tested a different regime, and that **is** a specification defect of
+the phase, recorded as one. But the consequence was asserted to run in the strategy's favour, and the
+arithmetic says otherwise:
+
+> **Round-trip cost is fixed at 70.98 bp and does not scale with the horizon. Typical price movement
+> scales roughly as √H.** So the relative cost drag against the 30-minute named cell is √(30/H): **2.4× at
+> 5 minutes, 5.5× at 60 seconds, 7.7× at 30 seconds, 13.4× at 10 seconds.** Shorter horizons are
+> structurally *harder* against a fixed cost. The minute-scale null was **generous** to the second-scale
+> case, not irrelevant to it.
+
+**The free test that settles it.** Arm 1 already spanned horizons of 1, 5, 15, 30 and 60 minutes. Re-cutting
+that committed grid by horizon — latency, segment, denominator and barrier pair all held fixed — measures
+the gradient directly, with no new computation and no data pass. Named cell (k=3, m=2), gap to break-even:
+
+| horizon | 60 min | 30 min | 15 min | 5 min | 1 min |
+|---|---|---|---|---|---|
+| gap to break-even | −0.2255 | −0.2564 | −0.3027 | −0.3890 | **−0.4808** |
+| expiry share | 0.0814 | 0.1440 | 0.2425 | 0.4404 | **0.6716** |
+
+**The gap more than doubles as the horizon shortens from 60 minutes to 1, and the gradient runs the same
+way in 6 of 6 barrier pairs.** Extrapolating toward 10–300 seconds runs against Arm 2, not for it. The
+expiry share rising to 67% at one minute is the same effect from the other side: at short horizons against
+a fixed cost, most cells carry no outcome at all.
+
+**Two corrections to the record about what Arm 2 would have been.**
+
+1. **`s_min` is a rate statistic** — `s_min = 2.26/λ̂` is `λ̂` inverted. Arm 1's `s_min` stratification is
+   therefore **already a coarse, minute-resolution version of the rate-based selection Arm 2 would
+   perform**, and it delivered **+7.8 points against a required +23.8**. A second-scale rate detector would
+   have to be roughly **three times as selective** as the minute-scale one. Finer resolution should help;
+   three-fold is a large ask.
+2. **Arm 2's lookahead is in the rate channel, not in price.** It sees future *arrivals*, not future
+   returns. So it would have bounded **this family of rate-based timing detectors**, not what any strategy
+   could achieve. The ceiling is narrower than the phase prompt claimed, and the record says so.
+
+**What survives, and it is not nothing.**
+
+- **Conditioning moves `p_clear` monotonically in both stratifiers** — **+8.5 points** across path position
+  (0.4268 at 0–14 minutes since the anchor to 0.3417 at 240+) and **+7.8 points** across `s_min` (0.3778 at
+  the fastest-resolving tape to 0.3003 at the slowest), with non-overlapping event-clustered CIs at the
+  extremes in each.
+- **`s_min` relates to forward excursion.** Chart 05's pre-registered failure appearance was a flat line,
+  meaning `s_min` is an estimability gate only. **It is not flat.** This is the first time in this
+  programme that a timing statistic has been connected to price at all; six versions of Phase 10 did not
+  reach it. It does not clear the cost stack, and it is a real relationship.
+- Everything D22 and D23 left standing: the resolution floor `s ≥ 2.26/λ` and its causal form `4.51/λ`,
+  the saturation bound, the half-inactive cohort at a ten-second horizon.
+
+**What is NOT closed by this.** The **conditional** question at the second scale is untested, and this
+decision does not assert it is untestable — it asserts that the evidence available says the extrapolation
+runs the wrong way, and that spending a tick pass on 78 events to find +23.8 points where crude
+stratification found +7.8, in a regime carrying 13× the cost drag, is not supported. **Reopening requires a
+numbered decision**, so that a seventh attempt cannot arrive under a new name.
+
+**What must not happen**, recorded because it is the failure this programme has spent six phases learning
+to avoid: re-running Arm 1 with different barriers to find a cell that clears. Ninety cells is already a
+wide sweep and the closest gap is 21 points.
+
+**Evidence.** `results/phase_10e/REPORT.md` §§5–17; `t4b_horizon_gradient.json` (the free test);
+`t3c_null_baseline.json` (the censoring-matched null); `t4_gate.json`; charts 01–05.
+
+**Numbering note.** Recorded as D24, confirmed free by reading this file — `tools/verify_claude_md_indices.py`
+reports register highest D23, next free D24. `CLAUDE.md`'s pointer list is updated in the same commit.
+**Next free number: D25.**

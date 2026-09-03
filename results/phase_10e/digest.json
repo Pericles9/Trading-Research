@@ -1,7 +1,7 @@
 {
   "phase": "10e",
   "config_hash": "edfa945f408f",
-  "status": "escalated",
+  "status": "escalated -- Arm 1 complete, Arm 2 DECLINED by D24",
   "gate_mode": "sync-required",
   "escalation": {
     "criterion": "rows 11 and 12",
@@ -95,7 +95,10 @@
     "I MISCALIBRATED THE NULL FIRST TIME and its own diagnostic caught it: raw Parkinson sigma gave a null expiring 23.70% against the tape's 11.34%, too quiet, which would have reported drift in 30 of 30 cells. Parkinson from a sparse minute bar is downward-biased. Recalibrated by matching the observed expiry share per cell.",
     "INDEPENDENT VALIDATION, not fitted: the null was calibrated on expiry share alone yet reproduces the observed R1 ambiguity to within 0.4pp (0.0291 vs 0.0249), which is evidence the bar-discretisation and tie mechanism are modelled correctly.",
     "SPECIFICATION DEFECT OF THIS PHASE, recorded as one: Arm 1's finest horizon and latency are both 1 MINUTE, while the strategy class holds for seconds and acts in 1-3 seconds. Arm 2's grid is in SECONDS. The second-scale question was gated behind a minute-scale null, and that gate is only valid if the cheap arm's negative implies the expensive arm's -- which it does not, because they cover different regimes.",
-    "RTH-fill restriction moves the headline by +0.0003 (0.3621 -> 0.3624): the two tapes differ by 7.3 points but RTH fills are 74% of the cell."
+    "RTH-fill restriction moves the headline by +0.0003 (0.3621 -> 0.3624): the two tapes differ by 7.3 points but RTH fills are 74% of the cell.",
+    "THE FREE TEST REFUTED THE ARGUMENT FOR RUNNING ARM 2. The horizon-mismatch defect was real but its consequence ran the OPPOSITE way: cost is fixed while movement scales as sqrt(H), so a 10-second hold carries 13.4x the drag of the 30-minute hold that failed. The measured gradient agrees -- the gap to break-even more than doubles from 60 min to 1 min, in 6 of 6 barrier pairs.",
+    "s_min IS A RATE STATISTIC (2.26/lambda inverted), so Arm 1's s_min stratification is already a coarse version of the rate-based selection Arm 2 would perform: +7.8 points against a required +23.8. Arm 2 would need ~3x the selectivity.",
+    "Arm 2's lookahead is in the RATE channel, not price -- it bounds this family of rate-based timing detectors, not what any strategy could achieve. Narrower ceiling than the phase prompt claimed."
   ],
   "artifacts": [
     {
@@ -162,6 +165,11 @@
       "path": "results/phase_10e/artifacts/t4_gate.json",
       "sha256": "b6552a6ff18e99f2ef361ff12845071747dbbfcd10d8b6e16a9d5fe8fd02863e",
       "size_bytes": 56225
+    },
+    {
+      "path": "results/phase_10e/artifacts/t4b_horizon_gradient.json",
+      "sha256": "09ae118fa7cfa8ce046eb51d6682ee3aad13f46439d13d2fb3e0be15bfa889fe",
+      "size_bytes": 11227
     }
   ],
   "charts": [
@@ -181,5 +189,21 @@
     "naive_additive_stack_of_both_stratifiers": 0.5043,
     "still_short_by_points": 9.6,
     "note": "the stack assumes independence AND zero overlap; early bars are plausibly also faster-resolving bars, so 0.5043 is an upper bound on a stack that will not be achieved"
+  },
+  "D24": {
+    "decision": "Arm 2 declined; the timing-detector line closes",
+    "basis": [
+      "derived cost scaling: fixed 70.98 bp against sqrt(H) movement, 13.4x relative drag at 10 s",
+      "observed horizon gradient running the wrong way in 6 of 6 barrier pairs"
+    ],
+    "named_cell_gap_by_horizon": {
+      "60min": -0.2255,
+      "30min": -0.2564,
+      "15min": -0.3027,
+      "5min": -0.389,
+      "1min": -0.4808
+    },
+    "not_on_budget": true,
+    "what_is_not_closed": "the conditional question at the second scale is untested; reopening requires a numbered decision"
   }
 }
