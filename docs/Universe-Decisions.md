@@ -1136,3 +1136,67 @@ wide sweep and the closest gap is 21 points.
 **Numbering note.** Recorded as D24, confirmed free by reading this file — `tools/verify_claude_md_indices.py`
 reports register highest D23, next free D24. `CLAUDE.md`'s pointer list is updated in the same commit.
 **Next free number: D25.**
+
+---
+
+## D25 — The long thesis is closed at both ends, measured
+
+**Date:** 2026-09-02 · **Gate:** Cooper's disposition following Phase 10e Arm 1, D24, and the costed
+re-read of Phase 8 and Phase 9. · **Closes:** the long intraday thesis, and the day-scale alternative D5
+demoted to archive.
+
+**Decision.** **The long thesis is closed. Measured at both ends, not paused at either.**
+
+**Intraday, by barriers.** Phase 10e Arm 1: `p_clear` reaches break-even at **none of 90 cells**, closest
+gap −0.210, both denominators on the same side. Against a driftless null **matched on the censoring**,
+`p_clear` sits below the baseline in **0 of 30 cells** — so the finding is not "the path does not pay" but
+**"there is no drift here to pay with."** D24's horizon gradient adds that the gap worsens as the horizon
+shortens, in 6 of 6 barrier pairs, and at the flattest observed slope reaches zero only at ~9,440 minutes,
+24 full sessions.
+
+**Day-scale, by hold-to-horizon.** The Phase 8 markout grid re-read against Phase 11's 70.98 bp round trip
+— a cost that did not exist as a number when either phase ran — clears on a majority of events in **0 of
+29 cells**. The **median markout is negative at every latency and horizon** and becomes more negative with
+horizon: −46 bp at det+5, −351 at the T=0 close, −642 at T+1, **−886 bp at T+3**. Phase 9's retracement
+attaches the path context: the median event gives back 38% (RTH) to 62% (premarket) of its excursion by
+the close.
+
+**So the day-scale alternative is the worse end, not a refuge.** Both ends are measured and both fail.
+
+**Why the two statistics disagree in direction, and why that is itself the finding.** Arm 1's `p_clear`
+*rises* with horizon while the markout *falls* with horizon. They are different exit rules on the same
+paths: a longer hold gives more opportunity to **touch** a distant profit barrier along the way, while the
+price **at** the horizon keeps decaying. **The upside excursion is real and the terminal value is not.**
+That is `model_selection_session_notes` §8's "the path is the resource", measured rather than asserted for
+the first time — and it is also why it rescues nothing, because at all 90 barrier settings the excursion
+is neither frequent enough nor large enough to clear 71 bp.
+
+**What this does NOT decide.**
+
+- **Anything conditional.** Every number above is unconditional. Arm 1's own stratifiers moved `p_clear`
+  by **+8.5** points (path position) and **+7.8** points (`s_min`) with no detector at all, against a
+  required +23.8. D24 declined to spend a tick pass closing that gap, on evidence, and reserved reopening
+  to a numbered decision.
+- **The sign.** D5's long-only constraint meant direction was never a variable. The same artifacts read
+  with the sign reversed have now had their **adverse tail** measured (`t6_adverse_tail.json`,
+  REPORT.md §19) and that record exists; **no decision is taken on it here**, and three things not in the
+  repo can each close it independently — locate availability, halt risk, and Reg SHO 201.
+
+**Consequence for D5.** D5 selected the intraday horizon class and demoted day-scale work to archive,
+both **before the cost stack existed as a number**. Every horizon now measured against that cost fails.
+This decision does not reverse D5 — reversing it toward the day scale would move toward the worse end —
+but it records that the horizon class was chosen without the binding constraint, and that the constraint
+has now been measured on both sides of it. The open item stands for a future decision.
+
+**Consequence for Phase 12.** Halt risk was parked as optional under a long thesis. Under any thesis whose
+adverse direction is the unbounded one it is **load-bearing rather than optional**, and the phase is
+specified, drafted, and blocked only on its `[Cooper]` LULD band table.
+
+**What must not happen**, recorded because it is the failure this programme has spent six phases learning
+to avoid: re-running Arm 1 with different barriers, or extending the horizon grid, to find a cell that
+clears. Ninety barrier cells and twenty-nine markout cells are already a wide sweep; the closest either
+comes is 21 points and 168 bp respectively.
+
+**Numbering note.** Recorded as D25, confirmed free by reading this file — the verifier reports register
+highest D24, next free D25. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number:
+D26.**

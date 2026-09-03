@@ -146,8 +146,12 @@
     result; D22's structural fact 2 does not survive a one-sided kernel, fact 1 does**
     (2026-08-30) · **D24 Arm 2 declined and the timing-detector line closes, on a derived
     cost-scaling argument (fixed cost against sqrt(H) movement -- 13.4x the drag at 10 s) and
-    an observed horizon gradient running the wrong way in 6 of 6 barrier pairs** (2026-09-02).
-  - **Next free number: D25.**
+    an observed horizon gradient running the wrong way in 6 of 6 barrier pairs** (2026-09-02) ·
+    **D25 the long thesis is closed at BOTH ends, measured -- intraday by barriers (0 of 90
+    cells clear, and below a censoring-matched null in 0 of 30) and day-scale by
+    hold-to-horizon markouts (0 of 29 cells, median negative at every horizon, -886 bp at
+    T+3)** (2026-09-02).
+  - **Next free number: D26.**
 - Repo map: docs/Research-Library-Map.md. Data layout: data/Schema.md.
 - `docs/Claude-Code-Operating-Plan.md` **exists** (added 2026-08-13, commit `edfb1ea`; §6 is the phase
   map). The note previously here said it had never existed in this checkout — true when written on

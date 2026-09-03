@@ -557,3 +557,77 @@ stratifiers moved `p_clear` by 8.5 and 7.8 points without any detector. This is 
 move lives outside RTH (**31.9%** of session highs sit outside it, post and premarket equally at 15.9%),
 and the live false-positive rate remains unmeasured and blocked on data acquisition.
 
+---
+
+## 19. The adverse tail, read from the short side
+
+Run before any sign-reversed capture figure is repeated anywhere, because the median is the wrong
+statistic for a position with bounded gain and unbounded loss. Artifact: `t6_adverse_tail.json`.
+**This section reports distributions. It does not compare the two directions and does not characterise
+what it finds.**
+
+Sign convention: a long's markout `m` is a short's loss of `+m`, so the short's adverse tail is the
+**right** tail of markout, and the short's adverse **excursion** is the long's MFE. Stop levels are in
+round-trip multiples: 1× = 71 bp, 2× = 142, 3× = 213, 5× = 355, 10× = 710 bp.
+
+### 19.1 Terminal tail — Phase 8 markout, latency 5, untrimmed
+
+| horizon | median | p90 | p95 | p99 | worst observed | >2× | >5× | >10× |
+|---|---|---|---|---|---|---|---|---|
+| det+15 | −63 | 741 | 1,276 | 2,996 | 12,983 | 0.297 | 0.192 | 0.105 |
+| det+60 | −190 | 1,152 | 2,073 | 5,102 | 14,638 | 0.320 | 0.241 | 0.155 |
+| t0_close | −250 | 1,905 | 3,094 | 7,254 | 32,453 | 0.360 | 0.301 | 0.222 |
+| t1_close | −575 | 2,292 | 3,815 | 9,065 | 43,316 | 0.345 | 0.303 | 0.247 |
+| **t3_close** | **−791** | **2,877** | **4,574** | **10,857** | **44,768** | 0.344 | 0.310 | **0.262** |
+
+All figures in bp. At T+3 the p99 adverse outcome is **10,857 bp** against a median of −791, and the worst
+observed is **44,768 bp — a 448% adverse move**.
+
+**The tail is not a boundary artifact.** The six worst events are **none of them** `flag_cross_session_extreme`:
+UCAR 2024-03-28 (+44,768 bp), XPON 2024-10-08 (+44,089), SINT 2022-12-19 (+41,504), HSCS 2024-05-16
+(+41,162). Removing the A12-flagged set moves p99 from 10,857 → 8,978 and the >10× share from 0.262 →
+0.239; the worst observed is unchanged.
+
+### 19.2 Path tail — the binding one
+
+A position is not held to the horizon if it is closed first, so what governs survival is the **maximum
+adverse excursion inside the horizon**. Phase 10e's own T2 table, RTH, latency 5:
+
+**Entries within 14 minutes of the detection anchor:**
+
+| H (min) | median | p90 | p95 | p99 | worst | >2× | >5× | >10× |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 101 | 452 | 648 | 1,250 | 7,611 | 0.403 | 0.146 | 0.042 |
+| 5 | 176 | 741 | 1,083 | 2,062 | 12,532 | 0.564 | 0.275 | 0.106 |
+| 15 | 267 | 1,144 | 1,707 | 3,457 | 25,772 | 0.679 | 0.407 | 0.197 |
+| **30** | **342** | **1,492** | **2,245** | **4,768** | **31,905** | **0.736** | **0.488** | **0.266** |
+| 60 | 434 | 1,916 | 2,848 | 6,283 | 37,143 | 0.782 | 0.562 | 0.341 |
+
+**Over all entries** (not only those near the anchor) the same distribution is materially lighter — at
+H=30, median 214 vs 342, >10× share 0.139 vs 0.266.
+
+**Two readings of that difference, both stated as measurement:**
+
+- The path tail is **heavier than the terminal tail at every comparable point**, because it takes the
+  maximum rather than the endpoint. At H=30 near the anchor, 26.6% of entries see an adverse excursion
+  above 710 bp; the terminal distribution at det+30 puts 13.5% above the same line.
+- **Entries near the anchor carry the heavier tail.** That is the same fact §18.3 recorded from the other
+  side — later entry was monotonically better there — and it is the second independent statement that the
+  minutes immediately after detection are the most violent part of the path.
+
+### 19.3 What this does and does not settle
+
+**Settled:** the adverse distribution is heavy-tailed at every horizon and every entry position measured,
+the tail is not explained by the cross-session flag, and the shares breaching every plausible stop level
+are large — 73.6% breach 2× round trip within 30 minutes of the anchor, 26.6% breach 10×.
+
+**Not addressed here, and each can close the question independently:**
+
+- **Locate availability**, which is binary, unmeasured, and a capability question rather than a research
+  one.
+- **Halt risk**, which is asymmetric against a short because the adverse direction is the unbounded one.
+  Phase 12 is specified and drafted and has not run.
+- **Reg SHO 201**, unmodelled. Most of the day-scale adverse mass sits at T+1 and T+3, where it is live.
+- Every standing caveat on the register, with the sign reversed — notably that a name which halts and
+  delists **leaves the sample**, and those are cases a short would be in.
+

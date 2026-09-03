@@ -475,3 +475,40 @@ entry cannot -- and that is the question D24 declined to spend a tick pass on, o
 reserved to a numbered decision.
 
 **Cooper decision, unassigned.**
+
+
+### After D25 — three items, and two of them are not research (2026-09-02)
+
+**D25 closed the long thesis at both ends, measured.** The adverse tail from the short side is now on
+record (`results/phase_10e/artifacts/t6_adverse_tail.json`, REPORT.md section 19) and **no decision is
+taken on it.** Three items follow, and the ordering matters because two of them can close the question
+without any further measurement.
+
+- **LOCATE AVAILABILITY -- a capability question, not a research one. Unassigned, and it may be the
+  shortest path to an answer the programme has.** On a micro-cap that has just spiked, shares to borrow
+  are often simply absent. This is the same shape as the universe scan being blocked on data acquisition
+  rather than method: **a negative answer makes everything downstream moot**, and it is answered outside
+  the repo. It should be settled before further research spend, not after.
+
+- **PHASE 12 MOVES FROM PARKED TO LOAD-BEARING.** Halt risk was optional under a long thesis. Under any
+  thesis whose adverse direction is the unbounded one it is not: the strategy-ending scenario
+  `docs/Mom-DB-Strategy-Research-Program.md` section 4.2 names -- trapped in a halt with an adverse reopen
+  -- is far worse when the adverse direction is unbounded. The phase is specified, drafted and committed;
+  it is blocked only on its `[Cooper]` LULD band table and the two verification questions recorded in
+  `config/phase_12.json`. **Its T5 reopen distribution should be read on the adverse-for-a-short side.**
+
+- **REG SHO 201 IS UNMODELLED.** The short-sale restriction triggers on a 10% decline from the prior
+  close and restricts short sales to upticks. A name that gapped +30% and faded to +15% is still up on the
+  day, so day-1 exposure is probably limited -- but **most of the day-scale adverse mass sits at T+1 and
+  T+3**, where it is live and unpriced. Nothing in this repo models it. **Unassigned.**
+
+**And a caveat that cuts against the short specifically, already on the register with the sign
+unreversed:** risk row 8's delisting/halt handling means **a name that halts and delists leaves the
+sample** -- and those are precisely the cases a short would be in. The measured tail is therefore a
+LOWER bound on adverse outcomes, not an estimate of them.
+
+**What the measured tail says, stated once and not repeated as a result:** heavy at every horizon and
+entry position measured, not explained by the cross-session flag (the six worst events carry no A12
+flag), and breaching every plausible stop level at high rates -- **73.6% breach 2x round trip within 30
+minutes of the anchor, 26.6% breach 10x**, worst observed +44,768 bp. Cooper reads it; nothing is
+concluded from it here.
