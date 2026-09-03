@@ -477,3 +477,83 @@ and the observed gradient, not on budget. Full text in `docs/Universe-Decisions.
 it is untestable. It asserts the available evidence says the extrapolation runs the wrong way. Reopening
 requires a numbered decision, so a seventh attempt cannot arrive under a new name.
 
+---
+
+## 18. Post-close-out — Phase 8 and Phase 9 re-read against a cost stack that postdates them
+
+Run at Cooper's direction after D24. **Not part of Phase 10e's gated tasks**; a re-cut of committed
+artifacts, no tick pass, no new measurement, no gate touched. Artifact: `t5_costed_markouts.json`.
+
+**It also replaces an extrapolation with a measurement.** The read after D24 projected Arm 1's
+gap-to-break-even past its 60-minute ceiling on the flattest observed slope, giving −0.194 at 120 min,
+−0.164 at 240 min and −0.142 at a full session — flattening short of zero. That arithmetic is confirmed
+(last slope 0.1026 per log-decade; at that rate the gap reaches zero at **9,440 minutes, 24 full
+sessions**). But **Phase 8's grid already carries `t0_close`, `t1_close` and `t3_close`**, so the horizon
+axis does not need extrapolating at all.
+
+### 18.1 The comparison
+
+A long trade held from the detection anchor to a horizon earns its markout and pays one round trip, so it
+clears when `markout > 70.98 bp`. Reported as a **share**, defined on every event.
+
+| latency | horizon | share clearing | 95% CI (event-clustered) | median markout | gap to cost |
+|---|---|---|---|---|---|
+| 0 | det+5 | 0.3538 | [0.346, 0.362] | −46.1 bp | −117.1 bp |
+| 0 | t0_close | 0.3640 | [0.357, 0.371] | −350.6 bp | −421.6 bp |
+| 0 | t1_close | 0.3485 | [0.341, 0.356] | −641.8 bp | −712.8 bp |
+| 0 | t3_close | 0.3424 | [0.335, 0.350] | −885.5 bp | −956.5 bp |
+| 5 | t0_close | 0.3835 | [0.376, 0.391] | −249.5 bp | −320.5 bp |
+| 30 | det+60 | 0.3820 | [0.374, 0.389] | −41.3 bp | −112.3 bp |
+| **30** | **t0_close** | **0.4270** | **[0.419, 0.435]** | **−96.8 bp** | **−167.8 bp** |
+| 30 | t3_close | 0.3724 | [0.365, 0.380] | −625.4 bp | −696.4 bp |
+
+**In 0 of 29 cells does more than half of the population clear one round trip.** The best cell anywhere —
+latency 30 min, hold to the T=0 close — clears on **42.7%** of events with a **median markout of −96.8 bp**,
+which is 167.8 bp short of cost.
+
+### 18.2 The day-scale case does not rescue it; it is worse
+
+**The median markout is negative at every latency and every horizon measured**, and it becomes *more*
+negative as the horizon lengthens: −46 bp at det+5, −351 bp at the T=0 close, −642 bp at T+1, **−886 bp at
+T+3** (latency 0). The median event is down roughly 9% three days after its detection anchor, before any
+cost is charged.
+
+**This reconciles with Arm 1 rather than contradicting it, and the reconciliation is the interesting
+part.** Arm 1's `p_clear` *rises* with horizon while Phase 8's markout *falls* with horizon, because they
+are different exit rules on the same paths: a longer hold gives more opportunity to **touch** a +213 bp
+barrier somewhere along the way, while the price **at** the horizon keeps decaying. Both statistics point
+the same way about the strategy class — one never reaches break-even, the other is negative throughout —
+but only reading them together shows why.
+
+### 18.3 Two patterns worth recording
+
+**Later entry is better, monotonically.** At the T=0 close the share clearing rises 0.3640 → 0.3727 →
+0.3835 → 0.4068 → **0.4270** as latency goes 0 → 1 → 5 → 15 → 30 minutes. Waiting longer before entering
+improves the outcome at every horizon, which is the signature of entering a fade later and therefore
+lower. It is also the opposite of what a latency axis usually shows, and it is why latency 0 being
+*physically impossible* matters less here than it would elsewhere.
+
+**A12 makes the result slightly worse, not better.** Removing `flag_cross_session_extreme` events at
+`t1_close` moves the share 0.3615 → 0.3376 and the median −575.1 → −655.0 bp; at `t3_close`, 0.3535 →
+0.3335 and −790.9 → −870.1 bp. The flagged set was mildly flattering, so the conclusion is robust to the
+boundary flag rather than resting on it.
+
+### 18.4 Path-risk context from Phase 9, attached
+
+Median `retrace_excursion` at the T=0 close is **0.381** (RTH) and **0.615** (premarket) — the median event
+gives back 38–62% of its excursion by the close, rising to 0.493 / 0.696 by T+1. So the negative markouts
+above are not a thin tail dragging a mean: the central case is a substantial give-back.
+
+### 18.5 What this establishes
+
+**The thesis does not clear 70.98 bp at any horizon measured — intraday or multi-day, at any latency, on
+either exit rule.** Arm 1 covered 1–60 minutes under barriers; this covers 5 minutes to three sessions
+under hold-to-horizon. Neither clears, and the day-scale end is the worse of the two.
+
+**What it does not establish:** anything conditional. Every number here is unconditional, and §7's
+stratifiers moved `p_clear` by 8.5 and 7.8 points without any detector. This is a base-rate result.
+
+**Two standing caveats bound it, both already on the register:** the archive under-samples events whose
+move lives outside RTH (**31.9%** of session highs sit outside it, post and premarket equally at 15.9%),
+and the live false-positive rate remains unmeasured and blocked on data acquisition.
+

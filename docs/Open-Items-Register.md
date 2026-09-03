@@ -441,3 +441,37 @@ against 45,925,350, verified at landing.
 **The rewording of row 1a is Cooper's**, because it changes an escalation row and the agent does not.
 Recommended: compare against the baseline file, and state in the phase report that the tag-period state
 is attested by provenance rather than by hash. **Unassigned.**
+
+
+### D5's horizon class is contradicted by measurement taken after it (2026-09-02)
+
+**Recorded for a Cooper decision, not taken here.** Next free number is **D25**.
+
+**D5 (2026-08-03) selected "intraday post-trigger, long-only, burst-scale horizons" as the programme
+spine, and demoted the day-scale work to archive under its consequence (b).** Both were decided before
+Phase 11 produced a round-trip cost of **70.98 bp / 2.512 cents** — the binding constraint did not exist
+as a number when the horizon class was chosen.
+
+**It now does, and the measurement runs against the choice:**
+
+- **Phase 10e Arm 1**, barriers, 1-60 minutes: `p_clear` reaches break-even at none of 90 cells, and under
+  a censoring-matched driftless null sits below baseline in 0 of 30 cells.
+- **D24's horizon gradient**: the gap to break-even worsens as the horizon shortens, in 6 of 6 barrier
+  pairs, and at the flattest observed slope reaches zero only at ~9,440 minutes -- 24 full sessions.
+- **The Phase 8 / Phase 9 costed re-read** (`t5_costed_markouts.json`): hold-to-horizon markouts clear one
+  round trip on a majority of events in **0 of 29 cells**; the median markout is negative at every latency
+  and horizon and becomes more negative with horizon, reaching **-886 bp at T+3**. **The day-scale
+  alternative D5 demoted is the worse end, not a refuge.**
+
+**So this is not an argument for reversing D5 toward the day scale** -- that end was measured here and is
+worse. It is a record that **the horizon class was chosen without the cost stack, and every horizon now
+measured against that cost fails**, which is the kind of decision the programme's own discipline says
+should be revisited on the record rather than inherited silently by every future phase.
+
+**What a D25 would have to weigh, stated neutrally:** every number above is **unconditional**. Arm 1's own
+stratifiers moved `p_clear` by +8.5 and +7.8 points with no detector at all, against a required +23.8. The
+open question is not which horizon to hold but whether conditioning can close a gap that unconditional
+entry cannot -- and that is the question D24 declined to spend a tick pass on, on evidence, with reopening
+reserved to a numbered decision.
+
+**Cooper decision, unassigned.**
