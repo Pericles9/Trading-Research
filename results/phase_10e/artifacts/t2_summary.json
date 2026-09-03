@@ -1,0 +1,74 @@
+{
+  "task": "Phase 10e T2 -- fill, excursion, and the two R1 ordering bounds",
+  "r1_reduction": "First-passage on bars is ambiguous EXACTLY when both barriers are first touched inside the same bar. optimistic: profit if t_profit <= t_stop. pessimistic: profit if t_profit < t_stop. ambiguous: t_profit == t_stop within the horizon. So R1 reduces to two first-touch minutes per barrier level and the ambiguous share is the tie rate -- the 90 barrier cells never have to be materialised.",
+  "cost_unit": {
+    "round_trip_bp": 70.98,
+    "round_trip_fraction": 0.007098,
+    "round_trip_cents": 2.512,
+    "source": "Phase 11, read from config, NOT recomputed"
+  },
+  "barriers": {
+    "profit_k": [
+      1.5,
+      2,
+      3
+    ],
+    "stop_m": [
+      1,
+      2
+    ],
+    "profit_levels_bp": [
+      106.47,
+      141.96,
+      212.94
+    ],
+    "stop_levels_bp": [
+      70.98,
+      141.96
+    ]
+  },
+  "latency_minutes": [
+    0,
+    1,
+    5
+  ],
+  "horizons_minutes": [
+    1,
+    5,
+    15,
+    30,
+    60
+  ],
+  "latency_0_note": "Physical impossibility. Labelled the upper bound on every chart and table. D7.",
+  "latency_axis_caveat": "Minute resolution cannot express a 1-3 second execution lag, so Arm 1's latency axis is PESSIMISTIC relative to achievable execution. State this in the report. Arm 2 carries the real axis.",
+  "R3_no_fill": {
+    "definition": "event_minute_bars_v2 stores only bars that traded, so a missing bar at fill_minute IS the no-fill case. Carried with filled = false, never dropped, never forward-filled.",
+    "per_latency": [
+      {
+        "latency_minutes": 0,
+        "filled": 6322397,
+        "no_fill": 0,
+        "total": 6322397,
+        "no_fill_share": 0.0
+      },
+      {
+        "latency_minutes": 1,
+        "filled": 5727491,
+        "no_fill": 594906,
+        "total": 6322397,
+        "no_fill_share": 0.09409500858614225
+      },
+      {
+        "latency_minutes": 5,
+        "filled": 5632168,
+        "no_fill": 690229,
+        "total": 6322397,
+        "no_fill_share": 0.10917204345124168
+      }
+    ]
+  },
+  "rows_written": 17682056,
+  "runtime_seconds": 435.6,
+  "source": "research/phase_10e/t2_excursion.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/phase_10e/t2_excursion.py"
+}

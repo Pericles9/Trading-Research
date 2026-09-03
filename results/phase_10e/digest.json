@@ -1,0 +1,158 @@
+{
+  "phase": "10e",
+  "config_hash": "edfa945f408f",
+  "status": "escalated",
+  "gate_mode": "sync-required",
+  "escalation": {
+    "criterion": "rows 11 and 12",
+    "observed": {
+      "row_11_no_fill": 0.15190849229304013,
+      "row_12_cells_clearing": 0
+    },
+    "tier": "HARD STOP"
+  },
+  "THE_VERDICT": {
+    "named_cell_state": "both_below",
+    "p_clear_optimistic": 0.36208472474542663,
+    "p_clear_pessimistic": 0.3372186341032441,
+    "p_breakeven": 0.6,
+    "p_randomwalk": 0.4,
+    "note": "stated separately and always -- two of the four outcomes fire no row"
+  },
+  "headline_metrics": [
+    {
+      "name": "p_clear_optimistic_named_cell",
+      "value": 0.36208472474542663,
+      "n": 5632168,
+      "effective_n": 10359.42209209412,
+      "source": "research/phase_10e/t4_gate.py:main",
+      "chart": "results/phase_10e/charts/02_outcome_shares.html"
+    },
+    {
+      "name": "cells_where_optimistic_clears_breakeven",
+      "value": 0,
+      "n": 90,
+      "source": "research/phase_10e/t3_shares.py:main",
+      "chart": "results/phase_10e/charts/02_outcome_shares.html"
+    },
+    {
+      "name": "no_fill_share_named_cell",
+      "value": 0.15190849229304013,
+      "n": 3074364,
+      "source": "research/phase_10e/t4_gate.py:no_fill_by_segment",
+      "chart": "results/phase_10e/charts/04_path_position.html"
+    },
+    {
+      "name": "r1_ambiguous_share_named_cell",
+      "value": 0.024866090642182547,
+      "n": 5632168,
+      "source": "research/phase_10e/t3_shares.py:main",
+      "chart": "results/phase_10e/charts/03_ambiguity.html"
+    },
+    {
+      "name": "s_min_p_clear_spread_fastest_to_slowest",
+      "value": 0.07750000000000001,
+      "n": 2607342,
+      "source": "research/phase_10e/t3b_stratification.py:main",
+      "chart": "results/phase_10e/charts/05_smin_stratification.html"
+    }
+  ],
+  "passes_spent": {
+    "filtered_trades": 0,
+    "filtered_quotes": 0,
+    "note": "Arm 1 read event_minute_bars_v2 and the frozen artifacts only"
+  },
+  "decisions_log": [
+    {
+      "decision": "row 1b -- master moved since phase-11-approved",
+      "chose": "recorded, not a stop",
+      "why": "79 commits; row 1a passes against the baseline"
+    },
+    {
+      "decision": "R1 ambiguity representation",
+      "options_considered": [
+        "bound loosely",
+        "materialise 90 barrier cells",
+        "tie rate"
+      ],
+      "chose": "tie rate -- both barriers first touched in the same bar",
+      "why": "exact, and collapses 90 cells to five first-touch columns per (entry, latency)"
+    }
+  ],
+  "surprises": [
+    "row 11 fires at 15.19% but WITHIN RTH BARS the no-fill share is 5.27% -- the named-cell figure is driven by entries whose fill minute lands in post (27.28%), i.e. by the entry universe's reach rather than by RTH tape",
+    "p_randomwalk is not directly comparable to p_clear under an expiry: expiry censors the far barrier more, so p_clear < p_randomwalk does NOT establish absence of drift. All 27 cells clearing p_randomwalk have m=1, the smaller span",
+    "s_min is NOT flat against forward excursion -- p_clear falls 7.8pp from the fastest-resolving tape to the slowest",
+    "latency 0 has a 0.00% no-fill share BY CONSTRUCTION, since the fill bar is the entry bar"
+  ],
+  "artifacts": [
+    {
+      "path": "results/phase_10e/artifacts/frozen_baseline.json",
+      "sha256": "62573b178e58225113bd5e3fd70e483ae04f9b1294df1c8664368ac952e7e904",
+      "size_bytes": 4127
+    },
+    {
+      "path": "results/phase_10e/artifacts/t0d_satisfiability_audit.json",
+      "sha256": "b2a941f1d84a47b66d70a74882fd44b8896ecda67eb44f7fb46ac0d10a4cecde",
+      "size_bytes": 17376
+    },
+    {
+      "path": "results/phase_10e/artifacts/t1_candidate_entries.parquet",
+      "sha256": "391b1c2845d90c5c8c1da40c1ee5f0ee8a03db6b7bc52b474c8552d681e669a8",
+      "size_bytes": 246251814
+    },
+    {
+      "path": "results/phase_10e/artifacts/t1_waterfall.json",
+      "sha256": "3a651674123546f4f96c5a14b4242c8dd5368925213f3a5ac8121f6ee82ada89",
+      "size_bytes": 4221
+    },
+    {
+      "path": "results/phase_10e/artifacts/t2_excursion.parquet",
+      "sha256": "9fbfe47dc156ab7f3bd8173ab102b66eff1a4d7b12ab4b517f602e3fcb9bbf00",
+      "size_bytes": 1029677579
+    },
+    {
+      "path": "results/phase_10e/artifacts/t2_summary.json",
+      "sha256": "a0bd032fad31818ac80040445e36f01af110acbb3d14b33cd41d6b347d5497b5",
+      "size_bytes": 2340
+    },
+    {
+      "path": "results/phase_10e/artifacts/t3_excursion_dist.parquet",
+      "sha256": "d95ead401f7505f6889f788c99bf7f94b3ac5e16124fc2841196404de5787448",
+      "size_bytes": 65770
+    },
+    {
+      "path": "results/phase_10e/artifacts/t3_shares.json",
+      "sha256": "2b7eaa8f3e3abd90c926633dc626a43365e70102d88147bc22f65d9693f443d5",
+      "size_bytes": 4045
+    },
+    {
+      "path": "results/phase_10e/artifacts/t3_shares.parquet",
+      "sha256": "9a671b5acb16d916d17b425166e6763245b43df00c453e3271bd44e0c333cc5f",
+      "size_bytes": 44361
+    },
+    {
+      "path": "results/phase_10e/artifacts/t3b_stratification.json",
+      "sha256": "00b08ff0208c78d98dfc1c658920f3b9ff3b636fdc9dd9b7de33ef7580ba260d",
+      "size_bytes": 10573
+    },
+    {
+      "path": "results/phase_10e/artifacts/t3b_stratification.parquet",
+      "sha256": "ee247c95ddcef5242d9881f4ff95eb3b813b720e97201dd9ac5d975ca83bd67d",
+      "size_bytes": 13222
+    },
+    {
+      "path": "results/phase_10e/artifacts/t4_gate.json",
+      "sha256": "b6552a6ff18e99f2ef361ff12845071747dbbfcd10d8b6e16a9d5fe8fd02863e",
+      "size_bytes": 56225
+    }
+  ],
+  "charts": [
+    "results/phase_10e/charts/01_excursion_distribution.html",
+    "results/phase_10e/charts/02_outcome_shares.html",
+    "results/phase_10e/charts/03_ambiguity.html",
+    "results/phase_10e/charts/04_path_position.html",
+    "results/phase_10e/charts/05_smin_stratification.html"
+  ],
+  "reproduce": "python research/phase_10e/{t1_candidate_entries,t2_excursion,t3_shares,t3b_stratification,t4_gate,t8_charts}.py"
+}
