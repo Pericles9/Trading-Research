@@ -55,3 +55,4 @@ results/scale_field/artifacts/*.parquet
 results/scale_field/charts/*/*.html
 results/scale_field/charts/*/plotly.min.js
 results/scope_universe_scan/*.parquet
+results/phase_10e/**/*.parquet

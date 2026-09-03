@@ -1,0 +1,112 @@
+{
+  "task": "Phase 10e T1 -- candidate-entry universe",
+  "pass_budget": {
+    "filtered_trades": 0,
+    "filtered_quotes": 0,
+    "note": "Arm 1 reads event_minute_bars_v2 and frozen artifacts only"
+  },
+  "d4_row_6a": "momentum_pct appears only as part of the event key -- a grouping key, never a numerator, denominator or computed quantity. No other spine numeric is read.",
+  "T1a_i_anchor_crosscheck": {
+    "rule": "ONE ANCHOR, BOTH ARMS: a102_detection_anchors.parquet. v2_r14_phase8_crosscheck.json is READ, never re-derived (row 25).",
+    "source": "results/phase_10/artifacts/v2_r14_phase8_crosscheck.json",
+    "n_comparable": 110,
+    "n_exact": 110,
+    "share_exact": 1.0,
+    "share_beyond_tolerance": 0.0,
+    "verdict": "EXACT AGREEMENT on the floor-exact analogue -- 110/110, share 1.0. Row 25 does not fire.",
+    "convention_note": "Phase 8 det_minute is the minute CONTAINING the crossing (floor). The D7 60s poll is the first minute boundary AT OR AFTER the crossing (ceil). They differ by exactly 1 whenever the crossing is not on a boundary. The floor comparison is the exact analogue and is the real test; the 60s-poll comparison is reported as R1.4a specifies. Neither side was adjusted to fit the other (R1.4b).",
+    "poll60_note": "the 60 s poll differs by exactly 1 minute by construction (floor vs ceil); within tolerance on all 110.",
+    "covers_arm2_cohort": "the crosscheck population is the Phase 10 cohort manifest (114 rows, 110 comparable), which is the superset the Arm 2 causal cohort of 78 was drawn from."
+  },
+  "T1c_s_min": {
+    "formula": "s_min = 2.26 / lambda_hat, lambda_hat = n_prints / 60",
+    "note": "the scale-space arc's one surviving criterion, entering as a STRATIFIER only. No field is computed in Arm 1.",
+    "bands_seconds": [
+      0.5,
+      1,
+      2,
+      5,
+      10,
+      30,
+      100
+    ],
+    "band_counts": {
+      "[10.0, 30.0)": 997118,
+      "[0.0, 0.5)": 991478,
+      "[30.0, 100.0)": 894093,
+      "[2.0, 5.0)": 880721,
+      "[5.0, 10.0)": 672893,
+      "[1.0, 2.0)": 660213,
+      "[100.0, inf)": 655327,
+      "[0.5, 1.0)": 570554
+    }
+  },
+  "T1d_denominators": {
+    "print_weighted": 6322397,
+    "event_equalised": 606351,
+    "entries_per_event_cap": 40,
+    "seed": 42,
+    "rule": "Both carried. Never blended."
+  },
+  "T1e_waterfall": [
+    {
+      "step": "event_minute_bars_v2, all offsets",
+      "rows": 45925350,
+      "events": 15763,
+      "reason": "source table"
+    },
+    {
+      "step": "T=0 session only",
+      "rows": 8519526,
+      "events": 15763,
+      "reason": "session_offset = 0"
+    },
+    {
+      "step": "inner join to D1 universe",
+      "rows": 8519526,
+      "events": 15763,
+      "reason": "D1, escalation row: universe is D1"
+    },
+    {
+      "step": "join a102, drop det_undefined",
+      "rows": 8399634,
+      "events": 15369,
+      "reason": "D7 anchor required; det_undefined events carry no anchor"
+    },
+    {
+      "step": "bars at or after det_minute",
+      "rows": 6322397,
+      "events": 15369,
+      "reason": "T1b: minute_index >= det_minute"
+    },
+    {
+      "step": "print-weighted denominator",
+      "rows": 6322397,
+      "events": 15369,
+      "reason": "T1d(i): every bar with n_prints >= 1 -- what is actually enterable"
+    },
+    {
+      "step": "event-equalised denominator",
+      "rows": 606351,
+      "events": 15369,
+      "reason": "T1d(ii): seeded uniform subsample, <= 40 bars/event, seed 42"
+    }
+  ],
+  "entries_per_event": {
+    "median": 379.0,
+    "q25": 210.0,
+    "q75": 578.0,
+    "max": 960,
+    "note": "R5 lives here: the max is the single-event dominance risk that event-equalisation exists to remove."
+  },
+  "flags_carried": {
+    "flag_possible_row_cap": 3512,
+    "flag_has_dup_prints": 315,
+    "flag_cross_session_extreme": 549748,
+    "note": "row counts, not event counts; flags are carried, never used to drop"
+  },
+  "pq_rth_open_null_rows": 0,
+  "runtime_seconds": 708.2,
+  "source": "research/phase_10e/t1_candidate_entries.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/phase_10e/t1_candidate_entries.py"
+}
