@@ -629,5 +629,62 @@ are large — 73.6% breach 2× round trip within 30 minutes of the anchor, 26.6%
   Phase 12 is specified and drafted and has not run.
 - **Reg SHO 201**, unmodelled. Most of the day-scale adverse mass sits at T+1 and T+3, where it is live.
 - Every standing caveat on the register, with the sign reversed — notably that a name which halts and
-  delists **leaves the sample**, and those are cases a short would be in.
+  delists **leaves the sample**. **§20.2 corrects what was first said about this**: the direction of that
+  censoring bias is **not established**, because the censored set contains both the maximum-gain case
+  (delisting to zero) and the catastrophic-loss case (an acquisition gap).
+
+---
+
+## 20. Two checks on the read that followed §19
+
+### 20.1 The capture-versus-excursion comparison was not latency-matched, and matching it strengthens it
+
+The read that followed §19 set median short capture at t0_close (351 bp) against median adverse path
+excursion (342 bp) and called the ratio **1.03** — the gain and the risk the same size. **The two figures
+come from different latencies**: 351 bp is latency 0, 342 bp is latency 5. Matched:
+
+| latency | median capture, t0_close | median adverse excursion, H=30, entries < 14 min | ratio |
+|---|---|---|---|
+| 0 | 350.6 bp | **391.2 bp** | **0.90** |
+| 1 | 315.8 bp | 363.5 bp | 0.87 |
+| 5 | 249.5 bp | 342.5 bp | **0.73** |
+
+**At every matched latency the median adverse excursion exceeds the median capture.** And the horizons are
+also mismatched in the same direction: `t0_close` averages ~195 minutes while the excursion is measured
+over 30. Taking the excursion at H=60 instead — still far short of 195 — the latency-5 ratio falls to
+**0.57**.
+
+So the read's conclusion holds and its own number was conservative: it is not that the gain and the risk
+are the same size, but that **at matched latency the risk is the larger of the two, by 10% at latency 0
+and 27% at latency 5**, before the horizon mismatch is corrected in the same direction.
+
+### 20.2 The censoring caveat pointed the wrong way and is withdrawn
+
+§19.3 and the register recorded delisting censoring as making the measured tail **"a lower bound on
+adverse outcomes."** That was asserted, not shown, and it is **withdrawn**. The censored set cuts both
+ways for a short: halt → bankruptcy → delisting to zero is the **maximum gain**; halt → acquisition → gap
+to a deal price is a **catastrophic loss**, and on a micro-cap that just spiked 30%+ the spike may *be* the
+deal news. Both populations sit in the `0001000` set D2 flagged as *"disproportionately consistent with
+halt/delisting outcomes."*
+
+**What the observed extremes show**, from `t1_cross_session_flags.parquet`, 2,214 flagged rows of 62,961
+(3.52%):
+
+| session pair | n | share UP (adverse for a short) |
+|---|---|---|
+| tm1→t0 | 890 | 93.8% — *this is the event itself, selection not censoring* |
+| **t0→t1** | 251 | **62.6%** |
+| t0→t2 | 450 | 53.1% |
+| t0→t3 | 623 | 49.8% |
+
+Post-event extreme moves start skewed adverse and decay to symmetric by T+3. **The magnitude tails are
+asymmetric in log space and structurally so:** up median +0.807, p95 +2.878, **max +5.201** (a 181× move);
+down median −0.756, p05 −2.022, **min −3.083** (a 95% decline). The up tail runs further because it is
+unbounded while the down tail is floored at −100%.
+
+**Recorded as direction-unknown, not as a lower bound.** The observed extremes lean adverse and the
+adverse tail is structurally longer, which is evidence; but the specific censored population — names that
+halt and delist — is by construction absent from the archive and contains both the maximum-gain and the
+catastrophic-loss case. **The direction of the censoring bias is not established, and the register now
+says so.**
 

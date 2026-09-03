@@ -502,13 +502,38 @@ without any further measurement.
   day, so day-1 exposure is probably limited -- but **most of the day-scale adverse mass sits at T+1 and
   T+3**, where it is live and unpriced. Nothing in this repo models it. **Unassigned.**
 
-**And a caveat that cuts against the short specifically, already on the register with the sign
-unreversed:** risk row 8's delisting/halt handling means **a name that halts and delists leaves the
-sample** -- and those are precisely the cases a short would be in. The measured tail is therefore a
-LOWER bound on adverse outcomes, not an estimate of them.
+**And a caveat about the censored set, CORRECTED below:** risk row 8's delisting/halt handling means
+**a name that halts and delists leaves the sample**. What was first written here -- that this makes the
+measured tail a lower bound -- **is withdrawn as unshown**; see the correction entry at the end of this
+file.
 
 **What the measured tail says, stated once and not repeated as a result:** heavy at every horizon and
 entry position measured, not explained by the cross-session flag (the six worst events carry no A12
 flag), and breaching every plausible stop level at high rates -- **73.6% breach 2x round trip within 30
 minutes of the anchor, 26.6% breach 10x**, worst observed +44,768 bp. Cooper reads it; nothing is
 concluded from it here.
+
+
+### CORRECTION — the delisting-censoring caveat pointed the wrong way and is withdrawn (2026-09-02)
+
+The entry above recorded delisting censoring as making the measured adverse tail **"a lower bound on
+adverse outcomes, not an estimate of them."** **That was asserted rather than shown, and it is withdrawn.**
+A caveat pointing the wrong way is worse than no caveat, because it gets cited.
+
+**The censored set cuts both ways for a short.** Halt to bankruptcy to delisting at zero is the MAXIMUM
+GAIN for a short; halt to acquisition, gapping to a deal price, is a CATASTROPHIC LOSS -- and on a
+micro-cap that has just spiked 30%+, the spike may BE the deal news. Both sit in the `0001000` set D2
+flagged as disproportionately consistent with halt/delisting outcomes.
+
+**What is measurable, and it is evidence rather than proof** (`t1_cross_session_flags.parquet`, 2,214
+flagged rows of 62,961): post-event extreme cross-session moves are **62.6% UP at t0->t1**, 53.1% at
+t0->t2 and 49.8% at t0->t3 -- starting adverse for a short and decaying to symmetric. The tm1->t0 pair is
+93.8% up but that is the event itself, selection rather than censoring. **The magnitude tails are
+structurally asymmetric:** up median +0.807 log, p95 +2.878, max **+5.201** (a 181x move); down median
+-0.756, p05 -2.022, min **-3.083** (a 95% decline). The up tail runs further because it is unbounded while
+the down tail is floored at -100%.
+
+**RECORDED AS DIRECTION-UNKNOWN.** The observed extremes lean adverse and the adverse tail is structurally
+longer. The censored population is absent by construction and contains both extremes. **The sign of the
+bias is not established**, and any future use of the tail figures carries that sentence rather than the
+withdrawn one.
