@@ -37,6 +37,7 @@ pastes it, in a commit that says what moved.
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import os
 import re
@@ -68,6 +69,40 @@ D_DRIVE = re.compile(r"[dD]:\s*[\\/]{1,2}")
 # src/data/paths.py as the live path resolver -- listing it as a hazard would be wrong.
 # Handles a plain "#" comment and the escaped form notebooks store source lines in.
 COMMENTED = re.compile(r'^\s*(\\?["\'])?\s*#')
+
+
+def docstring_lines(path: str, text: str) -> set:
+    """Line numbers inside a module/class/function DOCSTRING of a .py file.
+
+    A docstring is documentation, exactly like a `#` comment: a tool that explains in prose
+    why the D:\\ enumeration matters is not a file that touches D:. This started as a
+    special-case skip of this script's own filename; a second tool
+    (tools/verify_cited_paths.py) then tripped the same wire, and the corrected list this
+    script prints would have told CLAUDE.md to never execute a read-only gate. So the
+    special case is generalised. Only genuine DOCSTRINGS count -- a D: path in an ordinary
+    string literal is a hardcode and still counts as live.
+
+    Unparseable or non-.py files return the empty set, i.e. nothing is excused.
+    """
+    if not path.lower().endswith(".py"):
+        return set()
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return set()
+    out = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef,
+                                 ast.AsyncFunctionDef)):
+            continue
+        body = getattr(node, "body", None)
+        if not body:
+            continue
+        first = body[0]
+        if (isinstance(first, ast.Expr) and isinstance(first.value, ast.Constant)
+                and isinstance(first.value.value, str)):
+            out.update(range(first.lineno, (first.end_lineno or first.lineno) + 1))
+    return out
 # Writes we care about: these turn a stale index into a hazard rather than a doc bug.
 WRITE_CALLS = re.compile(r"\.to_parquet\(|\.to_csv\(|\.to_pickle\(|open\([^)]*['\"][wa]",
                          re.I)
@@ -88,26 +123,50 @@ def iter_repo_files():
                 yield os.path.join(dirpath, fn)
 
 
+def is_readonly_gate(rel: str, text: str) -> bool:
+    """A tools/*.py that performs no disk write.
+
+    CLAUDE.md mandates running tools/verify_claude_md_indices.py in T0 of every phase. A file
+    the same document orders you to execute cannot also sit on its never-execute list -- that
+    is a contradiction, and it arose the moment this script's own reporting strings ('Live D:\\
+    hardcodes exist in:') were scanned by the generalised docstring rule, which correctly does
+    not excuse an ordinary string literal.
+
+    The exemption is EARNED, not asserted: it applies only while the file contains no write
+    call, checked with the same WRITE_CALLS pattern used to flag a hardcode as a hazard. Add a
+    write to a tools/ script and it returns to the list.
+    """
+    return rel.startswith("tools/") and rel.endswith(".py") and not WRITE_CALLS.search(text)
+
+
 def scan_d_drive():
-    """-> {relpath: {'lines': [...], 'writes': bool}} for every file naming a D: path."""
+    """-> {relpath: {...}} for every file naming a D: path, classified by why it names one."""
     found = {}
     for path in iter_repo_files():
         rel = os.path.relpath(path, ROOT).replace("\\", "/")
-        if rel == "CLAUDE.md" or rel.startswith("tools/verify_claude_md_indices"):
-            continue                      # the index itself, and this script's own docstring
+        if rel == "CLAUDE.md":
+            continue                      # the index being checked, not a candidate
+        # NOTE: this script no longer skips itself. It used to, to excuse its own docstring;
+        # docstring_lines() now handles that generally, so both tools/ gates are scanned
+        # like any other file and neither gets an exemption the others do not.
         try:
             with open(path, "r", encoding="utf-8", errors="replace") as fh:
                 text = fh.read()
         except OSError:
             continue
+        doc = docstring_lines(path, text)
         live, commented = [], []
         for i, ln in enumerate(text.splitlines()):
             if D_DRIVE.search(ln):
-                (commented if COMMENTED.match(ln) else live).append(i + 1)
+                n = i + 1
+                (commented if (COMMENTED.match(ln) or n in doc) else live).append(n)
         if live or commented:
+            in_doc = sorted(n for n in commented if n in doc)
             found[rel] = {"lines": live[:20], "n_lines": len(live),
                           "commented_only_lines": commented[:20],
+                          "docstring_lines": in_doc,
                           "live": bool(live),
+                          "readonly_gate": is_readonly_gate(rel, text),
                           "writes_to_disk": bool(WRITE_CALLS.search(text)),
                           "executable": os.path.splitext(rel)[1].lower() in EXECUTABLE_EXT}
     return found
@@ -149,10 +208,20 @@ def main() -> int:
 
     # --- index 1: the D:\ hardcode enumeration -----------------------------
     scanned = scan_d_drive()
-    actual = {k: v for k, v in scanned.items() if v["executable"] and v["live"]}
+    actual = {k: v for k, v in scanned.items()
+              if v["executable"] and v["live"] and not v["readonly_gate"]}
     references = {k: v for k, v in scanned.items() if not v["executable"]}
+    # EXCUSED, SPLIT BY REASON AND NAMED. A count alone hid something that mattered:
+    # src/data/prepare_database_split.py's only remaining D: mentions are a docstring USAGE
+    # EXAMPLE (--target-root D:/mom_db_storage). That is not a hardcode -- the path is a CLI
+    # argument -- but a human copying the example WOULD write to D:. Dropping it from a count
+    # makes it invisible; naming it keeps the hazard readable while stating what kind it is.
     provenance_only = {k: v for k, v in scanned.items()
-                       if v["executable"] and not v["live"]}
+                       if v["executable"] and not v["live"] and not v["docstring_lines"]}
+    docstring_only = {k: v for k, v in scanned.items()
+                      if v["executable"] and not v["live"] and v["docstring_lines"]}
+    readonly_gates = {k: v for k, v in scanned.items()
+                      if v["executable"] and v["live"] and v["readonly_gate"]}
     listed = listed_d_drive(text)
     idx1 = {"index": "CLAUDE.md 'Live D:\\ hardcodes exist in'",
             "scope": ("EXECUTABLE files (.py/.ipynb/.sh) carrying a D: path OUTSIDE a "
@@ -162,6 +231,11 @@ def main() -> int:
             "listed_n": None if listed is None else len(listed),
             "actual_n": len(actual),
             "executables_with_provenance_comments_only": sorted(provenance_only),
+            "executables_with_docstring_mentions_only": {
+                k: {"docstring_lines": v["docstring_lines"],
+                    "writes_to_disk": v["writes_to_disk"]}
+                for k, v in sorted(docstring_only.items())},
+            "readonly_gates_exempt": sorted(readonly_gates),
             "non_executable_mentions_n": len(references)}
     if listed is None:
         idx1["status"] = "NOT FOUND - the enumeration is gone or reworded"
@@ -196,7 +270,8 @@ def main() -> int:
     else:
         print("=== CLAUDE.md index verification ===\n")
         print(f"[1] D:\\ hardcode enumeration          {idx1['status']}")
-        print(f"    scope: executables with a D: path OUTSIDE a comment")
+        print(f"    scope: executables with a D: path outside a comment or docstring;"
+              f" read-only tools/ gates exempt")
         print(f"    listed {idx1['listed_n']}   live hardcodes found {idx1['actual_n']}"
               f"   (excluded: "
               f"{len(idx1['executables_with_provenance_comments_only'])} executables whose "
@@ -207,6 +282,11 @@ def main() -> int:
             print(f"    MISSING: {m['path']} (lines {m['first_lines']}){flag}")
         for s in idx1.get("listed_but_no_longer_matching", []):
             print(f"    LISTED BUT NOT FOUND: {s}")
+        for k, v in idx1["executables_with_docstring_mentions_only"].items():
+            kind = "  <-- and it can WRITE" if v["writes_to_disk"] else ""
+            print(f"    excused, DOCSTRING only: {k} lines {v['docstring_lines']}{kind}")
+        for k in idx1["readonly_gates_exempt"]:
+            print(f"    excused, read-only tools/ gate (no write call): {k}")
         print(f"\n[2] decision pointer                  {idx2['status']}")
         print(f"    CLAUDE.md next free: D{idx2['claude_md_says_next_free']}   "
               f"register highest: D{idx2['highest_in_register']}   "

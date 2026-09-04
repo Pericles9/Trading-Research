@@ -418,6 +418,30 @@ Did not exist anywhere in this checkout as of Phase 0a. Recovered by locating th
 
 ---
 
+## `tools/` (repo-hygiene gates — 2 files)
+
+Both are **read-only** and **exit 1 on drift**, so either can gate a phase start. Neither edits what
+it checks: a tool that silently repaired a reference would hide exactly the drift it exists to
+surface. They exist because this repo has now been bitten three times by a hand-maintained index
+going stale and five times by a cited path that did not resolve — the response in both cases was to
+**make the class checkable rather than patch the instance**.
+
+- `tools/verify_claude_md_indices.py` — Regenerates the enumerated lists in `CLAUDE.md` from the
+  checkout and diffs them against what the file claims. Its first run found **11 listed `D:\`
+  hardcodes against 24 live, 7 of the unlisted ones writing to `D:`**, plus a decision pointer sitting
+  at D14 against a register running to D19. `CLAUDE.md` mandates running it in T0 of every phase.
+- `tools/verify_cited_paths.py` — Resolves every repo path cited in `docs/`, `prompts/`, `CLAUDE.md`
+  and `README_HANDOFF.md` against the checkout (2026-09-04). Scoped to **root-anchored** citations,
+  skipping template placeholders and treating a phase prompt's references to its own
+  `results/phase_{x}/` deliverables as specification rather than citation — without that scoping the
+  first two passes reported 266 and 92 hits, nearly all false. Absences with a legitimate reason are
+  **dispositioned individually with that reason and reported on every run**, never silently swallowed;
+  a **staleness check** fails the gate when a disposition stops matching reality, so the one
+  hand-maintained list in the tool cannot itself go stale. Current state: 643 distinct paths cited,
+  **0 unresolved**, 11 dispositioned, 40 under four subtrees the map itself declares absent.
+
+---
+
 ## `research/` (Obsidian vault — 157 files in scope)
 
 `research/CLAUDE.md` — Vault-level contributor guide explaining the purpose of the `research/` Obsidian vault, its key files, tag conventions, naming conventions, and notes on symlinked docs and off-limits phase-pipeline parquet files.
@@ -1539,7 +1563,7 @@ two arms, Arm 1 gates Arm 2; 24 escalation rows); `prompts/phase_12.md` + `confi
 and LULD; Stage A is a feasibility gate; 17 rows); `prompts/universe_scan_scoping.md` (**the only
 unblocked item** — no `[Cooper]` slot, read-only on data, produces a written feasibility assessment and
 no measurement); `docs/operating_plan_s6_replacement.md` (proposed §6 map: 10e inserted, rows 13/15/16
-disposed, nothing renumbered); `docs/decisions_draft_D24_D27.md` (four draft decision texts);
+disposed, nothing renumbered); `docs/decisions_draft_D24_D26.md` (four draft decision texts);
 `README_HANDOFF.md`.
 
 **The numbering collision the handoff predicted, and it happened.** The drafts arrived numbered D23–D26

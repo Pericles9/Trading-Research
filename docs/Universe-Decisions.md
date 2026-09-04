@@ -406,7 +406,7 @@ therefore not whether to resume 6b, but what standing its completed output has u
 - **`prompts/phase_6b.md` and `config/phase_6b.json` are left exactly as committed** — the historical
   record of what ran, not a queue entry.
 
-**How to apply:** cite A11 when reusing any `results/phase_6/` or `results/phase_6b/` decay
+**How to apply:** cite A11 when reusing any `results/phase_6_rth_only/` or `results/phase_6b/` decay
 statistic, and state that it is session-anchored and superseded as a budget. Reuse of
 `event_minute_bars_v2` itself needs no citation.
 

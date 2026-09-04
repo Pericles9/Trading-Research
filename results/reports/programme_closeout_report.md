@@ -159,10 +159,18 @@ Recorded as defects, not as limitations of findings.
    at D23), the `D:\` hardcode enumeration (11 listed against 24 live, **7 of them writing to D:**), the
    commit staging scope (`git add -A` swept an uncommitted human draft into an unrelated commit), and
    escalation row 20.
-6. **Three references carried forward without re-checking their context** — an invented module path
-   asserted as fact; a config key retained after the row it belonged to changed shape; and two numbers put
-   in a ratio without checking they sat on the same latency. **Same failure as a stale index, at the scale
-   of a single value.**
+6. **References carried forward without re-checking their context** — a config key retained after the
+   row it belonged to changed shape; two numbers put in a ratio without checking they sat on the same
+   latency; and **five separate unresolvable path citations**: an invented module path asserted as fact
+   (`research/scale_space/scale_field.py`), a Project doc cited as repo authority three times
+   (`claude/scale_space_lessons.md`), and one register entry pointing at a file the same agent had
+   written to a different path. **Same failure as a stale index, at the scale of a single value.**
+   **This class is now gated** — `tools/verify_cited_paths.py` resolves every root-anchored path cited
+   in `docs/` and `prompts/` against the checkout and exits 1 on any that does not resolve. It was built
+   after the fifth instance, it found the fifth instance, and it additionally caught a directory rename
+   (`results/phase_6/` → `results/phase_6_rth_only/`) still being cited as a live instruction, and a
+   draft-decision filename off by one. Each was repaired. The residual is **one open defect it cannot
+   fix**: §6 item 5.
 7. **A caveat that pointed the wrong way.** Delisting censoring was recorded as making the adverse tail
    "a lower bound." Asserted, not shown — the censored set contains both the maximum-gain case (delisting
    to zero) and the catastrophic-loss case (an acquisition gap). **Withdrawn and recorded as
@@ -209,9 +217,46 @@ thesis is closed on both sides and the two remaining threads are precondition-sh
 | 3 | **Phase 12 (halts/LULD)** | **Reverted to optional.** Promoted while a short thesis was live; that promotion lapsed with §2.2. Specified, drafted, blocked on its `[Cooper]` band table. |
 | 4 | **The one variant not excluded** | Late-entry, multi-day short. Capture t1→t3 is 244 bp less 71 bp = **173 bp before borrow**, with unbounded upside risk and Reg SHO live. **No tail read exists at that entry point** — and the tail read is what closed the near-anchor version. If pursued: **that test first, not the markout**, as a phase with a kill condition. |
 
+| 5 | **A load-bearing document does not live in the repo** | **Open, and only Cooper can close it.** See §6.1. |
+
 **What must not happen:** re-running the barrier grid or extending the horizon axis to find a cell that
 clears. Ninety barrier cells and twenty-nine markout cells are already a wide sweep; the closest either
 comes is 21 points and 168 bp.
+
+### 6.1 The open defect item 5 names
+
+`claude/scale_space_lessons.md` is cited four times across `docs/` and `prompts/` as authority for a
+closed item. It is a claude.ai Project doc and **has never existed in this checkout**. The chat layer and
+the repo look the same through one interface and different through the other; the executor sees only the
+repo, so a Project doc cited in a spec is unresolvable **to the only party that has to act on it**.
+
+Two closures exist and **the agent can perform neither**:
+
+1. **Move the content into `docs/`.** Requires Cooper to supply it — the agent has never seen the
+   document, and writing a file under that name from inference would manufacture the authority the
+   citation claims. That is a worse defect than the missing file.
+2. **Replace each citation with restated content**, attributing it to the read it came from. Also
+   requires the content.
+
+Until one happens the path stays in `EXPECTED_ABSENT` in `tools/verify_cited_paths.py`, flagged in the
+tool's source as *"the open defect this tool exists to surface, not a benign exception."* It is reported
+on every run rather than suppressed, so it cannot quietly become permanent.
+
+### 6.2 If the answer to item 1 is a different universe — five criteria
+
+Each is a **generalisation of a specific failure recorded above**, not a wish list. A candidate universe
+that fails any one of them reproduces a failure this programme has already paid for.
+
+| # | criterion | the failure it generalises |
+|---|---|---|
+| 1 | **The population is reproducible from a written rule.** | The q05 volume screen was recovered only by *fitting* it — `log10(min_volume_threshold) = b0 + b1·log10(momentum_pct)`, R² = 1.0, under D4 Amendment A13. The rule itself was never written down. Recovering a selection function by regression is a rescue, not a standard. |
+| 2 | **Rejected candidates are retained, not only survivors.** | A13's first use produced a **hard stop**: `min_volume_threshold` is non-null on all 23,268 rows and every one is above the line, so the rejected population is on no table and the selection lookahead is **unmeasurable from disk**. This is the standing methodology rule in operational form — sensitivity analyses run on an archive of survivors, counterfactual re-selection analyses cannot. |
+| 3 | **The round-trip cost is small relative to the move being traded.** | Phase 11 measured **70.98 bp** round trip. Against it, `p_clear` reaches break-even in **0 of 90** barrier cells and the markout clears on a majority in **0 of 29**. D5 chose the horizon class *before that number existed*. The cost stack is a screening input, not a closing check. |
+| 4 | **The tape resolves the timescales the strategy trades.** | D22's resolution floor `s ≥ 2.26/λ` (causal: `4.51/λ`) is the first applicability criterion in this programme that was **derived rather than adopted**. Where the event rate cannot resolve the scale, no detector on that tape can, and no amount of method fixes it. |
+| 5 | **The selection criterion is not adversarial to the trade direction.** | `momentum_pct` selects on the session high. Every event is therefore at or near its own extreme *by construction* — a long enters after the move it was selected for, and a short is selected into precisely the names that just ran. This is why no refinement of either side works, and it is the one criterion that would have been cheapest to check first and was checked last. |
+
+Criterion 5 is the load-bearing one. Criteria 1–4 are satisfiable by better data collection; **5 is a
+property of the selection rule, and no downstream method can repair it.**
 
 ---
 

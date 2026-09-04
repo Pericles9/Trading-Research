@@ -431,7 +431,7 @@ no record of their content at the tag — and no digest records artifact content
 `phase-11-approved` touched `research/phase_{8,9,10}/`, `config/phase_{8,9,10}.json` or `src/`, and all
 three artifact mtimes predate the tag by 15–17 days. Provenance, not a hash, and recorded as such.
 
-**A forward baseline now exists:** `results/scope_universe_scan/frozen_input_baseline.json` — sha256 for
+**A forward baseline now exists:** `results/phase_10e/artifacts/frozen_baseline.json` — sha256 for
 each of the five, established 2026-08-31. It makes row 1a evaluable **from here on**; it does **not**
 verify the tag-period state, which was never recorded and cannot be reconstructed.
 
@@ -574,3 +574,46 @@ between unmatched conditions is not evidence whichever way it points.**
 
 Companion to *every list has one home* (which governs lists) and to *cite repo paths, mark unverified*
 (which governs paths). This one governs values.
+
+---
+
+## OPEN — a load-bearing document does not live in the repo (2026-09-04)
+
+**Status:** open. **Owner: Cooper — the agent cannot close it.** **Gate:** reported on every run of
+`tools/verify_cited_paths.py`.
+
+`claude/scale_space_lessons.md` is cited **four times** across `docs/` and `prompts/` as authority for a
+closed item. It is a claude.ai Project doc and **has never existed in this checkout**.
+
+**Why this is structural rather than careless.** The chat layer sees Project docs and the repo through
+the same interface; the executor sees only the repo. A Project doc cited in a spec is therefore
+unresolvable to the only party that has to act on it, and nothing in the writing process surfaces that.
+The same root cause produced five unresolvable citations in one session: an invented module path
+(`research/scale_space/scale_field.py`), this doc three times, and a register entry of the agent's own
+pointing at `results/scope_universe_scan/frozen_input_baseline.json` when the file it had written was
+`results/phase_10e/artifacts/frozen_baseline.json`.
+
+**The class is now gated.** `tools/verify_cited_paths.py` (read-only, exit 1 on drift, added 2026-09-04)
+resolves every root-anchored path cited in `docs/`, `prompts/`, `CLAUDE.md` and `README_HANDOFF.md`
+against the checkout. It found the fifth instance, plus two further live drifts now repaired —
+`results/phase_6/` cited as a current location at `docs/Universe-Decisions.md:409` when the directory was
+renamed to `results/phase_6_rth_only/` under D3, and `docs/decisions_draft_D24_D27.md` in the repo map
+when the file is `docs/decisions_draft_D24_D26.md`.
+
+**Two closures exist and both need Cooper.**
+
+1. **Move the content into `docs/`.** The agent has never seen the document. Writing a file under that
+   name from inference would **manufacture the authority the citation claims** — a worse defect than the
+   missing file, and the exact failure mode of the invented path above.
+2. **Replace each of the four citations with restated content**, attributed to the read it came from.
+   Also needs the content.
+
+**Until then** the path stays in `EXPECTED_ABSENT` in the tool, with its reason recorded in the source as
+*"THIS IS THE OPEN DEFECT this tool exists to surface, not a benign exception."* It is **reported on
+every run rather than suppressed**, so it cannot quietly become permanent — and the tool's staleness
+check fails the gate if the entry stops matching reality.
+
+**What the tool cannot do, stated so it is not over-trusted:** it cannot distinguish a narrative mention
+(*"`results/phase_6/` was renamed"*) from a live citation (*"enumerated in
+`results/phase_6/artifacts/…`"*). Both are unresolvable strings. Dispositioning each is a human
+judgement recorded in the tool's source, and that is its boundary rather than a defect in it.
