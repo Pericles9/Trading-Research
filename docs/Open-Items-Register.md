@@ -537,3 +537,40 @@ the down tail is floored at -100%.
 longer. The censored population is absent by construction and contains both extremes. **The sign of the
 bias is not established**, and any future use of the tail figures carries that sentence rather than the
 withdrawn one.
+
+
+### Post-D25 status reversions, and a standing rule (2026-09-02)
+
+**Two items promoted while a short thesis was live are reverted, because the short closed on structure.**
+
+- **LOCATE AVAILABILITY reverts from gating question to precondition on ONE BRANCH.** It was recorded as
+  the cheapest path to a definitive answer when the short was open. The adverse-tail read closed the short
+  on its own terms, so locate now matters only if the late-entry multi-day variant is pursued. Still not
+  research, still answered outside the repo -- but no longer the thing to do first.
+- **PHASE 12 REVERTS FROM LOAD-BEARING TO OPTIONAL.** It was promoted because halt risk is asymmetric
+  against a short. With the short structurally closed that promotion lapses; Phase 12 is a real
+  measurement that **no live thesis currently depends on**. Specified, drafted, committed, blocked on its
+  [Cooper] LULD band table.
+
+**Neither should be spent on before the programme-level decision is taken** -- doing so measures the risk
+of a trade already closed on its own arithmetic.
+
+### STANDING RULE -- restate the conditions when a number moves between contexts
+
+Three errors in one session shared a single shape: **a reference carried forward without re-checking that
+its context still applied.**
+
+| | error |
+|---|---|
+| 1 | an invented module path (`research/scale_space/scale_field.py`) asserted rather than checked |
+| 2 | a config key (`row_10_r1_straddle`) carried forward after the escalation row it belonged to changed shape -- it would have made row 2 permanently unevaluable |
+| 3 | median capture at latency 0 put in a ratio against median adverse excursion at latency 5 |
+
+**It is the same failure as a stale index, at the scale of a single value.** The third is the instructive
+one because it happened to point the *right* way -- matched, the conclusion strengthened -- and **a ratio
+between unmatched conditions is not evidence whichever way it points.**
+
+> **When a number moves between contexts, restate the conditions attached to it, not the number alone.**
+
+Companion to *every list has one home* (which governs lists) and to *cite repo paths, mark unverified*
+(which governs paths). This one governs values.

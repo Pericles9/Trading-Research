@@ -1611,3 +1611,23 @@ halves as the event runs, mechanically**, and a hazard model without the bracket
 the tape.
 
 **Still blocked:** 8 real `[Cooper]` slots in `config/phase_10e.json`, 7 in `config/phase_12.json`.
+
+
+## Programme close-out (2026-09-02)
+
+**`results/programme_closeout/REPORT.md`**, copy at `results/reports/programme_closeout_report.md`.
+Cross-phase, records no decision. **Written for a reader with no context**, against the test 10b's
+close-out set: could someone who has never seen this repository read only that file and correctly decide
+what to do next?
+
+Carries the thesis as originally stated (quoted, not paraphrased); what closed it on **both** sides -- the
+long by D25 at both ends, the short on the structural identity that the screen selects on demonstrated
+upward explosiveness and the trade bets against it; the two questions never answerable from disk (live
+false-positive rate, RTH-scoped population coverage); **what survives independent of the thesis** --
+`s >= 2.26/lambda` and its causal form, `s_min` relating to forward excursion, the cost stack and its
+horizon-invariance; **seven specification defects in full**, including four of the agent's own; and the
+apparatus as the transferable asset.
+
+**The one variant not excluded** is recorded there: late-entry multi-day short, 173 bp before borrow, with
+**no tail read at that entry point** -- and the tail read is what closed the near-anchor version, so that
+test comes first if it is ever pursued.
