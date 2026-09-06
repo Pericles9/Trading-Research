@@ -3,8 +3,14 @@
   "title": "Per-event scale-field panel charts, offline vs online",
   "spec": "work order: per-event scale-field panel charts (diagnostic render)",
   "not_a_phase": "DIAGNOSTIC RENDER. Records no decision, applies no gate, produces no digest. No statistic is reported, no threshold is established, no timescale is claimed. Agent_Prompt_Standard s9 chart rules apply; s7, s10, s11 do not. This is the tape review D21 fired on, applied to the scale-space arc for the first time -- whether the marks land is Cooper's read, and the agent states only what was computed.",
-  "governing_decisions": ["D3", "D4", "D14", "D21", "D22", "D23"],
-
+  "governing_decisions": [
+    "D3",
+    "D4",
+    "D14",
+    "D21",
+    "D22",
+    "D23"
+  ],
   "section_0_resolutions": {
     "a_cohort_column": {
       "asked": "70th-80th percentile of volume and momentum",
@@ -30,15 +36,20 @@
       "no_fork": "scale_field.py is imported unchanged. burst_on(), s_min_for_rate(), field(), field_onesided() are used as committed."
     }
   },
-
   "cohort": {
     "rule": "NOT the frozen scale_field cohort. A fresh joint-filter draw from the D1 universe, per the work order s3. See cohort_freeze_conflict below.",
     "pool_source": "results/phase_10/artifacts/t1_stratification_pool.parquet",
     "pool_definition": "D1 = momentum_events_canonical WHERE in_scope = TRUE AND source_file = 'file1', with T=0 tick print count joined from event_minute_bars_v2. n = 15763.",
     "percentile_basis": "the whole D1 pool (n = 15763). Percentiles are NOT recomputed on the readable subset -- p70/p80 mean the universe's p70/p80.",
     "joint_filter": {
-      "print_count_percentiles": [70, 80],
-      "momentum_pct_percentiles": [70, 80],
+      "print_count_percentiles": [
+        70,
+        80
+      ],
+      "momentum_pct_percentiles": [
+        70,
+        80
+      ],
       "rule": "t0_print_count AND momentum_pct both inside their own [p70, p80], inclusive at both ends"
     },
     "readability_filter": {
@@ -55,34 +66,57 @@
       "phase_9": "results/phase_9/artifacts/t1_cross_session_flags.parquet, flag_cross_session_extreme, per (event, session_pair). Joined, never re-derived (CLAUDE.md standing exception to A9.3).",
       "row_cap": "results/phase_8/artifacts/a101_labels.parquet, flag_possible_row_cap",
       "dup_prints": "results/phase_6b/artifacts/event_index_v2.parquet, flag_has_dup_prints",
-      "canonical_view": ["flag_eth_dominant_t0", "repaired_1c", "flag_window_calendar_bug", "flag_missing_event_day", "coverage_class"]
+      "canonical_view": [
+        "flag_eth_dominant_t0",
+        "repaired_1c",
+        "flag_window_calendar_bug",
+        "flag_missing_event_day",
+        "coverage_class"
+      ]
     }
   },
-
   "cohort_freeze_conflict": {
     "surfaced": "config/scale_field.json cohort.rule reads: 'FROZEN. Phase 10 manifest, reused, never redrawn or extended. Hash asserted on every run.' This work order directs a fresh 10-event draw from the D1 universe under a joint print-count/momentum filter, which is a redraw relative to that freeze.",
     "why_it_is_taken_anyway": "the freeze exists to stop a MEASUREMENT cohort being reselected. This run measures nothing (s6: no statistic, no threshold, no timescale) and returns nothing to the strategy layer but pictures. The work order is explicit and specifies the filter, the seed and the draw.",
     "what_is_not_done": "no number from these ten events is pooled, compared, or carried anywhere. Nothing here amends config/scale_field.json or its frozen cohort.",
     "overlap_with_the_frozen_100": "reported in the run manifest, as a fact about the draw rather than a criterion on it."
   },
-
   "scale_ladder": {
     "rule": "one ladder, evaluated in three cost groups. Groups exist ONLY to set the base bin grid dt = min_scale / sigma_lo; the estimator, its constants and its masks are identical across them. Both kernels use the SAME group split, so panes 2 and 3 differ in the kernel and in nothing else.",
     "groups": [
-      {"min_seconds": 0.25, "max_seconds": 2.0, "n_scales": 25},
-      {"min_seconds": 2.0, "max_seconds": 64.0, "n_scales": 41},
-      {"min_seconds": 64.0, "max_seconds": 2048.0, "n_scales": 41}
+      {
+        "min_seconds": 0.25,
+        "max_seconds": 2.0,
+        "n_scales": 25
+      },
+      {
+        "min_seconds": 2.0,
+        "max_seconds": 64.0,
+        "n_scales": 41
+      },
+      {
+        "min_seconds": 64.0,
+        "max_seconds": 2048.0,
+        "n_scales": 41
+      }
     ],
     "spacing": "geometric, 8 per octave, continuous across the joins (each group's max is the next group's min; the duplicate scale is dropped once)",
-    "span_seconds": [0.25, 2048.0],
+    "span_seconds": [
+      0.25,
+      2048.0
+    ],
     "n_scales_total": 105,
     "floor_why": "0.25 s, not the committed coarse band's 1 s. Measured on a joint-filter member (AEMD_2022-08-02_63.77, 89,439 prints): session-wide s_min q10 = 0.90 s centred / 1.14 s causal. At a 1 s ladder floor the read scale would be CLAMPED to the floor through the busiest tenth of the session, and read_factor 1.0 vs 2.0 would be the same number wherever 2*s_min <= 1 s -- which would make s0(b)'s comparison vacuous exactly where the bursts are. The floor is set below the data, not at it.",
     "ceiling_why": "2048 s, the committed coarse ceiling. Under the extended-session cap span/8 = 7200 s and under the RTH cap 2925 s (config/scale_field.json scale_axis.coarse_cap_rule).",
     "hard_floor_seconds": 9.5367431640625e-07,
     "ladder_floor_binds": "where s_min(t) falls BELOW 0.25 s the read is taken at the ladder floor, which is ABOVE read_factor * s_min. That share is measured per event, per kernel, and reported in the caption -- it is the one place the read is not where the work order asks it to be, and it is a data fact, not a choice.",
-    "measured_cost_seconds_per_event": {"group_1": 37.4, "group_2": 5.5, "group_3": 0.2, "both_kernels_total": 43.0}
+    "measured_cost_seconds_per_event": {
+      "group_1": 37.4,
+      "group_2": 5.5,
+      "group_3": 0.2,
+      "both_kernels_total": 43.0
+    }
   },
-
   "field": {
     "channel": "rate",
     "channel_why": "dL/dln s on L = log lambda-hat. NOT the interval channel: the feasibility work established that the event-weighted interval channel mislocates burst position by a non-constant factor (9x and 2.3x on synthetic) while the time-weighted rate channel recovers duration to ~15%. Chart the one that localises.",
@@ -94,7 +128,6 @@
     "reduce": "interp",
     "reduce_why": "_reduce_extremum is NOT enabled. It is in the module, off by default, as a recorded negative result: it raises the background floor as much as it raises the signal (background p99 0.59 -> 1.53). Point-sampling is what the work order specifies and what runs."
   },
-
   "s_min": {
     "rule": "TWO LINES, NEVER SHARED. A one-sided kernel keeps half the mass, so n_eff = sqrt(pi)*s*lambda and the causal floor is EXACTLY DOUBLE the centred one. Pane 2 carries 2.2568/lambda, pane 3 carries 4.5135/lambda. Drawing one line across both panes is a defect.",
     "centred_coefficient": 2.2567583341910247,
@@ -103,7 +136,6 @@
     "lambda_estimator": "scale_field-adjacent knn_rate (k = 20) from research/scale_field/t1_lead_time.py, imported not copied. causal=True for the one-sided pane: the kNN rate that sets s_min(t) must also stop reading forward, or a forward read survives in the scale selection after the estimator itself has stopped reading forward. That defect was found and fixed once already (config/scale_field.json one_sided_kernel.second_forward_read_found_and_fixed) and is not reintroduced here.",
     "knn_k": 20
   },
-
   "burst_marking": {
     "helper": "scale_field.burst_on(f, scales, s_min_t, factor) -> (on, s_star, jstar). ONE HELPER, ONE DEFINITION, ONE TEST. The condition is not restated in prose anywhere in this run; prose references the helper.",
     "condition": "ON where dL/dln s is NEGATIVE at the smallest ladder scale clearing read_factor * s_min(t).",
@@ -124,7 +156,6 @@
       "rule": "full-height vrect shapes spanning ALL FOUR PANES on the shared x-axis, both at low opacity, online drawn over offline, each on its own legend group so either can be toggled. Where they overlap the colour mixes; that overlap is the most informative thing on the chart and must not be hidden by drawing one opaque over the other."
     }
   },
-
   "render": {
     "panes": [
       "1 - trades: print price against time, raw scatter, no smoothing, no bars",
@@ -136,9 +167,11 @@
     "span": "full session -- the D3 extended day [04:00 ET, post_end), America/New_York, DST-aware",
     "t_grid_points": 20000,
     "t_grid_why": "the field and the booleans are evaluated on this grid. Grid cost is O(n_grid) interpolation only -- the FFT/pyramid cost is set by the base bin count, not by the output grid -- so the boolean is resolved far finer than the heatmap is drawn.",
-    "heatmap_render_columns": 2000,
-    "decimation": "point-sample the field onto render columns. The SHADING keeps the full 20,000-point grid; only the heatmap image is decimated. Both widths are stated in the caption against the kernel width, so undersampling of short features is visible.",
-    "tape_max_points": 30000,
+    "heatmap_render_columns": 1600,
+    "heatmap_scale_stride": 2,
+    "heatmap_scale_stride_why": "the IMAGE is drawn at 4/octave, half the ladder. The field is smooth in scale -- s is a kernel width, not a data axis -- so the second sample per octave cost 1.9 MB per event and added no visible structure. The BOOLEAN reads the full 8/octave ladder; only the picture is thinned, and the caption says so.",
+    "decimation": "point-sample the field onto render columns. The SHADING keeps the full 20,000-point grid; the heatmap image and the s_min line are decimated to render columns, and the heatmap z is rounded to 3 dp -- a colour ramp does not resolve a fourth. Both widths are stated in the caption against the kernel width, so undersampling of short features is visible. Payload was measured, not guessed: at 2,000 columns and a full-grid s_min line one event came to 11.0 MB, of which 1.7 MB was a display-only line drawn at 12x the resolution its own pane renders.",
+    "tape_max_points": 20000,
     "tape_subsample_rule": "uniform stride over prints, deterministic, applied only to panes 1 and 4 and only above the cap. The retained fraction and the stride are stated in the caption. Outliers are never clipped -- a stride keeps the full value range, it does not trim it.",
     "axes": "log axes on scale (log2 seconds) and on the interval axis (log10 seconds), per the standard: this data is multiplicative.",
     "colour": "asinh, unclipped, neutral exactly at zero. dL/dln s is bounded below by -1 with a long positive tail, so a linear symmetric ramp would render the field as one flat colour and a few bright cells. Ticks are labelled in original units. Palette imported from research/phase_10d_diag1/plot_boundary_through_time.py -- one palette in the repo, not two that drift.",
@@ -147,9 +180,9 @@
     "library": "plotly",
     "offline": "--plotlyjs directory, never a CDN (D14). One shared plotly.min.js beside the charts.",
     "one_file_per_event": true,
-    "index": "index.html, sortable, linking all ten with ticker, date, segment, print count, momentum decile and flags"
+    "index": "index.html, sortable, linking all ten with ticker, date, segment, print count, momentum decile and flags",
+    "superseded_by_amendment_1": "heatmap_render_columns / t_grid_points / heatmap_scale_stride described the UNIFORM grid the amendment replaces. They are retained as the record of what v1 ran, and are no longer read by the script."
   },
-
   "reporting": {
     "caption_must_state": [
       "sample and filters (joint [p70,p80] on print count and momentum_pct, population before sampling, n drawn, seed)",
@@ -164,13 +197,11 @@
     ],
     "never": "no interpretation of whether the marks land correctly. That is Cooper's read and it is the entire point of building this."
   },
-
   "what_this_is_not": {
     "not_a_measurement": "no statistic is reported, no threshold is established, no timescale is claimed.",
     "not_evidence_about_tradeability": "D24 and D25 closed that on cost arithmetic and nothing rendered here reopens it. Bursts being visible and bursts being profitable are different claims.",
     "no_forward_returns": "NOT TOUCHED. The moment anything here touches forward returns, the full Agent_Prompt_Standard applies again, pre-registered, no exceptions."
   },
-
   "paths": {
     "filtered_root": "data/filtered",
     "pool": "results/phase_10/artifacts/t1_stratification_pool.parquet",
@@ -180,10 +211,63 @@
     "out_artifacts": "results/scale_field/artifacts/",
     "out_charts": "results/scale_field/charts/event_panels/"
   },
-
   "reproduce": [
     ".venv/Scripts/python.exe research/scale_field/event_panels.py --cohort",
     ".venv/Scripts/python.exe research/scale_field/event_panels.py --render",
     ".venv/Scripts/python.exe -m pytest research/scale_field/test_event_panels.py -q"
-  ]
+  ],
+  "amendment_1": {
+    "title": "Amendment 1 -- dynamic render resolution matched to the tape",
+    "amends": "work order s1 (Decimation) and the pane-2/3 specification",
+    "trigger": "the fine field is unreadable across a full event. NOT a code defect -- a grid defect.",
+    "problem_1": "the columns were uniform and the tape is not. At 20,000 uniform columns over a 57,600 s extended session a column is 2.88 s; against s_min = 0.27 s at lambda = 8.4/s near the anchor that is ~11x the feature, and the first render's 64 s columns were ~240x. At that ratio you are not sampling the fine band, you are stepping over it.",
+    "problem_2": "most of the panel was mask. On an absolute log s axis s_min(t) sweeps more than a decade as lambda changes, so the populated region is a thin moving sliver.",
+    "fix": "problem 1 is fixed by MOVING THE COLUMNS (print-indexed grid), problem 2 by MOVING THE AXIS (normalised s/s_min). Neither is fixed by more columns.",
+    "column_grid": {
+      "rule": "one column per k prints. dt = k/lambda and s_min = 2.2568/lambda, so dt/s_min = k/2.2568 EVERYWHERE, with no tuning and no per-event calibration. Dense stretches get narrow columns, dead stretches wide ones, automatically.",
+      "prints_per_column": 4.52,
+      "prints_per_column_why": "k = 4.52 puts every render column at exactly 2*s_min.",
+      "prints_per_column_eval": 1.13,
+      "prints_per_column_eval_why": "THE EVALUATION GRID IS FINER THAN THE RENDER GRID, and this is an addition to the amendment rather than a departure from it. The amendment sets k for RENDER COLUMNS. At dt = 2*s_min the boolean would be sampled at twice its own read scale, and the debounce -- whose minimum on-duration is 1*s* -- would be finer than the grid spacing and therefore inoperative. The marking is evaluated at dt = 0.5*s_min so that the read and the debounce are both resolved; the picture is then decimated to the render grid, and both achieved ratios are reported separately.",
+      "eval_max_points": 60000,
+      "max_columns": 16000,
+      "max_columns_rule": "a HARD CAP. When it binds, k RISES for that event and the achieved dt/s_min is reported in the caption. The session is NEVER silently truncated.",
+      "session_is_never_truncated": "the dead stretch before the first print and after the last are their own columns, so the panel always spans the full D3 extended session.",
+      "x_axis": "stays clock time -- the shared axis, the price pane and the burst shading are unaffected. Only the column edges change. xgap = 0.",
+      "max_columns_measured": "16,000. At 22,000 the target k = 4.52 is reachable on these events but the file reaches ~13 MB; at 16,000 the achieved dt/s_min is ~3 and the file is ~7 MB, against a repo precedent of 5 MB per committed chart. The cap binding is REPORTED in every caption as the achieved ratio, which is what the amendment asks for."
+    },
+    "normalised_axis": {
+      "rule": "panes 2 and 3 PRIMARY y-axis is s / s_min(t), not s. Under that coordinate the mask boundary is a flat line at 1.0, every column uses its full vertical extent, and the read scale is a horizontal line at read_factor rather than a curve chasing lambda.",
+      "u_min": 0.7,
+      "u_max": 64.0,
+      "per_octave": 3,
+      "coordinate_change_not_standardisation": "THE FIELD VALUES STAY RAW. This is load-bearing: the feasibility work recorded that dividing the statistic by its standard error drags the argmax toward coarse scales. Nothing here divides the statistic by anything. Only the axis moves.",
+      "resampling": "NEAREST ladder scale in log space, never an interpolated value -- every cell drawn is a field value that was actually evaluated. Cells whose target scale falls outside the ladder are NaN.",
+      "mask_boundary_is_only_approximately_flat": "the field's own n_eff mask uses the kernel-weighted count from the binned tape; s_min(t) uses the k=20 kNN rate. They are two estimators of the same lambda and they disagree slightly, so the visible mask edge wobbles around 1.0 rather than sitting exactly on it. Reported, not corrected.",
+      "secondary_view": "the absolute log2 s axis is RETAINED as a toggled second view, because 'this burst is three seconds long' is a statement that cannot be made in normalised coordinates. Both views are built from the same evaluation.",
+      "absolute_view_column_stride": 6,
+      "absolute_view_scale_stride": 4,
+      "absolute_view_why_leaner": "the absolute view answers how long a feature is in seconds, which does not need the finest columns. Its own achieved dt/s_min is reported separately rather than inherited from the primary view.",
+      "u_max_why": "u = 64 is 64 resolution floors above s_min; above that the picture is the coarse end, which the absolute view answers better. Measured: the first amended render came to 13.2 MB per event, 7.7 MB of it heatmap. Trimming the normalised axis to [0.7, 64] and the absolute view's columns is what brings it back to ~7 MB without touching the column grid, which is the thing the amendment is actually about."
+    },
+    "faithfulness": {
+      "rule": "the render states its own faithfulness. s_faithful = 2 x max(dt) across the rendered columns is reported as a scalar; the HATCHING is applied PER COLUMN at s < 2*dt(t), which is the honest boundary rather than the global worst case.",
+      "why_per_column": "a single global rule would hatch almost the whole pane: max(dt) falls in the deadest stretch of premarket, where one column can span minutes. Because the grid is print-indexed, 2*dt(t)/s_min(t) is a CONSTANT, so the per-column boundary is exactly the horizontal rule the amendment asks for -- on the normalised pane it IS flat, and on the absolute pane it is the curve 2*dt(t).",
+      "aliased_cells": "hatched, NOT coloured. Aliased cells are set NaN in the heatmap and the region is drawn as a hatched overlay, so nothing below the line is rendered as if it were measured.",
+      "read_below_the_line": "a consequence that is reported rather than hidden: with render dt = 2*s_min the faithful line sits at u = 4, while the PRIMARY READ is at u = 1. The marking therefore reads at a scale the picture cannot honestly draw. The shading is still computed on the finer evaluation grid, where the read is resolved; the caption states both.",
+      "reduce_extremum": "STILL OFF. Not enabled to compensate -- it is a recorded negative result (it raises the background floor as much as the signal). Point-sample on a correct grid instead."
+    },
+    "cost_guard": {
+      "rule": "time the pipeline on one median-density event first and extrapolate on print count BEFORE running the cohort. If the projection exceeds runtime_ceiling_seconds, POST AND STOP -- raise k by decision, never reduce the cohort or the scale band silently.",
+      "runtime_ceiling_seconds": 2400,
+      "file_size_note": "heatmapgl is the amendment's sanctioned fallback, and it is NOT used, because it would not have helped: heatmapgl changes the renderer, not the payload -- the z array is the same JSON either way. What actually reduced the payload was binary encoding (plotly 6.5 serialises numpy arrays as base64 float32, and numeric epoch-ms x on a type='date' axis instead of ISO strings), plus the two trims above. Measured per event and reported, not assumed."
+    },
+    "unchanged": [
+      "scale_field.py is reused unchanged -- this is a grid and a rendering change; the estimator is untouched",
+      "both s_min lines stay distinct: 2.2568/lambda on pane 2, 4.5135/lambda on pane 3",
+      "IN NORMALISED COORDINATES BOTH FLOORS BECOME 1.0 ON THEIR OWN PANE, which is exactly why the absolute view is retained -- the normalised view makes the offline and online floors look identical when they differ by a factor of two. The caption says so.",
+      "the burst-marking definition, the sign helper, the shading colours and the chart contract are unchanged",
+      "still not a measurement, still no interpretation in the output"
+    ]
+  }
 }
