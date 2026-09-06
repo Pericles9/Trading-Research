@@ -1,0 +1,189 @@
+{
+  "name": "scale_field_panels",
+  "title": "Per-event scale-field panel charts, offline vs online",
+  "spec": "work order: per-event scale-field panel charts (diagnostic render)",
+  "not_a_phase": "DIAGNOSTIC RENDER. Records no decision, applies no gate, produces no digest. No statistic is reported, no threshold is established, no timescale is claimed. Agent_Prompt_Standard s9 chart rules apply; s7, s10, s11 do not. This is the tape review D21 fired on, applied to the scale-space arc for the first time -- whether the marks land is Cooper's read, and the agent states only what was computed.",
+  "governing_decisions": ["D3", "D4", "D14", "D21", "D22", "D23"],
+
+  "section_0_resolutions": {
+    "a_cohort_column": {
+      "asked": "70th-80th percentile of volume and momentum",
+      "taken": "DEFAULT TAKEN, not a ruling. event_volume is a spine numeric and D4 bars it; A13 permits reading spine numerics only to audit the selection function, which this is not. Substituted: tick-derived T=0 print count per event.",
+      "substitution": "t0_print_count",
+      "substitution_source": "results/phase_10/artifacts/t1_stratification_pool.parquet, column t0_print_count, built by research/phase_10/t1_cohort.py from event_minute_bars_v2 (SUM(n_trades) at session_offset = 0). Tick-derived, D4-clean, already committed -- not recomputed here.",
+      "must_appear_in_every_caption": true,
+      "if_cooper_wants_spine_event_volume": "that is its own ruling and is not taken here."
+    },
+    "b_read_scale": {
+      "asked": "mark bursts where the field is negative AT the s_min line",
+      "taken": "built as asked. read_factor = 1.0 is PRIMARY.",
+      "read_factor_primary": 1.0,
+      "read_factor_overlay": 2.0,
+      "overlay_rule": "2.0 renders as a second, legend-toggled trace on the same panes, so the definitional overlap D22 avoided is visible rather than argued about: s_min moves with lambda, so a read taken AT the boundary is partly definitional -- the boundary dropping and the tape speeding up are the same event.",
+      "d22_precedent": "D22's work order deliberately read at 2*s_min for that reason. Both are drawn."
+    },
+    "c_location": {
+      "asked": "research/scale_space/ does not exist; locate scale_field.py and put the script beside it",
+      "resolved": "research/scale_field/scale_field.py",
+      "script": "research/scale_field/event_panels.py",
+      "no_new_tree": true,
+      "no_fork": "scale_field.py is imported unchanged. burst_on(), s_min_for_rate(), field(), field_onesided() are used as committed."
+    }
+  },
+
+  "cohort": {
+    "rule": "NOT the frozen scale_field cohort. A fresh joint-filter draw from the D1 universe, per the work order s3. See cohort_freeze_conflict below.",
+    "pool_source": "results/phase_10/artifacts/t1_stratification_pool.parquet",
+    "pool_definition": "D1 = momentum_events_canonical WHERE in_scope = TRUE AND source_file = 'file1', with T=0 tick print count joined from event_minute_bars_v2. n = 15763.",
+    "percentile_basis": "the whole D1 pool (n = 15763). Percentiles are NOT recomputed on the readable subset -- p70/p80 mean the universe's p70/p80.",
+    "joint_filter": {
+      "print_count_percentiles": [70, 80],
+      "momentum_pct_percentiles": [70, 80],
+      "rule": "t0_print_count AND momentum_pct both inside their own [p70, p80], inclusive at both ends"
+    },
+    "readability_filter": {
+      "rule": "clean_window AND trades_ingested. A panel cannot be drawn from a session whose tape was never ingested; the count before and after this filter is reported.",
+      "applied_after": "the joint filter, so the population size at the joint filter is reported unwidened"
+    },
+    "n_draw": 10,
+    "seed": 42,
+    "draw_rule": "sort by (ticker, event_date_canonical, momentum_pct) with a stable mergesort BEFORE the seeded choice. Phase 10 T1 recorded why: an unsorted pool makes a seeded draw non-reproducible, and it silently returned a different cohort once.",
+    "hard_stop_if_population_under": 10,
+    "hard_stop_rule": "post and stop. Do not widen silently -- widening is Cooper's call and the widened definition goes in the caption.",
+    "flags": {
+      "rule": "carry and display every flag on the drawn events. DO NOT EXCLUDE FLAGGED EVENTS -- label them in the title.",
+      "phase_9": "results/phase_9/artifacts/t1_cross_session_flags.parquet, flag_cross_session_extreme, per (event, session_pair). Joined, never re-derived (CLAUDE.md standing exception to A9.3).",
+      "row_cap": "results/phase_8/artifacts/a101_labels.parquet, flag_possible_row_cap",
+      "dup_prints": "results/phase_6b/artifacts/event_index_v2.parquet, flag_has_dup_prints",
+      "canonical_view": ["flag_eth_dominant_t0", "repaired_1c", "flag_window_calendar_bug", "flag_missing_event_day", "coverage_class"]
+    }
+  },
+
+  "cohort_freeze_conflict": {
+    "surfaced": "config/scale_field.json cohort.rule reads: 'FROZEN. Phase 10 manifest, reused, never redrawn or extended. Hash asserted on every run.' This work order directs a fresh 10-event draw from the D1 universe under a joint print-count/momentum filter, which is a redraw relative to that freeze.",
+    "why_it_is_taken_anyway": "the freeze exists to stop a MEASUREMENT cohort being reselected. This run measures nothing (s6: no statistic, no threshold, no timescale) and returns nothing to the strategy layer but pictures. The work order is explicit and specifies the filter, the seed and the draw.",
+    "what_is_not_done": "no number from these ten events is pooled, compared, or carried anywhere. Nothing here amends config/scale_field.json or its frozen cohort.",
+    "overlap_with_the_frozen_100": "reported in the run manifest, as a fact about the draw rather than a criterion on it."
+  },
+
+  "scale_ladder": {
+    "rule": "one ladder, evaluated in three cost groups. Groups exist ONLY to set the base bin grid dt = min_scale / sigma_lo; the estimator, its constants and its masks are identical across them. Both kernels use the SAME group split, so panes 2 and 3 differ in the kernel and in nothing else.",
+    "groups": [
+      {"min_seconds": 0.25, "max_seconds": 2.0, "n_scales": 25},
+      {"min_seconds": 2.0, "max_seconds": 64.0, "n_scales": 41},
+      {"min_seconds": 64.0, "max_seconds": 2048.0, "n_scales": 41}
+    ],
+    "spacing": "geometric, 8 per octave, continuous across the joins (each group's max is the next group's min; the duplicate scale is dropped once)",
+    "span_seconds": [0.25, 2048.0],
+    "n_scales_total": 105,
+    "floor_why": "0.25 s, not the committed coarse band's 1 s. Measured on a joint-filter member (AEMD_2022-08-02_63.77, 89,439 prints): session-wide s_min q10 = 0.90 s centred / 1.14 s causal. At a 1 s ladder floor the read scale would be CLAMPED to the floor through the busiest tenth of the session, and read_factor 1.0 vs 2.0 would be the same number wherever 2*s_min <= 1 s -- which would make s0(b)'s comparison vacuous exactly where the bursts are. The floor is set below the data, not at it.",
+    "ceiling_why": "2048 s, the committed coarse ceiling. Under the extended-session cap span/8 = 7200 s and under the RTH cap 2925 s (config/scale_field.json scale_axis.coarse_cap_rule).",
+    "hard_floor_seconds": 9.5367431640625e-07,
+    "ladder_floor_binds": "where s_min(t) falls BELOW 0.25 s the read is taken at the ladder floor, which is ABOVE read_factor * s_min. That share is measured per event, per kernel, and reported in the caption -- it is the one place the read is not where the work order asks it to be, and it is a data fact, not a choice.",
+    "measured_cost_seconds_per_event": {"group_1": 37.4, "group_2": 5.5, "group_3": 0.2, "both_kernels_total": 43.0}
+  },
+
+  "field": {
+    "channel": "rate",
+    "channel_why": "dL/dln s on L = log lambda-hat. NOT the interval channel: the feasibility work established that the event-weighted interval channel mislocates burst position by a non-constant factor (9x and 2.3x on synthetic) while the time-weighted rate channel recovers duration to ~15%. Chart the one that localises.",
+    "neff_min": 8.0,
+    "sigma_lo": 8.0,
+    "edge_scales": 4.0,
+    "tie_variant": "collapse_same_timestamp -- consecutive prints sharing a timestamp collapse to one arrival (reference variant, config/phase_10_v4.json)",
+    "neff_rule": "field() and field_onesided() return NaN under n_eff >= 8 and MUST NEVER be given a fallback. Cells below their pane's own s_min are masked, not interpolated. At fine scales over a whole session most cells are masked -- that is the correct appearance, not a rendering failure.",
+    "reduce": "interp",
+    "reduce_why": "_reduce_extremum is NOT enabled. It is in the module, off by default, as a recorded negative result: it raises the background floor as much as it raises the signal (background p99 0.59 -> 1.53). Point-sampling is what the work order specifies and what runs."
+  },
+
+  "s_min": {
+    "rule": "TWO LINES, NEVER SHARED. A one-sided kernel keeps half the mass, so n_eff = sqrt(pi)*s*lambda and the causal floor is EXACTLY DOUBLE the centred one. Pane 2 carries 2.2568/lambda, pane 3 carries 4.5135/lambda. Drawing one line across both panes is a defect.",
+    "centred_coefficient": 2.2567583341910247,
+    "onesided_coefficient": 4.513516668382049,
+    "source": "scale_field.s_min_for_rate(lam, kernel=...). The formula lives there once and is never restated at a call site (A9.3's rule, applied to the estimator's own constants).",
+    "lambda_estimator": "scale_field-adjacent knn_rate (k = 20) from research/scale_field/t1_lead_time.py, imported not copied. causal=True for the one-sided pane: the kNN rate that sets s_min(t) must also stop reading forward, or a forward read survives in the scale selection after the estimator itself has stopped reading forward. That defect was found and fixed once already (config/scale_field.json one_sided_kernel.second_forward_read_found_and_fixed) and is not reintroduced here.",
+    "knn_k": 20
+  },
+
+  "burst_marking": {
+    "helper": "scale_field.burst_on(f, scales, s_min_t, factor) -> (on, s_star, jstar). ONE HELPER, ONE DEFINITION, ONE TEST. The condition is not restated in prose anywhere in this run; prose references the helper.",
+    "condition": "ON where dL/dln s is NEGATIVE at the smallest ladder scale clearing read_factor * s_min(t).",
+    "sign": "NEGATIVE SELECTS BURSTS. At a cluster centre the kernel's mass sits at z ~ 0 and the statistic goes toward -1; in a gap it is positive. A POSITIVE condition selects VOIDS -- that error is on the record (config/scale_field.json task_1_lead_time.sign_correction) and the helper exists to make it unrepeatable.",
+    "read_factor_is_passed_explicitly": "never defaulted. scale_field.burst_on defaults to factor=2.0; this run passes 1.0 and 2.0 from this config, so the module default is never silently inherited.",
+    "test": "research/scale_field/test_event_panels.py -- asserts the sign on a synthetic burst at read_factor 1.0 under BOTH kernels. The committed suite already pins factor 2.0 centred (test_scale_field.py) and the one-sided sign (test_onesided.py); this covers the configuration this render actually runs.",
+    "debounce": {
+      "rule": "a minimum on-duration and a merge gap, both from config, both reported in the caption, NOT tuned per event.",
+      "min_on_duration_factor": 1.0,
+      "merge_gap_factor": 1.0,
+      "unit": "multiples of the LOCAL read scale s*(t), taken as the median s* inside the run (or inside the gap) being tested. Local, not global: s* spans two orders of magnitude across an extended session, so one global sample count would over-debounce the bursts and under-debounce the dead stretches.",
+      "order": "merge gaps first, then drop short runs.",
+      "why_not_tuned": "a feature narrower than the kernel that produced it has not been resolved by that kernel, so an ON run shorter than s* is an artifact of reading a smoothed field on a grid finer than the smoothing. The threshold is s*, which is arithmetic."
+    },
+    "colours": {
+      "offline_centred": "red",
+      "online_onesided": "green",
+      "rule": "full-height vrect shapes spanning ALL FOUR PANES on the shared x-axis, both at low opacity, online drawn over offline, each on its own legend group so either can be toggled. Where they overlap the colour mixes; that overlap is the most informative thing on the chart and must not be hidden by drawing one opaque over the other."
+    }
+  },
+
+  "render": {
+    "panes": [
+      "1 - trades: print price against time, raw scatter, no smoothing, no bars",
+      "2 - offline field: dL/dln s, rate channel, CENTRED kernel, (t, log s) heatmap, s_min = 2.2568/lambda overlaid",
+      "3 - online field: same statistic, ONE-SIDED/TRAILING kernel, s_min = 4.5135/lambda overlaid",
+      "4 - log ITT: log10(dt) per print against time, scatter"
+    ],
+    "shared_x_axis": true,
+    "span": "full session -- the D3 extended day [04:00 ET, post_end), America/New_York, DST-aware",
+    "t_grid_points": 20000,
+    "t_grid_why": "the field and the booleans are evaluated on this grid. Grid cost is O(n_grid) interpolation only -- the FFT/pyramid cost is set by the base bin count, not by the output grid -- so the boolean is resolved far finer than the heatmap is drawn.",
+    "heatmap_render_columns": 2000,
+    "decimation": "point-sample the field onto render columns. The SHADING keeps the full 20,000-point grid; only the heatmap image is decimated. Both widths are stated in the caption against the kernel width, so undersampling of short features is visible.",
+    "tape_max_points": 30000,
+    "tape_subsample_rule": "uniform stride over prints, deterministic, applied only to panes 1 and 4 and only above the cap. The retained fraction and the stride are stated in the caption. Outliers are never clipped -- a stride keeps the full value range, it does not trim it.",
+    "axes": "log axes on scale (log2 seconds) and on the interval axis (log10 seconds), per the standard: this data is multiplicative.",
+    "colour": "asinh, unclipped, neutral exactly at zero. dL/dln s is bounded below by -1 with a long positive tail, so a linear symmetric ramp would render the field as one flat colour and a few bright cells. Ticks are labelled in original units. Palette imported from research/phase_10d_diag1/plot_boundary_through_time.py -- one palette in the repo, not two that drift.",
+    "nan": "drawn as absence, never as a value. The blank region IS the result at that scale.",
+    "theme": "light",
+    "library": "plotly",
+    "offline": "--plotlyjs directory, never a CDN (D14). One shared plotly.min.js beside the charts.",
+    "one_file_per_event": true,
+    "index": "index.html, sortable, linking all ten with ticker, date, segment, print count, momentum decile and flags"
+  },
+
+  "reporting": {
+    "caption_must_state": [
+      "sample and filters (joint [p70,p80] on print count and momentum_pct, population before sampling, n drawn, seed)",
+      "the print-count substitution for event_volume (s0(a)) and why",
+      "config hash",
+      "masked fraction PER PANE",
+      "render column width AND field grid width, both against the kernel width",
+      "read factor, and the share of time the ladder floor binds",
+      "debounce min on-duration and merge gap",
+      "every flag carried by the event",
+      "tape subsample fraction where one was applied"
+    ],
+    "never": "no interpretation of whether the marks land correctly. That is Cooper's read and it is the entire point of building this."
+  },
+
+  "what_this_is_not": {
+    "not_a_measurement": "no statistic is reported, no threshold is established, no timescale is claimed.",
+    "not_evidence_about_tradeability": "D24 and D25 closed that on cost arithmetic and nothing rendered here reopens it. Bursts being visible and bursts being profitable are different claims.",
+    "no_forward_returns": "NOT TOUCHED. The moment anything here touches forward returns, the full Agent_Prompt_Standard applies again, pre-registered, no exceptions."
+  },
+
+  "paths": {
+    "filtered_root": "data/filtered",
+    "pool": "results/phase_10/artifacts/t1_stratification_pool.parquet",
+    "phase9_flags": "results/phase_9/artifacts/t1_cross_session_flags.parquet",
+    "row_cap_labels": "results/phase_8/artifacts/a101_labels.parquet",
+    "event_index_v2": "results/phase_6b/artifacts/event_index_v2.parquet",
+    "out_artifacts": "results/scale_field/artifacts/",
+    "out_charts": "results/scale_field/charts/event_panels/"
+  },
+
+  "reproduce": [
+    ".venv/Scripts/python.exe research/scale_field/event_panels.py --cohort",
+    ".venv/Scripts/python.exe research/scale_field/event_panels.py --render",
+    ".venv/Scripts/python.exe -m pytest research/scale_field/test_event_panels.py -q"
+  ]
+}
