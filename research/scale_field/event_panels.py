@@ -758,6 +758,13 @@ def main() -> int:
     if args.cohort or not cohort_pq.exists():
         drawn, counts = build_cohort(cfg)
         drawn.to_parquet(cohort_pq, index=False)
+        # .gitignore excludes *.parquet under this folder (the field artifacts are
+        # large), and the work order requires the drawn event list to be COMMITTED.
+        # The CSV is the committed copy: small, diffable, and it does not push a file
+        # past a deliberate ignore rule.
+        drawn[COHORT_KEY + ["event_id", "t0_print_count", "t0_print_decile",
+                            "coverage_class"] + [c for c in FLAG_COLS if c in drawn]
+              ].to_csv(art / "event_panels_cohort.csv", index=False)
         with open(counts_js, "w", encoding="utf-8") as f:
             json.dump({"config_hash": chash, "counts": counts,
                        "seed": cfg["cohort"]["seed"],
