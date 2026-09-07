@@ -181,7 +181,8 @@
     "offline": "--plotlyjs directory, never a CDN (D14). One shared plotly.min.js beside the charts.",
     "one_file_per_event": true,
     "index": "index.html, sortable, linking all ten with ticker, date, segment, print count, momentum decile and flags",
-    "superseded_by_amendment_1": "heatmap_render_columns / t_grid_points / heatmap_scale_stride described the UNIFORM grid the amendment replaces. They are retained as the record of what v1 ran, and are no longer read by the script."
+    "superseded_by_amendment_1": "heatmap_render_columns / t_grid_points / heatmap_scale_stride described the UNIFORM grid the amendment replaces. They are retained as the record of what v1 ran, and are no longer read by the script.",
+    "magnitude_column_stride": 3
   },
   "reporting": {
     "caption_must_state": [
@@ -230,11 +231,11 @@
       "prints_per_column_eval": 1.13,
       "prints_per_column_eval_why": "THE EVALUATION GRID IS FINER THAN THE RENDER GRID, and this is an addition to the amendment rather than a departure from it. The amendment sets k for RENDER COLUMNS. At dt = 2*s_min the boolean would be sampled at twice its own read scale, and the debounce -- whose minimum on-duration is 1*s* -- would be finer than the grid spacing and therefore inoperative. The marking is evaluated at dt = 0.5*s_min so that the read and the debounce are both resolved; the picture is then decimated to the render grid, and both achieved ratios are reported separately.",
       "eval_max_points": 60000,
-      "max_columns": 16000,
+      "max_columns": 6000,
       "max_columns_rule": "a HARD CAP. When it binds, k RISES for that event and the achieved dt/s_min is reported in the caption. The session is NEVER silently truncated.",
       "session_is_never_truncated": "the dead stretch before the first print and after the last are their own columns, so the panel always spans the full D3 extended session.",
       "x_axis": "stays clock time -- the shared axis, the price pane and the burst shading are unaffected. Only the column edges change. xgap = 0.",
-      "max_columns_measured": "16,000. At 22,000 the target k = 4.52 is reachable on these events but the file reaches ~13 MB; at 16,000 the achieved dt/s_min is ~3 and the file is ~7 MB, against a repo precedent of 5 MB per committed chart. The cap binding is REPORTED in every caption as the achieved ratio, which is what the amendment asks for."
+      "max_columns_measured": "6,000, and the binding constraint is the REFERENCE RENDERER's payload rather than the grid theory. add_channel carries z and customdata -- two full arrays -- which is right at the fine band's 1,500 columns and came to 1.7 GB for ten events at 15,001. With float32 and a 4/octave image the file lands near 10 MB at 6,000 columns. The cap binding raises k, and the achieved dt/s_min is REPORTED in every caption, which is the mechanism A1 specified for exactly this."
     },
     "normalised_axis": {
       "rule": "panes 2 and 3 PRIMARY y-axis is s / s_min(t), not s. Under that coordinate the mask boundary is a flat line at 1.0, every column uses its full vertical extent, and the read scale is a horizontal line at read_factor rather than a curve chasing lambda.",
@@ -268,6 +269,30 @@
       "IN NORMALISED COORDINATES BOTH FLOORS BECOME 1.0 ON THEIR OWN PANE, which is exactly why the absolute view is retained -- the normalised view makes the offline and online floors look identical when they differ by a factor of two. The caption says so.",
       "the burst-marking definition, the sign helper, the shading colours and the chart contract are unchanged",
       "still not a measurement, still no interpretation in the output"
-    ]
+    ],
+    "superseded_by_amendment_2": "A1's rendering prescriptions -- the normalised s/s_min axis, the hatching, the s_faithful rules -- are DROPPED under A2-4 as suggestions that did not earn their place. WHAT SURVIVES is the print-indexed column grid, retained as the default because it holds a constant ratio to s_min with no tuning. The cost guard survives too. Everything else in A1 about axes and faithfulness is no longer read by the script."
+  },
+  "amendment_2": {
+    "title": "Amendment 2 -- stop re-deriving the renderer. Reuse the one that works.",
+    "trigger": "two rounds of grid theory and it still did not look like the fine-band charts.",
+    "diagnosis": "it read as a resolution problem and it is a COLOUR-SCALE problem. The whole-event panes were showing ACTIVITY -- dense means colour, sparse means nothing -- rather than SHAPE.",
+    "reuse": {
+      "renderer": "research/scale_field/plot_scale_field.py:add_channel -- imported and called, not copied and not adapted. asinh, unclipped, neutral exactly at zero, limits computed FROM THE MASKED CELLS ONLY, ticks in original units.",
+      "palette_and_idea": "research/phase_10d_diag1/plot_boundary_through_time.py -- THEMES, and the per-column normalisation its own docstring names: 'each column is max-normalized so a faint mode in a quiet stretch is as visible as a tall one in a busy stretch. Without this the picture shows activity, not shape.' Recorded in the D9 close-out as reusable for any future distribution-through-time question.",
+      "what_was_deleted": "the third rendering path this repo had grown -- event_panels' own div_colorscale, its own _heat, its own colourbar tick logic and its own et(). All removed in favour of the imports."
+    },
+    "signed_field_adaptation": "Do NOT max-normalise: that destroys the sign, and the sign IS the burst condition. Each column is divided by its own maximum ABSOLUTE value and rendered on the same diverging scale, symmetric about zero. Shape becomes visible everywhere, zero stays zero, negative stays negative.",
+    "two_views": {
+      "primary": "per-column normalised -- SHAPE. This is the one that should look like the fine charts.",
+      "secondary": "raw values through the same renderer -- MAGNITUDE, for comparing burst strength across the session.",
+      "marking": "BURST MARKING READS THE RAW SIGN AND IS UNAFFECTED BY EITHER VIEW. Stated in every caption so nobody reads the normalised colours as the marking criterion."
+    },
+    "reference_test": {
+      "rule": "A2-3. Render the old fine-band chart and the new code's output on the SAME event over the SAME +/-15 s window; they must look the same before the span is extended.",
+      "method": "both renderers are fed the SAME committed field artifact (results/scale_field/artifacts/field_AEHL_2021-02-19_37.50.parquet), so any difference is the renderer and nothing else -- which is what the test is for.",
+      "artifact": "results/scale_field/charts/event_panels/reference_test/"
+    },
+    "old_charts_deleted": "A2-5. The pre-A2 output is removed before regenerating, so two generations never sit in the tree for someone to read the wrong one.",
+    "payload": "Reuse has a cost and it was measured rather than assumed: the reference renderer emits z plus customdata so hover reports original units, which at 15,001 columns x 105 scales x 4 heatmaps is 1.7 GB across ten events. Narrowed by float32 (four significant digits against a ramp that resolves two), a 4/octave image, and a 6,000-column cap. The renderer itself is still imported and called unchanged."
   }
 }

@@ -344,7 +344,7 @@ def compute_event(event_id, cfg):
     """
     fcfg = cfg["field"]
     a1 = cfg["amendment_1"]
-    cg, na = a1["column_grid"], a1["normalised_axis"]
+    cg = a1["column_grid"]
 
     ts, meta = adapter.load_event_prints_meta(event_id, None)
     if meta["n_prints"] < 100:
@@ -384,11 +384,6 @@ def compute_event(event_id, cfg):
            "dt_over_s_min_render": float(k_eval * stride / 2.2567583341910247),
            "tape_ns": ts, "arrivals_ns": arr, "kernels": {}}
 
-    u_grid = np.geomspace(na["u_min"], na["u_max"],
-                          int(round(np.log2(na["u_max"] / na["u_min"])
-                                    * na["per_octave"])) + 1)
-    out["u_grid"] = u_grid
-    logL = np.log2(scales)
 
     for kernel in KERNELS:
         t0 = time.perf_counter()
@@ -451,53 +446,16 @@ def compute_event(event_id, cfg):
                 "s_star_median": float(np.nanmedian(np.where(defined, s_star, np.nan))),
             }
 
-        # ---- the normalised view (A1-2): a COORDINATE CHANGE, not a normalisation of
-        # the statistic. Nearest ladder scale in log space, so every cell drawn is a
-        # value that was actually evaluated -- nothing is interpolated into existence.
-        sm_r = s_min_t[ci]
-        Zr = Z[ci, :]
-        with np.errstate(invalid="ignore"):
-            base = np.log2(np.where(np.isfinite(sm_r) & (sm_r > 0), sm_r, np.nan))
-        tgt = np.log2(u_grid)[None, :] + base[:, None]
-        safe = np.where(np.isfinite(tgt), tgt, logL[0])
-        pos = np.clip(np.searchsorted(logL, safe), 1, logL.size - 1)
-        take_lo = (safe - logL[pos - 1]) <= (logL[pos] - safe)
-        idx = np.where(take_lo, pos - 1, pos)
-        Znorm = np.take_along_axis(Zr, idx, axis=1)
-        Znorm = np.where(np.isfinite(tgt) & (tgt >= logL[0]) & (tgt <= logL[-1]),
-                         Znorm, np.nan)
-
-        # ---- faithfulness (A1-3). PER COLUMN, not global: because the grid is
-        # print-indexed, 2*dt/s_min is a CONSTANT, so this boundary is exactly the
-        # horizontal rule the amendment asks for on the normalised pane, and the
-        # curve 2*dt(t) on the absolute one. A global 2*max(dt) rule would hatch
-        # almost the whole pane -- max(dt) falls in the deadest premarket stretch,
-        # where one column can span minutes.
-        with np.errstate(invalid="ignore", divide="ignore"):
-            ratio = dt_render / np.where(sm_r > 0, sm_r, np.nan)
-        u_faith = float(2.0 * np.nanmedian(ratio))
-        s_faith_col = 2.0 * dt_render
-
-        # MASKED and HATCHED are different things and conflating them would overstate
-        # how much of the pane carries no data. Masked = n_eff < 8, the estimator
-        # declining to answer. Hatched = the grid cannot honestly draw that scale.
-        # The masked share is therefore measured BEFORE the aliasing cut.
-        masked_norm = float(np.isnan(Znorm).mean())
-        hatched_rows = float(np.mean(u_grid < u_faith))
-
-        Znorm = np.where(u_grid[None, :] >= u_faith, Znorm, np.nan)
-        Zabs = np.where(scales[None, :] >= s_faith_col[:, None], Zr, np.nan)
-
+        # Amendment 1's normalised s/s_min axis, its per-column hatching and its
+        # s_faithful rules are DROPPED under A2-4 -- they were suggestions, they did
+        # not earn their place, and the result is judged by eye against the fine-band
+        # charts rather than against a rule. What survives from A1 is the print-indexed
+        # column grid, which is the part worth keeping: it holds a constant ratio to
+        # s_min with no tuning.
         out["kernels"][kernel] = {
-            "Z": Z, "Znorm": Znorm, "Zabs": Zabs, "lam": lam, "s_min_t": s_min_t,
+            "Z": Z, "lam": lam, "s_min_t": s_min_t,
             "reads": reads,
             "masked_fraction": float(np.isnan(Z).mean()),
-            "masked_fraction_norm": masked_norm,
-            "hatched_row_share": hatched_rows,
-            "u_faithful_at_specified_k": float(2.0 * 4.52 / 2.2567583341910247),
-            "masked_fraction_abs": float(np.isnan(Zabs).mean()),
-            "u_faithful": u_faith,
-            "s_faithful_scalar": float(2.0 * np.nanmax(dt_render)),
             "seconds_elapsed": round(elapsed, 2),
             "s_min_median": float(np.nanmedian(s_min_t[np.isfinite(s_min_t)])),
         }
@@ -508,26 +466,43 @@ def compute_event(event_id, cfg):
 # T4 -- render
 # --------------------------------------------------------------------------- #
 
-def et(ns):
-    """Epoch ns -> naive America/New_York wall clock, DISPLAY ONLY. Every axis in this
-    repo is read in ET; plotting the raw epoch would put an rth event under a 16:00
-    label that is really 11:00 -- the confusion the D3 clock exists to prevent."""
-    return (pd.to_datetime(pd.Series(np.asarray(ns, dtype="int64")), unit="ns", utc=True)
-            .dt.tz_convert("America/New_York").dt.tz_localize(None))
+# THE RENDERER IS IMPORTED, NOT REWRITTEN (Amendment 2). Two files already solve
+# this and both are reused rather than re-derived:
+#
+#   plot_scale_field.add_channel   -- the fine-band heatmap construction that was
+#       signed off as needing no change: asinh colour, unclipped, neutral exactly at
+#       zero, limits computed FROM THE MASKED CELLS ONLY, ticks in original units.
+#       Imported and called; not copied, not adapted.
+#   plot_boundary_through_time     -- palette, themes, and the per-column
+#       normalisation idea its own docstring names: "each column is max-normalized so
+#       a faint mode in a quiet stretch is as visible as a tall one in a busy stretch.
+#       Without this the picture shows ACTIVITY, NOT SHAPE."
+#
+# One adaptation, because this field is SIGNED and a density is not: dividing by the
+# column max would destroy the sign, and the sign IS the burst condition. Each column
+# is divided by its own maximum ABSOLUTE value instead and rendered on the same
+# diverging scale, so zero stays zero and negative stays negative.
+from plot_scale_field import add_channel, et  # noqa: E402  -- the reference renderer
 
 
-def etnum(ns):
-    """The same naive ET wall clock, as float64 epoch MILLISECONDS for a date axis.
+def normalise_columns(Z):
+    """Per-column normalisation by max |value|, for a SIGNED field.
 
-    Why numeric rather than datetimes: plotly serialises a numeric array as base64
-    binary and a datetime array as ISO strings. On a print-indexed grid the column
-    count runs to tens of thousands, and at ~29 characters per timestamp the x arrays
-    alone cost more than the field does. The axis is declared type='date', so the
-    numbers are read as milliseconds and rendered as wall-clock labels -- identical
-    display, a fraction of the payload. The ET conversion happens BEFORE the cast, so
-    DST is handled by the same tz machinery as everywhere else.
+    plot_boundary_through_time's build_field does this for a density with a plain
+    max. Here the field runs negative (bursts) and positive (voids) and is bounded
+    below by -1, so the divisor is the column's max ABSOLUTE value: shape becomes
+    visible in quiet stretches and busy ones alike, zero stays at zero, and the sign
+    survives. Columns that are entirely masked stay entirely masked -- normalisation
+    never invents a value where n_eff declined to answer.
+
+    Z is (time, scale). Returns a copy on [-1, 1].
     """
-    return (et(ns).to_numpy().astype("datetime64[ms]").astype(np.float64))
+    Z = np.asarray(Z, dtype=np.float64).copy()
+    with np.errstate(invalid="ignore"):
+        m = np.nanmax(np.abs(Z), axis=1)
+    good = np.isfinite(m) & (m > 0)
+    Z[good] = Z[good] / m[good, None]
+    return Z
 
 
 def _rgba(hex_color, alpha):
@@ -536,35 +511,7 @@ def _rgba(hex_color, alpha):
     return f"rgba({r},{g},{b},{alpha})"
 
 
-NEG = ["#0d366b", "#184f95", "#256abf", "#3987e5", "#86b6ef", "#cde2fb"]
-POS = ["#fbe3cd", "#f6c9a2", "#f2a874", "#eb6834", "#c9491d", "#8f300f"]
-NEUTRAL = {"light": "#f4f2ec", "dark": "#26262a"}
-CBAR_TICKS = [-1, -0.5, -0.25, 0, 0.25, 0.5, 1, 2, 4, 8, 16]
 BURST_COLOUR = {"centred": "#c0392b", "onesided": "#1e8449"}   # red offline, green online
-
-
-def div_colorscale(lo, hi, theme, reverse=False):
-    """Diverging ramp whose neutral colour lands exactly on zero, wherever zero sits.
-    Symmetric would waste half its range: dL/dln s is bounded below by -1 and has a
-    long positive tail."""
-    if not (lo < 0 < hi):
-        span = POS if lo >= 0 else NEG[::-1]
-        return [[i / (len(span) - 1), c] for i, c in enumerate(span)]
-    frac = (0.0 - lo) / (hi - lo)
-    neg, pos = (POS[::-1], NEG[::-1]) if reverse else (NEG, POS)
-    stops = [[frac * (i / (len(neg) - 1)), c] for i, c in enumerate(neg)]
-    stops.append([frac, NEUTRAL[theme]])
-    stops += [[frac + (1 - frac) * ((i + 1) / len(pos)), c] for i, c in enumerate(pos)]
-    stops[0][0], stops[-1][0] = 0.0, 1.0
-    seen, out = set(), []
-    for v, c in stops:
-        v = min(max(float(v), 0.0), 1.0)
-        while v in seen:
-            v = min(v + 1e-6, 1.0)
-        seen.add(v)
-        out.append([v, c])
-    out.sort(key=lambda st: st[0])
-    return out
 
 
 def shading_trace(spans, y0, y1, colour, name, group, showlegend, visible=True):
@@ -576,43 +523,42 @@ def shading_trace(spans, y0, y1, colour, name, group, showlegend, visible=True):
     chart is for.
     """
     if not spans:
-        xs, ys = [np.nan], [np.nan]
+        xs, ys = [None], [None]
     else:
         xs, ys = [], []
         for a, b in spans:
-            xs += [a, a, b, b, np.nan]
-            ys += [y0, y1, y1, y0, np.nan]
-    return dict(x=np.asarray(xs, dtype=np.float64), y=np.asarray(ys, dtype=np.float64),
-                fill="toself", mode="lines",
+            xs += [a, a, b, b, None]
+            ys += [y0, y1, y1, y0, None]
+    return dict(x=xs, y=ys, fill="toself", mode="lines",
                 line=dict(width=0), fillcolor=_rgba(colour, 0.16),
                 name=name, legendgroup=group, showlegend=showlegend,
                 hoverinfo="skip", visible=True if visible else "legendonly")
 
 
-def _heat(x, y, Z, theme, cbar_y, hover_y, showscale=True, visible=True):
-    """One field pane. asinh colour, unclipped, neutral exactly at zero, NaN as absence."""
-    import plotly.graph_objects as go
-    v = Z[np.isfinite(Z)]
-    lo, hi = (float(v.min()), float(v.max())) if v.size else (-1.0, 1.0)
-    A = np.arcsinh(Z).astype(np.float32)
-    ticks = [tv for tv in CBAR_TICKS if lo <= tv <= hi]
-    return go.Heatmap(
-        x=x, y=y.astype(np.float32), z=A, xgap=0, ygap=0,
-        zmin=float(np.arcsinh(lo)), zmax=float(np.arcsinh(hi)),
-        colorscale=div_colorscale(float(np.arcsinh(lo)), float(np.arcsinh(hi)),
-                                  theme, reverse=True),
-        hovertemplate="%{x}<br>" + hover_y + "<br>dL/dln s (asinh) %{z:.3f}<extra></extra>",
-        colorbar=dict(title=dict(text="dL/dln s<br>(asinh)", font=dict(size=9)),
-                      len=0.28, y=cbar_y, thickness=9, outlinewidth=0,
-                      tickmode="array",
-                      tickvals=[float(np.arcsinh(tv)) for tv in ticks],
-                      ticktext=[f"{tv:g}" for tv in ticks],
-                      tickfont=dict(size=8)),
-        showscale=showscale, visible=visible)
+def _shrink(tr):
+    """float32 the two full-size arrays the reference renderer carries.
+
+    add_channel sends z (the asinh image) AND customdata (the raw value, so hover
+    reports original units rather than the colour mapping). That is exactly right at
+    the fine band's 1,500 columns and it is two float64 copies of a 105 x 15,001 grid
+    here -- MEASURED at 1.7 GB for ten events before this. float32 is four significant
+    digits, against a colour ramp that resolves about two and a hover that prints
+    three, so nothing visible is lost and the payload halves. The renderer is still
+    the reference renderer; this only narrows what it emits.
+    """
+    tr.z = np.asarray(tr.z, dtype=np.float32)
+    if tr.customdata is not None:
+        tr.customdata = np.asarray(tr.customdata, dtype=np.float32)
 
 
 def build_figure(res, row, cfg, chash, theme):
-    """Four panes, shared x, two toggled views of panes 2 and 3 (Amendment 1)."""
+    """Four panes, shared x, two COLOUR views of panes 2 and 3 (Amendment 2).
+
+    The y-axis is absolute log2 kernel scale -- the same axis the fine-band charts
+    use. Amendment 1's normalised s/s_min axis, its hatching and its s_faithful rules
+    are dropped under A2-4: they were suggestions, they did not earn their place, and
+    the reference test is against the fine charts rather than against a rule.
+    """
     import plotly.graph_objects as go
     from plotly.subplots import make_subplots
     from plot_boundary_through_time import THEMES
@@ -620,26 +566,18 @@ def build_figure(res, row, cfg, chash, theme):
     t = THEMES[theme]
     ev = res["event_id"]
     scales = res["scales"]
-    u_grid = res["u_grid"]
     grid_ns = res["grid_ns"]
     ci = res["ci"]
-    na = cfg["amendment_1"]["normalised_axis"]
     rcfg = cfg["render"]
 
-    x_col = etnum(grid_ns[ci])
-    y_u = np.log2(u_grid)
-    y_s = np.log2(scales)
+    x_ns = grid_ns[ci]
+    y = np.log2(scales)
+    lo2, hi2 = float(y.min()), float(y.max())
+    # The IMAGE is drawn at half the ladder's scale resolution. The field is smooth in
+    # scale -- s is a kernel width, not a data axis -- and the BOOLEAN still reads the
+    # full 8/octave ladder; only the picture is thinned.
+    sj = np.arange(0, scales.size, int(cfg["render"].get("heatmap_scale_stride", 2)))
 
-    # the absolute view is leaner: it answers "how long is this in seconds", which
-    # does not need the finest columns. Its own achieved ratio is reported separately.
-    cs = int(na["absolute_view_column_stride"])
-    ss = int(na["absolute_view_scale_stride"])
-    ai = np.arange(0, ci.size, cs)
-    aj = np.arange(0, scales.size, ss)
-    x_abs = x_col[ai]
-    y_abs = y_s[aj]
-
-    # ---- tape ---------------------------------------------------------------
     tape = adapter.load_event_tape(ev, None)
     n_tape = len(tape)
     cap = int(rcfg["tape_max_points"])
@@ -655,253 +593,184 @@ def build_figure(res, row, cfg, chash, theme):
         row_heights=[0.18, 0.31, 0.31, 0.20],
         subplot_titles=(
             "1 — trades: print price",
-            "2 — OFFLINE field: dL/dln s, rate channel, CENTRED kernel",
-            "3 — ONLINE field: dL/dln s, rate channel, ONE-SIDED (trailing) kernel",
+            "2 — OFFLINE field: dL/dln s, rate channel, CENTRED kernel "
+            "· black line = s_min = 2.2568/λ",
+            "3 — ONLINE field: dL/dln s, rate channel, ONE-SIDED (trailing) kernel "
+            "· black line = s_min = 4.5135/λ (exactly double)",
             "4 — log₁₀ inter-trade interval per print",
         ),
     )
 
     fig.add_trace(go.Scattergl(
-        x=etnum(tp["ts_ns"].to_numpy()),
-        y=np.round(tp["price"].to_numpy(float), 4).astype(np.float32), mode="markers",
+        x=et(tp["ts_ns"].to_numpy()),
+        y=np.round(tp["price"].to_numpy(float), 4), mode="markers",
         marker=dict(size=2, color=t["ink2"], opacity=0.55),
         name="price", showlegend=False,
         hovertemplate="%{x}<br>%{y}<extra></extra>"), row=1, col=1)
 
-    norm_idx, abs_idx = [], []
+    shape_idx, mag_idx = [], []
     for r, kernel in ((2, "centred"), (3, "onesided")):
         K = res["kernels"][kernel]
+        Zr = K["Z"][ci, :]
         cy = 0.585 if r == 2 else 0.265
 
-        # --- PRIMARY: normalised s / s_min(t) --------------------------------
-        # Rows below the aliasing line are NaN in every column by construction, so
-        # they are not SENT -- the pane still spans the full u range and the hatched
-        # band still covers them. Storing 6 always-empty rows per column cost ~1 MB an
-        # event and showed nothing.
-        keep = u_grid >= K["u_faithful"]
-        fig.add_trace(_heat(x_col, y_u[keep], K["Znorm"][:, keep].T, theme, cy,
-                            "s/s<sub>min</sub> = 2^%{y:.2f}", True, True), row=r, col=1)
-        norm_idx.append(len(fig.data) - 1)
+        # PRIMARY -- shape. Per-column normalised, then handed to the reference
+        # renderer unchanged, which computes its limits from the masked cells only.
+        add_channel(fig, r, x_ns, y[sj], normalise_columns(Zr)[:, sj].T, t, theme,
+                    "dL/dln s<br>per-column<br>normalised", cy, True,
+                    "dL/dln s (col-norm)")
+        # customdata is dropped on THIS view only. The reference renderer ships it so
+        # hover can report original units, which matters on the raw view and does not
+        # here -- a per-column ratio is what the colour already encodes, so the second
+        # full array would be a duplicate of the picture. Hover is re-pointed at z and
+        # relabelled, rather than left claiming units it no longer carries.
+        fig.data[-1].customdata = None
+        fig.data[-1].hovertemplate = ("%{x}<br>scale 2^%{y:.2f} s<br>"
+                                      "col-normalised (asinh) %{z:.3f}<extra></extra>")
+        _shrink(fig.data[-1])
+        shape_idx.append(len(fig.data) - 1)
 
-        # the aliased band: HATCHED, NOT COLOURED. Cells below it are already NaN in
-        # the heatmap above -- nothing under this line is rendered as if measured.
-        uf = np.log2(K["u_faithful"])
-        fig.add_trace(go.Scatter(
-            x=np.array([x_col[0], x_col[0], x_col[-1], x_col[-1]]),
-            y=np.array([y_u[0], uf, uf, y_u[0]]),
-            fill="toself", fillcolor="rgba(137,135,129,0.10)",
-            fillpattern=dict(shape="/", size=6, solidity=0.12,
-                             fgcolor=t["muted"], bgcolor="rgba(0,0,0,0)"),
-            line=dict(width=0), mode="lines", hoverinfo="skip",
-            name="aliased (s < 2·dt)", legendgroup="alias",
-            showlegend=(r == 2)), row=r, col=1)
-        norm_idx.append(len(fig.data) - 1)
-
-        for uu, lab, dash in ((1.0, "s<sub>min</sub> (u = 1)", "solid"),
-                              (2.0, "2×s<sub>min</sub>", "dot")):
-            fig.add_trace(go.Scatter(
-                x=np.array([x_col[0], x_col[-1]]),
-                y=np.array([np.log2(uu)] * 2), mode="lines",
-                line=dict(color=t["ink"], width=1.3, dash=dash),
-                name=lab, legendgroup="floor", showlegend=(r == 2),
-                hoverinfo="skip"), row=r, col=1)
-            norm_idx.append(len(fig.data) - 1)
-
-        # --- SECONDARY: absolute log2 s --------------------------------------
-        fig.add_trace(_heat(x_abs, y_abs, K["Zabs"][np.ix_(ai, aj)].T, theme, cy,
-                            "scale 2^%{y:.2f} s", True, False), row=r, col=1)
-        abs_idx.append(len(fig.data) - 1)
+        # SECONDARY -- magnitude. The same renderer on RAW values, for comparing burst
+        # strength ACROSS the session -- a question about level, not about timing, so
+        # it runs on coarser columns and keeps customdata for true-unit hover.
+        mstep = int(cfg["render"].get("magnitude_column_stride", 3))
+        mi = np.arange(0, ci.size, mstep)
+        add_channel(fig, r, x_ns[mi], y[sj], Zr[np.ix_(mi, sj)].T, t, theme,
+                    "dL/dln s<br>raw", cy, True, "dL/dln s")
+        _shrink(fig.data[-1])
+        fig.data[-1].visible = False
+        mag_idx.append(len(fig.data) - 1)
 
         sm = K["s_min_t"][ci]
         ys = np.where(np.isfinite(sm) & (sm > 0), np.log2(np.maximum(sm, 1e-12)), np.nan)
-        ys = np.where((ys >= y_s.min()) & (ys <= y_s.max()), np.round(ys, 3), np.nan)
-        coef = 2.2568 if kernel == "centred" else 4.5135
+        ys = np.where((ys >= lo2) & (ys <= hi2), np.round(ys, 3), np.nan)
+        coef = "2.2568" if kernel == "centred" else "4.5135"
         fig.add_trace(go.Scattergl(
-            x=x_col, y=ys.astype(np.float32), mode="lines",
-            line=dict(color=t["ink"], width=1.4), visible=False,
-            name=f"s_min = {coef}/λ ({kernel})", legendgroup="floorabs",
-            showlegend=(r == 2),
+            x=et(x_ns), y=ys, mode="lines",
+            line=dict(color=t["ink"], width=1.4), showlegend=False,
+            name=f"s_min = {coef}/λ",
             hovertemplate="%{x}<br>s_min 2^%{y:.2f} s<extra></extra>"), row=r, col=1)
-        abs_idx.append(len(fig.data) - 1)
-
-        # 2*dt(t) as a curve on the absolute pane -- the same boundary, in the other
-        # coordinate. Decimated: it is chrome, not data.
-        d = max(1, ai.size // 600)
-        sf = np.log2(2.0 * res["dt_render"][ai][::d])
-        fig.add_trace(go.Scatter(
-            x=x_abs[::d], y=np.clip(sf, y_s.min(), y_s.max()).astype(np.float32),
-            mode="lines", line=dict(color=t["muted"], width=1.2, dash="dashdot"),
-            visible=False, name="2·dt (aliasing floor)", legendgroup="alias2",
-            showlegend=(r == 2), hoverinfo="skip"), row=r, col=1)
-        abs_idx.append(len(fig.data) - 1)
 
     fig.add_trace(go.Scattergl(
-        x=etnum(itt_ns[::istride]),
-        y=np.round(itt[::istride], 3).astype(np.float32), mode="markers",
+        x=et(itt_ns[::istride]), y=np.round(itt[::istride], 3), mode="markers",
         marker=dict(size=2, color=t["muted"], opacity=0.45),
         name="log ITT", showlegend=False,
         hovertemplate="%{x}<br>log₁₀ Δt = %{y:.2f}<extra></extra>"), row=4, col=1)
+    fig.update_yaxes(title_text="log₁₀ Δt (s)", row=4, col=1)
+    fig.update_yaxes(title_text="price", row=1, col=1)
 
-    # ---- shading, all four panes, shared x -----------------------------------
     price = tp["price"].to_numpy(float)
-    pane_y = {
-        1: (float(np.nanmin(price)), float(np.nanmax(price))),
-        2: (float(y_u.min()), float(y_u.max())),
-        3: (float(y_u.min()), float(y_u.max())),
-        4: (float(np.nanmin(itt)), float(np.nanmax(itt))),
-    }
-    shade_idx = {"primary": [], "overlay": []}
+    pane_y = {1: (float(np.nanmin(price)), float(np.nanmax(price))),
+              2: (lo2, hi2), 3: (lo2, hi2),
+              4: (float(np.nanmin(itt)), float(np.nanmax(itt)))}
+    over_idx = []
     for tag, vis in (("primary", True), ("overlay", False)):
         for kernel, label in (("centred", "offline"), ("onesided", "online")):
             rd = res["kernels"][kernel]["reads"][tag]
             spans = [(res["origin_ns"] + int(a * 1e9), res["origin_ns"] + int(b * 1e9))
                      for a, b in rd["spans"]]
-            spans_x = [(float(etnum(np.array([a]))[0]), float(etnum(np.array([b]))[0]))
-                       for a, b in spans]
+            spans_x = [(et([a]).iloc[0], et([b]).iloc[0]) for a, b in spans]
             f = rd["read_factor"]
-            name = (f"{label} bursts ({kernel}) · read {f:g}×s_min · {len(spans_x)} runs")
-            group = f"{label}-{tag}"
-            for r in (1, 2, 3, 4):
-                tr = shading_trace(spans_x, pane_y[r][0], pane_y[r][1],
-                                   BURST_COLOUR[kernel], name, group,
-                                   showlegend=(r == 1), visible=vis)
-                fig.add_trace(go.Scatter(**tr), row=r, col=1)
-                shade_idx[tag].append(len(fig.data) - 1)
+            name = f"{label} bursts ({kernel}) · read {f:g}×s_min · {len(spans_x)} runs"
+            for rr in (1, 2, 3, 4):
+                tr = shading_trace(spans_x, pane_y[rr][0], pane_y[rr][1],
+                                   BURST_COLOUR[kernel], name, f"{label}-{tag}",
+                                   showlegend=(rr == 1), visible=vis)
+                fig.add_trace(go.Scatter(**tr), row=rr, col=1)
+                if tag == "overlay":
+                    over_idx.append(len(fig.data) - 1)
 
-    # ---- the two views -------------------------------------------------------
     n = len(fig.data)
 
     def vis_for(view):
-        v = []
+        out = []
         for i in range(n):
-            if i in norm_idx:
-                v.append(view == "norm")
-            elif i in abs_idx:
-                v.append(view == "abs")
-            elif i in shade_idx["overlay"]:
-                v.append("legendonly")
+            if i in shape_idx:
+                out.append(view == "shape")
+            elif i in mag_idx:
+                out.append(view == "mag")
+            elif i in over_idx:
+                out.append("legendonly")
             else:
-                v.append(True)
-        return v
+                out.append(True)
+        return out
 
-    # DOTTED KEYS, not a nested dict: plotly.js applies relayout on attribute paths,
-    # and "title_text" inside a yaxis object is a plotly.py convenience that does not
-    # survive the round trip -- the toggle would have silently kept the wrong axis
-    # title. Caught by reading the emitted JSON rather than by trusting the call.
-    yn_t, ya_t = "s / s<sub>min</sub>(t)  (log₂)", "log₂ kernel scale (s)"
-    yn_r = [float(y_u.min()), float(y_u.max())]
-    ya_r = [float(y_s.min()), float(y_s.max())]
-    yn = {"yaxis2.title.text": yn_t, "yaxis3.title.text": yn_t,
-          "yaxis2.range": yn_r, "yaxis3.range": yn_r}
-    ya = {"yaxis2.title.text": ya_t, "yaxis3.title.text": ya_t,
-          "yaxis2.range": ya_r, "yaxis3.range": ya_r}
     fig.update_layout(updatemenus=[dict(
         type="buttons", direction="right", x=0.0, y=1.045, xanchor="left",
         showactive=True, bgcolor=t["plane"], bordercolor=t["axis"], borderwidth=1,
         font=dict(size=10),
-        buttons=[
-            dict(label="normalised  s / s_min  (primary)", method="update",
-                 args=[{"visible": vis_for("norm")}, yn]),
-            dict(label="absolute  log₂ s", method="update",
-                 args=[{"visible": vis_for("abs")}, ya]),
-        ])])
-    fig.update_yaxes(row=2, col=1, title_text=yn_t, range=yn_r)
-    fig.update_yaxes(row=3, col=1, title_text=yn_t, range=yn_r)
-    fig.update_yaxes(title_text="price", row=1, col=1)
-    fig.update_yaxes(title_text="log₁₀ Δt (s)", row=4, col=1)
+        buttons=[dict(label="shape — per-column normalised (primary)",
+                      method="update", args=[{"visible": vis_for("shape")}]),
+                 dict(label="magnitude — raw values",
+                      method="update", args=[{"visible": vis_for("mag")}])])])
 
-    # ---- caption -------------------------------------------------------------
     cc = res["cohort_counts"]
     flags = flag_list(row)
     kc, ko = res["kernels"]["centred"], res["kernels"]["onesided"]
     pc, po = kc["reads"]["primary"], ko["reads"]["primary"]
-    sub = (f"tape sub-sampled 1-in-{stride} for panes 1/4 "
-           f"({len(tp):,} of {n_tape:,} prints drawn; stride only — the full value "
-           f"range is kept, nothing is clipped). " if stride > 1 else
-           f"all {n_tape:,} prints drawn, no sub-sampling. ")
+    sub = (f"tape sub-sampled 1-in-{stride} for panes 1/4 ({len(tp):,} of {n_tape:,} "
+           f"prints; stride only, nothing clipped). " if stride > 1 else
+           f"all {n_tape:,} prints drawn. ")
     title = (
         f"<b>{ev}</b> · scale-space field, offline vs online · "
         f"{row['t0_print_count']:,} T=0 prints · momentum {row['momentum_pct']:.2f}% "
         f"(print decile {int(row['t0_print_decile'])})"
         + (f" · <b>FLAGS: {', '.join(flags)}</b>" if flags else " · no flags")
         + "<br><sup>"
-        f"<b>Cohort:</b> joint [p70,p80] on <b>tick print count</b> and momentum_pct of "
-        f"the D1 universe (n={cc['pool_n']:,}); print count {cc['print_count_p70']:,.0f}"
-        f"–{cc['print_count_p80']:,.0f}, momentum {cc['momentum_pct_p70']:.2f}"
-        f"–{cc['momentum_pct_p80']:.2f}%. Population at the joint filter "
-        f"<b>{cc['n_joint_filter']}</b> ({cc['n_joint_and_readable']} readable); "
-        f"10 drawn, seed {cfg['cohort']['seed']}. "
-        f"<b>event_volume is NOT used</b> — it is a spine numeric and D4 bars it; "
-        f"tick-derived T=0 print count is substituted (§0a). Config hash {chash}. "
-        f"<br><b>GRID (Amendment 1): columns are print-indexed, not uniform in time.</b> "
-        f"dt = k/λ and s_min = 2.2568/λ, so dt/s_min = k/2.2568 everywhere on the tape. "
-        f"Evaluation grid {res['n_eval_columns']:,} columns at k={res['k_eval']:.2f} "
-        f"prints/col → <b>dt/s_min = {res['dt_over_s_min_eval']:.2f}</b>; render grid "
-        f"{res['n_render_columns']:,} columns at k={res['k_render']:.2f} → "
-        f"<b>dt/s_min = {res['dt_over_s_min_render']:.2f}</b> "
-        f"(dt from {np.nanmin(res['dt_render']):.3g} s in the densest stretch to "
-        f"{np.nanmax(res['dt_render']):.4g} s in the deadest — the whole point of the "
-        f"print-indexed grid). The booleans are computed on the EVALUATION grid, so the "
-        f"marking is resolved even where the picture is not. "
-        f"<br><b>Y-AXIS is s/s_min(t) — a COORDINATE CHANGE, not a normalisation of the "
-        f"statistic</b> (the values are raw; dividing by a standard error would drag the "
-        f"argmax coarse, and nothing here does that). The mask boundary is therefore flat "
-        f"at u=1 — <i>approximately</i>: the field's n_eff mask uses the kernel-weighted "
-        f"count while s_min(t) uses the k=20 kNN rate, two estimators of the same λ, so "
-        f"the edge wobbles around 1.0. <b>In this view the two floors LOOK identical when "
-        f"they differ by exactly two</b> (2.2568/λ offline, 4.5135/λ online) — that is why "
-        f"the absolute view is retained; toggle it at the top left. "
-        f"<br><b>FAITHFULNESS:</b> hatched below u={kc['u_faithful']:.2f} offline / "
-        f"{ko['u_faithful']:.2f} online (s &lt; 2·dt, per column — flat here <i>because</i> "
-        f"the grid is print-indexed). Aliased cells are hatched, <b>never coloured</b>. At the "
-        f"amendment's specified k = 4.52 this line would sit at u = "
-        f"{kc['u_faithful_at_specified_k']:.1f}; it is higher here because max_columns "
-        f"binds and k rises, which is reported rather than absorbed. "
-        f"Global s_faithful = 2·max(dt) = {kc['s_faithful_scalar']:.4g} s, reported as the "
-        f"worst case; the per-column line is the honest boundary. "
-        f"<b>The primary read is at u=1, below the faithful line</b> — the marking reads a "
-        f"scale the picture cannot draw, which is a consequence of dt=2·s_min at the render "
-        f"grid and is stated rather than hidden. "
-        f"<b>Masked and hatched are different and are counted apart.</b> MASKED (n_eff &lt; 8, "
-        f"the estimator declining to answer, never interpolated): {kc['masked_fraction']:.1%} "
-        f"of evaluated cells offline / {ko['masked_fraction']:.1%} online, and "
-        f"{kc['masked_fraction_norm']:.1%} / {ko['masked_fraction_norm']:.1%} of rendered "
-        f"cells before the aliasing cut. HATCHED (the grid cannot honestly draw it): "
-        f"{kc['hatched_row_share']:.0%} / {ko['hatched_row_share']:.0%} of the u range. "
-        f"<br><b>Read:</b> primary {pc['read_factor']:g}×s_min (median s* "
-        f"{pc['s_star_median']:.2f} s offline / {po['s_star_median']:.2f} s online); ladder "
-        f"floor binds {pc['ladder_floor_binds_share']:.1%} / "
-        f"{po['ladder_floor_binds_share']:.1%}; no ladder scale clears the floor on "
-        f"{pc['no_scale_clears_share']:.1%} / {po['no_scale_clears_share']:.1%} of the "
-        f"session. 2×s_min read is a legend-toggled trace, hidden by default. "
-        f"<b>Debounce</b> merge {cfg['burst_marking']['debounce']['merge_gap_factor']:g}×s*, "
-        f"min on-duration {cfg['burst_marking']['debounce']['min_on_duration_factor']:g}×s*, "
-        f"local to each run, not tuned per event: {pc['n_runs_raw']}→{len(pc['spans'])} runs "
-        f"offline, {po['n_runs_raw']}→{len(po['spans'])} online. <b>ON share, two ways "
-        f"because the grid is print-indexed:</b> by PRINT {pc['on_share']:.1%} / "
-        f"{po['on_share']:.1%}, by TIME {pc['on_share_time_weighted']:.1%} / "
-        f"{po['on_share_time_weighted']:.1%} — every column holds equal prints, not equal "
-        f"time, so the column mean is print-weighted and only the time-weighted figure is "
-        f"comparable with a uniform-grid render. "
-        f"<br>{sub}Markers uniform 2 px — at {n_tape:,} prints the count does not permit "
-        f"size-scaled markers. Colour asinh, unclipped, neutral exactly at zero; "
-        f"<b>warm = negative = burst-like</b>. Rate channel, not the interval channel. "
-        f"_reduce_extremum stays OFF. <b>No statistic is reported and no threshold applied</b> "
-        f"— diagnostic render (D24/D25 closed tradeability; visible ≠ profitable)."
+        f"<b>COLOUR IS PER-COLUMN NORMALISED</b> (each column divided by its own max "
+        f"|dL/dln s|, diverging, zero at zero, sign preserved) so the picture shows "
+        f"SHAPE, not ACTIVITY — without it a dense stretch is bright and a quiet one is "
+        f"blank whatever their structure. Toggle 'magnitude' at top left for raw values. "
+        f"<b>The burst marking reads the RAW SIGN and is unaffected by either view</b> — "
+        f"the colours are not the marking criterion. Renderer reused unchanged from "
+        f"plot_scale_field.add_channel (asinh, unclipped, limits from masked cells only); "
+        f"palette from plot_boundary_through_time. "
+        f"<br><b>Cohort:</b> joint [p70,p80] on <b>tick print count</b> and momentum_pct of "
+        f"the D1 universe (n={cc['pool_n']:,}); population at the joint filter "
+        f"<b>{cc['n_joint_filter']}</b> ({cc['n_joint_and_readable']} readable), 10 drawn, "
+        f"seed {cfg['cohort']['seed']}. <b>event_volume is NOT used</b> — spine numeric, "
+        f"D4 bars it; tick-derived T=0 print count substituted (§0a). Config {chash}. "
+        f"<br><b>Grid:</b> print-indexed columns (A1's one retained default) — "
+        f"{res['n_render_columns']:,} render columns at k={res['k_render']:.2f} prints/col, "
+        f"so dt/s_min = {res['dt_over_s_min_render']:.2f} everywhere; dt from "
+        f"{np.nanmin(res['dt_render']):.3g} s in the densest stretch to "
+        f"{np.nanmax(res['dt_render']):.4g} s in the deadest. Booleans computed on the "
+        f"finer evaluation grid ({res['n_eval_columns']:,} columns, dt/s_min "
+        f"{res['dt_over_s_min_eval']:.2f}). Ladder {scales[0]:g}–{scales[-1]:g} s, "
+        f"{len(scales)} scales at 8/octave, image drawn at every "
+        f"{int(cfg['render'].get('heatmap_scale_stride', 2))}nd scale — "
+        f"<b>the boolean reads the full ladder</b>. "
+        f"The magnitude view runs at every "
+        f"{int(cfg['render'].get('magnitude_column_stride', 3))}rd column — it answers a "
+        f"question about level across the session, not about timing. "
+        f"<b>Masked</b> (n_eff &lt; 8, never interpolated, never given a fallback): "
+        f"{kc['masked_fraction']:.1%} offline / {ko['masked_fraction']:.1%} online. "
+        f"<br><b>Read:</b> {pc['read_factor']:g}×s_min (median s* {pc['s_star_median']:.2f} s "
+        f"offline / {po['s_star_median']:.2f} s online); 2×s_min is a legend-toggled trace, "
+        f"hidden by default. <b>Debounce</b> merge "
+        f"{cfg['burst_marking']['debounce']['merge_gap_factor']:g}×s*, min on-duration "
+        f"{cfg['burst_marking']['debounce']['min_on_duration_factor']:g}×s*, local, not "
+        f"tuned per event: {pc['n_runs_raw']}→{len(pc['spans'])} runs offline, "
+        f"{po['n_runs_raw']}→{len(po['spans'])} online. <b>ON share</b> by TIME "
+        f"{pc['on_share_time_weighted']:.1%} / {po['on_share_time_weighted']:.1%} "
+        f"(by print {pc['on_share']:.1%} / {po['on_share']:.1%} — print-indexed columns "
+        f"hold equal prints, not equal time). "
+        f"<br>{sub}Rate channel, not the interval channel. _reduce_extremum stays OFF. "
+        f"<b>No statistic is reported and no threshold applied</b> — diagnostic render "
+        f"(D24/D25 closed tradeability; visible ≠ profitable)."
         "</sup>")
 
     fig.update_layout(
         title=dict(text=title, font=dict(size=14, color=t["ink"]), x=0.005,
                    xanchor="left"),
-        height=1440, hovermode="x unified",
+        height=1400, hovermode="x unified",
         paper_bgcolor=t["plane"], plot_bgcolor=t["surface"],
         font=dict(family='system-ui, -apple-system, "Segoe UI", sans-serif',
                   size=11, color=t["ink2"]),
         legend=dict(orientation="h", y=1.012, x=1, xanchor="right",
                     bgcolor="rgba(0,0,0,0)", font=dict(size=10)),
-        margin=dict(l=70, r=88, t=300, b=44),
+        margin=dict(l=70, r=104, t=250, b=44),
     )
-    fig.update_xaxes(type="date")
     fig.update_xaxes(title_text="America/New_York wall clock (D3 extended session)",
                      row=4, col=1)
     fig.update_xaxes(showgrid=False, linecolor=t["axis"], zeroline=False)
@@ -911,10 +780,6 @@ def build_figure(res, row, cfg, chash, theme):
         a.update(x=0, xanchor="left")
     return fig
 
-
-# --------------------------------------------------------------------------- #
-# index
-# --------------------------------------------------------------------------- #
 
 def _v1_records(art):
     """The pre-amendment run, kept so the revised numbers can be read AGAINST it
@@ -935,7 +800,7 @@ def write_index(rows, counts, cfg, chash, out, v1=None):
             ("prints", "n"), ("momentum %", "n"), ("mom decile", "n"),
             ("render cols", "n"), ("dt/s_min", "n"), ("dt min (s)", "n"),
             ("dt max (s)", "n"), ("masked 2", "n"), ("masked 3", "n"),
-            ("hatched", "n"), ("runs off", "n"), ("runs on", "n"),
+            ("runs off", "n"), ("runs on", "n"),
             ("ON% off (time)", "n"), ("ON% on (time)", "n"), ("flags", "s")]
     body = []
     for r in rows:
@@ -946,7 +811,6 @@ def write_index(rows, counts, cfg, chash, out, v1=None):
             f'{r["dt_over_s_min_render"]:.2f}', f'{r["dt_min_seconds"]:.3g}',
             f'{r["dt_max_seconds"]:.4g}',
             f'{r["masked_offline"]*100:.1f}%', f'{r["masked_online"]*100:.1f}%',
-            f'{r["hatched_row_share"]*100:.0f}%',
             str(r["runs_offline"]), str(r["runs_online"]),
             f'{r["on_offline_time_weighted"]*100:.1f}%',
             f'{r["on_online_time_weighted"]*100:.1f}%',
@@ -1031,13 +895,16 @@ readable (<code>clean_window AND trades_ingested</code>); <b>{len(rows)} drawn</
 <p><b><code>event_volume</code> is not used.</b> It is a spine numeric and D4 bars it;
 A13 permits reading spine numerics only to audit the selection function, which a cohort
 draw is not. Tick-derived T=0 print count is substituted (§0a).</p>
-<p><b>Grid (Amendment 1).</b> Columns are <b>print-indexed, not uniform in time</b>: one
-column per k prints, so <code>dt/s_min = k/2.2568</code> everywhere on the tape and dense
-stretches get narrow columns automatically. The <b>primary y-axis is s/s_min(t)</b> — a
-coordinate change, not a normalisation of the statistic — with the absolute log₂ s view
-toggled at the top left of each chart. <b>In the normalised view the offline and online
-floors look identical when they differ by exactly two</b>; that is why the absolute view
-is retained. Cells the grid cannot honestly draw are <b>hatched, never coloured</b>.</p>
+<p><b>Renderer (Amendment 2).</b> The heatmap construction is <b>imported from
+<code>plot_scale_field.add_channel</code></b>, the fine-band renderer that was signed off as
+needing no change, with the palette and the per-column normalisation idea from
+<code>plot_boundary_through_time.py</code>. <b>Colour is per-column normalised</b> — each
+column divided by its own max |dL/dln s| — so the picture shows <b>shape, not activity</b>;
+the sign is preserved because the field is signed and the sign is the burst condition.
+Raw magnitude is a toggle at the top left of each chart. <b>The burst marking reads the raw
+sign and is unaffected by either view.</b> The y-axis is absolute log₂ kernel scale, as in
+the fine-band charts. Columns are <b>print-indexed</b> (A1's one retained default), so
+<code>dt/s_min = k/2.2568</code> everywhere on the tape.</p>
 <p><b>Read at 1×s_min</b> (primary), with 2×s_min as a legend-toggled trace. Config hash
 <code>{chash}</code>.</p>
 <p><b>Not a measurement.</b> No statistic is reported, no threshold established, no
@@ -1231,8 +1098,6 @@ def main() -> int:
                     np.arange(10, 100, 10)), row["momentum_pct"]), 0, 9)),
             "masked_offline": kc["masked_fraction"],
             "masked_online": ko["masked_fraction"],
-            "masked_offline_rendered": kc["masked_fraction_norm"],
-            "masked_online_rendered": ko["masked_fraction_norm"],
             "n_eval_columns": res["n_eval_columns"],
             "n_render_columns": res["n_render_columns"],
             "k_eval": round(res["k_eval"], 3),
@@ -1241,11 +1106,6 @@ def main() -> int:
             "dt_over_s_min_render": round(res["dt_over_s_min_render"], 3),
             "dt_min_seconds": float(np.nanmin(res["dt_render"])),
             "dt_max_seconds": float(np.nanmax(res["dt_render"])),
-            "u_faithful_offline": kc["u_faithful"],
-            "u_faithful_online": ko["u_faithful"],
-            "u_faithful_at_specified_k": kc["u_faithful_at_specified_k"],
-            "hatched_row_share": kc["hatched_row_share"],
-            "s_faithful_scalar_seconds": kc["s_faithful_scalar"],
             "runs_offline": len(pc["spans"]), "runs_online": len(po["spans"]),
             "on_offline": pc["on_share"], "on_online": po["on_share"],
             "on_offline_time_weighted": pc["on_share_time_weighted"],
@@ -1261,7 +1121,7 @@ def main() -> int:
         summary.append(rec)
         print(f"{ev:26s} cols {res['n_render_columns']:>6,} dt/s_min "
               f"{res['dt_over_s_min_render']:.2f} masked "
-              f"{kc['masked_fraction_norm']:.1%}/{ko['masked_fraction_norm']:.1%} "
+              f"{kc['masked_fraction']:.1%}/{ko['masked_fraction']:.1%} "
               f"runs {len(pc['spans'])}/{len(po['spans'])} "
               f"ON(time) {pc['on_share_time_weighted']:.1%}/"
               f"{po['on_share_time_weighted']:.1%} [{rec['seconds']}s]")
@@ -1270,11 +1130,12 @@ def main() -> int:
         write_index(index_rows, counts, cfg, chash, charts, v1=_v1_records(art))
         with open(art / "event_panels_render.json", "w", encoding="utf-8") as f:
             json.dump({"config_hash": chash, "theme": args.theme,
-                       "amendment": "1 -- dynamic render resolution matched to the tape",
+                       "amendment": "2 -- renderer reused from plot_scale_field; "
+                                    "A1's print-indexed grid retained",
                        "cost_guard": guard,
                        "grid": cfg["amendment_1"]["column_grid"],
-                       "normalised_axis": cfg["amendment_1"]["normalised_axis"],
-                       "faithfulness": cfg["amendment_1"]["faithfulness"],
+                       "renderer": cfg["amendment_2"]["reuse"],
+                       "two_views": cfg["amendment_2"]["two_views"],
                        "supersedes": "results/scale_field/artifacts/"
                                      "event_panels_render_v1_preamendment.json",
                        "n_events": len(summary), "events": summary,
