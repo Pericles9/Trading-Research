@@ -351,12 +351,171 @@ def chart_surrogate(t):
     save(fig, "surrogate_control.html")
 
 
+# --------------------------------------------------------------------------- #
+# review follow-ups (2026-09-08)
+# --------------------------------------------------------------------------- #
+
+def chart_read_scale(t):
+    """Where the read lands in ABSOLUTE seconds, weighted by the marks themselves."""
+    x = load("read_scale_distribution.json")
+    b = x["reference_bands"]
+    for tag, lab in (("survivor_weighted", "surviving marks"),
+                     ("marked_weighted", "all marks")):
+        fig = go.Figure()
+        for i, seg in enumerate(("rth", "premarket", "post")):
+            for f_ in (1.0, 2.0, 3.0, 4.0):
+                g = [x["events"][e]["centred"][f"{f_:g}"][seg][tag]
+                     for e in x["events"]]
+                med = [q["quantiles_s"]["0.5"] for q in g]
+                lo = [q["quantiles_s"]["0.05"] for q in g]
+                hi = [q["quantiles_s"]["0.95"] for q in g]
+                fig.add_trace(go.Box(
+                    x=[f_] * len(med), y=med, name=seg, legendgroup=seg,
+                    showlegend=(f_ == 1.0), marker_color=SERIES[i],
+                    boxpoints="all", jitter=0.4, pointpos=0, width=0.22,
+                    offsetgroup=seg,
+                    customdata=list(zip(lo, hi, list(x["events"]))),
+                    hovertemplate="%{customdata[2]}<br>median s* %{y:.2f}s<br>"
+                                  "q05 %{customdata[0]:.2f}s q95 "
+                                  "%{customdata[1]:.2f}s<extra></extra>"))
+        fig.add_hline(y=b["real_excess_below_s"],
+                      line=dict(color=t["winner"], width=2, dash="dash"),
+                      annotation_text="30 s -- below: the excess is NOT a rate path",
+                      annotation_font=dict(size=10, color=t["winner"]))
+        fig.add_hline(y=b["rate_path_above_s"],
+                      line=dict(color=t["muted"], width=2, dash="dot"),
+                      annotation_text="64 s -- above: real and surrogate coincide, the "
+                                      "excess IS the rate path",
+                      annotation_font=dict(size=10, color=t["muted"]))
+        fig.update_layout(boxmode="group")
+        shell(fig, t, f"Where the read actually lands, in seconds - weighted by {lab}",
+              "Per-event median read scale s* = read_factor x s_min(t), time-weighted "
+              "over the cells being asked about. A session-mean lambda would understate "
+              "this badly: marks concentrate where the tape is fast, so the read scale "
+              "where marks occur is far finer than a session mean implies. One point "
+              "per event, n = 10. Segments are never pooled.",
+              "read_factor", "read scale s* (seconds)", logy=True)
+        save(fig, f"read_scale_{tag}.html")
+
+
+def chart_gateE_ceiling(t):
+    """Gate E against the ceiling the envelope alone buys."""
+    x = load("gateE_ceiling.json")
+    pool = {}
+    for eid, rows in x["events"].items():
+        for q in rows:
+            pool.setdefault(round(q["s"], 4), []).append(q)
+    ss = sorted(pool)
+    fig = go.Figure()
+    for i, (k, lab, dash) in enumerate([
+            ("r_real", "real tape (as first reported)", "solid"),
+            ("r_surrogate_CEILING",
+             "CEILING: smooth-rate surrogate, no clustering", "dash"),
+            ("r_real_residual", "real tape, envelope subtracted", "solid")]):
+        fig.add_trace(go.Scatter(
+            x=ss, y=[np.nanmedian([q[k] for q in pool[s]]) for s in ss],
+            mode="lines+markers", name=lab,
+            line=dict(color=SERIES[i], width=2.5, dash=dash), marker=dict(size=5),
+            hovertemplate="s %{x:.3g}s<br>r %{y:.3f}<extra></extra>"))
+    fig.add_hline(y=0.0, line=dict(color=t["axis"], width=1))
+    shell(fig, t, "Gate E, with the ceiling it was missing",
+          "Both halves of a split are thinned copies of one realisation, so both carry "
+          "the same diurnal envelope; if that envelope holds most of the variance, r "
+          "goes to 1 whether or not the fine structure replicates. The dashed line is "
+          "what the envelope alone buys - the identical split-half run on a "
+          "smooth-rate surrogate with no clustering at any scale. The third line "
+          "subtracts a deterministic envelope expectation from both halves and "
+          "correlates the residuals.",
+          "kernel scale s (seconds)", "corr(half A, half B)", logx=True)
+    save(fig, "gateE_ceiling.html")
+
+
+def chart_gateD_surrogate(t):
+    """Gate D against the surrogate rather than against print count."""
+    x = load("gateD_vs_surrogate.json")
+    ev = list(x["events"])
+    for seg in ("rth", "premarket"):
+        fig = go.Figure()
+        for tape, dash in (("real", "solid"), ("surrogate", "dash")):
+            for band, col in (("all", 0), ("s_below_30", 2), ("s_above_64", 1)):
+                xs = [1.0, 2.0, 3.0, 4.0]
+                ys = [np.nanmedian([x["events"][e]["tapes"][tape]["centred"][f"{f_:g}"]
+                                    [f"{seg}|{band}"]["survivor_fraction"] for e in ev])
+                      for f_ in xs]
+                fig.add_trace(go.Scatter(
+                    x=xs, y=ys, mode="lines+markers", name=f"{tape} - {band}",
+                    line=dict(color=SERIES[col], width=2.5 if tape == "real" else 1.6,
+                              dash=dash),
+                    marker=dict(size=7 if tape == "real" else 5),
+                    hovertemplate="rf %{x}<br>survivor fraction "
+                                  "%{y:.4f}<extra></extra>"))
+        shell(fig, t,
+              f"Gate D against the surrogate, not against print count - {seg}",
+              "A diurnal envelope produces a roughly constant shaded fraction across "
+              "events regardless of print count, which is exactly what a print-count "
+              "regression scores as a pass. The surrogate IS that envelope hypothesis, "
+              "made measurable: same lambda path, same s_min, same read scale, same "
+              "debounce, same threshold, no clustering at any scale. Median of ten "
+              "events.",
+              "read_factor", "survivor fraction of admissible time", logy=True)
+        save(fig, f"gateD_vs_surrogate_{seg}.html")
+
+
+def chart_gateF_calibrated(t):
+    """The width statistic against both of its references."""
+    c = load("gateF_calibration.json")
+    r = load("gateF_recompute.json")
+    noise = c["theory"]["noise_mean_width_over_s"]
+    bump = c["theory"]["bump_sigma_eq_s"]
+    fig = go.Figure()
+    for i, seg in enumerate(("rth", "premarket")):
+        pool = {}
+        for eid, d in r["events"].items():
+            for q in d.get(seg, []):
+                pool.setdefault(round(q["s"], 4), []).append(q)
+        ss = sorted(pool)
+        fig.add_trace(go.Scatter(
+            x=ss, y=[np.nanmedian([q["MEAN_complete_over_s"] for q in pool[s]])
+                     for s in ss],
+            mode="lines+markers", name=f"{seg} - mean, complete runs only",
+            line=dict(color=SERIES[i], width=2.5), marker=dict(size=5),
+            customdata=[[np.nanmedian([q["n_runs_complete"] for q in pool[s]]),
+                         np.nanmedian([q["complete_share"] for q in pool[s]])]
+                        for s in ss],
+            hovertemplate="s %{x:.3g}s<br>width/s %{y:.3f}<br>n complete runs "
+                          "%{customdata[0]:,.0f}<br>complete share "
+                          "%{customdata[1]:.2f}<extra></extra>"))
+        fig.add_trace(go.Scatter(
+            x=ss, y=[np.nanmedian([q["mean_raw_over_s"] for q in pool[s]]) for s in ss],
+            mode="lines", name=f"{seg} - raw, truncated runs included",
+            line=dict(color=SERIES[i], width=1.2, dash="dot")))
+    fig.add_hline(y=noise, line=dict(color=t["muted"], width=2),
+                  annotation_text=f"pure Poisson: {noise:.3f} (derived; statistic "
+                                  f"measured at 1.99-2.10)",
+                  annotation_font=dict(size=10, color=t["muted"]))
+    fig.add_hline(y=bump, line=dict(color=t["winner"], width=2, dash="dash"),
+                  annotation_text=f"a RESOLVED feature with sigma = s: {bump:.3f} "
+                                  f"(statistic measured at 2.838, ratio 1.003)",
+                  annotation_font=dict(size=10, color=t["winner"]))
+    shell(fig, t, "Gate F, calibrated against both references",
+          "Negative-run width divided by the kernel that drew it. The statistic is "
+          "calibrated: it returns 1.99-2.10 on pure Poisson against a derived target "
+          "of 1.987, and 2.838 on an injected sigma = s bump against a predicted "
+          "2.828. The real tape sits AT OR BELOW the noise line at every scale and "
+          "never approaches the resolved-feature line - nothing in this band has "
+          "sigma comparable to s.",
+          "kernel scale s (seconds)", "mean negative-run width / s", logx=True)
+    save(fig, "gateF_calibrated.html")
+
+
 def main() -> int:
     theme = THEMES["light"]
-    which = sys.argv[1:] or ["C", "B", "E", "F", "D", "X", "S"]
+    which = sys.argv[1:] or ["C", "B", "E", "F", "D", "X", "S", "R", "EC", "DS", "FC"]
     fns = {"C": chart_noise_ruler, "B": chart_gateB, "E": chart_gateE,
            "F": chart_gateF, "D": chart_gateD, "X": chart_excess,
-           "S": chart_surrogate}
+           "S": chart_surrogate, "R": chart_read_scale,
+           "EC": chart_gateE_ceiling, "DS": chart_gateD_surrogate,
+           "FC": chart_gateF_calibrated}
     for w in which:
         try:
             fns[w](theme)
