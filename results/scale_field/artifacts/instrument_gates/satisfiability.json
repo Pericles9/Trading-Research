@@ -1,0 +1,55 @@
+{
+  "note": "Are the detection requirement and the duration-readout requirement ever satisfied\nat the same time on this cohort?\n\nTHE TWO REQUIREMENTS, both derived rather than asserted.\n\n  DETECTION.  Depth at the centre of a Gaussian bump of width sigma read at scale s\n  is -s^2/(sigma^2+s^2) (exact: convolving a Gaussian of width sigma with one of\n  width s gives width sqrt(sigma^2+s^2), and F = s^2*lam''/lam at the centre is\n  -s^2/(sigma^2+s^2)). A 2-sd detection needs that depth below -2*sd(n_eff), so\n\n        s^2/(sigma^2+s^2) > 2*sd     =>     sigma < s * sqrt(1/(2*sd) - 1)\n\n  and it is available at all only while 2*sd < 1, because F >= -1 always.\n\n  DURATION READOUT.  Reading a duration needs scales down to sigma itself: the depth\n  curve is flat in sigma once s >> sigma, so a field evaluated only at s >> sigma\n  carries the feature's presence and not its width. And s >= s_min is a data limit,\n  so sigma >= s_min is required for the width to be readable at all.\n\nBoth are stated against s_min, which makes the answer scale-free: it holds at every\nrate on every event, and needs no tape to evaluate. Background dilution is IGNORED\nhere and that makes the detection condition OPTIMISTIC -- a bump sitting on a\nbackground is shallower than -s^2/(sigma^2+s^2), so the real satisfiable band is\nnarrower than the one printed. Verified against the measured fixture in\ngateA_resolve.json: at s = sigma the analytic depth is -0.500 and the measured value\non a bump of 200/s over a background of 20/s is -0.385.\n",
+  "read_factors": {
+    "1": {
+      "n_eff": 8.0,
+      "two_sd": 0.7854232754466912,
+      "detectable": true,
+      "sigma_max_over_s_min": 0.522684260252712,
+      "sigma_min_over_s_min": 1.0,
+      "band_decades": 0.0
+    },
+    "2": {
+      "n_eff": 16.0,
+      "two_sd": 0.47561423010990234,
+      "detectable": true,
+      "sigma_max_over_s_min": 2.100042213046818,
+      "sigma_min_over_s_min": 1.0,
+      "band_decades": 0.32222802459536737
+    },
+    "3": {
+      "n_eff": 24.0,
+      "two_sd": 0.3755452273452193,
+      "detectable": true,
+      "sigma_max_over_s_min": 3.8684824040979975,
+      "sigma_min_over_s_min": 1.0,
+      "band_decades": 0.5875406257973351
+    },
+    "4": {
+      "n_eff": 32.0,
+      "two_sd": 0.3189564012679931,
+      "detectable": true,
+      "sigma_max_over_s_min": 5.844963287149228,
+      "sigma_min_over_s_min": 1.0,
+      "band_decades": 0.7667817876555015
+    },
+    "6": {
+      "n_eff": 48.0,
+      "two_sd": 0.256889554297707,
+      "detectable": true,
+      "sigma_max_over_s_min": 10.204805010906945,
+      "sigma_min_over_s_min": 1.0,
+      "band_decades": 1.008804710816305
+    },
+    "8": {
+      "n_eff": 64.0,
+      "two_sd": 0.22080269081915443,
+      "detectable": true,
+      "sigma_max_over_s_min": 15.028357865566175,
+      "sigma_min_over_s_min": 1.0,
+      "band_decades": 1.1769115282325877
+    }
+  },
+  "n_eff_where_2sd_equals_1": 6.305391867941424,
+  "mask_floor_n_eff": 8.0
+}
