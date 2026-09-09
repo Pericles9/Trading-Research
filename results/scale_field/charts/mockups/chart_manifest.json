@@ -1,0 +1,36 @@
+{
+  "what": "Two layout mockups for the scale-field panel. SYNTHETIC TAPE ONLY -- no print in either file came from the cohort, and no number read off them is evidence about it.",
+  "n_charts": 2,
+  "charts": [
+    {
+      "file": "scale_field_price_mockup.html",
+      "source": "research/scale_field/derivations/07_price_mockup_generator.py",
+      "documents": "claude/scale_field_price_layouts.md",
+      "shows": "price + rate field + order-flow-imbalance field + log-price-curvature field on a shared x-axis, with a linked Gaussian-bandwidth slider driving both the price smooth and a read line across every field panel",
+      "injected": "A 5 s bought sweep, B 40 s two-sided churn, C 300 s sold accumulation, D 40 s pressure episode with no rate signature",
+      "reproduced_on_relocation": {
+        "minus_0.5_duration_readout": {"A_injected_5s": 6.5, "B_injected_40s": 55.5},
+        "never_reached_minus_0.5": ["C", "D"],
+        "doc_reference": "claude/scale_field_price_layouts.md section 4.1 -- the readout is biased high by background, so it is an upper bound, not an estimate"
+      }
+    },
+    {
+      "file": "scale_field_itt_overlay.html",
+      "source": "research/scale_field/derivations/08_itt_mockup_generator.py",
+      "documents": "claude/scale_field_itt_overlay.md",
+      "shows": "field heatmap and the inter-trade-interval quantile ribbon on ONE shared log-duration axis, plus the ribbon-width panel against the universal Poisson constant and the ITT scatter coloured by field significance",
+      "injected": "A real 5 s rate hump, V a genuine void, E clumping at constant mean rate (6.46/s inside vs 6.16/s ambient)",
+      "reproduced_on_relocation": {
+        "prints": 27995,
+        "ribbon_width_decades": {"across_E": 2.818, "quiet": 1.304, "poisson_constant": 1.34},
+        "s_min_minus_median_itt_decades": {"across_E": 1.903, "quiet": 0.515, "poisson_identity": 0.513},
+        "significant_cells_kept_share": 0.293,
+        "field_abs_F_median": {"across_E": 0.225, "quiet": 0.135},
+        "doc_reference": "claude/scale_field_itt_overlay.md sections 2.1, 2.2 and 4 -- every figure quoted there is reproduced above"
+      }
+    }
+  ],
+  "offline_rule": "D14 -- plotly is bundled into each file by include_plotlyjs=True, never a CDN",
+  "html_is_gitignored": "results/scale_field/charts/*/*.html. Both files are regenerable by running their source script; this manifest is the tracked record that they exist and what they contain.",
+  "provenance": "Delivered 2026-09-08 in scale_field_bundle/mockups/ and regenerated in place from the committed generators, which is what makes them reproducible rather than imported. Regeneration reproduced every quoted number; file size grew ~550 KB per file, which is the locally installed plotly 6.5.2 bundle, not a content change."
+}

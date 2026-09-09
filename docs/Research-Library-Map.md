@@ -1655,3 +1655,51 @@ apparatus as the transferable asset.
 **The one variant not excluded** is recorded there: late-entry multi-day short, 173 bp before borrow, with
 **no tail read at that entry point** -- and the tail read is what closed the near-anchor version, so that
 test comes first if it is ever pursued.
+
+---
+
+## Scale-field derivational arc, filed from `scale_field_bundle/` (2026-09-08)
+
+**Not a phase, and it records no decision.** Five documents, eight scripts and two mockups, delivered as
+a loose `scale_field_bundle/` folder at the repo root and distributed the same day. **All of it is
+synthetic or closed-form — no file in it has touched the cohort.** Reading order and the full
+verification record: `docs/Scale-Field-Arc-Index.md`.
+
+**`claude/` enters this map for the first time.** The directory was created on 2026-09-08 by the
+instrument-gates run and was not catalogued. It is where chat-layer documents land — the register's open
+item on `claude/scale_space_lessons.md` asks where such documents live, and this is the answer in
+practice, though the item itself stays open because that document is still not in the checkout.
+
+**`claude/` (6 files)**
+- `claude/scale_field_instrument_gates.md` — the gate battery run against the cohort, 2026-09-08
+  (pre-existing; committed at `67248fa`/`17e7238`, not part of this filing).
+- `claude/scale_field_reading_grammar.md` — the shape dictionary, the noise ruler, and three structural
+  problems with the sign-based burst mark.
+- `claude/scale_field_price_layouts.md` — field-against-price layouts; the order-flow-imbalance field is
+  the one it argues for.
+- `claude/scale_field_itt_overlay.md` — amends the above §1.2: the ITT pane is not redundant with
+  `s_min`; both go on one log-duration axis.
+- `claude/field_feature_extraction_methods.md` — closed-form derivatives, Newton apex/merge solving, the
+  ridge-first pipeline, the duration fit, and a frozen parameter surface.
+- `claude/field_credibility_and_value_tests.md` — credibility and value as separate questions, ordered
+  cheapest-killer-first.
+
+**Filenames were not chosen at filing time.** Each document is cited by path from its siblings and from
+`claude/scale_field_instrument_gates.md`; the citations set the names. That also means the paths now
+resolve under `tools/verify_cited_paths.py` rather than dangling.
+
+**Code** — `research/scale_field/derivations/`, eight self-contained scripts `01_verify_calculus.py`
+through `08_itt_mockup_generator.py` (numpy only, except 07–08 which need scipy and plotly). Run from the
+repo root after filing: **every number quoted in the five documents reproduced**, including the
+seed-independence test failing at `8.6e-2` in `ln s` before the §5.1 fix and passing at `5e-13` after it.
+Three packaging defects were repaired in the move — four scripts sourced siblings under names the
+bundling had renamed away and could not run at all, and the two generators wrote to an authoring-sandbox
+path absent from this checkout.
+
+**Charts** — `results/scale_field/charts/mockups/`: `scale_field_price_mockup.html` and
+`scale_field_itt_overlay.html`, both regenerated in place from the committed generators rather than
+imported. HTML is gitignored under the standing `results/scale_field/charts/*/*.html` rule;
+`results/scale_field/charts/mockups/chart_manifest.json` is tracked and carries every reproduced number.
+
+**Docs** — `docs/Scale-Field-Arc-Index.md`, the delivered bundle README rewritten to point at the real
+destinations.
