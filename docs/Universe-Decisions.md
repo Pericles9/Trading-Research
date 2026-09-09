@@ -1200,3 +1200,131 @@ comes is 21 points and 168 bp respectively.
 **Numbering note.** Recorded as D25, confirmed free by reading this file — the verifier reports register
 highest D24, next free D25. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number:
 D26.**
+
+---
+
+## D26 — The within-session timing line is closed
+
+**Date:** 2026-09-09 · **Gate:** both channels null under four controls on the identity-collapsed tape.
+· **Executes:** D21 §6(c). · **Supersedes** D5, D8 and D21 §6(a)/(b) as live options. · **Retracts:** the
+Allan clustering premise; the 30 s crossover; the sub-burst objects as events.
+· **Evidence:** `claude/fragmentation_and_the_closure.md`, `claude/scale_field_instrument_gates.md`,
+`results/scale_field/artifacts/instrument_gates/`.
+
+**Decision.** The within-session timing line is closed. **No further work on burst objects, sub-burst
+decomposition, burst timescales, or rate-shape state descriptors is authorised on this cohort.**
+
+### What was established
+
+1. **The rate channel finds nothing beyond the session envelope.** Under a rate-matched surrogate swept
+   over its own bandwidth 1–300 s, the apparent 30 s crossover scaled as ≈2.6h and was reproduced
+   indistinguishably by a positive control built to contain envelope structure only — `S30` returned
+   89.2 s at `h = 30` against the real tape's 86.9 s.
+
+2. **The interval channel finds nothing above 10 ms.** The cross-channel divergence
+   `D = m + lograte/ln10 + γ/ln10`, which is identically zero under a locally Poisson process at any rate
+   path, crosses zero at a 10 ms collapse tolerance **simultaneously at 1 s, 8 s and 64 s** (gap +0.008,
+   −0.003, −0.005), bracketed below by under-collapse (−0.36 at 1 ms) and above by over-collapse into
+   artificial regularity (+0.17 at 100 ms). **That the crossing is scale-invariant is what makes 10 ms a
+   measured boundary of the reporting process rather than a chosen parameter.**
+
+3. **The sub-millisecond structure is not events.** Sub-ms runs are sequence-contiguous (0.933; 0.987 at
+   τ = 0.1 ms, against **0.000** under a run-structure-preserving permutation), price-monotone (0.868 vs
+   0.450), single-venue, and enriched 7–15× in condition code 14, **`Intermarket Sweep`**. They are the
+   single-venue legs of intermarket sweeps — one aggressive order walking one book while its other legs
+   report as their own runs. **One order, many prints.** The code-14 mapping and the
+   sequence-number result are recorded **here**, in this decision, because that is the only tracked
+   home available: `.gitignore` excludes `/data/` wholly, so `data/filtered/METADATA.md` and
+   `data/Schema.md` are untracked and local-only. They have been mirrored into `METADATA.md` for
+   whoever reads the data tree directly, but **this entry is the copy of record.**
+   *(The observed multi-venue deficit, 0.561 against a permuted 0.856, is partly definitional — runs are
+   defined by sequence contiguity and one venue's fills report together — and is not evidence about
+   routing.)*
+
+4. **Consequently the D9 lineage's sub-burst objects were most likely not events.**
+   `resolution_floor_finding` §2 held that three prints inside 1.75 ms on a 0.30 prints/s tape was
+   astronomically improbable under any stationary null. That is true and irrelevant: it assumed three
+   prints were three events, and one trade occurring has probability ≈ 1. **This closes the question that
+   finding left explicitly open, and it explains why eight versions of object definition never survived a
+   tape review — there was no object.**
+
+5. **The Allan clustering premise is withdrawn.** `A(T)` measures rate variation **or** clustering and was
+   never rate-matched. On the 10 ms collapsed tape every rung is reproduced by an `h = 1 s` surrogate at
+   or **above** the real value (2.28 vs 1.98 at 4 s; 28.06 vs 24.65 at 64 s; 2,198 vs 2,173 at 2,048 s),
+   and `A(15.6 ms)` falls **9.79 → 0.91**. **Strike the premise from every document carrying it** rather
+   than annotating it.
+
+6. **The residual deficit is procedure bias, not a sub-Poisson finding**, and it was checked rather than
+   assumed. Against 60 replicates per rung, a **known-Poisson base tape pushed through the identical
+   procedure** shows a *larger* deficit than the real tape at every rung from 1 s to 32 s (ratio 0.628 at
+   4 s against the real tape's 0.873, 5/5 events below the 2.5th percentile) — the mechanism being that
+   `λ̂_h` estimated from a finite realisation turns its own sampling noise into real rate variation in the
+   surrogate. A second, separate bias holds at and below 31 ms: the 10 ms collapse is a dead time, and
+   re-running with the replicates put through the same collapse moves the band from 1.00 to 0.935–0.963.
+   **No positive characterisation survives; "no clustering term" stands.**
+
+### Scope — what this does not close
+
+**This closes the *timing* channel only.** Every quantity in this arc derives from *when* prints
+occurred. **The price and size channel was never examined**, is not barred by D4 (both are tick-derived),
+and is Phase 11's subject. **This decision is not evidence that these events lack tradeable structure** —
+it is evidence that their structure, if any, is not in the arrival times.
+
+**A by-product that belongs to the open channel.** The ISO flag is now available per print on this cohort
+as a free consequence of the cleanup, and ISO prints are a documented marker of informed trading
+(Chakravarty, Jain, Upson & Wood, *Clean Sweep*, JFQA 2012). Two quantities follow from the run structure
+already characterised with no new tick work: **book-walk depth per aggressive order** (levels crossed,
+from the price-monotone run) and **ISO share of aggressive volume through the event**. Both are
+price/size-channel quantities. Phase 11 wants both and is unblocked.
+
+**Relation to the detector reopening of the same date.** `config/scale_field_detector.json` and
+`research/scale_field/detector/` (commits `fc0ef2e`, `a24fecd`) implement a ridge detector on this field,
+a reopening of D22 taken by Cooper on 2026-09-09. **It does not conflict with this decision and is not
+closed by it:** it runs on **synthetic tapes only**, its two free parameters are deliberately unset and
+required without defaults so a cohort run cannot happen by accident, and it is scoped to the instrument
+lane — a feature table, no forward returns, no tradeability claim. **This decision closes cohort timing
+work; it does not close instrument work on synthetic data.** Should that detector ever be pointed at the
+cohort, this decision is the gate it has to clear.
+
+### What survives and is carried forward
+
+- **Instrument properties**, all derivation-based and independent of any null: the λ̂-weighted zero-sum
+  identity (1e-18 on the exact estimator); the Monte-Carlo sampling-error table for `F`; the blob-width
+  calibration (1.987 on Poisson, 2.828 at σ = s, measured 2.838); and the **empty satisfiable band at
+  `read_factor = 1`** (`n_eff = 8`, `2·sd = 0.785`, `F ≥ −1`, so detection needs `σ < 0.523·s_min` while a
+  width needs `σ ≥ s_min`). Recorded as **instrument properties, not operating choices** — there is no
+  operating point left to choose between.
+- **The condition-code 14 mapping and the identity-collapse rule**, as data-layer facts.
+- **The control standard below.**
+
+### Standing requirement — four controls, not one
+
+Applies to every future claim of the form *"real exceeds null"* in this programme. Four retractions in
+this arc, and **every one came from a control rather than from a review**:
+
+| control | asks |
+|---|---|
+| **Negative** | does the procedure stay quiet on structureless data? |
+| **Positive** | does it fire on known structure at the scale of interest? |
+| **Null-parameter sweep** | is the boundary the data's, or the null's? |
+| **Blindness** | can the procedure still see anything here, or has it gone deaf? |
+
+**The fourth is the one that is normally absent.** A negative and a positive control both return "no
+detection" when the method works *and* when it has been tuned into insensitivity; only a positive planted
+at the edge of detectability separates those. More generally: **a null that does not contain the
+structure you are conditioning on will score that structure as signal.** A control containing too little
+is a false-positive machine, one containing too much is a false-negative machine, and the bandwidth is
+the dial between them — **audit a control for what it contains, not only for what it randomises, and
+sweep the dial rather than picking a value.**
+
+### What would reopen this
+
+A cohort whose print rates support measurement below 10 ms; a different event class; or evidence that the
+timing structure is conditional on a price/size state not measured here. **Absent one of those, this is
+closed rather than abandoned** — which is the distinction the four prior attempts never earned.
+
+**Numbering note.** Recorded as D26, confirmed free by reading this file — register highest was D25.
+`CLAUDE.md`'s pointer list could **not** be updated in the same commit: that file carries an uncommitted
+edit from another session (the 2026-09-08 git-discipline block), and staging it would capture that work
+in an unrelated commit, which `CLAUDE.md`'s own explicit-path rule forbids. **The index update is
+outstanding and is flagged to Cooper.** **Next free number: D27.**

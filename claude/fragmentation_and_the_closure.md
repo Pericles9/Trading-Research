@@ -1,6 +1,7 @@
 # The sub-bursts were not events
 
-**Date:** 2026-09-09 · **Type:** finding. Records no decision; **proposes one** (§7).
+**Date:** 2026-09-09 · **Type:** finding. **D26 was written from this read** (`docs/Universe-Decisions.md`),
+from Cooper's draft text of the same date, edited only where §3.1 and §2 required a correction.
 **Cohort:** five of the ten committed panel events, regular hours (`event_panels_cohort.csv`).
 **Code:** `research/scale_field/{fragmentation_identity,collapsed_tape_measures,divergence_controlled,divergence_vs_tolerance}.py`.
 **Artifacts:** `results/scale_field/artifacts/instrument_gates/`.
@@ -48,17 +49,24 @@ session, so it asks whether these runs are coincidental collisions of independen
 participants do not get consecutive sequence numbers 93–99% of the time; one order's fills do. **One
 trade occurring has probability ≈ 1, and the astronomical improbability evaporates.**
 
-**One correction to the mechanism, from the same table.** Sub-millisecond runs are *less* likely to
-span multiple venues than chance (0.561 against 0.856). These are **not** cross-venue sweeps — they are
-predominantly **single-venue multi-level fills**, one marketable order walking one book and being
-reported once per resting order it consumed. The distinction does not change the conclusion (still one
-order, many prints) but it does change the name, and it was worth testing rather than assuming.
+**The mechanism, corrected twice — once by the data and once by the review.**
 
-**Empirically, condition tuples containing code 14 are enriched 7.0–15.5× inside sub-millisecond runs**
-relative to outside them. `data/filtered/METADATA.md` documents the column as "Trade conditions" and
-gives no code table, and the environment is offline (D14), so **what code 14 *means* is [verify] and is
-not used anywhere in the collapse.** The enrichment is a measurement; the interpretation is not
-available here.
+**Condition code 14 is `Intermarket Sweep`** (public trade-conditions glossary, supplied at review
+2026-09-09 and now recorded in `data/filtered/METADATA.md`; no other code in this table is established
+and any other reading remains [verify]). Tuples containing it are enriched **7.0–15.5× inside
+sub-millisecond runs.**
+
+That reconciles what first looked like a contradiction. An ISO lets a taker **walk multiple price levels
+on one venue** without violating trade-through protection, because they have simultaneously routed ISOs
+to the protected quotes elsewhere. **So a run is the single-venue leg of a multi-venue sweep** —
+single-venue, price-monotone, sequence-contiguous, ISO-flagged, with the other legs reporting as their
+own separate runs.
+
+**And the multi-venue deficit should not be read as evidence about routing, because it is partly
+definitional.** Runs are defined by sequence contiguity, and one venue's fills report together, so
+run-by-contiguity biases toward single-venue by construction. The 0.561-against-0.856 row is reported
+above because it is what was measured, but **it does not support an inference about how orders were
+routed** and is not used for one.
 
 **So the lineage's sub-burst objects — v4's 348 ns median, 10c's 1.75 ms, 10d's 3.37 ms — were not
 merely unmeasurable, which is what the resolution floor established. They were most likely not events.**
@@ -110,6 +118,40 @@ too weak here — **does not survive**, and should be struck from the documents 
 fragmentation behind; it reduces A by a near-constant ~0.70 at every rung, which is the signature of
 fragmentation multiplying A by a scale-independent factor. The 10 ms tolerance removes it fully. Both
 columns are in `collapsed_tape_measures.json` and `allan_controlled.json`.)*
+
+### 3.1 The ~10% deficit is procedure bias, from two separate mechanisms
+
+The collapsed tape sits **below** its surrogate at most rungs, and a deficit means *more regular than
+Poisson*, which would be the only positive characterisation the arc produced. It is not one. Checked
+against 60 replicates per rung, with a **known-Poisson base tape pushed through the identical
+procedure** — its deficit is by definition the procedure's:
+
+| T | real A | rep median | ratio | **known-Poisson ratio** | known below p2.5 |
+|---|---|---|---|---|---|
+| 1 s | 1.31 | 1.09 | 1.197 | **0.933** | **5/5** |
+| 4 s | 1.98 | 2.27 | 0.873 | **0.628** | **5/5** |
+| 8 s | 2.74 | 3.37 | 0.812 | **0.565** | **5/5** |
+| 16 s | 5.19 | 5.99 | 0.865 | **0.598** | **5/5** |
+| 32 s | 11.05 | 11.75 | 0.940 | **0.790** | **5/5** |
+
+**The known-Poisson control shows a *larger* deficit than the real tape at every one of these rungs.**
+The mechanism is that `λ̂_h` is estimated from a finite realisation and then simulated from: at `h = 1 s`
+and ~3 prints/s a bandwidth window holds about three prints, so the estimator's own sampling noise
+becomes **genuine rate variation in the surrogate**, inflating its `A(T)` above the truth. It is visible
+in the committed table without any of this: at T = 4 s the `h = 30` surrogate reads 1.00 and the `h = 1`
+surrogate reads 2.28, and nothing about the tape changed between those two numbers.
+
+**A second, separate bias holds at the finest rungs.** At T = 15.6 ms the real tape reads 0.914 and was
+5/5 below the band — but the band there was built from surrogates that had **not been collapsed**. A
+10 ms collapse imposes a hard 10 ms floor on every interval, and a dead time makes a process more
+regular than Poisson at T comparable to it. Re-running with the replicates put through the *same*
+collapse moves the band to **0.935–0.963** and the ratio to **0.949**; and the residual is
+under-corrected rather than real, because the collapse bites on **60% of the real tape's intervals
+against 3.5% of the control's**.
+
+**So: no sub-Poisson finding. "No clustering term" stands, and the deficit is the procedure at every
+rung** — surrogate estimation noise from 1 s to 32 s, collapse dead time at and below 31 ms.
+(`subpoisson_check.json`, `deadtime_check.json`.)
 
 ---
 
@@ -222,12 +264,13 @@ trustworthy enough to then falsify honestly rather than either believing or dism
    cited in at least the build brief, the goals brief's traps list, and three of the review documents,
    and it will outlive this session in all of them.
 
-2. **Propose closing the question rather than the arc.** D21 §6(c) — stop — is now the live option and
-   it is not a defeatist one: **it would be the first time this question was closed rather than
-   abandoned.** Both channels, under four controls, find nothing beyond the rate envelope above 10 ms,
-   and below 10 ms the cohort is already recorded as unable to measure. That is a *result*, and it is
-   the answer to what the programme has been asking since D6. **This needs a decision number and is
-   Cooper's to write** — `docs/Universe-Decisions.md` is the authority and this read does not touch it.
+2. **D26 is written.** The within-session timing line is closed, executing D21 §6(c) — the first time
+   this question has been *closed* rather than abandoned. Cooper's draft text of 2026-09-09 is the basis;
+   I edited it in three places only, each because a measurement required it: the sub-Poisson deficit is
+   procedure bias and not a finding (§3.1), condition code 14 is confirmed rather than `[verify]` (§2),
+   and the scope section now states explicitly why the same-day detector reopening does not conflict.
+   **The `CLAUDE.md` index update that D26 requires is outstanding** — that file carries another
+   session's uncommitted edit, and staging it would capture that work in an unrelated commit.
 
 3. **If anything continues, it is the print-process question, and it is a different question.** "Is
    there ultra-fast arrival clustering underneath the fragmentation" is answerable only with order-level

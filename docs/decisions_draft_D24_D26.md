@@ -112,6 +112,12 @@ reports.
 
 ## D26 — `s ≥ 2.26/λ` as the applicability gate
 
+> **⚠ THE NUMBER 26 IS TAKEN.** `D26 — The within-session timing line is closed` was appended to
+> `docs/Universe-Decisions.md` on 2026-09-09, with the next free number confirmed from the register's
+> tail (highest was D25) as this file's own preamble requires. **This draft is now D27 or later and
+> its number must be re-confirmed from the register at append time.** Flagged rather than renumbered,
+> because this file's rule is that numbers are provisional until append.
+
 **Date:** [Cooper] · **Deciding gate:** Cooper decision on the scale-space close-out
 
 **Closes:** the question left open by Phase 10c open item 4 and Phase 10d §4 — whether an applicability
