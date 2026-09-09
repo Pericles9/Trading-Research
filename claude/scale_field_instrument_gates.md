@@ -33,6 +33,16 @@ review follow-ups `read_scale_distribution.py`, `gateD_vs_surrogate.py`, `gateE_
 
 ## 1. The answer to §1 — third version, and the second retraction
 
+> **SUPERSEDED ON EVERY QUESTION ABOUT WHAT THE TAPE CONTAINS by
+> `claude/fragmentation_and_the_closure.md` (2026-09-09).** That read identifies the fragmentation from
+> the trade record rather than from a time tolerance (sequence-contiguity 0.933 against a permuted null
+> of 0.000), shows the Allan curve is fragmentation plus the rate envelope with **no clustering term**
+> (A(15.6 ms) = 9.79 raw, **0.91** collapsed, and every remaining rung reproduced by a rate-matched
+> surrogate), and closes the interval channel too: the cross-channel divergence gap is **zero at a
+> 10 ms collapse at every scale from 1 s to 64 s**. What remains true here is everything about the
+> INSTRUMENT — Gates 0, A, C and F's calibration. What is said below about the TAPE is either retracted
+> in §1 or superseded there.**
+
 **The 30-second crossover was the surrogate's bandwidth, not the tape's. It is withdrawn.**
 **What survives the bandwidth sweep is a sub-second excess, and that excess is print fragmentation.**
 **On this cohort, at the scales this instrument can read, there is no established burst structure left.**
@@ -683,6 +693,13 @@ does manufacture coarse survivors (6.5% of premarket time below λ̂ = 0.03/s, *
 but fast tape produces more of them and all below 30 s. Both effects are present; the second is larger.
 
 ### 9.2 The 40.9× was a vanishing denominator — and the two absolute statistics disagree
+
+> **⚠ Both rows are computed against the `h = 30` surrogate that §10 retracts. The comparison BETWEEN
+> read factors survives — they face the same surrogate — but the ABSOLUTE magnitudes do not, and
+> neither figure may be carried into decision text as it stands. The empty satisfiable band is
+> unaffected: it is `n_eff = 8`, `2·sd = 0.785` and the −1 floor, arithmetic with no null in it. With
+> the answer now at "nothing above 10 ms", it is an INSTRUMENT PROPERTY, not an operating decision —
+> there is no operating point left to choose between.**
 
 **The ratio is retired, as the review asked, and the reason is visible in its own numbers:** it is
 **non-monotone** in read factor — 37.4, 46.1, 21.3, 11.2 at `rf` 1/2/4 — which no property of the read
