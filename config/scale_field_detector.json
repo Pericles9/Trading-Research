@@ -1,0 +1,72 @@
+{
+  "name": "scale_field_detector",
+  "version": "1.0",
+  "date": "2026-09-09",
+  "source": "claude/field_feature_extraction_methods.md section 10 -- the frozen parameter surface, committed before the first run on real data exactly as that section requires",
+  "scope": "Instrument only. This detector produces a feature table. It touches no forward return, makes no tradeability claim, and does not reopen D24 or D25. D22 closed the scale-space field as a detector; building this is a reopening of that decision, taken by Cooper on 2026-09-09.",
+
+  "parameters": {
+    "cut": {
+      "value": 6.0,
+      "units": "kernel widths",
+      "basis": "derived -- exp(-18) ~= 1.5e-8, a numerical truncation and not a statistical choice",
+      "derived_or_chosen": "derived"
+    },
+    "seed_rungs_per_octave": {
+      "value": 6,
+      "basis": "derived -- below the measured noise correlation length in ln s (~1.0-1.4 octaves). The seed ladder must not touch any reported number; test_seed_density_independence is what enforces that.",
+      "derived_or_chosen": "derived"
+    },
+    "n_eff_floor": {
+      "value": 8,
+      "basis": "inherited from the panel build. section 4 of the source argues for 12-27 on noise-ruler grounds. CHANGING IT NEEDS ITS OWN DECISION and this config does not make one.",
+      "derived_or_chosen": "inherited"
+    },
+    "edge_guard_widths": {
+      "value": 6.0,
+      "units": "kernel widths from each end of the analysis window",
+      "basis": "derived -- same constant as cut. Not optional: the raw-topology pipeline's single surviving detection on a synthetic tape was an edge artifact.",
+      "derived_or_chosen": "derived"
+    },
+    "persistence_floor_octaves": {
+      "value": 1.0,
+      "basis": "derived -- measured noise decorrelation is 1.0-1.4 octaves in ln s",
+      "derived_or_chosen": "derived"
+    },
+    "grouping_radius_rule": {
+      "value": "max(s, s_prime)",
+      "basis": "derived -- the kernel's own width. No free number.",
+      "derived_or_chosen": "derived"
+    },
+    "scale_range": {
+      "value": ["s_min", "session/8"],
+      "basis": "already on the record from the build brief",
+      "derived_or_chosen": "derived"
+    },
+
+    "noise_constant": {
+      "value": null,
+      "basis": "MUST NOT DEFAULT. The Poisson value 0.87 is wrong on this tape by roughly sqrt(A(s)) -- an Allan factor running 5.99 at 15.6 ms to 1245 at 4096 s inflates every z by ~2.4x at the fine end and ~35x at the coarse end.",
+      "gate": "unset -- see kappa_gate below",
+      "derived_or_chosen": "must be measured"
+    },
+    "kappa": {
+      "value": null,
+      "basis": "MUST NOT BE CHOSEN. Section 4.3 of the source: the constant comes from the matched null, never from a Poisson reference. Deriving a free parameter from a Poisson reference is the failure this lineage has already had twice (D21-D23).",
+      "gate": "unset -- see kappa_gate below",
+      "derived_or_chosen": "must be measured"
+    }
+  },
+
+  "kappa_gate": {
+    "state": "OPEN -- no run on real data is authorised under this config while noise_constant and kappa are null",
+    "why_it_cannot_be_filled_today": "The source doc prescribes taking the constant from the matched null (the phase 10b T3c rate-matched inhomogeneous-Poisson machinery). On 2026-09-09 that object is under active retraction: results/scale_field/ shows the rate-matched surrogate is bandwidth-dependent, the crossover it produced tracked the surrogate bandwidth at roughly 3h, and a structureless positive control reproduced the real tape's crossover to within 0.5 s. Commit 1a34975 withdraws that finding. So the prescribed fix in section 4.3 points at the very object being withdrawn: it is right about the direction (do not use 0.87) and wrong about the destination (the matched null is not yet a fixed reference).",
+    "what_would_close_it": "A null whose bandwidth content is audited rather than assumed, swept rather than picked -- the general lesson recorded at claude/scale_field_instrument_gates.md section 11.6. Until that exists, this detector runs on synthetic tapes only.",
+    "enforced_in_code": "research/scale_field/detector/ridge.py -- detect() requires noise_constant and kappa as explicit arguments with no defaults, so a real-data run cannot happen without someone naming both."
+  },
+
+  "validation": {
+    "synthetic_only": true,
+    "note": "All validation is Poisson background with Gaussian bumps, which is the easy case. This tape sits ~1.3 decades from Poisson, so zero false positives on a matched Poisson null says nothing about the false-positive rate on the cohort."
+  }
+}
