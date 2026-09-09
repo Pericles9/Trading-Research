@@ -1703,3 +1703,48 @@ imported. HTML is gitignored under the standing `results/scale_field/charts/*/*.
 
 **Docs** — `docs/Scale-Field-Arc-Index.md`, the delivered bundle README rewritten to point at the real
 destinations.
+
+---
+
+## Scale-field ridge detector — the instrument built from the arc (2026-09-09)
+
+**A reopening, taken by Cooper on 2026-09-09.** D22 closed the scale-space field as a detector.
+This builds the ridge-first detector specified in `claude/field_feature_extraction_methods.md` and
+stays inside the instrument lane: it emits a feature table, touches no forward return, and disturbs
+neither D24 nor D25. **It has not been run on the cohort and cannot be** — see the kappa gate below.
+
+**Config** — `config/scale_field_detector.json`, committed before the code that uses it. Seven of the
+nine parameters are derived rather than chosen; `kappa` and the noise constant are **null**.
+
+**Code** — `research/scale_field/detector/`, a package rather than flat files so it cannot collide
+with concurrent work in `research/scale_field/`:
+- `moments.py` — the machinery. Kernel-weighted moments `M_0..M_6` and closed-form `F, F_t, F_u,
+  F_tt, F_tu, F_uu` at any `(t, ln s)`, `n_eff` computed from the prints with no rate estimate and no
+  bandwidth, `lam_hat`, and `field_fft` — a deliberately independent convolution path kept for the
+  agreement test. **The `z = (t - t_i)/s` convention is declared once here and nowhere else.**
+- `ridge.py` — seed → Newton-polish `t` → edge guard → calibrate → group → describe → **polish the
+  scale**. Plus `apex_newton` for `{F = 0, F_t = 0}` and the two-parameter duration fit.
+- `test_detector.py` — 18 tests, all passing.
+- `validate_synthetic.py` — end-to-end validation through the promoted module.
+
+**Artifact** — `results/scale_field/artifacts/detector/synthetic_validation.json`.
+
+**The kappa gate is open, and it is enforced in code.** `detect()` takes `noise_constant` and `kappa`
+as keyword arguments with no defaults and raises without them. The Poisson constant 0.87 is wrong on
+this tape by roughly `sqrt(A(s))`; the matched null that should replace it is the object commit
+`1a34975` withdrew. Until a null whose bandwidth content is audited exists, this detector runs on
+synthetic tapes only.
+
+**Three of the tests had never been run** and are the three the source flagged as having a
+demonstrated failure rate: the `z`-convention test (a flipped convention leaves `F` untouched and
+negates every odd `t`-derivative, so it is invisible in any rendered field), the forbidden-sign count
+(zero creations going coarse, the causality theorem counted rather than assumed), and
+moment-recursion against convolution. All pass. Measured against a brute-force direct sum that is
+neither implementation, the moment path agrees to `1e-8`–`4e-7` and the convolution path to `~1e-4`,
+shrinking with bin width — correct and discretization-limited.
+
+**One discrepancy against the source is recorded in the artifact rather than smoothed over:** section
+6 claims the duration fit is "within 16% everywhere"; through the promoted module the widest bump
+(`sigma = 90 s`) fits at **−18.9%**. The source's table predates its own section 5.1 scale-polishing
+fix, so mid-range accuracy improves (`sigma = 4 s`, −11% → −1.8%) and the widest degrades. The claim
+should read *within 20% everywhere, within 5% mid-range*.
