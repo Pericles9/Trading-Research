@@ -1,0 +1,866 @@
+{
+  "ladder_floor_s": 0.25,
+  "note": "Is the premarket conclusion a grid-coverage artifact? (review 2026-09-09 s2b)\n\nTHE HYPOTHESIS. At premarket's dense moments s* = rf * 2.2568/lambda is very small. The\ncommitted ladder floor is 0.25 s. If those reads fall off the bottom of the ladder they\nare not marked at the scale the rule asks for -- they are either dropped, or silently\ntaken at the floor, which is ABOVE rf * s_min. Either way the fast stretches would be\nmechanically under-represented, leaving only the slow-stretch reads behind, and\n\"premarket reads at 153 s\" would be a statement about the grid rather than the tape.\n\nWHAT burst_on ACTUALLY DOES, checked in the code rather than assumed: scale_index_at\ntakes the smallest ladder scale >= factor * s_min(t) that is also defined. Where\nfactor * s_min falls BELOW the ladder floor the read is taken AT THE FLOOR -- so the\ncell is NOT dropped, it is read too coarse. config/scale_field_panels.json calls this\nout under ladder_floor_binds and requires the share to be reported per event.\n\nSo there are two distinct leaks and they are counted separately:\n\n  floor_binds      rf * s_min(t) < 0.25 s  -- read too coarse, cell still marked\n  no_scale_clears  no ladder scale qualifies at all -- cell genuinely absent\n  masked           the field is NaN there (n_eff < 8) -- absent for a data reason\n\nIf floor_binds is material in premarket at rf 4, the premarket median read scale is\nbiased UP by exactly the mechanism the review describes, and the premarket conclusion\nis void until it is recomputed on a ladder that reaches lower.\n",
+  "events": {
+    "ARQQ_2023-02-06_65.20": {
+      "premarket": {
+        "segment_seconds": 19801.304729723,
+        "lambda_q10": 0.09807597335596685,
+        "lambda_median": 0.39777801324567746,
+        "lambda_q90": 18.22618956336644,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.0011486589833577185,
+            "masked_everywhere_time_share": 0.0027011422351737226,
+            "target_below_floor_median_s": 0.07194163928999094
+          },
+          "2": {
+            "floor_binds_time_share": 0.0004457351663676694,
+            "masked_everywhere_time_share": 0.0027011422351737226,
+            "target_below_floor_median_s": 0.07559282512859192
+          },
+          "3": {
+            "floor_binds_time_share": 0.00024823394120195236,
+            "masked_everywhere_time_share": 0.0027011422351737226,
+            "target_below_floor_median_s": 0.05654831438843645
+          },
+          "4": {
+            "floor_binds_time_share": 0.00011341308694820613,
+            "masked_everywhere_time_share": 0.0027011422351737226,
+            "target_below_floor_median_s": 0.03251986367405433
+          }
+        }
+      },
+      "rth": {
+        "segment_seconds": 23398.792341939,
+        "lambda_q10": 1.540949802082512,
+        "lambda_median": 12.024901312341392,
+        "lambda_q90": 1347.7582256596297,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.08011091140179182,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.07194163928999094
+          },
+          "2": {
+            "floor_binds_time_share": 0.028747661847716467,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.07559282512859192
+          },
+          "3": {
+            "floor_binds_time_share": 0.012364223019512715,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.05654831438843645
+          },
+          "4": {
+            "floor_binds_time_share": 0.006571474832288628,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.03251986367405433
+          }
+        }
+      },
+      "post": {
+        "segment_seconds": 14399.902928338,
+        "lambda_q10": 0.03135612646501637,
+        "lambda_median": 0.06655678467142323,
+        "lambda_q90": 0.18313744418494146,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 1.4638897293200703e-07,
+            "masked_everywhere_time_share": 0.011319922111017571,
+            "target_below_floor_median_s": 0.07194163928999094
+          },
+          "2": {
+            "floor_binds_time_share": 1.46388972932007e-07,
+            "masked_everywhere_time_share": 0.011319922111017571,
+            "target_below_floor_median_s": 0.07559282512859192
+          },
+          "3": {
+            "floor_binds_time_share": 1.46388972932007e-07,
+            "masked_everywhere_time_share": 0.011319922111017571,
+            "target_below_floor_median_s": 0.05654831438843645
+          },
+          "4": {
+            "floor_binds_time_share": 1.46388972932007e-07,
+            "masked_everywhere_time_share": 0.011319922111017571,
+            "target_below_floor_median_s": 0.03251986367405433
+          }
+        }
+      }
+    },
+    "ASPN_2024-05-02_60.38": {
+      "premarket": {
+        "segment_seconds": 19800.111072768,
+        "lambda_q10": 0.07732936735784032,
+        "lambda_median": 1.3580733804871314,
+        "lambda_q90": 15.275391389918507,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.0009601000783346839,
+            "masked_everywhere_time_share": 0.014623838888572516,
+            "target_below_floor_median_s": 0.04855478023082681
+          },
+          "2": {
+            "floor_binds_time_share": 0.0001759098657173887,
+            "masked_everywhere_time_share": 0.014623838888572516,
+            "target_below_floor_median_s": 0.02234897025937383
+          },
+          "3": {
+            "floor_binds_time_share": 9.952204049552958e-05,
+            "masked_everywhere_time_share": 0.014623838888572516,
+            "target_below_floor_median_s": 0.011014424996186083
+          },
+          "4": {
+            "floor_binds_time_share": 5.131321840903013e-05,
+            "masked_everywhere_time_share": 0.014623838888572516,
+            "target_below_floor_median_s": 0.008892884399753116
+          }
+        }
+      },
+      "rth": {
+        "segment_seconds": 23399.880401407998,
+        "lambda_q10": 1.3824410700180663,
+        "lambda_median": 6.340812878646508,
+        "lambda_q90": 1982.9686786131276,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.04257436330640627,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.04855478023082681
+          },
+          "2": {
+            "floor_binds_time_share": 0.012290717111814583,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.02234897025937383
+          },
+          "3": {
+            "floor_binds_time_share": 0.0055765857288804,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.011014424996186083
+          },
+          "4": {
+            "floor_binds_time_share": 0.0036918717459257554,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.008892884399753116
+          }
+        }
+      },
+      "post": {
+        "segment_seconds": 14400.008525824,
+        "lambda_q10": 0.014814829845963377,
+        "lambda_median": 0.052360590268544394,
+        "lambda_q90": 0.33287032441759284,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 2.7199983895675315e-09,
+            "masked_everywhere_time_share": 0.07828689297303675,
+            "target_below_floor_median_s": 0.04855478023082681
+          },
+          "2": {
+            "floor_binds_time_share": 2.7199983895675315e-09,
+            "masked_everywhere_time_share": 0.07828689297303675,
+            "target_below_floor_median_s": 0.02234897025937383
+          },
+          "3": {
+            "floor_binds_time_share": 2.7199983895675315e-09,
+            "masked_everywhere_time_share": 0.07828689297303675,
+            "target_below_floor_median_s": 0.011014424996186083
+          },
+          "4": {
+            "floor_binds_time_share": 2.7199983895675315e-09,
+            "masked_everywhere_time_share": 0.07828689297303675,
+            "target_below_floor_median_s": 0.008892884399753116
+          }
+        }
+      }
+    },
+    "ASST_2024-03-21_68.32": {
+      "premarket": {
+        "segment_seconds": 19800.103431838,
+        "lambda_q10": 3.6777160091097905,
+        "lambda_median": 15.551700025543045,
+        "lambda_q90": 66.77353964711999,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.07829020907069588,
+            "masked_everywhere_time_share": 0.7272843130135735,
+            "target_below_floor_median_s": 0.09844602549784615
+          },
+          "2": {
+            "floor_binds_time_share": 0.02884253107015146,
+            "masked_everywhere_time_share": 0.7272843130135735,
+            "target_below_floor_median_s": 0.123240124242673
+          },
+          "3": {
+            "floor_binds_time_share": 0.01133519226950654,
+            "masked_everywhere_time_share": 0.7272843130135735,
+            "target_below_floor_median_s": 0.1198447824136457
+          },
+          "4": {
+            "floor_binds_time_share": 0.0055745414412592285,
+            "masked_everywhere_time_share": 0.7272843130135735,
+            "target_below_floor_median_s": 0.10515810468339001
+          }
+        }
+      },
+      "rth": {
+        "segment_seconds": 23399.978442390002,
+        "lambda_q10": 0.3545352736199117,
+        "lambda_median": 3.3153872023477757,
+        "lambda_q90": 127.48734038941,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.01069044371980412,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.09844602549784615
+          },
+          "2": {
+            "floor_binds_time_share": 0.002777873260312324,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.123240124242673
+          },
+          "3": {
+            "floor_binds_time_share": 0.0012884172918460467,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.1198447824136457
+          },
+          "4": {
+            "floor_binds_time_share": 0.000854290924208144,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.10515810468339001
+          }
+        }
+      },
+      "post": {
+        "segment_seconds": 14399.918125772001,
+        "lambda_q10": 0.014830800657242444,
+        "lambda_median": 0.052508664868709226,
+        "lambda_q90": 0.4393121038804472,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.010037781327055345,
+            "target_below_floor_median_s": 0.09844602549784615
+          },
+          "2": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.010037781327055345,
+            "target_below_floor_median_s": 0.123240124242673
+          },
+          "3": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.010037781327055345,
+            "target_below_floor_median_s": 0.1198447824136457
+          },
+          "4": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.010037781327055345,
+            "target_below_floor_median_s": 0.10515810468339001
+          }
+        }
+      }
+    },
+    "COSM_2023-09-12_60.61": {
+      "premarket": {
+        "segment_seconds": 19800.016391167,
+        "lambda_q10": 3.3762446460983204,
+        "lambda_median": 18.646525479020845,
+        "lambda_q90": 283.81320700957014,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.040792668568310965,
+            "masked_everywhere_time_share": 0.2574149062155194,
+            "target_below_floor_median_s": 0.04138746865681325
+          },
+          "2": {
+            "floor_binds_time_share": 0.016447444430868263,
+            "masked_everywhere_time_share": 0.2574149062155194,
+            "target_below_floor_median_s": 0.0517064831635413
+          },
+          "3": {
+            "floor_binds_time_share": 0.00771776681347451,
+            "masked_everywhere_time_share": 0.2574149062155194,
+            "target_below_floor_median_s": 0.05183923742390174
+          },
+          "4": {
+            "floor_binds_time_share": 0.004167166015115451,
+            "masked_everywhere_time_share": 0.2574149062155194,
+            "target_below_floor_median_s": 0.046507509099820404
+          }
+        }
+      },
+      "rth": {
+        "segment_seconds": 23400.015479427002,
+        "lambda_q10": 1.2841143516928148,
+        "lambda_median": 26.965826407740586,
+        "lambda_q90": 8529.28658488218,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.045586997332794976,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.04138746865681325
+          },
+          "2": {
+            "floor_binds_time_share": 0.022466824970616365,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.0517064831635413
+          },
+          "3": {
+            "floor_binds_time_share": 0.013762418376523481,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.05183923742390174
+          },
+          "4": {
+            "floor_binds_time_share": 0.009555246448173509,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.046507509099820404
+          }
+        }
+      },
+      "post": {
+        "segment_seconds": 14399.968129406001,
+        "lambda_q10": 0.04215110160215083,
+        "lambda_median": 0.1265157930031145,
+        "lambda_q90": 0.8521438618034699,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 6.510913993520588e-06,
+            "masked_everywhere_time_share": 0.008556881459228812,
+            "target_below_floor_median_s": 0.04138746865681325
+          },
+          "2": {
+            "floor_binds_time_share": 6.510913993520588e-06,
+            "masked_everywhere_time_share": 0.008556881459228812,
+            "target_below_floor_median_s": 0.0517064831635413
+          },
+          "3": {
+            "floor_binds_time_share": 6.510913993520587e-06,
+            "masked_everywhere_time_share": 0.008556881459228812,
+            "target_below_floor_median_s": 0.05183923742390174
+          },
+          "4": {
+            "floor_binds_time_share": 6.510913993520587e-06,
+            "masked_everywhere_time_share": 0.008556881459228812,
+            "target_below_floor_median_s": 0.046507509099820404
+          }
+        }
+      }
+    },
+    "JFIN_2020-06-15_60.44": {
+      "premarket": {
+        "segment_seconds": 19799.538940927003,
+        "lambda_q10": 0.06665119259638351,
+        "lambda_median": 0.501049312514273,
+        "lambda_q90": 2.4013108399622682,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.00034173950232818933,
+            "masked_everywhere_time_share": 0.0006792901484790986,
+            "target_below_floor_median_s": 0.07088387155231912
+          },
+          "2": {
+            "floor_binds_time_share": 0.00026610181467959595,
+            "masked_everywhere_time_share": 0.0006792901484790986,
+            "target_below_floor_median_s": 0.08612868240378112
+          },
+          "3": {
+            "floor_binds_time_share": 0.00013355413431037175,
+            "masked_everywhere_time_share": 0.0006792901484790986,
+            "target_below_floor_median_s": 0.09404321190920845
+          },
+          "4": {
+            "floor_binds_time_share": 3.989654493252638e-05,
+            "masked_everywhere_time_share": 0.0006792901484790986,
+            "target_below_floor_median_s": 0.09321753743579277
+          }
+        }
+      },
+      "rth": {
+        "segment_seconds": 23400.554153882,
+        "lambda_q10": 0.9601736172324444,
+        "lambda_median": 9.024027877460073,
+        "lambda_q90": 123.32303216596368,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.05077960795436435,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.07088387155231912
+          },
+          "2": {
+            "floor_binds_time_share": 0.01869037835351621,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.08612868240378112
+          },
+          "3": {
+            "floor_binds_time_share": 0.010076660732193918,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.09404321190920845
+          },
+          "4": {
+            "floor_binds_time_share": 0.006181554602842737,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.09321753743579277
+          }
+        }
+      },
+      "post": {
+        "segment_seconds": 14399.906905191001,
+        "lambda_q10": 0.030369938510010814,
+        "lambda_median": 0.09876241118485819,
+        "lambda_q90": 0.37347527932802577,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.004580302490998996,
+            "target_below_floor_median_s": 0.07088387155231912
+          },
+          "2": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.004580302490998996,
+            "target_below_floor_median_s": 0.08612868240378112
+          },
+          "3": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.004580302490998996,
+            "target_below_floor_median_s": 0.09404321190920845
+          },
+          "4": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.004580302490998996,
+            "target_below_floor_median_s": 0.09321753743579277
+          }
+        }
+      }
+    },
+    "JFU_2021-02-24_55.56": {
+      "premarket": {
+        "segment_seconds": 19801.461275976,
+        "lambda_q10": 0.01549264561484761,
+        "lambda_median": 0.0483711150491403,
+        "lambda_q90": 0.21333021526171875,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.07340476336473592,
+            "target_below_floor_median_s": 0.06690809949123
+          },
+          "2": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.07340476336473592,
+            "target_below_floor_median_s": 0.013559935897750602
+          },
+          "3": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.07340476336473592,
+            "target_below_floor_median_s": 0.008955890722847479
+          },
+          "4": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.07340476336473592,
+            "target_below_floor_median_s": 0.009389690338903597
+          }
+        }
+      },
+      "rth": {
+        "segment_seconds": 23398.636493597,
+        "lambda_q10": 1.3380174771769364,
+        "lambda_median": 6.042015854399444,
+        "lambda_q90": 916.0158886235887,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.043289852989988754,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.06690809949123
+          },
+          "2": {
+            "floor_binds_time_share": 0.009980314877916239,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.013559935897750602
+          },
+          "3": {
+            "floor_binds_time_share": 0.0039831616557017835,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.008955890722847479
+          },
+          "4": {
+            "floor_binds_time_share": 0.0021688177553374505,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.009389690338903597
+          }
+        }
+      },
+      "post": {
+        "segment_seconds": 14399.902230427,
+        "lambda_q10": 0.024516945426626895,
+        "lambda_median": 0.10960190605518969,
+        "lambda_q90": 0.21225211219699994,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 8.018804444103226e-10,
+            "masked_everywhere_time_share": 0.04877447601685372,
+            "target_below_floor_median_s": 0.06690809949123
+          },
+          "2": {
+            "floor_binds_time_share": 8.018804444103226e-10,
+            "masked_everywhere_time_share": 0.04877447601685372,
+            "target_below_floor_median_s": 0.013559935897750602
+          },
+          "3": {
+            "floor_binds_time_share": 8.018804444103226e-10,
+            "masked_everywhere_time_share": 0.04877447601685372,
+            "target_below_floor_median_s": 0.008955890722847479
+          },
+          "4": {
+            "floor_binds_time_share": 8.018804444103226e-10,
+            "masked_everywhere_time_share": 0.04877447601685372,
+            "target_below_floor_median_s": 0.009389690338903597
+          }
+        }
+      }
+    },
+    "POLA_2021-01-22_55.92": {
+      "premarket": {
+        "segment_seconds": 19801.910617208996,
+        "lambda_q10": 0.028266582578183787,
+        "lambda_median": 0.14450289398780936,
+        "lambda_q90": 0.4456401222146083,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 8.66971709542022e-05,
+            "masked_everywhere_time_share": 0.027288770711063993,
+            "target_below_floor_median_s": 0.07991221928155602
+          },
+          "2": {
+            "floor_binds_time_share": 1.8649715531947566e-10,
+            "masked_everywhere_time_share": 0.027288770711063993,
+            "target_below_floor_median_s": 0.05715417727138339
+          },
+          "3": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.027288770711063993,
+            "target_below_floor_median_s": 0.026200754381432722
+          },
+          "4": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.027288770711063993,
+            "target_below_floor_median_s": 0.01716547981458382
+          }
+        }
+      },
+      "rth": {
+        "segment_seconds": 23398.168416114,
+        "lambda_q10": 1.9674615941458045,
+        "lambda_median": 9.659499283780256,
+        "lambda_q90": 825.2474112420732,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.09061040310471072,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.07991221928155602
+          },
+          "2": {
+            "floor_binds_time_share": 0.025830481058242476,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.05715417727138339
+          },
+          "3": {
+            "floor_binds_time_share": 0.010064193959593248,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.026200754381432722
+          },
+          "4": {
+            "floor_binds_time_share": 0.0053867321589666905,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.01716547981458382
+          }
+        }
+      },
+      "post": {
+        "segment_seconds": 14399.920966676998,
+        "lambda_q10": 0.029018174880103893,
+        "lambda_median": 0.11661321175884837,
+        "lambda_q90": 0.6747387723821865,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.004845541897727634,
+            "target_below_floor_median_s": 0.07991221928155602
+          },
+          "2": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.004845541897727634,
+            "target_below_floor_median_s": 0.05715417727138339
+          },
+          "3": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.004845541897727634,
+            "target_below_floor_median_s": 0.026200754381432722
+          },
+          "4": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.004845541897727634,
+            "target_below_floor_median_s": 0.01716547981458382
+          }
+        }
+      }
+    },
+    "RAIL_2020-11-27_63.18": {
+      "premarket": {
+        "segment_seconds": 19801.132614452,
+        "lambda_q10": 0.00854889475633914,
+        "lambda_median": 0.02969001248231385,
+        "lambda_q90": 0.07672991877561974,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.3597860329498209,
+            "target_below_floor_median_s": 0.07616356269644632
+          },
+          "2": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.3597860329498209,
+            "target_below_floor_median_s": 0.09138910280639786
+          },
+          "3": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.3597860329498209,
+            "target_below_floor_median_s": 0.08422352312514893
+          },
+          "4": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.3597860329498209,
+            "target_below_floor_median_s": 0.0728849055979661
+          }
+        }
+      },
+      "rth": {
+        "segment_seconds": 12598.728588009,
+        "lambda_q10": 3.157359438057035,
+        "lambda_median": 16.58492442526493,
+        "lambda_q90": 369.6424648125545,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.19495016574574417,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.07616356269644632
+          },
+          "2": {
+            "floor_binds_time_share": 0.07380988086195096,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.09138910280639786
+          },
+          "3": {
+            "floor_binds_time_share": 0.034741725353508134,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.08422352312514893
+          },
+          "4": {
+            "floor_binds_time_share": 0.019250508695840374,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.0728849055979661
+          }
+        }
+      },
+      "post": {
+        "segment_seconds": 14400.138797538999,
+        "lambda_q10": 0.035452150009185335,
+        "lambda_median": 0.10895628398417831,
+        "lambda_q90": 0.22987122605577331,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 9.80844712581094e-09,
+            "masked_everywhere_time_share": 0.022861684506975906,
+            "target_below_floor_median_s": 0.07616356269644632
+          },
+          "2": {
+            "floor_binds_time_share": 9.80844712581094e-09,
+            "masked_everywhere_time_share": 0.022861684506975906,
+            "target_below_floor_median_s": 0.09138910280639786
+          },
+          "3": {
+            "floor_binds_time_share": 9.808447125810941e-09,
+            "masked_everywhere_time_share": 0.022861684506975906,
+            "target_below_floor_median_s": 0.08422352312514893
+          },
+          "4": {
+            "floor_binds_time_share": 9.80844712581094e-09,
+            "masked_everywhere_time_share": 0.022861684506975906,
+            "target_below_floor_median_s": 0.0728849055979661
+          }
+        }
+      }
+    },
+    "SGD_2024-10-15_66.08": {
+      "premarket": {
+        "segment_seconds": 19800.068144307,
+        "lambda_q10": 10.114623746022769,
+        "lambda_median": 38.39515744301943,
+        "lambda_q90": 186.79120908268519,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.0599444425483588,
+            "masked_everywhere_time_share": 0.07551314688742101,
+            "target_below_floor_median_s": 0.04487090953559591
+          },
+          "2": {
+            "floor_binds_time_share": 0.03680859360741904,
+            "masked_everywhere_time_share": 0.07551314688742101,
+            "target_below_floor_median_s": 0.07477053280247273
+          },
+          "3": {
+            "floor_binds_time_share": 0.02363218279248893,
+            "masked_everywhere_time_share": 0.07551314688742101,
+            "target_below_floor_median_s": 0.09123177786399807
+          },
+          "4": {
+            "floor_binds_time_share": 0.014972532448795569,
+            "masked_everywhere_time_share": 0.07551314688742101,
+            "target_below_floor_median_s": 0.09861565056303269
+          }
+        }
+      },
+      "rth": {
+        "segment_seconds": 23399.947480306004,
+        "lambda_q10": 1.3602197151910653,
+        "lambda_median": 40.215387907045056,
+        "lambda_q90": 741.814468655796,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.050886066927165116,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.04487090953559591
+          },
+          "2": {
+            "floor_binds_time_share": 0.03162623491646069,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.07477053280247273
+          },
+          "3": {
+            "floor_binds_time_share": 0.02046978952637103,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.09123177786399807
+          },
+          "4": {
+            "floor_binds_time_share": 0.013722350765754834,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.09861565056303269
+          }
+        }
+      },
+      "post": {
+        "segment_seconds": 14399.984375387,
+        "lambda_q10": 0.015650280379632415,
+        "lambda_median": 0.03199914404957116,
+        "lambda_q90": 0.06566687806509769,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.009187058870572185,
+            "target_below_floor_median_s": 0.04487090953559591
+          },
+          "2": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.009187058870572185,
+            "target_below_floor_median_s": 0.07477053280247273
+          },
+          "3": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.009187058870572185,
+            "target_below_floor_median_s": 0.09123177786399807
+          },
+          "4": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.009187058870572185,
+            "target_below_floor_median_s": 0.09861565056303269
+          }
+        }
+      }
+    },
+    "TLRY_2020-03-19_61.13": {
+      "premarket": {
+        "segment_seconds": 19800.479767331002,
+        "lambda_q10": 0.006137297031762349,
+        "lambda_median": 0.03723445541982673,
+        "lambda_q90": 0.0606610055274659,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.55404981540691,
+            "target_below_floor_median_s": 0.06486587255361426
+          },
+          "2": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.55404981540691,
+            "target_below_floor_median_s": 0.029914933566767648
+          },
+          "3": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.55404981540691,
+            "target_below_floor_median_s": 0.0183455096353498
+          },
+          "4": {
+            "floor_binds_time_share": 0.0,
+            "masked_everywhere_time_share": 0.55404981540691,
+            "target_below_floor_median_s": 0.016112373919021917
+          }
+        }
+      },
+      "rth": {
+        "segment_seconds": 23399.492718498,
+        "lambda_q10": 1.257732563189053,
+        "lambda_median": 3.8086980838793263,
+        "lambda_q90": 128.6879203302091,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 0.024204948799392424,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.06486587255361426
+          },
+          "2": {
+            "floor_binds_time_share": 0.006516911457591137,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.029914933566767648
+          },
+          "3": {
+            "floor_binds_time_share": 0.0026794016902099943,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.0183455096353498
+          },
+          "4": {
+            "floor_binds_time_share": 0.001789643450940933,
+            "masked_everywhere_time_share": 0.0,
+            "target_below_floor_median_s": 0.016112373919021917
+          }
+        }
+      },
+      "post": {
+        "segment_seconds": 14400.027514171,
+        "lambda_q10": 0.025281500893057862,
+        "lambda_median": 0.1193934802794117,
+        "lambda_q90": 0.5339292431047941,
+        "by_rf": {
+          "1": {
+            "floor_binds_time_share": 5.3247814925730194e-09,
+            "masked_everywhere_time_share": 0.018951126345032578,
+            "target_below_floor_median_s": 0.06486587255361426
+          },
+          "2": {
+            "floor_binds_time_share": 5.3247814925730194e-09,
+            "masked_everywhere_time_share": 0.018951126345032578,
+            "target_below_floor_median_s": 0.029914933566767648
+          },
+          "3": {
+            "floor_binds_time_share": 5.3247814925730194e-09,
+            "masked_everywhere_time_share": 0.018951126345032578,
+            "target_below_floor_median_s": 0.0183455096353498
+          },
+          "4": {
+            "floor_binds_time_share": 5.3247814925730194e-09,
+            "masked_everywhere_time_share": 0.018951126345032578,
+            "target_below_floor_median_s": 0.016112373919021917
+          }
+        }
+      }
+    }
+  }
+}

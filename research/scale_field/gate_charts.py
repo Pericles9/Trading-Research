@@ -508,14 +508,155 @@ def chart_gateF_calibrated(t):
     save(fig, "gateF_calibrated.html")
 
 
+# --------------------------------------------------------------------------- #
+# 2026-09-09 review: the bandwidth sweep and what it took away
+# --------------------------------------------------------------------------- #
+
+def chart_bandwidth_family(t):
+    """The crossover tracks the surrogate bandwidth. This is the retraction."""
+    x = load("bandwidth_floor.json")
+    hs = [f"{h:g}" for h in x["bandwidths"]]
+    names = [("real", "real tape", 0, "solid"),
+             ("NS05_known_fine_structure", "NS05 - clusters at 0.5 s (must be seen)",
+              2, "solid"),
+             ("S30_envelope_only", "S30 - envelope only, NOTHING below 30 s", 1, "dash"),
+             ("poisson_nothing", "homogeneous Poisson - nothing at all", 3, "dot")]
+    fig = go.Figure()
+    for key, lab, col, dash in names:
+        ys = []
+        for h in hs:
+            v = [x["events"][e][key]["by_bandwidth"][h]["crossover_s"]
+                 for e in x["events"]]
+            v = [q for q in v if np.isfinite(q)]
+            ys.append(np.median(v) if v else np.nan)
+        fig.add_trace(go.Scatter(
+            x=[float(h) for h in hs], y=ys, mode="lines+markers", name=lab,
+            line=dict(color=SERIES[col], width=2.5, dash=dash), marker=dict(size=8),
+            hovertemplate="h %{x} s<br>crossover %{y:.1f} s<extra></extra>"))
+    hh = np.array([float(h) for h in hs])
+    fig.add_trace(go.Scatter(x=hh, y=2.6 * hh, mode="lines",
+                             name="2.6 x h - the artifact line",
+                             line=dict(color=t["winner"], width=2, dash="dashdot")))
+    shell(fig, t, "The crossover tracks the surrogate bandwidth - the retraction",
+          "A rate-matched surrogate contains intensity structure down to its bandwidth h "
+          "and none below it, so a crossover at ~3h is what ANY tape produces. S30 is "
+          "the proof: built to have nothing below 30 s, it returns 89.2 s at h = 30 "
+          "against the real tape's 86.9 s. Median across five events, regular hours.",
+          "surrogate bandwidth h (seconds)", "measured crossover (seconds)",
+          logx=True, logy=True)
+    save(fig, "bandwidth_family_ratio.html")
+
+
+def chart_bandwidth_controls(t):
+    """The full ratio curve per bandwidth, with the controls that read it."""
+    x = load("bandwidth_floor.json")
+    sc = np.array(x["scales"])
+    for key, lab in (("real", "real tape"),
+                     ("NS05_known_fine_structure", "NS05 (clusters at 0.5 s)"),
+                     ("S30_envelope_only", "S30 (envelope only)")):
+        fig = go.Figure()
+        for i, h in enumerate([f"{v:g}" for v in x["bandwidths"]]):
+            ys = [np.nanmedian([x["events"][e][key]["by_bandwidth"][h]["ratio"][j]
+                                for e in x["events"]]) for j in range(sc.size)]
+            fig.add_trace(go.Scatter(
+                x=sc, y=ys, mode="lines", name=f"h = {h} s",
+                line=dict(color=SERIES[i % len(SERIES)], width=2),
+                hovertemplate="s %{x:.3g}s<br>ratio %{y:.2f}<extra></extra>"))
+        fig.add_hline(y=1.0, line=dict(color=t["winner"], width=2),
+                      annotation_text="1.00 - the surrogate reproduces the tape",
+                      annotation_font=dict(size=10, color=t["winner"]))
+        shell(fig, t, f"Field sd ratio against surrogate bandwidth - {lab}",
+              "Each curve is the tape's field sd divided by that of its OWN surrogate at "
+              "bandwidth h. Where the curves separate, the answer depends on h and is "
+              "the surrogate's; where they lie on top of each other the excess is a "
+              "property of the tape. Median across five events, regular hours.",
+              "kernel scale s (seconds)", "sd(tape) / sd(its own surrogate)",
+              logx=True, logy=True)
+        save(fig, f"bandwidth_controls_{key}.html")
+
+
+def chart_subsecond(t):
+    """The surviving fine excess against collapse tolerance: it is fragmentation."""
+    x = load("subsecond_origin.json")
+    sc = np.array(x["scales"])
+    fig = go.Figure()
+    for i, tol in enumerate([f"{v:g}" for v in x["tolerances_ms"]]):
+        ys = []
+        for j in range(sc.size):
+            v = [x["events"][e]["by_tolerance"][tol]["ratio"][j] for e in x["events"]
+                 if x["events"][e]["by_tolerance"][tol]["ratio"]]
+            v = [q for q in v if np.isfinite(q)]
+            ys.append(np.median(v) if v else np.nan)
+        ret = np.median([x["events"][e]["by_tolerance"][tol].get("retained_share", 1.0)
+                         for e in x["events"]
+                         if x["events"][e]["by_tolerance"][tol]["ratio"]])
+        fig.add_trace(go.Scatter(
+            x=sc, y=ys, mode="lines+markers",
+            name=f"collapse tolerance {tol} ms  ({ret:.0%} of prints kept)",
+            line=dict(color=SERIES[i], width=2.5), marker=dict(size=5),
+            hovertemplate="s %{x:.3g}s<br>ratio %{y:.2f}<extra></extra>"))
+    fig.add_hline(y=1.0, line=dict(color=t["winner"], width=2),
+                  annotation_text="1.00 - no excess over a rate-matched surrogate",
+                  annotation_font=dict(size=10, color=t["winner"]))
+    shell(fig, t, "The surviving fine excess is sub-10 ms print clustering",
+          "40-57% of inter-print intervals on these tapes are under one millisecond. "
+          "Collapsing prints within a tolerance - with the surrogate rebuilt from the "
+          "collapsed tape each time, so F's invariance to lambda -> c*lambda keeps the "
+          "comparison like-for-like and thinning alone cannot move the ratio - takes the "
+          "0.25 s excess from 4.06 to 1.29 at 10 ms. Surrogate bandwidth h = 1 s "
+          "throughout, the tightest at which both null controls still read 1.00.",
+          "kernel scale s (seconds)", "sd(tape) / sd(its own h = 1 s surrogate)",
+          logx=True, logy=True)
+    save(fig, "subsecond_collapse.html")
+
+
+def chart_read_by_rate(t):
+    """Matched on local rate, the segments behave the same."""
+    x = load("read_by_rate.json")
+    for metric, lab in (("survivor_fraction", "survivor fraction"),
+                        ("mean_read_scale_s", "mean read scale s* (seconds)")):
+        fig = go.Figure()
+        for i, seg in enumerate(("rth", "premarket")):
+            for f_ in (1.0, 4.0):
+                xs, ys, ns = [], [], []
+                for b in range(len(x["rate_edges"]) - 1):
+                    k = f"{seg}|{b}|{f_:g}"
+                    c = x["cells"].get(k)
+                    if not c or c["defined_seconds"] < 600:
+                        continue
+                    lo, hi = c["rate_lo"], c["rate_hi"]
+                    xs.append(np.sqrt(max(lo, 1e-3) * min(hi, 300.0)))
+                    ys.append(c[metric])
+                    ns.append(c["defined_seconds"] / 3600.0)
+                fig.add_trace(go.Scatter(
+                    x=xs, y=ys, mode="lines+markers", name=f"{seg}, rf {f_:g}",
+                    line=dict(color=SERIES[i], width=2.5,
+                              dash="solid" if f_ == 4.0 else "dot"),
+                    marker=dict(size=7), customdata=ns,
+                    hovertemplate="lambda %{x:.2g}/s<br>" + lab
+                                  + " %{y:.4g}<br>%{customdata:.1f} h<extra></extra>"))
+        shell(fig, t, f"Matched on local rate, the segments agree - {lab}",
+              "Every defined cell binned on local lambda-hat and compared WITHIN rate "
+              "bins, which is the opposite of pooling. The segment difference in read "
+              "scale is a time-allocation difference: premarket spends 26.4 h below "
+              "0.1/s and 0.9 h above 10/s; regular hours spends 34.4 h above 1/s. Ten "
+              "events.",
+              "local print rate lambda-hat (/s)", lab, logx=True,
+              logy=(metric == "mean_read_scale_s"))
+        save(fig, f"read_by_rate_{metric}.html")
+
+
 def main() -> int:
     theme = THEMES["light"]
-    which = sys.argv[1:] or ["C", "B", "E", "F", "D", "X", "S", "R", "EC", "DS", "FC"]
+    which = sys.argv[1:] or ["C", "B", "E", "F", "D", "X", "S", "R", "EC", "DS", "FC",
+                             "BW", "BC", "SS", "RR"]
     fns = {"C": chart_noise_ruler, "B": chart_gateB, "E": chart_gateE,
            "F": chart_gateF, "D": chart_gateD, "X": chart_excess,
            "S": chart_surrogate, "R": chart_read_scale,
            "EC": chart_gateE_ceiling, "DS": chart_gateD_surrogate,
-           "FC": chart_gateF_calibrated}
+           "FC": chart_gateF_calibrated, "BW": chart_bandwidth_family,
+           "BC": chart_bandwidth_controls, "SS": chart_subsecond,
+           "RR": chart_read_by_rate}
     for w in which:
         try:
             fns[w](theme)

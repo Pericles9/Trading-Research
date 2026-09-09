@@ -1,14 +1,17 @@
 # Does the scale field detect anything real on this tape?
 
-**Date:** 2026-09-08 (revised same day after review). **Type:** diagnostic read. Records no
-decision, applies no gate, produces no digest.
+**Date:** 2026-09-08, **revised 2026-09-09 after a second review** - see §1, which withdraws the
+scale-anchored headline. **Type:** diagnostic read. Records no decision, applies no gate, produces no
+digest.
 **Brief:** goals-and-tests, 2026-09-07. **Cohort:** the ten committed panel events
 (`results/scale_field/artifacts/event_panels_cohort.csv`), plus a 60-event print-count-stratified
 draw for Gate D.
 **Code:** `research/scale_field/instrument_gates.py`, `gateA_resolve.py`, `satisfiability.py`,
 `excess_variance.py`, `surrogate_control.py`, `gateD_cohort.py`, `gate_charts.py`, and the
 review follow-ups `read_scale_distribution.py`, `gateD_vs_surrogate.py`, `gateE_ceiling.py`,
-`gateF_calibration.py`, `gateF_recompute.py`.
+`gateF_calibration.py`, `gateF_recompute.py`; and the 2026-09-09 follow-ups
+`surrogate_bandwidth_family.py`, `bandwidth_floor.py`, `subsecond_origin.py`,
+`premarket_coverage.py`, `read_by_rate.py`, `absolute_vs_ratio.py`, `crossover_vs_decay.py`.
 **Artifacts:** `results/scale_field/artifacts/instrument_gates/`. **Charts:**
 `results/scale_field/charts/instrument_gates/`.
 
@@ -28,38 +31,50 @@ review follow-ups `read_scale_distribution.py`, `gateD_vs_surrogate.py`, `gateE_
 
 ---
 
-## 1. The answer to §1
+## 1. The answer to §1 — third version, and the second retraction
 
-**The field detects real structure below about 30 seconds and detects nothing but the clock above about
-60. That band, not the read factor, is the finding.**
+**The 30-second crossover was the surrogate's bandwidth, not the tape's. It is withdrawn.**
+**What survives the bandwidth sweep is a sub-second excess, and that excess is print fragmentation.**
+**On this cohort, at the scales this instrument can read, there is no established burst structure left.**
 
-Four methods with almost nothing in common now put the crossover in the same place:
+Sweeping the surrogate bandwidth `h` over 1 – 300 s, the measured crossover is **2.6 s, 5.5 s, 14.6 s,
+42.5 s, 86.9 s, 305 s** — it tracks `h` at roughly `2.6h` throughout. **The positive control settles it
+beyond argument: `S30`, a tape built to carry envelope structure above 30 s, nothing below it and no
+clustering anywhere, returns a crossover of 88.8 s at `h = 30` against the real tape's 89.3 s.
+Indistinguishable.** The mechanism is that re-estimating `λ̂` at bandwidth `h` from a tape already
+smooth at `h` gives an effective bandwidth of `h√2`, so any tape with an envelope shows a spurious
+excess below ~3h. A homogeneous-Poisson control does not — which is why one control was not enough, and
+why the first version of this read had no way to catch it.
 
-| method | below ~30 s | above ~64 s |
-|---|---|---|
-| survivor fraction vs smooth-rate surrogate (RTH) | **9.9 – 41× the envelope** | **0.43 – 2.0×**, mostly ≤ 1 |
-| split-half reliability vs its surrogate ceiling | r 0.90–0.96, **ceiling ≈ 0.00** | r 0.96–0.99, **ceiling 0.95–0.99** |
-| observed sd(F) ÷ sampling noise, real vs surrogate | real/surrogate **1.9 – 3.1×** | real/surrogate **0.76 – 1.03** |
-| negative-run width vs its two calibrated references | at or **below** the Poisson value | at the Poisson value |
+**What survived that sweep looked like a real finding for about an hour.** Below ~1 s the excess is
+genuinely invariant to `h`: **3.99 / 3.79 / 3.78 / 3.48 / 3.63** at `s = 0.25 s` for `h` = 1 / 2 / 5 /
+15 / 30, a 30× sweep, while both structureless controls read **0.96 – 1.03 at every `h`**. That cannot
+be intensity structure the surrogate is missing.
 
-The read factor matters only because it decides **which side of that line the read lands on**, and the
-answer differs per segment — which is why they were never poolable. Weighted by the marks themselves,
-at `read_factor = 4`: **regular hours reads at a median 4.4 s with 100% of surviving marks below 30 s**;
-**premarket reads at 153 s with 75% above 64 s**; post-close at 99 s with 71% above. So the same
-`read_factor = 4` is a real detection in regular hours and a clock reading in premarket.
+**It is order fragmentation.** 40–57% of inter-print intervals on these tapes are **under one
+millisecond** (median ITT 0.3–2.8 ms). Collapsing prints within a tolerance — and rebuilding the
+surrogate from the collapsed tape each time, so the comparison stays like-for-like — the excess at
+0.25 s falls **4.06 → 2.63 → 1.29 → below 1** at tolerances of 0 / 1 / 10 / 100 ms. **The
+bandwidth-invariant fine excess is driven by sub-10 ms print clustering**, which sits at or below the
+band CLAUDE.md already records as unmeasurable on this cohort ("zero of 100 events are admissible in
+the fine band; do not aim any test there"). Whether it is one order printing many times or genuine
+ultra-fast arrival clustering is **not decidable from the trade tape alone** and needs order-level
+attribution or the quote side.
 
-So option **(iii)** still holds, but "detects cleanly at `read_factor = 4`" was the wrong compression and
-is withdrawn. The correct statement is: **in regular hours the field detects structure a smooth rate
-path cannot produce, at 10–41× the envelope, at every read factor, because in regular hours every read
-factor lands below 30 s. In premarket and post-close at `read_factor ≥ 2` it does not — it reads the
-session envelope.** The `read_factor = 1` defect is unchanged and is separate: its satisfiable band is
-empty, so nothing it detects can be measured.
+**So, against the brief's three options: the honest answer is now (ii) for every scale this cohort can
+measure.** The field is a correct instrument — Gates 0, A, C and F's calibration all hold, and the
+estimator is right to machine precision — but every positive claim this lineage has made about *what it
+detects* has now failed a control: the coarse marks are the session envelope, the mid-scale crossover
+was the surrogate's bandwidth, and the fine excess is the print process.
+
+**What is still true, and it is not nothing:** the field is not *sampling* noise (Gate B's survivors
+run 111× the estimator's own null; Gate E's raw reliability is 0.90–0.99), the estimator is correct,
+the noise ruler reproduces, and `read_factor = 1`'s satisfiable band is empty. Those are statements
+about the instrument and they stand. **The statements about the tape do not.**
 
 > **One input to this brief does not exist.** §0 directs "read `claude/scale_field_reading_grammar.md`
-> first". There is no `claude/` directory in this checkout and no file of that name in the repo or in
-> git history — it lives in the Claude project, not the git tree. Every derivation attributed to it was
-> re-derived here from `scale_field.py` and re-checked numerically, and **all of them reproduce**
-> (Gate C's table to ≤ 0.013 absolute), so each now has two independent derivations rather than one.
+> first". There is no such file in the checkout or in git history — it lives in the Claude project. Every
+> derivation attributed to it was re-derived here and reproduces (Gate C's table to ≤ 0.013 absolute).
 
 ---
 
@@ -94,6 +109,17 @@ empty, so nothing it detects can be measured.
 | **F** | **width statistic calibrated** (review §4) | 2.00 on noise, 2.83 on a `σ = s` bump | **1.99 – 2.10** on Poisson (target 1.987); **2.838** on the bump (predicted 2.828, ratio **1.003**) | **estimator unbiased** |
 | **F** | real tape, mean width/s, complete runs only | — | RTH **1.36 → 1.97**, never above the Poisson value; p90 2.4–2.8 vs Poisson p90 3.0–3.1 | **nothing in 8–512 s was ever resolved** |
 | **F** | read scale in absolute seconds, mark-weighted, `rf = 4` (review §1) | — | **RTH 4.4 s, 100% < 30 s**; premarket 153 s, 75% > 64 s | **the finding is per segment** |
+| **G1** | **crossover vs surrogate bandwidth `h`** (2026-09-09 §1) | sits still if it is the tape's | **2.6 / 5.5 / 14.6 / 42.5 / 86.9 / 305 s** at `h` = 1/2/5/15/30/100 — **tracks `h` at ≈2.6h** | **the crossover is the surrogate's. WITHDRAWN** |
+| **G1** | positive control `S30` (envelope only, nothing below 30 s) at `h = 30` | must show no crossover | **88.8 s** vs the real tape's **89.3 s** | **indistinguishable — the artifact, proven** |
+| **G1** | negative control, homogeneous Poisson, every `h ≤ 30` | 1.00, no crossover | **0.38 – 0.94 s**, i.e. none | pass |
+| **G1** | excess at `s = 0.25 s` across `h` = 1 … 30 | — | **3.99 / 3.79 / 3.78 / 3.48 / 3.63** | **invariant — survives the sweep** |
+| **G1** | both null controls at `s = 0.25 s`, every `h` | 1.00 | **0.96 – 1.03** | pass |
+| **G2** | **the surviving fine excess vs collapse tolerance** (0/1/10/100 ms) | — | **4.06 → 2.63 → 1.29 → <1** at `s = 0.25 s` | **it is sub-10 ms print clustering** |
+| **G2** | share of inter-print intervals under 1 ms | — | **0.40 – 0.57**; median ITT 0.3 – 2.8 ms | the tape is fragmented at that scale |
+| **G3** | premarket read scale a ladder-floor artefact? (§2b) | — | floor binds **0.00 – 0.02%** of premarket time at `rf 4` | **not an artefact** |
+| **G3** | premarket vs RTH **matched on local rate** (§2a) | — | survivor fraction within a rate bin: **pre 0.098 / rth 0.113** at λ 1–3, **0.112 / 0.178** at λ 10–30 | **the segment split is a rate difference** |
+| **G4** | `rf = 1`'s 40.9× — ratio or vanishing denominator? (§3) | — | ratio non-monotone **37 / 46 / 21 / 11**; abs excess **0.012 / 0.057 / 0.084 / 0.096**; excess mean F **2.02 / 1.43 / 1.07 / 0.83 sd** | **ratio retired; the two absolute statistics disagree** |
+| **G5** | crossover vs event envelope curvature (§4) | tracks if it is the envelope | slope 0.12 – 0.85, **t ≤ 1.25, n = 5**, and L spans only 92 – 111 s | **underpowered — no leverage in this cohort** |
 
 ---
 
@@ -396,6 +422,12 @@ Charts: `gateD_shaded_vs_prints_rf{1.0,2.0,4.0}.html`.
 
 ### 6.3 Gate D against the surrogate — the test print count could not do
 
+> **⚠ Every number in this subsection uses the `h = 30 s` surrogate, and §10 shows that bandwidth
+> manufactures a crossover at ~89 s on a tape with no structure below 30 s. The comparison BETWEEN
+> read factors and BETWEEN segments is unaffected — they all face the same surrogate — but the
+> "below 30 s / above 64 s" split it reports is the surrogate's bandwidth and not the tape's.
+> Read §10 first.**
+
 **The gate had a hole and it is mine.** Gate D was built to catch the Arm A failure — marks
 proportional to activity — and it catches it. It cannot catch the failure the surrogate control raised.
 **A diurnal envelope produces a roughly constant shaded fraction across events regardless of print
@@ -438,6 +470,12 @@ Charts: `gateD_vs_surrogate_{rth,premarket}.html`.
 ---
 
 ## 7. Gate E — split-half reliability, and the ceiling it was missing
+
+> **⚠ The ceiling in this section is built at `h = 30 s`. The finding that the coarse-scale
+> reliability is entirely envelope stands — the ceiling reaches 0.95 by 64 s, well above `h`, where the
+> surrogate is faithful. The finding that fine-scale reliability is "real structure" inherits §10: the
+> `h = 30` ceiling is blind to everything below 30 s by construction, so a near-zero ceiling there was
+> guaranteed and proves nothing. §10 redoes it properly.**
 
 **"No null needed" was the wrong claim, and it was mine.** A null is not needed; a **ceiling** is.
 Reliability near 1 at *every* scale, including fine scales where `n_eff` is small and noise should
@@ -559,6 +597,10 @@ Charts: `gateF_calibrated.html`, `gateF_median_width_over_s.html`, `gateF_depth_
 
 ### 8.2 The one curve with no threshold in it
 
+> **⚠ The surrogate comparison in this subsection is `h = 30 s`. Its coarse half stands; its
+> "below 30 s the excess is not a rate path" half is circular — a 30 s-smooth surrogate cannot
+> reproduce 5 s structure by construction. §10.**
+
 Observed sd(F) at each scale row against the **estimator's own sampling-noise sd**, the null evaluated
 per cell at that cell's `n_eff` and combined as `√(mean sd²)` — λ varies by a factor of ten inside one
 scale row, so a row-median n_eff would understate the floor wherever the tape is thin. Median of ten
@@ -604,76 +646,220 @@ Chart: `excess_variance_{centred,onesided}.html`, `surrogate_control.html`.
 
 ---
 
-## 9. Six routes, and the one line they all draw
+## 9. The premarket inversion, and §3's split — review items 2 and 3
 
-Nothing here rests on one measurement. Six methods with almost nothing in common were run. **They do
-not agree on a read factor. They agree on a scale.**
+### 9.1 Premarket is not a grid artefact, and it is not a segment effect
 
-| route | what it needs | below ~30 s | above ~64 s |
-|---|---|---|---|
-| Gate D vs surrogate (RTH) | a rate-matched control | **9.9 – 41×** the envelope | 0.43 – 2.0×, mostly ≤ 1 |
-| Gate E vs its ceiling | a rate-matched control | excess r **0.87 – 0.95** | excess r **0.00 – 0.02** |
-| excess variance vs surrogate | a rate-matched control | real/surrogate **1.9 – 3.1×** | real/surrogate 0.76 – 1.03 |
-| Gate B magnitude threshold | a Poisson null | survivors **111×** the null | survivors 11 – 17× the null |
-| Gate F width, calibrated | two analytic references | **shorter** than Poisson | at Poisson |
-| Gate D on print count, n = 60 | a cohort with leverage | *cannot distinguish these* — see §6.3 | |
+**§2(b), the five-minute check, comes back clean.** The ladder floor (`0.25 s`) binds on **0.00–0.02%
+of premarket time at `rf = 4`** — the fast premarket stretches are not falling off the bottom of the
+grid. (It binds more in *regular hours*: 4.8% at `rf 1`, 0.58% at `rf 4`.) What *is* large in premarket
+is the `n_eff` mask: 3–73% of premarket time has no defined scale at all on some events, which is the
+tape being too thin, not the grid being too coarse.
 
-**Every route that carries a rate-matched control puts the crossover at 30–64 s.** The two routes that
-do not — the Poisson null and the print-count regression — cannot see it, and that is the structural
-lesson: **a Poisson null and a print-count regression both score the session envelope as a detection.**
-Gate B's 111× and Gate D's `r² = 0.000` are both true and both would look identical on a tape with no
-clustering whatsoever above the envelope.
+**§2(a) resolves the inversion, and it dissolves the segment split.** Matched on local `λ̂`, premarket
+and regular hours behave the same — survivor fraction within a rate bin, `rf = 4`:
 
-**What none of it establishes.** The rate channel cannot separate clumping from a smooth rate excursion
-at constant mean rate — two tapes with identical `λ̂(t)`, one Poisson and one violently clustered, give
-identical fields (brief §11). The surrogate narrows the question to below 30 s but cannot answer it:
-what is established is that **something below 30 s is not a 30-second-smooth rate path**, not that it is
-clumping. Nothing here is evidence about burst *duration* (Gate F: nothing in 8–512 s was resolved), or
-about tradeability, which D24 and D25 closed on cost arithmetic.
+| λ̂ bin (/s) | 0.03–0.1 | 0.1–0.3 | 0.3–1 | 1–3 | 3–10 | 10–30 | 30–100 |
+|---|---|---|---|---|---|---|---|
+| **premarket** | 0.080 | 0.106 | 0.114 | 0.098 | 0.086 | 0.112 | 0.256 |
+| **rth** | 0.029 | 0.072 | 0.078 | 0.113 | 0.158 | 0.178 | 0.319 |
+| mean `s*` premarket (s) | 193 | 62 | 20 | 5.8 | 1.9 | 0.61 | 0.26 |
+| mean `s*` rth (s) | 129 | 55 | 17 | 5.9 | 2.0 | 0.64 | 0.26 |
+| survivor share below 30 s | 0.00 | 0.00 | 0.93–0.99 | 1.00 | 1.00 | 1.00 | 1.00 |
 
-## 10. What I would do next — offered as a view, and labelled as one
+**Same rate, same read scale, same survivorship.** The segment difference is a *time-allocation*
+difference: across the ten events premarket spends **26.4 hours below λ̂ = 0.1/s** and 0.9 h above
+10/s, while regular hours spends **34.4 h above 1/s** and 1.9 h below 0.1/s. Premarket reads at 153 s
+because premarket is mostly dead tape, not because premarket is different.
 
-1. **State the finding as a band, not a read factor, wherever it is written down.** "Detects at
-   `read_factor = 4`" is false in premarket and true in regular hours for a reason that has nothing to
-   do with 4: it is whether the read lands below 30 s. The read factor is a means; the band is the
-   finding.
+**So segment was the wrong conditioning variable and the review is right that rate is the portable
+one.** The crossing of the 30 s line happens at `λ̂ ≈ 0.3/s` at `rf = 4`, which is arithmetic
+(`4 × 2.2568 / 30 = 0.30`) and confirms the binning rather than discovering anything.
 
-2. **Retire `read_factor = 1` from the panels — the derivation is complete and does not depend on
-   anything still open.** `n_eff = 8` exactly at the read, `2·sd = 0.785`, `F ≥ −1`, so detection needs
-   `σ < 0.523·s_min` while a width can only be read at `σ ≥ s_min`: **the satisfiable band is empty.**
-   That is arithmetic, it holds at every rate on every event, and it is unaffected by everything the
-   review corrected. It is a real decision with a real derivation and belongs in
-   `docs/Universe-Decisions.md`, which this read deliberately did not touch. **Note the tension to
-   resolve when writing it:** `rf = 1` in RTH also has the *highest* envelope contrast of any read
-   (40.9× against 9.9× at `rf = 4`). It is the purest detection and the least measurable one, and the
-   case for retiring it is measurability, not signal.
+**One correction to the review's proposed mechanism.** The envelope-bias argument — slower tape, coarser
+read, more envelope, more survivors — predicts survivorship *falling* with rate. **Measured, it rises**:
+0.029 → 0.319 across the RTH rate bins. So the mechanism is real but is not the dominant term. Slow tape
+does manufacture coarse survivors (6.5% of premarket time below λ̂ = 0.03/s, **all of it above 30 s**),
+but fast tape produces more of them and all below 30 s. Both effects are present; the second is larger.
 
-3. **Do not read anything above ~60 s on this channel as burst structure, in any segment.** In
-   premarket and post the real tape produces *fewer* survivors up there than a structureless tape with
-   the same rate path (0.49–0.83×). That is the strongest single statement in this read and it is the
-   one most likely to be misused if the band is dropped.
+### 9.2 The 40.9× was a vanishing denominator — and the two absolute statistics disagree
 
-4. **The open question this leaves is what the sub-30 s excess is.** The rate channel provably cannot
-   answer it. Two routes exist and they are not equivalent: the interval channel (separate work, out of
-   scope here) or injection–recovery, which is now well-posed in a way it was not last week — a
-   candidate operating point (`rf` 3–4 in RTH), a candidate band (below 30 s, where every controlled
-   route agrees the excess is real), and a pre-registered prediction from §5.1 that recovery must
-   collapse for `σ > s*·√(1/(2·sd) − 1)`.
+**The ratio is retired, as the review asked, and the reason is visible in its own numbers:** it is
+**non-monotone** in read factor — 37.4, 46.1, 21.3, 11.2 at `rf` 1/2/4 — which no property of the read
+should be. It is division by a surrogate field that collapses as `(s/L)²`.
 
-5. **Open the charts before any of this is written down.** They are at
-   `results/scale_field/charts/instrument_gates/` and are gitignored by the same deliberate rule that
-   excludes the panel charts, so they exist only locally. Every closure in this lineage has turned on
-   looking at a picture, and none of the numbers above substitute for `read_scale_survivor_weighted.html`
-   and `gateD_vs_surrogate_rth.html`.
+On the two absolute statistics, both holding `n_eff` fixed at `8.01·rf`:
 
-**A note on the format, since it produced two of the four corrections.** The brief's numbers were
-carried by reference to a file outside the checkout, and its Gate A tolerance and Gate E "no reference
-needed" claim were both wrong in ways an agent with only the repo could not check against anything.
-**A goals-and-tests brief has to carry its numbers and its references inline** — not because the
-derivations were bad, but because the agent's whole world is the checkout, and a pre-registered number
-it cannot verify is indistinguishable from one it must not question.
+| rf | sd at read | survivor fraction, real | surrogate | **ABS excess** | **excess mean F, in sd** |
+|---|---|---|---|---|---|
+| 1 | 0.392 | 0.0118 | 0.0003 | 0.0117 | **+2.018** |
+| 2 | 0.238 | 0.0584 | 0.0013 | 0.0569 | +1.426 |
+| 3 | 0.188 | 0.0881 | 0.0043 | 0.0840 | +1.067 |
+| 4 | 0.159 | 0.1076 | 0.0092 | **0.0957** | +0.826 |
 
-## 11. Reproduction
+**They disagree, so the tension changes shape rather than dissolving.** On yield — excess survivor time
+per unit admissible time — `rf = 4` leads by **8×**, and the review's prediction holds. On per-cell
+displacement from the envelope, `rf = 1` leads at **2.02 sd against 0.83**, and it does not. Both are
+absolute, both hold `n_eff` fixed, and they are measuring different things: `rf = 1` reads where the
+contrast per cell is largest, but its threshold (`2·sd = 0.785` against a bound of −1) admits almost
+nothing; `rf = 4` reads where contrast per cell is weaker and the threshold is three times easier.
+
+**The decision text should therefore say: the ratio is not a comparable statistic and is withdrawn;
+`rf = 1` is retired on measurability (the satisfiable band is empty) and on yield (8× less), not on
+per-cell signal, where it is in fact the strongest read.** That is a narrower claim than either the
+original tension or the review's proposed resolution.
+
+*(Both rows use the `h = 30` surrogate and inherit §10's caveat on absolute magnitude; the comparison
+between read factors is unaffected because they face the same surrogate.)*
+
+---
+
+## 10. The bandwidth sweep, and what it took away
+
+*(This is the review's §1, run with four controls rather than one. It is placed last because it
+retracts things stated above, and the retraction is easier to read once they have been stated.)*
+
+### 10.1 The sweep
+
+| base tape | ground truth | h=1 | h=2 | h=5 | h=15 | h=30 | h=100 | h=300 |
+|---|---|---|---|---|---|---|---|---|
+| **real** | the question | 2.6 | 5.5 | 14.6 | 42.5 | 86.9 | 305 | none |
+| **S30** envelope only, nothing below 30 s | crossover at 30 s, or none | 0.7 | 0.8 | 0.8 | 31.1 | **89.2** | 297 | none |
+| **NS05** clusters at σ = 0.5 s | must be detected | 2.5 | 4.7 | 10.7 | 39.3 | 86.6 | — | — |
+| **Poisson** nothing at all | 1.00, no crossover | 0.7 | 0.6 | 0.4 | 0.9 | 0.4 | 99 | 214 |
+
+**The real tape's crossover is ≈ 2.6·h at every bandwidth over two decades.** And `S30` — which by
+construction has *nothing* below 30 s — returns **89.2 s at `h = 30` against the real tape's 86.9 s.**
+A tape with no fine structure and the real tape are indistinguishable on this statistic at the
+bandwidth the earlier sections used.
+
+**Why:** re-estimating `λ̂` at bandwidth `h` from a tape already smooth at `h` composes to `h√2`, so the
+surrogate is smoother than its own base and every tape with an envelope shows a spurious excess below
+~3h. The Poisson control does not show it because it has no envelope to double-smooth — **one control
+was not enough, and that is the methodological lesson.**
+
+### 10.2 What survived, and how it was checked
+
+The ratio *curve*, not the crossover, is bandwidth-invariant at the fine end:
+
+| s | h=1 | h=2 | h=5 | h=15 | h=30 |
+|---|---|---|---|---|---|
+| **0.25** | **3.99** | 3.79 | 3.78 | 3.48 | 3.63 |
+| 0.50 | 3.62 | 3.74 | 3.49 | 3.48 | 3.55 |
+| 1.00 | 2.09 | 3.42 | 3.45 | 3.43 | 3.17 |
+| 4.00 | 1.02 | 1.21 | 2.30 | 3.51 | 3.65 |
+| 64.0 | 0.99 | 0.99 | 0.99 | 1.05 | 1.21 |
+| `S30` at 0.25 | 0.96 | 1.03 | 1.03 | 1.03 | 1.03 |
+| `Poisson` at 0.25 | — | — | — | — | — (masked) |
+
+At `h = 1` the surrogate carries every intensity variation down to 1 s and the real tape **still**
+exceeds it 4× at 0.25 s, while `S30` reads 0.96. **`NS05` is the control that says the procedure has
+not gone blind**: a σ = 0.5 s cluster process is still detected at `h = 1` (ratio 1.54 at s = 1 s),
+though it is losing sensitivity there — at `h ≥ 2` it reads 1.95–2.04. So `h = 1` is near the
+overfitting floor but has not passed it.
+
+**And `NS05`'s shape does not match the real tape's.** NS05 peaks at s ≈ 1 s and reads **1.03 at
+0.25 s** — below its own cluster width a cluster looks like a locally elevated Poisson rate, so there
+is nothing for a curvature statistic to see. The real tape rises **monotonically as s falls**. Whatever
+the real fine structure is, it is *not* shaped like clustering at 0.5 s; it is at or below the ladder
+floor.
+
+### 10.3 And below the ladder floor is the print process
+
+| s | tol = 0 ms | 1 ms | 10 ms | 100 ms |
+|---|---|---|---|---|
+| **0.25** | **4.06** | **2.63** | **1.29** | — (masked) |
+| 0.50 | 3.66 | 2.14 | 1.42 | 0.46 |
+| 1.00 | 2.13 | 1.65 | 1.16 | 0.67 |
+| 4.00 | 1.02 | 0.93 | 0.81 | 0.72 |
+
+**40–57% of inter-print intervals on these tapes are under one millisecond**, median ITT 0.3–2.8 ms.
+Collapsing prints within a tolerance — with the surrogate rebuilt from the collapsed tape each time, so
+`F`'s invariance to `λ → cλ` keeps the comparison like-for-like and thinning alone cannot move the
+ratio — takes the 0.25 s excess from **4.06 to 1.29 at a 10 ms tolerance** and below 1 at 100 ms.
+
+**The surviving excess is sub-10 ms print clustering.** CLAUDE.md already records that band as
+unmeasurable on this cohort. Whether it is one order printing many times against multiple resting
+quotes, or genuine ultra-fast arrival clustering, **cannot be decided from the trade tape alone** —
+it needs order-level attribution or the quote side, and neither is in scope here.
+
+*(The collapse is diagnostic only. `collapse_same_timestamp` is the committed tie variant and nothing
+here proposes moving it.)*
+
+### 10.4 Review §4 — the portability test is underpowered, not negative
+
+Regressing log crossover on log envelope curvature scale gives slopes of 0.12 / −0.05 / 0.52 / 0.85 /
+0.33 at `h` = 1/2/5/15/30, **all with `t ≤ 1.25` on n = 5**. But the cohort supplies almost no leverage:
+the ten events' envelope curvature scales span **92.4 – 110.7 s, a factor of 1.2**. The right statement
+is not "the crossover does not track the envelope" but **"this cohort cannot test it"** — and since
+§10.1 shows the crossover is set by `h` rather than by the tape, the question as posed is moot until
+there is a crossover that is a tape property to regress.
+
+Charts: `bandwidth_family_ratio.html`, `bandwidth_floor_controls.html`,
+`subsecond_collapse.html`.
+
+---
+
+## 11. What I would do next — offered as a view, and labelled as one
+
+1. **Write down the retraction before anything else.** Two headlines from this read are now wrong in
+   the record: "detects cleanly at `read_factor = 4`" (withdrawn 2026-09-08) and "the crossover is at
+   30 seconds" (withdrawn here). The pattern in both is the same and is worth stating once, plainly:
+   **this lineage keeps finding structure in the properties of its own instrument.** Arm A found it in
+   the print count, Gate B found it in a Poisson null that does not contain the envelope, the scale
+   finding found it in a surrogate bandwidth. Each was caught by a control, and each control had to be
+   built after the claim was made.
+
+2. **The one decision that survives all of this is still worth taking, and it is unchanged.** Retire
+   `read_factor = 1` from the panels. `n_eff = 8` exactly at the read, `2·sd = 0.785`, `F ≥ −1`, so
+   detection needs `σ < 0.523·s_min` while a width can only be read at `σ ≥ s_min` — **the satisfiable
+   band is empty.** That is arithmetic. It does not depend on any surrogate, any null, or any of the
+   three retracted findings. §9.2 sharpens the wording: retire it on measurability and yield, **not**
+   on per-cell signal, where it is the strongest read of the four.
+
+3. **Do not run injection–recovery yet.** It was the natural next build when there was a band and an
+   operating point; there is now neither. Recovering an injected burst would prove the instrument can
+   see what you put in — which Gate F's calibration and `NS05` have already shown — without addressing
+   the question that actually failed, which is whether anything in the tape is there to be found.
+
+4. **The one question left is well-posed and cheap: is there anything between 10 ms and 1 s?**
+   §10.3 puts the surviving excess below 10 ms and CLAUDE.md rules that band unmeasurable here. §10.2
+   shows the real tape's shape does not match clustering at 0.5 s. So the honest next measurement is a
+   **collapsed-tape** run: rebuild at a 10 ms tolerance, which removes the fragmentation, and ask
+   whether *anything* clears a bandwidth-swept surrogate between 10 ms and a few seconds. The numbers
+   in §10.3 already hint at the answer (1.29 and 1.42 at 0.25 and 0.5 s, against 1.00 controls) — a
+   small residual, worth one clean measurement rather than a programme.
+
+5. **If that comes back at 1.0, the rate channel is finished on this cohort and should be said so.**
+   Not "further work is needed" — finished. Four segmentation attempts died in this lineage before
+   this one; the expensive part each time was how long it took to say so, and this read has now spent
+   three headlines learning the same thing.
+
+6. **Whatever happens, adopt the review's general form of the lesson**, because it applies to every
+   future gate here and not just this one:
+
+   > **A null that does not contain the structure you are conditioning on will score that structure as
+   > signal.** A surrogate that contains too little is a false-positive machine; one that contains too
+   > much is a false-negative machine; and the bandwidth is the dial between them. **Audit a control
+   > for what it contains, not only for what it randomises** — and sweep the dial rather than picking
+   > a value.
+
+7. **Open the charts.** They are gitignored by the same deliberate rule that excludes the panel charts
+   and exist only locally: `results/scale_field/charts/instrument_gates/`. `bandwidth_family_ratio.html`
+   and `subsecond_collapse.html` carry the retraction, and neither is legible from a table.
+
+**A note on Gate F, adopting the review's reading.** `width/s = 2√(1 + σ²/s²) ≥ 2` for an isolated
+bump — a feature can only make the negative region *wider* than `2s`, never narrower. So "every
+quantile shorter than Poisson, never longer" is not merely the absence of resolved features: **it means
+the negative regions are being cut short by neighbours**, adjacent features closer than `2s`
+interposing positive ridges. Read positively, **the fine structure is densely packed and non-isolated
+at every scale examined**, tightest at fine scales (0.68× Poisson) and loosening toward coarse (0.99×)
+— the same direction as everything else, from a statistic with no surrogate in it at all. It also says
+plainly what the burst object was never going to be: **there are no isolated episodes to segment**,
+anywhere in 8–512 s. D21 §6(b) chose the continuous state descriptor on pragmatic grounds; this is the
+geometric reason that was the right call.
+
+## 12. Reproduction
 
 ```
 GATE_CACHE=<scratch>  .venv/Scripts/python.exe research/scale_field/instrument_gates.py --gate 0
@@ -690,6 +876,13 @@ GATE_CACHE=<scratch>  .venv/Scripts/python.exe research/scale_field/instrument_g
                       .venv/Scripts/python.exe research/scale_field/excess_variance.py
                       .venv/Scripts/python.exe research/scale_field/surrogate_control.py
                       .venv/Scripts/python.exe research/scale_field/read_scale_distribution.py
+                      .venv/Scripts/python.exe research/scale_field/premarket_coverage.py
+                      .venv/Scripts/python.exe research/scale_field/read_by_rate.py
+                      .venv/Scripts/python.exe research/scale_field/absolute_vs_ratio.py
+                      .venv/Scripts/python.exe research/scale_field/surrogate_bandwidth_family.py 6
+                      .venv/Scripts/python.exe research/scale_field/bandwidth_floor.py 5
+                      .venv/Scripts/python.exe research/scale_field/subsecond_origin.py 5
+                      .venv/Scripts/python.exe research/scale_field/crossover_vs_decay.py
                       .venv/Scripts/python.exe research/scale_field/gateE_ceiling.py 3
                       .venv/Scripts/python.exe research/scale_field/gateF_calibration.py
                       .venv/Scripts/python.exe research/scale_field/gateF_recompute.py
@@ -719,6 +912,10 @@ events; everything else is minutes.
 | `gateD_vs_surrogate_{rth,premarket}.html` | 9.9-41x the envelope below 30 s, <=1x above 64 s |
 | `gateE_ceiling.html` | the ceiling the envelope alone buys: ~0 below 8 s, 0.95+ above 64 s |
 | `gateF_calibrated.html` | the width statistic against both references; nothing resolved |
+| `bandwidth_family_ratio.html` | **the retraction** - the crossover tracks h at ~2.6h |
+| `bandwidth_controls_{real,NS05...,S30...}.html` | the ratio curve per h, with its controls |
+| `subsecond_collapse.html` | **4.06 -> 1.29 at a 10 ms collapse** - it is fragmentation |
+| `read_by_rate_{survivor_fraction,mean_read_scale_s}.html` | matched on rate, the segments agree |
 
 **Constraints observed.** The estimator in `scale_field.py` is imported and called, never modified —
 `compute_event` from the committed panel script is what produces every field here. The renderer is
