@@ -255,8 +255,17 @@ special case, which is precisely why it reads high.
 | 90 s | never reached −0.5 | — | 75.18 | −16% |
 
 **The contour readout fails outright on the widest feature and is biased +14 to +85% on the rest; the fit
-is within 16% everywhere and within 6% in the middle of the range.** This supersedes the `−0.5` readout I
+is within 20% everywhere and within 5% in the middle of the range.** This supersedes the `−0.5` readout I
 recommended in `scale_field_price_layouts.md` §4.1 — that one is a first look, not a measurement.
+
+> **Corrected 2026-09-09, and the table above is left as it was measured.** That sentence read *"within
+> 16% everywhere and within 6% in the middle of the range"*, which the table supported — but the table
+> predates §5.1, as this section's own preamble says. Re-run through the promoted implementation
+> (`research/scale_field/detector/`, which applies the scale polish before fitting), the mid-range
+> improves and the widest degrades: `σ = 4 s` goes −11% → **−1.8%**, `σ = 12 s` −1% → **+0.1%**,
+> `σ = 35 s` −5% → **−4.9%**, and `σ = 90 s` −16% → **−18.9%**. The widest feature remains the weakest
+> case for this readout at any stage of the pipeline. Evidence:
+> `results/scale_field/artifacts/detector/synthetic_validation.json`.
 
 ---
 

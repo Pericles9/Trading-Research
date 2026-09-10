@@ -1748,3 +1748,76 @@ shrinking with bin width — correct and discretization-limited.
 (`sigma = 90 s`) fits at **−18.9%**. The source's table predates its own section 5.1 scale-polishing
 fix, so mid-range accuracy improves (`sigma = 4 s`, −11% → −1.8%) and the widest degrades. The claim
 should read *within 20% everywhere, within 5% mid-range*.
+
+---
+
+## Scale-field interval channel (G) — the second channel, and what it cost to check (2026-09-09)
+
+**Synthetic only. No cohort data was read.** Extends `research/scale_field/detector/` with the
+interval-channel counterpart of the F-channel detector, per
+`claude/field_feature_extraction_methods.md` §7. Records no decision.
+
+**Why a second channel exists.** The rate channel is structurally blind to clumping at constant
+mean rate: two tapes with identical `lambda-hat(t)`, one Poisson and one violently clustered,
+produce **identical** F fields. The interval distribution is the only place that difference lives.
+
+**Code** — `research/scale_field/detector/interval.py`: `G`, its derivatives from a second weighted
+moment family `N_k`, Gate 0's constant check, the measured noise constant, and a two-sided ridge
+detector (`clumped` and `regular` departures). `validate_interval.py` writes
+`results/scale_field/artifacts/detector/interval_synthetic_validation.json`.
+`GOING_LIVE.md` states the two blockers and the exact call shape the real run needs.
+
+**Gate 0 — G's null is a CONSTANT, not zero.** `-gamma/ln10 = -0.2506816`, measured `-0.250630`
+at 1e7 draws, inside one standard error; the interval sd came back `0.55703` against a predicted
+`0.557004`, independently reproducing the 0.5570-decade constant already on this programme's record.
+
+**The measured noise constant is 0.348, not F's 0.87** — derived envelope `< sqrt(0.5570^2 +
+0.4343^2) = 0.7063`, because the two contributions are negatively correlated. G is the quieter
+statistic per effective print. It is still a Poisson constant and carries the same health warning.
+
+**Two design decisions, both stated rather than defaulted.** (1) A parallel implementation rather
+than a generalised `ridge.py`, because the two differ structurally — two-sided seeding, a
+non-arithmetic baseline, a different noise constant — and threading flags through tested code was
+the worse trade. (2) **No apex/merge Newton solve for G.** For F, `F = 0` is *arithmetic*; the
+corresponding `G - G0 = 0` is *Poisson-referenced*, so its arches and merges would inherit exactly
+the dependence that has already killed two constructions in this arc. Ridge locations are invariant
+to the baseline (`G0` is a constant, so it cancels in `dG/dt`); only magnitudes depend on it. The
+reference-free half is built, the reference-dependent half is not.
+
+**Two results worth the build:**
+- **G sees what F cannot** — on a rate-matched clumping episode, G fires at **29x** F's best
+  calibrated significance. F is not silent; it speckles into several weak marks, which is the ITT
+  mockup's "a rate hump makes a trumpet, clumping makes speckle" confirmed as a test.
+- **The channels are NOT independent.** On a pure rate hump with no clumping in it, **G also fires**,
+  in the clumped direction, at the hump's flanks. The mechanism is exact: prints are laid down with
+  density `lambda`, so the print-weighted mean log-interval is size-biased toward high-rate moments
+  while `lambda-hat` is not, giving `D = log10<lam>_w - <lam log10 lam>_w/<lam>_w = -Var(eps)/(2 ln10)`,
+  **always negative** — any rate gradient reads as clumping. Measured within ~0.005 decades of the
+  closed form. The correction needs a `lambda-hat` bandwidth, which is the dependence that produced
+  the `1a34975` retraction, so it is deliberately not built.
+
+**A defect in the ALREADY-COMMITTED F channel, found by this work.** `persistence_octaves` is
+`log2(max/min)` over member ridge points, which live on the seed ladder — the §5.1 fix polished
+`s_selected` off the grid but left the *extent* on it, and persistence gates the feature count. On a
+dense tape F gives 6/7/7/6/7 and G gives 7/6/5/6/5 across seed densities, against a stable 2/2/2/2/2
+on the two-feature tape the committed F test uses. **The F channel's seed-independence was a property
+of the easy test tape, not of the algorithm.** Recorded as two `strict=True` xfail tests. It matters
+here more than it would elsewhere: the gates thread reports no isolated resolved feature anywhere from
+8 s to 512 s, so dense-and-interacting is this cohort's operating regime. Any feature-count statistic
+is unsafe until it is fixed; per-feature quantities are unaffected.
+
+**Doc correction applied.** `claude/field_feature_extraction_methods.md` §6 said the duration fit is
+"within 16% everywhere"; through the promoted module it is **within 20% everywhere, within 5%
+mid-range** (`sigma = 90 s` fits at -18.9%). The measured table is left as it was and a dated note
+carries the post-§5.1 numbers.
+
+**Tests:** 33 passed, 2 xfailed.
+
+**D26 lands on this work and is recorded in `GOING_LIVE.md` as a third blocker.** D26 (2026-09-09)
+closes cohort timing work and addresses this package by name: it *"closes cohort timing work, not
+instrument work on synthetic data, and is the gate that detector clears if it is ever pointed at the
+cohort."* So the G channel is inside what D26 permits and stops being so the moment it reads a cohort
+tape. Two of D26's measured findings also change the contract, both toward more caution: the
+fragmentation collapse's dead time **bites 60% of the real tape's intervals** and biases G toward the
+`regular` direction — the same direction as its small-`n_eff` bias — and the surrogate carries an
+**estimation-noise floor** of its own, so sweeping its bandwidth is necessary but not sufficient.

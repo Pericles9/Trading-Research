@@ -445,3 +445,420 @@ def test_duration_fit_beats_the_minus_half_contour():
         )
         if f.sigma_minus_half is not None:
             assert f.sigma_minus_half > f.sigma_fit, "the contour readout should read high"
+
+
+# ======================================================================================
+# THE INTERVAL CHANNEL (G)
+#
+# Source: claude/field_feature_extraction_methods.md section 7, and the brief of
+# 2026-09-09. The rate channel is structurally blind to clumping at constant mean rate --
+# two tapes with identical lambda-hat(t), one Poisson and one violently clustered, give
+# IDENTICAL F fields. G is the channel where that difference lives.
+#
+# G's null is a CONSTANT, -gamma/ln10 = -0.25068, not zero. Every test below is written
+# against that constant, and test_G_baseline_constant is what earns the right to use it.
+# ======================================================================================
+
+from .interval import (  # noqa: E402
+    G0,
+    INTERVAL_SD_DECADES,
+    G as G_stat,
+    G_t as G_t_stat,
+    G_tt as G_tt_stat,
+    G_u as G_u_stat,
+    detect_interval,
+    interval_carriers,
+    measure_noise_constant,
+    verify_baseline,
+)
+
+# Measured, not assumed: see test_G_noise_constant_is_not_F_s and the validation artifact.
+# A POISSON constant, carrying the same health warning 0.87 carries for F.
+NOISE_C_G = 0.348
+G_KW = dict(noise_constant=NOISE_C_G, kappa=1.0)
+
+
+def clumped_tape(seed=31, e0=700.0, e1=1000.0, K=7, tight=0.015, bg=6.0, T=1500.0):
+    """Clumping at CONSTANT MEAN RATE -- the case F cannot see.
+
+    Same construction as feature E of the ITT mockup: the ambient Poisson stretch inside
+    [e0, e1] is replaced by a cluster process of the SAME mean rate, K offspring per parent
+    inside a `tight` exponential window. lambda-hat is unchanged; only the interval
+    structure differs.
+    """
+    rng = np.random.default_rng(seed)
+    p = sample(lambda x: bg + 0 * x, T, bg * 1.6, seed)
+    p = p[(p < e0) | (p > e1)]
+    n_par = rng.poisson(bg / K * (e1 - e0))
+    parents = e0 + np.sort(rng.random(n_par)) * (e1 - e0)
+    kids = (parents[:, None] + rng.exponential(tight, size=(n_par, K))).ravel()
+    return np.sort(np.concatenate([p, kids[(kids >= e0) & (kids <= e1)]]))
+
+
+def short_clump_tape(seed=53, e0=740.0, e1=790.0, **kw):
+    """One short, isolated clumping episode -- G's analogue of the two-bump F tape."""
+    return clumped_tape(seed=seed, e0=e0, e1=e1, **kw)
+
+
+def rate_hump_tape(seed=41):
+    """A pure inhomogeneous-Poisson rate hump. No clumping anywhere in it."""
+    return sample(lambda x: 6.0 + 60.0 * np.exp(-(x - 850.0) ** 2 / (2 * 40.0 ** 2)),
+                  1500.0, 70.0, seed)
+
+
+def _exact_gradient_response(lam_fn, t, s):
+    """The closed-form response of G to rate variation alone, with no clumping present.
+
+        D = log10<lam>_w  -  <lam log10 lam>_w / <lam>_w
+
+    Prints are laid down with density lambda, so the print-weighted mean log-interval is
+    size-biased toward high-rate moments while lambda-hat is not. Expanding lam around its
+    mean gives D = -Var(eps)/(2 ln10) to second order: ALWAYS NEGATIVE. Rate variation is
+    read as clumping by construction.
+    """
+    g = np.linspace(t - 8 * s, t + 8 * s, 20001)
+    w = np.exp(-0.5 * ((t - g) / s) ** 2)
+    lam = lam_fn(g)
+    return float(np.log10((w * lam).sum() / w.sum())
+                 - (w * lam * np.log10(lam)).sum() / (w * lam).sum())
+
+
+# --- Gate 0 ---------------------------------------------------------------------------
+
+def test_G_baseline_constant():
+    """GATE 0. PREDICTION: E[log10 dt] under Poisson is -gamma/ln10 = -0.2506816 exactly,
+    and the sd of log10 of an exponential interval is sqrt(pi^2/6)/ln10 = 0.557004 decades.
+
+    Reproduced numerically rather than trusted, on the same discipline the 0.5570 constant
+    got elsewhere in this programme. Nothing downstream may assume G = 0 is the null.
+    """
+    rows = verify_baseline(draw_counts=(10 ** 4, 10 ** 6, 10 ** 7))
+    final = rows[-1]
+    assert final["abs_error"] < 3 * final["standard_error"], (
+        f"measured {final['measured_mean']:.6f} against predicted {G0:.6f}"
+    )
+    assert abs(final["measured_sd"] - INTERVAL_SD_DECADES) < 1e-3
+    # and it must actually be converging, not accidentally close once
+    assert rows[-1]["abs_error"] < rows[0]["abs_error"]
+
+
+def test_G_noise_constant_is_not_F_s():
+    """PREDICTION: sd(G)*sqrt(n_eff) is a constant, and it is NOT 0.87.
+
+    Two terms contribute -- the weighted mean log-interval at 0.5570/sqrt(n_eff) and
+    log10 lambda-hat at 0.4343/sqrt(n_eff) -- and they are NEGATIVELY correlated, because a
+    window with more prints has shorter intervals. So the constant must sit strictly below
+    sqrt(0.5570^2 + 0.4343^2) = 0.706. Measured: ~0.35, well under half of F's 0.87, which
+    makes G the quieter statistic per effective print.
+    """
+    rows = measure_noise_constant(n_eff_targets=(32, 128), draws=1200)
+    consts = [r["constant"] for r in rows]
+    for c in consts:
+        assert 0.25 < c < 0.706, f"constant {c:.4f} outside the derived envelope"
+    assert abs(consts[0] - consts[1]) < 0.08, "the 1/sqrt(n_eff) scaling does not hold"
+
+
+def test_G_small_n_eff_bias_is_toward_the_regular_side():
+    """PREDICTION, and it is a caveat rather than a pass/fail: G's mean approaches G0 only
+    asymptotically. At n_eff = 8 the mean sits ABOVE the baseline, biasing the statistic
+    toward 'more regular than Poisson' -- so the 'regular' direction is the one exposed to
+    a small-sample false positive, not the clumped one.
+    """
+    rows = measure_noise_constant(n_eff_targets=(8, 256), draws=1200)
+    assert rows[0]["mean_G"] > rows[1]["mean_G"], "expected an upward bias at small n_eff"
+    assert abs(rows[1]["mean_G"] - G0) < 0.01, "should be unbiased by n_eff = 256"
+
+
+# --- the calculus ---------------------------------------------------------------------
+
+def test_G_derivatives_vs_central_differences():
+    """PREDICTION: ~1e-9, the same bar F's derivatives were held to.
+
+    Untruncated on both sides, for the reason given in the F-channel version, and on an
+    absolute criterion for the same reason: G_tt is a second difference and its relative
+    error inflates where the true value passes through zero.
+    """
+    P = two_bump_tape()
+    C, X, _ = interval_carriers(P)
+    rng = np.random.default_rng(3)
+    worst = {"G_t": 0.0, "G_u": 0.0, "G_tt": 0.0}
+
+    for _ in range(30):
+        t = rng.uniform(200.0, 1300.0)
+        s = float(np.exp(rng.uniform(np.log(3.0), np.log(120.0))))
+        ht, hu = 1e-4 * s, 1e-4
+
+        def f(tt, ss):
+            return G_stat(C, X, tt, ss, truncate=False)
+
+        num = {
+            "G_t": (f(t + ht, s) - f(t - ht, s)) / (2 * ht),
+            "G_u": (f(t, s * np.exp(hu)) - f(t, s * np.exp(-hu))) / (2 * hu),
+            "G_tt": (f(t + ht, s) - 2 * f(t, s) + f(t - ht, s)) / ht ** 2,
+        }
+        ana = {"G_t": G_t_stat(C, X, t, s, truncate=False),
+               "G_u": G_u_stat(C, X, t, s, truncate=False),
+               "G_tt": G_tt_stat(C, X, t, s, truncate=False)}
+        for k in worst:
+            if np.isfinite(num[k]) and np.isfinite(ana[k]):
+                worst[k] = max(worst[k], abs(ana[k] - num[k]))
+
+    for k, v in worst.items():
+        assert v < 1e-6, f"{k} max absolute error {v:.2e}"
+
+
+def test_G_truncation_cost():
+    """PREDICTION: the +-CUT*s window changes G by less than 1e-6."""
+    P = two_bump_tape()
+    C, X, _ = interval_carriers(P)
+    rng = np.random.default_rng(7)
+    worst = 0.0
+    for _ in range(20):
+        t = rng.uniform(200.0, 1300.0)
+        for s in (4.0, 20.0):
+            a, b = G_stat(C, X, t, s, True), G_stat(C, X, t, s, False)
+            if np.isfinite(a) and np.isfinite(b):
+                worst = max(worst, abs(a - b))
+    assert worst < 1e-6, f"truncation costs {worst:.2e} in G"
+
+
+# --- the gate, and the invariances ----------------------------------------------------
+
+def test_detect_interval_refuses_without_thresholds():
+    P = short_clump_tape()
+    with pytest.raises(ValueError, match="named explicitly"):
+        detect_interval(P, 0.0, 1500.0, 2.0, 300.0, noise_constant=None, kappa=1.0)
+    with pytest.raises(ValueError, match="named explicitly"):
+        detect_interval(P, 0.0, 1500.0, 2.0, 300.0, noise_constant=NOISE_C_G, kappa=None)
+
+
+def test_G_is_invariant_under_thinning_on_poisson():
+    """THE SHARP PREDICTION, derived rather than inherited from F.
+
+    Thinning a Poisson process with retention p gives Poisson(p*lambda). Then
+    E[log10 dt] rises by log10(1/p) while log10 lambda-hat falls by exactly the same amount,
+    so the two shifts CANCEL and G is invariant. That is a different mechanism from F's
+    invariance to lambda -> c*lambda, and it is why the thinning z-ratio cannot simply be
+    assumed to carry over -- see test_G_thinning_z_ratio.
+    """
+    N = sample(lambda x: 6.0 + 0 * x, 1500.0, 8.0, seed=77)
+    C0, X0, _ = interval_carriers(N)
+    rng = np.random.default_rng(5)
+    for p_keep in (0.5, 0.25):
+        diffs = []
+        for _ in range(4):
+            thin = N[rng.random(N.size) < p_keep]
+            C1, X1, _ = interval_carriers(thin)
+            for t in np.linspace(400.0, 1100.0, 12):
+                a, b = G_stat(C0, X0, t, 60.0), G_stat(C1, X1, t, 60.0)
+                if np.isfinite(a) and np.isfinite(b):
+                    diffs.append(b - a)
+        shift = float(np.mean(diffs))
+        assert abs(shift) < 0.02, f"G shifted {shift:+.4f} decades at p={p_keep}"
+
+
+def test_G_thinning_z_ratio():
+    """PREDICTION, and it is NOT F's 0.707.
+
+    On Poisson tape G itself is invariant (previous test), n_eff scales by p, so z would
+    scale by sqrt(p) = 0.707. On a CLUMPED feature the cancellation is only approximate:
+    thinning removes offspring from clusters, so the fraction of within-cluster intervals
+    falls from (K-1)/K to (pK-1)/(pK) and the departure |D| SHRINKS. Measured |D| ratio
+    ~0.84, giving a z-ratio near 0.60 rather than 0.707.
+
+    The asserted content is therefore the DIRECTION -- thinning must not deepen the
+    departure -- plus a band around the measured value.
+    """
+    P = clumped_tape()
+    full = detect_interval(P, 0.0, 1500.0, 2.0, 300.0, **G_KW)
+    assert full
+    rng = np.random.default_rng(5)
+
+    for _ in range(2):
+        half = P[rng.random(P.size) < 0.5]
+        thin = detect_interval(half, 0.0, 1500.0, 2.0, 300.0, **G_KW)
+        ratios, dratios = [], []
+        for f in thin:
+            g = min(full, key=lambda g: abs(g.t_ridge - f.t_ridge))
+            if abs(f.t_ridge - g.t_ridge) <= max(f.s_selected, g.s_selected):
+                ratios.append(f.z / g.z)
+                dratios.append(f.D_at_ridge / g.D_at_ridge)
+        assert ratios
+        assert 0.45 < float(np.median(ratios)) < 0.80
+        assert float(np.median(dratios)) < 1.0, "thinning must not deepen the departure"
+
+
+def test_G_permutation_invariance():
+    P = short_clump_tape()
+    shuffled = P.copy()
+    np.random.default_rng(2).shuffle(shuffled)
+    a = detect_interval(P, 0.0, 1500.0, 2.0, 300.0, **G_KW)
+    b = detect_interval(shuffled, 0.0, 1500.0, 2.0, 300.0, **G_KW)
+
+    def key(fs):
+        return sorted((round(f.t_ridge, 9), round(f.s_selected, 9),
+                       round(f.calibrated, 9)) for f in fs)
+
+    assert key(a) == key(b)
+
+
+def test_G_time_rescaling():
+    """PREDICTION: under t -> c*t, dt -> c*dt so x rises by log10 c while log10 lambda-hat
+    falls by log10 c. G, n_eff, z and cal are UNCHANGED; t* and s* scale by exactly c."""
+    P = short_clump_tape()
+    base = detect_interval(P, 0.0, 1500.0, 2.0, 300.0, **G_KW)
+    assert base
+
+    for c in (1e-3, 1e3):
+        scaled = detect_interval(P * c, 0.0, 1500.0 * c, 2.0 * c, 300.0 * c, **G_KW)
+        assert len(scaled) == len(base)
+        for g, h in zip(sorted(base, key=lambda f: f.t_ridge),
+                        sorted(scaled, key=lambda f: f.t_ridge)):
+            assert abs(h.t_ridge / (g.t_ridge * c) - 1) < 1e-9
+            assert abs(h.s_selected / (g.s_selected * c) - 1) < 1e-9
+            assert abs(h.G_at_ridge - g.G_at_ridge) < 1e-9
+            assert abs(h.calibrated - g.calibrated) < 1e-9
+
+
+def test_G_seed_density_independence_isolated_feature():
+    """PREDICTION: with ONE isolated feature, every reported number is identical to solver
+    tolerance across seed ladders. This is the same claim the F channel makes, and it holds
+    under the same restriction -- see the xfail pair below, where that restriction becomes
+    visible."""
+    P = short_clump_tape()
+    ref = None
+    for per_oct in (3, 4, 6, 9, 12):
+        feats = detect_interval(P, 0.0, 1500.0, 2.0, 300.0, per_octave=per_oct, **G_KW)
+        got = sorted(((f.t_ridge, f.s_selected, f.calibrated) for f in feats),
+                     key=lambda r: r[0])
+        if ref is None:
+            ref = got
+            assert len(ref) >= 1
+            continue
+        assert len(got) == len(ref), f"count changed at {per_oct} rungs/octave"
+        for (t1, s1, c1), (t0, s0, c0) in zip(got, ref):
+            assert abs(t1 - t0) < 1e-8
+            assert abs(np.log(s1 / s0)) < 1e-8
+            assert abs(c1 - c0) < 1e-8
+
+
+# --- the controls ---------------------------------------------------------------------
+
+def test_positive_control_G_sees_what_F_cannot():
+    """THE POINT OF THE SECOND CHANNEL, shown rather than asserted.
+
+    A clumping episode at CONSTANT MEAN RATE. PREDICTIONS:
+      * G fires hard, in the 'clumped' direction, located on the episode.
+      * F does NOT produce a coherent trumpet. It is not silent -- clumping creates
+        curvature at scales comparable to the clumps, so F speckles -- but its calibrated
+        significance is an order of magnitude below G's, and it fragments into several
+        weak marks rather than one deep feature. That is the ITT mockup's prediction
+        ('a rate hump makes a trumpet, clumping makes speckle') as a test.
+    """
+    P = clumped_tape()
+    inside = ((P > 700.0) & (P < 1000.0)).sum()
+    outside = P.size - inside
+    rate_in, rate_out = inside / 300.0, outside / 1200.0
+    assert abs(rate_in / rate_out - 1) < 0.15, "the episode must be rate-matched"
+
+    gf = detect_interval(P, 0.0, 1500.0, 2.0, 300.0, **G_KW)
+    assert gf, "G found nothing in a clumping episode"
+    top = gf[0]
+    assert top.direction == "clumped"
+    assert 700.0 < top.t_ridge < 1000.0
+    assert top.D_at_ridge < -0.5, "the departure should be large, not marginal"
+
+    ff = detect(P, 0.0, 1500.0, 2.0, 300.0, noise_constant=POISSON_NOISE_CONSTANT,
+                kappa=1.0, fit_durations=False)
+    best_F = max((g.calibrated for g in ff), default=0.0)
+    assert top.calibrated > 10 * best_F, (
+        f"G {top.calibrated:.1f} vs best F {best_F:.1f} -- the channels are not separating"
+    )
+
+
+def test_negative_control_G_on_a_poisson_null():
+    """PREDICTION: zero detections, the same bar F was held to."""
+    N = sample(lambda x: 6.0 + 0 * x, 1500.0, 8.0, seed=77)
+    assert detect_interval(N, 0.0, 1500.0, 2.0, 300.0, **G_KW) == []
+
+
+def test_cross_check_G_DOES_respond_to_a_pure_rate_hump():
+    """THE CROSS-CHECK, AND IT FAILS THE HOPEFUL VERSION. The channels are NOT independent.
+
+    On a pure inhomogeneous-Poisson rate hump with no clumping anywhere, F fires as it
+    should -- and so does G, in the 'clumped' direction, at the hump's FLANKS.
+
+    This is not a bug and not noise. Prints are laid down with density lambda, so the
+    print-weighted mean log-interval is size-biased toward high-rate moments while
+    lambda-hat is not, and the gap is exactly
+
+        D = log10<lam>_w - <lam log10 lam>_w/<lam>_w = -Var(eps)/(2 ln10) + ...
+
+    always negative. ANY rate gradient reads as clumping. Asserted against the closed form
+    so the effect is pinned to its mechanism rather than merely observed.
+    """
+    H = rate_hump_tape()
+
+    def lam_fn(x):
+        return 6.0 + 60.0 * np.exp(-(x - 850.0) ** 2 / (2 * 40.0 ** 2))
+
+    ff = detect(H, 0.0, 1500.0, 2.0, 300.0, noise_constant=POISSON_NOISE_CONSTANT,
+                kappa=1.0, fit_durations=False)
+    assert ff, "F must fire on a rate hump"
+
+    gf = detect_interval(H, 0.0, 1500.0, 2.0, 300.0, **G_KW)
+    assert gf, ("If this ever comes back empty the confound has gone away and this test "
+                "should be rewritten, not deleted.")
+    for f in gf:
+        assert f.direction == "clumped", "the size-bias term is signed, and it is negative"
+        predicted = _exact_gradient_response(lam_fn, f.t_ridge, f.s_selected)
+        assert abs(f.D_at_ridge - predicted) < 0.05, (
+            f"measured {f.D_at_ridge:+.4f} against closed form {predicted:+.4f}"
+        )
+
+
+def test_gradient_response_vanishes_without_a_gradient():
+    """The other half of the previous test: on a FLAT tape the same statistic sits at the
+    baseline. Without this, 'G responds to gradients' could just be 'G is biased'."""
+    N = sample(lambda x: 6.0 + 0 * x, 1500.0, 8.0, seed=77)
+    C, X, _ = interval_carriers(N)
+    for s in (10.0, 40.0, 120.0):
+        vals = [G_stat(C, X, t, s) - G0 for t in np.linspace(300.0, 1200.0, 20)]
+        assert abs(float(np.mean(vals))) < 0.01, f"mean D = {np.mean(vals):+.4f} at s={s}"
+
+
+# --- the defect, recorded in executable form -------------------------------------------
+
+DENSE_TAPE_REASON = (
+    "KNOWN DEFECT, both channels, found 2026-09-09 while building the G channel. "
+    "persistence_octaves is log2(max/min) over the MEMBER RIDGE POINTS, and those live on "
+    "the seed ladder. The section 5.1 fix polished s_selected off the grid but left the "
+    "EXTENT on it -- and persistence is a gate (the >= 1 octave cut), so the feature COUNT "
+    "is seed-dependent wherever features are dense enough that groups sit near the floor. "
+    "On the 2-feature tape the committed F test uses, counts are stable at 2/2/2/2/2; on a "
+    "dense tape F gives 6/7/7/6/7 and G gives 7/6/5/6/5. Same class of defect as the "
+    "original 5.1 failure, one stage later. It matters here more than anywhere: the gates "
+    "thread reports the real cohort has NO isolated resolved feature at any scale from 8 s "
+    "to 512 s, so dense-and-interacting IS the operating regime. Fixing it means making the "
+    "extent resolution-free (continuation along the ridge to its termination scales, solved "
+    "rather than read off rungs), which is a design change to committed, tested code and "
+    "needs its own decision. strict=True: if someone fixes it, this turns into a failure "
+    "telling them to delete the marker."
+)
+
+
+@pytest.mark.xfail(strict=True, reason=DENSE_TAPE_REASON)
+def test_seed_density_independence_dense_tape_F():
+    P = clumped_tape()
+    counts = {len(detect(P, 0.0, 1500.0, 2.0, 300.0, noise_constant=POISSON_NOISE_CONSTANT,
+                         kappa=1.0, per_octave=po, fit_durations=False))
+              for po in (3, 4, 6, 9, 12)}
+    assert len(counts) == 1, f"feature count varies with seed density: {sorted(counts)}"
+
+
+@pytest.mark.xfail(strict=True, reason=DENSE_TAPE_REASON)
+def test_seed_density_independence_dense_tape_G():
+    P = clumped_tape()
+    counts = {len(detect_interval(P, 0.0, 1500.0, 2.0, 300.0, per_octave=po, **G_KW))
+              for po in (3, 4, 6, 9, 12)}
+    assert len(counts) == 1, f"feature count varies with seed density: {sorted(counts)}"
