@@ -1821,3 +1821,46 @@ tape. Two of D26's measured findings also change the contract, both toward more 
 fragmentation collapse's dead time **bites 60% of the real tape's intervals** and biases G toward the
 `regular` direction — the same direction as its small-`n_eff` bias — and the surrogate carries an
 **estimation-noise floor** of its own, so sweeping its bandwidth is necessary but not sufficient.
+
+---
+
+## Scale-field detector panels — the two channels, rendered (2026-09-10)
+
+**Synthetic only, no cohort file touched, records no decision.** Renders the detector tests that
+already passed, through the same code path that passed them — `ridge.detect` for F and
+`interval.detect_interval` for G — so the charts are a view of committed results rather than a new
+measurement. Inside D26, which permits instrument work on synthetic data.
+
+**Code** — `research/scale_field/detector/panels.py`. **Charts** —
+`results/scale_field/charts/detector/`: `s1_rate_hump_only.html`, `s2_clumping_only.html`,
+`s3_combined.html`, with `chart_manifest.json` tracked and the HTML gitignored under the standing
+`results/scale_field/charts/*/*.html` rule.
+
+**The renderer is imported, not rewritten**, per the one-palette rule: `THEMES` from
+`research/phase_10d_diag1/plot_boundary_through_time.py`, and `add_channel`,
+`add_resolution_floor`, `knn_rate`, `et` from `research/scale_field/plot_scale_field.py`.
+`add_channel` is called once per channel. Neither module was modified.
+
+| scenario | corresponds to | F | G |
+|---|---|---|---|
+| 1 — pure rate hump, zero clumping | `test_cross_check_G_DOES_respond_to_a_pure_rate_hump` | 1 feature, cal 77.1 | **2 features, cal 40.5, on the FLANKS** — the size-bias artifact on display |
+| 2 — clumping at constant mean rate | `test_positive_control_G_sees_what_F_cannot` | 7 speckle marks, best cal 4.8 | 5 features, best cal **139.3** |
+| 3 — a rate excursion that also clusters | no single test; combination of the two controls | hump at t=850 cal 76.5, speckle at t=598 cal 4.2 | clump at t=625 **D = −0.99**, hump-flank skirt at t=983 **D = −0.19** |
+
+**Scenario 3 is the one that reads.** The two channels separate cleanly on one axis: F owns the
+hump where G shows only a shallow skirt, G owns the clump where F shows only speckle, and the
+**departure magnitude tells the two G marks apart — −0.99 for real clumping against −0.19 for the
+uncorrected gradient artifact**, a 5x separation legible directly off the colourbar.
+
+**Two things are deliberately displayed uncorrected, and captioned as such on every panel.** G's
+rate-gradient size-bias is not corrected, so scenario 1's marks are the expected artifact rather
+than false positives to explain away; and feature counts on scenario 3 are captioned illustrative
+only, because `persistence_octaves` is still read off the seed ladder. Neither was fixed here —
+both are open items in `research/scale_field/detector/GOING_LIVE.md`.
+
+**Citation note.** The brief for this work cited `field_validity_goals_prompt.md` as the source of
+the reuse-the-renderer rule. **No file of that name exists in this checkout or in git history.** The
+rule itself is real and is the repo's standing practice — `gate_charts.py`, `plot_scale_field.py`,
+`plot_lead_time.py` and `plot_onesided.py` all import the one palette — so the practice was followed
+and the citation is recorded as unresolvable, per the same class of defect
+`tools/verify_cited_paths.py` exists to surface.

@@ -1,0 +1,215 @@
+{
+  "what": "Scale-field panels for the F and G detector channels.",
+  "synthetic_only": true,
+  "cohort_contact": "none",
+  "d26": "instrument work on synthetic data, which D26 permits explicitly; it becomes cohort timing work, which D26 closes, the moment a real tape is read",
+  "renderer": {
+    "imported_not_rewritten": true,
+    "palette_and_themes": "research/phase_10d_diag1/plot_boundary_through_time.py",
+    "heatmap_and_floor": "research/scale_field/plot_scale_field.py -- add_channel called once per channel, plus add_resolution_floor and knn_rate",
+    "modified": "neither module was modified"
+  },
+  "calibration": {
+    "formula": "z = |departure|*sqrt(n_eff)/c ; cal = z - sqrt(2*ln(T/s))",
+    "kappa": 1.0,
+    "c_F": 0.87,
+    "c_G": 0.348,
+    "both_are_poisson_constants": "correct for these synthetic Poisson tapes and wrong for the cohort -- see research/scale_field/detector/GOING_LIVE.md",
+    "G_baseline": -0.2506815781348522
+  },
+  "known_uncorrected": {
+    "G_size_bias": "G's response to a rate gradient is NOT corrected in these renders. Scenario 1 marks are the artifact on display.",
+    "persistence_counts": "feature counts are seed-ladder dependent on dense tapes; scenario 3 counts are captioned illustrative only"
+  },
+  "x_axis": "nominal ET wall clock anchored at 09:30 for legibility. These tapes have no date; the times mean elapsed seconds.",
+  "html_is_gitignored": "results/scale_field/charts/*/*.html -- regenerable by running research/scale_field/detector/panels.py; this manifest is the tracked record",
+  "scenarios": [
+    {
+      "file": "s1_rate_hump_only.html",
+      "title": "Scenario 1 \u2014 pure rate hump, ZERO clumping",
+      "finding": "The size-bias finding. G fires on the hump's FLANKS with no clumping present anywhere in the tape \u2014 any rate gradient reads as clumping.",
+      "corresponds_to_test": "test_cross_check_G_DOES_respond_to_a_pure_rate_hump",
+      "n_prints": 15172,
+      "runtime_s": 11.9,
+      "counts_illustrative_only": false,
+      "F_survivors": 1,
+      "F_best_calibrated": 77.08,
+      "G_survivors": 2,
+      "G_best_calibrated": 40.47,
+      "G_directions": [
+        "clumped"
+      ],
+      "G_features": [
+        {
+          "t": 701.69,
+          "s": 105.11,
+          "direction": "clumped",
+          "D": -0.1974,
+          "cal": 40.47
+        },
+        {
+          "t": 981.49,
+          "s": 83.26,
+          "direction": "clumped",
+          "D": -0.1985,
+          "cal": 36.24
+        }
+      ],
+      "F_features": [
+        {
+          "t": 849.7,
+          "s": 105.11,
+          "cal": 77.08
+        }
+      ]
+    },
+    {
+      "file": "s2_clumping_only.html",
+      "title": "Scenario 2 \u2014 clumping at CONSTANT mean rate, zero gradient",
+      "finding": "The case F cannot see. G fires once and hard; F speckles into several weak marks rather than forming a coherent trumpet.",
+      "corresponds_to_test": "test_positive_control_G_sees_what_F_cannot",
+      "n_prints": 9228,
+      "runtime_s": 8.9,
+      "counts_illustrative_only": false,
+      "F_survivors": 7,
+      "F_best_calibrated": 4.83,
+      "G_survivors": 5,
+      "G_best_calibrated": 139.3,
+      "G_directions": [
+        "clumped"
+      ],
+      "G_features": [
+        {
+          "t": 845.73,
+          "s": 109.36,
+          "direction": "clumped",
+          "D": -0.981,
+          "cal": 139.3
+        },
+        {
+          "t": 739.3,
+          "s": 11.49,
+          "direction": "clumped",
+          "D": -1.3413,
+          "cal": 46.59
+        },
+        {
+          "t": 979.36,
+          "s": 7.21,
+          "direction": "clumped",
+          "D": -1.0486,
+          "cal": 40.62
+        },
+        {
+          "t": 710.04,
+          "s": 4.52,
+          "direction": "clumped",
+          "D": -1.0679,
+          "cal": 31.13
+        },
+        {
+          "t": 987.37,
+          "s": 4.02,
+          "direction": "clumped",
+          "D": -1.0658,
+          "cal": 28.36
+        }
+      ],
+      "F_features": [
+        {
+          "t": 897.81,
+          "s": 18.96,
+          "cal": 4.83
+        },
+        {
+          "t": 779.28,
+          "s": 2.37,
+          "cal": 3.17
+        },
+        {
+          "t": 952.35,
+          "s": 2.0,
+          "cal": 3.14
+        },
+        {
+          "t": 842.37,
+          "s": 2.32,
+          "cal": 2.95
+        },
+        {
+          "t": 826.86,
+          "s": 16.58,
+          "cal": 2.95
+        },
+        {
+          "t": 716.57,
+          "s": 9.4,
+          "cal": 1.81
+        },
+        {
+          "t": 939.49,
+          "s": 4.35,
+          "cal": 1.36
+        }
+      ]
+    },
+    {
+      "file": "s3_combined.html",
+      "title": "Scenario 3 \u2014 a genuine rate excursion that ALSO clusters",
+      "finding": "The realistic case. The channels agree on the clump and diverge around the hump, where G's marks are the uncorrected size-bias rather than structure.",
+      "corresponds_to_test": "combination of the two controls above; no single test asserts this tape",
+      "n_prints": 15097,
+      "runtime_s": 9.9,
+      "counts_illustrative_only": true,
+      "F_survivors": 2,
+      "F_best_calibrated": 76.49,
+      "G_survivors": 4,
+      "G_best_calibrated": 87.75,
+      "G_directions": [
+        "clumped"
+      ],
+      "G_features": [
+        {
+          "t": 624.9,
+          "s": 50.14,
+          "direction": "clumped",
+          "D": -0.9936,
+          "cal": 87.75
+        },
+        {
+          "t": 983.32,
+          "s": 83.26,
+          "direction": "clumped",
+          "D": -0.1882,
+          "cal": 34.08
+        },
+        {
+          "t": 569.78,
+          "s": 5.08,
+          "direction": "clumped",
+          "D": -1.2758,
+          "cal": 32.37
+        },
+        {
+          "t": 682.63,
+          "s": 4.02,
+          "direction": "clumped",
+          "D": -1.1807,
+          "cal": 24.24
+        }
+      ],
+      "F_features": [
+        {
+          "t": 849.98,
+          "s": 105.11,
+          "cal": 76.49
+        },
+        {
+          "t": 598.19,
+          "s": 4.84,
+          "cal": 4.22
+        }
+      ]
+    }
+  ]
+}
