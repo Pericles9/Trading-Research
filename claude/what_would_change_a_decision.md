@@ -79,11 +79,13 @@ predict *sustained* continuation — and not as an entry-timing question, which 
 | | |
 |---|---|
 | **Decision it would move** | D1's universe definition. |
-| **Why it fails the gate** | A filter that separates continuation from fade changes *which events are studied*, not *whether any of them pay*. **D25 measured 0 of 90 intraday cells and 0 of 29 day-scale cells.** A filter improves a conditional mean; it does not create drift where 0 of 119 cells found any. |
+| **Why it fails the gate** | **Prior and cost, not logic.** *(Corrected 2026-09-10: an earlier version of this row argued a filter "changes which events are studied, not whether any pay". That is too strong and is withdrawn — a subpopulation cutting across all 119 cells **can** pay while none of the cells does, which is the standard wrong-partition argument and is not closed by D25's coverage.)* What actually justifies the rejection: the prior is poor, D25's coverage is broad, and the covariate route tests the same thing for nearly nothing inside a phase that is running anyway. **That is a prioritisation call, not a proof** — recorded as one, so that "but the partition was wrong" cannot be walked back through later, which is the shape of argument that restarted this lineage twice. |
 | **What would rescue it** | Only if run **as a stratifier inside (a) or (b)**, where it can move a threshold rather than define a population. Cheap there, and it costs nothing extra since the run structure is already characterised. |
 
 **Stated plainly: depth is a covariate, not a phase.** Proposing it as its own phase is how this lineage
-generated eight object definitions.
+generated eight object definitions. **But it is rejected on priority, not on impossibility**, and if (a)
+and (b) both return null the wrong-partition question is the honest thing left to ask — with the prior
+stated in advance, and against the same 70.98 bp floor.
 
 ---
 

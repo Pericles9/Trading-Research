@@ -1323,6 +1323,40 @@ A cohort whose print rates support measurement below 10 ms; a different event cl
 timing structure is conditional on a price/size state not measured here. **Absent one of those, this is
 closed rather than abandoned** — which is the distinction the four prior attempts never earned.
 
+### Retraction sweep — everything that cited the withdrawn premises
+
+**Added 2026-09-10.** D26 retracts three things, and this project has no mechanism that links a premise
+back to its citers: the register is append-only and citations run one way. The detector package's
+blocker rationale was found to be resting on the withdrawn Allan premise **by accident, while doing
+something unrelated.** The sweep below is what should have shipped with the decision. The search is a
+grep for the premise's distinctive numbers (`5.99`, `1,245`, `2.4x`, `35x`, `0.557`, `too weak`), so the
+cost is minutes.
+
+**Three labels.** `withdrawn` — the claim goes. `corrected` — the claim needs restating, not deleting.
+`unaffected` — the document cites the premise **and is still right**, because its conclusion has an
+independent derivation. **The third is not a dodge**; without it a future reader cannot tell a sound
+conclusion from an unreviewed one.
+
+| file | what it cites | status |
+|---|---|---|
+| `prompts/scale_field_brief.md` §"The correction that matters most" (L30–36) | *"this tape is nowhere near Poisson … a z-score would be inflated ~2.4× at ms and ~35× at the hour scale. Every threshold would be meaningless."* | **withdrawn.** On the collapsed tape `A(15.6 ms) = 0.91`, so the fine-end inflation is ≈1.0 and the Poisson constant is very nearly right there. The coarse-end departure is real but is the **envelope**, reproduced at or above the real value by an `h = 1` surrogate at every rung. |
+| `prompts/scale_field_brief.md` (L38–41) | *"Get the threshold from a matched null instead"* | **withdrawn.** The matched null is the object commit `1a34975` retracted: the crossover tracks the surrogate's own bandwidth at ≈2.6h, and a structureless positive control reproduced the real tape's crossover to within 0.5 s. |
+| `config/scale_field.json` → `noise_reference.why` (L137) | the same 5.99 / 1,245 / 2.4× / 35× sentence, **inside a committed config** | **withdrawn as a rationale. NOT edited** — outputs are keyed by config hash (CLAUDE.md, Code & repo layout), so amending the `why` field would silently re-key every artifact this config produced. The correction lives here; the config's rationale field is stale and is to be read against this row. |
+| `prompts/phase_10_v3.md` (L73) | *"[the Allan factor] tolerates a slowly-varying underlying rate … Fano … will be inflated by the trend; that inflation is expected and is not itself evidence of clustering"* | **corrected, and this is the root.** v3 was right that trend inflation is not clustering evidence, and right to warn about Fano — but it **exempted Allan**, and that exemption holds only for `T` much smaller than the envelope's variation scale. At `T = 4,096 s` on a 23,400 s session it does not hold at all. The premise was manufactured downstream by reading v3's caveat as applying to Fano alone. |
+| `research/scale_field/detector/GOING_LIVE.md`, blocker 1 | the 2.4× / 35× rationale, as justification for rejecting the Poisson `0.87` | **corrected** — `claude/going_live_blockers_answered.md`. That file reaches the right conclusion (no fixed matched-null reference exists) for the wrong reason. **Not edited: another session's uncommitted work.** |
+| `claude/field_feature_extraction_methods.md` §4.3 | *"take the constant from the matched null rather than the Poisson `0.87`"* | **corrected.** The direction survives; the justification and the destination do not. **Not edited: another session's uncommitted work.** |
+| `prompts/scale_field_brief.md` (L69) and `config/scale_field.json` → `coarse_cap_rule` (L122) | `A = 1,245` cited for the degrees of freedom at the 4,096 s rung | **unaffected.** The argument is that a rung holding ~2 independent windows is unreliable — which is true regardless of *what* `A` measures. The `session_span / 8` cap stands. |
+| the goals brief's traps list (§12), *"do not standardise against the analytic Poisson constant … use the `sd(F)` table"* | the same Allan numbers, as the reason | **unaffected — same conclusion, another route.** The `sd(F)` table is the **estimator's sampling error**, a different object from a clustering reference. The instruction was right and remains right; only its stated reason is withdrawn. |
+| `research/scale_field/scale_field.py` (L23) `SIGMA_POISSON_DECADES` | the constant's definition | **unaffected.** It is the sd of `log10(Exp)` for **any** rate, correctly documented, and makes no claim about this tape. |
+| `results/**` artifacts containing Allan numbers | computed values | **not citers.** Records of runs, correct as records. |
+
+**Also swept and clean:** `docs/Scale-Field-Arc-Index.md`, `claude/scale_field_reading_grammar.md`,
+`docs/Open-Items-Register.md` — no occurrence of the premise (the register's `inflat` hits are duplicate
+prints and quote staleness, unrelated).
+
+**Standing requirement going forward: a decision that retracts anything ships this table in the same
+commit.**
+
 **Numbering note.** Recorded as D26, confirmed free by reading this file — register highest was D25.
 `CLAUDE.md`'s pointer list could **not** be updated in the same commit: that file carries an uncommitted
 edit from another session (the 2026-09-08 git-discipline block), and staging it would capture that work
