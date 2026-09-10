@@ -112,11 +112,23 @@ reports.
 
 ## D26 — `s ≥ 2.26/λ` as the applicability gate
 
-> **⚠ THE NUMBER 26 IS TAKEN.** `D26 — The within-session timing line is closed` was appended to
-> `docs/Universe-Decisions.md` on 2026-09-09, with the next free number confirmed from the register's
-> tail (highest was D25) as this file's own preamble requires. **This draft is now D27 or later and
-> its number must be re-confirmed from the register at append time.** Flagged rather than renumbered,
-> because this file's rule is that numbers are provisional until append.
+> **⚠ WITHDRAWN 2026-09-10 — SUBSUMED, not merely renumbered.**
+>
+> **The number.** `D26 — The within-session timing line is closed` was appended to
+> `docs/Universe-Decisions.md` on 2026-09-09, next free number confirmed from the register's tail
+> (highest was D25) as this file's preamble requires. So this heading's number is stale.
+>
+> **But renumbering it would be wrong, because the content is already carried.** An applicability gate
+> governs *when the field may be used*, and on this cohort the field is no longer used — D26 closed the
+> within-session timing line. `s ≥ 2.26/λ` did not stop being true, and **D26 carries it forward
+> explicitly** in its *What survives and is carried forward* section, as an **instrument property**
+> rather than an operating gate: the resolution floor, the empty satisfiable band at `read_factor = 1`
+> (`n_eff = 8`, `2·sd = 0.785`, `F ≥ −1`), and the sampling-error table are all recorded there.
+>
+> **So this draft is withdrawn as subsumed by D26, and 10c open item 4 and 10d §4 close by absorption**
+> rather than remaining open against a decision that was never appended. **Do not append it under any
+> number.** If a future cohort reopens field use — which D26's *What would reopen this* section
+> defines — the gate is re-derived then, against that cohort's rates, not resurrected from here.
 
 **Date:** [Cooper] · **Deciding gate:** Cooper decision on the scale-space close-out
 
