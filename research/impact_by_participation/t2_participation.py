@@ -73,7 +73,7 @@ def main() -> int:
             FROM t GROUP BY 1, 2, 3, 4, 5
         )
         SELECT t.ticker, t.event_date, t.momentum_pct, t.session_offset, t.minute_index,
-               t.size, bt.bar_volume, bt.bar_n_trades,
+               t.sip_timestamp, t.size, bt.bar_volume, bt.bar_n_trades,
                t.size::DOUBLE / bt.bar_volume AS participation_rate
         FROM t JOIN bar_totals bt USING (ticker, event_date, momentum_pct, session_offset,
                                           minute_index)
