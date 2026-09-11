@@ -54,6 +54,16 @@
   uncommitted human work, a wildcard stage will eventually capture some of it, and the audit trail
   then says what happened to be dirty rather than what was intended. This mirrors the
   `write_allowlist` discipline that already bounds which paths a phase may write.
+- **Git discipline: work on a phase branch, commit at each real checkpoint, push to `origin`
+  intermittently rather than hoarding local commits.** Never commit or push directly to `master`;
+  merge phase branches to `master` via pull request, never a local `git merge` + push. Never
+  force-push a shared branch (`master`, or any `phase/*` already pushed to `origin`) without explicit
+  instruction, and never skip hooks or signing (`--no-verify`, `--no-gpg-sign`) without explicit
+  instruction. Commit messages describe the *why*, tied to the phase's Output Files table — see the
+  explicit-path rule above; run `git status`/`git diff` before every commit to confirm only the
+  intended paths are staged. Push after each phase's commits land, after any hard stop is committed,
+  and at any other natural checkpoint — a local-only history that only reaches `origin` at the very
+  end defeats the audit trail this file already requires everywhere else. Added 2026-09-08.
 - Exploratory code: research/phase_{x}/. Promoted code only: src/. Nothing in src/ changes mid-phase.
 - Deterministic, config-driven runs. Every tunable lives in config/phase_{x}.json, committed before the
   run that uses it. Outputs keyed by config hash.
