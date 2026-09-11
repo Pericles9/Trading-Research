@@ -76,8 +76,9 @@ set as the hardcoded default in `src/data/paths.py`. This is not the repo-relati
 default shown in the CLI examples below — D: (the drive the repo's default path
 would otherwise resolve to) has confirmed, worsening hardware defects and was
 migrated off entirely. See `results/hardware/` for the migration/verification
-record and `results/ingestion_run/e_drive_ingestion_report.md` for the full
-E:-based buildout and verification. Do not write new data to D:.
+record and `results/ingestion_run/` (disk capacity, schema-drift
+characterization and fix, subset validation) for the E:-based buildout and
+verification. Do not write new data to D:.
 
 ### Components
 
@@ -106,7 +107,7 @@ E:-based buildout and verification. Do not write new data to D:.
 |---|---|---|---|---|
 | `filtered` | `filtered_trades` | Table | **Loaded** — 24,200/24,200 files, exact match | 4,899,401,773 |
 | `filtered` | `filtered_quotes` | Table | **Loaded** — 22,660/22,660 files, exact match | 3,775,991,856 |
-| `quote_data` | `raw_quotes` | Table | **Loaded** — 19,123/19,136 files; 13 excluded (9 unreadable/absent source files, 2 truncated, 2 OOM on malformed metadata) — see `e_drive_ingestion_report.md` | 1,757,761,017 |
+| `quote_data` | `raw_quotes` | Table | **Loaded** — 19,123/19,136 files; 13 excluded (9 unreadable/absent source files, 2 truncated, 2 OOM on malformed metadata) — see `results/ingestion_run/schema_drift_characterization.md` | 1,757,761,017 |
 | `metadata` | `collection_stats` | Table | **Loaded** | 1 |
 | `metadata` | `symbols_metadata` | Table | **Loaded** | 2 |
 | `daily` | `daily_bars` | Table | Not loaded — out of scope for this buildout | — |
