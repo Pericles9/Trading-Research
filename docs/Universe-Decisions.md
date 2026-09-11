@@ -651,6 +651,34 @@ No package index, no R, no network fetch. Any prompt requiring an external packa
 implementation, or a downloaded artifact must state an offline fallback at drafting time.
 `reuse-before-build` applies only to what is already installed.
 
+### D14 Amendment A1 — Scoped network exception for Build F1's staging pulls
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight (`prompts/fundamentals_f1.md`)
+
+D14 as written has no carve-out for any network step. Build F1 (fundamental data and float layer)
+requires two staging pulls — a Massive vendor bulk pull (F1-T2) and an SEC EDGAR daily-index /
+`companyfacts.zip` pull (F1-T3) — and this session confirmed directly that the sandbox has outbound
+network reachability (`curl` to `api.massive.com` and `www.sec.gov` both returned live HTTP
+responses, not connection failures).
+
+**Decision.** Network access is authorized, narrowly, for exactly these two staging steps:
+
+- F1-T2 (Massive bulk pull: financials, ticker reference/events, splits, dividends, short interest /
+  volume, and the float endpoint for archival only per D27) — writes immutable raw responses under
+  `data/raw/fundamentals/massive/<fetch_date>/` plus a fetch manifest (endpoint, params, timestamp,
+  record count, checksum) per source.
+- F1-T3 (SEC EDGAR daily index and `companyfacts.zip` pull) — writes immutable raw archives under
+  `data/raw/fundamentals/sec/<fetch_date>/`, with a declared User-Agent and the published rate limit
+  respected.
+
+**Both steps write once, to an immutable raw archive, and stop.** No task after F1-T2/F1-T3 reaches
+the network. D14's offline constraint is otherwise unchanged and continues to bind everywhere else in
+this programme — this amendment does not reopen network access generally, and it does not authorize
+any other phase or task to fetch anything.
+
+**Standing rule.** Any future task that wants network access states so explicitly, in the same way,
+before it runs — D14 is still the default and this is still the exception.
+
 ## D15 — Phase 11 reads the quote/trade coverage columns from the Phase 4/5 materializations
 
 **Date:** 2026-08-15 · **Gate:** Phase 11 Amendment 1, approved by Cooper before T1 ran
@@ -1406,3 +1434,145 @@ commit.**
 edit from another session (the 2026-09-08 git-discipline block), and staging it would capture that work
 in an unrelated commit, which `CLAUDE.md`'s own explicit-path rule forbids. **The index update is
 outstanding and is flagged to Cooper.** **Next free number: D27.**
+
+## D27 — The Massive float endpoint is banned from any computed quantity
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-1
+
+`/stocks/vX/float` is documented "Plan History: Not applicable to this endpoint" — a current snapshot
+with no date parameter and no history, marked experimental. Joining it to an event from 2020–2024,
+after an unknown number of offerings and reverse splits in between, is a lookahead of the same class
+as D4's spine contamination.
+
+**Decision.** The float endpoint may be fetched and stored in the raw archive for orientation only
+(F1-T2c). **It may never appear in `event_fundamentals` or any table a downstream phase reads.**
+Treated identically to D4's quarantine: a write boundary, not an intent test.
+
+**Standing rule.** Any future fundamentals/float work touching a current-snapshot vendor endpoint with
+no history applies the same test before use: does the endpoint carry an as-of date that predates the
+event, or does it always describe "now"? If "now," it is archive-only.
+
+## D28 — The as-of anchor for fundamentals is the acceptance timestamp of the latest filing strictly before t0
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-2
+
+Not the event date, not the period end, not `filing_date` — a date, which cannot distinguish a filing
+accepted after the close from one accepted pre-open, a distinction that decides correctness for every
+pre-market event in this universe. Acceptance timestamps come from the SEC filing index
+(`sec_filings.accepted_ns`), never from the vendor.
+
+**Decision.** Every as-of join in F1, and any future fundamentals work, filters strictly on
+`accepted_ns < t0_ns`, never `<=`, and never on a bare date field.
+
+**Standing rule.** `t0_ns` itself is defined in D33, below — this decision governs the join condition,
+not the anchor's construction.
+
+## D29 — Fundamentals provenance is carried per source vintage, not per field
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-3
+
+All financial line items drawn from one filing share one acceptance timestamp and one accession
+number — repeating that provenance once per field, rather than once per group, would multiply the
+same fact across a dozen columns for no benefit and create a chance for it to silently disagree with
+itself.
+
+**Decision.** `event_fundamentals`'s groups (`flg_`, `shs_`, `fin_`, `si_`, `spl_` — schema in
+`prompts/fundamentals_f1.md` §4) each carry exactly one `*_accepted_ns`/`*_asof_ns` and one accession
+column for the whole group, never one per field.
+
+**Standing rule.** Any future group added to this table follows the same rule: provenance is declared
+at the grain the source actually vintages at, not at the grain of the table's rows.
+
+## D30 — Fundamentals joins resolve on the SEC Central Index Key as of t0, never on ticker
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-4
+
+The universe is 2,576 tickers in the corner of the market where symbols are recycled after delisting
+and reverse splits are routine. A ticker-keyed join silently attaches one company's balance sheet to
+another company's event.
+
+**Decision.** `ticker_identity` resolves the CIK as of `t0` for every `(ticker, t0)` pair (F1-T1), and
+every fundamentals join downstream resolves on CIK, never ticker. Events whose ticker maps to more
+than one CIK across the window are flagged `resolved_ambiguous` and carried, not dropped or guessed at.
+
+**Standing rule.** Any future join between this universe and an external company-keyed source resolves
+identity first, as its own auditable step, before joining anything else.
+
+## D31 — Share counts are stored as filed; no basis adjustment at write time
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-5
+
+This programme already carries one documented adjustment-basis mismatch (D4: spine numeric columns
+carry inconsistent adjustment bases per ticker and per column). It does not need a second, and
+`shares_outstanding_observations` is exactly the kind of quantity a well-intentioned adjustment step
+would quietly get wrong the same way.
+
+**Decision.** `shs_shares_outstanding` and every raw share-count field are stored exactly as filed.
+Split factors are carried as their own series (`spl_` group) so any later conversion is explicit,
+auditable, and reversible — never baked into the stored count.
+
+## D32 — No fundamental column is put against any outcome variable under Build F1
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-6
+
+F1 is a data-layer build: it constructs `event_fundamentals`, produces a coverage report, and stops.
+It carries no phase number, tests no hypothesis, and is not the place a regression, split, or
+conditional-expectancy claim against a fundamental column gets made.
+
+**Decision.** The first such use requires a written sentence naming the decision the result would
+change, and that sentence is Cooper's to write. It is not produced by this build, and no task in
+`prompts/fundamentals_f1.md` is authorized to produce it.
+
+**Standing rule.** Same shape as every other "measurement is not permission" boundary in this
+programme (D4's write-boundary test, A13(a)) — F1 may build and report; it may not analyze.
+
+## D33 — t0 for Build F1 is a tiered construction; no single anchor covers the universe
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, resolved with Cooper before F1-T1
+
+Neither the canonical spine nor any existing detection artifact carries a `t0` covering all ~20,951
+in-scope events at any single precision:
+
+- `results/phase_10/artifacts/v2_r13_detection.parquet` carries the nanosecond-precision, D7-derived
+  `det_ns_poll1` — "CAUSAL" per `research/phase_10/v4_t5_t6.py:36` — for **114 events** (342 rows
+  across up to 3 thresholds). Confirmed, by search, to be the only nanosecond-precision detection
+  artifact in the repo; no universe-scale version exists anywhere.
+- `results/phase_8/artifacts/a102_detection_anchors.parquet` carries a minute-level anchor
+  (`det_minute`, `det_segment`) for **15,763 events** — the anchor `config/phase_11.json`'s
+  `reused_frozen` block already treats as the standing frozen artifact for the most recently completed
+  phase.
+
+Using the nanosecond anchor alone, as its precision would recommend, leaves **20,837 of 20,951 events
+(99.5%) with no anchor at all** — a table that would still pass every row-count assertion in
+`prompts/fundamentals_f1.md` §5 while carrying no filing-proximity or share-count join for nearly the
+whole universe.
+
+**Decision.** F1's `t0_spine` (a new artifact this decision names, not in the original work order)
+takes the finest anchor actually available per event, in this order:
+
+1. `det_ns_poll1` from `v2_r13_detection.parquet`, for the 114 events it covers (filtered to the
+   `threshold` matching this universe's scanner trigger, confirmed before use — it is not implied by
+   the filename, and the file carries three).
+2. Else, `a102_detection_anchors.parquet`'s `det_minute`/`det_segment`, converted to a nanosecond
+   timestamp at the start of that minute on `event_date_canonical` via the pinned XNYS calendar.
+3. Else, the first regular-session trade timestamp of `event_date_canonical` for that ticker, read
+   fresh from `filtered_trades` (DuckDB SQL; never materialized to a dataframe, per the standing
+   DuckDB-over-pandas rule).
+
+Every row carries `t0_source ∈ {nanosecond_poll1, minute_a102, first_trade_fallback, unavailable}`.
+**F1-T3f's poll-boundary question is answered only for the `nanosecond_poll1` tier** and is reported as
+not-measurable-at-that-precision for the other two tiers — stated plainly in the digest, never
+silently extrapolated from a coarser tier.
+
+**Consequence acknowledged.** `t0` under tiers 2 and 3 is coarser than the "moment of detection" D7
+defines. This is acceptable for F1's purpose — filing-proximity and share-count timing operate on a
+scale of hours to months, not seconds, except at the single edge case F1-T3f asks about, which this
+decision scopes to the tier that can actually answer it.
+
+**Standing rule.** Any future work joining fundamentals or any other slow-moving data source to this
+universe's `t0` reuses `t0_spine`, keyed by `event_id` — it does not re-derive t0 by picking whichever
+anchor artifact happens to be at hand.
+
+**Numbering note.** Recorded as D27 through D33, confirmed free by reading this file — register
+highest was D26, next free D27. `CLAUDE.md`'s pointer list is updated in the same commit.
+**Next free number: D34.**

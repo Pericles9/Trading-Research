@@ -166,8 +166,16 @@
     channels return the session envelope and nothing else under four controls; below 10 ms
     the structure is order fragmentation on a cohort already unable to measure there; three
     prior headlines (the 30 s crossover, the Allan clustering premise, v3's 128 s knee)
-    retracted by control, not by review** (2026-09-09/10).
-  - **Next free number: D27.**
+    retracted by control, not by review** (2026-09-09/10) · **D27 the Massive float endpoint
+    is banned from any computed quantity** · **D28 fundamentals as-of anchor is a filing's
+    acceptance timestamp strictly before t0** · **D29 fundamentals provenance is carried per
+    source vintage, not per field** · **D30 fundamentals joins resolve on CIK as of t0, never
+    ticker** · **D31 share counts are stored as filed, no basis adjustment at write time** ·
+    **D32 no fundamental column goes against any outcome variable under Build F1** ·
+    **D33 Build F1's t0 is a tiered construction (nanosecond anchor for 114 events, minute
+    anchor for up to 15,763, first-trade fallback for the rest) since no single anchor covers
+    the ~20,951-event universe** (D27-D33, 2026-09-11, Build F1 pre-flight).
+  - **Next free number: D34.**
 - Repo map: docs/Research-Library-Map.md. Data layout: docs/data/Schema.md (tracked copy of
   record; `data/Schema.md` is a local, untracked mirror — `.gitignore` excludes `/data/` wholly,
   so edit the tracked copy and mirror the change there). Corrected 2026-09-10 — `data/Schema.md`

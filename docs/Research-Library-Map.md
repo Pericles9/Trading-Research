@@ -11,6 +11,37 @@ This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `resea
 
 ---
 
+## Build F1 addendum — fundamental data and float layer, pre-flight (folder-level; branch `build/fundamentals-f1`, 2026-09-11)
+
+Unnumbered work unit (see `07af342`'s exact-stem convention, `tools/verify_cited_paths.py`), not a
+numbered phase — no `research/phase_{n}/`/`results/phase_{n}/` pairing applies. Branched from
+`phase/10e`, not `master`: `master`'s `docs/Universe-Decisions.md` does not yet carry D24–D26 (an open
+pull request merging `phase/10e` into `master` is unmerged as of this addendum).
+
+Files added, pre-flight only (F1-T0 through F1-T6 have not run yet):
+
+- `prompts/fundamentals_f1.md` — the work order, reconciled against actual repo state before any task
+  ran (no `event_id`/`t0` spine column exists, the companion scoping note referenced by the original
+  draft does not exist, D14 as written has no network carve-out).
+- `research/fundamentals_f1/common.py` — shared config/DuckDB-connection/identity-key/t0-tier plumbing.
+  `event_id()` reused verbatim from `research/phase_10/common.py:215`.
+- `config/fundamentals_f1.json` — frozen config skeleton; `cooper_pending` block holds the two
+  thresholds (`filed_stale_days`, `shs_quality_coverage_floor`) that must be set before F1-T4 runs.
+- `docs/data/fundamentals_sources.md` — tracked provenance doc for `data/raw/fundamentals/` and
+  `data/fundamentals/` (both under the wholly-gitignored `/data/`), per the same convention as
+  `docs/data/Schema.md`.
+- `docs/Universe-Decisions.md` — **D14 Amendment A1** (scoped network exception for F1-T2/F1-T3) and
+  **D27–D33** (the work order's DF-1..DF-6 registered, plus D33: the tiered t0 construction, a new
+  artifact — `t0_spine.parquet` — not in the original draft). `CLAUDE.md`'s decision index updated in
+  the same commit; next free number is now **D34**.
+- `.gitignore` — added `results/fundamentals_f1/artifacts/*.parquet`, matching the existing
+  `results/scale_field/artifacts/*.parquet` rule for non-`phase_*` work units.
+- Empty skeleton directories: `results/fundamentals_f1/{artifacts,charts}/`, `data/raw/fundamentals/`
+  (the latter gitignored under `/data/`, present locally only).
+
+**Not yet built:** `t0_spine.parquet` (F1-PF5), and everything in F1-T0 through F1-T6. This addendum
+covers pre-flight only.
+
 ## Phase 10 addendum — v3 and v4 (folder-level; branch `phase/10`, 2026-08-06)
 
 Supersedes the "ran in two scopes" framing in the Phase 10 section below: the phase ran **four**
