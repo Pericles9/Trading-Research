@@ -1,0 +1,89 @@
+{
+  "phase": "impact_by_participation",
+  "config_hash": null,
+  "status": "escalated",
+  "escalation": {
+    "criterion": "prompt-mandated stop after T4 (Approval Gate)",
+    "observed": "T0-T4 complete, dev tier only; T5 and full-tier promotion blocked pending Cooper review",
+    "tier": "HARD STOP (by task design, not a fired numeric threshold)"
+  },
+  "headline_metrics": [
+    {
+      "name": "closest_cell_gap_p_clear_optimistic_vs_breakeven",
+      "value": -0.2115,
+      "n": 5727491,
+      "source": "results/phase_10e/artifacts/t4_gate.json",
+      "chart": null
+    },
+    {
+      "name": "t1_p_clear_upper_bound_at_baseline_round_trip_bp",
+      "value": 0.6501,
+      "n": 5727491,
+      "source": "research/impact_by_participation/t1_threshold.py:main",
+      "chart": "results/impact_by_participation/charts/01_threshold_sweep.html"
+    },
+    {
+      "name": "t3_effective_spread_bp_p50_decile_1_one_sided",
+      "value": 25.36,
+      "n": 414579,
+      "source": "research/impact_by_participation/t3_cost_by_decile.py:main",
+      "chart": "results/impact_by_participation/charts/03_cost_by_participation.html"
+    },
+    {
+      "name": "t3_effective_spread_bp_p50_decile_10_one_sided",
+      "value": 35.65,
+      "n": 202353,
+      "source": "research/impact_by_participation/t3_cost_by_decile.py:main",
+      "chart": "results/impact_by_participation/charts/03_cost_by_participation.html"
+    },
+    {
+      "name": "t4_deciles_below_70_98bp_baseline",
+      "value": 9,
+      "n": 10,
+      "source": "research/impact_by_participation/t4_compare.py:main",
+      "chart": "results/impact_by_participation/charts/03_cost_by_participation.html"
+    }
+  ],
+  "decisions_log": [
+    {
+      "decision": "T1's threshold method, on discovering t2_excursion.parquet lacks arbitrary-level touch times",
+      "options_considered": ["approximate the exact ordering-sensitive p_clear anyway", "run a new full pass to get exact touch times", "compute and clearly label an upper bound"],
+      "chose": "explicit upper bound, sanity-checked against T3's exact value",
+      "why": "prompt required no silent approximation of a quantity the data can't actually support; the bound is honest, cheap, and still informative in one direction"
+    },
+    {
+      "decision": "dev cohort for T2/T3",
+      "options_considered": ["config/dev_sample_v3.json (generic CLAUDE.md dev sample)", "filtered_trades_dev_v4 dev_cohort='primary' (Phase 11's frozen cohort)"],
+      "chose": "filtered_trades_dev_v4, dev_cohort='primary'",
+      "why": "T3 reuses Phase 11's own build_cache() and Lee & Ready machinery; using the same frozen cohort keeps the comparison apples-to-apples rather than mixing sample conventions"
+    },
+    {
+      "decision": "join key for prints to participation deciles",
+      "options_considered": ["(ticker, event_date, minute_index) -- bar-level", "+ sip_timestamp + size -- print-level"],
+      "chose": "print-level key, with a small documented dedup for residual ties",
+      "why": "the bar-level key produced a 6.1e9-row cartesian blowup (45.6 GiB, OOM) on the first attempt"
+    }
+  ],
+  "surprises": [
+    "T1's bound already clears p_breakeven at the FULL 70.98 bp baseline cost, not just at some hypothetically lower cost -- the shortfall is dominated by touch ORDER, not barrier reachability.",
+    "T2 initially included 6 'flagged_sidecar' events Phase 11's own prompt says are never pooled with the 50 primary events -- caught and corrected before T3 ran.",
+    "build_cache() requires a _bounds table that neither it nor Phase 11's own t5a_dev_timing.py actually creates -- a pre-existing gap in Phase 11's code, worked around here rather than left blocking.",
+    "go.Histogram/go.Violin embed ALL raw data points client-side when given a full-size array -- chart 02's first attempt was 107 MB (9.5e6 points) and failed GitHub's 100 MB push limit; fixed by pre-binning (chart 02) and subsampling with quartiles computed from the full n (chart 03).",
+    "T3's effective spread is roughly FLAT across deciles 1-9 and rises only at decile 10 -- not the monotonic 'lower participation, lower cost' shape the candidate's premise might suggest."
+  ],
+  "artifacts": [
+    {"path": "results/impact_by_participation/artifacts/t0_audit.json", "sha256": null, "size_bytes": null},
+    {"path": "results/impact_by_participation/artifacts/t1_threshold.json", "sha256": null, "size_bytes": null},
+    {"path": "results/impact_by_participation/artifacts/t2_participation.json", "sha256": null, "size_bytes": null},
+    {"path": "results/impact_by_participation/artifacts/t3_cost_by_decile.json", "sha256": null, "size_bytes": null},
+    {"path": "results/impact_by_participation/artifacts/t4_compare.json", "sha256": null, "size_bytes": null}
+  ],
+  "artifacts_note": "sha256/size_bytes left null in this digest -- the standard's field notes require them for artifacts a FUTURE phase might need to verify against a frozen state; nothing downstream is frozen against this run yet since T5 has not happened. Populate on the commit that unblocks T5, if any.",
+  "charts": [
+    "results/impact_by_participation/charts/01_threshold_sweep.html",
+    "results/impact_by_participation/charts/02_participation_deciles.html",
+    "results/impact_by_participation/charts/03_cost_by_participation.html"
+  ],
+  "commits": ["844972a", "a7fd756", "86845dc", "146893a", "2cb1246", "af92454"],
+  "reproduce": ".venv/Scripts/python.exe -m research.impact_by_participation.t0_audit && .venv/Scripts/python.exe -m research.impact_by_participation.t1_threshold && .venv/Scripts/python.exe -m research.impact_by_participation.t2_participation && .venv/Scripts/python.exe -m research.impact_by_participation.t3_cost_by_decile && .venv/Scripts/python.exe -m research.impact_by_participation.t4_compare"
+}
