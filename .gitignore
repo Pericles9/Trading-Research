@@ -61,3 +61,9 @@ results/scale_field/charts/*/*/plotly.min.js
 results/scope_universe_scan/*.parquet
 results/phase_10e/**/*.parquet
 results/phase_10e/charts/plotly.min.js
+
+# impact_by_participation: same rule as phase_10e above -- chart HTML is small (a
+# handful of files) and tracked; only the 4.8 MB offline plotly.min.js bundle each
+# directory needs (D14: no CDN) is regenerable and excluded.
+results/impact_by_participation/charts/plotly.min.js
+results/impact_by_participation/artifacts/*.parquet
