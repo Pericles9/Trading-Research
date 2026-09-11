@@ -617,3 +617,93 @@ check fails the gate if the entry stops matching reality.
 (*"`results/phase_6/` was renamed"*) from a live citation (*"enumerated in
 `results/phase_6/artifacts/…`"*). Both are unresolvable strings. Dispositioning each is a human
 judgement recorded in the tool's source, and that is its boundary rather than a defect in it.
+
+---
+
+### Sub-burst reality question — CLOSED by D26 (2026-09-10)
+
+Closes the "Five methods have now failed to produce a within-session burst decomposition" item
+above (logged Phase 10 v4, 2026-08-06) and the Phase 10c close-out's explicit refusal to close it
+unilaterally ("that item stays open as recorded, cross-referenced here rather than closed
+unilaterally").
+
+**D26 (`docs/Universe-Decisions.md`) result 4 supplies the causal reason, not just another failed
+attempt.** Sub-millisecond runs are sequence-contiguous, price-monotone, single-venue, and enriched
+7–15× in condition code 14 (`Intermarket Sweep`) — the single-venue legs of intermarket sweeps, one
+aggressive order walking one book while its other legs report as their own runs. **One order, many
+prints.** This closes what `resolution_floor_finding` §2 (`claude/field_credibility_and_value_tests.md`)
+left explicitly open, and explains why eight versions of object definition — v1 (Kleinberg,
+threshold+hysteresis), v2 (intensity profile), v3 (envelope-and-excursion), v4 (interval
+thresholding), Phase 10c's sixth method family, 10d, Diag1, and the scale-field ridge/interval
+detector — never survived a tape review: **there was no object underneath any of them**, which is a
+different finding than a parameter-tuning failure. D13 had already re-anchored Phases 11/13/14/16/17
+away from a burst-relative anchor; D26 supplies the reason the anchor was never findable in the first
+place. Evidence: `docs/Universe-Decisions.md` D26 (results 3, 4, 6); `claude/scale_field_arc_closeout.md`
+§2.
+
+### Entry-signal class — CLOSED by D26 (2026-09-10)
+
+Closes the "Entry-signal class — annotated 2026-08-31, still open" item above. None of its three
+deciding tests need to run.
+
+**D26 settles the question by evidence rather than by decision.** Above 10 ms, both the rate channel
+and the interval channel return the session envelope and nothing else, under a four-control battery
+(negative, positive, null-parameter sweep, blindness); below 10 ms the structure is order
+fragmentation on a cohort already recorded as unable to measure there (see the sub-burst closure
+above). **Nothing in this programme has predicted an onset, and in the timing channel there was no
+onset to predict.** The three deciding tests are moot rather than answered: (1) null-rate matching
+(Phase 10e T5b-i, escalation row 23) is superseded by D26's own four-control battery, which already
+establishes the field fires on envelope, not on a real lead; (2) the fixed-kernel control (Task 3 of
+the scale-space work order, promoted by D23) and (3) price conversion (Phase 10e Arm 2) both
+presupposed a real lead to isolate or convert into basis points, and D26 shows the leading channel
+is the envelope. Price and size channels are untouched and remain open per Rows 18–19.
+
+**The applicability-gate question closes by absorption in the same pass.** `docs/decisions_draft_D24_D26.md`'s
+draft `D26 — s ≥ 2.26/λ as the applicability gate` heading is withdrawn as subsumed (2026-09-10): an
+applicability gate governs *when the field may be used*, and on this cohort the field is no longer
+used at all. `s ≥ 2.26/λ` did not stop being true — the register's D26 carries it forward explicitly,
+as an instrument property (the resolution floor, the empty satisfiable band at `read_factor = 1`)
+rather than an operating gate. 10c open item 4 and 10d §4 close by absorption on the same basis,
+per that file's withdrawal note. Do not append the draft under any number; if a future cohort
+reopens field use, the gate is re-derived then, against that cohort's rates.
+
+### OPEN — the wrong-partition question, contingent on the next two null results (2026-09-10)
+
+**Status: open, unscheduled, and not yet applicable.** Opened for the record per
+`claude/scale_field_arc_closeout.md` §6 item 4 — it is the honest next question to ask, not a
+finding, and only becomes live if two specific results land null.
+
+D24 and D25 closed the long thesis at both ends — 0 of 90 intraday barrier cells clear, 0 of 29
+day-scale hold-to-horizon cells clear, 119 cells total — on the timing/entry-class partition this
+programme has used throughout (`docs/Universe-Decisions.md` D24, D25). `claude/what_would_change_a_decision.md`
+identifies two candidates that could still reopen that arithmetic: **(a)** impact by participation,
+and **(b)** ISO share as a hold-length state variable (D24's cost-scaling argument already closed
+entry timing, so (b) must be specified as a hold-length question, not an entry-timing one). **If
+both (a) and (b) also return null, whether the 119 cells were ever the right partition of the data —
+rather than further evidence the long thesis is dead — is the honest thing left to ask.** Not to be
+run as its own phase: `docs/decisions_draft_D24_D26.md` s4 warns that proposing a filter or partition
+check as its own phase is how this lineage produced eight object definitions: it belongs as a
+covariate check inside whichever of (a) or (b) runs first. Cooper decision on sequencing; (a) is
+recommended first since a null result there converts "costs bind, assumed" into "costs bind,
+measured" without risking a real effect that fails to clear an unmeasured cost floor.
+
+### OPEN — `persistence_octaves` feature-count instability needs fixing as a class (2026-09-10)
+
+**Status: open, unscheduled.** Logged from `claude/scale_field_arc_closeout.md` §5 and
+`docs/amendment_draft_prompt_standard_v1_4.md` §D.
+
+`persistence_octaves` (`log2(max/min)` over a ridge feature's member points,
+`research/scale_field/detector/{ridge,interval}.py`) is computed off the seed ladder rather than the
+polished selection, so it gates the FEATURE COUNT with a value that was never itself polished. On a
+dense, non-isolated tape — the operating regime D26 result 6 establishes for this cohort at every
+scale in 8–512 s — the F channel returns feature counts 6/7/7/6/7 and the G channel 7/6/5/6/5 across
+five seed densities, against a stable 2/2/2/2/2 on the two-feature synthetic tape the committed
+detector tests use (`research/scale_field/detector/test_detector.py:834`,
+`research/scale_field/detector/validate_interval.py:266`; recorded as two `strict=True` xfail tests,
+also documented at `docs/Research-Library-Map.md:1799`). **The seed-independence the committed tests
+assert is a property of the easy synthetic tape, not of the algorithm.** Any future feature-COUNT
+statistic on this field is unsafe until this is fixed; per-feature quantities are unaffected. Row 16
+(Regime labeling + stability) is the most directly exposed — if it runs, it must report the
+seed-stable fraction as a first-class quantity rather than discover instability as a finding.
+`research/scale_field/detector/GOING_LIVE.md:134` names this as an open blocker. Unscheduled;
+belongs to whichever phase fixes the F/G channel packages or runs Row 16.
