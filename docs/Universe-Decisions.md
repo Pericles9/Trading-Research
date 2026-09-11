@@ -1350,6 +1350,50 @@ conclusion from an unreviewed one.
 | `research/scale_field/scale_field.py` (L23) `SIGMA_POISSON_DECADES` | the constant's definition | **unaffected.** It is the sd of `log10(Exp)` for **any** rate, correctly documented, and makes no claim about this tape. |
 | `results/**` artifacts containing Allan numbers | computed values | **not citers.** Records of runs, correct as records. |
 
+#### The knees are a second citation, and they are resolved by measurement
+
+**Added 2026-09-10, completing the sweep.** D26 struck *"A = 5.99 at 15.6 ms means clustering."* The same
+contaminated curve also produced **v3's knees — 128 s regular hours, 16 s premarket** — which are cited
+independently of the clustering claim, most prominently as a *prediction* in the build brief: *"the scale
+axis should show a change of character near them."*
+
+**The validity ceiling is not a constant of this tape. It is a function of the surrogate bandwidth**, and
+reporting it from one bandwidth would be the failure this decision's own control standard names. Swept,
+on envelope-only tapes with no clustering at any scale (`A(T)` must be 1 wherever the statistic is valid):
+
+| surrogate bandwidth `h` | ceiling: `T` where envelope-only `A` reaches 1.10 | ceiling / `h` |
+|---|---|---|
+| 10 s | 5.5 s | 0.55 |
+| 30 s | 11.0 s | 0.37 |
+| 100 s | 26.6 s | 0.27 |
+| 300 s | 57.7 s | 0.19 |
+
+**So the honest statement is not "the ceiling is 9 s" — it is that `A(T)` is valid only for `T` well below
+the finest scale on which the rate varies, and on this tape the rate varies at every scale.** There is
+therefore **no `T` at which `A(T)` cleanly measures clustering here**, which is the general form of what
+D26 established at a single rung.
+
+**Envelope-only `A` at the two knees, by bandwidth:**
+
+| `h` | `A(16 s)` | `A(128 s)` |
+|---|---|---|
+| 10 s | 2.36 | 44.92 |
+| 30 s | 1.22 | 34.68 |
+| 100 s | 1.00 | 9.50 |
+| 300 s | 0.99 | 1.99 |
+
+| file | what it cites | status |
+|---|---|---|
+| `prompts/phase_10_v3.md` — the knee derivation | knees read off the Allan curve at 128 s (RTH) and 16 s (premarket) | **128 s withdrawn; 16 s corrected.** At 128 s the envelope alone produces `A` = 2.0–44.9 across *every* bandwidth tested, so that rung cannot carry a clustering reading under any assumption about the envelope. At 16 s the envelope contribution is 1.00 if the rate is smooth below ~100 s and 1.22–2.36 if it varies at 30 s or finer — and this tape's envelope curvature scale is 92–111 s, so the 16 s knee is **contaminated but not destroyed**, and is quotable only with the bandwidth assumption stated. |
+| `prompts/scale_field_brief.md` — the knee *prediction* | *"the scale axis should show a change of character near them"* | **withdrawn as a prediction.** A knee that is the envelope entering the statistic is not a property of the arrival process, so there was never a reason for the scale axis to show one. |
+
+**This retires an open loose end rather than leaving it.** Gate F found no change of character at either
+knee (`width/s` flat at ≈1.85 through both). That was first flagged as *"Gate F contradicts v3"*, then
+withdrawn as a framing error, and has sat unexplained since. **The mechanism is now measured:** the coarse
+knee is where envelope curvature enters the Allan statistic, and Gate F measures curvature geometry
+directly — so it correctly sees the envelope as envelope and registers no knee. **Two statistics, no
+contradiction, one scope violation.** Evidence: `allan_validity_ceiling.json`, `allan_ceiling_sweep.json`.
+
 **Also swept and clean:** `docs/Scale-Field-Arc-Index.md`, `claude/scale_field_reading_grammar.md`,
 `docs/Open-Items-Register.md` — no occurrence of the premise (the register's `inflat` hits are duplicate
 prints and quote staleness, unrelated).

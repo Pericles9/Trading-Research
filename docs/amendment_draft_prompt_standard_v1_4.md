@@ -45,6 +45,36 @@ with an unreported free parameter.**
 
 ---
 
+## §A2 — Scope conditions on invariance claims *(new, and it caused the arc's root failure)*
+
+> **A robustness or invariance claim stated without the regime in which it holds becomes a licence.**
+> Every such claim carries the bandwidth, scale range, or sample condition under which it is true, **in
+> the same sentence**. *"X is insensitive to Y"* is not a usable statement; *"X is insensitive to Y for
+> `T ≪ L`"* is.
+
+**The worked instance is the root cause of the whole scale arc.** `prompts/phase_10_v3.md` stated that the
+Allan factor *"tolerates a slowly-varying underlying rate."* True — and true only for `T` well below the
+envelope's own variation scale, because `A(T)` differences successive counts, which cancels a trend
+approximately linear across `2T`; once `T` approaches the scale on which the rate actually curves,
+successive windows straddle different rates and the cancellation stops. **v3 stated the property and not
+the regime**, and downstream that read as *"Allan is drift-immune, full stop"*, after which the whole
+ladder was quotable and a year of work rested on it.
+
+**It happened twice in one week.** The first draft of §C below said "prefer statistics provably zero under
+a locally-Poisson rate path" as though the property were unconditional. It is not: `D` is exactly zero
+only where `λ` is constant **across the kernel**. *"Envelope-invariant"* means *"invariant to rate
+variation slower than the kernel"* — a scope condition, in precisely the position where v3 left one out.
+**Two instances of one failure in one week, one of them in this amendment**, which is the argument for a
+rule rather than a habit.
+
+**Corollary — a scope condition is measured, not assumed.** When the regime is itself a function of a free
+parameter, it is swept, not quoted. The Allan ceiling was expected to be a single observable number; swept
+over the surrogate bandwidth it moves from 5.5 s to 57.7 s as `h` goes 10 s to 300 s. **The usable output
+was not a ceiling but a dependence**, and quoting the single-bandwidth value would have been the §A
+corollary's failure inside the section that defines it.
+
+---
+
 ## §B — Retraction sweep *(new section)*
 
 **When a decision withdraws a premise, the same commit carries the list of everything that cited it.**
@@ -118,6 +148,19 @@ what removes the envelope, and (ii) which controls prove the removal worked.
 boolean extracted from a continuous field, unstable because the field has no gaps to cut at —
 reappearing in a different detector (`persistence_octaves`, 6/7/7/6/7 and 7/6/5/6/5 on a dense tape).
 **Worth fixing as a class.**
+
+---
+
+## §D2 — Known property, recorded rather than fixed: the config hash covers rationale text
+
+Outputs are keyed by config hash, and the hash covers **every** field including `why` strings that cannot
+affect any computation. So a stale rationale cannot be corrected without orphaning every artifact the
+config produced — which is why D26's sweep marks `config/scale_field.json`'s `noise_reference.why` as
+withdrawn-and-not-edited.
+
+**Not worth fixing now**, and recorded so it is a known property rather than a surprise: **a hash over
+computational fields only would let documentation be corrected without re-keying artifacts.** If the
+config schema is ever revised, that is the change to make.
 
 ---
 

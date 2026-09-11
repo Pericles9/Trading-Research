@@ -597,11 +597,17 @@ It also points the same way as everything else: runs shorter than Poisson means 
 than Poisson, i.e. structure at higher frequency than the scale being read — consistent with the empty
 satisfiable band, and with the excess living below 30 s.
 
-**On the Allan comparison, the review is right and I overstated it.** The Allan factor counts variance
-against window width; negative-run width is curvature geometry. **A process can have an Allan knee with
-no change in curvature texture**, so the absence of a knee-shaped feature in this statistic is not
-evidence that either measurement is wrong. The two measure different things. Flagging the
-non-appearance was worth doing; calling it a contradiction was not, and that framing is withdrawn.
+**On the Allan comparison — withdrawn as a contradiction, and now CLOSED by measurement (2026-09-10).**
+The first pass called it a contradiction; that framing was withdrawn as too strong, because the Allan
+factor counts variance against window width while negative-run width is curvature geometry, and a process
+can have an Allan knee with no change in curvature texture. **The mechanism is now measured rather than
+left open.** On envelope-only tapes with no clustering at any scale, `A(128 s)` reads **2.0 – 44.9 across
+every surrogate bandwidth tested** — so v3's coarse knee is where envelope curvature enters the Allan
+statistic, not a feature of the arrival process. **Gate F measures curvature geometry directly, so it sees
+the envelope as envelope and registers no knee.** Two statistics, no contradiction, one scope violation.
+The 16 s premarket knee is the marginal case: envelope-only `A` is 1.00 if the rate is smooth below
+~100 s and 1.22 – 2.36 if it varies at 30 s or finer. Full sweep and both knee rows: `docs/Universe-Decisions.md`
+D26 retraction sweep; `allan_validity_ceiling.json`, `allan_ceiling_sweep.json`.
 
 Charts: `gateF_calibrated.html`, `gateF_median_width_over_s.html`, `gateF_depth_median.html`.
 
