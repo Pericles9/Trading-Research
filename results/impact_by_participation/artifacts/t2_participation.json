@@ -4,84 +4,84 @@
   "definition": "participation_rate(print) = print.size / SUM(size) over all trades in the same (ticker, event_date, momentum_pct, session_offset, minute_index) bar, INCLUSIVE of the print's own size.",
   "minute_grid_source": "event_minute_bars_v2 (session_offset, minute_index), matched by (ticker, event_date, momentum_pct) and sip_timestamp within [first_trade_ts, last_trade_ts] of the bar.",
   "dev_table": "filtered_trades_dev_v4 (Phase 11's frozen dev cohort)",
-  "n_dev_events": 56,
-  "n_prints_total_dev": 9638361,
-  "n_prints_matched_to_a_bar": 9567114,
+  "n_dev_events": 50,
+  "n_prints_total_dev": 9545832,
+  "n_prints_matched_to_a_bar": 9474585,
   "n_deciles_requested": 10,
   "n_deciles_actual": 10,
   "decile_boundaries": [
     {
       "decile": 1,
       "min": 0.0,
-      "max": 2.7440864936062786e-05,
-      "median": 9.603080668278383e-06,
-      "n": 956730
+      "max": 2.6962535556843766e-05,
+      "median": 9.475349877294219e-06,
+      "n": 947459
     },
     {
       "decile": 2,
-      "min": 2.7442182751216032e-05,
-      "max": 8.930333574750018e-05,
-      "median": 5.407451468123074e-05,
-      "n": 957410
+      "min": 2.6962899050905955e-05,
+      "max": 8.795461541844409e-05,
+      "median": 5.309039170090997e-05,
+      "n": 947459
     },
     {
       "decile": 3,
-      "min": 8.930365475207073e-05,
-      "max": 0.00019190174630589137,
-      "median": 0.00013453101814419843,
-      "n": 956024
+      "min": 8.79550022208638e-05,
+      "max": 0.00018850141376060322,
+      "median": 0.00013228125640737335,
+      "n": 947492
     },
     {
       "decile": 4,
-      "min": 0.00019190234027999172,
-      "max": 0.00035983616659335005,
-      "median": 0.0002641191494306912,
-      "n": 956746
+      "min": 0.00018850496710588323,
+      "max": 0.0003534867937333861,
+      "median": 0.00025920239719491735,
+      "n": 947599
     },
     {
       "decile": 5,
-      "min": 0.0003598364902988082,
-      "max": 0.0006599618369894263,
-      "median": 0.0004890095112349936,
-      "n": 956647
+      "min": 0.0003534883720930233,
+      "max": 0.0006471465689906778,
+      "median": 0.00047901896915117836,
+      "n": 947334
     },
     {
       "decile": 6,
-      "min": 0.0006599630420696441,
-      "max": 0.0012262716436945112,
-      "median": 0.0008959808857411042,
-      "n": 956711
+      "min": 0.0006471467581677078,
+      "max": 0.0011943150603129105,
+      "median": 0.0008748294082653882,
+      "n": 947503
     },
     {
       "decile": 7,
-      "min": 0.0012262767030347484,
-      "max": 0.0024809740304043365,
-      "median": 0.001725863794829312,
-      "n": 956714
+      "min": 0.0011943189154293092,
+      "max": 0.0024067903578629843,
+      "median": 0.00167369619066747,
+      "n": 947363
     },
     {
       "decile": 8,
-      "min": 0.0024809791597750577,
-      "max": 0.0056198813894380115,
-      "median": 0.0036714089031665903,
-      "n": 956709
+      "min": 0.0024068086587116324,
+      "max": 0.005421621426247876,
+      "median": 0.0035471810552154203,
+      "n": 947460
     },
     {
       "decile": 9,
-      "min": 0.005619891008174387,
-      "max": 0.0169971671388102,
-      "median": 0.009195486855051541,
-      "n": 956720
+      "min": 0.005421643659251842,
+      "max": 0.016213798178905902,
+      "median": 0.008834702712253733,
+      "n": 947457
     },
     {
       "decile": 10,
-      "min": 0.016997304713109777,
+      "min": 0.016213809565034567,
       "max": 1.0,
-      "median": 0.04412811387900356,
-      "n": 956703
+      "median": 0.04158972567416945,
+      "n": 947459
     }
   ],
   "source": "research/impact_by_participation/t2_participation.py:main",
   "reproduce": ".venv/Scripts/python.exe -m research.impact_by_participation.t2_participation",
-  "match_rate": 0.9926079755676303
+  "match_rate": 0.992536323706514
 }

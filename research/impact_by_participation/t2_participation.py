@@ -44,8 +44,12 @@ def main() -> int:
     con = duckdb.connect()
     con.execute(f"ATTACH '{DB}' AS mom (READ_ONLY)")
 
+    # dev_cohort='primary' only: filtered_trades_dev_v4 also carries 6 'flagged_sidecar'
+    # events (56 total) that Phase 11's own prompt states are "never pooled" with the 50
+    # primary events. Matched here for consistency with what T3 reuses.
     dev_events = con.execute(
-        "SELECT DISTINCT ticker, event_date, momentum_pct FROM mom.filtered_trades_dev_v4"
+        "SELECT DISTINCT ticker, event_date, momentum_pct FROM mom.filtered_trades_dev_v4 "
+        "WHERE dev_cohort = 'primary'"
     ).df()
     n_dev_events = len(dev_events)
 
@@ -61,6 +65,7 @@ def main() -> int:
               ON b.ticker = t.ticker AND b.event_date_canonical = t.event_date
              AND b.momentum_pct = t.momentum_pct
              AND t.sip_timestamp >= b.first_trade_ts AND t.sip_timestamp <= b.last_trade_ts
+            WHERE t.dev_cohort = 'primary'
         ),
         bar_totals AS (
             SELECT ticker, event_date, momentum_pct, session_offset, minute_index,
@@ -104,7 +109,8 @@ def main() -> int:
         "reproduce": ".venv/Scripts/python.exe -m research.impact_by_participation.t2_participation",
     }
     n_prints_total = con.execute(
-        "SELECT COUNT(*) FROM mom.filtered_trades_dev_v4").fetchone()[0]
+        "SELECT COUNT(*) FROM mom.filtered_trades_dev_v4 "
+        "WHERE dev_cohort = 'primary'").fetchone()[0]
     out["n_prints_total_dev"] = int(n_prints_total)
     out["match_rate"] = float(n_matched / n_prints_total) if n_prints_total else None
 
