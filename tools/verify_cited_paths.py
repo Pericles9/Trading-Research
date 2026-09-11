@@ -155,6 +155,15 @@ TOKEN = re.compile(r"`([^`\n]+)`")
 SKIP = re.compile(r"https?://|[{}\[\]<>*|]|\.\.\.|\u2026|\s|/NN_")
 
 PHASE_SEG = re.compile(r"^(?:results|research)/(phase_[A-Za-z0-9]+)(?:/|$)")
+# Not every prompt names a numbered phase -- scale_field (prompts/scale_field_brief.md) and
+# impact_by_participation established a second, unnumbered convention this tool's own class-2
+# reasoning already covers in spirit ("an Output Files table specifying what the phase will
+# produce") but PHASE_SEG's "phase_" literal never matched. Exact-stem only, deliberately
+# narrower than PHASE_SEG's prefix+underscore allowance: a bare word (unlike "phase_NN") is
+# common enough elsewhere in the tree (results/hardware/, config/scale_field.json) that a
+# prefix match would risk masking a real cross-file citation, which is the case this tool
+# exists to keep catching.
+BARE_SEG = re.compile(r"^(?:results|research)/([A-Za-z][A-Za-z0-9_]*)(?:/|$)")
 
 
 def looks_like_path(tok: str) -> bool:
@@ -173,6 +182,10 @@ def is_self_referential(src_rel: str, tok: str) -> bool:
     True when src is prompts/<name>.md and tok points into results/<phase>/ or
     research/<phase>/ (or results/reports/<phase>_*) where <phase> and <name> share a
     phase prefix on a segment boundary -- so phase_1 does NOT match phase_10b.
+
+    Also true, exact-stem only (no prefix allowance -- see BARE_SEG's comment), for the
+    unnumbered-work-unit convention: prompts/<name>.md citing results/<name>/, research/<name>/,
+    or config/<name>.json.
     """
     if not src_rel.startswith("prompts/") or not src_rel.endswith(".md"):
         return False
@@ -184,8 +197,14 @@ def is_self_referential(src_rel: str, tok: str) -> bool:
         # the standing cross-phase copy: results/reports/phase_10b_report.md
         seg = os.path.basename(tok).split(".")[0]
         seg = re.sub(r"_(report|summary)$", "", seg)
+    elif tok.startswith("config/") and tok.endswith(".json"):
+        seg = os.path.basename(tok)[:-5]            # e.g. impact_by_participation
+        return seg == name
     else:
-        return False
+        bm = BARE_SEG.match(tok)
+        if not bm:
+            return False
+        return bm.group(1) == name
     for a, b in ((seg, name), (name, seg)):
         if b == a or (b.startswith(a) and b[len(a):].startswith("_")):
             return True
