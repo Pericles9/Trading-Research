@@ -166,7 +166,10 @@
     prior headlines (the 30 s crossover, the Allan clustering premise, v3's 128 s knee)
     retracted by control, not by review** (2026-09-09/10).
   - **Next free number: D27.**
-- Repo map: docs/Research-Library-Map.md. Data layout: data/Schema.md.
+- Repo map: docs/Research-Library-Map.md. Data layout: docs/data/Schema.md (tracked copy of
+  record; `data/Schema.md` is a local, untracked mirror — `.gitignore` excludes `/data/` wholly,
+  so edit the tracked copy and mirror the change there). Corrected 2026-09-10 — `data/Schema.md`
+  had no version history and no backup until the copy of record moved under `docs/data/`.
 - `docs/Claude-Code-Operating-Plan.md` **exists** (added 2026-08-13, commit `edfb1ea`; §6 is the phase
   map). The note previously here said it had never existed in this checkout — true when written on
   2026-08-03 per `results/redirect_d5/doc_existence_audit.json`, stale since Phase 10b created it.
