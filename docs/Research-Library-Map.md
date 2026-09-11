@@ -1864,3 +1864,115 @@ rule itself is real and is the repo's standing practice — `gate_charts.py`, `p
 `plot_lead_time.py` and `plot_onesided.py` all import the one palette — so the practice was followed
 and the citation is recorded as unresolvable, per the same class of defect
 `tools/verify_cited_paths.py` exists to surface.
+
+---
+
+## Scale-field instrument gates — Gates 0–F on the real cohort, and the retraction sweep (2026-09-07 to 2026-09-10)
+
+**Not a phase, and diagnostic only until D26.** Runs the scale field against the real cohort tape
+for the first time — everything mapped above this section is synthetic-only. Answers one question:
+does the field detect real structure, or the session envelope and estimator noise? The answer is
+**D26 — the within-session timing line is closed** (`docs/Universe-Decisions.md`), reached only after
+three headline results were run down and retracted by their own controls. This section maps the
+instrument, not the decision — read `docs/Universe-Decisions.md` D26 and `claude/scale_field_arc_closeout.md`
+for the findings themselves.
+
+**Code — `research/scale_field/`, orchestration and gates.** `instrument_gates.py` runs Gates
+0/A–F in sequence against the real tape, stopping on first failure; diagnostic only, no digest, no
+decision. Per-gate scripts:
+
+| script | what it gates |
+|---|---|
+| `gateA_resolve.py` | Gate A's zero-sum identity on the field's own `lograte`-weighted intensity, with an inhomogeneous-Poisson control to separate real residual from finite-domain/mask artifact |
+| `gateD_cohort.py` | widens the print-count-stratified cohort so Gate D's shaded-fraction-vs-print-count regression has leverage |
+| `gateD_vs_surrogate.py` | re-runs Gate D against a rate-matched smooth-envelope surrogate instead of a print-count regression, per segment, never pooled — separates "detects clustering" from "detects the diurnal envelope" |
+| `gateE_ceiling.py` | builds a reliability ceiling for Gate E's split-half correlation from a smooth-rate surrogate and the envelope-subtracted residual, so `r` near 1 isn't misread as fine-structure detection |
+| `gateF_calibration.py` | derives Gate F's negative-run-width reference values (2.00 pure Poisson; `2·sqrt(1+σ²/s²)` Gaussian bump) against the estimator's own biases |
+| `gateF_recompute.py` | re-runs Gate F's width statistic with the calibration fix (mean not median run length, edge/NaN/segment-truncation excluded) |
+| `gate_charts.py` | diagnostic Plotly charts for the gates, palette reused from `research/phase_10d_diag1/plot_boundary_through_time.py` |
+
+**Code — the retraction chain.** Each of the three retracted headlines has its own script:
+`surrogate_bandwidth_family.py` and `bandwidth_floor.py` sweep the surrogate smoothing bandwidth `h`
+and locate the real-vs-surrogate crossover, which is what showed the "30 s crossover" scales as
+`≈2.6h` rather than being a tape property. `subpoisson_check.py` tests the ~10% Allan-factor deficit
+against a known-Poisson positive control (bias, not a sub-Poisson finding). `allan_validity_ceiling.py`
+and `allan_ceiling_sweep.py` measure the Allan-factor validity ceiling directly (rather than assume it
+via rule-of-thumb) across a bandwidth family, which is what withdrew v3's 128 s/16 s knees.
+`fragmentation_identity.py` identifies same-order-fill fragmentation from trade-record signatures
+(monotone price + multi-venue OR sequence-contiguity) rather than a time tolerance, permutation-tested
+against a null — the basis for D26 result 3 (condition code 14, one order many prints). Supporting:
+`divergence_controlled.py`, `divergence_vs_tolerance.py`, `subsecond_origin.py`, `reconcile_allan.py`
+(order-of-work step 2, a hard-stop reconciliation against Phase 10 v3's committed Allan curve, float-for-float
+tol 1e-12), `crossover_vs_decay.py`, `excess_variance.py`, `collapsed_tape_measures.py`,
+`absolute_vs_ratio.py`, `subburst_is_a_restatement.py` (tests whether the committed sub-burst-duration
+statistic is a restatement of a low quantile of the event's own interval distribution — feeds D26
+result 4), and the lead-time pair `t1_lead_time.py` / `t1_paired_control.py` with their charts
+`plot_lead_time.py` / `plot_onesided.py`.
+
+**Control tapes — three surrogates, three different jobs, built in `bandwidth_floor.py` and
+`surrogate_bandwidth_family.py` off a shared thinned-Poisson `draw()`:**
+
+- **`S30` ("envelope only").** Thinned Poisson from the real event's own intensity smoothed at
+  `h = 30 s`. Carries the diurnal envelope shape above 30 s and **nothing** below it — the positive
+  control for "envelope, no clustering." Reproduced the real tape's crossover to within 0.5 s, which
+  is what retracted the 30 s-crossover finding.
+- **`NS05` ("known fine structure").** A Neyman–Scott cluster process on the same envelope: parents
+  thinned from the same smoothed intensity, each spawning Poisson(μ=3.0) offspring at Gaussian
+  σ = 0.5 s offsets. Same mean intensity and envelope as the real tape, but with **known** clustering
+  at a known scale — the blindness control proving the procedure can detect fine structure at all.
+- **Poisson base ("nothing").** Homogeneous Poisson, same print count as the real tape, uniform
+  arrival times. The negative control; any statistic must read its null value on this tape at every
+  scale.
+
+**Artifacts — `results/scale_field/artifacts/instrument_gates/`, 34 files, ~6.9 MB, tracked as
+JSON.** One per gate/script above (`gateA_resolve.json`, `gateD_vs_surrogate.json`,
+`gateF_recompute.json`, `allan_validity_ceiling.json`, `allan_ceiling_sweep.json`,
+`fragmentation_identity.json`, `collapsed_tape_measures.json`, `subpoisson_check.json`,
+`surrogate_bandwidth_family.json`, `bandwidth_floor.json`, `crossover_vs_decay.json`, and 23 more,
+one per script in the two tables above). **Configs:** `config/scale_field_detector.json` — the frozen
+parameter surface per `claude/field_feature_extraction_methods.md` §10, committed before this run,
+scoped to produce a feature table only (touches no forward return, reopens D22 per Cooper
+2026-09-09, does not reopen D24/D25).
+
+**Charts — an outlier in the standing convention.** `results/scale_field/charts/instrument_gates/`
+holds 28 gitignored HTML files (plus the local `plotly.min.js`) — the two the closeout singles out
+for a Cooper visual read are `bandwidth_family_ratio.html` (10.4 KB) and `subsecond_collapse.html`
+(16.6 KB), both real and non-trivial. **Unlike every other chart directory in this tree
+(`cohort/`, `detector/`, `event_panels/`, `mockups/`, each per-event folder), this directory has no
+`chart_manifest.json`** — the tracked enumeration-of-gitignored-HTML the `.gitignore` comment
+describes as the standing pattern. So these 28 charts are currently enumerated nowhere in git; only
+this map entry and the closeout note record that they exist. **Gap noted, not fixed here** — writing
+one is a natural companion task to the Cooper chart review the closeout already asks for.
+
+**Prior art.** Cited at `claude/scale_field_arc_closeout.md`'s closeout checklist as owed to this
+map; assembled here from where each is actually used:
+
+- **SiZer** — Chaudhuri & Marron, *SiZer for Exploration of Structures in Curves*, JASA 1999.
+  `claude/field_feature_extraction_methods.md` calls it "the closest published relative of your whole
+  panel" — same idea as the scale-vs-significance map here, read as one object across the scale
+  family. Not implemented from directly; cited as the closest published analogue.
+- **Dümbgen–Spokoiny** — *Multiscale Testing of Qualitative Hypotheses*, Ann. Statist. 2001. **This
+  one is implemented, not just cited**: `research/scale_field/derivations/03_fingerprint_raw_topology.py:123`
+  carries `cal = z - sqrt(2*log(max(T_span/s, e)))` verbatim as the per-scale calibration, so that a
+  detection at 3 s and one at 300 s are comparable under one decision threshold.
+  `claude/field_feature_extraction_methods.md` §4.2 and `claude/scale_field_reading_grammar.md` carry
+  the derivation.
+  Selinger et al. 2007 and Pasquale et al. 2010 (log-interval histogram burst detection) and Ko et al.
+  2012 (locally-normalized log-interval method, adopted in Phase 10 v4 — `prompts/phase_10_v4.md`,
+  `docs/Universe-Decisions.md:548`, `docs/Open-Items-Register.md:51`). None of the scale-field arc's
+  own surrogate-generation code (`bandwidth_floor.py`, `surrogate_bandwidth_family.py`) cites a named
+  spike-train surrogate paper directly — the connection is methodological (thinned-Poisson /
+  Neyman–Scott construction is the same family of technique) rather than a direct import.
+- **Legéndy & Salcman** and **Kepler injection–recovery** — **cited nowhere in this repo except the
+  closeout checklist line itself** (`claude/scale_field_arc_closeout.md:123`). A whole-repo,
+  case-insensitive search for `Legendy`, `Salcman`, and `Kepler` returns exactly that one file and no
+  other. Recorded here as **owed, not resolved** — per the same standard as the citation notes
+  elsewhere in this map, an unelaborated reference is flagged rather than silently completed with
+  invented content. Whoever wrote the checklist line has the source; it is not reconstructable from
+  what is in the checkout.
+- **Chakravarty, Jain, Upson & Wood**, *Clean Sweep*, JFQA 2012 — ISOs carry disproportionate price
+  discovery relative to volume share. Used in `docs/Universe-Decisions.md` D26 ("Scope — what this
+  does not close") and `claude/what_would_change_a_decision.md` to motivate ISO share as a
+  hold-length state variable — the open item this section's Library Map neighbor,
+  `docs/Open-Items-Register.md`'s wrong-partition entry, names as one of the two candidates that
+  could still reopen D24/D25.
