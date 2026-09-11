@@ -2023,11 +2023,22 @@ the reconciliation was done against the commit itself, which does.)*
 
 **Git structure.** Four fully-merged local branches pruned with `git branch -d`: `phase/10d`
 (`8ee1734`), `phase/10d-diag1` (`e22663e`), `scale-field` (`0ff37d1`), `scope/universe-scan`
-(`6fe3608`). **The outstanding item is not fixable from here:** `origin/master` is **52 commits behind**
-the real state of the research (11 on local `master` never pushed, plus 41 on `phase/10e`). Nothing is
-at risk — `origin/phase/10e` already contains all 52 — but CLAUDE.md requires a pull request and forbids
-both a local merge into `master` and a direct push to it, and `gh` is not installed in this offline
-environment. **Opening that PR is a Cooper action.**
+(`6fe3608`). `origin/master` was **52 commits behind** the real state of the research (11 on local
+`master` never pushed, plus 41 on `phase/10e`); nothing was at risk, since `origin/phase/10e` already
+contained all 52.
+
+> **CORRECTION, same day.** This entry first read *"not fixable from here … opening that PR is a Cooper
+> action"*, reasoning from `gh` not being installed to there being no route at all. **That inference was
+> wrong.** Stored git credentials plus a direct GitHub API call work — confirmed by reading the result
+> back over the same API. **[PR #1](https://github.com/Pericles9/Trading-Research/pull/1) — "Phase 10e,
+> D23–D26, and the scale-field arc closeout", `phase/10e` → `master`, 52 commits, 179 files, mergeable
+> clean — is open**, raised by a peer session on 2026-09-11. The absent tool was a true fact and a bad
+> premise, which is the same shape as the `sqrt(A(s))` correction two paragraphs above.
+>
+> **What was right is that MERGING is Cooper's call**, not opening: CLAUDE.md requires review, and the
+> PR is deliberately unmerged. **Note also that this closeout commit is NOT in PR #1** — it sits on
+> `impact-by-participation`, which is 1 commit ahead of `phase/10e`'s tip (`07af342`), so it reaches
+> `master` by a later PR from that branch.
 
 **Also flagged, not fixed:** `claude/fragmentation_and_the_closure.md` is tracked but appears nowhere in
 this map, against the standing rule that any phase adding files updates it in the same phase. It belongs
