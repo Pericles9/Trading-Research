@@ -160,8 +160,12 @@
     **D25 the long thesis is closed at BOTH ends, measured -- intraday by barriers (0 of 90
     cells clear, and below a censoring-matched null in 0 of 30) and day-scale by
     hold-to-horizon markouts (0 of 29 cells, median negative at every horizon, -886 bp at
-    T+3)** (2026-09-02).
-  - **Next free number: D26.**
+    T+3)** (2026-09-02) · **D26 the within-session timing line is closed -- above 10 ms both
+    channels return the session envelope and nothing else under four controls; below 10 ms
+    the structure is order fragmentation on a cohort already unable to measure there; three
+    prior headlines (the 30 s crossover, the Allan clustering premise, v3's 128 s knee)
+    retracted by control, not by review** (2026-09-09/10).
+  - **Next free number: D27.**
 - Repo map: docs/Research-Library-Map.md. Data layout: data/Schema.md.
 - `docs/Claude-Code-Operating-Plan.md` **exists** (added 2026-08-13, commit `edfb1ea`; §6 is the phase
   map). The note previously here said it had never existed in this checkout — true when written on
