@@ -1,0 +1,52 @@
+{
+  "companies_tested": [
+    "AGAE",
+    "CLRB"
+  ],
+  "per_company": {
+    "AGAE": {
+      "total_records": 18,
+      "duplicate_periods": {},
+      "n_duplicate_periods": 0,
+      "restatement_signal": {
+        "restatement_signal": "10-K/A",
+        "filed": "2024-04-29",
+        "restated_period": "2023-12-31"
+      }
+    },
+    "CLRB": {
+      "total_records": 59,
+      "duplicate_periods": {},
+      "n_duplicate_periods": 0,
+      "restatement_signal": {
+        "restatement_signal": "8-K Item 4.02 non-reliance",
+        "filed": "2024-08-09",
+        "restated_period": "2023-12-31"
+      }
+    }
+  },
+  "decisive_test": {
+    "ticker": "CLRB",
+    "cutoff_before": "2024-08-09",
+    "filtered_top_record": [
+      {
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "filing_date": "2024-03-27",
+        "revenues": 0
+      }
+    ],
+    "unfiltered_top_record": [
+      {
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "filing_date": "2024-03-27",
+        "revenues": 0
+      }
+    ],
+    "identical": true
+  },
+  "outcome": "one_record_per_period_latest_values",
+  "escalation_row_1_fires": true,
+  "action": "STOP AND POST. Vendor financials are not point-in-time via filing_date. The work order needs an amendment before F1-T2 -- the fin_ group cannot be assembled from Massive's financials endpoint alone without lookahead; the SEC route (raw XBRL per accepted filing) becomes the source of record for financials, per prompts/fundamentals_f1.md SS3's own outcome table."
+}

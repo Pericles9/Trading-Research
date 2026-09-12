@@ -6,9 +6,25 @@ Companion to `prompts/fundamentals_f1.md`. Tracked copy of record for `data/raw/
 
 ## Status
 
-Pre-flight only. Source schemas below are filled in as F1-T2 (Massive) and F1-T3 (SEC EDGAR) actually
-run — this file is created now, empty of fetched-schema detail, so the decisions that must be recorded
-*before* those tasks run have a committed home from the start.
+**STOPPED at F1-T0 (2026-09-11), escalation row 1 fired.** Pre-flight (D14 Amendment A1, D27–D33) and
+`t0_spine.parquet` (F1-PF5) are built and verified. F1-T0's restatement gate test found Massive's
+financials endpoint is **not point-in-time**: two independent universe companies with a confirmed SEC
+restatement event (AGAE, a 10-K/A; CLRB, a genuine 8-K Item 4.02 non-reliance event) both show zero
+duplicate `(start_date, end_date, timeframe)` records across their complete history, and CLRB's FY2023
+record queried with `filing_date.lt` set before its restatement 8-K returns byte-identical output to an
+unfiltered query. There is no earlier vintage for `filing_date` to gate to. Full record:
+`results/fundamentals_f1/artifacts/t0_restatement_test_summary.json`,
+`research/fundamentals_f1/t0_restatement_test.py`.
+
+**Consequence: F1-T1 through F1-T6 do not run as originally scoped.** Per `prompts/fundamentals_f1.md`
+§3's own outcome table, the `fin_` group cannot be assembled from Massive's financials endpoint without
+look-ahead bias — every stored value would silently carry whatever the *latest* restatement says, not
+what was knowable at `t0`. The SEC route (raw XBRL per accepted filing, already the plan for `shs_` and
+`flg_`) becomes the source of record for `fin_` too. **This needs a work-order amendment from Cooper
+before F1-T2 or any later task runs** — not a workaround chosen here.
+
+Source schemas below are filled in as F1-T2 (Massive, once amended) and F1-T3 (SEC EDGAR) actually
+run.
 
 ## Identity key
 

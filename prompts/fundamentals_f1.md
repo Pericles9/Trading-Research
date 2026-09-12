@@ -157,21 +157,41 @@ records are keyed by filing vintage and that filtering on `filing_date` is a val
 be true.
 
 **Needs the same Massive financials entitlement as F1-T2a below — check that first, so an authorization
-failure here isn't misread as a data finding.**
+failure here isn't misread as a data finding.** Confirmed 2026-09-11: `GET /vX/reference/financials`
+returns 200 for a live query (`AAPL`), entitlement is not the blocker.
 
-- [ ] **F1-T0a** — Select a company in the universe with a known restatement or a filed amendment (form
-      10-K/A or 10-Q/A). Record how it was identified.
-- [ ] **F1-T0b** — Query the income statement endpoint for the period spanning the restatement, **unfiltered
-      by `filing_date`**. Record the full response verbatim into the raw archive.
-- [ ] **F1-T0c** — Report: how many records exist for that single period, whether each carries a distinct
-      `filing_date`, and whether the values differ between them.
-- [ ] **F1-T0d** — Repeat on a second company independently. One case is an anecdote.
-- [ ] **F1-T0e** — **Stop and post.** Do not proceed to any other task.
+- [x] **F1-T0a** — Select a company in the universe with a known restatement or a filed amendment (form
+      10-K/A or 10-Q/A). Record how it was identified. **Done, with a correction along the way:** a
+      plain search for any 10-K/A in the universe (17 tickers found via SEC EDGAR full-text search
+      cross-referenced against the universe ticker list) repeatedly surfaced administrative,
+      Part-III-only amendments filed ~1 month after the original — a well-known small-cap compliance
+      pattern (adding director/officer compensation disclosure that would otherwise need a proxy
+      statement) that never touches financial-statement values and cannot distinguish either outcome
+      branch below. **AGAE** and **CLRB** were confirmed instead via an 8-K Item 4.02 ("Non-Reliance on
+      Previously Issued Financial Statements") search — the signal that actually accompanies a genuine
+      financial restatement.
+- [x] **F1-T0b** — Query the income statement endpoint for the period spanning the restatement, **unfiltered
+      by `filing_date`**. Record the full response verbatim into the raw archive. **Done:**
+      `research/fundamentals_f1/t0_restatement_test.py`; raw archive at
+      `data/raw/fundamentals/massive/2026-09-11/t0_restatement_test/{AGAE,CLRB}_all_unfiltered.json`
+      (18 and 59 records respectively, full history, every timeframe).
+- [x] **F1-T0c** — Report: how many records exist for that single period, whether each carries a distinct
+      `filing_date`, and whether the values differ between them. **Done:** zero duplicate
+      `(start_date, end_date, timeframe)` keys in either company's complete history. The decisive
+      check went further — CLRB's FY2023 record queried with `filing_date.lt=2024-08-09` (before its
+      Item 4.02 8-K) returned **byte-identical** `filing_date` and `revenues` to an unfiltered query.
+      `filing_date` does not gate the response to an earlier vintage; there is no earlier vintage to
+      gate to.
+- [x] **F1-T0d** — Repeat on a second company independently. One case is an anecdote. **Done:** AGAE and
+      CLRB are independent companies, independent restatement mechanisms (administrative 10-K/A vs. a
+      genuine Item 4.02 non-reliance event), same result.
+- [x] **F1-T0e** — **Stop and post.** Do not proceed to any other task. **STOPPED HERE, 2026-09-11.**
+      See outcome below — escalation row 1 fires.
 
 | outcome | consequence |
 |---|---|
 | Multiple records per period, distinct `filing_date`, differing values | The vendor data is point-in-time. `filing_date < t0` is a valid as-of filter. Proceed as written. |
-| One record per period carrying the latest values | **The vendor financials are not point-in-time.** They may still be archived, but they may not be joined at `t0`. The SEC route becomes the only source of record for financials, and the work order needs an amendment before F1-T2 runs. |
+| **One record per period carrying the latest values** — **CONFIRMED, 2026-09-11** | **The vendor financials are not point-in-time.** They may still be archived, but they may not be joined at `t0`. The SEC route becomes the only source of record for financials, and the work order needs an amendment before F1-T2 runs. **Full record:** `results/fundamentals_f1/artifacts/t0_restatement_test_summary.json`. **F1-T1 through F1-T6 do not run until this amendment lands — this is escalation row 1, a stop, not a flag.** |
 
 ### F1-T1 — Identity spine
 

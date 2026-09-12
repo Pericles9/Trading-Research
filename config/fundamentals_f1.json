@@ -67,8 +67,8 @@
   "sec_edgar": {
     "network_authorization": "D14 Amendment A1, scoped to F1-T3 only",
     "daily_index_start_date": "2020-01-01",
-    "user_agent": null,
-    "user_agent_note": "PENDING -- SEC requires a descriptive User-Agent with a real contact address before any request. Set before F1-T3 runs.",
+    "user_agent": "Mom_db Research fundamentals_f1 (cleeming29@gmail.com)",
+    "user_agent_note": "Set 2026-09-11 for F1-T0's identification lookups and F1-T3's bulk pull, per SEC's declared-contact requirement.",
     "companyfacts_zip_url": "https://www.sec.gov/Archives/edgar/daily-index/xbrl/companyfacts.zip",
     "disk_budget_check_required": true
   },

@@ -39,11 +39,15 @@ Files added, pre-flight only (F1-T0 through F1-T6 have not run yet):
 - `research/fundamentals_f1/t0_assemble.py` — F1-PF5, builds `t0_spine.parquet` (gitignored parquet,
   20,951 rows) and `t0_assemble_summary.json` (tracked). Run and verified: tier counts
   `nanosecond_poll1`=110, `minute_a102`=15,259, `first_trade_fallback`=5,582, `unavailable`=0.
-- Empty skeleton directories: `results/fundamentals_f1/charts/`, `data/raw/fundamentals/` (the latter
-  gitignored under `/data/`, present locally only).
+- `research/fundamentals_f1/t0_restatement_test.py` — F1-T0, the restatement gate test. Run and
+  verified: escalation row 1 fires (`t0_restatement_test_summary.json`) — Massive's financials
+  endpoint is not point-in-time via `filing_date`.
+- Empty skeleton directory: `results/fundamentals_f1/charts/`.
+- `data/raw/fundamentals/massive/2026-09-11/t0_restatement_test/` — raw archive (gitignored under
+  `/data/`), two companies' full unfiltered financials history plus a fetch manifest.
 
-**Built so far:** pre-flight (D14 Amendment A1, D27–D33) and F1-PF5 (`t0_spine.parquet`). **Not yet
-built:** F1-T0 through F1-T6.
+**Built so far:** pre-flight (D14 Amendment A1, D27–D33), F1-PF5 (`t0_spine.parquet`), and F1-T0
+(stopped, escalation row 1 fired). **Not yet built, pending Cooper's amendment:** F1-T1 through F1-T6.
 
 ## Phase 10 addendum — v3 and v4 (folder-level; branch `phase/10`, 2026-08-06)
 
