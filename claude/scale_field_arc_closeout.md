@@ -115,20 +115,27 @@ barred by D4, and are where rows 11, 18, 19 and the excursion work already live.
 Against the house convention, adapted — this arc was not a numbered phase, so there is no digest or tag to
 cut.
 
-- [ ] **Operating Plan §6** — mark the scale-field line closed, gate outcome *no structure in the timing
+- [x] **Operating Plan §6** — mark the scale-field line closed, gate outcome *no structure in the timing
       channel above 10 ms*. **Insert-only; renumber nothing.** Mark row 15 closed by D26 and annotate rows
-      13, 14, 16, 17 per §4.
-- [ ] **`docs/Research-Library-Map.md`** — the gate scripts, the control tapes (`S30`, `NS05`, Poisson
+      13, 14, 16, 17 per §4. Done 2026-09-11.
+- [x] **`docs/Research-Library-Map.md`** — the gate scripts, the control tapes (`S30`, `NS05`, Poisson
       base), the bandwidth-sweep artifacts, and the prior-art entries (SiZer, Dümbgen–Spokoiny, spike-train
-      surrogates, Legéndy & Salcman, Kepler injection–recovery, Chakravarty et al. on ISOs).
-- [ ] **`docs/Open-Items-Register.md`** — close the sub-burst reality question (result 4) and the
+      surrogates, Legéndy & Salcman, Kepler injection–recovery, Chakravarty et al. on ISOs). Done
+      2026-09-11 — Legéndy & Salcman and Kepler injection–recovery flagged as owed rather than resolved
+      (cited nowhere else in this checkout).
+- [x] **`docs/Open-Items-Register.md`** — close the sub-burst reality question (result 4) and the
       applicability-gate item; open the wrong-partition question and the `persistence_octaves` stability
-      item.
-- [ ] **Charts** — `results/scale_field/charts/instrument_gates/` is gitignored by the same rule as the
+      item. Done 2026-09-11.
+- [x] **Charts** — `results/scale_field/charts/instrument_gates/` is gitignored by the same rule as the
       panel charts. **Open the retraction pair locally at least once** (`bandwidth_family_ratio.html`,
       `subsecond_collapse.html`); neither is legible from a table, and this record asserts what they show.
-- [ ] **`docs/amendment_draft_prompt_standard_v1_4.md`** — yours to fold in or reject. Until then the
-      four-control standard lives only in D26.
+      **Reviewed by Cooper, 2026-09-12 — verdict: both charts show nothing that could not be legible from
+      a table.** Recorded as the actual finding rather than left matching this item's original assertion,
+      which the review did not confirm.
+- [x] **`docs/amendment_draft_prompt_standard_v1_4.md`** — yours to fold in or reject. Until then the
+      four-control standard lives only in D26. **Folded in by Cooper, 2026-09-12**, merged with the
+      pre-existing v1.4 draft (Plan Authorship, two-tier escalation, async gate) — see
+      `docs/Agent_Prompt_Standard.md` v1.4 and the banner on the draft file itself.
 
 ---
 

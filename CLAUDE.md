@@ -133,8 +133,18 @@
 - Full text and scope: `docs/Universe-Decisions.md`, D5.
 
 ## Pointers
-- All phase prompts follow docs/Agent_Prompt_Standard.md (v1.3, 2026-07-14) — defines the Evidence
-  Standard, §9 Chart Contract, §10 Verification Block, §11 Digest Contract, §12 Git Discipline.
+- All phase prompts follow docs/Agent_Prompt_Standard.md (**v1.4, adopted 2026-09-12** — supersedes
+  v1.3; the v1.4 draft sat unapplied since 2026-08-31 until this approval). Defines the Evidence
+  Standard; **The Control Standard** (four controls — negative, positive, null-parameter sweep,
+  blindness — for any "real exceeds null" claim; scope conditions on robustness claims; envelope
+  invariance as a selection criterion); §3 Plan Authorship; §5 Escalation Criteria (two-tier,
+  `HARD STOP`/`LOG`); §9 Approval Gate (`async`/`sync-required`); §10 Chart Contract; §11
+  Verification Block; §12 Digest Contract; §13 Git Discipline; and the standing **Retraction
+  Sweep** rule (a decision that withdraws a premise carries, in the same commit, a table of every
+  citing file marked withdrawn/corrected/unaffected). **Section numbers shifted from v1.3** —
+  historical prompts citing old numbers (e.g. `prompts/universe_scan_scoping.md`'s "§10 and §12")
+  are bannered record of what was live when written, per the standard's own Retraction Sweep rule,
+  and are not corrected retroactively.
 - Strategy context: docs/Mom-DB-Strategy-Research-Program.md (v2.0, 2026-08-03 — re-ranked under D5).
 - **Standing decisions: `docs/Universe-Decisions.md` is the AUTHORITY. The list below is a
   convenience index and is not to be used to pick the next free decision number** — read the file.
