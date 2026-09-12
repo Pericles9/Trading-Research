@@ -61,3 +61,11 @@ results/scale_field/charts/*/*/plotly.min.js
 results/scope_universe_scan/*.parquet
 results/phase_10e/**/*.parquet
 results/phase_10e/charts/plotly.min.js
+
+# impact_by_participation, iso_share_hold_length: same rule -- chart HTML is small and
+# tracked; only the offline plotly.min.js bundle (D14: no CDN) and regenerable artifact
+# parquets are excluded.
+results/impact_by_participation/charts/plotly.min.js
+results/impact_by_participation/artifacts/*.parquet
+results/iso_share_hold_length/charts/plotly.min.js
+results/iso_share_hold_length/artifacts/*.parquet
