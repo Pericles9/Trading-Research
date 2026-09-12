@@ -8,7 +8,13 @@ raised or left candidate (b)'s own threshold in place.
 **Branch:** `iso-share-hold-length`, cut from `master` — `master` fast-forwarded to `phase/10e`'s
 tip on 2026-09-12 (PR #1, merge `e32bbfe`) and Agent Prompt Standard v1.4 landed in the same
 history (PR #2, merge `5b80914`), so `master` is the current, up-to-date base and there is no
-stale-branch risk this time.
+stale-branch risk this time. **Known, temporary gate exception:** this prompt cites three paths
+from candidate (a)'s own report (`prompts/impact_by_participation.md`,
+`results/impact_by_participation/REPORT.md`, `.../artifacts/t2_participation.json`) that exist only
+on branch `impact-by-participation` (PR #3, opened 2026-09-12, awaiting Cooper's review) —
+`tools/verify_cited_paths.py` reports these as `UNRESOLVED` on this branch specifically. Not added
+to that script's `EXPECTED_ABSENT` list, which is reserved for permanently- or historically-absent
+paths, not a citation waiting on a pending PR — this resolves cleanly on its own once PR #3 merges.
 **Standard:** `docs/Agent_Prompt_Standard.md` **v1.4** (adopted 2026-09-12, this is the first prompt
 written against it). Section numbers below follow v1.4: §3/§3b Plan Authorship / Task Checklist
 (skipped here — see the callout in §3, this phase's targets are pre-registered below, but the
@@ -100,11 +106,11 @@ above this reference scale would itself be a notable finding regardless of wheth
   be built from the ingested DuckDB tables and must be read from the raw per-event files
   (`data/filtered/{TICKER}_{DATE}_{MP}/trades.parquet`, column `conditions`, a list of SIP codes),
   exactly as `research/scale_field/fragmentation_identity.py` already does (`COLS`, `read_full()`).
-  **Reuse that reader and its per-event file helpers (`trade_files()`, `session_window()` from
-  `research/phase_10/common.py` / `research/phase_10d_diag1/common.py`) — do not write a second
-  path to the same files.** This is a targeted per-event read (50 dev events, two files each), not a
-  full-table materialization, and does not conflict with the DuckDB-SQL-over-pandas rule, which
-  governs the 4.9B/3.8B-row ingested tables specifically.
+  **Reuse that reader and its per-event file helpers (`trade_files()`, `session_window()`, both in
+  `research/phase_10/common.py`) — do not write a second path to the same files.** This is a
+  targeted per-event read (50 dev events, two files each), not a full-table materialization, and
+  does not conflict with the DuckDB-SQL-over-pandas rule, which governs the 4.9B/3.8B-row ingested
+  tables specifically.
 - **Condition code 14 = Intermarket Sweep is CONFIRMED**, not `[verify]` — D26 point 3
   (`docs/Universe-Decisions.md`), supplied from the public trade-conditions glossary at Cooper's
   review. No re-derivation needed.
