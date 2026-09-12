@@ -36,11 +36,14 @@ Files added, pre-flight only (F1-T0 through F1-T6 have not run yet):
   the same commit; next free number is now **D34**.
 - `.gitignore` — added `results/fundamentals_f1/artifacts/*.parquet`, matching the existing
   `results/scale_field/artifacts/*.parquet` rule for non-`phase_*` work units.
-- Empty skeleton directories: `results/fundamentals_f1/{artifacts,charts}/`, `data/raw/fundamentals/`
-  (the latter gitignored under `/data/`, present locally only).
+- `research/fundamentals_f1/t0_assemble.py` — F1-PF5, builds `t0_spine.parquet` (gitignored parquet,
+  20,951 rows) and `t0_assemble_summary.json` (tracked). Run and verified: tier counts
+  `nanosecond_poll1`=110, `minute_a102`=15,259, `first_trade_fallback`=5,582, `unavailable`=0.
+- Empty skeleton directories: `results/fundamentals_f1/charts/`, `data/raw/fundamentals/` (the latter
+  gitignored under `/data/`, present locally only).
 
-**Not yet built:** `t0_spine.parquet` (F1-PF5), and everything in F1-T0 through F1-T6. This addendum
-covers pre-flight only.
+**Built so far:** pre-flight (D14 Amendment A1, D27–D33) and F1-PF5 (`t0_spine.parquet`). **Not yet
+built:** F1-T0 through F1-T6.
 
 ## Phase 10 addendum — v3 and v4 (folder-level; branch `phase/10`, 2026-08-06)
 

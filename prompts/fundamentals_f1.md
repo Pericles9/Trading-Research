@@ -30,7 +30,7 @@ Restated rather than cited, per the rule that a brief must carry its numbers inl
 | **Executable assertions** | Every membership or coverage claim in the digest must be produced by a script-level assertion that fails loudly, in the structured drift-dict + exit-code style of `tools/verify_cited_paths.py` / `tools/verify_claude_md_indices.py` — not a bare `assert`. Prose statements of membership are insufficient — this is the recurring defect pattern (the VEEE/CODX swap, the ticker `.nunique()` bug). |
 | **Universe membership** | Inner join to `momentum_events_canonical WHERE in_scope = TRUE`. Target row count: **20,951** — confirmed against `results/phase_5/artifacts/quotes_bitmaps_all.parquet` (D15's own materialization, 20,951 rows), not a live `COUNT(*)` against the view, which is expensive (observed still under 10% complete after ~40 minutes; the view's staged construction joins `filtered_trades`/`filtered_quotes`, 4.9B/3.8B rows, for coverage flags regardless of which columns are selected). |
 | **Identity key** | No spine or view column is named `event_id`. This build reuses the de facto convention already standard across `research/phase_10/`, `phase_10e/`, `phase_11/`, `scale_field/` (50+ files), defined once at `research/phase_10/common.py:215`: `f"{ticker}_{event_date_canonical}_{momentum_pct:.2f}"`. No second convention is invented for the same concept. |
-| **t0 anchor** | No spine or view column is named `t0`, and no single existing artifact covers the universe at any one precision. Per D33: a tiered construction — nanosecond anchor (`v2_r13_detection.parquet`, 114 events) → minute anchor (`a102_detection_anchors.parquet`, up to 15,763 events) → first-trade fallback (`filtered_trades`, the remainder). Built once as `t0_spine.parquet` before F1-T1; every downstream task reads it rather than re-deriving t0. |
+| **t0 anchor** | No spine or view column is named `t0`, and no single existing artifact covers the universe at any one precision. Per D33: a tiered construction — nanosecond anchor (`v2_r13_detection.parquet`, 110 events) → minute anchor (`a102_detection_anchors.parquet` resolved via `event_minute_bars_v2`, 15,259 events) → first-trade fallback (each event's own `data/filtered/` folder, 5,582 events). Run and verified: 0 unavailable, sum = 20,951. Built once as `t0_spine.parquet` before F1-T1; every downstream task reads it rather than re-deriving t0. |
 | **Git discipline** | Branch `build/fundamentals-f1` (off `phase/10e`, per the reconciliation note above). Commit before each run, at every task boundary, and before any escalation. Tag at the F1-T6 gate. |
 | **Data documentation lives in `docs/data/`** | Not in `/data/`, which `.gitignore` excludes wholly. Schema and provenance documents are version-controlled artifacts. |
 
@@ -240,7 +240,7 @@ on D14 Amendment A1 (F1-PF2).**
       is accepted **between the instantaneous threshold crossing and the 60-second poll boundary.** D7 makes
       detection a family indexed by polling interval, so a filing landing inside that window means filing
       proximity is also a family, not a scalar. **Per D33, this is answerable only for the `nanosecond_poll1`
-      tier of `t0_spine.parquet` (114 events)** — the other two tiers do not carry instantaneous-crossing
+      tier of `t0_spine.parquet` (110 events)** — the other two tiers do not carry instantaneous-crossing
       precision, and this task reports that limitation explicitly rather than extrapolating from a coarser
       tier. If the count on that tier is zero, that is a sentence in the digest and the question is closed for
       that tier. If it is not zero, **stop and post** — it needs a decision, not a default.
@@ -434,7 +434,8 @@ exists to close.
       equality in both directions, not row counts — **equal counts with different membership is the exact
       defect that has occurred before in this repo.**
 - [ ] `t0_spine`'s `nanosecond_poll1` / `minute_a102` / `first_trade_fallback` / `unavailable` tier counts
-      sum to exactly 20,951, and the `nanosecond_poll1` tier count is exactly 114.
+      sum to exactly 20,951, and the `nanosecond_poll1` tier count is exactly 110. Run and verified:
+      110 / 15,259 / 5,582 / 0.
 - [ ] For every group, **zero** rows have a non-null `*_accepted_ns`, `*_asof_ns`, or `*_last_split_ns` that
       is greater than or equal to `t0_ns`. Any violation is a hard stop, not a flag.
 - [ ] Every quality column contains only values from its declared enum. Assert the domain explicitly; do not

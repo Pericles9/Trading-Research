@@ -1534,15 +1534,18 @@ Neither the canonical spine nor any existing detection artifact carries a `t0` c
 in-scope events at any single precision:
 
 - `results/phase_10/artifacts/v2_r13_detection.parquet` carries the nanosecond-precision, D7-derived
-  `det_ns_poll1` — "CAUSAL" per `research/phase_10/v4_t5_t6.py:36` — for **114 events** (342 rows
-  across up to 3 thresholds). Confirmed, by search, to be the only nanosecond-precision detection
-  artifact in the repo; no universe-scale version exists anywhere.
-- `results/phase_8/artifacts/a102_detection_anchors.parquet` carries a minute-level anchor
-  (`det_minute`, `det_segment`) for **15,763 events** — the anchor `config/phase_11.json`'s
-  `reused_frozen` block already treats as the standing frozen artifact for the most recently completed
-  phase.
+  `det_ns_poll1` — "CAUSAL" per `research/phase_10/v4_t5_t6.py:36` — at threshold 1.3 for 114 rows,
+  **110** of which have an actual crossing (4 are `never_crosses = TRUE`, meaning the price never
+  reaches 1.3× the T-1 RTH close, so there is no crossing timestamp to record). Confirmed, by search,
+  to be the only nanosecond-precision detection artifact in the repo; no universe-scale version
+  exists anywhere.
+- `results/phase_8/artifacts/a102_detection_anchors.parquet` has 15,763 rows total, of which
+  **15,369** carry a defined `det_minute` (the other 394 are the same `never_crosses` condition at
+  a larger scale) — matching D15's own, independently recorded "detection-universe" population of
+  15,369 exactly. `config/phase_11.json`'s `reused_frozen` block already treats this artifact as the
+  standing frozen anchor for the most recently completed phase.
 
-Using the nanosecond anchor alone, as its precision would recommend, leaves **20,837 of 20,951 events
+Using the nanosecond anchor alone, as its precision would recommend, leaves **20,841 of 20,951 events
 (99.5%) with no anchor at all** — a table that would still pass every row-count assertion in
 `prompts/fundamentals_f1.md` §5 while carrying no filing-proximity or share-count join for nearly the
 whole universe.
@@ -1550,19 +1553,26 @@ whole universe.
 **Decision.** F1's `t0_spine` (a new artifact this decision names, not in the original work order)
 takes the finest anchor actually available per event, in this order:
 
-1. `det_ns_poll1` from `v2_r13_detection.parquet`, for the 114 events it covers (filtered to the
-   `threshold` matching this universe's scanner trigger, confirmed before use — it is not implied by
-   the filename, and the file carries three).
-2. Else, `a102_detection_anchors.parquet`'s `det_minute`/`det_segment`, converted to a nanosecond
-   timestamp at the start of that minute on `event_date_canonical` via the pinned XNYS calendar.
-3. Else, the first regular-session trade timestamp of `event_date_canonical` for that ticker, read
-   fresh from `filtered_trades` (DuckDB SQL; never materialized to a dataframe, per the standing
-   DuckDB-over-pandas rule).
+1. `det_ns_poll1` from `v2_r13_detection.parquet`, for the 110 events with an actual crossing
+   (filtered to `threshold = 1.3`, matching this artifact's own pin in `config/phase_10_v4.json` —
+   confirmed before use, not implied by the filename; the file carries three threshold values).
+2. Else, `a102_detection_anchors.parquet`'s `det_minute`, resolved back to that bar's `first_trade_ts`
+   in `event_minute_bars_v2` (the table `a102_detection.py` itself joined to produce `det_minute`),
+   rather than reconstructing wall-clock time from the minute-index grid independently — the source
+   table already carries the exact nanosecond timestamp, so re-deriving it through calendar
+   arithmetic adds DST/early-close risk for no benefit.
+3. Else, the first regular-session (09:30–16:00 ET) trade timestamp of `event_date_canonical` for
+   that ticker, read directly from that event's own `data/filtered/{TICKER}_{DATE}_{MOM:.2f}/`
+   folder (DuckDB-over-pandas is a rule about the 4.9B-row aggregate tables, not a per-event targeted
+   read this small — the same read pattern `research/phase_10/common.py` already established).
 
 Every row carries `t0_source ∈ {nanosecond_poll1, minute_a102, first_trade_fallback, unavailable}`.
-**F1-T3f's poll-boundary question is answered only for the `nanosecond_poll1` tier** and is reported as
-not-measurable-at-that-precision for the other two tiers — stated plainly in the digest, never
-silently extrapolated from a coarser tier.
+**Run and verified** (`results/fundamentals_f1/artifacts/t0_spine.parquet`,
+`t0_assemble_summary.json`): `nanosecond_poll1` = 110, `minute_a102` = 15,259, `first_trade_fallback`
+= 5,582, `unavailable` = 0. Sum = 20,951, exactly the universe. **F1-T3f's poll-boundary question is
+answered only for the `nanosecond_poll1` tier** and is reported as not-measurable-at-that-precision
+for the other two tiers — stated plainly in the digest, never silently extrapolated from a coarser
+tier.
 
 **Consequence acknowledged.** `t0` under tiers 2 and 3 is coarser than the "moment of detection" D7
 defines. This is acceptable for F1's purpose — filing-proximity and share-count timing operate on a

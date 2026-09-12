@@ -21,11 +21,18 @@ Tiered construction — see `docs/Universe-Decisions.md` D33 for the full reason
 `config/fundamentals_f1.json`'s `t0_spine` block for the exact artifact paths and thresholds:
 
 1. `det_ns_poll1` from `results/phase_10/artifacts/v2_r13_detection.parquet`, threshold 1.3 (matching
-   `config/phase_10_v4.json`'s own pin for this artifact) — 114 events.
-2. `a102_detection_anchors.parquet`'s `det_minute`/`det_segment`, coarsened to nanosecond-at-minute-start
-   via the pinned XNYS calendar — up to 15,763 events cumulative.
-3. First regular-session trade of `event_date_canonical`, read fresh from `filtered_trades` — the
-   remainder.
+   `config/phase_10_v4.json`'s own pin for this artifact) — 114 rows at that threshold, 110 with an
+   actual crossing (4 are `never_crosses = TRUE`).
+2. `a102_detection_anchors.parquet`'s `det_minute`, resolved back to that bar's `first_trade_ts` in
+   `event_minute_bars_v2` (not reconstructed via calendar arithmetic) — 15,763 rows total, 15,369
+   with a defined `det_minute` (matching D15's own "detection-universe" count exactly), 15,259
+   actually used after tier 1 claims its 110.
+3. First regular-session (09:30–16:00 ET) trade of `event_date_canonical`, read directly from each
+   event's own `data/filtered/{TICKER}_{DATE}_{MOM:.2f}/` folder — 5,582 events.
+
+**Run and verified** (`results/fundamentals_f1/artifacts/t0_assemble_summary.json`, F1-PF5,
+2026-09-11): `nanosecond_poll1`=110, `minute_a102`=15,259, `first_trade_fallback`=5,582,
+`unavailable`=0. Sum = 20,951, exactly the universe.
 
 ## Massive vendor pull (F1-T2)
 

@@ -172,9 +172,11 @@
     source vintage, not per field** · **D30 fundamentals joins resolve on CIK as of t0, never
     ticker** · **D31 share counts are stored as filed, no basis adjustment at write time** ·
     **D32 no fundamental column goes against any outcome variable under Build F1** ·
-    **D33 Build F1's t0 is a tiered construction (nanosecond anchor for 114 events, minute
-    anchor for up to 15,763, first-trade fallback for the rest) since no single anchor covers
-    the ~20,951-event universe** (D27-D33, 2026-09-11, Build F1 pre-flight).
+    **D33 Build F1's t0 is a tiered construction -- nanosecond anchor for 110 events, minute
+    anchor (resolved via event_minute_bars_v2) for 15,259, first-trade fallback (read from
+    each event's own filtered/ folder) for 5,582, zero unavailable -- since no single anchor
+    covers the ~20,951-event universe** (D27-D33, 2026-09-11, Build F1 pre-flight; tier counts
+    confirmed by the actual F1-PF5 run).
   - **Next free number: D34.**
 - Repo map: docs/Research-Library-Map.md. Data layout: docs/data/Schema.md (tracked copy of
   record; `data/Schema.md` is a local, untracked mirror — `.gitignore` excludes `/data/` wholly,
