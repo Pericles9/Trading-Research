@@ -1,0 +1,11 @@
+ticker,event_date_canonical,momentum_pct,event_id,t0_print_count,t0_print_decile,coverage_class,flag_cross_session_extreme,flag_possible_row_cap,flag_has_dup_prints,flag_eth_dominant_t0,repaired_1c,flag_window_calendar_bug,flag_missing_event_day
+ARQQ,2023-02-06,65.2,ARQQ_2023-02-06_65.20,102762,7,full_window,False,False,False,False,False,False,False
+ASPN,2024-05-02,60.38,ASPN_2024-05-02_60.38,90112,7,full_window,False,False,False,False,False,False,False
+ASST,2024-03-21,68.32,ASST_2024-03-21_68.32,70984,7,full_window,False,False,False,True,False,False,False
+COSM,2023-09-12,60.61,COSM_2023-09-12_60.61,105955,7,full_window,False,False,False,False,False,False,False
+JFIN,2020-06-15,60.44,JFIN_2020-06-15_60.44,67696,7,full_window,False,False,False,False,False,False,False
+JFU,2021-02-24,55.56,JFU_2021-02-24_55.56,81037,7,full_window,False,False,False,False,False,False,False
+POLA,2021-01-22,55.92,POLA_2021-01-22_55.92,118757,7,full_window,False,False,False,False,False,False,False
+RAIL,2020-11-27,63.18,RAIL_2020-11-27_63.18,98691,7,full_window,False,False,False,False,False,False,False
+SGD,2024-10-15,66.08,SGD_2024-10-15_66.08,108241,7,full_window,False,False,False,False,True,False,False
+TLRY,2020-03-19,61.13,TLRY_2020-03-19_61.13,68839,7,full_window,False,False,False,False,False,False,False

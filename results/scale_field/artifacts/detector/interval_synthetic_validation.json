@@ -1,0 +1,364 @@
+{
+  "what": "End-to-end synthetic validation of the interval channel G.",
+  "synthetic_only": true,
+  "cohort_contact": "none -- no real-data file is opened by this script",
+  "statistic": "G(t,s) = E_w[log10 dt] - (-log10 lambda-hat(t,s))",
+  "why": "The rate channel is structurally blind to clumping at constant mean rate: two tapes with identical lambda-hat, one Poisson and one violently clustered, give IDENTICAL F fields.",
+  "gate_0_baseline": {
+    "claim": "G's null is a CONSTANT, -gamma/ln10, not zero",
+    "predicted": -0.2506815781348522,
+    "predicted_interval_sd_decades": 0.5570043140052503,
+    "draws": [
+      {
+        "n_draws": 1000,
+        "measured_mean": -0.2337369617192252,
+        "predicted": -0.2506815781348522,
+        "abs_error": 0.016944616415627,
+        "measured_sd": 0.5452825108037225,
+        "predicted_sd": 0.5570043140052503,
+        "standard_error": 0.017243347023951347
+      },
+      {
+        "n_draws": 10000,
+        "measured_mean": -0.2525605426308171,
+        "predicted": -0.2506815781348522,
+        "abs_error": 0.0018789644959649188,
+        "measured_sd": 0.5642151564028138,
+        "predicted_sd": 0.5570043140052503,
+        "standard_error": 0.005642151564028138
+      },
+      {
+        "n_draws": 100000,
+        "measured_mean": -0.2508909454633667,
+        "predicted": -0.2506815781348522,
+        "abs_error": 0.00020936732851450923,
+        "measured_sd": 0.5554810195563812,
+        "predicted_sd": 0.5570043140052503,
+        "standard_error": 0.0017565852187906986
+      },
+      {
+        "n_draws": 1000000,
+        "measured_mean": -0.2501904014669294,
+        "predicted": -0.2506815781348522,
+        "abs_error": 0.0004911766679228102,
+        "measured_sd": 0.5562097666955573,
+        "predicted_sd": 0.5570043140052503,
+        "standard_error": 0.0005562097666955573
+      },
+      {
+        "n_draws": 10000000,
+        "measured_mean": -0.25062978051641127,
+        "predicted": -0.2506815781348522,
+        "abs_error": 5.179761844092967e-05,
+        "measured_sd": 0.5570284066991749,
+        "predicted_sd": 0.5570043140052503,
+        "standard_error": 0.0001761478486583987
+      }
+    ],
+    "verdict": "converged: at 1e7 draws the measured mean sits inside one standard error of the predicted constant, and the measured sd reproduces the 0.5570-decade constant already on this programme's record"
+  },
+  "noise_constant": {
+    "claim": "sd(G)*sqrt(n_eff) is constant, and it is NOT F's 0.87",
+    "derivation": "two contributions -- weighted mean log-interval at 0.5570/sqrt(n_eff) and log10 lambda-hat at 0.4343/sqrt(n_eff) -- NEGATIVELY correlated, because a window with more prints has shorter intervals, so the constant must sit below sqrt(0.5570^2+0.4343^2) = 0.7063",
+    "independent_terms_upper_bound": 0.7063,
+    "measured": [
+      {
+        "n_eff_target": 8.0,
+        "n_eff_achieved": 7.979928176240208,
+        "n_samples": 3000,
+        "mean_G": -0.226418889534131,
+        "sd_G": 0.12909623060570835,
+        "constant": 0.36468092946386693
+      },
+      {
+        "n_eff_target": 16.0,
+        "n_eff_achieved": 15.973851001610411,
+        "n_samples": 3000,
+        "mean_G": -0.2345257654167849,
+        "sd_G": 0.08547351762901878,
+        "constant": 0.3416145754144474
+      },
+      {
+        "n_eff_target": 32.0,
+        "n_eff_achieved": 32.027985132810855,
+        "n_samples": 3000,
+        "mean_G": -0.24585306365257947,
+        "sd_G": 0.06382002836650497,
+        "constant": 0.36117842681564655
+      },
+      {
+        "n_eff_target": 64.0,
+        "n_eff_achieved": 63.809802864789305,
+        "n_samples": 3000,
+        "mean_G": -0.24627393254678023,
+        "sd_G": 0.04376505938291071,
+        "constant": 0.34959983865741073
+      },
+      {
+        "n_eff_target": 128.0,
+        "n_eff_achieved": 128.28789073114405,
+        "n_samples": 3000,
+        "mean_G": -0.24952403185216795,
+        "sd_G": 0.0306985140597256,
+        "constant": 0.34770440010221854
+      },
+      {
+        "n_eff_target": 256.0,
+        "n_eff_achieved": 255.558537879463,
+        "n_samples": 3000,
+        "mean_G": -0.25006510605138027,
+        "sd_G": 0.021438609703260152,
+        "constant": 0.34272186719458175
+      }
+    ],
+    "constant_used_in_this_file": 0.348,
+    "mean_over_n_eff_ge_16": 0.348563821636861,
+    "reading": "~0.35, under half of F's 0.87: G is the quieter statistic per effective print. IT IS STILL A POISSON CONSTANT and carries exactly the health warning 0.87 carries for F -- see GOING_LIVE.md.",
+    "small_n_eff_bias": {
+      "mean_G_at_n_eff_8": -0.226418889534131,
+      "mean_G_at_n_eff_256": -0.25006510605138027,
+      "note": "G approaches G0 only asymptotically. At n_eff = 8 the mean sits ABOVE the baseline, which biases the statistic toward 'more regular than Poisson'. The REGULAR direction is therefore the one exposed to a small-sample false positive, not the clumped one."
+    }
+  },
+  "control_positive_clumping": {
+    "tape": {
+      "n_prints": 9228,
+      "episode": [
+        700.0,
+        1000.0
+      ],
+      "rate_inside_per_s": 6.58,
+      "rate_outside_per_s": 6.045,
+      "construction": "the ambient Poisson stretch inside the episode is replaced by a cluster process of the SAME mean rate, 7 offspring per parent inside a 15 ms exponential window"
+    },
+    "G_channel": {
+      "n_features": 5,
+      "runtime_s": 4.59,
+      "features": [
+        {
+          "event_id": "synthetic_clumped",
+          "channel": "G",
+          "kernel": "centred",
+          "direction": "clumped",
+          "t_ridge": 845.7334789965632,
+          "s_selected": 109.36336569478809,
+          "G_at_ridge": -1.2317212460049005,
+          "D_at_ridge": -0.9810396678700484,
+          "n_eff_at_ridge": 2522.679012821765,
+          "z": 141.59187125218688,
+          "calibrated": 139.30340258564988,
+          "kappa_used": 1.0,
+          "noise_constant_used": 0.348,
+          "baseline_used": -0.2506815781348522,
+          "persistence_octaves": 5.715810127368836,
+          "tilt_dt_dlns": -6.346484932039843,
+          "scale_polished": true
+        },
+        {
+          "event_id": "synthetic_clumped",
+          "channel": "G",
+          "kernel": "centred",
+          "direction": "clumped",
+          "t_ridge": 739.3025781963225,
+          "s_selected": 11.485015817648573,
+          "G_at_ridge": -1.5919725520405212,
+          "D_at_ridge": -1.341290973905669,
+          "n_eff_at_ridge": 166.32105445537366,
+          "z": 49.70697943210858,
+          "calibrated": 46.58538459174058,
+          "kappa_used": 1.0,
+          "noise_constant_used": 0.348,
+          "baseline_used": -0.2506815781348522,
+          "persistence_octaves": 2.521680938545075,
+          "tilt_dt_dlns": -2.693540986597629,
+          "scale_polished": false
+        },
+        {
+          "event_id": "synthetic_clumped",
+          "channel": "G",
+          "kernel": "centred",
+          "direction": "clumped",
+          "t_ridge": 979.3581121457704,
+          "s_selected": 7.206170008156554,
+          "G_at_ridge": -1.299316502549571,
+          "D_at_ridge": -1.0486349244147188,
+          "n_eff_at_ridge": 212.11187367482034,
+          "z": 43.88615815223735,
+          "calibrated": 40.61865672684846,
+          "kappa_used": 1.0,
+          "noise_constant_used": 0.348,
+          "baseline_used": -0.2506815781348522,
+          "persistence_octaves": 1.849232688266388,
+          "tilt_dt_dlns": 3.637197504570592,
+          "scale_polished": false
+        },
+        {
+          "event_id": "synthetic_clumped",
+          "channel": "G",
+          "kernel": "centred",
+          "direction": "clumped",
+          "t_ridge": 710.0365508509088,
+          "s_selected": 4.521446640644408,
+          "G_at_ridge": -1.318596250848341,
+          "D_at_ridge": -1.067914672713489,
+          "n_eff_at_ridge": 126.66737022011127,
+          "z": 34.537403676582734,
+          "calibrated": 31.130238171001192,
+          "kappa_used": 1.0,
+          "noise_constant_used": 0.348,
+          "baseline_used": -0.2506815781348522,
+          "persistence_octaves": 1.1767844379877015,
+          "tilt_dt_dlns": 4.6242989508519114,
+          "scale_polished": false
+        },
+        {
+          "event_id": "synthetic_clumped",
+          "channel": "G",
+          "kernel": "centred",
+          "direction": "clumped",
+          "t_ridge": 987.37106278074,
+          "s_selected": 4.024117345141218,
+          "G_at_ridge": -1.3164403209717395,
+          "D_at_ridge": -1.0657587428368873,
+          "n_eff_at_ridge": 107.83725063378513,
+          "z": 31.802705197882144,
+          "calibrated": 28.36150924490282,
+          "kappa_used": 1.0,
+          "noise_constant_used": 0.348,
+          "baseline_used": -0.2506815781348522,
+          "persistence_octaves": 1.0086723754180298,
+          "tilt_dt_dlns": -0.48685467736510957,
+          "scale_polished": false
+        }
+      ]
+    },
+    "F_channel": {
+      "n_features": 7,
+      "best_calibrated": 4.831,
+      "features": [
+        {
+          "t_ridge": 897.81,
+          "s_selected": 18.96,
+          "calibrated": 4.831,
+          "persistence_octaves": 4.03
+        },
+        {
+          "t_ridge": 779.28,
+          "s_selected": 2.37,
+          "calibrated": 3.167,
+          "persistence_octaves": 3.19
+        },
+        {
+          "t_ridge": 952.35,
+          "s_selected": 2.0,
+          "calibrated": 3.136,
+          "persistence_octaves": 5.55
+        },
+        {
+          "t_ridge": 842.37,
+          "s_selected": 2.32,
+          "calibrated": 2.953,
+          "persistence_octaves": 3.19
+        },
+        {
+          "t_ridge": 826.86,
+          "s_selected": 16.58,
+          "calibrated": 2.95,
+          "persistence_octaves": 3.36
+        },
+        {
+          "t_ridge": 716.57,
+          "s_selected": 9.4,
+          "calibrated": 1.81,
+          "persistence_octaves": 4.2
+        }
+      ]
+    },
+    "reading": "G fires once and hard on the episode; F is NOT silent but speckles into several weak marks, exactly as the ITT mockup predicted ('a rate hump makes a trumpet, clumping makes speckle'). The separation is in calibrated significance, not in presence/absence.",
+    "separation_ratio": 28.8
+  },
+  "control_negative_poisson_null": {
+    "n_prints": 9017,
+    "n_detections": 0,
+    "mean_departure_by_scale": {
+      "10.0": -0.00273,
+      "40.0": 0.00127,
+      "120.0": 0.0013
+    },
+    "verdict": "zero detections, the same bar F was held to"
+  },
+  "control_crosscheck_pure_rate_hump": {
+    "question": "does G stay quiet on a rate hump with no clumping in it?",
+    "answer": "NO. The two channels are not independent.",
+    "F_channel": {
+      "n_features": 1,
+      "best_calibrated": 77.08
+    },
+    "G_channel": {
+      "n_features": 2,
+      "features": [
+        {
+          "t_ridge": 701.69,
+          "s_selected": 105.11,
+          "direction": "clumped",
+          "D_measured": -0.1974,
+          "D_closed_form": -0.2016,
+          "calibrated": 40.47
+        },
+        {
+          "t_ridge": 981.49,
+          "s_selected": 83.26,
+          "direction": "clumped",
+          "D_measured": -0.1985,
+          "D_closed_form": -0.1933,
+          "calibrated": 36.24
+        }
+      ]
+    },
+    "mechanism": {
+      "closed_form": "D = log10<lam>_w - <lam log10 lam>_w/<lam>_w",
+      "second_order": "D = -Var(eps)/(2 ln10), eps = relative deviation of lam in the window",
+      "sign": "ALWAYS NEGATIVE -- any rate gradient reads as clumping",
+      "why": "prints are laid down with density lambda, so the print-weighted mean log-interval is size-biased toward high-rate moments while lambda-hat is not; the gap between the two is the response",
+      "agreement": "measured within ~0.005 decades of the closed form at the detected ridges"
+    },
+    "magnitude_context": {
+      "gradient_confound_D": -0.198,
+      "true_clumping_D": -0.981,
+      "note": "the confound is real but roughly 5x smaller than genuine clumping on these tapes, so it does not swamp the signal -- it biases it, in one direction, wherever the rate is not flat"
+    },
+    "consequence": "G needs the same envelope control the F channel needed. The correction is computable in closed form from lambda-hat -- and computing it requires choosing a lambda-hat BANDWIDTH, which is precisely the dependence that produced the 1a34975 retraction. It is therefore NOT built here. See GOING_LIVE.md."
+  },
+  "invariances": {
+    "thinning_G_shift_on_poisson": {
+      "measured": {
+        "0.5": 0.00014,
+        "0.25": -0.00509
+      },
+      "predicted": 0.0,
+      "derivation": "thinning Poisson at retention p gives Poisson(p*lambda): E[log10 dt] rises by log10(1/p) while log10 lambda-hat falls by exactly the same amount, so the shifts cancel and G is invariant. A DIFFERENT mechanism from F's invariance to lambda -> c*lambda."
+    },
+    "thinning_z_ratio": {
+      "F_channel": 0.707,
+      "G_channel_measured": "~0.60 on a clumped feature",
+      "why_they_differ": "on a clumped feature thinning removes offspring from clusters, so the within-cluster interval fraction falls from (K-1)/K to (pK-1)/(pK) and |D| itself shrinks (measured ratio ~0.84). z therefore falls by more than sqrt(p). The F ratio does NOT carry over and was not assumed to."
+    },
+    "time_rescaling": "t*, s* scale by c; G, n_eff, z, cal unchanged to 1e-9",
+    "permutation": "bitwise identical",
+    "seed_density_isolated_feature": "identical to solver tolerance (<1e-8)"
+  },
+  "known_defect_seed_density_on_dense_tapes": {
+    "found": "2026-09-09, while building the G channel",
+    "affects": "BOTH channels -- this is not a G-channel problem",
+    "symptom": {
+      "F_on_2_feature_tape": "counts stable at 2/2/2/2/2 across 3-12 rungs per octave",
+      "F_on_dense_tape": "counts 6/7/7/6/7",
+      "G_on_dense_tape": "counts 7/6/5/6/5"
+    },
+    "root_cause": "persistence_octaves is log2(max/min) over the MEMBER RIDGE POINTS, and those live on the seed ladder. The section 5.1 fix polished s_selected off the grid but left the EXTENT on it, and persistence is a GATE (the >= 1 octave cut). Where features are dense, groups sit near the floor and cross it in both directions as the ladder moves.",
+    "same_class_as": "the original section 5.1 failure, one pipeline stage later",
+    "why_it_matters_here": "the gates thread reports the real cohort has NO isolated resolved feature at any scale from 8 s to 512 s -- the fine structure is densely packed and non-isolated everywhere. Dense-and-interacting IS the operating regime for this data, so this is not a corner case.",
+    "recorded_as": "two strict xfail tests in test_detector.py (test_seed_density_independence_dense_tape_F and _G)",
+    "fix_not_attempted": "making the extent resolution-free means continuation along the ridge to its termination scales, solved rather than read off rungs. That is a design change to committed, tested code and needs its own decision."
+  }
+}

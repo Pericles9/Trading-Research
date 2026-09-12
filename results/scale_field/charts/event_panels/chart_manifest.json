@@ -1,0 +1,38 @@
+{
+  "config_hash": "588ffd11",
+  "amendment": "1 -- dynamic render resolution matched to the tape",
+  "n_charts": 10,
+  "charts": [
+    "ARQQ_2023-02-06_65.20.html",
+    "ASPN_2024-05-02_60.38.html",
+    "ASST_2024-03-21_68.32.html",
+    "COSM_2023-09-12_60.61.html",
+    "JFIN_2020-06-15_60.44.html",
+    "JFU_2021-02-24_55.56.html",
+    "POLA_2021-01-22_55.92.html",
+    "RAIL_2020-11-27_63.18.html",
+    "SGD_2024-10-15_66.08.html",
+    "TLRY_2020-03-19_61.13.html"
+  ],
+  "index": "index.html",
+  "offline_rule": "D14 -- plotly.min.js written beside the charts, never a CDN",
+  "html_is_gitignored": "results/scale_field/charts/*/*.html; the numbers behind every chart are in results/scale_field/artifacts/event_panels_render.json",
+  "grid": {
+    "rule": "one column per k prints. dt = k/lambda and s_min = 2.2568/lambda, so dt/s_min = k/2.2568 EVERYWHERE, with no tuning and no per-event calibration. Dense stretches get narrow columns, dead stretches wide ones, automatically.",
+    "prints_per_column": 4.52,
+    "achieved_dt_over_s_min": {
+      "ARQQ_2023-02-06_65.20": 8.348,
+      "ASPN_2024-05-02_60.38": 7.002,
+      "ASST_2024-03-21_68.32": 5.767,
+      "COSM_2023-09-12_60.61": 8.608,
+      "JFIN_2020-06-15_60.44": 5.007,
+      "JFU_2021-02-24_55.56": 6.583,
+      "POLA_2021-01-22_55.92": 9.648,
+      "RAIL_2020-11-27_63.18": 8.017,
+      "SGD_2024-10-15_66.08": 8.793,
+      "TLRY_2020-03-19_61.13": 5.592
+    }
+  },
+  "v1_preamendment": "results/scale_field/artifacts/event_panels_render_v1_preamendment.json",
+  "source": "research/scale_field/event_panels.py:write_index"
+}

@@ -1,0 +1,41 @@
+{
+  "config_hash": "0e2c8194",
+  "counts": {
+    "pool_n": 15763,
+    "print_count_p70": 66451.2,
+    "print_count_p80": 123043.80000000003,
+    "momentum_pct_p70": 55.56,
+    "momentum_pct_p80": 70.38,
+    "n_marginal_print_count": 1576,
+    "n_marginal_momentum": 1581,
+    "n_joint_filter": 226,
+    "n_joint_and_readable": 222,
+    "n_dropped_by_readability": 4
+  },
+  "seed": 42,
+  "n_drawn": 10,
+  "event_ids": [
+    "ARQQ_2023-02-06_65.20",
+    "ASPN_2024-05-02_60.38",
+    "ASST_2024-03-21_68.32",
+    "COSM_2023-09-12_60.61",
+    "JFIN_2020-06-15_60.44",
+    "JFU_2021-02-24_55.56",
+    "POLA_2021-01-22_55.92",
+    "RAIL_2020-11-27_63.18",
+    "SGD_2024-10-15_66.08",
+    "TLRY_2020-03-19_61.13"
+  ],
+  "hard_stop_floor": 10,
+  "hard_stop_fired": false,
+  "substitution": {
+    "asked": "70th-80th percentile of volume and momentum",
+    "taken": "DEFAULT TAKEN, not a ruling. event_volume is a spine numeric and D4 bars it; A13 permits reading spine numerics only to audit the selection function, which this is not. Substituted: tick-derived T=0 print count per event.",
+    "substitution": "t0_print_count",
+    "substitution_source": "results/phase_10/artifacts/t1_stratification_pool.parquet, column t0_print_count, built by research/phase_10/t1_cohort.py from event_minute_bars_v2 (SUM(n_trades) at session_offset = 0). Tick-derived, D4-clean, already committed -- not recomputed here.",
+    "must_appear_in_every_caption": true,
+    "if_cooper_wants_spine_event_volume": "that is its own ruling and is not taken here."
+  },
+  "source": "research/scale_field/event_panels.py:build_cohort",
+  "reproduce": ".venv/Scripts/python.exe research/scale_field/event_panels.py --cohort"
+}

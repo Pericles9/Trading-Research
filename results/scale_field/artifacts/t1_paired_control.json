@@ -1,0 +1,95 @@
+{
+  "task": "D23 paired control -- is the reversal the kernel or the population?",
+  "config_hash": "b0f3f50e",
+  "design": "The causal arm's contributing events are a strict subset of the centred arm's, so the two arms are compared WITHIN EVENT. Same event, anchor, ladder, debounce, tolerance rule and window; only the kernel differs. Statistic = the per-event median signed lead in units of s.",
+  "populations": {
+    "centred_contributing": 45,
+    "causal_contributing": 19,
+    "shared": 19,
+    "causal_is_strict_subset_of_centred": true
+  },
+  "on_the_shared_events": {
+    "centred": {
+      "n": 19,
+      "n_positive": 3,
+      "n_negative": 16,
+      "median": -0.18659934526876906,
+      "q25": -0.34206006118315885,
+      "q75": -0.05411368896182778,
+      "sign_test_p": 0.004425048828125,
+      "wilcoxon_p": 0.020412445068359375
+    },
+    "causal": {
+      "n": 19,
+      "n_positive": 19,
+      "n_negative": 0,
+      "median": 1.5150288927245663,
+      "q25": 0.6241972637148978,
+      "q75": 2.8100223806429954,
+      "sign_test_p": 3.814697265625e-06,
+      "wilcoxon_p": 3.814697265625e-06
+    }
+  },
+  "paired_difference_causal_minus_centred": {
+    "n": 19,
+    "n_positive": 18,
+    "n_negative": 1,
+    "median": 1.905954676933732,
+    "q25": 0.7530602336886929,
+    "q75": 3.557380283490402,
+    "sign_test_p": 7.62939453125e-05,
+    "wilcoxon_p": 1.9073486328125e-05
+  },
+  "robustness_drop_largest_causal_contributor": {
+    "dropped_event": "VCIG_2024-12-13_39.13",
+    "n_onsets_dropped": 21,
+    "share_of_causal_onsets": 0.3620689655172414,
+    "causal": {
+      "n": 18,
+      "n_positive": 18,
+      "n_negative": 0,
+      "median": 1.6478898013750962,
+      "q25": 0.7883097392141667,
+      "q75": 3.2073971065122917,
+      "sign_test_p": 7.62939453125e-06,
+      "wilcoxon_p": 7.62939453125e-06
+    },
+    "paired_difference": {
+      "n": 18,
+      "n_positive": 17,
+      "n_negative": 1,
+      "median": 1.9725530973534524,
+      "q25": 0.86404881615011,
+      "q75": 3.727673227014571,
+      "sign_test_p": 0.00014495849609375,
+      "wilcoxon_p": 3.814697265625e-05
+    }
+  },
+  "are_the_shared_events_special": {
+    "what": "If the 19 were events where the field leads under any kernel, the CENTRED arm would already show a lead on them. It does not, and its result on them is indistinguishable from its result on its other 26.",
+    "centred_on_shared": {
+      "n": 19,
+      "n_positive": 3,
+      "n_negative": 16,
+      "median": -0.18659934526876906,
+      "q25": -0.34206006118315885,
+      "q75": -0.05411368896182778,
+      "sign_test_p": 0.004425048828125,
+      "wilcoxon_p": 0.020412445068359375
+    },
+    "centred_on_its_other_events": {
+      "n": 26,
+      "n_positive": 9,
+      "n_negative": 17,
+      "median": -0.2092079206734131,
+      "q25": -0.38857016595374005,
+      "q75": 0.36788343256541634,
+      "sign_test_p": 0.16863754391670227,
+      "wilcoxon_p": 0.416351062401646
+    },
+    "mann_whitney_p": 0.9541869232888771
+  },
+  "reads": "A positive paired difference that a sign test and a signed-rank test both separate from zero, on events where the centred arm shows no lead and is not distinguishable from the rest of its own population, is the kernel and not the population.",
+  "source": "research/scale_field/t1_paired_control.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/scale_field/t1_paired_control.py"
+}

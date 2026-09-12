@@ -1,0 +1,255 @@
+{
+  "gate": "A",
+  "zero_sum_exact_reference": [
+    {
+      "s": 0.5,
+      "rel_residual": -6.621545207800217e-19
+    },
+    {
+      "s": 2.0,
+      "rel_residual": 2.1314323035759276e-18
+    },
+    {
+      "s": 8.0,
+      "rel_residual": 3.510594382360352e-18
+    }
+  ],
+  "sign_helper": {
+    "F_in_bump_median": 0.004773977640596288,
+    "on_share_in_bump": 0.47,
+    "on_share_far_outside": 0.48928571428571427,
+    "pass": false
+  },
+  "events": {
+    "ARQQ_2023-02-06_65.20": {
+      "n_prints": 102762,
+      "centred": {
+        "max_abs_rel": 0.2402395019989913,
+        "median_abs_rel": 0.06414553829782044,
+        "max_abs_rel_where_neff_ge_32": 0.12672574993550068,
+        "n_scales": 105
+      },
+      "onesided": {
+        "max_abs_rel": 0.5252539959392334,
+        "median_abs_rel": 0.09415326766354748,
+        "max_abs_rel_where_neff_ge_32": 0.17936439240526816,
+        "n_scales": 105
+      },
+      "blobs_centred": {
+        "n_blobs": 3301,
+        "n_closed_bottom": 122,
+        "closed_share": 0.03695849742502272,
+        "closed_area_share": 0.0027099251925858715,
+        "neg_area": 4095316
+      },
+      "seconds": 51.6
+    },
+    "ASPN_2024-05-02_60.38": {
+      "n_prints": 90112,
+      "centred": {
+        "max_abs_rel": 0.4170776673982244,
+        "median_abs_rel": 0.07735435441221974,
+        "max_abs_rel_where_neff_ge_32": 0.11582353773446583,
+        "n_scales": 105
+      },
+      "onesided": {
+        "max_abs_rel": 0.7075578863041221,
+        "median_abs_rel": 0.10351456665641925,
+        "max_abs_rel_where_neff_ge_32": 0.26895832227818256,
+        "n_scales": 105
+      },
+      "blobs_centred": {
+        "n_blobs": 2833,
+        "n_closed_bottom": 143,
+        "closed_share": 0.05047652665019414,
+        "closed_area_share": 0.00318445390628917,
+        "neg_area": 4148592
+      },
+      "seconds": 46.7
+    },
+    "ASST_2024-03-21_68.32": {
+      "n_prints": 70984,
+      "centred": {
+        "max_abs_rel": 0.3115000283685702,
+        "median_abs_rel": 0.05647580325034883,
+        "max_abs_rel_where_neff_ge_32": 0.11732305382850082,
+        "n_scales": 105
+      },
+      "onesided": {
+        "max_abs_rel": 0.4067249668110015,
+        "median_abs_rel": 0.08929397306781829,
+        "max_abs_rel_where_neff_ge_32": 0.3172882176672366,
+        "n_scales": 105
+      },
+      "blobs_centred": {
+        "n_blobs": 2438,
+        "n_closed_bottom": 86,
+        "closed_share": 0.03527481542247744,
+        "closed_area_share": 0.004173758614582183,
+        "neg_area": 3777171
+      },
+      "seconds": 40.9
+    },
+    "COSM_2023-09-12_60.61": {
+      "n_prints": 105955,
+      "centred": {
+        "max_abs_rel": 0.2630955351657801,
+        "median_abs_rel": 0.09780539793245151,
+        "max_abs_rel_where_neff_ge_32": 0.2630955351657801,
+        "n_scales": 105
+      },
+      "onesided": {
+        "max_abs_rel": 0.3469061193068972,
+        "median_abs_rel": 0.12646230551155832,
+        "max_abs_rel_where_neff_ge_32": 0.3469061193068972,
+        "n_scales": 105
+      },
+      "blobs_centred": {
+        "n_blobs": 2700,
+        "n_closed_bottom": 85,
+        "closed_share": 0.03148148148148148,
+        "closed_area_share": 0.00189518636960193,
+        "neg_area": 4336249
+      },
+      "seconds": 46.1
+    },
+    "JFIN_2020-06-15_60.44": {
+      "n_prints": 67696,
+      "centred": {
+        "max_abs_rel": 0.3778727133212592,
+        "median_abs_rel": 0.08898070256930302,
+        "max_abs_rel_where_neff_ge_32": 0.24658855329703644,
+        "n_scales": 105
+      },
+      "onesided": {
+        "max_abs_rel": 0.4856837327339238,
+        "median_abs_rel": 0.11446650335783226,
+        "max_abs_rel_where_neff_ge_32": 0.26773966546135336,
+        "n_scales": 105
+      },
+      "blobs_centred": {
+        "n_blobs": 2373,
+        "n_closed_bottom": 122,
+        "closed_share": 0.05141171512852929,
+        "closed_area_share": 0.00689053020582297,
+        "neg_area": 4087639
+      },
+      "seconds": 47.9
+    },
+    "JFU_2021-02-24_55.56": {
+      "n_prints": 81037,
+      "centred": {
+        "max_abs_rel": 0.3030983540702823,
+        "median_abs_rel": 0.06354573365505047,
+        "max_abs_rel_where_neff_ge_32": 0.12065226824980059,
+        "n_scales": 105
+      },
+      "onesided": {
+        "max_abs_rel": 0.6040634877785703,
+        "median_abs_rel": 0.11176706319185035,
+        "max_abs_rel_where_neff_ge_32": 0.6040634877785703,
+        "n_scales": 105
+      },
+      "blobs_centred": {
+        "n_blobs": 3060,
+        "n_closed_bottom": 151,
+        "closed_share": 0.04934640522875817,
+        "closed_area_share": 0.005673381399059698,
+        "neg_area": 3953198
+      },
+      "seconds": 51.6
+    },
+    "POLA_2021-01-22_55.92": {
+      "n_prints": 118757,
+      "centred": {
+        "max_abs_rel": 0.301148220778668,
+        "median_abs_rel": 0.061877741541821116,
+        "max_abs_rel_where_neff_ge_32": 0.15872381613400385,
+        "n_scales": 105
+      },
+      "onesided": {
+        "max_abs_rel": 0.5220634660230568,
+        "median_abs_rel": 0.10543771537150397,
+        "max_abs_rel_where_neff_ge_32": 0.1992078427418943,
+        "n_scales": 105
+      },
+      "blobs_centred": {
+        "n_blobs": 4055,
+        "n_closed_bottom": 180,
+        "closed_share": 0.04438964241676942,
+        "closed_area_share": 0.002921731765030323,
+        "neg_area": 4061290
+      },
+      "seconds": 54.7
+    },
+    "RAIL_2020-11-27_63.18": {
+      "n_prints": 98691,
+      "centred": {
+        "max_abs_rel": 0.27854987464155473,
+        "median_abs_rel": 0.0707762472932929,
+        "max_abs_rel_where_neff_ge_32": 0.19783415350366942,
+        "n_scales": 105
+      },
+      "onesided": {
+        "max_abs_rel": 0.3282579305099182,
+        "median_abs_rel": 0.10639823592529353,
+        "max_abs_rel_where_neff_ge_32": 0.25834043195873346,
+        "n_scales": 105
+      },
+      "blobs_centred": {
+        "n_blobs": 2936,
+        "n_closed_bottom": 95,
+        "closed_share": 0.03235694822888283,
+        "closed_area_share": 0.002461377172658136,
+        "neg_area": 4154991
+      },
+      "seconds": 41.7
+    },
+    "SGD_2024-10-15_66.08": {
+      "n_prints": 108241,
+      "centred": {
+        "max_abs_rel": 0.41063645198824306,
+        "median_abs_rel": 0.08898800977329328,
+        "max_abs_rel_where_neff_ge_32": 0.41063645198824306,
+        "n_scales": 105
+      },
+      "onesided": {
+        "max_abs_rel": 0.47801218920718164,
+        "median_abs_rel": 0.10922595806711315,
+        "max_abs_rel_where_neff_ge_32": 0.47801218920718164,
+        "n_scales": 105
+      },
+      "blobs_centred": {
+        "n_blobs": 2305,
+        "n_closed_bottom": 58,
+        "closed_share": 0.025162689804772233,
+        "closed_area_share": 0.001958652910688925,
+        "neg_area": 4345844
+      },
+      "seconds": 43.9
+    },
+    "TLRY_2020-03-19_61.13": {
+      "n_prints": 68839,
+      "centred": {
+        "max_abs_rel": 0.7430362929471438,
+        "median_abs_rel": 0.058694449671516505,
+        "max_abs_rel_where_neff_ge_32": 0.11505124819552684,
+        "n_scales": 105
+      },
+      "onesided": {
+        "max_abs_rel": 1.0193161239597726,
+        "median_abs_rel": 0.10338681999967628,
+        "max_abs_rel_where_neff_ge_32": 0.15880497891164158,
+        "n_scales": 105
+      },
+      "blobs_centred": {
+        "n_blobs": 2684,
+        "n_closed_bottom": 147,
+        "closed_share": 0.05476900149031297,
+        "closed_area_share": 0.006136852760364657,
+        "neg_area": 3814333
+      },
+      "seconds": 43.9
+    }
+  }
+}

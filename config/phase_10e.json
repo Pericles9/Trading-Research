@@ -1,0 +1,325 @@
+{
+  "phase": "10e",
+  "name": "Does the path pay? Forward excursion, and the ceiling on timing detection",
+  "branch": "phase/10e",
+  "committed_before_any_run": true,
+  "_note": "Every [Cooper] value below is UNFILLED BY DESIGN. The agent proposes none of them and fills none of them. T1 hard-stops (escalation row 2) if any remain unfilled in the committed file.",
+  "_corrections_on_landing": {
+    "_date": "2026-08-30",
+    "_who": "landed from the handoff paste; corrections are factual only, no threshold filled",
+    "scale_field_module": "was 'research/scale_space/scale_field.py' -- that path does not exist and neither does research/scale_space/. Corrected to research/scale_field/scale_field.py, which is where the module actually lives and what Arm 2 T5b would have failed to import.",
+    "branch_base": "the prompt said 'cut from main'. There is no main branch in this repo; origin/HEAD points to master. Corrected to master in prompts/phase_10e.md.",
+    "arm2_max_events": "RESOLVED 2026-08-31 by Cooper: the integer is retired (null) and replaced by arm2_cohort_artifact + arm2_cohort_expected_n. 75 vs 78 was a SET-IDENTITY problem, not a cap problem - 75 was the centred +60s admissible count and 78 is the causal cohort, two different sets. A bare integer cannot express which one is authorised, which is exactly what row 5 exists to protect.",
+    "det_anchor": "RESOLVED 2026-08-31 by Cooper: a102 for BOTH arms. See frozen_inputs.det_anchor_single_source_rule and escalation row 25.",
+    "_resolutions_date": "2026-08-31",
+    "_cooper_fills_2026_08_31": "Arm 1's five slots filled: named_cell k=3/m=2, row_10 (role changed to reporting trigger; the stop is now a straddle), row_11 = 0.10, row_12 (bound reversed to optimistic). p_randomwalk added as a third reported number per cell. Arm 2's three slots remain [Cooper] and are gated behind T4."
+  },
+  "universe": {
+    "analysis_universe": "in_scope = TRUE AND source_file = 'file1'",
+    "decision": "D1",
+    "session": "T=0",
+    "segments_computed": [
+      "premarket",
+      "rth",
+      "post"
+    ],
+    "segment_carrying_the_gate": "rth",
+    "gate_segment_decision": "D18"
+  },
+  "frozen_inputs": {
+    "_rule": "Reused frozen. NOT re-derived. Re-deriving any of these is escalation row 6 territory.",
+    "det_anchor": "results/phase_8/artifacts/a102_detection_anchors.parquet",
+    "det_anchor_decision": "D7",
+    "participation_quintile": "results/phase_8/artifacts/t3_participation.parquet",
+    "participation_note": "pq_rth_open is read HERE, not from a102_detection_anchors.parquet. Phase 11 A1-7 correction.",
+    "phase_9_flags": [
+      "flag_cross_session_extreme",
+      "flag_possible_row_cap",
+      "flag_has_dup_prints"
+    ],
+    "minute_bars": "event_minute_bars_v2",
+    "minute_bars_expected_rows": 45925350,
+    "scale_field_module": "research/scale_field/scale_field.py",
+    "scale_field_note": "Reused UNCHANGED. Do not fork it. Channels per arm2.signal, amended 2026-08-30 under D23.",
+    "det_anchor_single_source_rule": "ONE ANCHOR, BOTH ARMS: a102_detection_anchors.parquet, the artifact D7 was taken on and the one Phase 11 reuses frozen. results/phase_10/artifacts/v2_r13_detection.parquet is Phase 10's own detection artifact and is NOT used here. If Arm 1 and Arm 2 resolve det_anchor differently the two arms are not on the same clock - escalation row 25. Phase 10 v2 produced results/phase_10/artifacts/v2_r14_phase8_crosscheck.json specifically to reconcile the two: READ it and report agreement on the Arm 2 cohort (T1a-i); do not re-derive the comparison. Disagreement on any cohort event is a finding for the register and a stop.",
+    "det_anchor_crosscheck": "results/phase_10/artifacts/v2_r14_phase8_crosscheck.json",
+    "frozen_baseline": "results/phase_10e/artifacts/frozen_baseline.json",
+    "frozen_baseline_note": "Row 1a compares against THIS FILE, not against the state at phase-11-approved, because that state was never recorded: three of the five frozen inputs are gitignored parquet and no digest carries artifact content hashes. The baseline was established 2026-08-31 and VERIFIES FORWARD FROM THAT POINT ONLY. The tag period is covered by circumstantial evidence stated in full in REPORT.md -- no commit since the tag touched the producing code, config or src/, and all three parquet mtimes predate the tag by 15-17 days. The durable fix is in the Agent_Prompt_Standard v1.4 draft: every artifact listed in a digest carries its sha256."
+  },
+  "cost": {
+    "_source": "results/reports/phase_11_report.md - named cell, RTH, latency 5 min. NOT recomputed here.",
+    "round_trip_bp": 70.98,
+    "round_trip_cents": 2.512,
+    "effective_spread_bp_at_lat5_rth": 75.8,
+    "effective_spread_cents_at_lat5_rth": 2.385,
+    "reporting_units": [
+      "bp",
+      "cents"
+    ],
+    "reporting_rule": "D19 - both units always, neither alone",
+    "standing_qualifier_verbatim": "Effective spread measures the cost of the average print, not the cost of a specific order. Depth, queue position and fill probability are not measured. The cost stack is a LOWER BOUND."
+  },
+  "arm1": {
+    "_description": "Excursion base rate. Zero passes over filtered_trades / filtered_quotes.",
+    "pass_budget": {
+      "filtered_trades": 0,
+      "filtered_quotes": 0
+    },
+    "latency_minutes": [
+      0,
+      1,
+      5
+    ],
+    "latency_0_note": "Physical impossibility. Labelled the upper bound on every chart and table. D7.",
+    "latency_axis_caveat": "Minute resolution cannot express a 1-3 second execution lag, so Arm 1's latency axis is PESSIMISTIC relative to achievable execution. State this in the report. Arm 2 carries the real axis.",
+    "horizons_minutes": [
+      1,
+      5,
+      15,
+      30,
+      60
+    ],
+    "entries_per_event": 40,
+    "entry_subsample_seed": 42,
+    "entry_denominators": {
+      "print_weighted": "every bar with n_prints >= 1",
+      "event_equalised": "seeded uniform subsample of entries_per_event bars per event, equal weight per event",
+      "rule": "Both carried. Never blended. Phase 11 T7b pattern."
+    },
+    "smin_coefficient": 2.26,
+    "smin_formula": "s_min = 2.26 / lambda_hat, from n_eff = 2*sqrt(pi)*s*lambda >= 8",
+    "smin_note": "The one surviving criterion of the 10-series. Enters here as a STRATIFIER only. No field is computed in Arm 1.",
+    "smin_bands_seconds": [
+      0.5,
+      1,
+      2,
+      5,
+      10,
+      30,
+      100
+    ]
+  },
+  "arm2": {
+    "_description": "Oracle ceiling. Non-causal by construction and that is the point. Gated behind T4.",
+    "authorised": false,
+    "authorisation_note": "Set true ONLY by Cooper in writing after the T4 gate. The agent does not set this.",
+    "arm2_cohort": "scale-space admissible set, anchor +60s window",
+    "arm2_cohort_artifact": "[Cooper] - repo path to the committed cohort manifest the causal run produced",
+    "arm2_cohort_expected_n": "[Cooper] - the row count of that artifact, asserted at load",
+    "arm2_max_events": null,
+    "arm2_cohort_note": "The cohort is a NAMED FROZEN ARTIFACT, not a count. Row 5 fires if the loaded manifest's row count differs from arm2_cohort_expected_n in EITHER direction - silent expansion and silent reduction are the same defect. The centred +60s admissible set (n=75) and the causal cohort (n=78) are different sets, possibly not nested; do not substitute one for the other, and do not reconstruct either from a count.",
+    "pass_budget": {
+      "method": "targeted per-event folder reads only",
+      "equivalence_proof": "Phase 10 v1 T0d"
+    },
+    "collapse_same_timestamp": true,
+    "collapse_note": "Precondition, not a detail. Real tape carries same-timestamp prints (log 0).",
+    "signal": {
+      "channels": [
+        "LEVEL_centred (oracle ceiling)",
+        "LEVEL_causal",
+        "FIELD_causal"
+      ],
+      "amended": "2026-08-30 under D23 - the original LEVEL-only instruction is withdrawn",
+      "level_definition": "lambda_hat(t,s) above its own trailing q90",
+      "centred_scale": "s = 2 * s_min(t), s_min = 2.26/lam",
+      "causal_scale": "s = 2 * s_min_causal(t), s_min_causal = 4.51/lam",
+      "trailing_window_seconds": 60,
+      "quantile": 0.9,
+      "null_rate_matching": "REQUIRED before any cross-channel onset comparison. T5b-i, escalation row 23.",
+      "null_rate_matching_why": "An onset is a first-passage event. First passage of a noisier series occurs EARLIER with no information content. D22 measured FIELD firing at 2.8x the LEVEL rate. Until thresholds are matched on burst-free tape, \"FIELD leads\" and \"FIELD is noisier\" are the same statement."
+    },
+    "channels_closed_do_not_build": {
+      "D": "m + lograte/ln10 + gamma/ln10 - degenerate against the Poisson reference. Fired its kill condition again under the CAUSAL kernel: 3 and 2 onsets over 78 events. Remains closed."
+    },
+    "control_draws": 200,
+    "control_seed": 42,
+    "control_matching": "stratified on seconds_since_anchor so the control shares the oracle's position-in-path distribution",
+    "control_note": "Intraday drift is real and large. An unmatched control measures drift, not selection.",
+    "latency_seconds": [
+      0.25,
+      0.5,
+      1,
+      2,
+      5
+    ],
+    "horizons_seconds": [
+      10,
+      30,
+      60,
+      300
+    ],
+    "smin_causal_coefficient": 4.5135,
+    "smin_causal_note": "A one-sided kernel keeps half the mass, so n_eff = sqrt(pi)*s*lam and the causal floor is exactly TWICE the centred one. Using 2.26/lam under a causal kernel puts every read at n_eff = 4.00. Escalation row 24. Implemented as scale_field.s_min_onesided / s_min_for_rate(kernel='onesided').",
+    "field_status_note": "D22 closed FIELD as a detector on two facts. Fact 1 (saturation, dL/dln s >= -1) is UNCHANGED and survives the causal kernel - dw/dln s = w*z^2 regardless of support. Fact 2 (FIELD lags LEVEL) was REVERSED by D23 under a one-sided kernel. Only fact 2 is reopened."
+  },
+  "barrier_grid": {
+    "_units": "multiples of round_trip_bp",
+    "profit_k": [
+      1.5,
+      2,
+      3
+    ],
+    "stop_m": [
+      1,
+      2
+    ],
+    "expiry": "the horizon H of the cell",
+    "breakeven_formula": "p_breakeven = (m + 1) / (k + m)",
+    "breakeven_note": "Arithmetic, not a choice. One round trip is charged on every outcome. Do NOT assume 0.5.",
+    "expiry_in_dollars_note": "model_selection_session_notes s6 prefers a dollar expiry over a clock expiry. NOT adopted here - Arm 1 is bar-based and has no dollar clock. Logged as an open item for the feature phase.",
+    "randomwalk_formula": "p_randomwalk = m / (k + m)",
+    "randomwalk_note": "COOPER 2026-08-31, added to the spec. Report THREE numbers per cell: p_clear, p_breakeven and p_randomwalk. They answer different questions and both matter. p_clear above p_randomwalk => DRIFT EXISTS, the path has directional structure. p_clear above p_breakeven => IT PAYS, the drift exceeds the cost. A result that clears the first and fails the second is a real finding -- there is a signal and it is smaller than the cost stack -- and it is a completely different disposition from no signal at all. With only two numbers reported those two outcomes look identical.",
+    "drift_needed_is_the_gap": "p_breakeven - p_randomwalk = 1/(k+m) exactly. That is the whole economics of scalping this universe in one line: the cost is fixed, so it is a larger share of a narrower barrier span."
+  },
+  "reading_rules": {
+    "R1_intrabar_ordering": "Compute BOTH bounds (optimistic / pessimistic). Never a single Arm 1 first-passage number. Report ambiguous share.",
+    "R2_expiry_class": "Three outcome classes sum to 1 per cell. A win rate on touched-only entries is a BANNED output.",
+    "R3_no_fill": "Own row, own share. Never dropped, never forward-filled.",
+    "R4_dead_tape": "Entries with MFE and MAE both below the smallest barrier at every horizon - own share per cell.",
+    "R5_event_dominance": "Every pooled cell reports raw n, distinct events, and effective n under event-equal weighting.",
+    "R6_breakeven": "p_clear reported against BOTH p_breakeven and p_randomwalk = m/(k+m), per cell, always.",
+    "R7_thin_cells": "Cells below min_cell_n hatched, carry no claim, appear in no summary sentence."
+  },
+  "inference": {
+    "bootstrap_reps": 2000,
+    "bootstrap_seed": 42,
+    "clustering": [
+      "event",
+      "ticker"
+    ],
+    "clustering_precedent": "Phase 9 ticker-block bootstrap",
+    "ci_level": 0.95,
+    "min_cell_n": 100,
+    "max_event_share": 0.05
+  },
+  "named_cell": {
+    "_description": "The single cell escalation rows 10, 11 and 12 are evaluated on. Chosen before the run.",
+    "arm": "arm1",
+    "denominator": "print_weighted",
+    "det_segment": "rth",
+    "latency_minutes": 5,
+    "horizon_minutes": 30,
+    "profit_k": 3,
+    "stop_m": 2,
+    "cell_rationale": "latency 5 / hold 30 / RTH matches the Phase 11 named cell exactly, so the two phases are directly comparable. The barrier pair is Cooper's.",
+    "barrier_pair_rationale": "COOPER 2026-08-31. Chosen on the NOISE FLOOR and the COST DRAG, in that order. (1) The stop is decided by the noise floor: barriers are measured on TRADE prices, which bounce the full spread. Against Phase 11's T=0 RTH figures (quoted spread 3.79c, effective 2.385c, round trip 2.512c), an m=1 stop is 2.512c = 0.66 of ONE QUOTED SPREAD -- a single print on the other side breaches it. That is not a stop, it is the bid-ask bounce with a name. m=2 is 5.024c = 1.33 quoted spreads. (2) Then k, on how much drift each cell demands: the gap between p_breakeven and p_randomwalk is EXACTLY 1/(k+m), the fixed 71bp cost as a share of the barrier span. k=1.5,m=1 needs 0.400 of drift over a random walk; k=3,m=2 needs 0.200. The cost does not scale, so tight barriers are mostly cost. A 212.9bp target is 9.6c on a $4.52 name that moved 30%+ that day -- modest against the daily range.",
+    "barrier_pair_what_it_was_NOT_chosen_on": "k=3,m=2 also has the WIDEST barriers and therefore the LOWEST R1 ambiguity, since both barriers are least likely to sit inside one bar's range. That is convenient and it is NOT a reason. Choosing the pair to make row 10 pass would be adjusting a parameter to make a criterion pass, which this prompt forbids. The ambiguity share falls where it falls and is reported as an outcome, never as a justification.",
+    "p_breakeven": 0.6,
+    "p_randomwalk": 0.4
+  },
+  "cooper_thresholds": {
+    "_note": "FILLED 2026-08-31 by Cooper for ARM 1. Arm 2's three slots remain unfilled and are gated behind the T4 gate regardless.",
+    "row_11_no_fill_share_max": 0.1,
+    "row_11_proposal": 0.1,
+    "row_11_scope": "R3 no-fill share on the named cell. Confirmed at 0.10 by Cooper 2026-08-31 -- a data-quality check on fills, independent of barriers, with no reason to move it.",
+    "row_12_arm1_gate": "optimistic p_clear below p_breakeven at EVERY cell in the grid",
+    "row_12_proposal": "pessimistic p_clear below p_breakeven at EVERY cell in the grid",
+    "row_12_scope": "THE ARM 1 GATE. Firing means the path does not pay at minute scale and Arm 2 does not run.",
+    "row_12_reasoning": "Expressed as a SHARE against an arithmetic break-even, defined on every candidate entry. Phase 11's row 11 was a median ratio and could not see a denominator that was non-positive on 52.86% of its cell. This is the direct correction.",
+    "row_13_ceiling": "[Cooper]",
+    "row_13_proposal": "lower bound of the event-clustered CI on p_clear(oracle) - p_clear(control) <= 0 at the best cell",
+    "row_13_scope": "THE CEILING. Firing means an oracle with full lookahead does not beat random entry inside the same event, and the timing-detector line closes.",
+    "row_13_reasoning": "Non-causality only helps the oracle, so a null here is decisive in a way a null on a causal detector would not be.",
+    "row_1_amendment": "AMENDED 2026-08-31 by Cooper. The original row 1 stopped on 'phase-11-approved absent OR master moved since it'. master being ahead is the expected state - the scale-space arc happened after Phase 11 and touched nothing this phase consumes - and clearing the row by fiat would have thrown away the check it was meant to make. Split into: row 1 (tag absent -> stop), row 1a (any of the five frozen inputs differs in content hash from its state at the tag -> stop, post both hashes and the commits that touched it), row 1b (master moved AND 1a passes -> NOT a stop; record the commit count in decisions_log and proceed). An unconditional branch check replaced by a real integrity test.",
+    "row_10_action_on_firing": "unchanged: MFE/MAE distributions stand, and the first-passage label comes from Arm 2's tick data where ordering is exact.",
+    "row_12_correction_2026_08_31": "COOPER REVERSED HIS OWN SPEC. It read 'PESSIMISTIC p_clear below p_breakeven at every cell', and that is wrong and kills too easily: pessimistic is the LOWER bound, and its failing does not mean the truth fails -- the truth sits between the bounds, so a strategy whose real value clears break-even would be killed on its worst reading. Corrected to the OPTIMISTIC bound: if even the most favourable resolution of the ordering ambiguity cannot clear break-even anywhere, the path definitively does not pay. THAT is a kill condition. The pessimistic bound is reported alongside throughout -- it is the honest floor -- but it does not carry the gate.",
+    "row_10a_r1_ambiguous_share_max": 0.25,
+    "row_10a_proposal": 0.25,
+    "row_10a_scope": "CORRECTED 2026-08-31 by Cooper. A fixed 25% ambiguity threshold is a proxy, and the same class of error as row 1's branch check: THE AMBIGUITY ONLY MATTERS WHEN IT CHANGES THE ANSWER. If 40% of entries are ambiguous but both bounds sit below break-even, the conclusion holds and the share is irrelevant. THE STOP IS NOW A STRADDLE: row 10 fires when the optimistic and pessimistic p_clear fall on OPPOSITE SIDES of p_breakeven on the named cell, so the bounds straddle the decision and Arm 1 cannot resolve it. 0.25 is retained as a REPORTING trigger -- above it the ambiguity gets its own report section and chart 03 carries the headline -- but it does not stop the phase.",
+    "row_10a_role": "REPORTING TRIGGER, NOT THE STOP",
+    "row_10_straddle_has_no_parameter": "ROW 10 CARRIES NO CONFIG KEY, DELIBERATELY. The straddle test is structural -- sign(optimistic - p_breakeven) != sign(pessimistic - p_breakeven) -- so there is nothing to fill. Cooper's amendment of 2026-08-31 listed 'cooper_thresholds.row_10_r1_straddle' in cooper_slots_by_arm.arm1; that key does not exist and was NOT created, because a slot that can never be filled would make row 2 unevaluable -- the same defect class T0d exists to catch. The arm1 list below names the five keys that really do carry fillable values."
+  },
+  "runtime_ceilings": {
+    "runtime_ceiling_seconds_arm1": 3600,
+    "runtime_ceiling_seconds_arm2": 7200,
+    "on_breach": "hard stop; do not silently reduce the cohort, the grid, or the ladder"
+  },
+  "closed_do_not_reopen": [
+    "D6 no within-session quiet state",
+    "D8 event-relative reference",
+    "D9 interval-based, no intensity curve as operating variable",
+    "D13 no burst timescale established",
+    "D21 threshold-from-trough and every repair inside it, including exact partition",
+    "Hawkes calibration",
+    "constant-reference thresholding",
+    "two-state segmentation",
+    "burst vs quiet as a split",
+    "envelope fitting",
+    "print aggregation",
+    "any free parameter referenced to a Poisson null"
+  ],
+  "write_allowlist": [
+    "prompts/",
+    "config/",
+    "research/phase_10e/",
+    "results/phase_10e/",
+    "results/reports/phase_10e_report.md",
+    "docs/Universe-Decisions.md (APPEND-ONLY, number confirmed by reading the file)",
+    "docs/Open-Items-Register.md (APPEND-ONLY)",
+    "docs/Research-Library-Map.md (APPEND-ONLY)"
+  ],
+  "reporting": {
+    "n_rule": "Every posted table carries n AND effective n per row. Every prose claim carries its chart filename.",
+    "description_only": "No recommendations, no causal language, no 'suggests / confirms / indicates / therefore'.",
+    "escalation_report_order": "Report in table order - the table is the priority order.",
+    "units_rule": "D19 - bp and cents, never one alone"
+  },
+  "cooper_slots_by_arm": {
+    "arm1": [
+      "named_cell.profit_k",
+      "named_cell.stop_m",
+      "cooper_thresholds.row_10a_r1_ambiguous_share_max",
+      "cooper_thresholds.row_11_no_fill_share_max",
+      "cooper_thresholds.row_12_arm1_gate"
+    ],
+    "arm2": [
+      "arm2.arm2_cohort_artifact",
+      "arm2.arm2_cohort_expected_n",
+      "cooper_thresholds.row_13_ceiling"
+    ],
+    "_rule": "The agent fills none of these. Row 2 evaluates arm1 at T0c; row 2a evaluates arm2 at T5a. The mapping lives here rather than inline in the rows, so the escalation table cannot drift from it -- which is exactly how row 20 broke.",
+    "_row_10_note": "Row 10 is absent from arm1 by design: the straddle test has no parameter. See cooper_thresholds.row_10_straddle_has_no_parameter."
+  },
+  "t4_verdict": {
+    "_why": "Rows 10 and 12 are mutually exclusive but they DO NOT PARTITION THE OUTCOME SPACE. 'Neither fired' collapses two opposite results -- the named cell paying, and the named cell failing while some other cell clears. A gate that returns the same summary for its best and its second-worst outcome is the Phase 11 row 11 defect again: a criterion that cannot see the state it most needs to report.",
+    "states": [
+      "both_below",
+      "straddle",
+      "both_above"
+    ],
+    "classification": "T4a classifies the NAMED CELL into exactly one of the three states against p_breakeven, using the optimistic and pessimistic bounds, and reports it as the phase's headline verdict alongside the grid-wide row-12 condition.",
+    "the_four_outcomes": [
+      {
+        "named_cell": "both_below",
+        "grid": "optimistic below p_breakeven at EVERY cell",
+        "verdict": "THE PATH DOES NOT PAY",
+        "row_fired": "12",
+        "disposition": "Stop. Arm 2 does not run."
+      },
+      {
+        "named_cell": "both_below",
+        "grid": "some other cell clears",
+        "verdict": "NAMED CELL FAILS, GRID DOES NOT",
+        "row_fired": "none",
+        "disposition": "The edge, if any, is not where the named cell looked."
+      },
+      {
+        "named_cell": "straddle",
+        "grid": "n/a",
+        "verdict": "UNRESOLVABLE ON BARS",
+        "row_fired": "10",
+        "disposition": "MFE/MAE distributions stand; the label comes from Arm 2's tick data."
+      },
+      {
+        "named_cell": "both_above",
+        "grid": "n/a",
+        "verdict": "THE PATH PAYS AT THE NAMED CELL",
+        "row_fired": "none",
+        "disposition": "The good outcome. It fires no row, so it must be stated by the verdict."
+      }
+    ],
+    "rule": "The escalation table records which rows fired; THE VERDICT IS STATED SEPARATELY AND ALWAYS, because two of the four outcomes fire no row at all."
+  },
+  "write_allowlist_note": "Row 20 REFERENCES this list and never restates it. Restating it is how it drifted: the prompt's inline copy was narrower than this list and narrower than the Output Files table, so T8b's required report copy would have fired the row. Fourth list in this programme to drift from its source, after the decision pointer, the D: hardcode enumeration and the commit staging scope."
+}

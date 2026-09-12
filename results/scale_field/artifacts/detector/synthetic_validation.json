@@ -1,0 +1,141 @@
+{
+  "what": "End-to-end synthetic validation of research/scale_field/detector/.",
+  "synthetic_only": true,
+  "caveat": "Poisson background with Gaussian bumps. The cohort sits ~1.3 decades from Poisson; nothing here bounds the false-positive rate there.",
+  "config": "config/scale_field_detector.json",
+  "kappa_gate_state": "OPEN -- no run on real data is authorised under this config while noise_constant and kappa are null",
+  "kappa_used_here": 1.0,
+  "noise_constant_used_here": 0.87,
+  "why_a_constant_is_permitted_here": "These are simulated homogeneous-Poisson-background tapes, so sd(F) = 0.87/sqrt(n_eff) is the correct sampling law rather than a stand-in for a measured one. On the cohort it is not, which is what the gate is about.",
+  "two_bump_tape": {
+    "n_prints": 12748,
+    "runtime_s": 2.65,
+    "n_injected": 2,
+    "n_detected": 2,
+    "features": [
+      {
+        "true_t": 500.0,
+        "true_sigma": 8.0,
+        "found_t": 499.985,
+        "localisation_error_s": -0.015,
+        "s_selected": 36.2699,
+        "F_min": -0.632304,
+        "n_eff": 2396.3,
+        "z": 35.578,
+        "calibrated": 32.849,
+        "persistence_octaves": 4.539,
+        "scale_polished": true,
+        "sigma_minus_half": 10.222,
+        "sigma_minus_half_err_pct": 27.8,
+        "sigma_fit": 7.833,
+        "sigma_fit_err_pct": -2.1,
+        "tilt_dt_dlns": -0.1899
+      },
+      {
+        "true_t": 900.0,
+        "true_sigma": 40.0,
+        "found_t": 901.4855,
+        "localisation_error_s": 1.4855,
+        "s_selected": 109.6064,
+        "F_min": -0.502396,
+        "n_eff": 5585.4,
+        "z": 43.157,
+        "calibrated": 40.87,
+        "persistence_octaves": 2.69,
+        "scale_polished": true,
+        "sigma_minus_half": 74.104,
+        "sigma_minus_half_err_pct": 85.3,
+        "sigma_fit": 42.464,
+        "sigma_fit_err_pct": 6.2,
+        "tilt_dt_dlns": 5.6464
+      }
+    ]
+  },
+  "matched_null": {
+    "description": "flat 6/s Poisson, identical settings",
+    "n_prints": 9069,
+    "n_detections": 0
+  },
+  "four_width_tape": {
+    "n_prints": 33838,
+    "n_injected": 4,
+    "n_detected": 4,
+    "features": [
+      {
+        "true_t": 300.0,
+        "true_sigma": 4.0,
+        "detected": true,
+        "found_t": 300.166,
+        "sigma_minus_half": 5.13,
+        "sigma_minus_half_err_pct": 28.2,
+        "sigma_fit": 3.927,
+        "sigma_fit_err_pct": -1.8,
+        "persistence_octaves": 4.416
+      },
+      {
+        "true_t": 700.0,
+        "true_sigma": 12.0,
+        "detected": true,
+        "found_t": 700.675,
+        "sigma_minus_half": 14.802,
+        "sigma_minus_half_err_pct": 23.3,
+        "sigma_fit": 12.017,
+        "sigma_fit_err_pct": 0.1,
+        "persistence_octaves": 4.416
+      },
+      {
+        "true_t": 1200.0,
+        "true_sigma": 35.0,
+        "detected": true,
+        "found_t": 1199.387,
+        "sigma_minus_half": 42.708,
+        "sigma_minus_half_err_pct": 22.0,
+        "sigma_fit": 33.275,
+        "sigma_fit_err_pct": -4.9,
+        "persistence_octaves": 4.416
+      },
+      {
+        "true_t": 1900.0,
+        "true_sigma": 90.0,
+        "detected": true,
+        "found_t": 1902.384,
+        "sigma_minus_half": null,
+        "sigma_minus_half_err_pct": null,
+        "sigma_fit": 72.961,
+        "sigma_fit_err_pct": -18.9,
+        "persistence_octaves": 2.038
+      }
+    ]
+  },
+  "schema_example": [
+    {
+      "event_id": "synthetic_two_bump",
+      "channel": "F",
+      "kernel": "centred",
+      "t_ridge": 901.4855105409843,
+      "s_selected": 109.60641448977437,
+      "sigma_fit": 42.463531672963974,
+      "c_fit": 0.00574630598154536,
+      "fit_rss": 0.0005305587299791083,
+      "sigma_minus_half": 74.10371369567737,
+      "F_min": -0.5023960327822321,
+      "n_eff_at_min": 5585.441033265063,
+      "z": 43.157440881010466,
+      "calibrated": 40.86994247099028,
+      "kappa_used": 1.0,
+      "noise_constant_used": 0.87,
+      "persistence_octaves": 2.6897930011147455,
+      "tilt_dt_dlns": 5.646412308733665,
+      "feature_class": "bump",
+      "scale_polished": true,
+      "edge_guard_ok": true
+    }
+  ],
+  "reading": {
+    "localisation": "both bumps located to within a second on a 1500 s tape",
+    "duration": "the -0.5 contour reads high on every bump and fails outright on the widest; the two-parameter fit is the measurement and the contour is a first look, which is section 6 of the source reproduced",
+    "false_positives": "zero on a matched Poisson null at the same operating point",
+    "one_discrepancy_against_the_source": "The source's section 6 claims the fit is 'within 16% everywhere'. Through the promoted module the widest bump (sigma = 90 s) fits at -18.9%, outside that. The source states its own section 6 table was computed BEFORE the section 5.1 scale-polishing fix, so the selected scale -- and with it the set of spine points the fit sees -- moves. The mid-range improves (sigma = 4 s goes from -11% to -1.8%, sigma = 12 s from -1% to +0.1%) and the widest degrades. The claim should read 'within 20% everywhere, within 5% in the middle of the range', and the widest feature remains the weakest case for the readout.",
+    "what_it_does_not_establish": "that any of this transfers to the cohort. Synthetic Poisson validation says the code is right; it says nothing about the calibration, which is exactly why kappa must come from a null whose bandwidth content is audited."
+  }
+}

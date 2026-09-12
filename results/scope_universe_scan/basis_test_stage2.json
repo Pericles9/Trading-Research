@@ -1,0 +1,51 @@
+{
+  "task": "Stage 2 -- does momentum_pct track the RTH-only high or the extended-session high?",
+  "claim_under_test": "CLAUDE.md: momentum_pct 'inherits the vendor's RTH-scoped, adjusted-basis high forever'. Asserted 2026-07-24, never verified against ticks.",
+  "method": "implied_H = P * (1 + momentum_pct/100) with P = tick-derived T-1 close (price_earlier on the tm1_t0 pair, committed Phase 9 artifact). Compared in log distance against the tick RTH high and the tick extended-session high.",
+  "a12": "P is T-1 and H is T=0, so every ratio here spans a session boundary. A12 applies -- denominators count. Reported WITH and WITHOUT flag_cross_session_extreme; untrimmed is primary and flagged events are their own row, never dropped.",
+  "d4": "all measured quantities tick-derived; momentum_pct is D4's sole exception; the spine's prev_close is NOT read",
+  "n_stage1": 301,
+  "n_joined_to_flags": 301,
+  "n_discriminating": 95,
+  "n_non_discriminating": 206,
+  "non_discriminating_note": "events whose extended high equals their RTH high within 0.1%. The test cannot separate the two candidates there, by construction.",
+  "PRIMARY_untrimmed": {
+    "label": "discriminating, untrimmed (PRIMARY)",
+    "n": 95,
+    "closer_to_RTH_high": 61,
+    "closer_to_EXTENDED_high": 34,
+    "tie": 0,
+    "share_closer_to_RTH": 0.6421052631578947,
+    "median_log_dist_to_rth": 0.02173379710112196,
+    "median_log_dist_to_sess": 0.09857275813444384,
+    "median_implied_over_rth": 1.013818181818182,
+    "median_implied_over_sess": 0.9516655172413794
+  },
+  "excluding_a12_flagged": {
+    "label": "discriminating, A12-flagged removed",
+    "n": 83,
+    "closer_to_RTH_high": 50,
+    "closer_to_EXTENDED_high": 33,
+    "tie": 0,
+    "share_closer_to_RTH": 0.6024096385542169,
+    "median_log_dist_to_rth": 0.025910693556535882,
+    "median_log_dist_to_sess": 0.08856715766044583,
+    "median_implied_over_rth": 1.0152191304347826,
+    "median_implied_over_sess": 0.9733741007194244
+  },
+  "a12_flagged_only": {
+    "label": "discriminating, A12-flagged only",
+    "n": 12,
+    "closer_to_RTH_high": 11,
+    "closer_to_EXTENDED_high": 1,
+    "tie": 0,
+    "share_closer_to_RTH": 0.9166666666666666,
+    "median_log_dist_to_rth": 0.006907038900954323,
+    "median_log_dist_to_sess": 0.15525031878180257,
+    "median_implied_over_rth": 1.002450085962951,
+    "median_implied_over_sess": 0.856399021804062
+  },
+  "n_a12_flagged_in_discriminating": 12,
+  "source": "research/scope_universe_scan/basis_test_stage2.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/scope_universe_scan/basis_test_stage2.py"
+}

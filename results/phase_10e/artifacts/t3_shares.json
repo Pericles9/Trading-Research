@@ -1,0 +1,72 @@
+{
+  "task": "Phase 10e T3 -- shares, stratification, clustered inference",
+  "outcome_logic": "optimistic: profit if t_profit <= t_stop. pessimistic: profit if t_profit < t_stop. The bounds differ on exactly the ties, so the AMBIGUOUS SHARE IS THE TIE RATE.",
+  "three_numbers_per_cell": "p_clear, p_breakeven=(m+1)/(k+m), p_randomwalk=m/(k+m)",
+  "bootstrap": {
+    "reps": 2000,
+    "seed": 42,
+    "ci_level": 0.95,
+    "clustering": [
+      "event",
+      "ticker"
+    ],
+    "note": "common random numbers across cells -- the paired construction, and what makes 90 cells affordable"
+  },
+  "n_cells": 180,
+  "named_cell": {
+    "_description": "The single cell escalation rows 10, 11 and 12 are evaluated on. Chosen before the run.",
+    "arm": "arm1",
+    "denominator": "print_weighted",
+    "det_segment": "rth",
+    "latency_minutes": 5,
+    "horizon_minutes": 30,
+    "profit_k": 3,
+    "stop_m": 2,
+    "cell_rationale": "latency 5 / hold 30 / RTH matches the Phase 11 named cell exactly, so the two phases are directly comparable. The barrier pair is Cooper's.",
+    "barrier_pair_rationale": "COOPER 2026-08-31. Chosen on the NOISE FLOOR and the COST DRAG, in that order. (1) The stop is decided by the noise floor: barriers are measured on TRADE prices, which bounce the full spread. Against Phase 11's T=0 RTH figures (quoted spread 3.79c, effective 2.385c, round trip 2.512c), an m=1 stop is 2.512c = 0.66 of ONE QUOTED SPREAD -- a single print on the other side breaches it. That is not a stop, it is the bid-ask bounce with a name. m=2 is 5.024c = 1.33 quoted spreads. (2) Then k, on how much drift each cell demands: the gap between p_breakeven and p_randomwalk is EXACTLY 1/(k+m), the fixed 71bp cost as a share of the barrier span. k=1.5,m=1 needs 0.400 of drift over a random walk; k=3,m=2 needs 0.200. The cost does not scale, so tight barriers are mostly cost. A 212.9bp target is 9.6c on a $4.52 name that moved 30%+ that day -- modest against the daily range.",
+    "barrier_pair_what_it_was_NOT_chosen_on": "k=3,m=2 also has the WIDEST barriers and therefore the LOWEST R1 ambiguity, since both barriers are least likely to sit inside one bar's range. That is convenient and it is NOT a reason. Choosing the pair to make row 10 pass would be adjusting a parameter to make a criterion pass, which this prompt forbids. The ambiguity share falls where it falls and is reported as an outcome, never as a justification.",
+    "p_breakeven": 0.6,
+    "p_randomwalk": 0.4
+  },
+  "named_cell_row": [
+    {
+      "cell_id": "print_weighted|L5|H30|k3|m2",
+      "denominator": "print_weighted",
+      "latency_minutes": 5,
+      "horizon_minutes": 30,
+      "profit_k": 3.0,
+      "stop_m": 2,
+      "n": 5632168,
+      "n_prof_opt": 2039322.0,
+      "n_prof_pess": 1899272.0,
+      "n_ambig": 140050.0,
+      "n_expiry": 638958.0,
+      "n_dead": 81665.0,
+      "distinct_events": 15288,
+      "effective_n": 10359.42209209412,
+      "max_event_share": 0.000169561703415097,
+      "p_clear_optimistic": 0.36208472474542663,
+      "p_clear_pessimistic": 0.3372186341032441,
+      "ambiguous_share": 0.024866090642182547,
+      "expiry_share": 0.11344796533057963,
+      "dead_tape_share": 0.01449974503601455,
+      "p_breakeven": 0.6,
+      "p_randomwalk": 0.4,
+      "ci_event_opt_lo": 0.3604673743247986,
+      "ci_event_opt_hi": 0.36379528045654297,
+      "ci_event_pess_lo": 0.3357284367084503,
+      "ci_event_pess_hi": 0.3387167751789093,
+      "ci_ticker_opt_lo": 0.3596203029155731,
+      "ci_ticker_opt_hi": 0.36458152532577515,
+      "ci_ticker_pess_lo": 0.3351757824420929,
+      "ci_ticker_pess_hi": 0.339236855506897,
+      "stop_share_optimistic": 0.5244673099239937,
+      "stop_share_pessimistic": 0.5493334005661763,
+      "thin_cell": false,
+      "event_dominated": false
+    }
+  ],
+  "runtime_seconds": 85.7,
+  "source": "research/phase_10e/t3_shares.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/phase_10e/t3_shares.py"
+}

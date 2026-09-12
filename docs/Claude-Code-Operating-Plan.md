@@ -234,11 +234,11 @@ Mapped to §9 of the research program. Each row is one prompt, one session, one 
 | **9** | Path shape, cross-session integrity, clustered inference | *(executed, unmerged)* Cross-session corporate-action flag; separation of the detection-time / holding-period / latency axes; retracement ECDFs at T0…T+3 with ticker-clustered CIs | Retracement ECDFs; axis-separation grid | Branch `phase/9`, pending approval |
 | **10** | Burst decomposition | Per-event burst segmentation; burst count, duration, spacing; fraction of session move carried per burst; burst-relative concentration curve | Burst count & duration distributions; per-burst move-share; burst-relative decay curve | **Burst timescale is a number.** Burst-relative latency budget replaces the session-anchored one | **CLOSED 2026-08-27 — D21. The sub-burst line (v4 → 10c → 10d → Diag1) is closed: 10d-R0 fired on Cooper's tape review, and the histogram is richly multimodal rather than bimodal, so there is no privileged valley to select. The burst timescale is NOT a number and the burst-relative latency budget never replaced the session-anchored one — D13 had already re-anchored the downstream. See results/d9_lineage_closeout/REPORT.md.**
 | **10b** | Randomness of trade arrivals under a non-constant rate | Crossing timescale at which arrivals stop being explainable by an inhomogeneous Poisson process whose rate varies more slowly than that timescale, per detection segment; Allan factor against a matched null; time-rescaling under held-out intensity; synthetic-control validation | Allan vs. matched-null band; KS-vs-bandwidth; cross-method agreement | Crossing timescale is a number, or its absence is a recorded finding | **CLOSED 2026-08-13 — no burst timescale established; failed its own synthetic control gate, zero real events read. See results/phase_10b/REPORT.md.**
-| **11** | Spread & impact by participation | Quoted vs. effective spread bucketed by participation rate; impact per unit signed volume, burst vs. quiet | Spread-vs-participation; impact curves | Compression claim tested; FP cost is a number |
+| **11** | Spread & impact by participation | Quoted vs. effective spread bucketed by participation rate; impact per unit signed volume, burst vs. quiet | Spread-vs-participation; impact curves | **CLOSED 2026-09-11. Executed: round trip 70.98 bp / 2.512 cents at 5-min latency, RTH — the cost of record for the programme. Its `burst vs. quiet` half is now permanently UNSPECIFIABLE, not merely blocked: D26 establishes there is no burst object on this cohort. Closed rather than pending.** |
 | **12** | Halts & LULD | P(halt \| state); time-to-halt; reopen gap distribution, long-side conditional | Reopen gap distribution; halt timing | Sizing constraint is a number |
 | **13** | Noise floor & tape characterization | Inter-trade interval distributions, print-size distributions, quote flicker rates — inside bursts vs. outside | Interval & size distributions by regime | Detector null distribution known |
 | **14** | Signed flow & impact efficiency — feature layer | Lee-Ready aggressor classification; rolling signed volume; impact-efficiency derivative. Precomputed once, cached, lag-baked | Feature distributions | Features cached, not recomputed in loops |
-| **15** | Burst hazard function | Duration distributions → P(death \| age); spread re-widening and intensity decay as covariates | Hazard curves by age; covariate-conditioned survival | **Exit prior is a number** |
+| **15** | Burst hazard function | Duration distributions → P(death \| age); spread re-widening and intensity decay as covariates | Hazard curves by age; covariate-conditioned survival | **CLOSED 2026-09-11 — D26. `P(death \| age)` needs episodes with ages, and D26's result 6 measures the field as dense and non-isolated at every scale in 8–512 s: blob width is sub-Poisson everywhere and never above, so negative regions are cut short by neighbours rather than ending. Bursts that never isolate do not end. Closed for a stated reason, superseding the 2026-08-27 correction that (correctly, at the time) reopened it.** |
 | **16** | Regime labeling + stability | Offline labels; label-perturbation stability test (§5.1.1) | Label-set overlap under perturbation | Foundation solid, or sand |
 | **17** | Detector + end-detector | Threshold+hysteresis baseline; CUSUM/BOCPD and intensity challengers; operating point by expected PnL; flanking-day FP estimation | Detection latency vs. FP; PnL at operating point | Both detectors exist; complexity earned or discarded |
 | **18** | Direction signal | Features vs. cost-adjusted markouts within true-positive regimes, against the always-long-while-on null | Markout tables; monotonicity plots | "Detector + market order" vs. "detector + signal" — decided |
@@ -258,6 +258,44 @@ histogram boundary-detection method is not available as a way to define its inpu
 to a burst object, or any reformulation that does not need one, is untouched. Rows 13, 14, 16 and 17
 are likewise unaffected — D13 re-anchored them to detection time, clock time or price-path events,
 and that re-anchoring stands. Nothing is renumbered and no row is removed.
+
+**Insert, 2026-09-11 — the scale-field arc closes, and what it does to the pending rows.**
+**Insert-only; nothing is renumbered and no row is removed.** The arc was not a numbered phase, so it
+has no row of its own; its outcome is **D26 — the within-session timing line is closed**, gate outcome
+**no structure in the timing channel above 10 ms**, and below 10 ms the structure is order fragmentation
+on a cohort already recorded as unable to measure there. Evidence:
+`claude/fragmentation_and_the_closure.md`, `claude/scale_field_instrument_gates.md`, D26 and its
+retraction sweep.
+
+**The scoping sentence that governs every row below: D26 closed the TIMING channel.** Every quantity in
+the arc derives from *when* prints happened. **Price and size were never examined, are not barred by D4,
+and are where rows 11, 18, 19 already live.**
+
+- **Row 11 — CLOSED** (cell updated). The deliverable exists; only its burst-conditioned half is gone.
+- **Row 13 — largely absorbed, re-scope before running.** The interval channel ran, on a properly
+  collapsed tape, with the fragmentation mode identified and removed. Inter-trade interval distributions
+  "inside bursts vs. outside" is unspecifiable for the same reason as row 11's second half. **Anything 13
+  still wants must be scoped against what was already measured**, not run fresh.
+- **Row 14 — re-scope, do not cancel.** Any feature defined as a property of a burst object has no
+  referent. **Features on the continuous field remain possible; features on price/size are untouched**,
+  and Lee-Ready aggressor classification and signed volume are price/size work that D26 does not reach.
+- **Row 15 — CLOSED** (cell updated).
+- **Row 16 — its answer is partly known in advance.** A label set cut from a dense, non-isolated field
+  will be unstable under perturbation; the detector package's `persistence_octaves` seed-dependence
+  (feature counts 6/7/7/6/7 and 7/6/5/6/5 on a dense tape) is that result appearing early. **If 16 runs
+  it must report the seed-stable fraction as a first-class quantity** rather than discovering instability
+  as a finding.
+- **Row 17 — the end-detector half has no object.** Bursts that never isolate do not end. The
+  entry-signal half is settled by evidence rather than by decision: nothing in this programme has
+  predicted an onset, and D26 adds that in the timing channel **there was no onset to predict**.
+- **Rows 18, 19 — untouched.** Price/size channel.
+- **Parallel (unconditional universe scan) — untouched, and still the oldest open blocker.** It gates
+  capital, multiplies every result in the programme, and did not move while this arc ran.
+
+**What is carried forward as reusable** is recorded in D26: the four-control standard (negative,
+positive, null-parameter sweep, **blindness**), the retraction-sweep requirement, scope conditions on
+robustness claims, envelope invariance as a selection criterion, and the identity-collapse rule plus the
+condition-code 14 mapping as data-layer facts.
 
 **Numbering, from 2026-08-03 onward.** Rows 8 and up are prompt filenames — row *n* is `prompts/phase_{n}.md`. Rows 0–7 are the original plan slots and are left untouched; they never tracked filenames, because the executed program inserted 0a/0b/0c/1b/1c/2b/5a and re-scoped several phases along the way. The crosswalk for the two plan rows that did get executed under different numbers: the old row 8 (*Measurement 1 — concentration*) ran as **Phase 6**, and the old row 12 (*Event-study grid — T+1*) ran as **Phase 8** in the re-scoped, tradeable-anchor form recorded above.
 

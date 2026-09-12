@@ -1,0 +1,39 @@
+{
+  "gate": "0",
+  "rows": [
+    {
+      "s": 0.1,
+      "kernel": "centred",
+      "F": -0.9999999999999999
+    },
+    {
+      "s": 0.1,
+      "kernel": "onesided",
+      "F": -0.9999999999999998
+    },
+    {
+      "s": 1.0,
+      "kernel": "centred",
+      "F": -1.0
+    },
+    {
+      "s": 1.0,
+      "kernel": "onesided",
+      "F": -1.0
+    },
+    {
+      "s": 10.0,
+      "kernel": "centred",
+      "F": -1.0
+    },
+    {
+      "s": 10.0,
+      "kernel": "onesided",
+      "F": -1.0
+    }
+  ],
+  "delta_limit_F": -1.0,
+  "log_base": "natural",
+  "threshold_multiplier": 1.0,
+  "pass": true
+}

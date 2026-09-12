@@ -25,6 +25,17 @@ constraint. Nothing else in the pipeline knows the data layout.
 
 Then a runner that loops the cohort and writes one parquet per event.
 
+> **⚠ RETRACTED 2026-09-10 by D26 — the section below is left as the record of what was asked,
+> and is wrong.** The Allan premise (`5.99` at 15.6 ms → `1,245` at 4,096 s ⇒ "nowhere near Poisson",
+> z inflated 2.4×–35×) was never rate-matched. On a fragmentation-collapsed tape `A(15.6 ms) = 0.91`
+> and **every remaining rung is reproduced by a rate-matched surrogate at or above the real value** —
+> the curve is order fragmentation plus the session envelope, with no clustering term. The prescribed
+> replacement, a matched null, was itself withdrawn by commit `1a34975`: its crossover tracks the
+> surrogate's own bandwidth at ≈2.6h. **The instruction not to standardise against
+> `SIGMA_POISSON_DECADES` still stands, but for a different reason** — the right reference is the
+> estimator's own sampling-error table, which is not a clustering constant at all. See
+> `docs/Universe-Decisions.md` D26 and its retraction sweep.
+
 ## The correction that matters most
 
 **Do not standardise against the analytic Poisson null on this data.** The constant

@@ -1,0 +1,191 @@
+{
+  "task": "Audit of the universe-selection function under D4 Amendment A13",
+  "HARD_STOP": {
+    "what_could_not_be_run": "the vintage-churn test, in all three arms",
+    "why": "momentum_events carries min_volume_threshold -- the column filter_events_power_law.py writes onto its own output (line 65). All 23,268 rows carry a non-null value and ALL sit ABOVE the line; zero below. No table in this checkout holds a rejected event. The spine IS the filter's survivors.",
+    "consequence": "A q=0.05 quantile line cannot be refit from the ~95% of the population above it. Every arm of the three-arm design needs the rejected mass, and it does not exist on disk.",
+    "relation_to_prior_finding": "Phase 8 A10.2d established rejected candidates are absent from data/filtered/. This is the same fact one level up: absent from the spine too.",
+    "verification": {
+      "n_rows": 23268,
+      "n_with_null_threshold": 0,
+      "n_above_line": 23268,
+      "n_below_line": 0
+    }
+  },
+  "1_selection_function_recovered": {
+    "_a13": "A13(a) names fitted coefficients as a permitted output.",
+    "form": "log10(min_volume_threshold) = b0 + b1 * log10(momentum_pct)",
+    "b0_intercept": 2.1261374532144517,
+    "b1_slope": 0.584556497372942,
+    "r_squared": 1.0,
+    "max_abs_residual_decades": 3.552713678800501e-15,
+    "reading": "an exact line recovery confirms the threshold column is the fitted line evaluated per event, and pins the selection function that was actually applied."
+  },
+  "2_residual_spread_REPORTED_FIRST": {
+    "_why_first": "Cooper's ordering. The interpretation of any churn number hangs on this, so it precedes every churn figure.",
+    "quantity": "margin = log10(event_volume) - log10(min_volume_threshold)",
+    "censoring": "CENSORED AT ZERO. Only survivors are on disk, so this is the upper ~95% of the true residual distribution and the observed spread UNDERSTATES the true one.",
+    "n": 23268,
+    "observed_quantiles_decades": {
+      "q01": 0.22190531296431557,
+      "q05": 0.8138984034021807,
+      "q10": 1.276384591791303,
+      "q25": 2.138789311257404,
+      "q50": 2.9667707851127076,
+      "q75": 3.741132972863051,
+      "q90": 4.359912133277073,
+      "q95": 4.633271235205845,
+      "q99": 5.072942020430203
+    },
+    "observed_sd_decades_censored": 1.14516225126035,
+    "uncensored_sigma_estimate": {
+      "method": "match each observed quantile to a normal truncated below at its own 5th percentile -- the censoring point is known exactly, because the line IS the 5th percentile by construction",
+      "sigma_hat_decades": 1.7374324074325689,
+      "per_quantile_estimates": {
+        "from_q01": 2.5842331655113155,
+        "from_q05": 2.332589854438695,
+        "from_q10": 2.175413257896978,
+        "from_q25": 1.9727788011837082,
+        "from_q50": 1.7374324074325689,
+        "from_q75": 1.5857492224130332,
+        "from_q90": 1.4752195424944283,
+        "from_q95": 1.3979020776620887,
+        "from_q99": 1.271291499892078
+      },
+      "max_over_min_ratio": 2.0327620893640015,
+      "normality_check": "if the residual were normal these estimates would agree; their spread is the departure"
+    }
+  },
+  "3_basis_perturbation_arm_ONE_SIDED": {
+    "_a13": "clause (c) -- basis sensitivity measured, not asserted",
+    "mechanism": "a per-ticker volume factor is an ADDITIVE shift in log10(event_volume), so it moves a point vertically against the fitted line -- straight across the membership boundary",
+    "amc_anchor": {
+      "price_factor": 5.24,
+      "volume_factor": 10.06,
+      "ratio": 1.9198473282442747,
+      "decades": 0.2832666937361819,
+      "source": "D4 / Phase 6c, the price-free volume cross-check"
+    },
+    "one_sided_caveat": "This is a LOWER BOUND on basis churn. It counts survivors a -delta shift would push below the line. Events below the line that a +delta shift would PROMOTE are invisible, because they are not on disk. Total churn is larger by an unmeasurable amount.",
+    "sweep": [
+      {
+        "delta_decades": 0.05,
+        "factor": 1.122,
+        "share_pushed_below_line": 0.0026646037476362387,
+        "n_pushed_below_line": 62,
+        "is_amc_anchor": false
+      },
+      {
+        "delta_decades": 0.1,
+        "factor": 1.259,
+        "share_pushed_below_line": 0.004512635379061372,
+        "n_pushed_below_line": 105,
+        "is_amc_anchor": false
+      },
+      {
+        "delta_decades": 0.15,
+        "factor": 1.413,
+        "share_pushed_below_line": 0.00679044180849235,
+        "n_pushed_below_line": 158,
+        "is_amc_anchor": false
+      },
+      {
+        "delta_decades": 0.2833,
+        "factor": 1.92,
+        "share_pushed_below_line": 0.014397455733195806,
+        "n_pushed_below_line": 335,
+        "is_amc_anchor": true
+      },
+      {
+        "delta_decades": 0.35,
+        "factor": 2.239,
+        "share_pushed_below_line": 0.017921609076843734,
+        "n_pushed_below_line": 417,
+        "is_amc_anchor": false
+      },
+      {
+        "delta_decades": 0.5,
+        "factor": 3.162,
+        "share_pushed_below_line": 0.027032834794567646,
+        "n_pushed_below_line": 629,
+        "is_amc_anchor": false
+      },
+      {
+        "delta_decades": 0.75,
+        "factor": 5.623,
+        "share_pushed_below_line": 0.0451693312704143,
+        "n_pushed_below_line": 1051,
+        "is_amc_anchor": false
+      },
+      {
+        "delta_decades": 1.0,
+        "factor": 10.0,
+        "share_pushed_below_line": 0.06768953068592058,
+        "n_pushed_below_line": 1575,
+        "is_amc_anchor": false
+      },
+      {
+        "delta_decades": 1.5,
+        "factor": 31.623,
+        "share_pushed_below_line": 0.12901839436135465,
+        "n_pushed_below_line": 3002,
+        "is_amc_anchor": false
+      }
+    ]
+  },
+  "4_churn_vs_displacement_EXACT": {
+    "_what": "THE SUBSTITUTE DELIVERABLE. Membership loss under a line displacement delta is P(margin < delta); inverted, the displacement required to churn a share c is exactly the c-th quantile of the margin. No fit, no assumed family -- the empirical quantile function IS the curve.",
+    "_why_this_is_the_honest_object": "It converts 'we cannot know how far the vintage line moved' into 'here is how far it would have to move to matter'. A bound rather than a measurement, which is what the data supports, and it does not depend on one counterfactual fit being representative.",
+    "one_sided": "survivors only, so this counts membership LOST to a displacement. Events a displacement would ADMIT are not on disk.",
+    "curve": [
+      {
+        "membership_churn": 0.005,
+        "required_displacement_decades": 0.11001862248584902,
+        "required_factor": 1.2883047928357367
+      },
+      {
+        "membership_churn": 0.01,
+        "required_displacement_decades": 0.22190531296431557,
+        "required_factor": 1.66688375067278
+      },
+      {
+        "membership_churn": 0.02,
+        "required_displacement_decades": 0.38494437128537856,
+        "required_factor": 2.4262992908675396
+      },
+      {
+        "membership_churn": 0.05,
+        "required_displacement_decades": 0.8138984034021807,
+        "required_factor": 6.5147597332417355
+      },
+      {
+        "membership_churn": 0.1,
+        "required_displacement_decades": 1.276384591791303,
+        "required_factor": 18.896640103978154
+      },
+      {
+        "membership_churn": 0.25,
+        "required_displacement_decades": 2.138789311257404,
+        "required_factor": 137.6541507011706
+      },
+      {
+        "membership_churn": 0.5,
+        "required_displacement_decades": 2.9667707851127076,
+        "required_factor": 926.3407839145115
+      }
+    ],
+    "read_lognormal_approximation": {
+      "method": "lognormal fitted to median 926x and 1.51% within 2x, from the read of 2026-08-31",
+      "sigma_decades": 1.23,
+      "predicted_displacement_decades": {
+        "1%": 0.11,
+        "2%": 0.44,
+        "5%": 0.94,
+        "10%": 1.39
+      }
+    }
+  },
+  "source": "research/scope_universe_scan/selection_audit.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/scope_universe_scan/selection_audit.py",
+  "a13_write_boundary": "no per-event artifact and no spine numeric column under any name is written by this script; JSON aggregates only, no parquet"
+}

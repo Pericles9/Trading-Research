@@ -247,3 +247,463 @@ created per Phase 2's T8 addendum instruction to "log verbatim to the register."
 - **Standing decision recorded:** `docs/Universe-Decisions.md` D3 gained an amendment for the
   session-boundary and auction-print assignment rule this phase established, for reuse by any
   future intraday segment work.
+
+
+### Entry-signal class — annotated 2026-08-31, still open
+
+The item above ("Entry-signal class undecided — onset prediction vs. fast detection and ride", logged
+D5 redirect T5, 2026-08-03) **remains open.** A draft decision closing it in favour of *fast detection
+and ride* was prepared on 2026-08-30 and **withdrawn on 2026-08-31 without consuming a number**, because
+D23 removed two of its three stated reasons the day after it was written.
+
+**What changed.** The draft argued that `dL/dln s` (i) saturates at −1, (ii) *"necessarily lags"* a level
+statistic, measured at −0.21 in units of `s`, and (iii) that LEVEL was the only channel that ever fired
+reliably. **D23 reversed (ii) and falsified (iii):** under a one-sided kernel the field boolean *leads*
+by +1.515 kernel widths on 19/19 contributing events, paired within event, Wilcoxon p = 1.9e−05. Only
+(i) survives, and saturation is a statement about *discrimination*, not about *onset versus
+confirmation* — it does not carry the conclusion alone.
+
+**The three tests that now decide this item**, none of them run:
+
+1. **Null-rate matching** — Phase 10e T5b-i, escalation row 23. Until all channels fire at equal rates on
+   burst-free tape, "FIELD leads" and "FIELD is noisier" are the same statement. D22 measured FIELD
+   firing at 2.8× LEVEL's rate.
+2. **The fixed-kernel control** — under a causal kernel `dL/dln s` weights recent lags while `λ̂` averages
+   the whole half-kernel (centroid `0.80·s`), so a shorter level kernel may buy the same lead. The
+   measured +1.52 against a 0.80 centroid gap is suggestive, not separating. This is Task 3 of the
+   scale-space work order, promoted by D23 from declined formality to the decisive test, and unrun.
+3. **Price conversion** — +1.180 s of lead is not yet a number in basis points. Phase 10e Arm 2 is where
+   it becomes one, or does not.
+
+**A decision that says "still undecided" is not a decision and should not consume a number.** Cooper
+decision, unassigned. Still blocking Phase 17 specification per `docs/Claude-Code-Operating-Plan.md` §6.
+
+
+### Universe-scan scoping pass — risk rows 2, 3, 4, 5, 9 annotated (2026-08-31)
+
+Scoping pass run under `prompts/universe_scan_scoping.md`, authorised by Cooper 2026-08-31. **No scan was
+executed, no measurement produced, no false-positive rate estimated.** Full record:
+`results/scope_universe_scan/REPORT.md`. What it established, against the rows it was aimed at:
+
+- **Row 2 — the q05 filter's exact mechanics: HALF-CLOSED, not closed.** The script was read
+  (`data/collection_scripts/filter_events_power_law.py`, 86 lines). **It does not select on momentum at
+  all.** It fits a quantile regression at q=0.05 of `log10(event_volume)` on `log10(momentum_pct)` over
+  events at or below the 99.5th momentum percentile, then keeps events whose volume exceeds that fitted
+  line. Momentum is the regressor, not the criterion. **The >=X% momentum screen is upstream, in the two
+  scan files the script reads, and the producer of those files is not in this checkout** — searched for
+  and not found. The row stays open for that reason: its mechanics are now specified, but the screen the
+  row was implicitly about is still unread.
+
+- **A property stronger than the register's current wording, affecting rows 3, 4 and 9.** The open item
+  says the archive's selection variable is "only knowable after the session ends." The threshold is in
+  fact a quantile line **fitted over the pooled 2020-2025 population**, so archive membership is not a
+  property of an event — it depends on every other event in the file. **No real-time screen can reproduce
+  it even in principle**, because the criterion does not exist until the population does. That is a
+  difference in kind rather than in degree, and it is the agent's characterisation rather than the
+  script's (REPORT.md section 9a).
+
+- **Recorded alongside:** the filter selects on `event_volume`, one of the spine numeric columns D4
+  permanently quarantines, and D4 Amendment A9.2 extends that quarantine to pre-ingestion scan inputs
+  prospectively. The universe's own selection function ran on that column before the quarantine existed.
+  Not actionable — A9.2 is prospective and the universe is frozen — but stated so no future work treats
+  archive membership as a D4-clean quantity.
+
+- **Row 5 — `daily/` breadth for control-set construction: AUDITED.** 1,848 files on disk, **12 empty**;
+  1,836 distinct tickers; 144,026 rows; **date range 2024-12-02 to 2025-04-01, 82 sessions**; 1,695
+  tickers span the full window. **Breadth is wide, depth is not.** Against the archive's 20,951 in-scope
+  events over 1,465 sessions (2020-01-03 to 2025-10-31), `daily/` covers **5.6% of sessions** and the
+  window contains **10.3%** of in-scope events. **Whether the 1,836 tickers are a market-wide set or
+  themselves a selected one was NOT established** — breadth was measured, provenance was not, and any
+  bound built on this resource turns on it.
+
+- **The live screen is more precisely specified than this register records.** It carries a **20 s poll
+  interval** (`scanner-epg-momentum/live/strategy.json:26`) and an explicit instrument pre-filter
+  (common stock on XNYS/XNAS, `live/CLAUDE.md:143`), neither of which appears in the row-9 summary.
+
+- **NEW OPEN ITEM — the reference price of the live screen is not established by any committed source.**
+  The docs say ">=30% from previous close"; the implementation tests Polygon's `todaysChangePerc`
+  (`scanner-epg-momentum/live/CLAUDE.md:143`). **No committed file in this checkout states what that
+  field is referenced to, nor whether its numerator uses the last extended-hours trade or the last RTH
+  trade.** This bites exactly where it matters: the screen is specified as pre/post inclusive, so if the
+  field is RTH-scoped then the live screen does not fire on the extended-hours moves it is meant to fire
+  on, and the live-vs-archive mismatch is different **in kind** from the one recorded above. Settling it
+  needs an external field definition and **D14 bars the fetch**. **Unassigned.**
+
+- **Four routes to an unconditional population are enumerated and costed** in
+  `results/scope_universe_scan/routes_and_costs.json`, each with what it would and would not establish
+  and its specific over-reading failure mode. **No route is proposed** — that is Cooper's. Sequencing
+  facts only: the reference-price ambiguity gates the intraday-replay route; the market-wide-set audit
+  gates the bound route; the two whole-market routes are both offline-blocked under D14; flanking-day
+  pseudo-controls are the only route that can start today, and they answer a **different** question from
+  the one being scoped (within-ticker, not cross-ticker).
+
+- **Defect found while reading, outside the pass's remit to fix.**
+  `data/collection_scripts/filter_events_power_law.py` carries live `D:\` hardcodes and **writes** a
+  parquet and a CSV there (lines 7, 78, 83). CLAUDE.md's hard rule is never to write to D:, and it
+  enumerates the files carrying live D: hardcodes with an instruction never to execute them until a
+  remediation phase clears them. **This file is not on that list.** The list is incomplete and the
+  omitted file is one that writes. Reported, not modified, not executed. **Unassigned.**
+
+
+### Universe-selection audit under A13 — a hard stop, and three items (2026-08-31)
+
+Run under **D4 Amendment A13**, granted the same day. Full record:
+`results/scope_universe_scan/REPORT.md` section 14, artifact `selection_audit.json`.
+
+- **THE VINTAGE-CHURN TEST CANNOT BE RUN, AND THE LOOKAHEAD IS UNMEASURABLE FROM DISK.**
+  `momentum_events` carries `min_volume_threshold`, the column `filter_events_power_law.py` writes onto
+  its own output. All 23,268 rows are non-null and **all 23,268 sit above the line; zero below**. No table
+  in this checkout holds a rejected event. **The spine IS the filter's survivors**, a q=0.05 line cannot
+  be refit from the ~95% above it, and all three arms need the rejected mass. This is Phase 8 A10.2d
+  (rejected candidates absent from `data/filtered/`) one level up. **Record the lookahead as unmeasurable
+  from disk, not as pending measurement** — and the point-in-time refit that was to repair the universe
+  cannot be produced, so A13(b) has nothing to attach to.
+
+- **What was recovered instead.** The selection function exactly —
+  `log10(threshold) = 2.126137 + 0.584556·log10(momentum_pct)`, R² = 1.0000000000, max residual
+  3.6e−15 decades. The residual spread, censored at zero, **uncensored σ = 1.737 decades** with a 2.03×
+  per-quantile disagreement (so it is not normal). And the basis-perturbation arm, measured per A13(c):
+  **1.44% of survivors (335) are pushed below the line by the AMC-anchor 1.92× volume-factor
+  discrepancy** — one-sided, a lower bound, because events the shift would promote are not on disk.
+
+- **The geometry that explains both, and it is a finding in its own right.** The q05 threshold is ~1,200
+  shares at median momentum; the median survivor trades 1,202,800 — **926× its own threshold** — and only
+  **1.51%** of survivors sit within 2× of exclusion. **The q05 line is an extraordinarily permissive
+  constraint on the surviving population**, which is why a near-2× basis error moves only 1.44%, and why
+  the expectation of double-figure basis churn resolved the other way.
+
+- **Risk row 5 / the universe scan is now blocked on DATA ACQUISITION, not on method.** `data/daily/`
+  holds 216 of the 904 archive tickers present in its own window (**76.1% missing**), so it cannot bound
+  anything about names the archive does not contain. No method will fix that. The disposition is a
+  procurement decision — obtain a genuine market-wide daily universe, or accept that the live
+  false-positive rate stays unmeasured and size for it. **Recorded here explicitly because a
+  blocked-on-method item invites more method, and this one will not yield to any.**
+
+- **HAZARD, not a documentation defect: seven committed files write to `D:`.** The regenerated
+  enumeration (`tools/verify_claude_md_indices.py`) found 24 live `D:\` hardcodes against 11 listed, and
+  **seven of the previously unlisted files write** — `data/collection_scripts/collect_massive_data.py`,
+  `data/collection_scripts/filter_events_power_law.py`, `research/phase_1c/fetch_pair.py`,
+  `research/phase_7/t1_d4_sweep.py`, and three notebooks. CLAUDE.md's hard rule is never to write to D:
+  (confirmed failing hardware, migrated off 2026-07-12). **Anyone who runs one of these writes outside the
+  repo, onto known-bad hardware.** Reported, not modified — remediation is its own decision. **Unassigned,
+  and it should not sit at the same priority as a stale index.**
+
+
+### Universe-lookahead item — CLOSED as bounded, not measured (2026-08-31)
+
+Artifact: `results/scope_universe_scan/selection_audit.json` ->
+`4_churn_vs_displacement_EXACT`. Full record: `results/scope_universe_scan/REPORT.md` section 15.
+
+**The vintage-churn test is dead and was not salvaged.** The rejected population is on no table, so the
+counterfactual cannot be run and a partial reconstruction would be circular — the surviving asymmetry
+(events the pooled line kept that a vintage line would have rejected are on disk; the reverse are not)
+still needs a vintage line, which still needs the rejected mass.
+
+**Its question is nonetheless answered, from survivors alone.** Membership loss under a line displacement
+delta is P(margin < delta); inverted, the displacement required to churn a share c is **exactly the c-th
+quantile of the margin** — no fit, no assumed family. **A q05 line would have to move 6.5x to churn 5% of
+membership, and 1.7x to churn 1%.** For a two-parameter quantile fit well-powered from its first vintage
+(3,439 events in 2020 alone), a 6.5x displacement is not a plausible refit movement.
+
+**So the pooled-line lookahead is real in principle and negligible in practice, and the reason is
+geometric rather than statistical: the line is not stable, it is irrelevant.** The median survivor sits
+926x above its own threshold and only 1.51% sit within 2x. This is a stronger closure than a vintage
+refit would have given, because it does not rest on one counterfactual fit being representative.
+
+**One-sided.** It counts membership a displacement would LOSE; events it would ADMIT are not on disk.
+
+**What remains open is the other half only:** the live false-positive rate, blocked on **data
+acquisition**, not method. No further method will move it.
+
+
+### Phase 10e escalation row 1a is unsatisfiable as written (2026-08-31, pre-flight)
+
+Row 1a, added the same day when row 1 was split, stops if any frozen input **"differs in content hash
+from its state at `phase-11-approved`"**. **That comparison cannot be made.** Three of the five frozen
+inputs are parquet artifacts, **gitignored** under the standing regenerable-artifact rule, so git holds
+no record of their content at the tag — and no digest records artifact content hashes either
+(`phase_8`, `phase_9` and `phase_11` digests carry `config_hash` and artifact **paths** only).
+
+**It would have fired at T0d**, satisfiability check (ii) — threshold not reachable in either direction —
+*after* the branch, prompt and config commits were already made. Caught in pre-flight instead.
+
+**Substitute evidence for the tag period, strong but circumstantial:** zero commits since
+`phase-11-approved` touched `research/phase_{8,9,10}/`, `config/phase_{8,9,10}.json` or `src/`, and all
+three artifact mtimes predate the tag by 15–17 days. Provenance, not a hash, and recorded as such.
+
+**A forward baseline now exists:** `results/phase_10e/artifacts/frozen_baseline.json` — sha256 for
+each of the five, established 2026-08-31. It makes row 1a evaluable **from here on**; it does **not**
+verify the tag-period state, which was never recorded and cannot be reconstructed.
+
+**`event_minute_bars_v2` needs no hash** — row 7 already hard-stops on an exact row-count mismatch
+against 45,925,350, verified at landing.
+
+**The rewording of row 1a is Cooper's**, because it changes an escalation row and the agent does not.
+Recommended: compare against the baseline file, and state in the phase report that the tag-period state
+is attested by provenance rather than by hash. **Unassigned.**
+
+
+### D5's horizon class is contradicted by measurement taken after it (2026-09-02)
+
+**Recorded for a Cooper decision, not taken here.** Next free number is **D25**.
+
+**D5 (2026-08-03) selected "intraday post-trigger, long-only, burst-scale horizons" as the programme
+spine, and demoted the day-scale work to archive under its consequence (b).** Both were decided before
+Phase 11 produced a round-trip cost of **70.98 bp / 2.512 cents** — the binding constraint did not exist
+as a number when the horizon class was chosen.
+
+**It now does, and the measurement runs against the choice:**
+
+- **Phase 10e Arm 1**, barriers, 1-60 minutes: `p_clear` reaches break-even at none of 90 cells, and under
+  a censoring-matched driftless null sits below baseline in 0 of 30 cells.
+- **D24's horizon gradient**: the gap to break-even worsens as the horizon shortens, in 6 of 6 barrier
+  pairs, and at the flattest observed slope reaches zero only at ~9,440 minutes -- 24 full sessions.
+- **The Phase 8 / Phase 9 costed re-read** (`t5_costed_markouts.json`): hold-to-horizon markouts clear one
+  round trip on a majority of events in **0 of 29 cells**; the median markout is negative at every latency
+  and horizon and becomes more negative with horizon, reaching **-886 bp at T+3**. **The day-scale
+  alternative D5 demoted is the worse end, not a refuge.**
+
+**So this is not an argument for reversing D5 toward the day scale** -- that end was measured here and is
+worse. It is a record that **the horizon class was chosen without the cost stack, and every horizon now
+measured against that cost fails**, which is the kind of decision the programme's own discipline says
+should be revisited on the record rather than inherited silently by every future phase.
+
+**What a D25 would have to weigh, stated neutrally:** every number above is **unconditional**. Arm 1's own
+stratifiers moved `p_clear` by +8.5 and +7.8 points with no detector at all, against a required +23.8. The
+open question is not which horizon to hold but whether conditioning can close a gap that unconditional
+entry cannot -- and that is the question D24 declined to spend a tick pass on, on evidence, with reopening
+reserved to a numbered decision.
+
+**Cooper decision, unassigned.**
+
+
+### After D25 — three items, and two of them are not research (2026-09-02)
+
+**D25 closed the long thesis at both ends, measured.** The adverse tail from the short side is now on
+record (`results/phase_10e/artifacts/t6_adverse_tail.json`, REPORT.md section 19) and **no decision is
+taken on it.** Three items follow, and the ordering matters because two of them can close the question
+without any further measurement.
+
+- **LOCATE AVAILABILITY -- a capability question, not a research one. Unassigned, and it may be the
+  shortest path to an answer the programme has.** On a micro-cap that has just spiked, shares to borrow
+  are often simply absent. This is the same shape as the universe scan being blocked on data acquisition
+  rather than method: **a negative answer makes everything downstream moot**, and it is answered outside
+  the repo. It should be settled before further research spend, not after.
+
+- **PHASE 12 MOVES FROM PARKED TO LOAD-BEARING.** Halt risk was optional under a long thesis. Under any
+  thesis whose adverse direction is the unbounded one it is not: the strategy-ending scenario
+  `docs/Mom-DB-Strategy-Research-Program.md` section 4.2 names -- trapped in a halt with an adverse reopen
+  -- is far worse when the adverse direction is unbounded. The phase is specified, drafted and committed;
+  it is blocked only on its `[Cooper]` LULD band table and the two verification questions recorded in
+  `config/phase_12.json`. **Its T5 reopen distribution should be read on the adverse-for-a-short side.**
+
+- **REG SHO 201 IS UNMODELLED.** The short-sale restriction triggers on a 10% decline from the prior
+  close and restricts short sales to upticks. A name that gapped +30% and faded to +15% is still up on the
+  day, so day-1 exposure is probably limited -- but **most of the day-scale adverse mass sits at T+1 and
+  T+3**, where it is live and unpriced. Nothing in this repo models it. **Unassigned.**
+
+**And a caveat about the censored set, CORRECTED below:** risk row 8's delisting/halt handling means
+**a name that halts and delists leaves the sample**. What was first written here -- that this makes the
+measured tail a lower bound -- **is withdrawn as unshown**; see the correction entry at the end of this
+file.
+
+**What the measured tail says, stated once and not repeated as a result:** heavy at every horizon and
+entry position measured, not explained by the cross-session flag (the six worst events carry no A12
+flag), and breaching every plausible stop level at high rates -- **73.6% breach 2x round trip within 30
+minutes of the anchor, 26.6% breach 10x**, worst observed +44,768 bp. Cooper reads it; nothing is
+concluded from it here.
+
+
+### CORRECTION — the delisting-censoring caveat pointed the wrong way and is withdrawn (2026-09-02)
+
+The entry above recorded delisting censoring as making the measured adverse tail **"a lower bound on
+adverse outcomes, not an estimate of them."** **That was asserted rather than shown, and it is withdrawn.**
+A caveat pointing the wrong way is worse than no caveat, because it gets cited.
+
+**The censored set cuts both ways for a short.** Halt to bankruptcy to delisting at zero is the MAXIMUM
+GAIN for a short; halt to acquisition, gapping to a deal price, is a CATASTROPHIC LOSS -- and on a
+micro-cap that has just spiked 30%+, the spike may BE the deal news. Both sit in the `0001000` set D2
+flagged as disproportionately consistent with halt/delisting outcomes.
+
+**What is measurable, and it is evidence rather than proof** (`t1_cross_session_flags.parquet`, 2,214
+flagged rows of 62,961): post-event extreme cross-session moves are **62.6% UP at t0->t1**, 53.1% at
+t0->t2 and 49.8% at t0->t3 -- starting adverse for a short and decaying to symmetric. The tm1->t0 pair is
+93.8% up but that is the event itself, selection rather than censoring. **The magnitude tails are
+structurally asymmetric:** up median +0.807 log, p95 +2.878, max **+5.201** (a 181x move); down median
+-0.756, p05 -2.022, min **-3.083** (a 95% decline). The up tail runs further because it is unbounded while
+the down tail is floored at -100%.
+
+**RECORDED AS DIRECTION-UNKNOWN.** The observed extremes lean adverse and the adverse tail is structurally
+longer. The censored population is absent by construction and contains both extremes. **The sign of the
+bias is not established**, and any future use of the tail figures carries that sentence rather than the
+withdrawn one.
+
+
+### Post-D25 status reversions, and a standing rule (2026-09-02)
+
+**Two items promoted while a short thesis was live are reverted, because the short closed on structure.**
+
+- **LOCATE AVAILABILITY reverts from gating question to precondition on ONE BRANCH.** It was recorded as
+  the cheapest path to a definitive answer when the short was open. The adverse-tail read closed the short
+  on its own terms, so locate now matters only if the late-entry multi-day variant is pursued. Still not
+  research, still answered outside the repo -- but no longer the thing to do first.
+- **PHASE 12 REVERTS FROM LOAD-BEARING TO OPTIONAL.** It was promoted because halt risk is asymmetric
+  against a short. With the short structurally closed that promotion lapses; Phase 12 is a real
+  measurement that **no live thesis currently depends on**. Specified, drafted, committed, blocked on its
+  [Cooper] LULD band table.
+
+**Neither should be spent on before the programme-level decision is taken** -- doing so measures the risk
+of a trade already closed on its own arithmetic.
+
+### STANDING RULE -- restate the conditions when a number moves between contexts
+
+Three errors in one session shared a single shape: **a reference carried forward without re-checking that
+its context still applied.**
+
+| | error |
+|---|---|
+| 1 | an invented module path (`research/scale_space/scale_field.py`) asserted rather than checked |
+| 2 | a config key (`row_10_r1_straddle`) carried forward after the escalation row it belonged to changed shape -- it would have made row 2 permanently unevaluable |
+| 3 | median capture at latency 0 put in a ratio against median adverse excursion at latency 5 |
+
+**It is the same failure as a stale index, at the scale of a single value.** The third is the instructive
+one because it happened to point the *right* way -- matched, the conclusion strengthened -- and **a ratio
+between unmatched conditions is not evidence whichever way it points.**
+
+> **When a number moves between contexts, restate the conditions attached to it, not the number alone.**
+
+Companion to *every list has one home* (which governs lists) and to *cite repo paths, mark unverified*
+(which governs paths). This one governs values.
+
+---
+
+## OPEN — a load-bearing document does not live in the repo (2026-09-04)
+
+**Status:** open. **Owner: Cooper — the agent cannot close it.** **Gate:** reported on every run of
+`tools/verify_cited_paths.py`.
+
+`claude/scale_space_lessons.md` is cited **four times** across `docs/` and `prompts/` as authority for a
+closed item. It is a claude.ai Project doc and **has never existed in this checkout**.
+
+**Why this is structural rather than careless.** The chat layer sees Project docs and the repo through
+the same interface; the executor sees only the repo. A Project doc cited in a spec is therefore
+unresolvable to the only party that has to act on it, and nothing in the writing process surfaces that.
+The same root cause produced five unresolvable citations in one session: an invented module path
+(`research/scale_space/scale_field.py`), this doc three times, and a register entry of the agent's own
+pointing at `results/scope_universe_scan/frozen_input_baseline.json` when the file it had written was
+`results/phase_10e/artifacts/frozen_baseline.json`.
+
+**The class is now gated.** `tools/verify_cited_paths.py` (read-only, exit 1 on drift, added 2026-09-04)
+resolves every root-anchored path cited in `docs/`, `prompts/`, `CLAUDE.md` and `README_HANDOFF.md`
+against the checkout. It found the fifth instance, plus two further live drifts now repaired —
+`results/phase_6/` cited as a current location at `docs/Universe-Decisions.md:409` when the directory was
+renamed to `results/phase_6_rth_only/` under D3, and `docs/decisions_draft_D24_D27.md` in the repo map
+when the file is `docs/decisions_draft_D24_D26.md`.
+
+**Two closures exist and both need Cooper.**
+
+1. **Move the content into `docs/`.** The agent has never seen the document. Writing a file under that
+   name from inference would **manufacture the authority the citation claims** — a worse defect than the
+   missing file, and the exact failure mode of the invented path above.
+2. **Replace each of the four citations with restated content**, attributed to the read it came from.
+   Also needs the content.
+
+**Until then** the path stays in `EXPECTED_ABSENT` in the tool, with its reason recorded in the source as
+*"THIS IS THE OPEN DEFECT this tool exists to surface, not a benign exception."* It is **reported on
+every run rather than suppressed**, so it cannot quietly become permanent — and the tool's staleness
+check fails the gate if the entry stops matching reality.
+
+**What the tool cannot do, stated so it is not over-trusted:** it cannot distinguish a narrative mention
+(*"`results/phase_6/` was renamed"*) from a live citation (*"enumerated in
+`results/phase_6/artifacts/…`"*). Both are unresolvable strings. Dispositioning each is a human
+judgement recorded in the tool's source, and that is its boundary rather than a defect in it.
+
+---
+
+### Sub-burst reality question — CLOSED by D26 (2026-09-10)
+
+Closes the "Five methods have now failed to produce a within-session burst decomposition" item
+above (logged Phase 10 v4, 2026-08-06) and the Phase 10c close-out's explicit refusal to close it
+unilaterally ("that item stays open as recorded, cross-referenced here rather than closed
+unilaterally").
+
+**D26 (`docs/Universe-Decisions.md`) result 4 supplies the causal reason, not just another failed
+attempt.** Sub-millisecond runs are sequence-contiguous, price-monotone, single-venue, and enriched
+7–15× in condition code 14 (`Intermarket Sweep`) — the single-venue legs of intermarket sweeps, one
+aggressive order walking one book while its other legs report as their own runs. **One order, many
+prints.** This closes what `resolution_floor_finding` §2 (`claude/field_credibility_and_value_tests.md`)
+left explicitly open, and explains why eight versions of object definition — v1 (Kleinberg,
+threshold+hysteresis), v2 (intensity profile), v3 (envelope-and-excursion), v4 (interval
+thresholding), Phase 10c's sixth method family, 10d, Diag1, and the scale-field ridge/interval
+detector — never survived a tape review: **there was no object underneath any of them**, which is a
+different finding than a parameter-tuning failure. D13 had already re-anchored Phases 11/13/14/16/17
+away from a burst-relative anchor; D26 supplies the reason the anchor was never findable in the first
+place. Evidence: `docs/Universe-Decisions.md` D26 (results 3, 4, 6); `claude/scale_field_arc_closeout.md`
+§2.
+
+### Entry-signal class — CLOSED by D26 (2026-09-10)
+
+Closes the "Entry-signal class — annotated 2026-08-31, still open" item above. None of its three
+deciding tests need to run.
+
+**D26 settles the question by evidence rather than by decision.** Above 10 ms, both the rate channel
+and the interval channel return the session envelope and nothing else, under a four-control battery
+(negative, positive, null-parameter sweep, blindness); below 10 ms the structure is order
+fragmentation on a cohort already recorded as unable to measure there (see the sub-burst closure
+above). **Nothing in this programme has predicted an onset, and in the timing channel there was no
+onset to predict.** The three deciding tests are moot rather than answered: (1) null-rate matching
+(Phase 10e T5b-i, escalation row 23) is superseded by D26's own four-control battery, which already
+establishes the field fires on envelope, not on a real lead; (2) the fixed-kernel control (Task 3 of
+the scale-space work order, promoted by D23) and (3) price conversion (Phase 10e Arm 2) both
+presupposed a real lead to isolate or convert into basis points, and D26 shows the leading channel
+is the envelope. Price and size channels are untouched and remain open per Rows 18–19.
+
+**The applicability-gate question closes by absorption in the same pass.** `docs/decisions_draft_D24_D26.md`'s
+draft `D26 — s ≥ 2.26/λ as the applicability gate` heading is withdrawn as subsumed (2026-09-10): an
+applicability gate governs *when the field may be used*, and on this cohort the field is no longer
+used at all. `s ≥ 2.26/λ` did not stop being true — the register's D26 carries it forward explicitly,
+as an instrument property (the resolution floor, the empty satisfiable band at `read_factor = 1`)
+rather than an operating gate. 10c open item 4 and 10d §4 close by absorption on the same basis,
+per that file's withdrawal note. Do not append the draft under any number; if a future cohort
+reopens field use, the gate is re-derived then, against that cohort's rates.
+
+### OPEN — the wrong-partition question, contingent on the next two null results (2026-09-10)
+
+**Status: open, unscheduled, and not yet applicable.** Opened for the record per
+`claude/scale_field_arc_closeout.md` §6 item 4 — it is the honest next question to ask, not a
+finding, and only becomes live if two specific results land null.
+
+D24 and D25 closed the long thesis at both ends — 0 of 90 intraday barrier cells clear, 0 of 29
+day-scale hold-to-horizon cells clear, 119 cells total — on the timing/entry-class partition this
+programme has used throughout (`docs/Universe-Decisions.md` D24, D25). `claude/what_would_change_a_decision.md`
+identifies two candidates that could still reopen that arithmetic: **(a)** impact by participation,
+and **(b)** ISO share as a hold-length state variable (D24's cost-scaling argument already closed
+entry timing, so (b) must be specified as a hold-length question, not an entry-timing one). **If
+both (a) and (b) also return null, whether the 119 cells were ever the right partition of the data —
+rather than further evidence the long thesis is dead — is the honest thing left to ask.** Not to be
+run as its own phase: `docs/decisions_draft_D24_D26.md` s4 warns that proposing a filter or partition
+check as its own phase is how this lineage produced eight object definitions: it belongs as a
+covariate check inside whichever of (a) or (b) runs first. Cooper decision on sequencing; (a) is
+recommended first since a null result there converts "costs bind, assumed" into "costs bind,
+measured" without risking a real effect that fails to clear an unmeasured cost floor.
+
+### OPEN — `persistence_octaves` feature-count instability needs fixing as a class (2026-09-10)
+
+**Status: open, unscheduled.** Logged from `claude/scale_field_arc_closeout.md` §5 and
+`docs/amendment_draft_prompt_standard_v1_4.md` §D.
+
+`persistence_octaves` (`log2(max/min)` over a ridge feature's member points,
+`research/scale_field/detector/{ridge,interval}.py`) is computed off the seed ladder rather than the
+polished selection, so it gates the FEATURE COUNT with a value that was never itself polished. On a
+dense, non-isolated tape — the operating regime D26 result 6 establishes for this cohort at every
+scale in 8–512 s — the F channel returns feature counts 6/7/7/6/7 and the G channel 7/6/5/6/5 across
+five seed densities, against a stable 2/2/2/2/2 on the two-feature synthetic tape the committed
+detector tests use (`research/scale_field/detector/test_detector.py:834`,
+`research/scale_field/detector/validate_interval.py:266`; recorded as two `strict=True` xfail tests,
+also documented at `docs/Research-Library-Map.md:1799`). **The seed-independence the committed tests
+assert is a property of the easy synthetic tape, not of the algorithm.** Any future feature-COUNT
+statistic on this field is unsafe until this is fixed; per-feature quantities are unaffected. Row 16
+(Regime labeling + stability) is the most directly exposed — if it runs, it must report the
+seed-stable fraction as a first-class quantity rather than discover instability as a finding.
+`research/scale_field/detector/GOING_LIVE.md:134` names this as an open blocker. Unscheduled;
+belongs to whichever phase fixes the F/G channel packages or runs Row 16.

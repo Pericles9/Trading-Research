@@ -1,0 +1,39 @@
+{
+  "task": "Cooper read section 4, adapted -- is the ARCHIVE's selection variable RTH-scoped? Stage 1, within-session, A12 does not apply.",
+  "what_could_not_be_tested": "The SCREEN's field (Polygon todaysChangePerc) is not stored anywhere in this checkout, so it cannot be tested here. This tests momentum_pct, the archive's own selection variable, against tick data. It answers the archive half of Cooper's question and NOT the live half.",
+  "claim_under_test": "CLAUDE.md asserts momentum_pct 'inherits the vendor's RTH-scoped, adjusted-basis high forever'. Never verified against ticks until now.",
+  "n_sampled": 400,
+  "n_with_tick_highs": 301,
+  "seed": 42,
+  "d4": "every measured quantity is tick-derived from filtered/ prints; momentum_pct is D4's sole exception; the spine's prev_close is NOT read",
+  "stage_1_where_the_session_high_sits": {
+    "counts": {
+      "rth": 205,
+      "post": 48,
+      "premarket": 48
+    },
+    "shares": {
+      "rth": 0.6810631229235881,
+      "post": 0.15946843853820597,
+      "premarket": 0.15946843853820597
+    },
+    "n": 301
+  },
+  "stage_1_session_high_over_rth_high": {
+    "n": 301,
+    "share_gt_1": 0.31893687707641194,
+    "share_gt_1p01": 0.2857142857142857,
+    "share_gt_1p05": 0.2159468438538206,
+    "quantiles": {
+      "q50": 1.0,
+      "q75": 1.0328548029675306,
+      "q90": 1.1267217630853994,
+      "q95": 1.2421276595744681,
+      "q99": 1.5931372549019607
+    },
+    "max": 2.3848238482384825
+  },
+  "events_with_no_rth_prints": 0,
+  "source": "research/scope_universe_scan/basis_test.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/scope_universe_scan/basis_test.py --n 400"
+}

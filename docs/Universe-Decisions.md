@@ -293,6 +293,60 @@ session-pair) — parallel to `flag_possible_row_cap` (Phase 8) and `flag_has_du
 **How to apply:** any phase computing a quantity across a session boundary cites A12, states which
 pairs it spans, and reports the with/without-flag pair. Within-day quantities are unaffected.
 
+
+### D4 Amendment A13 — reading spine numerics to audit the selection function
+
+**Date:** 2026-08-31 · **Gate:** Cooper's ruling on the amendment proposed when the vintage-churn
+test was found to require `event_volume`, which D4 bars. Granted as amended below.
+
+**Why granting this is the conservative option, not the permissive one.** The instinct that a
+spine-numeric exemption loosens D4 has it backwards. **The contamination is already in the universe** —
+`event_volume` was used to build the population every phase since has run on. D4 quarantined the column
+going forward and grandfathered the population it had already shaped. **A13 adds no contamination path;
+it makes an existing one auditable.** Refusing it would make the universe-selection function
+*permanently unauditable*, because the function is defined on the column — you cannot reproduce or check
+a function without reading its inputs. That is worse than what D4 exists to prevent: D4 guards against a
+contaminated *measurement*, and refusal would guarantee a contaminated *population* nobody is allowed to
+look at.
+
+**Decision.** Spine numeric columns may be **read** for the sole purpose of reproducing, auditing, or
+causally re-deriving the **universe-selection function**, whose output is a membership set and never a
+measured market quantity.
+
+**(a) Write boundary — a read/write test, not an intent test.** Intent tests are unenforceable at review
+time. No committed artifact that a downstream phase reads may carry a spine numeric column, **under any
+name, including a transform of one**. The permitted outputs are a **membership boolean**, a **vintage
+label**, and the **fitted coefficients of the selection function itself**. Nothing relating a spine
+numeric to a market outcome. This is checkable against artifact schemas.
+
+**(b) Inherited contamination, stated wherever the population is used.** A point-in-time refit is
+causally valid and **not basis-clean**. It fixes the lookahead and not the adjustment-basis
+inconsistency D4 documents. Any population produced under this amendment carries that sentence.
+
+**(c) Basis sensitivity is measured, not asserted.** Any use under this amendment reports membership
+churn under a basis perturbation at the scale of the observed per-ticker factor discrepancies, alongside
+the churn it was run to measure, **on the same axis**. Where the two are the same order, no conclusion is
+drawn about either without the residual spread reported. This converts a disclosure into a measurement,
+and this programme's record is that disclosures get read past and measurements do not.
+
+**Why (c) is load-bearing, with the arithmetic.** A per-ticker volume factor is a per-ticker **additive
+shift in `log10(event_volume)`**, which moves a point **vertically against the fitted line** — straight
+across the membership boundary. D4's own AMC evidence puts the discrepancy at 10.06 / 5.24 = **1.92×**,
+i.e. **0.283 decades**. Against a plausible residual spread that is 0.19–0.71 standard deviations, so
+**basis churn is plausibly the same order as, or larger than, lookahead churn**. A two-arm test therefore
+cannot separate the thing it was designed to measure, and a bare churn number would be uninterpretable.
+
+**Scope.** This amendment authorises no other use of spine numerics. D4 and A9.2 are otherwise unchanged.
+It consumes no decision number: it is a D4 amendment, continuing A12. **Next free decision number remains
+D24.**
+
+**First use, and it produced a hard stop — see `results/scope_universe_scan/REPORT.md` §14.** The test
+A13 was granted for cannot be run: `momentum_events` carries `min_volume_threshold`, the column the
+filter writes onto its *own output*, and all 23,268 rows sit above the line with no nulls. The table is
+the filter's **survivors only**; the rejected population is on no table in this checkout. A `q=0.05`
+quantile line cannot be refit from the ~95% above it. What A13 *did* make possible is recorded in the
+same section.
+
 ---
 
 ## D5 — Strategy surface and horizon class
@@ -352,7 +406,7 @@ therefore not whether to resume 6b, but what standing its completed output has u
 - **`prompts/phase_6b.md` and `config/phase_6b.json` are left exactly as committed** — the historical
   record of what ran, not a queue entry.
 
-**How to apply:** cite A11 when reusing any `results/phase_6/` or `results/phase_6b/` decay
+**How to apply:** cite A11 when reusing any `results/phase_6_rth_only/` or `results/phase_6b/` decay
 statistic, and state that it is session-anchored and superseded as a budget. Reuse of
 `event_minute_bars_v2` itself needs no citation.
 
@@ -890,5 +944,465 @@ window the usable scale range is **0.67 decades (2.2 octaves) at the 10 s horizo
 live alternative. That comparison (work-order Task 3's control arm) is **not run**, and on
 these results the fixed-kernel arm is the likely winner rather than a control.
 
+**AMENDED BY D23 (2026-08-30).** The precondition below was discharged and **structural
+fact 2 did not survive it** — with a causal kernel the field LEADS by +1.515 kernel widths
+on 19/19 contributing events (paired within event against this run: 3/19 → 19/19, Wilcoxon
+p = 1.9e-05). Fact 1 (saturation) and everything in "what survives" are untouched. Do not
+cite D22's lead result without D23.
+
 **Numbering note.** Recorded as D22; the register in this file is the authority and
 `CLAUDE.md`'s pointer list is updated in the same commit. Next free number: **D23**.
+
+---
+
+## D23 — The causal re-derivation reverses D22's lead result; D22's second structural fact does not survive
+
+**Date:** 2026-08-30 · **Gate:** D22's own standing, undischarged precondition, now
+discharged. · **Supersedes in part:** D22.
+
+**What D22 recorded as the precondition.** "Both booleans use a **centred** kernel and
+read forward by ~`s`. **Relative ordering survives** — both cheat equally — **but no
+absolute timing claim does.** Nothing in this line is tradeable until the construction is
+re-derived on a **one-sided kernel** and the comparison re-run there."
+
+**The parenthesis is false, and that is this decision.** They do not cheat equally.
+
+**Decision.**
+
+1. **D22's structural fact 2 — "it is a *centred* concentration statistic, so it cannot
+   lead" — does not survive the causal re-derivation.** With a causal half-Gaussian the
+   field leads the level detector by a median **+1.515 kernel widths (+1.180 s)** on
+   **19 of 19** contributing events (sign test p = 3.8e−06; 18/18 with the largest
+   contributor dropped), in both segments separately.
+2. **The closure of the field as an onset detector is reopened to the extent of fact 2
+   only.** It is *not* reopened as "the field is a detector". No detector, boolean, or
+   entry/exit signal is authorised on this basis; what is authorised is the fixed-kernel
+   control that now decides it (below).
+3. **D22's structural fact 1 is untouched and stands in full.** `dw/dln s = w·z²`
+   regardless of the support restriction, so `dL/dln s = E_w[z²] − 1 ≥ −1` under the
+   causal kernel too. The statistic still saturates and is still ON 23.4% of the window
+   against LEVEL's 11.9%. Going causal does not repair it, and a test
+   (`test_onesided_is_still_bounded_below_by_minus_one`) exists so this cannot be misread.
+4. **Everything in D22's "what survives" list is untouched** — `s_min`, the half-inactive
+   cohort at a ten-second horizon, the 49.3% two-print composition, the D9 lineage gap.
+5. **The D channel stays dead.** Under the causal kernel as under the centred one, median
+   `D` at `s*` is **−1.284 decades** below the Poisson identity, `D < 0` is ON ~100%, and
+   the two forms emit **3** and **2** onsets across 78 events. D22 §14.3 is undisturbed.
+
+**Why this is the kernel and not the population — the paired control.** The 19 causal
+contributors are a strict subset of the centred 45, so the comparison runs within event:
+centred **3/19** lead (median −0.187 s-units), causal **19/19** (median +1.515); paired
+difference median **+1.906 s-units**, **18/19 positive, Wilcoxon p = 1.9e−05**. The 19 are
+not a special subpopulation — the centred arm's median on them (−0.187) matches its median
+on the other 26 (−0.209), **Mann-Whitney p = 0.954**; had these been events where the field
+leads under any kernel, the centred arm would already show it on them. Dropping the largest
+causal contributor (36% of onsets) leaves causal 18/18 and the paired difference 17/18
+positive. Same frozen cohort and hash, same anchors, same ladder, same debounce, same
+tolerance rule, same 200-draw circular-shift null, same window. One thing changed. Code
+path: `research/scale_field/t1_paired_control.py` → `t1_paired_control.json`.
+
+**The mechanism, which is why D22's assumption failed.** `LEVEL` is a *level* (`λ̂` above a
+trailing q90) and under a centred kernel it sees burst mass arrive from the future, so it
+rises early. `FIELD` is a *centred concentration* statistic that cannot go negative until
+the burst is centred. The centred kernel therefore advances `LEVEL` more than it advances
+`FIELD` — the two do not cheat equally — and removing the forward read from both flips the
+ordering.
+
+**The derived price, and it is not free.** `n_eff = 2√π·s·λ` becomes `√π·s·λ`, exactly
+half, so **`s_min` doubles to `4.514/λ`** and the bottom octave of the usable scale range
+is gone. Median `s*` moved 1.567 s → 2.506 s. Against this the causal kernel gains the top
+of the axis in any live setting: the centred field needs 4 kernel widths of *future*, so it
+is undefined above `W/8` in a window of length `W` and is **not computable until
+`T + 4·s*`** — median **6.27 s**, q75 **12.72 s**, against the ten-second horizon at which
+D22 measured half this cohort inactive. The causal kernel's latency is zero.
+
+**What now decides it — Task 3, promoted.** Under a causal kernel `dL/dln s` is dominated
+by the most recent lags while `λ̂` averages the whole half-kernel, whose centroid sits at
+`s·√(2/π) = 0.80·s` in the past. So the field is a *faster* statistic at the same nominal
+`s`, and **a shorter level kernel might buy the same lead.** The measured lead (+1.52
+kernel widths) is about twice the centroid gap (0.80), so it is not purely that asymmetry
+— but it is the same order, and only a fixed-kernel control separates them. D22 declined
+Task 3 because "with the onset test negative, the fixed-kernel arm is the likely winner
+rather than a control." **The onset test is no longer negative, so that reasoning lapses.**
+Task 3 is hereby the decisive test and is unrun.
+
+**Standing limits carried forward.**
+- Only **19 of 100** cohort events contribute a matched onset; the two booleans are
+  temporally segregated on most events (matched share of LEVEL onsets **20.0%** against a
+  circular-shift null of **65.1%**). The null gives 50.0% field-first so the *sign* is not
+  a product of that selection, but the base is 19 events and must be reported as such
+  wherever this result is cited.
+- **No forward-return claim is made or implied.** The brief's line is unchanged: the
+  moment this line touches forward returns, the full Agent_Prompt_Standard applies again,
+  pre-registered, no exceptions.
+
+**A second forward read was found and fixed in the same run**, and it is recorded because
+it would have survived a careless re-run: `knn_rate()` used `lo = i − k//2`, taking k/2
+prints from *each* side of `t`, so `λ̂` → `s_min(t)` → the scale `s*` the booleans are read
+at depended on prints that had not happened. Swapping only the estimator would have left
+the scale selection cheating while the estimator looked clean.
+
+**Evidence.** `results/scale_field/REPORT.md` §15;
+`results/scale_field/artifacts/t1_lead_time_onesided.{json,parquet}`;
+chart `results/scale_field/charts/cohort/08_onesided_{light,dark}.html`;
+`research/scale_field/test_onesided.py` (13 assertions; full suite 59 passing);
+Allan hard-stop gate re-run after the estimator change — 2,166/2,166 cells, max relative
+difference 0.000e+00.
+
+**Numbering note.** Recorded as D23; the register in this file is the authority and
+`CLAUDE.md`'s pointer list is updated in the same commit. Next free number: **D24**.
+
+---
+
+## D24 — Arm 2 is declined and the timing-detector line closes, on a derived cost argument and an observed gradient
+
+**Date:** 2026-09-02 · **Gate:** Cooper's conditional disposition of 2026-08-31, whose free test was run
+before the decision was taken and resolved against Arm 2. · **Closes:** the 10-series.
+
+**Decision.** **Phase 10e Arm 2 is not run, and the timing-detector line closes.** Not on budget — on a
+cost-scaling argument that is derived rather than asserted, and on a gradient measured inside an artifact
+that already existed.
+
+**What was established first, so this is a close on evidence.** Arm 1 measured, on the archive's RTH
+events, unconditional minute-resolution entry at 1–5 minute latency and 1–60 minute holds against a
+70.98 bp round trip: `p_clear` reaches break-even at **none of 90 cells**, closest gap **−0.210**, both
+denominators on the same side. Against a driftless null **matched on the censoring**, `p_clear` sits below
+the baseline in **0 of 30 cells** — so the finding is not "the path does not pay" but **"there is no drift
+here to pay with."**
+
+**The argument that nearly saved Arm 2, and why it reversed.** Arm 1's finest horizon and latency are both
+one minute, while the strategy class holds for seconds and acts in 1–3 seconds; Arm 2's grid is specified
+in seconds. So the minute-scale gate tested a different regime, and that **is** a specification defect of
+the phase, recorded as one. But the consequence was asserted to run in the strategy's favour, and the
+arithmetic says otherwise:
+
+> **Round-trip cost is fixed at 70.98 bp and does not scale with the horizon. Typical price movement
+> scales roughly as √H.** So the relative cost drag against the 30-minute named cell is √(30/H): **2.4× at
+> 5 minutes, 5.5× at 60 seconds, 7.7× at 30 seconds, 13.4× at 10 seconds.** Shorter horizons are
+> structurally *harder* against a fixed cost. The minute-scale null was **generous** to the second-scale
+> case, not irrelevant to it.
+
+**The free test that settles it.** Arm 1 already spanned horizons of 1, 5, 15, 30 and 60 minutes. Re-cutting
+that committed grid by horizon — latency, segment, denominator and barrier pair all held fixed — measures
+the gradient directly, with no new computation and no data pass. Named cell (k=3, m=2), gap to break-even:
+
+| horizon | 60 min | 30 min | 15 min | 5 min | 1 min |
+|---|---|---|---|---|---|
+| gap to break-even | −0.2255 | −0.2564 | −0.3027 | −0.3890 | **−0.4808** |
+| expiry share | 0.0814 | 0.1440 | 0.2425 | 0.4404 | **0.6716** |
+
+**The gap more than doubles as the horizon shortens from 60 minutes to 1, and the gradient runs the same
+way in 6 of 6 barrier pairs.** Extrapolating toward 10–300 seconds runs against Arm 2, not for it. The
+expiry share rising to 67% at one minute is the same effect from the other side: at short horizons against
+a fixed cost, most cells carry no outcome at all.
+
+**Two corrections to the record about what Arm 2 would have been.**
+
+1. **`s_min` is a rate statistic** — `s_min = 2.26/λ̂` is `λ̂` inverted. Arm 1's `s_min` stratification is
+   therefore **already a coarse, minute-resolution version of the rate-based selection Arm 2 would
+   perform**, and it delivered **+7.8 points against a required +23.8**. A second-scale rate detector would
+   have to be roughly **three times as selective** as the minute-scale one. Finer resolution should help;
+   three-fold is a large ask.
+2. **Arm 2's lookahead is in the rate channel, not in price.** It sees future *arrivals*, not future
+   returns. So it would have bounded **this family of rate-based timing detectors**, not what any strategy
+   could achieve. The ceiling is narrower than the phase prompt claimed, and the record says so.
+
+**What survives, and it is not nothing.**
+
+- **Conditioning moves `p_clear` monotonically in both stratifiers** — **+8.5 points** across path position
+  (0.4268 at 0–14 minutes since the anchor to 0.3417 at 240+) and **+7.8 points** across `s_min` (0.3778 at
+  the fastest-resolving tape to 0.3003 at the slowest), with non-overlapping event-clustered CIs at the
+  extremes in each.
+- **`s_min` relates to forward excursion.** Chart 05's pre-registered failure appearance was a flat line,
+  meaning `s_min` is an estimability gate only. **It is not flat.** This is the first time in this
+  programme that a timing statistic has been connected to price at all; six versions of Phase 10 did not
+  reach it. It does not clear the cost stack, and it is a real relationship.
+- Everything D22 and D23 left standing: the resolution floor `s ≥ 2.26/λ` and its causal form `4.51/λ`,
+  the saturation bound, the half-inactive cohort at a ten-second horizon.
+
+**What is NOT closed by this.** The **conditional** question at the second scale is untested, and this
+decision does not assert it is untestable — it asserts that the evidence available says the extrapolation
+runs the wrong way, and that spending a tick pass on 78 events to find +23.8 points where crude
+stratification found +7.8, in a regime carrying 13× the cost drag, is not supported. **Reopening requires a
+numbered decision**, so that a seventh attempt cannot arrive under a new name.
+
+**What must not happen**, recorded because it is the failure this programme has spent six phases learning
+to avoid: re-running Arm 1 with different barriers to find a cell that clears. Ninety cells is already a
+wide sweep and the closest gap is 21 points.
+
+**Evidence.** `results/phase_10e/REPORT.md` §§5–17; `t4b_horizon_gradient.json` (the free test);
+`t3c_null_baseline.json` (the censoring-matched null); `t4_gate.json`; charts 01–05.
+
+**Numbering note.** Recorded as D24, confirmed free by reading this file — `tools/verify_claude_md_indices.py`
+reports register highest D23, next free D24. `CLAUDE.md`'s pointer list is updated in the same commit.
+**Next free number: D25.**
+
+---
+
+## D25 — The long thesis is closed at both ends, measured
+
+**Date:** 2026-09-02 · **Gate:** Cooper's disposition following Phase 10e Arm 1, D24, and the costed
+re-read of Phase 8 and Phase 9. · **Closes:** the long intraday thesis, and the day-scale alternative D5
+demoted to archive.
+
+**Decision.** **The long thesis is closed. Measured at both ends, not paused at either.**
+
+**Intraday, by barriers.** Phase 10e Arm 1: `p_clear` reaches break-even at **none of 90 cells**, closest
+gap −0.210, both denominators on the same side. Against a driftless null **matched on the censoring**,
+`p_clear` sits below the baseline in **0 of 30 cells** — so the finding is not "the path does not pay" but
+**"there is no drift here to pay with."** D24's horizon gradient adds that the gap worsens as the horizon
+shortens, in 6 of 6 barrier pairs, and at the flattest observed slope reaches zero only at ~9,440 minutes,
+24 full sessions.
+
+**Day-scale, by hold-to-horizon.** The Phase 8 markout grid re-read against Phase 11's 70.98 bp round trip
+— a cost that did not exist as a number when either phase ran — clears on a majority of events in **0 of
+29 cells**. The **median markout is negative at every latency and horizon** and becomes more negative with
+horizon: −46 bp at det+5, −351 at the T=0 close, −642 at T+1, **−886 bp at T+3**. Phase 9's retracement
+attaches the path context: the median event gives back 38% (RTH) to 62% (premarket) of its excursion by
+the close.
+
+**So the day-scale alternative is the worse end, not a refuge.** Both ends are measured and both fail.
+
+**Why the two statistics disagree in direction, and why that is itself the finding.** Arm 1's `p_clear`
+*rises* with horizon while the markout *falls* with horizon. They are different exit rules on the same
+paths: a longer hold gives more opportunity to **touch** a distant profit barrier along the way, while the
+price **at** the horizon keeps decaying. **The upside excursion is real and the terminal value is not.**
+That is `model_selection_session_notes` §8's "the path is the resource", measured rather than asserted for
+the first time — and it is also why it rescues nothing, because at all 90 barrier settings the excursion
+is neither frequent enough nor large enough to clear 71 bp.
+
+**What this does NOT decide.**
+
+- **Anything conditional.** Every number above is unconditional. Arm 1's own stratifiers moved `p_clear`
+  by **+8.5** points (path position) and **+7.8** points (`s_min`) with no detector at all, against a
+  required +23.8. D24 declined to spend a tick pass closing that gap, on evidence, and reserved reopening
+  to a numbered decision.
+- **The sign.** D5's long-only constraint meant direction was never a variable. The same artifacts read
+  with the sign reversed have now had their **adverse tail** measured (`t6_adverse_tail.json`,
+  REPORT.md §19) and that record exists; **no decision is taken on it here**, and three things not in the
+  repo can each close it independently — locate availability, halt risk, and Reg SHO 201.
+
+**Consequence for D5.** D5 selected the intraday horizon class and demoted day-scale work to archive,
+both **before the cost stack existed as a number**. Every horizon now measured against that cost fails.
+This decision does not reverse D5 — reversing it toward the day scale would move toward the worse end —
+but it records that the horizon class was chosen without the binding constraint, and that the constraint
+has now been measured on both sides of it. The open item stands for a future decision.
+
+**Consequence for Phase 12.** Halt risk was parked as optional under a long thesis. Under any thesis whose
+adverse direction is the unbounded one it is **load-bearing rather than optional**, and the phase is
+specified, drafted, and blocked only on its `[Cooper]` LULD band table.
+
+**What must not happen**, recorded because it is the failure this programme has spent six phases learning
+to avoid: re-running Arm 1 with different barriers, or extending the horizon grid, to find a cell that
+clears. Ninety barrier cells and twenty-nine markout cells are already a wide sweep; the closest either
+comes is 21 points and 168 bp respectively.
+
+**Numbering note.** Recorded as D25, confirmed free by reading this file — the verifier reports register
+highest D24, next free D25. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number:
+D26.**
+
+---
+
+## D26 — The within-session timing line is closed
+
+**Date:** 2026-09-09 · **Gate:** both channels null under four controls on the identity-collapsed tape.
+· **Executes:** D21 §6(c). · **Supersedes** D5, D8 and D21 §6(a)/(b) as live options. · **Retracts:** the
+Allan clustering premise; the 30 s crossover; the sub-burst objects as events.
+· **Evidence:** `claude/fragmentation_and_the_closure.md`, `claude/scale_field_instrument_gates.md`,
+`results/scale_field/artifacts/instrument_gates/`.
+
+**Decision.** The within-session timing line is closed. **No further work on burst objects, sub-burst
+decomposition, burst timescales, or rate-shape state descriptors is authorised on this cohort.**
+
+### What was established
+
+1. **The rate channel finds nothing beyond the session envelope.** Under a rate-matched surrogate swept
+   over its own bandwidth 1–300 s, the apparent 30 s crossover scaled as ≈2.6h and was reproduced
+   indistinguishably by a positive control built to contain envelope structure only — `S30` returned
+   89.2 s at `h = 30` against the real tape's 86.9 s.
+
+2. **The interval channel finds nothing above 10 ms.** The cross-channel divergence
+   `D = m + lograte/ln10 + γ/ln10`, which is identically zero under a locally Poisson process at any rate
+   path, crosses zero at a 10 ms collapse tolerance **simultaneously at 1 s, 8 s and 64 s** (gap +0.008,
+   −0.003, −0.005), bracketed below by under-collapse (−0.36 at 1 ms) and above by over-collapse into
+   artificial regularity (+0.17 at 100 ms). **That the crossing is scale-invariant is what makes 10 ms a
+   measured boundary of the reporting process rather than a chosen parameter.**
+
+3. **The sub-millisecond structure is not events.** Sub-ms runs are sequence-contiguous (0.933; 0.987 at
+   τ = 0.1 ms, against **0.000** under a run-structure-preserving permutation), price-monotone (0.868 vs
+   0.450), single-venue, and enriched 7–15× in condition code 14, **`Intermarket Sweep`**. They are the
+   single-venue legs of intermarket sweeps — one aggressive order walking one book while its other legs
+   report as their own runs. **One order, many prints.** The code-14 mapping and the
+   sequence-number result are recorded **here**, in this decision, because that is the only tracked
+   home available: `.gitignore` excludes `/data/` wholly, so `data/filtered/METADATA.md` and
+   `data/Schema.md` are untracked and local-only. They have been mirrored into `METADATA.md` for
+   whoever reads the data tree directly, but **this entry is the copy of record.**
+   *(The observed multi-venue deficit, 0.561 against a permuted 0.856, is partly definitional — runs are
+   defined by sequence contiguity and one venue's fills report together — and is not evidence about
+   routing.)*
+
+4. **Consequently the D9 lineage's sub-burst objects were most likely not events.**
+   `resolution_floor_finding` §2 held that three prints inside 1.75 ms on a 0.30 prints/s tape was
+   astronomically improbable under any stationary null. That is true and irrelevant: it assumed three
+   prints were three events, and one trade occurring has probability ≈ 1. **This closes the question that
+   finding left explicitly open, and it explains why eight versions of object definition never survived a
+   tape review — there was no object.**
+
+5. **The Allan clustering premise is withdrawn.** `A(T)` measures rate variation **or** clustering and was
+   never rate-matched. On the 10 ms collapsed tape every rung is reproduced by an `h = 1 s` surrogate at
+   or **above** the real value (2.28 vs 1.98 at 4 s; 28.06 vs 24.65 at 64 s; 2,198 vs 2,173 at 2,048 s),
+   and `A(15.6 ms)` falls **9.79 → 0.91**. **Strike the premise from every document carrying it** rather
+   than annotating it.
+
+6. **The residual deficit is procedure bias, not a sub-Poisson finding**, and it was checked rather than
+   assumed. Against 60 replicates per rung, a **known-Poisson base tape pushed through the identical
+   procedure** shows a *larger* deficit than the real tape at every rung from 1 s to 32 s (ratio 0.628 at
+   4 s against the real tape's 0.873, 5/5 events below the 2.5th percentile) — the mechanism being that
+   `λ̂_h` estimated from a finite realisation turns its own sampling noise into real rate variation in the
+   surrogate. A second, separate bias holds at and below 31 ms: the 10 ms collapse is a dead time, and
+   re-running with the replicates put through the same collapse moves the band from 1.00 to 0.935–0.963.
+   **No positive characterisation survives; "no clustering term" stands.**
+
+### Scope — what this does not close
+
+**This closes the *timing* channel only.** Every quantity in this arc derives from *when* prints
+occurred. **The price and size channel was never examined**, is not barred by D4 (both are tick-derived),
+and is Phase 11's subject. **This decision is not evidence that these events lack tradeable structure** —
+it is evidence that their structure, if any, is not in the arrival times.
+
+**A by-product that belongs to the open channel.** The ISO flag is now available per print on this cohort
+as a free consequence of the cleanup, and ISO prints are a documented marker of informed trading
+(Chakravarty, Jain, Upson & Wood, *Clean Sweep*, JFQA 2012). Two quantities follow from the run structure
+already characterised with no new tick work: **book-walk depth per aggressive order** (levels crossed,
+from the price-monotone run) and **ISO share of aggressive volume through the event**. Both are
+price/size-channel quantities. Phase 11 wants both and is unblocked.
+
+**Relation to the detector reopening of the same date.** `config/scale_field_detector.json` and
+`research/scale_field/detector/` (commits `fc0ef2e`, `a24fecd`) implement a ridge detector on this field,
+a reopening of D22 taken by Cooper on 2026-09-09. **It does not conflict with this decision and is not
+closed by it:** it runs on **synthetic tapes only**, its two free parameters are deliberately unset and
+required without defaults so a cohort run cannot happen by accident, and it is scoped to the instrument
+lane — a feature table, no forward returns, no tradeability claim. **This decision closes cohort timing
+work; it does not close instrument work on synthetic data.** Should that detector ever be pointed at the
+cohort, this decision is the gate it has to clear.
+
+### What survives and is carried forward
+
+- **Instrument properties**, all derivation-based and independent of any null: the λ̂-weighted zero-sum
+  identity (1e-18 on the exact estimator); the Monte-Carlo sampling-error table for `F`; the blob-width
+  calibration (1.987 on Poisson, 2.828 at σ = s, measured 2.838); and the **empty satisfiable band at
+  `read_factor = 1`** (`n_eff = 8`, `2·sd = 0.785`, `F ≥ −1`, so detection needs `σ < 0.523·s_min` while a
+  width needs `σ ≥ s_min`). Recorded as **instrument properties, not operating choices** — there is no
+  operating point left to choose between.
+- **The condition-code 14 mapping and the identity-collapse rule**, as data-layer facts.
+- **The control standard below.**
+
+### Standing requirement — four controls, not one
+
+Applies to every future claim of the form *"real exceeds null"* in this programme. Four retractions in
+this arc, and **every one came from a control rather than from a review**:
+
+| control | asks |
+|---|---|
+| **Negative** | does the procedure stay quiet on structureless data? |
+| **Positive** | does it fire on known structure at the scale of interest? |
+| **Null-parameter sweep** | is the boundary the data's, or the null's? |
+| **Blindness** | can the procedure still see anything here, or has it gone deaf? |
+
+**The fourth is the one that is normally absent.** A negative and a positive control both return "no
+detection" when the method works *and* when it has been tuned into insensitivity; only a positive planted
+at the edge of detectability separates those. More generally: **a null that does not contain the
+structure you are conditioning on will score that structure as signal.** A control containing too little
+is a false-positive machine, one containing too much is a false-negative machine, and the bandwidth is
+the dial between them — **audit a control for what it contains, not only for what it randomises, and
+sweep the dial rather than picking a value.**
+
+### What would reopen this
+
+A cohort whose print rates support measurement below 10 ms; a different event class; or evidence that the
+timing structure is conditional on a price/size state not measured here. **Absent one of those, this is
+closed rather than abandoned** — which is the distinction the four prior attempts never earned.
+
+### Retraction sweep — everything that cited the withdrawn premises
+
+**Added 2026-09-10.** D26 retracts three things, and this project has no mechanism that links a premise
+back to its citers: the register is append-only and citations run one way. The detector package's
+blocker rationale was found to be resting on the withdrawn Allan premise **by accident, while doing
+something unrelated.** The sweep below is what should have shipped with the decision. The search is a
+grep for the premise's distinctive numbers (`5.99`, `1,245`, `2.4x`, `35x`, `0.557`, `too weak`), so the
+cost is minutes.
+
+**Three labels.** `withdrawn` — the claim goes. `corrected` — the claim needs restating, not deleting.
+`unaffected` — the document cites the premise **and is still right**, because its conclusion has an
+independent derivation. **The third is not a dodge**; without it a future reader cannot tell a sound
+conclusion from an unreviewed one.
+
+| file | what it cites | status |
+|---|---|---|
+| `prompts/scale_field_brief.md` §"The correction that matters most" (L30–36) | *"this tape is nowhere near Poisson … a z-score would be inflated ~2.4× at ms and ~35× at the hour scale. Every threshold would be meaningless."* | **withdrawn.** On the collapsed tape `A(15.6 ms) = 0.91`, so the fine-end inflation is ≈1.0 and the Poisson constant is very nearly right there. The coarse-end departure is real but is the **envelope**, reproduced at or above the real value by an `h = 1` surrogate at every rung. |
+| `prompts/scale_field_brief.md` (L38–41) | *"Get the threshold from a matched null instead"* | **withdrawn.** The matched null is the object commit `1a34975` retracted: the crossover tracks the surrogate's own bandwidth at ≈2.6h, and a structureless positive control reproduced the real tape's crossover to within 0.5 s. |
+| `config/scale_field.json` → `noise_reference.why` (L137) | the same 5.99 / 1,245 / 2.4× / 35× sentence, **inside a committed config** | **withdrawn as a rationale. NOT edited** — outputs are keyed by config hash (CLAUDE.md, Code & repo layout), so amending the `why` field would silently re-key every artifact this config produced. The correction lives here; the config's rationale field is stale and is to be read against this row. |
+| `prompts/phase_10_v3.md` (L73) | *"[the Allan factor] tolerates a slowly-varying underlying rate … Fano … will be inflated by the trend; that inflation is expected and is not itself evidence of clustering"* | **corrected, and this is the root.** v3 was right that trend inflation is not clustering evidence, and right to warn about Fano — but it **exempted Allan**, and that exemption holds only for `T` much smaller than the envelope's variation scale. At `T = 4,096 s` on a 23,400 s session it does not hold at all. The premise was manufactured downstream by reading v3's caveat as applying to Fano alone. |
+| `research/scale_field/detector/GOING_LIVE.md`, blocker 1 | the 2.4× / 35× rationale, as justification for rejecting the Poisson `0.87` | **corrected** — `claude/going_live_blockers_answered.md`. That file reaches the right conclusion (no fixed matched-null reference exists) for the wrong reason. **Not edited: another session's uncommitted work.** |
+| `claude/field_feature_extraction_methods.md` §4.3 | *"take the constant from the matched null rather than the Poisson `0.87`"* | **corrected.** The direction survives; the justification and the destination do not. **Not edited: another session's uncommitted work.** |
+| `prompts/scale_field_brief.md` (L69) and `config/scale_field.json` → `coarse_cap_rule` (L122) | `A = 1,245` cited for the degrees of freedom at the 4,096 s rung | **unaffected.** The argument is that a rung holding ~2 independent windows is unreliable — which is true regardless of *what* `A` measures. The `session_span / 8` cap stands. |
+| the goals brief's traps list (§12), *"do not standardise against the analytic Poisson constant … use the `sd(F)` table"* | the same Allan numbers, as the reason | **unaffected — same conclusion, another route.** The `sd(F)` table is the **estimator's sampling error**, a different object from a clustering reference. The instruction was right and remains right; only its stated reason is withdrawn. |
+| `research/scale_field/scale_field.py` (L23) `SIGMA_POISSON_DECADES` | the constant's definition | **unaffected.** It is the sd of `log10(Exp)` for **any** rate, correctly documented, and makes no claim about this tape. |
+| `results/**` artifacts containing Allan numbers | computed values | **not citers.** Records of runs, correct as records. |
+
+#### The knees are a second citation, and they are resolved by measurement
+
+**Added 2026-09-10, completing the sweep.** D26 struck *"A = 5.99 at 15.6 ms means clustering."* The same
+contaminated curve also produced **v3's knees — 128 s regular hours, 16 s premarket** — which are cited
+independently of the clustering claim, most prominently as a *prediction* in the build brief: *"the scale
+axis should show a change of character near them."*
+
+**The validity ceiling is not a constant of this tape. It is a function of the surrogate bandwidth**, and
+reporting it from one bandwidth would be the failure this decision's own control standard names. Swept,
+on envelope-only tapes with no clustering at any scale (`A(T)` must be 1 wherever the statistic is valid):
+
+| surrogate bandwidth `h` | ceiling: `T` where envelope-only `A` reaches 1.10 | ceiling / `h` |
+|---|---|---|
+| 10 s | 5.5 s | 0.55 |
+| 30 s | 11.0 s | 0.37 |
+| 100 s | 26.6 s | 0.27 |
+| 300 s | 57.7 s | 0.19 |
+
+**So the honest statement is not "the ceiling is 9 s" — it is that `A(T)` is valid only for `T` well below
+the finest scale on which the rate varies, and on this tape the rate varies at every scale.** There is
+therefore **no `T` at which `A(T)` cleanly measures clustering here**, which is the general form of what
+D26 established at a single rung.
+
+**Envelope-only `A` at the two knees, by bandwidth:**
+
+| `h` | `A(16 s)` | `A(128 s)` |
+|---|---|---|
+| 10 s | 2.36 | 44.92 |
+| 30 s | 1.22 | 34.68 |
+| 100 s | 1.00 | 9.50 |
+| 300 s | 0.99 | 1.99 |
+
+| file | what it cites | status |
+|---|---|---|
+| `prompts/phase_10_v3.md` — the knee derivation | knees read off the Allan curve at 128 s (RTH) and 16 s (premarket) | **128 s withdrawn; 16 s corrected.** At 128 s the envelope alone produces `A` = 2.0–44.9 across *every* bandwidth tested, so that rung cannot carry a clustering reading under any assumption about the envelope. At 16 s the envelope contribution is 1.00 if the rate is smooth below ~100 s and 1.22–2.36 if it varies at 30 s or finer — and this tape's envelope curvature scale is 92–111 s, so the 16 s knee is **contaminated but not destroyed**, and is quotable only with the bandwidth assumption stated. |
+| `prompts/scale_field_brief.md` — the knee *prediction* | *"the scale axis should show a change of character near them"* | **withdrawn as a prediction.** A knee that is the envelope entering the statistic is not a property of the arrival process, so there was never a reason for the scale axis to show one. |
+
+**This retires an open loose end rather than leaving it.** Gate F found no change of character at either
+knee (`width/s` flat at ≈1.85 through both). That was first flagged as *"Gate F contradicts v3"*, then
+withdrawn as a framing error, and has sat unexplained since. **The mechanism is now measured:** the coarse
+knee is where envelope curvature enters the Allan statistic, and Gate F measures curvature geometry
+directly — so it correctly sees the envelope as envelope and registers no knee. **Two statistics, no
+contradiction, one scope violation.** Evidence: `allan_validity_ceiling.json`, `allan_ceiling_sweep.json`.
+
+**Also swept and clean:** `docs/Scale-Field-Arc-Index.md`, `claude/scale_field_reading_grammar.md`,
+`docs/Open-Items-Register.md` — no occurrence of the premise (the register's `inflat` hits are duplicate
+prints and quote staleness, unrelated).
+
+**Standing requirement going forward: a decision that retracts anything ships this table in the same
+commit.**
+
+**Numbering note.** Recorded as D26, confirmed free by reading this file — register highest was D25.
+`CLAUDE.md`'s pointer list could **not** be updated in the same commit: that file carries an uncommitted
+edit from another session (the 2026-09-08 git-discipline block), and staging it would capture that work
+in an unrelated commit, which `CLAUDE.md`'s own explicit-path rule forbids. **The index update is
+outstanding and is flagged to Cooper.** **Next free number: D27.**

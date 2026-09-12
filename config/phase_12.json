@@ -1,0 +1,196 @@
+{
+  "phase": "12",
+  "name": "Halts & LULD",
+  "branch": "phase/12",
+  "committed_before_any_run": true,
+  "parallel_with": "phase/10e",
+  "parallel_note": "Independent data path. No shared artifact, no dependency in either direction.",
+  "_note": "Every [Cooper] value is UNFILLED BY DESIGN. Escalation row 2 hard-stops T0c if any remain unfilled in the committed file. The LULD band table is the most important of them.",
+  "_corrections_on_landing": {
+    "_date": "2026-08-30",
+    "_who": "landed from the handoff paste; no threshold filled, no band parameter supplied",
+    "branch_base": "the prompt said 'cut from main'. There is no main branch in this repo; origin/HEAD points to master. Corrected to master in prompts/phase_12.md.",
+    "nothing_else": "No other change. Every [Cooper] slot, including the entire LULD band table, is left exactly as handed over.",
+    "luld_bands": "DRAFTED 2026-08-31 by Cooper from named public sources and marked _STATUS: DRAFT. source_document remains [Cooper] deliberately - the config must cite a document Cooper has verified, not a URL. Two open verification questions are recorded in the block."
+  },
+  "universe": {
+    "analysis_universe": "in_scope = TRUE AND source_file = 'file1'",
+    "decision": "D1",
+    "session": "T=0",
+    "segments_computed": [
+      "premarket",
+      "rth",
+      "post"
+    ],
+    "halt_scope_note": "LULD pauses apply to regular trading hours. Premarket and post are computed and reported but carry no band arithmetic unless Cooper supplies parameters for them."
+  },
+  "luld_bands": {
+    "_STATUS": "DRAFT - drafted by the chat layer from the LULD plan operator site and the Nasdaq LULD FAQ. Cooper MUST verify against the authoritative plan document before this is committed. Escalation row 4 stands: no band parameter may be used that does not cite a key in this block.",
+    "_CRITICAL": "THE ENVIRONMENT IS OFFLINE (D14). There is no way to fetch the LULD plan. The values below were supplied by Cooper 2026-08-31 as a DRAFT from named public sources; they are not authority until source_document is filled with a verified document. The agent does NOT fill these from memory, from the data, or by inference.",
+    "source_document": "[Cooper] - cite the plan document and its effective date",
+    "_draft_sources": [
+      "https://www.luldplan.com/",
+      "https://www.nasdaqtrader.com/content/MarketRegulation/LULD_FAQ.pdf"
+    ],
+    "tier_assignment_rule": "Tier 1 = S&P 500, Russell 1000, and selected ETPs. Tier 2 = all other NMS securities.",
+    "universe_tier_expected": "Tier 2",
+    "universe_tier_note": "This universe is micro-cap and is Tier 2 by exclusion. CONFIRM per event rather than assuming - an event that entered an index would be Tier 1.",
+    "band_table_tier_2": {
+      "brackets": [
+        {
+          "price_min": 3.0,
+          "price_max": null,
+          "band_pct": 10.0,
+          "doubled_in_closing_period": false
+        },
+        {
+          "price_min": 0.75,
+          "price_max": 3.0,
+          "band_pct": 20.0,
+          "doubled_in_closing_period": true
+        },
+        {
+          "price_min": 0.0,
+          "price_max": 0.75,
+          "band_pct": null,
+          "rule": "lesser of $0.15 or 75%",
+          "doubled_in_closing_period": true,
+          "doubled_rule": "lesser of $0.30 or 150%, UPPER BAND ONLY"
+        }
+      ]
+    },
+    "doubling_windows": [
+      {
+        "start_local": "15:35",
+        "end_local": "16:00",
+        "multiplier": 2.0,
+        "applies_to": "Tier 1 securities, and Tier 2 securities priced BELOW $3.00",
+        "does_not_apply_to": "Tier 2 securities priced at or above $3.00"
+      }
+    ],
+    "reference_price_rule": "Arithmetic mean price of eligible reported transactions over the prior 5-minute period. The reference price UPDATES ONLY when the new value moves at least 1% from the current one - it is a stateful calculation with hysteresis, not a rolling mean. Implementing it as a plain 5-minute rolling mean will produce wrong bands.",
+    "limit_state_duration_seconds": 15,
+    "pause_duration_seconds": 300,
+    "pause_extension_seconds": 300,
+    "pause_note": "Five minutes, extendable by a further five. Maximum ten.",
+    "price_bracket_crossing_note": "LOAD-BEARING FOR THIS UNIVERSE. Phase 11 A2-6 puts implied price at ~$2.21 (T-3) rising to ~$4.52 (T=0), so the median event CROSSES $3.00 during the event and its band goes 20% -> 10%. Two effects compound: the percentage band halves, and the security simultaneously loses its closing-period doubling. In dollars the band is near-constant ($0.442 -> $0.452, 1.02x) while price roughly doubles - so the RELATIVE move required to trigger a halt approximately halves as the event runs. Evaluate the band at every moment, never once per event. Report the share of events that cross a bracket, and the share of halts that occur after a crossing.",
+    "crossing_is_a_prediction_not_a_caveat": "If halt risk rises through an event, part of that rise is MECHANICAL - the guardrail tightens in percentage terms exactly as the move accelerates. A P(halt | state) model that does not carry the price bracket as a state variable will attribute a mechanical effect to the tape. T4b must carry it.",
+    "_open_verification_questions": [
+      "Whether the closing-period doubling applies to a Tier 2 security that crossed $3.00 DURING the session, or is set from the previous close.",
+      "Whether the band brackets key off the previous close or the live reference price.",
+      "Both change the arithmetic on exactly the population this universe lives in. Treat as OPEN until the plan document settles them; escalation row 4 applies to any parameter used before then."
+    ]
+  },
+  "route_1_tape_gaps": {
+    "gap_threshold_seconds": "[Cooper]",
+    "gap_threshold_proposal": 60,
+    "gap_threshold_reasoning": "Proposed well below any plausible pause length so the DISTRIBUTION is visible before a threshold is applied. T1b reports the distribution first; the threshold is applied after.",
+    "require_resumption": true,
+    "resumption_note": "A gap with no prints afterwards is a session end or a delisting, not a halt. Carried as its own class."
+  },
+  "route_2_condition_codes": {
+    "fields": [
+      "conditions",
+      "indicators"
+    ],
+    "dictionary_path": "[Cooper] - path to a committed dictionary file, or the string 'NONE'",
+    "dictionary_note": "Phase 11 A2-11 found `indicators` populated on 88.85% of source rows, 99.77% carrying a single code, and NO dictionary on disk - available and uninterpretable. If this resolves to NONE, route 2 produces a census only and identifies nothing. Inferring a code's meaning from its distribution is escalation row 5.",
+    "census_only_if_no_dictionary": true
+  },
+  "route_3_band_arithmetic": {
+    "evaluate_at": "every quote update, or every minute bar if quote-level proves out of budget",
+    "carry": [
+      "tier",
+      "price_bracket",
+      "doubling_window_active",
+      "distance_to_band_edge_bp",
+      "distance_to_band_edge_cents"
+    ],
+    "every_parameter_cites_config_key": true
+  },
+  "stage_b": {
+    "authorised": false,
+    "authorisation_note": "Set true ONLY by Cooper in writing after the T3 gate.",
+    "hazard_windows_minutes": [
+      1,
+      5,
+      15,
+      30
+    ],
+    "state_variables": {
+      "_rule": "Every state variable must be knowable at decision time and lagged by realistic pipeline latency. CLAUDE.md standing constraint. Escalation row 7.",
+      "candidates": [
+        "distance_to_band_edge_bp",
+        "distance_to_band_edge_cents",
+        "price_bracket",
+        "doubling_window_active",
+        "minutes_since_det_anchor",
+        "participation_quintile",
+        "realised_range_since_anchor",
+        "direction_of_last_leg"
+      ],
+      "latency_lag_minutes": "[Cooper]",
+      "latency_lag_proposal": 1,
+      "bracket_rule": "price_bracket and doubling_window_active are REQUIRED, not optional - see luld_bands.crossing_is_a_prediction_not_a_caveat."
+    },
+    "reopen": {
+      "gap_definition": "first print after resumption against last print before the gap",
+      "units": [
+        "bp",
+        "cents"
+      ],
+      "tail_quantiles": [
+        0.01,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        0.9,
+        0.95,
+        0.99
+      ],
+      "long_side_conditional": true,
+      "report_worst_observed_with_event_named": true
+    },
+    "ruin_thresholds": "[Cooper]",
+    "ruin_thresholds_proposal_note": "Expressed as a fraction of account equity, e.g. [0.01, 0.02, 0.05, 0.10]. The T5d table reports, for each, the position size at which the observed p01 adverse reopen produces that loss. It is arithmetic. The agent proposes NO position size - escalation row 15."
+  },
+  "inference": {
+    "min_cell_n": 100,
+    "bootstrap_reps": 2000,
+    "bootstrap_seed": 42,
+    "clustering": [
+      "event",
+      "ticker"
+    ],
+    "ci_level": 0.95
+  },
+  "cooper_thresholds": {
+    "row_10_corroborated_halt_count_min": "[Cooper]",
+    "row_10_proposal": 50,
+    "row_10_scope": "Events with >= 2 routes agreeing on at least one halt. Below this, a reopen distribution cannot be measured and the phase writes the feasibility finding.",
+    "row_11_single_route_only_share_max": "[Cooper]",
+    "row_11_proposal": 0.6,
+    "row_11_scope": "Share of candidate halts identified by exactly one route. Above this, the routes do not corroborate and identification is not established."
+  },
+  "runtime_ceilings": {
+    "runtime_ceiling_seconds": 7200,
+    "on_breach": "hard stop; do not silently reduce the cohort or the grid"
+  },
+  "write_allowlist": [
+    "prompts/",
+    "config/",
+    "research/phase_12/",
+    "results/phase_12/",
+    "results/reports/phase_12_report.md",
+    "docs/Open-Items-Register.md (APPEND-ONLY)",
+    "docs/Research-Library-Map.md (APPEND-ONLY)"
+  ],
+  "reporting": {
+    "n_rule": "Every posted table carries n per row. Every prose claim carries its chart filename.",
+    "description_only": "No recommendations, no position size, no causal language.",
+    "units_rule": "D19 - bp and cents, never one alone",
+    "distribution_rule": "Reopen gap is never reported as a median alone. Full distribution and explicit left tail."
+  }
+}

@@ -1,0 +1,376 @@
+{
+  "task": "Phase 10e T0d -- satisfiability audit over every escalation row, four checks each",
+  "why_this_exists": "Two of 10b's three amendments introduced an unreachable required outcome. This audit is a hard stop (row 3) precisely so that a phase does not run against a criterion it cannot satisfy.",
+  "checks": {
+    "i": "is the quantity computed by some task",
+    "ii": "is its threshold reachable in both directions",
+    "iii": "does any other row make it unreachable",
+    "iv": "is its scope unambiguous"
+  },
+  "n_rows_audited": 32,
+  "n_pass": 29,
+  "n_deferred": 3,
+  "n_fail": 0,
+  "VERDICT": "PASS -- row 3 does not fire. All evaluable rows satisfy all four checks; three are deferred by design -- rows 2a, 5 and 13, all Arm 2, behind the T4 gate.",
+  "cross_row_note_rows_10_and_12": "MUTUALLY EXCLUSIVE, and this is a good property rather than a conflict. If row 12 fires (optimistic below break-even everywhere) then on the named cell pessimistic <= optimistic < break-even, so both bounds sit below and there is no straddle -- row 10 cannot fire. If row 10 fires (pessimistic < break-even < optimistic) then optimistic exceeds break-even on the named cell, so row 12 cannot fire. They partition the failure modes cleanly.",
+  "rows": [
+    {
+      "row": "1",
+      "condition": "phase-11-approved tag absent",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "T0a. Observed: tag exists at 05ccbfc."
+    },
+    {
+      "row": "1a",
+      "condition": "frozen input differs from frozen_baseline.json",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "T0a-i. Observed: all five match. NOTE this row was UNSATISFIABLE as originally written (it compared against a state at phase-11-approved that was never recorded) and was reworded in pre-flight. Had it not been, it would have failed check (ii) here."
+    },
+    {
+      "row": "1a-i",
+      "condition": "baseline verifies forward only; tag period is circumstantial",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": null,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS (not a stop)",
+      "note": "Informational by design."
+    },
+    {
+      "row": "1b",
+      "condition": "master moved AND 1a passes -> record, do not stop",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS (not a stop)",
+      "note": "Observed: 79 commits since the tag. Recorded in decisions_log."
+    },
+    {
+      "row": "2",
+      "condition": "any slot in config.cooper_slots_by_arm.arm1 still [Cooper] at T0c",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "AMENDED 2026-08-31 -- scoped to the arm being run, with the mapping in config so the row cannot drift from it. Observed: all five arm1 slots filled (profit_k=3, stop_m=2, row_10a=0.25, row_11=0.10, row_12=optimistic-bound). NOTE Cooper's amendment listed 'cooper_thresholds.row_10_r1_straddle' in arm1; that key does not exist and was not created -- the straddle test is structural and has no parameter, so a slot that can never be filled would make this row unevaluable. The five real keys are listed instead."
+    },
+    {
+      "row": "2a",
+      "condition": "any slot in config.cooper_slots_by_arm.arm2 still [Cooper] at T5a",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "DEFERRED BY DESIGN",
+      "note": "Explicitly NOT evaluated at T0c. All three arm2 slots are unfilled and that is intended; Arm 2 is gated behind T4 and its slots are not needed to run Arm 1."
+    },
+    {
+      "row": "3",
+      "condition": "T0d fails any check",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "This audit. See verdict."
+    },
+    {
+      "row": "4",
+      "condition": "any pass over filtered_trades/quotes in Arm 1",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "Arm 1 reads event_minute_bars_v2 and the frozen artifacts only."
+    },
+    {
+      "row": "5",
+      "condition": "Arm 2 cohort row count differs from arm2_cohort_expected_n",
+      "i_computed_by_a_task": false,
+      "ii_reachable_both_directions": false,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "DEFERRED",
+      "note": "Not evaluable at T0d: arm2_cohort_expected_n is unfilled. Not reached before T5a, which is behind the T4 gate. Recorded rather than passed."
+    },
+    {
+      "row": "6",
+      "condition": "spine numeric on a computation path, other than momentum_pct as a GROUPING KEY and other than an A13-permitted read",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "AMENDED 2026-08-31 -- both standing carve-outs now named in the row."
+    },
+    {
+      "row": "6a",
+      "condition": "momentum_pct in a numerator, denominator or any computed quantity rather than as a grouping key",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "The important half of the amendment. 'Permitted for stratification' is the kind of clause that erodes; a GROUPING KEY is checkable and an intent is not. Arm 1 uses momentum_pct only as part of event identity (ticker, date, momentum_pct), which is a key, not a measurement."
+    },
+    {
+      "row": "6b",
+      "condition": "any spine numeric written into a committed artifact under any name, other than a membership boolean, vintage label or selection-function coefficient",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "A13(a) made enforceable. The only part of A13 that can actually leak, so it is the part that gets a row."
+    },
+    {
+      "row": "7",
+      "condition": "event_minute_bars_v2 row count != 45,925,350",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "T0a. Observed 45,925,350 -- MATCH."
+    },
+    {
+      "row": "8",
+      "condition": "Arm 1 first-passage number without both R1 bounds",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "row": "9",
+      "condition": "win rate on touched-only entries",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "row": "10",
+      "condition": "optimistic and pessimistic p_clear straddle p_breakeven on the named cell",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "T3d/T4a. Mutually exclusive with row 12 -- see the cross-row note."
+    },
+    {
+      "row": "10a",
+      "condition": "R1 ambiguous share on the named cell > 0.25",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS (reporting trigger, not a stop)",
+      "note": ""
+    },
+    {
+      "row": "11",
+      "condition": "no-fill share (R3) on the named cell > 0.10",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "row": "12",
+      "condition": "optimistic p_clear below p_breakeven at EVERY cell",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "Bound reversed 2026-08-31. Mutually exclusive with row 10."
+    },
+    {
+      "row": "13",
+      "condition": "ceiling: p_clear(oracle) - p_clear(control), best cell, CI lower bound",
+      "i_computed_by_a_task": false,
+      "ii_reachable_both_directions": false,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "DEFERRED",
+      "note": "Not evaluable at T0d: row_13_ceiling is unfilled. Arm 2 only, behind the T4 gate."
+    },
+    {
+      "row": "14",
+      "condition": "cell where one event exceeds max_event_share, presented unflagged",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "row": "15",
+      "condition": "cell with n < min_cell_n presented unhatched",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "row": "16",
+      "condition": "quantity reported in one unit alone (D19)",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "row": "17",
+      "condition": "burst object / duration / timescale / quiet split appears",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "row": "18",
+      "condition": "Arm 2 output described as a detector or operating point",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "row": "19",
+      "condition": "runtime exceeds the arm's ceiling",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "row": "20",
+      "condition": "write outside config.write_allowlist",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "AMENDED 2026-08-31 -- the row now REFERENCES the allowlist instead of restating it. The inline copy was narrower than both the allowlist and the Output Files table, so T8b's required report copy would have fired it. Fourth list in this programme to drift from its source; the generalising rule went into the v1.4 draft."
+    },
+    {
+      "row": "21",
+      "condition": "agent states a recommendation or characterises a result",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": ""
+    },
+    {
+      "row": "22",
+      "condition": "decision appended at a number not confirmed free by reading the file",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "tools/verify_claude_md_indices.py checks this; currently clean at D24."
+    },
+    {
+      "row": "23",
+      "condition": "onset compared across channels before T5b-i null-rate matching",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "Arm 2 only."
+    },
+    {
+      "row": "24",
+      "condition": "causal kernel run against the centred floor 2.26/lambda",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "Arm 2 only. s_min_onesided exists in code with coefficient 4.5135."
+    },
+    {
+      "row": "25",
+      "condition": "Arm 1 and Arm 2 resolve det_anchor to different artifacts",
+      "i_computed_by_a_task": true,
+      "ii_reachable_both_directions": true,
+      "iii_not_blocked_by_another_row": true,
+      "iv_scope_unambiguous": true,
+      "verdict": "PASS",
+      "note": "T1a-i. Both resolve to a102; v2_r14 crosscheck is read, not re-derived."
+    }
+  ],
+  "amendments_applied_2026_08_31": [
+    "row 2 scoped to the arm being run, mapping in config.cooper_slots_by_arm; row 2a added",
+    "row 6 gained the momentum_pct and A13 carve-outs; rows 6a and 6b added, making the grouping-key restriction and the A13(a) write boundary separately checkable",
+    "row 20 now references config.write_allowlist instead of restating it",
+    "T4a now reports a VERDICT in {both_below, straddle, both_above}, because rows 10 and 12 are mutually exclusive but do not partition the outcome space -- two of the four outcomes fire no row at all"
+  ],
+  "t4_verdict_gap_closed": "Rows 10 and 12 being mutually exclusive is correct but insufficient: 'neither fired' collapsed the named cell PAYING and the named cell FAILING WHILE ANOTHER CELL CLEARS -- opposite findings. A gate returning the same summary for its best and second-worst outcome is the Phase 11 row-11 defect again. T4a now states the verdict always, separately from the row-firing table.",
+  "_resolved_failures_kept_for_the_record": [
+    {
+      "row": "2",
+      "problem": "Read literally it fires now -- three [Cooper] slots are unfilled -- which contradicts Cooper's own 2026-08-31 statement that Arm 2's slots are gated behind T4 regardless.",
+      "minimal_fix": "scope row 2 to the arm being run: fires at T0c for any slot ARM 1 needs, and at T5a for any slot ARM 2 needs. Preserves the protection -- nothing runs against an unfilled threshold -- without blocking Arm 1 on Arm 2's parameters.",
+      "whose_call": "Cooper. It changes an escalation row."
+    },
+    {
+      "row": "6",
+      "problem": "Scope omits two standing carve-outs, so read literally the row fires on this phase's own T1c and T3b, which use momentum_pct for stratification as the Constraints section expressly permits.",
+      "minimal_fix": "add 'other than momentum_pct used for stratification (D4's sole exception), and other than a read permitted by D4 Amendment A13'.",
+      "whose_call": "Cooper."
+    },
+    {
+      "row": "20",
+      "problem": "The row's path list is narrower than config.write_allowlist and narrower than the phase's own Output Files table. T8b requires results/reports/phase_10e_report.md, which row 20 forbids -- the phase cannot complete without firing it.",
+      "minimal_fix": "replace the inline list with 'outside config.write_allowlist', so the two cannot drift apart again.",
+      "whose_call": "Cooper."
+    }
+  ],
+  "observed_state_at_T0a": {
+    "branch": "phase/10e",
+    "tag": "phase-11-approved at 05ccbfc",
+    "commits_since_tag": 79,
+    "working_tree": "DIRTY -- docs/Agent_Prompt_Standard.md only, Cooper's uncommitted v1.4 draft plus the section 12 sha256 edit Cooper directed. Not phase work, and 10e's row 1 does not stop on a dirty tree.",
+    "phase_11_digest_status": "FIELD ABSENT",
+    "event_minute_bars_v2": 45925350,
+    "frozen_artifacts": "all five present; row 1a passes against the baseline"
+  },
+  "source": "Phase 10e T0d",
+  "reproduce": "read prompts/phase_10e.md escalation table against config/phase_10e.json"
+}

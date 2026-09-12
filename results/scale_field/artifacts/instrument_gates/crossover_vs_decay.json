@@ -1,0 +1,163 @@
+{
+  "source": "bandwidth_floor.json",
+  "note": "Does the crossover track the event's own timescale, or is it a cohort constant?\n(review 2026-09-09 s4)\n\nTHE PREDICTION. If the crossover is where the read scale starts to resolve the event's\nown rise-and-decay shape -- rather than a microstructure constant -- it should sit at a\nfixed FRACTION of that shape's timescale, and should therefore move from event to event.\nFast-decaying events show it finer, slow ones coarser.\n\n  tracks     -> the mechanism is confirmed and every event gets its own operating scale\n                instead of a cohort-wide number. That is the difference between a value\n                that holds on this cohort and one that transfers.\n  no track   -> the crossover is a property of the tape shared across events, which is\n                the more surprising result and worth its own investigation.\n\nTHE TIMESCALE, computed from the object that already exists rather than imported from\nelsewhere. The surrogate's own curvature scale is\n\n    L(t) = sqrt( | lambda_h / lambda_h'' | )\n\nevaluated on the 30 s intensity -- the same lambda_h the surrogate is drawn from, so it\nis the curvature the ENVELOPE actually has rather than a separate estimate of a\ndifferent thing. It is summarised intensity-weighted, because the envelope's curvature\nwhere there is no tape is not what the read responds to.\n\nTHE CROSSOVER used here is the one measured at each bandwidth in bandwidth_floor.py, so\nthis regression inherits that run's caveat: the crossover LEVEL tracks h and is not a\ntape property. What is being asked here is different and survives it -- whether the\ncrossover VARIES ACROSS EVENTS with their envelope curvature, at fixed h. A slope near\nzero at every h means the crossover is not set by the envelope shape; a consistent\npositive slope means it is.\n",
+  "events": [
+    {
+      "event_id": "ARQQ_2023-02-06_65.20",
+      "prints_rth": 97423,
+      "mean_rate": 4.163376068376069,
+      "envelope_curvature_scale_s": 102.4528045142788,
+      "crossover_by_h": {
+        "1": 2.5985115542666923,
+        "2": 5.54597759217855,
+        "5": 14.721295487066124,
+        "15": 42.51317409055767,
+        "30": 86.92887245582136
+      }
+    },
+    {
+      "event_id": "ASPN_2024-05-02_60.38",
+      "prints_rth": 82586,
+      "mean_rate": 3.5293162393162394,
+      "envelope_curvature_scale_s": 110.74961131932227,
+      "crossover_by_h": {
+        "1": 2.6449550749649853,
+        "2": 5.5105444202845595,
+        "5": 14.819572393557808,
+        "15": 49.56544878372,
+        "30": 94.1444463343508
+      }
+    },
+    {
+      "event_id": "ASST_2024-03-21_68.32",
+      "prints_rth": 23411,
+      "mean_rate": 1.0004700854700854,
+      "envelope_curvature_scale_s": 92.68722203455718,
+      "crossover_by_h": {
+        "1": 2.6070317605925473,
+        "2": 5.869148293227016,
+        "5": 12.945659170708778,
+        "15": 39.98090247707707,
+        "30": 82.18413599124919
+      }
+    },
+    {
+      "event_id": "COSM_2023-09-12_60.61",
+      "prints_rth": 74471,
+      "mean_rate": 3.1825213675213675,
+      "envelope_curvature_scale_s": 92.4368963519367,
+      "crossover_by_h": {
+        "1": 2.5821185313606922,
+        "2": 5.493647366683746,
+        "5": 14.5612873292369,
+        "15": 45.7445078202906,
+        "30": 94.95818456622257
+      }
+    },
+    {
+      "event_id": "JFIN_2020-06-15_60.44",
+      "prints_rth": 63266,
+      "mean_rate": 2.7036752136752136,
+      "envelope_curvature_scale_s": 96.9083787599805,
+      "crossover_by_h": {
+        "1": 2.5275696683740243,
+        "2": 4.869694924691663,
+        "5": 13.05444963721969,
+        "15": 36.15389000994983,
+        "30": 83.56395561279616
+      }
+    }
+  ],
+  "regressions": {
+    "h=1": {
+      "n": 5,
+      "slope": 0.11927886552910263,
+      "intercept": 0.4044583429161978,
+      "se_slope": 0.10484172202782326,
+      "t": 1.1377041813320083,
+      "r": 0.5490091510270488,
+      "r2": 0.30141104791143847
+    },
+    "h=2": {
+      "n": 5,
+      "slope": -0.05126490737043692,
+      "intercept": 1.9306859022285854,
+      "se_slope": 0.5164419350687633,
+      "t": -0.09926557835318135,
+      "r": -0.05721711912387975,
+      "r2": 0.0032737987208366626
+    },
+    "h=5": {
+      "n": 5,
+      "slope": 0.5187677220904248,
+      "intercept": 0.25587564639952354,
+      "se_slope": 0.4161213503037667,
+      "t": 1.2466741293416612,
+      "r": 0.5841805188481994,
+      "r2": 0.34126687860175087
+    },
+    "h=15": {
+      "n": 5,
+      "slope": 0.8477710427983496,
+      "intercept": -0.1435421116851122,
+      "se_slope": 0.7784327374187604,
+      "t": 1.0890742411598864,
+      "r": 0.5322964675209461,
+      "r2": 0.28333952933527606
+    },
+    "h=30": {
+      "n": 5,
+      "slope": 0.32535022168071853,
+      "intercept": 2.985174883271309,
+      "se_slope": 0.469419531927947,
+      "t": 0.6930905076413774,
+      "r": 0.37151552331028875,
+      "r2": 0.13802378406051696
+    },
+    "rate|h=1": {
+      "n": 5,
+      "slope": 6.989078880009006e-05,
+      "intercept": 0.9522670698701894,
+      "se_slope": 0.016975832927058027,
+      "t": 0.0041170756746015166,
+      "r": 0.0023769880339031273,
+      "r2": 5.650072112950433e-06
+    },
+    "rate|h=2": {
+      "n": 5,
+      "slope": -0.04881242756851146,
+      "intercept": 1.7424661582008385,
+      "se_slope": 0.0640842238725893,
+      "t": -0.7616917958709953,
+      "r": -0.4025568183439625,
+      "r2": 0.1620519919952138
+    },
+    "rate|h=5": {
+      "n": 5,
+      "slope": 0.09540720193230065,
+      "intercept": 2.5463422580448816,
+      "se_slope": 0.04219351550884376,
+      "t": 2.26118162427834,
+      "r": 0.7938642645777335,
+      "r2": 0.6302204705735455
+    },
+    "rate|h=15": {
+      "n": 5,
+      "slope": 0.08984018751073496,
+      "intercept": 3.663504590208092,
+      "se_slope": 0.113118738820179,
+      "t": 0.7942113609801718,
+      "r": 0.41680855591847116,
+      "r2": 0.17372937228684304
+    },
+    "rate|h=30": {
+      "n": 5,
+      "slope": 0.07359976995655763,
+      "intercept": 4.408339019230682,
+      "se_slope": 0.053633062943847155,
+      "t": 1.3722835489297946,
+      "r": 0.6210024086710666,
+      "r2": 0.38564399157526985
+    }
+  }
+}

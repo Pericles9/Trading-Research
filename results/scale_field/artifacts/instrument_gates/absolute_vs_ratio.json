@@ -1,0 +1,466 @@
+{
+  "bandwidth_s": 30.0,
+  "note": "Is 40.9x at rf 1 a strong read, or a vanishing denominator? (review 2026-09-09 s3)\n\nTHE CLAIM UNDER TEST, and it was mine to write into the decision tension: \"rf = 1 in\nRTH has the highest envelope contrast of any read -- 40.9x against 9.9x at rf = 4.\"\n\nTHE REVIEW'S OBJECTION, which is a statement about the denominator. A smooth envelope of\ncurvature scale L contributes F ~ (s/L)^2 to the field, so as the read scale goes fine\nthe SURROGATE's field collapses toward zero quadratically. A ratio against a vanishing\nnull inflates without limit and says nothing about the numerator. 40.9x at rf 1 would\nthen be division by nearly nothing and 9.9x at rf 4 division by something real -- not\ncomparable, and the larger number the weaker evidence.\n\nTHE COMPARABLE QUANTITIES ARE ABSOLUTE, and both hold n_eff fixed at 8.01*rf along the\nread path, so nothing about the noise level moves between read factors:\n\n  survivors per unit admissible time        real - surrogate, not real / surrogate\n  excess in sd units   (mean F_real - mean F_surrogate) / sd(n_eff at the read)\n\nBoth are computed on the SAME tapes, the SAME grid and the SAME read as\ngateD_vs_surrogate.py, so the ratio and the absolute statistics are two views of one\nrun rather than two runs.\n\nIf rf = 1 does not lead on the absolute statistics, the decision tension dissolves: rf 1\nis retired for measurability AND it was never the purest detection, it merely had the\nsmallest denominator. If it still leads, the tension is real and belongs in the decision\ntext as written.\n",
+  "events": {
+    "ARQQ_2023-02-06_65.20": {
+      "1": {
+        "survivor_fraction_real": 0.014578630963447489,
+        "mean_F_real": 1.0673675172486876,
+        "survivor_fraction_surrogate": 0.00044023308519884705,
+        "mean_F_surrogate": 0.08412611211520711,
+        "ABS_excess_survivor_fraction": 0.014138397878248641,
+        "RATIO_survivor_fraction": 33.11570950389276,
+        "EXCESS_meanF_in_sd_units": 2.5064137182787802,
+        "sd_at_read": 0.3922901466597055,
+        "defined_seconds": 23394.759610977
+      },
+      "2": {
+        "survivor_fraction_real": 0.06812411308874744,
+        "mean_F_real": 0.5172927479096004,
+        "survivor_fraction_surrogate": 0.0011351337015418582,
+        "mean_F_surrogate": 0.05662795638564783,
+        "ABS_excess_survivor_fraction": 0.06698897938720558,
+        "RATIO_survivor_fraction": 60.014175419348476,
+        "EXCESS_meanF_in_sd_units": 1.9385694224010375,
+        "sd_at_read": 0.2376313100788472,
+        "defined_seconds": 23393.028951686
+      },
+      "3": {
+        "survivor_fraction_real": 0.09886245369490176,
+        "mean_F_real": 0.30527083924240617,
+        "survivor_fraction_surrogate": 0.0037309299771629252,
+        "mean_F_surrogate": 0.04334548562295782,
+        "ABS_excess_survivor_fraction": 0.09513152371773884,
+        "RATIO_survivor_fraction": 26.4980726789407,
+        "EXCESS_meanF_in_sd_units": 1.3959026443988214,
+        "sd_at_read": 0.1876386972045982,
+        "defined_seconds": 23389.82237976
+      },
+      "4": {
+        "survivor_fraction_real": 0.10918433940633006,
+        "mean_F_real": 0.19527616351024402,
+        "survivor_fraction_surrogate": 0.008591246160300011,
+        "mean_F_surrogate": 0.03000071219889579,
+        "ABS_excess_survivor_fraction": 0.10059309324603005,
+        "RATIO_survivor_fraction": 12.708789548001645,
+        "EXCESS_meanF_in_sd_units": 1.037044426174254,
+        "sd_at_read": 0.15937162106069414,
+        "defined_seconds": 23367.265375753
+      }
+    },
+    "ASPN_2024-05-02_60.38": {
+      "1": {
+        "survivor_fraction_real": 0.011465902816103298,
+        "mean_F_real": 1.0602483101037141,
+        "survivor_fraction_surrogate": 2.5005169144543534e-05,
+        "mean_F_surrogate": 0.09341575093606826,
+        "ABS_excess_survivor_fraction": 0.011440897646958754,
+        "RATIO_survivor_fraction": 458.5413019933645,
+        "EXCESS_meanF_in_sd_units": 2.464585377430677,
+        "sd_at_read": 0.3922901466597055,
+        "defined_seconds": 23394.659113216
+      },
+      "2": {
+        "survivor_fraction_real": 0.07042283754743793,
+        "mean_F_real": 0.5166309227711622,
+        "survivor_fraction_surrogate": 0.0014188089639438092,
+        "mean_F_surrogate": 0.05518173711721233,
+        "ABS_excess_survivor_fraction": 0.06900402858349412,
+        "RATIO_survivor_fraction": 49.63517946185387,
+        "EXCESS_meanF_in_sd_units": 1.9418703095178782,
+        "sd_at_read": 0.2376313100788472,
+        "defined_seconds": 23388.199247872
+      },
+      "3": {
+        "survivor_fraction_real": 0.10655141872551027,
+        "mean_F_real": 0.3093634696678048,
+        "survivor_fraction_surrogate": 0.004303758238210432,
+        "mean_F_surrogate": 0.037782701070226625,
+        "ABS_excess_survivor_fraction": 0.10224766048729984,
+        "RATIO_survivor_fraction": 24.75776120031686,
+        "EXCESS_meanF_in_sd_units": 1.4473601269009606,
+        "sd_at_read": 0.1876386972045982,
+        "defined_seconds": 23382.701684736
+      },
+      "4": {
+        "survivor_fraction_real": 0.12227062830848638,
+        "mean_F_real": 0.19335738333430408,
+        "survivor_fraction_surrogate": 0.007987188765449156,
+        "mean_F_surrogate": 0.021105880722307572,
+        "ABS_excess_survivor_fraction": 0.11428343954303723,
+        "RATIO_survivor_fraction": 15.308343385773297,
+        "EXCESS_meanF_in_sd_units": 1.0808166564761068,
+        "sd_at_read": 0.15937162106069414,
+        "defined_seconds": 23374.812730112
+      }
+    },
+    "ASST_2024-03-21_68.32": {
+      "1": {
+        "survivor_fraction_real": 0.008514345911896284,
+        "mean_F_real": 0.8783343658142967,
+        "survivor_fraction_surrogate": 4.013627384728408e-05,
+        "mean_F_surrogate": 0.15723409162626875,
+        "ABS_excess_survivor_fraction": 0.008474209638048999,
+        "RATIO_survivor_fraction": 212.1359333029473,
+        "EXCESS_meanF_in_sd_units": 1.8381809493001382,
+        "sd_at_read": 0.3922901466597055,
+        "defined_seconds": 23388.939768087002
+      },
+      "2": {
+        "survivor_fraction_real": 0.06848334835955874,
+        "mean_F_real": 0.41641649716608115,
+        "survivor_fraction_surrogate": 0.0006016528274180183,
+        "mean_F_surrogate": 0.14670112869982144,
+        "ABS_excess_survivor_fraction": 0.06788169553214073,
+        "RATIO_survivor_fraction": 113.82535781216842,
+        "EXCESS_meanF_in_sd_units": 1.1350161238296708,
+        "sd_at_read": 0.2376313100788472,
+        "defined_seconds": 23382.940478238
+      },
+      "3": {
+        "survivor_fraction_real": 0.09009888206990921,
+        "mean_F_real": 0.2601184756304297,
+        "survivor_fraction_surrogate": 0.003648302456809332,
+        "mean_F_surrogate": 0.14871892468236,
+        "ABS_excess_survivor_fraction": 0.08645057961309988,
+        "RATIO_survivor_fraction": 24.696110899946135,
+        "EXCESS_meanF_in_sd_units": 0.5936917736462509,
+        "sd_at_read": 0.1876386972045982,
+        "defined_seconds": 23378.053726856
+      },
+      "4": {
+        "survivor_fraction_real": 0.10341855390665518,
+        "mean_F_real": 0.16885686490363397,
+        "survivor_fraction_surrogate": 0.010427081853175328,
+        "mean_F_surrogate": 0.13011939909678363,
+        "ABS_excess_survivor_fraction": 0.09299147205347985,
+        "RATIO_survivor_fraction": 9.91826432005628,
+        "EXCESS_meanF_in_sd_units": 0.24306376222462964,
+        "sd_at_read": 0.15937162106069414,
+        "defined_seconds": 23375.555997766
+      }
+    },
+    "COSM_2023-09-12_60.61": {
+      "1": {
+        "survivor_fraction_real": 0.012485032369798811,
+        "mean_F_real": 1.1007808034853173,
+        "survivor_fraction_surrogate": 0.0005121691000677511,
+        "mean_F_surrogate": 0.12850711566041811,
+        "ABS_excess_survivor_fraction": 0.01197286326973106,
+        "RATIO_survivor_fraction": 24.37677784182462,
+        "EXCESS_meanF_in_sd_units": 2.4784555413988105,
+        "sd_at_read": 0.3922901466597055,
+        "defined_seconds": 23397.591694887
+      },
+      "2": {
+        "survivor_fraction_real": 0.06515727311845174,
+        "mean_F_real": 0.5976319557521098,
+        "survivor_fraction_surrogate": 0.0011431346218877742,
+        "mean_F_surrogate": 0.13224207526098,
+        "ABS_excess_survivor_fraction": 0.06401413849656397,
+        "RATIO_survivor_fraction": 56.99877500941308,
+        "EXCESS_meanF_in_sd_units": 1.9584535402203997,
+        "sd_at_read": 0.2376313100788472,
+        "defined_seconds": 23396.120650993
+      },
+      "3": {
+        "survivor_fraction_real": 0.0956442513504272,
+        "mean_F_real": 0.3982361920998999,
+        "survivor_fraction_surrogate": 0.004389497029847768,
+        "mean_F_surrogate": 0.14271209159112352,
+        "ABS_excess_survivor_fraction": 0.09125475432057943,
+        "RATIO_survivor_fraction": 21.7893418539901,
+        "EXCESS_meanF_in_sd_units": 1.361787863140816,
+        "sd_at_read": 0.1876386972045982,
+        "defined_seconds": 23391.778866279
+      },
+      "4": {
+        "survivor_fraction_real": 0.11128084827131869,
+        "mean_F_real": 0.2868365737075686,
+        "survivor_fraction_surrogate": 0.009068480211114737,
+        "mean_F_surrogate": 0.13619514817899006,
+        "ABS_excess_survivor_fraction": 0.10221236806020395,
+        "RATIO_survivor_fraction": 12.271168451680346,
+        "EXCESS_meanF_in_sd_units": 0.9452211411667147,
+        "sd_at_read": 0.15937162106069414,
+        "defined_seconds": 23388.321473236
+      }
+    },
+    "JFIN_2020-06-15_60.44": {
+      "1": {
+        "survivor_fraction_real": 0.009186198032471086,
+        "mean_F_real": 0.9173823558999882,
+        "survivor_fraction_surrogate": 0.00037139778467256795,
+        "mean_F_surrogate": 0.2522952349998253,
+        "ABS_excess_survivor_fraction": 0.008814800247798519,
+        "RATIO_survivor_fraction": 24.73412177342369,
+        "EXCESS_meanF_in_sd_units": 1.6953959373267071,
+        "sd_at_read": 0.3922901466597055,
+        "defined_seconds": 23395.046957874998
+      },
+      "2": {
+        "survivor_fraction_real": 0.050467288843761594,
+        "mean_F_real": 0.4624089304146448,
+        "survivor_fraction_surrogate": 0.0025743026127250167,
+        "mean_F_surrogate": 0.21589643335536157,
+        "ABS_excess_survivor_fraction": 0.04789298623103658,
+        "RATIO_survivor_fraction": 19.60425654478114,
+        "EXCESS_meanF_in_sd_units": 1.0373738080957817,
+        "sd_at_read": 0.2376313100788472,
+        "defined_seconds": 23388.924980896998
+      },
+      "3": {
+        "survivor_fraction_real": 0.07925047528981206,
+        "mean_F_real": 0.25658679424235276,
+        "survivor_fraction_surrogate": 0.005328057590929876,
+        "mean_F_surrogate": 0.1671932689568277,
+        "ABS_excess_survivor_fraction": 0.07392241769888219,
+        "RATIO_survivor_fraction": 14.874177678695272,
+        "EXCESS_meanF_in_sd_units": 0.4764130566737617,
+        "sd_at_read": 0.1876386972045982,
+        "defined_seconds": 23376.498756294
+      },
+      "4": {
+        "survivor_fraction_real": 0.08674248908662098,
+        "mean_F_real": 0.1555957834610411,
+        "survivor_fraction_surrogate": 0.009574650617831368,
+        "mean_F_surrogate": 0.11127274577341675,
+        "ABS_excess_survivor_fraction": 0.0771678384687896,
+        "RATIO_survivor_fraction": 9.059598365404158,
+        "EXCESS_meanF_in_sd_units": 0.27811123079901806,
+        "sd_at_read": 0.15937162106069414,
+        "defined_seconds": 23371.463911262
+      }
+    },
+    "JFU_2021-02-24_55.56": {
+      "1": {
+        "survivor_fraction_real": 0.008391807402249605,
+        "mean_F_real": 0.6812932588796039,
+        "survivor_fraction_surrogate": 0.0002015832721069053,
+        "mean_F_surrogate": 0.09300554355187465,
+        "ABS_excess_survivor_fraction": 0.0081902241301427,
+        "RATIO_survivor_fraction": 41.62948301483662,
+        "EXCESS_meanF_in_sd_units": 1.4996239909080435,
+        "sd_at_read": 0.3922901466597055,
+        "defined_seconds": 23394.493514874
+      },
+      "2": {
+        "survivor_fraction_real": 0.05386607093932273,
+        "mean_F_real": 0.33511506463176244,
+        "survivor_fraction_surrogate": 0.0009510357930511112,
+        "mean_F_surrogate": 0.05858505714150723,
+        "ABS_excess_survivor_fraction": 0.05291503514627162,
+        "RATIO_survivor_fraction": 56.63937291624924,
+        "EXCESS_meanF_in_sd_units": 1.1636934855028205,
+        "sd_at_read": 0.2376313100788472,
+        "defined_seconds": 23387.719064122997
+      },
+      "3": {
+        "survivor_fraction_real": 0.08096414494775964,
+        "mean_F_real": 0.2140388568884596,
+        "survivor_fraction_surrogate": 0.003938555292059931,
+        "mean_F_surrogate": 0.041002030064744344,
+        "ABS_excess_survivor_fraction": 0.07702558965569971,
+        "RATIO_survivor_fraction": 20.5568130809239,
+        "EXCESS_meanF_in_sd_units": 0.9221809221742715,
+        "sd_at_read": 0.1876386972045982,
+        "defined_seconds": 23378.989942972003
+      },
+      "4": {
+        "survivor_fraction_real": 0.09961290853871992,
+        "mean_F_real": 0.14191700901904894,
+        "survivor_fraction_surrogate": 0.00929534972054378,
+        "mean_F_surrogate": 0.02476103199051652,
+        "ABS_excess_survivor_fraction": 0.09031755881817613,
+        "RATIO_survivor_fraction": 10.716423968273517,
+        "EXCESS_meanF_in_sd_units": 0.7351119116992318,
+        "sd_at_read": 0.15937162106069414,
+        "defined_seconds": 23365.130502984
+      }
+    },
+    "POLA_2021-01-22_55.92": {
+      "1": {
+        "survivor_fraction_real": 0.01214955218036671,
+        "mean_F_real": 0.8337945134783544,
+        "survivor_fraction_surrogate": 0.00013116545610358096,
+        "mean_F_surrogate": 0.08658655305202854,
+        "ABS_excess_survivor_fraction": 0.01201838672426313,
+        "RATIO_survivor_fraction": 92.62768217549784,
+        "EXCESS_meanF_in_sd_units": 1.9047329299211178,
+        "sd_at_read": 0.3922901466597055,
+        "defined_seconds": 23395.789818273
+      },
+      "2": {
+        "survivor_fraction_real": 0.05433561146695845,
+        "mean_F_real": 0.41928025745700037,
+        "survivor_fraction_surrogate": 0.0012784289787336031,
+        "mean_F_surrogate": 0.05544132173198283,
+        "ABS_excess_survivor_fraction": 0.053057182488224844,
+        "RATIO_survivor_fraction": 42.50186155885067,
+        "EXCESS_meanF_in_sd_units": 1.5311068882475716,
+        "sd_at_read": 0.2376313100788472,
+        "defined_seconds": 23393.369949061
+      },
+      "3": {
+        "survivor_fraction_real": 0.08783052588100287,
+        "mean_F_real": 0.2546518330551457,
+        "survivor_fraction_surrogate": 0.004238877802547027,
+        "mean_F_surrogate": 0.03861783419881154,
+        "ABS_excess_survivor_fraction": 0.08359164807845584,
+        "RATIO_survivor_fraction": 20.72023067714476,
+        "EXCESS_meanF_in_sd_units": 1.151329667466057,
+        "sd_at_read": 0.1876386972045982,
+        "defined_seconds": 23391.697425489
+      },
+      "4": {
+        "survivor_fraction_real": 0.10702887080738878,
+        "mean_F_real": 0.16548002238567128,
+        "survivor_fraction_surrogate": 0.008705902425400145,
+        "mean_F_surrogate": 0.021708915286107803,
+        "ABS_excess_survivor_fraction": 0.09832296838198863,
+        "RATIO_survivor_fraction": 12.293828437029543,
+        "EXCESS_meanF_in_sd_units": 0.902112346870153,
+        "sd_at_read": 0.15937162106069414,
+        "defined_seconds": 23381.187216863
+      }
+    },
+    "RAIL_2020-11-27_63.18": {
+      "1": {
+        "survivor_fraction_real": 0.022310603734787895,
+        "mean_F_real": 0.9242776654469191,
+        "survivor_fraction_surrogate": 0.0011304354863106024,
+        "mean_F_surrogate": 0.08854384012111267,
+        "ABS_excess_survivor_fraction": 0.021180168248477294,
+        "RATIO_survivor_fraction": 19.736291017900474,
+        "EXCESS_meanF_in_sd_units": 2.130397188004747,
+        "sd_at_read": 0.3922901466597055,
+        "defined_seconds": 12576.150994583
+      },
+      "2": {
+        "survivor_fraction_real": 0.057598929230939025,
+        "mean_F_real": 0.4744087074137564,
+        "survivor_fraction_surrogate": 0.0015992348543079112,
+        "mean_F_surrogate": 0.05907109448875238,
+        "ABS_excess_survivor_fraction": 0.05599969437663111,
+        "RATIO_survivor_fraction": 36.01655446401941,
+        "EXCESS_meanF_in_sd_units": 1.7478236045039395,
+        "sd_at_read": 0.2376313100788472,
+        "defined_seconds": 12509.964468922
+      },
+      "3": {
+        "survivor_fraction_real": 0.08445292258706995,
+        "mean_F_real": 0.2936540568420793,
+        "survivor_fraction_surrogate": 0.005250748945463986,
+        "mean_F_surrogate": 0.04135104229751867,
+        "ABS_excess_survivor_fraction": 0.07920217364160596,
+        "RATIO_survivor_fraction": 16.083976488730638,
+        "EXCESS_meanF_in_sd_units": 1.3446214363205342,
+        "sd_at_read": 0.1876386972045982,
+        "defined_seconds": 12481.20644486
+      },
+      "4": {
+        "survivor_fraction_real": 0.09963259044712912,
+        "mean_F_real": 0.19150714032103902,
+        "survivor_fraction_surrogate": 0.009106986262662868,
+        "mean_F_surrogate": 0.02406011523312285,
+        "ABS_excess_survivor_fraction": 0.09052560418446626,
+        "RATIO_survivor_fraction": 10.940237261102084,
+        "EXCESS_meanF_in_sd_units": 1.05067027600947,
+        "sd_at_read": 0.15937162106069414,
+        "defined_seconds": 12464.125249919998
+      }
+    },
+    "SGD_2024-10-15_66.08": {
+      "1": {
+        "survivor_fraction_real": 0.014975052779112541,
+        "mean_F_real": 1.2973719935523873,
+        "survivor_fraction_surrogate": 0.0007325738899850827,
+        "mean_F_surrogate": 0.46024225321376766,
+        "ABS_excess_survivor_fraction": 0.014242478889127459,
+        "RATIO_survivor_fraction": 20.441696030713672,
+        "EXCESS_meanF_in_sd_units": 2.1339555618887185,
+        "sd_at_read": 0.3922901466597055,
+        "defined_seconds": 23389.9838035
+      },
+      "2": {
+        "survivor_fraction_real": 0.05524026506490438,
+        "mean_F_real": 0.6406485336733704,
+        "survivor_fraction_surrogate": 0.0020578886191508663,
+        "mean_F_surrogate": 0.3942895338985849,
+        "ABS_excess_survivor_fraction": 0.053182376445753514,
+        "RATIO_survivor_fraction": 26.84317535498973,
+        "EXCESS_meanF_in_sd_units": 1.0367278608742359,
+        "sd_at_read": 0.2376313100788472,
+        "defined_seconds": 23379.451663231
+      },
+      "3": {
+        "survivor_fraction_real": 0.08447293929948395,
+        "mean_F_real": 0.3669006820048886,
+        "survivor_fraction_surrogate": 0.010639863862849396,
+        "mean_F_surrogate": 0.3196348633121061,
+        "ABS_excess_survivor_fraction": 0.07383307543663456,
+        "RATIO_survivor_fraction": 7.939287606341777,
+        "EXCESS_meanF_in_sd_units": 0.25189803274558353,
+        "sd_at_read": 0.1876386972045982,
+        "defined_seconds": 23367.385706087996
+      },
+      "4": {
+        "survivor_fraction_real": 0.10886792545703818,
+        "mean_F_real": 0.2357632425270608,
+        "survivor_fraction_surrogate": 0.022325556209429515,
+        "mean_F_surrogate": 0.24315137478237397,
+        "ABS_excess_survivor_fraction": 0.08654236924760866,
+        "RATIO_survivor_fraction": 4.876381328903074,
+        "EXCESS_meanF_in_sd_units": -0.04635789111098724,
+        "sd_at_read": 0.15937162106069414,
+        "defined_seconds": 23361.605618017005
+      }
+    },
+    "TLRY_2020-03-19_61.13": {
+      "1": {
+        "survivor_fraction_real": 0.008343169797583847,
+        "mean_F_real": 0.8181263021536493,
+        "survivor_fraction_surrogate": 9.596181440301178e-06,
+        "mean_F_surrogate": 0.09669163554786037,
+        "ABS_excess_survivor_fraction": 0.008333573616143546,
+        "RATIO_survivor_fraction": 869.4260159093027,
+        "EXCESS_meanF_in_sd_units": 1.8390333602531237,
+        "sd_at_read": 0.3922901466597055,
+        "defined_seconds": 23394.215900595
+      },
+      "2": {
+        "survivor_fraction_real": 0.059252941289158916,
+        "mean_F_real": 0.37292280839189834,
+        "survivor_fraction_surrogate": 0.0014459083832921303,
+        "mean_F_surrogate": 0.058992305938134156,
+        "ABS_excess_survivor_fraction": 0.057807032905866786,
+        "RATIO_survivor_fraction": 40.97973424446734,
+        "EXCESS_meanF_in_sd_units": 1.3210822359629317,
+        "sd_at_read": 0.2376313100788472,
+        "defined_seconds": 23354.112431026002
+      },
+      "3": {
+        "survivor_fraction_real": 0.08836433178576249,
+        "mean_F_real": 0.22471471787144126,
+        "survivor_fraction_surrogate": 0.004020574236957553,
+        "mean_F_surrogate": 0.04047004666959663,
+        "ABS_excess_survivor_fraction": 0.08434375754880494,
+        "RATIO_survivor_fraction": 21.978037608038175,
+        "EXCESS_meanF_in_sd_units": 0.9819119080801719,
+        "sd_at_read": 0.1876386972045982,
+        "defined_seconds": 23332.610624948997
+      },
+      "4": {
+        "survivor_fraction_real": 0.10825084228864562,
+        "mean_F_real": 0.1416002140518607,
+        "survivor_fraction_surrogate": 0.009491109698654441,
+        "mean_F_surrogate": 0.02196401756415694,
+        "ABS_excess_survivor_fraction": 0.09875973258999118,
+        "RATIO_survivor_fraction": 11.405499011774397,
+        "EXCESS_meanF_in_sd_units": 0.7506744029549792,
+        "sd_at_read": 0.15937162106069414,
+        "defined_seconds": 23320.451147647
+      }
+    }
+  }
+}

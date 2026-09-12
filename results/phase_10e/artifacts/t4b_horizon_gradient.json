@@ -1,0 +1,378 @@
+{
+  "task": "Phase 10e T4b -- the horizon gradient, free, decides whether Arm 2 is worth a pass",
+  "held_fixed": {
+    "latency_minutes": 5,
+    "det_segment": "rth",
+    "denominator": "print_weighted",
+    "note": "only the horizon moves"
+  },
+  "derived_cost_scaling": {
+    "premise": "round-trip cost is FIXED at 70.98 bp; typical move scales as sqrt(H); so relative cost drag = sqrt(30/H) against the 30-minute named cell",
+    "relative_drag_vs_30min": {
+      "30": 1.0,
+      "5": 2.449489742783178,
+      "1": 5.477225575051661,
+      "60s": 5.477225575051661,
+      "30s": 7.745966692414834,
+      "10s": 13.416407864998739
+    },
+    "reading": "a 10-second hold faces ~13x the cost drag of the 30-minute hold that failed -- shorter horizons are structurally HARDER against a fixed cost, so the minute-scale null may be GENEROUS to the second-scale case rather than irrelevant to it"
+  },
+  "gradient": [
+    {
+      "profit_k": 1.5,
+      "stop_m": 1,
+      "horizon_minutes": 1,
+      "p_clear_optimistic": 0.2588337088115023,
+      "expiry_share": 0.4071652280368283,
+      "p_breakeven": 0.8,
+      "gap_to_breakeven": -0.5411662911884978,
+      "n": 2607342
+    },
+    {
+      "profit_k": 1.5,
+      "stop_m": 1,
+      "horizon_minutes": 5,
+      "p_clear_optimistic": 0.35329657559307526,
+      "expiry_share": 0.19168064642076107,
+      "p_breakeven": 0.8,
+      "gap_to_breakeven": -0.4467034244069248,
+      "n": 2607342
+    },
+    {
+      "profit_k": 1.5,
+      "stop_m": 1,
+      "horizon_minutes": 15,
+      "p_clear_optimistic": 0.40744597371576113,
+      "expiry_share": 0.0751109750849716,
+      "p_breakeven": 0.8,
+      "gap_to_breakeven": -0.3925540262842389,
+      "n": 2607342
+    },
+    {
+      "profit_k": 1.5,
+      "stop_m": 1,
+      "horizon_minutes": 30,
+      "p_clear_optimistic": 0.42647761590155797,
+      "expiry_share": 0.036150608550777,
+      "p_breakeven": 0.8,
+      "gap_to_breakeven": -0.3735223840984421,
+      "n": 2607342
+    },
+    {
+      "profit_k": 1.5,
+      "stop_m": 1,
+      "horizon_minutes": 60,
+      "p_clear_optimistic": 0.43517421189855415,
+      "expiry_share": 0.018509654659802973,
+      "p_breakeven": 0.8,
+      "gap_to_breakeven": -0.3648257881014459,
+      "n": 2607342
+    },
+    {
+      "profit_k": 1.5,
+      "stop_m": 2,
+      "horizon_minutes": 1,
+      "p_clear_optimistic": 0.2730420481854701,
+      "expiry_share": 0.546337611253146,
+      "p_breakeven": 0.8571428571428571,
+      "gap_to_breakeven": -0.5841008089573869,
+      "n": 2607342
+    },
+    {
+      "profit_k": 1.5,
+      "stop_m": 2,
+      "horizon_minutes": 5,
+      "p_clear_optimistic": 0.4022168936794636,
+      "expiry_share": 0.3076577602784752,
+      "p_breakeven": 0.8571428571428571,
+      "gap_to_breakeven": -0.4549259634633935,
+      "n": 2607342
+    },
+    {
+      "profit_k": 1.5,
+      "stop_m": 2,
+      "horizon_minutes": 15,
+      "p_clear_optimistic": 0.4899468500871769,
+      "expiry_share": 0.14284087012750915,
+      "p_breakeven": 0.8571428571428571,
+      "gap_to_breakeven": -0.3671960070556802,
+      "n": 2607342
+    },
+    {
+      "profit_k": 1.5,
+      "stop_m": 2,
+      "horizon_minutes": 30,
+      "p_clear_optimistic": 0.5259145137078297,
+      "expiry_share": 0.07556546091767018,
+      "p_breakeven": 0.8571428571428571,
+      "gap_to_breakeven": -0.3312283434350274,
+      "n": 2607342
+    },
+    {
+      "profit_k": 1.5,
+      "stop_m": 2,
+      "horizon_minutes": 60,
+      "p_clear_optimistic": 0.5454217360054799,
+      "expiry_share": 0.03967412023432292,
+      "p_breakeven": 0.8571428571428571,
+      "gap_to_breakeven": -0.31172112113737716,
+      "n": 2607342
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": 1,
+      "horizon_minutes": 1,
+      "p_clear_optimistic": 0.1925075421636287,
+      "expiry_share": 0.4510777642518703,
+      "p_breakeven": 0.6666666666666666,
+      "gap_to_breakeven": -0.47415912450303793,
+      "n": 2607342
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": 1,
+      "horizon_minutes": 5,
+      "p_clear_optimistic": 0.27870797156644583,
+      "expiry_share": 0.2295260844185381,
+      "p_breakeven": 0.6666666666666666,
+      "gap_to_breakeven": -0.3879586951002208,
+      "n": 2607342
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": 1,
+      "horizon_minutes": 15,
+      "p_clear_optimistic": 0.3355969412528161,
+      "expiry_share": 0.09782759607293558,
+      "p_breakeven": 0.6666666666666666,
+      "gap_to_breakeven": -0.33106972541385055,
+      "n": 2607342
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": 1,
+      "horizon_minutes": 30,
+      "p_clear_optimistic": 0.35826101830906726,
+      "expiry_share": 0.04934603899296679,
+      "p_breakeven": 0.6666666666666666,
+      "gap_to_breakeven": -0.30840564835759937,
+      "n": 2607342
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": 1,
+      "horizon_minutes": 60,
+      "p_clear_optimistic": 0.37002894135100034,
+      "expiry_share": 0.025159722046436562,
+      "p_breakeven": 0.6666666666666666,
+      "gap_to_breakeven": -0.2966377253156663,
+      "n": 2607342
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": 2,
+      "horizon_minutes": 1,
+      "p_clear_optimistic": 0.20449062685294067,
+      "expiry_share": 0.6025151284334774,
+      "p_breakeven": 0.75,
+      "gap_to_breakeven": -0.5455093731470593,
+      "n": 2607342
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": 2,
+      "horizon_minutes": 5,
+      "p_clear_optimistic": 0.3223861695166955,
+      "expiry_share": 0.36224016642235657,
+      "p_breakeven": 0.75,
+      "gap_to_breakeven": -0.4276138304833045,
+      "n": 2607342
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": 2,
+      "horizon_minutes": 15,
+      "p_clear_optimistic": 0.4131690434166289,
+      "expiry_share": 0.1804155342874084,
+      "p_breakeven": 0.75,
+      "gap_to_breakeven": -0.3368309565833711,
+      "n": 2607342
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": 2,
+      "horizon_minutes": 30,
+      "p_clear_optimistic": 0.45459590648254045,
+      "expiry_share": 0.09975676378472789,
+      "p_breakeven": 0.75,
+      "gap_to_breakeven": -0.29540409351745955,
+      "n": 2607342
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": 2,
+      "horizon_minutes": 60,
+      "p_clear_optimistic": 0.47915846866272244,
+      "expiry_share": 0.05347514825442922,
+      "p_breakeven": 0.75,
+      "gap_to_breakeven": -0.27084153133727756,
+      "n": 2607342
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": 1,
+      "horizon_minutes": 1,
+      "p_clear_optimistic": 0.11098275561855714,
+      "expiry_share": 0.5059708315978495,
+      "p_breakeven": 0.5,
+      "gap_to_breakeven": -0.38901724438144286,
+      "n": 2607342
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": 1,
+      "horizon_minutes": 5,
+      "p_clear_optimistic": 0.17820523736433502,
+      "expiry_share": 0.28542323945228515,
+      "p_breakeven": 0.5,
+      "gap_to_breakeven": -0.321794762635665,
+      "n": 2607342
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": 1,
+      "horizon_minutes": 15,
+      "p_clear_optimistic": 0.23330809690481724,
+      "expiry_share": 0.13727734988352122,
+      "p_breakeven": 0.5,
+      "gap_to_breakeven": -0.26669190309518276,
+      "n": 2607342
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": 1,
+      "horizon_minutes": 30,
+      "p_clear_optimistic": 0.25962838783711534,
+      "expiry_share": 0.07523677369520378,
+      "p_breakeven": 0.5,
+      "gap_to_breakeven": -0.24037161216288466,
+      "n": 2607342
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": 1,
+      "horizon_minutes": 60,
+      "p_clear_optimistic": 0.2755821829280547,
+      "expiry_share": 0.04012208601710094,
+      "p_breakeven": 0.5,
+      "gap_to_breakeven": -0.2244178170719453,
+      "n": 2607342
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": 2,
+      "horizon_minutes": 1,
+      "p_clear_optimistic": 0.11919495025968975,
+      "expiry_share": 0.6715812501773837,
+      "p_breakeven": 0.6,
+      "gap_to_breakeven": -0.48080504974031024,
+      "n": 2607342
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": 2,
+      "horizon_minutes": 5,
+      "p_clear_optimistic": 0.21103407224675552,
+      "expiry_share": 0.4404297556668822,
+      "p_breakeven": 0.6,
+      "gap_to_breakeven": -0.38896592775324446,
+      "n": 2607342
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": 2,
+      "horizon_minutes": 15,
+      "p_clear_optimistic": 0.29727285488439953,
+      "expiry_share": 0.24248104007836332,
+      "p_breakeven": 0.6,
+      "gap_to_breakeven": -0.30272714511560045,
+      "n": 2607342
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": 2,
+      "horizon_minutes": 30,
+      "p_clear_optimistic": 0.34355600454409124,
+      "expiry_share": 0.1439680716990713,
+      "p_breakeven": 0.6,
+      "gap_to_breakeven": -0.25644399545590874,
+      "n": 2607342
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": 2,
+      "horizon_minutes": 60,
+      "p_clear_optimistic": 0.37446180823229175,
+      "expiry_share": 0.08142967052270089,
+      "p_breakeven": 0.6,
+      "gap_to_breakeven": -0.22553819176770823,
+      "n": 2607342
+    }
+  ],
+  "per_barrier_pair": [
+    {
+      "profit_k": 1.5,
+      "stop_m": "1",
+      "gap_at_H1": -0.5411662911884978,
+      "gap_at_H60": -0.3648257881014459,
+      "gap_slope_per_log_horizon": 0.044430303835840956,
+      "improves_as_horizon_shortens": false
+    },
+    {
+      "profit_k": 1.5,
+      "stop_m": "2",
+      "gap_at_H1": -0.5841008089573869,
+      "gap_at_H60": -0.31172112113737716,
+      "gap_slope_per_log_horizon": 0.06881436320712933,
+      "improves_as_horizon_shortens": false
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": "1",
+      "gap_at_H1": -0.47415912450303793,
+      "gap_at_H60": -0.2966377253156663,
+      "gap_slope_per_log_horizon": 0.044855274018298044,
+      "improves_as_horizon_shortens": false
+    },
+    {
+      "profit_k": 2.0,
+      "stop_m": "2",
+      "gap_at_H1": -0.5455093731470593,
+      "gap_at_H60": -0.27084153133727756,
+      "gap_slope_per_log_horizon": 0.06946600669520649,
+      "improves_as_horizon_shortens": false
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": "1",
+      "gap_at_H1": -0.38901724438144286,
+      "gap_at_H60": -0.2244178170719453,
+      "gap_slope_per_log_horizon": 0.04166326915956689,
+      "improves_as_horizon_shortens": false
+    },
+    {
+      "profit_k": 3.0,
+      "stop_m": "2",
+      "gap_at_H1": -0.48080504974031024,
+      "gap_at_H60": -0.22553819176770823,
+      "gap_slope_per_log_horizon": 0.06450944254532169,
+      "improves_as_horizon_shortens": false
+    }
+  ],
+  "n_pairs_improving_as_horizon_shortens": 0,
+  "n_pairs": 6,
+  "VERDICT": "the gradient runs AGAINST short horizons in 6 of 6 barrier pairs",
+  "source": "research/phase_10e/t4b_horizon_gradient.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/phase_10e/t4b_horizon_gradient.py"
+}

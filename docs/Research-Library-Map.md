@@ -418,6 +418,30 @@ Did not exist anywhere in this checkout as of Phase 0a. Recovered by locating th
 
 ---
 
+## `tools/` (repo-hygiene gates — 2 files)
+
+Both are **read-only** and **exit 1 on drift**, so either can gate a phase start. Neither edits what
+it checks: a tool that silently repaired a reference would hide exactly the drift it exists to
+surface. They exist because this repo has now been bitten three times by a hand-maintained index
+going stale and five times by a cited path that did not resolve — the response in both cases was to
+**make the class checkable rather than patch the instance**.
+
+- `tools/verify_claude_md_indices.py` — Regenerates the enumerated lists in `CLAUDE.md` from the
+  checkout and diffs them against what the file claims. Its first run found **11 listed `D:\`
+  hardcodes against 24 live, 7 of the unlisted ones writing to `D:`**, plus a decision pointer sitting
+  at D14 against a register running to D19. `CLAUDE.md` mandates running it in T0 of every phase.
+- `tools/verify_cited_paths.py` — Resolves every repo path cited in `docs/`, `prompts/`, `CLAUDE.md`
+  and `README_HANDOFF.md` against the checkout (2026-09-04). Scoped to **root-anchored** citations,
+  skipping template placeholders and treating a phase prompt's references to its own
+  `results/phase_{x}/` deliverables as specification rather than citation — without that scoping the
+  first two passes reported 266 and 92 hits, nearly all false. Absences with a legitimate reason are
+  **dispositioned individually with that reason and reported on every run**, never silently swallowed;
+  a **staleness check** fails the gate when a disposition stops matching reality, so the one
+  hand-maintained list in the tool cannot itself go stale. Current state: 643 distinct paths cited,
+  **0 unresolved**, 11 dispositioned, 40 under four subtrees the map itself declares absent.
+
+---
+
 ## `research/` (Obsidian vault — 157 files in scope)
 
 `research/CLAUDE.md` — Vault-level contributor guide explaining the purpose of the `research/` Obsidian vault, its key files, tag conventions, naming conventions, and notes on symlinked docs and off-limits phase-pipeline parquet files.
@@ -1449,3 +1473,506 @@ lineage's timescales and what the tape supports. **Tasks 2–5 not run:** at 2�
 onset test negative, the fixed-kernel arm is the likely winner rather than a control. Decision:
 `docs/Universe-Decisions.md` **D22**; `CLAUDE.md` pointer list updated in the same commit; **next free
 number D23**.
+**REOPENED IN PART 2026-08-30 — D23. The causal re-derivation reverses D22's lead result.**
+D22's own standing precondition (both booleans centred, so both read forward by ~`s`;
+"relative ordering survives — both cheat equally") was discharged by re-deriving the
+estimator on a causal half-Gaussian, `w(u) = exp(−u²/2s²)·1[u ≥ 0]`. **The parenthesis is
+false.** `LEVEL` is a level statistic that a centred kernel advances by seeing future mass;
+`FIELD` is a centred concentration statistic that cannot respond until the burst is
+centred. They do not cheat equally, and removing the forward read from both flips the
+ordering: the field goes from **−0.204** kernel widths (12/45 events leading) to **+1.515**
+(**19/19** events, sign test p = 3.8e−06; 18/18 with the largest contributor dropped),
+median **+1.180 s**, both segments agreeing in sign.
+
+**The paired control is what makes it a finding.** The 19 causal contributors are a strict
+subset of the centred 45, so it runs within event: centred 3/19 lead (−0.187), causal 19/19
+(+1.515), paired difference **+1.906 s-units, 18/19 positive, Wilcoxon p = 1.9e−05**. The
+19 are not a special subpopulation — centred median on them (−0.187) ≈ on the other 26
+(−0.209), Mann-Whitney p = 0.954; dropping the largest causal contributor (36% of onsets)
+leaves causal 18/18 and the paired difference 17/18 positive. Code path
+`t1_paired_control.py` → `t1_paired_control.json`. Same frozen cohort and hash, same anchors, ladder, debounce, tolerance rule,
+200-draw circular-shift null and window; one thing changed.
+
+**What did NOT change, and it is deliberate.** `dw/dln s = w·z²` regardless of the support
+restriction, so `dL/dln s = E_w[z²] − 1 ≥ −1` under the causal kernel too. **D22's
+structural fact 1 — saturation — survives untouched** (still ON 23.4% vs LEVEL's 11.9%),
+and `test_onesided_is_still_bounded_below_by_minus_one` exists so the causal work cannot be
+misread as having repaired it. The Poisson cross-channel identity survives too. The D
+channel fires its kill condition again (median D −1.284 decades, 3 and 2 onsets over 78
+events).
+
+**The derived price.** `n_eff` halves (`2√π·s·λ` → `√π·s·λ`), so **`s_min` doubles to
+`4.514/λ`** and the bottom octave of the usable range is gone; median `s*` 1.567 → 2.506 s.
+Against that, the centred field needs 4 kernel widths of *future*, so in a live window it is
+undefined above `W/8` and **not computable until `T + 4·s*`** — median **6.27 s**, q75
+**12.72 s**, against the ten-second horizon at which half this cohort is inactive. The
+`W/8` ceiling that bounded §11's usable range was never a property of the data.
+
+**Two defects found in the same run, both reported not silently fixed.** (1) `knn_rate()`
+used `lo = i − k//2` — k/2 prints on *each* side of `t` — so `λ̂` → `s_min(t)` → the scale
+`s*` the booleans are read at depended on prints that had not happened; swapping only the
+estimator would have left the scale selection cheating while the estimator looked clean.
+(2) A coordinate bug in the first draft of the causality test (`prep` re-origins to the
+first print, so truncating the raw tape cut 26 ms off-target) — caught by the test failing
+against itself, which is the defect class `test_verification.py` exists for.
+
+**Code** — `scale_field.py` gains `field_onesided()` (explicit FFT convolution, **no
+pyramid**: half-Gaussians do not compose in quadrature and the pyramid's symmetric
+pre-decimation low-pass would leak future into past, so the causal path carries strictly
+*fewer* approximations than the centred one it is compared against), `s_min_onesided()`,
+`kernel=` on `field_exact()` and `s_min_for_rate()`. `t1_lead_time.py` takes
+`--kernel centred|onesided` and counts event attrition by reason. New
+`test_onesided.py` (13 assertions); new `plot_onesided.py`.
+
+**Tests** — 59 passing (16 acceptance + 8 verification + 13 causal + adapter,
+pyramid-sensitivity, sign/bound/identity pins). Causality is asserted for **bit equality**
+by *rewriting* the future rather than deleting it, so array lengths match and numpy's
+pairwise summation associates identically; the deletion variant is 4e-15 and the reason is
+recorded rather than absorbed. The closed-form causal rate ramp
+`dL/dln s = k²s² − 2a·e^{−a²}/(√π·erfc(a))`, `a = ks/√2`, matches to < 0.03 across 14
+scales and is *negative* where the centred form is positive.
+
+**Allan hard-stop gate re-run after the estimator change: 2,166/2,166 cells, max relative
+difference 0.000e+00.** The only diff in `reconcile_allan.json` is the config-hash key.
+
+**What this does not settle.** Saturation stands. Only **19 of 100** cohort events
+contribute a matched onset, and the two booleans are temporally segregated on most (matched
+share of LEVEL onsets 20.0% against a 65.1% null; the null gives 50.0% field-first so the
+*sign* is not a selection artifact, but the base is 19 events). And under a causal kernel
+`dL/dln s` weights recent lags while `λ̂` averages the half-kernel, centroid `0.80·s` — so
+**a shorter level kernel might buy the same lead**. The measured +1.52 is about twice the
+0.80 centroid gap, so it is not purely that, but only a fixed-kernel control separates them.
+**Task 3 is therefore promoted from declined formality to the decisive test, and is unrun** —
+D22 declined it because the onset test was negative, and it is no longer negative.
+
+Artifacts `t1_lead_time_onesided.{json,parquet}`; charts
+`charts/cohort/08_onesided_{light,dark}.html`. Decision: `docs/Universe-Decisions.md`
+**D23**, with a forward pointer added to D22 so it is not cited standalone; `CLAUDE.md`
+pointer list updated in the same commit. **Next free number D24.**
+
+
+## Handoff landing — Phase 10e, Phase 12, universe-scan scoping (2026-08-30)
+
+**Not phases yet. Specs only, nothing run.** Seven files landed from a chat-layer handoff paste. Both
+measurement phases are hard-stopped by their own escalation row 2 (`[Cooper]` slots unfilled: 8 in
+`config/phase_10e.json`, 16 in `config/phase_12.json`, including the entire LULD band table). The agent
+fills none of them.
+
+**Files** — `prompts/phase_10e.md` + `config/phase_10e.json` (forward excursion and the detector ceiling;
+two arms, Arm 1 gates Arm 2; 24 escalation rows); `prompts/phase_12.md` + `config/phase_12.json` (halts
+and LULD; Stage A is a feasibility gate; 17 rows); `prompts/universe_scan_scoping.md` (**the only
+unblocked item** — no `[Cooper]` slot, read-only on data, produces a written feasibility assessment and
+no measurement); `docs/operating_plan_s6_replacement.md` (proposed §6 map: 10e inserted, rows 13/15/16
+disposed, nothing renumbered); `docs/decisions_draft_D24_D26.md` (four draft decision texts);
+`README_HANDOFF.md`.
+
+**The numbering collision the handoff predicted, and it happened.** The drafts arrived numbered D23–D26
+on the belief that D22 was the last decision taken. **D23 was already taken the same day** — the causal
+re-derivation. The register was read to confirm (the handoff's own instruction, and Phase 10e escalation
+row 22), and the drafts were renumbered **D24–D27**, with cross-references in `README_HANDOFF.md` and
+`operating_plan_s6_replacement.md` shifted to match. **References to D23 inside `prompts/phase_10e.md`
+and `config/phase_10e.json` were left alone** — those cite the real D23 and are correct. The pointer list
+has now been stale twice: near-collision at D20, real collision at D23.
+
+**Draft D25 cannot be appended as written, and it is flagged in place rather than rewritten.** Its
+justification for closing onset prediction rests partly on `dL/dln s` *"necessarily lagging"* a level
+statistic at −0.21 kernel widths — the centred-kernel number, which **D23 reversed** (+1.515 under a
+one-sided kernel, 19/19 events, paired, Wilcoxon p = 1.9e−05). Saturation and the `D` degeneracy survive
+and still support the conclusion; the stated reason does not. Draft D27's *"derivable and not yet
+applied"* is stale for the same reason and is annotated. Both notes say what the minimum repair is and
+leave the wording to Cooper.
+
+**Two factual corrections made on landing.** `config/phase_10e.json` pointed `scale_field_module` at
+`research/scale_space/scale_field.py` — that path and that directory do not exist, the module is at
+`research/scale_field/scale_field.py`, and Arm 2 T5b would have failed to import. All three prompts said
+"cut from `main`"; there is no `main` branch (`origin/HEAD -> origin/master`), so they read `master`.
+
+**Three flagged and deliberately not changed, because they are Cooper's:** `arm2_max_events = 75`
+against a causal cohort of **78** (fires row 5, which also forbids silently reducing the cohort); the two
+different artifacts both cited as the D7 anchor (`phase_8/a102_detection_anchors.parquet` in this config
+vs. `phase_10/v2_r13_detection.parquet` in the scale-space arc); and Phase 10e escalation **row 1, which
+fires as written** — `phase-11-approved` is at `05ccbfc` and `master` is 70 commits ahead of it.
+
+**Also recorded:** `claude/scale_space_lessons.md`, cited by the handoff as the authority for a
+closed-do-not-reopen item, does not exist in this checkout; the standing record is D22/D23 and
+`results/scale_field/REPORT.md`. And `results/phase_11/digest.json` carries no `status` field, which
+Phase 10e T0a asks for.
+
+**State observed read-only at landing:** `event_minute_bars_v2` = **45,925,350** rows, matching escalation
+row 7 exactly; all five frozen artifacts present; working tree clean.
+
+### Handoff resolutions (2026-08-31)
+
+Cooper returned rulings on all four flagged items and named four defects of drafting, one of them
+systematic. **The systematic one is worth carrying forward:** the chat layer sees Project docs and the
+repo through one interface, the executor sees only the repo, so **any prompt or config drafted for the
+executor must cite repo paths only**; where a Project doc is the source of a fact, the fact is restated
+in the prompt rather than pointed at. That is what produced the `claude/scale_space_lessons.md` citation.
+Alongside it: an invented path presented as fact is a fabrication rather than a defect, and the correct
+behaviour was to mark it `[verify]`.
+
+**Rulings applied.** (1) **The entry-signal draft decision is WITHDRAWN and consumes no number** — D23
+removed two of its three stated reasons, and saturation, the only survivor, speaks to discrimination
+rather than to onset-versus-confirmation. The remaining drafts shift to **D24–D26**
+(`docs/decisions_draft_D24_D26.md`, renumbered a second time); the open item is annotated in
+`docs/Open-Items-Register.md` with the three tests that now decide it (null-rate matching, the
+fixed-kernel control, price conversion of the lead). *"A decision that says still-undecided is not a
+decision and should not consume a number."* (2) **Escalation row 1 amended, not cleared** — split into
+1 / 1a / 1b, where **1a compares the five frozen inputs' content hashes against their state at
+`phase-11-approved`** and 1b records branch movement without stopping; new task T0a-i. An unconditional
+branch check became the integrity test it was a poor proxy for. (3) **`arm2_max_events` retired** in
+favour of `arm2_cohort_artifact` + `arm2_cohort_expected_n`, with row 5 firing on a difference in
+**either** direction — 75 vs 78 was set identity, not a cap. (4) **One detection anchor, `a102`, across
+both arms**, new escalation row 25 and task T1a-i; `results/phase_10/artifacts/v2_r14_phase8_crosscheck.json`
+is read rather than re-derived. (5) **Phase 12's LULD band table drafted** from public sources and marked
+`_STATUS: DRAFT`, with `source_document` deliberately left `[Cooper]` — the config must cite a verified
+document, not a URL, so row 2 still blocks the phase. Two questions recorded open: whether the
+closing-period doubling applies to a Tier 2 security that crossed $3.00 mid-session, and whether the
+brackets key off previous close or the live reference price. `price_bracket` and `doubling_window_active`
+are promoted to **required** T4b state variables, because the median event crosses $3.00 during the event
+and its band goes 20% -> 10% while price roughly doubles — **the relative move needed to halt roughly
+halves as the event runs, mechanically**, and a hazard model without the bracket would attribute that to
+the tape.
+
+**Still blocked:** 8 real `[Cooper]` slots in `config/phase_10e.json`, 7 in `config/phase_12.json`.
+
+
+## Programme close-out (2026-09-02)
+
+**`results/programme_closeout/REPORT.md`**, copy at `results/reports/programme_closeout_report.md`.
+Cross-phase, records no decision. **Written for a reader with no context**, against the test 10b's
+close-out set: could someone who has never seen this repository read only that file and correctly decide
+what to do next?
+
+Carries the thesis as originally stated (quoted, not paraphrased); what closed it on **both** sides -- the
+long by D25 at both ends, the short on the structural identity that the screen selects on demonstrated
+upward explosiveness and the trade bets against it; the two questions never answerable from disk (live
+false-positive rate, RTH-scoped population coverage); **what survives independent of the thesis** --
+`s >= 2.26/lambda` and its causal form, `s_min` relating to forward excursion, the cost stack and its
+horizon-invariance; **seven specification defects in full**, including four of the agent's own; and the
+apparatus as the transferable asset.
+
+**The one variant not excluded** is recorded there: late-entry multi-day short, 173 bp before borrow, with
+**no tail read at that entry point** -- and the tail read is what closed the near-anchor version, so that
+test comes first if it is ever pursued.
+
+---
+
+## Scale-field derivational arc, filed from `scale_field_bundle/` (2026-09-08)
+
+**Not a phase, and it records no decision.** Five documents, eight scripts and two mockups, delivered as
+a loose `scale_field_bundle/` folder at the repo root and distributed the same day. **All of it is
+synthetic or closed-form — no file in it has touched the cohort.** Reading order and the full
+verification record: `docs/Scale-Field-Arc-Index.md`.
+
+**`claude/` enters this map for the first time.** The directory was created on 2026-09-08 by the
+instrument-gates run and was not catalogued. It is where chat-layer documents land — the register's open
+item on `claude/scale_space_lessons.md` asks where such documents live, and this is the answer in
+practice, though the item itself stays open because that document is still not in the checkout.
+
+**`claude/` (6 files)**
+- `claude/scale_field_instrument_gates.md` — the gate battery run against the cohort, 2026-09-08
+  (pre-existing; committed at `67248fa`/`17e7238`, not part of this filing).
+- `claude/scale_field_reading_grammar.md` — the shape dictionary, the noise ruler, and three structural
+  problems with the sign-based burst mark.
+- `claude/scale_field_price_layouts.md` — field-against-price layouts; the order-flow-imbalance field is
+  the one it argues for.
+- `claude/scale_field_itt_overlay.md` — amends the above §1.2: the ITT pane is not redundant with
+  `s_min`; both go on one log-duration axis.
+- `claude/field_feature_extraction_methods.md` — closed-form derivatives, Newton apex/merge solving, the
+  ridge-first pipeline, the duration fit, and a frozen parameter surface.
+- `claude/field_credibility_and_value_tests.md` — credibility and value as separate questions, ordered
+  cheapest-killer-first.
+
+**Filenames were not chosen at filing time.** Each document is cited by path from its siblings and from
+`claude/scale_field_instrument_gates.md`; the citations set the names. That also means the paths now
+resolve under `tools/verify_cited_paths.py` rather than dangling.
+
+**Code** — `research/scale_field/derivations/`, eight self-contained scripts `01_verify_calculus.py`
+through `08_itt_mockup_generator.py` (numpy only, except 07–08 which need scipy and plotly). Run from the
+repo root after filing: **every number quoted in the five documents reproduced**, including the
+seed-independence test failing at `8.6e-2` in `ln s` before the §5.1 fix and passing at `5e-13` after it.
+Three packaging defects were repaired in the move — four scripts sourced siblings under names the
+bundling had renamed away and could not run at all, and the two generators wrote to an authoring-sandbox
+path absent from this checkout.
+
+**Charts** — `results/scale_field/charts/mockups/`: `scale_field_price_mockup.html` and
+`scale_field_itt_overlay.html`, both regenerated in place from the committed generators rather than
+imported. HTML is gitignored under the standing `results/scale_field/charts/*/*.html` rule;
+`results/scale_field/charts/mockups/chart_manifest.json` is tracked and carries every reproduced number.
+
+**Docs** — `docs/Scale-Field-Arc-Index.md`, the delivered bundle README rewritten to point at the real
+destinations.
+
+---
+
+## Scale-field ridge detector — the instrument built from the arc (2026-09-09)
+
+**A reopening, taken by Cooper on 2026-09-09.** D22 closed the scale-space field as a detector.
+This builds the ridge-first detector specified in `claude/field_feature_extraction_methods.md` and
+stays inside the instrument lane: it emits a feature table, touches no forward return, and disturbs
+neither D24 nor D25. **It has not been run on the cohort and cannot be** — see the kappa gate below.
+
+**Config** — `config/scale_field_detector.json`, committed before the code that uses it. Seven of the
+nine parameters are derived rather than chosen; `kappa` and the noise constant are **null**.
+
+**Code** — `research/scale_field/detector/`, a package rather than flat files so it cannot collide
+with concurrent work in `research/scale_field/`:
+- `moments.py` — the machinery. Kernel-weighted moments `M_0..M_6` and closed-form `F, F_t, F_u,
+  F_tt, F_tu, F_uu` at any `(t, ln s)`, `n_eff` computed from the prints with no rate estimate and no
+  bandwidth, `lam_hat`, and `field_fft` — a deliberately independent convolution path kept for the
+  agreement test. **The `z = (t - t_i)/s` convention is declared once here and nowhere else.**
+- `ridge.py` — seed → Newton-polish `t` → edge guard → calibrate → group → describe → **polish the
+  scale**. Plus `apex_newton` for `{F = 0, F_t = 0}` and the two-parameter duration fit.
+- `test_detector.py` — 18 tests, all passing.
+- `validate_synthetic.py` — end-to-end validation through the promoted module.
+
+**Artifact** — `results/scale_field/artifacts/detector/synthetic_validation.json`.
+
+**The kappa gate is open, and it is enforced in code.** `detect()` takes `noise_constant` and `kappa`
+as keyword arguments with no defaults and raises without them. The Poisson constant 0.87 is wrong on
+this tape by roughly `sqrt(A(s))`; the matched null that should replace it is the object commit
+`1a34975` withdrew. Until a null whose bandwidth content is audited exists, this detector runs on
+synthetic tapes only.
+
+**Three of the tests had never been run** and are the three the source flagged as having a
+demonstrated failure rate: the `z`-convention test (a flipped convention leaves `F` untouched and
+negates every odd `t`-derivative, so it is invisible in any rendered field), the forbidden-sign count
+(zero creations going coarse, the causality theorem counted rather than assumed), and
+moment-recursion against convolution. All pass. Measured against a brute-force direct sum that is
+neither implementation, the moment path agrees to `1e-8`–`4e-7` and the convolution path to `~1e-4`,
+shrinking with bin width — correct and discretization-limited.
+
+**One discrepancy against the source is recorded in the artifact rather than smoothed over:** section
+6 claims the duration fit is "within 16% everywhere"; through the promoted module the widest bump
+(`sigma = 90 s`) fits at **−18.9%**. The source's table predates its own section 5.1 scale-polishing
+fix, so mid-range accuracy improves (`sigma = 4 s`, −11% → −1.8%) and the widest degrades. The claim
+should read *within 20% everywhere, within 5% mid-range*.
+
+---
+
+## Scale-field interval channel (G) — the second channel, and what it cost to check (2026-09-09)
+
+**Synthetic only. No cohort data was read.** Extends `research/scale_field/detector/` with the
+interval-channel counterpart of the F-channel detector, per
+`claude/field_feature_extraction_methods.md` §7. Records no decision.
+
+**Why a second channel exists.** The rate channel is structurally blind to clumping at constant
+mean rate: two tapes with identical `lambda-hat(t)`, one Poisson and one violently clustered,
+produce **identical** F fields. The interval distribution is the only place that difference lives.
+
+**Code** — `research/scale_field/detector/interval.py`: `G`, its derivatives from a second weighted
+moment family `N_k`, Gate 0's constant check, the measured noise constant, and a two-sided ridge
+detector (`clumped` and `regular` departures). `validate_interval.py` writes
+`results/scale_field/artifacts/detector/interval_synthetic_validation.json`.
+`GOING_LIVE.md` states the two blockers and the exact call shape the real run needs.
+
+**Gate 0 — G's null is a CONSTANT, not zero.** `-gamma/ln10 = -0.2506816`, measured `-0.250630`
+at 1e7 draws, inside one standard error; the interval sd came back `0.55703` against a predicted
+`0.557004`, independently reproducing the 0.5570-decade constant already on this programme's record.
+
+**The measured noise constant is 0.348, not F's 0.87** — derived envelope `< sqrt(0.5570^2 +
+0.4343^2) = 0.7063`, because the two contributions are negatively correlated. G is the quieter
+statistic per effective print. It is still a Poisson constant and carries the same health warning.
+
+**Two design decisions, both stated rather than defaulted.** (1) A parallel implementation rather
+than a generalised `ridge.py`, because the two differ structurally — two-sided seeding, a
+non-arithmetic baseline, a different noise constant — and threading flags through tested code was
+the worse trade. (2) **No apex/merge Newton solve for G.** For F, `F = 0` is *arithmetic*; the
+corresponding `G - G0 = 0` is *Poisson-referenced*, so its arches and merges would inherit exactly
+the dependence that has already killed two constructions in this arc. Ridge locations are invariant
+to the baseline (`G0` is a constant, so it cancels in `dG/dt`); only magnitudes depend on it. The
+reference-free half is built, the reference-dependent half is not.
+
+**Two results worth the build:**
+- **G sees what F cannot** — on a rate-matched clumping episode, G fires at **29x** F's best
+  calibrated significance. F is not silent; it speckles into several weak marks, which is the ITT
+  mockup's "a rate hump makes a trumpet, clumping makes speckle" confirmed as a test.
+- **The channels are NOT independent.** On a pure rate hump with no clumping in it, **G also fires**,
+  in the clumped direction, at the hump's flanks. The mechanism is exact: prints are laid down with
+  density `lambda`, so the print-weighted mean log-interval is size-biased toward high-rate moments
+  while `lambda-hat` is not, giving `D = log10<lam>_w - <lam log10 lam>_w/<lam>_w = -Var(eps)/(2 ln10)`,
+  **always negative** — any rate gradient reads as clumping. Measured within ~0.005 decades of the
+  closed form. The correction needs a `lambda-hat` bandwidth, which is the dependence that produced
+  the `1a34975` retraction, so it is deliberately not built.
+
+**A defect in the ALREADY-COMMITTED F channel, found by this work.** `persistence_octaves` is
+`log2(max/min)` over member ridge points, which live on the seed ladder — the §5.1 fix polished
+`s_selected` off the grid but left the *extent* on it, and persistence gates the feature count. On a
+dense tape F gives 6/7/7/6/7 and G gives 7/6/5/6/5 across seed densities, against a stable 2/2/2/2/2
+on the two-feature tape the committed F test uses. **The F channel's seed-independence was a property
+of the easy test tape, not of the algorithm.** Recorded as two `strict=True` xfail tests. It matters
+here more than it would elsewhere: the gates thread reports no isolated resolved feature anywhere from
+8 s to 512 s, so dense-and-interacting is this cohort's operating regime. Any feature-count statistic
+is unsafe until it is fixed; per-feature quantities are unaffected.
+
+**Doc correction applied.** `claude/field_feature_extraction_methods.md` §6 said the duration fit is
+"within 16% everywhere"; through the promoted module it is **within 20% everywhere, within 5%
+mid-range** (`sigma = 90 s` fits at -18.9%). The measured table is left as it was and a dated note
+carries the post-§5.1 numbers.
+
+**Tests:** 33 passed, 2 xfailed.
+
+**D26 lands on this work and is recorded in `GOING_LIVE.md` as a third blocker.** D26 (2026-09-09)
+closes cohort timing work and addresses this package by name: it *"closes cohort timing work, not
+instrument work on synthetic data, and is the gate that detector clears if it is ever pointed at the
+cohort."* So the G channel is inside what D26 permits and stops being so the moment it reads a cohort
+tape. Two of D26's measured findings also change the contract, both toward more caution: the
+fragmentation collapse's dead time **bites 60% of the real tape's intervals** and biases G toward the
+`regular` direction — the same direction as its small-`n_eff` bias — and the surrogate carries an
+**estimation-noise floor** of its own, so sweeping its bandwidth is necessary but not sufficient.
+
+---
+
+## Scale-field detector panels — the two channels, rendered (2026-09-10)
+
+**Synthetic only, no cohort file touched, records no decision.** Renders the detector tests that
+already passed, through the same code path that passed them — `ridge.detect` for F and
+`interval.detect_interval` for G — so the charts are a view of committed results rather than a new
+measurement. Inside D26, which permits instrument work on synthetic data.
+
+**Code** — `research/scale_field/detector/panels.py`. **Charts** —
+`results/scale_field/charts/detector/`: `s1_rate_hump_only.html`, `s2_clumping_only.html`,
+`s3_combined.html`, with `chart_manifest.json` tracked and the HTML gitignored under the standing
+`results/scale_field/charts/*/*.html` rule.
+
+**The renderer is imported, not rewritten**, per the one-palette rule: `THEMES` from
+`research/phase_10d_diag1/plot_boundary_through_time.py`, and `add_channel`,
+`add_resolution_floor`, `knn_rate`, `et` from `research/scale_field/plot_scale_field.py`.
+`add_channel` is called once per channel. Neither module was modified.
+
+| scenario | corresponds to | F | G |
+|---|---|---|---|
+| 1 — pure rate hump, zero clumping | `test_cross_check_G_DOES_respond_to_a_pure_rate_hump` | 1 feature, cal 77.1 | **2 features, cal 40.5, on the FLANKS** — the size-bias artifact on display |
+| 2 — clumping at constant mean rate | `test_positive_control_G_sees_what_F_cannot` | 7 speckle marks, best cal 4.8 | 5 features, best cal **139.3** |
+| 3 — a rate excursion that also clusters | no single test; combination of the two controls | hump at t=850 cal 76.5, speckle at t=598 cal 4.2 | clump at t=625 **D = −0.99**, hump-flank skirt at t=983 **D = −0.19** |
+
+**Scenario 3 is the one that reads.** The two channels separate cleanly on one axis: F owns the
+hump where G shows only a shallow skirt, G owns the clump where F shows only speckle, and the
+**departure magnitude tells the two G marks apart — −0.99 for real clumping against −0.19 for the
+uncorrected gradient artifact**, a 5x separation legible directly off the colourbar.
+
+**Two things are deliberately displayed uncorrected, and captioned as such on every panel.** G's
+rate-gradient size-bias is not corrected, so scenario 1's marks are the expected artifact rather
+than false positives to explain away; and feature counts on scenario 3 are captioned illustrative
+only, because `persistence_octaves` is still read off the seed ladder. Neither was fixed here —
+both are open items in `research/scale_field/detector/GOING_LIVE.md`.
+
+**Citation note.** The brief for this work cited `field_validity_goals_prompt.md` as the source of
+the reuse-the-renderer rule. **No file of that name exists in this checkout or in git history.** The
+rule itself is real and is the repo's standing practice — `gate_charts.py`, `plot_scale_field.py`,
+`plot_lead_time.py` and `plot_onesided.py` all import the one palette — so the practice was followed
+and the citation is recorded as unresolvable, per the same class of defect
+`tools/verify_cited_paths.py` exists to surface.
+
+---
+
+## Scale-field instrument gates — Gates 0–F on the real cohort, and the retraction sweep (2026-09-07 to 2026-09-10)
+
+**Not a phase, and diagnostic only until D26.** Runs the scale field against the real cohort tape
+for the first time — everything mapped above this section is synthetic-only. Answers one question:
+does the field detect real structure, or the session envelope and estimator noise? The answer is
+**D26 — the within-session timing line is closed** (`docs/Universe-Decisions.md`), reached only after
+three headline results were run down and retracted by their own controls. This section maps the
+instrument, not the decision — read `docs/Universe-Decisions.md` D26 and `claude/scale_field_arc_closeout.md`
+for the findings themselves.
+
+**Code — `research/scale_field/`, orchestration and gates.** `instrument_gates.py` runs Gates
+0/A–F in sequence against the real tape, stopping on first failure; diagnostic only, no digest, no
+decision. Per-gate scripts:
+
+| script | what it gates |
+|---|---|
+| `gateA_resolve.py` | Gate A's zero-sum identity on the field's own `lograte`-weighted intensity, with an inhomogeneous-Poisson control to separate real residual from finite-domain/mask artifact |
+| `gateD_cohort.py` | widens the print-count-stratified cohort so Gate D's shaded-fraction-vs-print-count regression has leverage |
+| `gateD_vs_surrogate.py` | re-runs Gate D against a rate-matched smooth-envelope surrogate instead of a print-count regression, per segment, never pooled — separates "detects clustering" from "detects the diurnal envelope" |
+| `gateE_ceiling.py` | builds a reliability ceiling for Gate E's split-half correlation from a smooth-rate surrogate and the envelope-subtracted residual, so `r` near 1 isn't misread as fine-structure detection |
+| `gateF_calibration.py` | derives Gate F's negative-run-width reference values (2.00 pure Poisson; `2·sqrt(1+σ²/s²)` Gaussian bump) against the estimator's own biases |
+| `gateF_recompute.py` | re-runs Gate F's width statistic with the calibration fix (mean not median run length, edge/NaN/segment-truncation excluded) |
+| `gate_charts.py` | diagnostic Plotly charts for the gates, palette reused from `research/phase_10d_diag1/plot_boundary_through_time.py` |
+
+**Code — the retraction chain.** Each of the three retracted headlines has its own script:
+`surrogate_bandwidth_family.py` and `bandwidth_floor.py` sweep the surrogate smoothing bandwidth `h`
+and locate the real-vs-surrogate crossover, which is what showed the "30 s crossover" scales as
+`≈2.6h` rather than being a tape property. `subpoisson_check.py` tests the ~10% Allan-factor deficit
+against a known-Poisson positive control (bias, not a sub-Poisson finding). `allan_validity_ceiling.py`
+and `allan_ceiling_sweep.py` measure the Allan-factor validity ceiling directly (rather than assume it
+via rule-of-thumb) across a bandwidth family, which is what withdrew v3's 128 s/16 s knees.
+`fragmentation_identity.py` identifies same-order-fill fragmentation from trade-record signatures
+(monotone price + multi-venue OR sequence-contiguity) rather than a time tolerance, permutation-tested
+against a null — the basis for D26 result 3 (condition code 14, one order many prints). Supporting:
+`divergence_controlled.py`, `divergence_vs_tolerance.py`, `subsecond_origin.py`, `reconcile_allan.py`
+(order-of-work step 2, a hard-stop reconciliation against Phase 10 v3's committed Allan curve, float-for-float
+tol 1e-12), `crossover_vs_decay.py`, `excess_variance.py`, `collapsed_tape_measures.py`,
+`absolute_vs_ratio.py`, `subburst_is_a_restatement.py` (tests whether the committed sub-burst-duration
+statistic is a restatement of a low quantile of the event's own interval distribution — feeds D26
+result 4), and the lead-time pair `t1_lead_time.py` / `t1_paired_control.py` with their charts
+`plot_lead_time.py` / `plot_onesided.py`.
+
+**Control tapes — three surrogates, three different jobs, built in `bandwidth_floor.py` and
+`surrogate_bandwidth_family.py` off a shared thinned-Poisson `draw()`:**
+
+- **`S30` ("envelope only").** Thinned Poisson from the real event's own intensity smoothed at
+  `h = 30 s`. Carries the diurnal envelope shape above 30 s and **nothing** below it — the positive
+  control for "envelope, no clustering." Reproduced the real tape's crossover to within 0.5 s, which
+  is what retracted the 30 s-crossover finding.
+- **`NS05` ("known fine structure").** A Neyman–Scott cluster process on the same envelope: parents
+  thinned from the same smoothed intensity, each spawning Poisson(μ=3.0) offspring at Gaussian
+  σ = 0.5 s offsets. Same mean intensity and envelope as the real tape, but with **known** clustering
+  at a known scale — the blindness control proving the procedure can detect fine structure at all.
+- **Poisson base ("nothing").** Homogeneous Poisson, same print count as the real tape, uniform
+  arrival times. The negative control; any statistic must read its null value on this tape at every
+  scale.
+
+**Artifacts — `results/scale_field/artifacts/instrument_gates/`, 34 files, ~6.9 MB, tracked as
+JSON.** One per gate/script above (`gateA_resolve.json`, `gateD_vs_surrogate.json`,
+`gateF_recompute.json`, `allan_validity_ceiling.json`, `allan_ceiling_sweep.json`,
+`fragmentation_identity.json`, `collapsed_tape_measures.json`, `subpoisson_check.json`,
+`surrogate_bandwidth_family.json`, `bandwidth_floor.json`, `crossover_vs_decay.json`, and 23 more,
+one per script in the two tables above). **Configs:** `config/scale_field_detector.json` — the frozen
+parameter surface per `claude/field_feature_extraction_methods.md` §10, committed before this run,
+scoped to produce a feature table only (touches no forward return, reopens D22 per Cooper
+2026-09-09, does not reopen D24/D25).
+
+**Charts — an outlier in the standing convention.** `results/scale_field/charts/instrument_gates/`
+holds 28 gitignored HTML files (plus the local `plotly.min.js`) — the two the closeout singles out
+for a Cooper visual read are `bandwidth_family_ratio.html` (10.4 KB) and `subsecond_collapse.html`
+(16.6 KB), both real and non-trivial. **Unlike every other chart directory in this tree
+(`cohort/`, `detector/`, `event_panels/`, `mockups/`, each per-event folder), this directory has no
+`chart_manifest.json`** — the tracked enumeration-of-gitignored-HTML the `.gitignore` comment
+describes as the standing pattern. So these 28 charts are currently enumerated nowhere in git; only
+this map entry and the closeout note record that they exist. **Gap noted, not fixed here** — writing
+one is a natural companion task to the Cooper chart review the closeout already asks for.
+
+**Prior art.** Cited at `claude/scale_field_arc_closeout.md`'s closeout checklist as owed to this
+map; assembled here from where each is actually used:
+
+- **SiZer** — Chaudhuri & Marron, *SiZer for Exploration of Structures in Curves*, JASA 1999.
+  `claude/field_feature_extraction_methods.md` calls it "the closest published relative of your whole
+  panel" — same idea as the scale-vs-significance map here, read as one object across the scale
+  family. Not implemented from directly; cited as the closest published analogue.
+- **Dümbgen–Spokoiny** — *Multiscale Testing of Qualitative Hypotheses*, Ann. Statist. 2001. **This
+  one is implemented, not just cited**: `research/scale_field/derivations/03_fingerprint_raw_topology.py:123`
+  carries `cal = z - sqrt(2*log(max(T_span/s, e)))` verbatim as the per-scale calibration, so that a
+  detection at 3 s and one at 300 s are comparable under one decision threshold.
+  `claude/field_feature_extraction_methods.md` §4.2 and `claude/scale_field_reading_grammar.md` carry
+  the derivation.
+  Selinger et al. 2007 and Pasquale et al. 2010 (log-interval histogram burst detection) and Ko et al.
+  2012 (locally-normalized log-interval method, adopted in Phase 10 v4 — `prompts/phase_10_v4.md`,
+  `docs/Universe-Decisions.md:548`, `docs/Open-Items-Register.md:51`). None of the scale-field arc's
+  own surrogate-generation code (`bandwidth_floor.py`, `surrogate_bandwidth_family.py`) cites a named
+  spike-train surrogate paper directly — the connection is methodological (thinned-Poisson /
+  Neyman–Scott construction is the same family of technique) rather than a direct import.
+- **Legéndy & Salcman** and **Kepler injection–recovery** — **cited nowhere in this repo except the
+  closeout checklist line itself** (`claude/scale_field_arc_closeout.md:123`). A whole-repo,
+  case-insensitive search for `Legendy`, `Salcman`, and `Kepler` returns exactly that one file and no
+  other. Recorded here as **owed, not resolved** — per the same standard as the citation notes
+  elsewhere in this map, an unelaborated reference is flagged rather than silently completed with
+  invented content. Whoever wrote the checklist line has the source; it is not reconstructable from
+  what is in the checkout.
+- **Chakravarty, Jain, Upson & Wood**, *Clean Sweep*, JFQA 2012 — ISOs carry disproportionate price
+  discovery relative to volume share. Used in `docs/Universe-Decisions.md` D26 ("Scope — what this
+  does not close") and `claude/what_would_change_a_decision.md` to motivate ISO share as a
+  hold-length state variable — the open item this section's Library Map neighbor,
+  `docs/Open-Items-Register.md`'s wrong-partition entry, names as one of the two candidates that
+  could still reopen D24/D25.

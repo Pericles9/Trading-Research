@@ -1,0 +1,792 @@
+{
+  "taus_ns": [
+    100000,
+    1000000,
+    10000000
+  ],
+  "tau_collapse_ns": 1000000,
+  "note": "Identify fragmentation from the trade record, not from a time tolerance (review s3).\n\nTHE OBJECTION THIS ANSWERS, and it is correct. The excess goes 4.06 -> 2.63 -> 1.29 ->\nbelow 1 at collapse tolerances of 0/1/10/100 ms. Choosing 100 ms because that is where\nthe signal disappears is parameter tuning in the negative direction, and a null feels\nconservative when it is merely an answer.\n\nWHAT THE RECORD CARRIES. data/filtered/*/trades.parquet has, beyond the four columns the\ncommitted reader takes: `exchange`, `conditions` (list of SIP condition codes),\n`id`, `tape`, `trf_id`, `participant_timestamp`. So prints from one marketable order\nsweeping the book are separable from independent arrivals by their JOINT signature\nrather than by proximity alone:\n\n    monotone price      a marketable order walks the book one way and does not reverse\n    multiple exchanges  a sweep takes liquidity at several venues at once\n    contiguous sequence the SIP numbers them consecutively\n\nTHE CONDITION CODES ARE NOT DECODED HERE AND THAT IS DELIBERATE. data/filtered/\nMETADATA.md documents the column as \"Trade conditions\" and gives no code table; the\nenvironment is offline (D14) so no reference can be fetched. Asserting that code 14 is\nan intermarket sweep would be a fabrication dressed as a finding. What IS reported is\nthe EMPIRICAL association: which condition tuples are enriched inside sub-millisecond\nruns relative to outside them. That is a measurement and needs no code table. Any\nreading of what the codes MEAN is marked [verify] and is not used by the collapse.\n\nTHE NULL, so \"monotone and multi-venue\" is not scored against intuition. Run structure\nis held fixed and the per-print attributes (price, exchange) are permuted across the\nsession. If sub-millisecond runs are genuinely one order, monotonicity and venue count\ninside them sit far above that null; if they are coincidental collisions of independent\narrivals, they sit on it.\n\nOUTPUT. A per-event collapsed tape written to the cache, built on identity rather than\non a tolerance, for the Allan recomputation and the interval channel to consume.\n",
+  "events": {
+    "ARQQ_2023-02-06_65.20": {
+      "prints": 97423,
+      "by_tau": {
+        "100000": {
+          "n_runs": 66899,
+          "n_multi_print_runs": 11042,
+          "prints_in_multi_runs": 41566,
+          "share_prints_in_multi": 0.4266548966876405,
+          "mono_share": 0.9551711646440862,
+          "mono_null": 0.5454929662500755,
+          "multi_venue_share": 0.4629596087665278,
+          "multi_venue_null": 0.8205337197367627,
+          "contig_share": 0.9867777576525991,
+          "contig_null": 0.0,
+          "len_hist": {
+            "1": 55857,
+            "2": 5168,
+            "3": 2274,
+            "4": 1195,
+            "5": 705,
+            "6": 479,
+            "7": 320,
+            "8": 193,
+            "9": 149,
+            "10": 139,
+            "11": 92,
+            "12": 65,
+            "13": 57,
+            "14": 33,
+            "15": 31,
+            "16": 25,
+            "17": 21,
+            "18": 13,
+            "19": 13,
+            "20": 70
+          }
+        },
+        "1000000": {
+          "n_runs": 49873,
+          "n_multi_print_runs": 10310,
+          "prints_in_multi_runs": 57860,
+          "share_prints_in_multi": 0.5939049300473194,
+          "mono_share": 0.8649854510184287,
+          "mono_null": 0.4448755253798901,
+          "multi_venue_share": 0.5764306498545102,
+          "multi_venue_null": 0.853378596831555,
+          "contig_share": 0.9132880698351116,
+          "contig_null": 3.233107015842224e-05,
+          "len_hist": {
+            "1": 39563,
+            "2": 3931,
+            "3": 1735,
+            "4": 983,
+            "5": 675,
+            "6": 522,
+            "7": 371,
+            "8": 311,
+            "9": 278,
+            "10": 217,
+            "11": 173,
+            "12": 146,
+            "13": 123,
+            "14": 102,
+            "15": 105,
+            "16": 75,
+            "17": 58,
+            "18": 53,
+            "19": 47,
+            "20": 405
+          }
+        },
+        "10000000": {
+          "n_runs": 37149,
+          "n_multi_print_runs": 9739,
+          "prints_in_multi_runs": 70013,
+          "share_prints_in_multi": 0.7186496001970787,
+          "mono_share": 0.7557244070233083,
+          "mono_null": 0.43067392271622684,
+          "multi_venue_share": 0.6251155149399322,
+          "multi_venue_null": 0.8626142314405997,
+          "contig_share": 0.6767635280829654,
+          "contig_null": 3.4226648868809256e-05,
+          "len_hist": {
+            "1": 27410,
+            "2": 3646,
+            "3": 1385,
+            "4": 829,
+            "5": 581,
+            "6": 433,
+            "7": 319,
+            "8": 295,
+            "9": 246,
+            "10": 214,
+            "11": 173,
+            "12": 149,
+            "13": 129,
+            "14": 121,
+            "15": 122,
+            "16": 89,
+            "17": 94,
+            "18": 66,
+            "19": 78,
+            "20": 770
+          }
+        }
+      },
+      "condition_enrichment": [
+        {
+          "conditions": "14,37,41",
+          "n_inside": 8739,
+          "n_outside": 398,
+          "share_inside": 0.15103698582786035,
+          "share_outside": 0.010059904456183807,
+          "enrichment": 15.013759473134773
+        },
+        {
+          "conditions": "14,41",
+          "n_inside": 9036,
+          "n_outside": 808,
+          "share_inside": 0.1561700656757691,
+          "share_outside": 0.020423122614564113,
+          "enrichment": 7.646728104369372
+        },
+        {
+          "conditions": "none",
+          "n_inside": 25247,
+          "n_outside": 21738,
+          "share_inside": 0.43634635326650534,
+          "share_outside": 0.5494527715289538,
+          "enrichment": 0.7941471512688726
+        },
+        {
+          "conditions": "37",
+          "n_inside": 14737,
+          "n_outside": 16516,
+          "share_inside": 0.2547010024196336,
+          "share_outside": 0.41746075878977834,
+          "enrichment": 0.6101196269513178
+        },
+        {
+          "conditions": "10,37,41",
+          "n_inside": 2,
+          "n_outside": 90,
+          "share_inside": 3.456619426201175e-05,
+          "share_outside": 0.0022748527664737256,
+          "enrichment": 0.015194914928755231
+        }
+      ],
+      "identity_collapse": {
+        "prints_before": 97423,
+        "prints_after": 66394,
+        "removed": 31029,
+        "retained_share": 0.6815023146484916
+      }
+    },
+    "ASPN_2024-05-02_60.38": {
+      "prints": 86029,
+      "by_tau": {
+        "100000": {
+          "n_runs": 54173,
+          "n_multi_print_runs": 9945,
+          "prints_in_multi_runs": 41801,
+          "share_prints_in_multi": 0.4858942914598566,
+          "mono_share": 0.8277526395173453,
+          "mono_null": 0.5350092173621586,
+          "multi_venue_share": 0.5871292106586224,
+          "multi_venue_null": 0.8665996313055137,
+          "contig_share": 0.9845148315736552,
+          "contig_null": 3.3517680576504107e-05,
+          "len_hist": {
+            "1": 44228,
+            "2": 4608,
+            "3": 1787,
+            "4": 1004,
+            "5": 647,
+            "6": 416,
+            "7": 319,
+            "8": 262,
+            "9": 199,
+            "10": 123,
+            "11": 102,
+            "12": 69,
+            "13": 48,
+            "14": 62,
+            "15": 46,
+            "16": 40,
+            "17": 17,
+            "18": 22,
+            "19": 15,
+            "20": 159
+          }
+        },
+        "1000000": {
+          "n_runs": 37752,
+          "n_multi_print_runs": 8759,
+          "prints_in_multi_runs": 57036,
+          "share_prints_in_multi": 0.6629857373676319,
+          "mono_share": 0.7132092704646649,
+          "mono_null": 0.44289682992731283,
+          "multi_venue_share": 0.6197054458271493,
+          "multi_venue_null": 0.8874300719260191,
+          "contig_share": 0.9328690489781939,
+          "contig_null": 3.805609468356357e-05,
+          "len_hist": {
+            "1": 28993,
+            "2": 3382,
+            "3": 1273,
+            "4": 745,
+            "5": 557,
+            "6": 392,
+            "7": 308,
+            "8": 242,
+            "9": 236,
+            "10": 165,
+            "11": 157,
+            "12": 150,
+            "13": 126,
+            "14": 112,
+            "15": 99,
+            "16": 77,
+            "17": 65,
+            "18": 63,
+            "19": 58,
+            "20": 552
+          }
+        },
+        "10000000": {
+          "n_runs": 29819,
+          "n_multi_print_runs": 8861,
+          "prints_in_multi_runs": 65071,
+          "share_prints_in_multi": 0.7563844750026154,
+          "mono_share": 0.6724974607832073,
+          "mono_null": 0.43862618967008987,
+          "multi_venue_share": 0.6240830606026407,
+          "multi_venue_null": 0.8911710491667607,
+          "contig_share": 0.8018282360907347,
+          "contig_null": 3.761802655832675e-05,
+          "len_hist": {
+            "1": 20958,
+            "2": 3386,
+            "3": 1243,
+            "4": 733,
+            "5": 484,
+            "6": 392,
+            "7": 288,
+            "8": 235,
+            "9": 218,
+            "10": 173,
+            "11": 160,
+            "12": 136,
+            "13": 141,
+            "14": 122,
+            "15": 97,
+            "16": 100,
+            "17": 89,
+            "18": 59,
+            "19": 69,
+            "20": 736
+          }
+        }
+      },
+      "condition_enrichment": [
+        {
+          "conditions": "14",
+          "n_inside": 274,
+          "n_outside": 9,
+          "share_inside": 0.004803983449049723,
+          "share_outside": 0.00031041975649294656,
+          "enrichment": 15.475765793144292
+        },
+        {
+          "conditions": "14,41",
+          "n_inside": 10341,
+          "n_outside": 519,
+          "share_inside": 0.18130654323585105,
+          "share_outside": 0.017900872624426585,
+          "enrichment": 10.128363406622407
+        },
+        {
+          "conditions": "14,37,41",
+          "n_inside": 16170,
+          "n_outside": 1174,
+          "share_inside": 0.28350515463917525,
+          "share_outside": 0.04049253268030214,
+          "enrichment": 7.00141818437275
+        },
+        {
+          "conditions": "none",
+          "n_inside": 16365,
+          "n_outside": 10808,
+          "share_inside": 0.28692404796970333,
+          "share_outside": 0.37277963646397405,
+          "enrichment": 0.769688094262177
+        },
+        {
+          "conditions": "37",
+          "n_inside": 12339,
+          "n_outside": 14409,
+          "share_inside": 0.21633705028403113,
+          "share_outside": 0.4969820301452075,
+          "enrichment": 0.43530155450655245
+        },
+        {
+          "conditions": "10,37,41",
+          "n_inside": 1481,
+          "n_outside": 1943,
+          "share_inside": 0.025966056525703066,
+          "share_outside": 0.06701617631842169,
+          "enrichment": 0.3874595351774107
+        },
+        {
+          "conditions": "2,10,41",
+          "n_inside": 2,
+          "n_outside": 109,
+          "share_inside": 3.50655726208009e-05,
+          "share_outside": 0.0037595281619701307,
+          "enrichment": 0.00932712061463193
+        }
+      ],
+      "identity_collapse": {
+        "prints_before": 86029,
+        "prints_after": 70308,
+        "removed": 15721,
+        "retained_share": 0.8172592962838112
+      }
+    },
+    "ASST_2024-03-21_68.32": {
+      "prints": 23411,
+      "by_tau": {
+        "100000": {
+          "n_runs": 17614,
+          "n_multi_print_runs": 2892,
+          "prints_in_multi_runs": 8689,
+          "share_prints_in_multi": 0.37115031395497844,
+          "mono_share": 0.9450207468879668,
+          "mono_null": 0.660903642231443,
+          "multi_venue_share": 0.4149377593360996,
+          "multi_venue_null": 0.8184647302904565,
+          "contig_share": 0.9844398340248963,
+          "contig_null": 0.0,
+          "len_hist": {
+            "1": 14722,
+            "2": 1699,
+            "3": 557,
+            "4": 280,
+            "5": 130,
+            "6": 78,
+            "7": 56,
+            "8": 23,
+            "9": 26,
+            "10": 7,
+            "11": 11,
+            "12": 7,
+            "13": 3,
+            "14": 3,
+            "15": 4,
+            "17": 3,
+            "18": 1,
+            "19": 1,
+            "20": 3
+          }
+        },
+        "1000000": {
+          "n_runs": 12135,
+          "n_multi_print_runs": 3258,
+          "prints_in_multi_runs": 14534,
+          "share_prints_in_multi": 0.6208192729913289,
+          "mono_share": 0.8680171884591774,
+          "mono_null": 0.504706363822386,
+          "multi_venue_share": 0.5607734806629834,
+          "multi_venue_null": 0.8560466543891959,
+          "contig_share": 0.8759975445058318,
+          "contig_null": 0.0,
+          "len_hist": {
+            "1": 8877,
+            "2": 1423,
+            "3": 548,
+            "4": 385,
+            "5": 227,
+            "6": 136,
+            "7": 107,
+            "8": 83,
+            "9": 57,
+            "10": 53,
+            "11": 45,
+            "12": 32,
+            "13": 25,
+            "14": 26,
+            "15": 20,
+            "16": 16,
+            "17": 10,
+            "18": 4,
+            "19": 3,
+            "20": 58
+          }
+        },
+        "10000000": {
+          "n_runs": 9227,
+          "n_multi_print_runs": 2972,
+          "prints_in_multi_runs": 17156,
+          "share_prints_in_multi": 0.7328179061125112,
+          "mono_share": 0.7913862718707941,
+          "mono_null": 0.42990130103185287,
+          "multi_venue_share": 0.6763122476446837,
+          "multi_venue_null": 0.88257065948856,
+          "contig_share": 0.6628532974427994,
+          "contig_null": 0.0,
+          "len_hist": {
+            "1": 6255,
+            "2": 1094,
+            "3": 464,
+            "4": 309,
+            "5": 247,
+            "6": 158,
+            "7": 101,
+            "8": 103,
+            "9": 67,
+            "10": 55,
+            "11": 49,
+            "12": 37,
+            "13": 39,
+            "14": 33,
+            "15": 22,
+            "16": 17,
+            "17": 26,
+            "18": 18,
+            "19": 13,
+            "20": 120
+          }
+        }
+      },
+      "condition_enrichment": [
+        {
+          "conditions": "14,41",
+          "n_inside": 3656,
+          "n_outside": 581,
+          "share_inside": 0.25154809412412277,
+          "share_outside": 0.0654500394277346,
+          "enrichment": 3.8433604673663297
+        },
+        {
+          "conditions": "14,37,41",
+          "n_inside": 1045,
+          "n_outside": 179,
+          "share_inside": 0.07190037154258978,
+          "share_outside": 0.02016446997859637,
+          "enrichment": 3.5656960792378185
+        },
+        {
+          "conditions": "none",
+          "n_inside": 7649,
+          "n_outside": 5350,
+          "share_inside": 0.5262831980184395,
+          "share_outside": 0.6026810859524614,
+          "enrichment": 0.8732366259457359
+        },
+        {
+          "conditions": "37",
+          "n_inside": 2163,
+          "n_outside": 2762,
+          "share_inside": 0.14882344846566672,
+          "share_outside": 0.31114115128985015,
+          "enrichment": 0.47831489935905996
+        }
+      ],
+      "identity_collapse": {
+        "prints_before": 23411,
+        "prints_after": 16375,
+        "removed": 7036,
+        "retained_share": 0.6994575199692452
+      }
+    },
+    "COSM_2023-09-12_60.61": {
+      "prints": 74471,
+      "by_tau": {
+        "100000": {
+          "n_runs": 43706,
+          "n_multi_print_runs": 8094,
+          "prints_in_multi_runs": 38859,
+          "share_prints_in_multi": 0.5218004323830753,
+          "mono_share": 0.9794909809735607,
+          "mono_null": 0.5028827938390577,
+          "multi_venue_share": 0.3710155670867309,
+          "multi_venue_null": 0.8776048101474343,
+          "contig_share": 0.9918458117123795,
+          "contig_null": 0.0,
+          "len_hist": {
+            "1": 35612,
+            "2": 3444,
+            "3": 1485,
+            "4": 820,
+            "5": 537,
+            "6": 351,
+            "7": 280,
+            "8": 199,
+            "9": 140,
+            "10": 98,
+            "11": 99,
+            "12": 77,
+            "13": 87,
+            "14": 66,
+            "15": 59,
+            "16": 42,
+            "17": 31,
+            "18": 25,
+            "19": 23,
+            "20": 231
+          }
+        },
+        "1000000": {
+          "n_runs": 32211,
+          "n_multi_print_runs": 7316,
+          "prints_in_multi_runs": 49576,
+          "share_prints_in_multi": 0.6657087993984235,
+          "mono_share": 0.9245489338436303,
+          "mono_null": 0.450063787133224,
+          "multi_venue_share": 0.5016402405686168,
+          "multi_venue_null": 0.8901038819026791,
+          "contig_share": 0.9455986878075451,
+          "contig_null": 0.0,
+          "len_hist": {
+            "1": 24895,
+            "2": 2838,
+            "3": 1077,
+            "4": 682,
+            "5": 494,
+            "6": 322,
+            "7": 262,
+            "8": 183,
+            "9": 151,
+            "10": 152,
+            "11": 94,
+            "12": 93,
+            "13": 90,
+            "14": 71,
+            "15": 67,
+            "16": 52,
+            "17": 51,
+            "18": 43,
+            "19": 38,
+            "20": 556
+          }
+        },
+        "10000000": {
+          "n_runs": 23740,
+          "n_multi_print_runs": 7400,
+          "prints_in_multi_runs": 58131,
+          "share_prints_in_multi": 0.7805857313585154,
+          "mono_share": 0.8104054054054054,
+          "mono_null": 0.4561711711711712,
+          "multi_venue_share": 0.5728378378378378,
+          "multi_venue_null": 0.8896396396396397,
+          "contig_share": 0.7463513513513513,
+          "contig_null": 0.0,
+          "len_hist": {
+            "1": 16340,
+            "2": 2961,
+            "3": 1020,
+            "4": 602,
+            "5": 422,
+            "6": 293,
+            "7": 241,
+            "8": 205,
+            "9": 153,
+            "10": 158,
+            "11": 99,
+            "12": 93,
+            "13": 84,
+            "14": 83,
+            "15": 71,
+            "16": 50,
+            "17": 58,
+            "18": 53,
+            "19": 42,
+            "20": 712
+          }
+        }
+      },
+      "condition_enrichment": [
+        {
+          "conditions": "14,41",
+          "n_inside": 12810,
+          "n_outside": 658,
+          "share_inside": 0.25839115701145715,
+          "share_outside": 0.026431010243020688,
+          "enrichment": 9.776060568085448
+        },
+        {
+          "conditions": "14,37,41",
+          "n_inside": 3953,
+          "n_outside": 245,
+          "share_inside": 0.0797361626593513,
+          "share_outside": 0.009841333601124724,
+          "enrichment": 8.102170487365512
+        },
+        {
+          "conditions": "none",
+          "n_inside": 25248,
+          "n_outside": 16405,
+          "share_inside": 0.5092786832338229,
+          "share_outside": 0.6589676641895963,
+          "enrichment": 0.7728432075041768
+        },
+        {
+          "conditions": "37",
+          "n_inside": 7540,
+          "n_outside": 7574,
+          "share_inside": 0.15208972083266095,
+          "share_outside": 0.30423779875477003,
+          "enrichment": 0.4999040929666087
+        }
+      ],
+      "identity_collapse": {
+        "prints_before": 74471,
+        "prints_after": 41919,
+        "removed": 32552,
+        "retained_share": 0.5628902525815418
+      }
+    },
+    "JFIN_2020-06-15_60.44": {
+      "prints": 63266,
+      "by_tau": {
+        "100000": {
+          "n_runs": 50603,
+          "n_multi_print_runs": 6850,
+          "prints_in_multi_runs": 19513,
+          "share_prints_in_multi": 0.30842790756488475,
+          "mono_share": 0.9662773722627738,
+          "mono_null": 0.6999026763990267,
+          "multi_venue_share": 0.3159124087591241,
+          "multi_venue_null": 0.7177615571776156,
+          "contig_share": 0.9944525547445255,
+          "contig_null": 0.0,
+          "len_hist": {
+            "1": 43753,
+            "2": 4284,
+            "3": 1343,
+            "4": 556,
+            "5": 273,
+            "6": 149,
+            "7": 85,
+            "8": 44,
+            "9": 31,
+            "10": 26,
+            "11": 18,
+            "12": 12,
+            "13": 7,
+            "14": 2,
+            "15": 5,
+            "16": 2,
+            "17": 3,
+            "19": 1,
+            "20": 9
+          }
+        },
+        "1000000": {
+          "n_runs": 38001,
+          "n_multi_print_runs": 9897,
+          "prints_in_multi_runs": 35162,
+          "share_prints_in_multi": 0.5557803559573863,
+          "mono_share": 0.8923916338284329,
+          "mono_null": 0.6010912397696272,
+          "multi_venue_share": 0.3858745074264929,
+          "multi_venue_null": 0.7545384123134956,
+          "contig_share": 0.9566535313731434,
+          "contig_null": 0.0,
+          "len_hist": {
+            "1": 28104,
+            "2": 5226,
+            "3": 1763,
+            "4": 1026,
+            "5": 552,
+            "6": 422,
+            "7": 209,
+            "8": 190,
+            "9": 103,
+            "10": 103,
+            "11": 62,
+            "12": 54,
+            "13": 29,
+            "14": 30,
+            "15": 15,
+            "16": 20,
+            "17": 18,
+            "18": 10,
+            "19": 5,
+            "20": 60
+          }
+        },
+        "10000000": {
+          "n_runs": 25956,
+          "n_multi_print_runs": 9285,
+          "prints_in_multi_runs": 46595,
+          "share_prints_in_multi": 0.7364935352321942,
+          "mono_share": 0.7403338718362951,
+          "mono_null": 0.4786573326153294,
+          "multi_venue_share": 0.5701669359181476,
+          "multi_venue_null": 0.795799676898223,
+          "contig_share": 0.7797522886375875,
+          "contig_null": 0.0,
+          "len_hist": {
+            "1": 16671,
+            "2": 3816,
+            "3": 1575,
+            "4": 996,
+            "5": 603,
+            "6": 496,
+            "7": 298,
+            "8": 289,
+            "9": 179,
+            "10": 165,
+            "11": 126,
+            "12": 108,
+            "13": 93,
+            "14": 79,
+            "15": 47,
+            "16": 53,
+            "17": 47,
+            "18": 41,
+            "19": 31,
+            "20": 243
+          }
+        }
+      },
+      "condition_enrichment": [
+        {
+          "conditions": "14,41",
+          "n_inside": 5523,
+          "n_outside": 1616,
+          "share_inside": 0.157072976508731,
+          "share_outside": 0.05750071164247082,
+          "enrichment": 2.731670131065208
+        },
+        {
+          "conditions": "14,37,41",
+          "n_inside": 2195,
+          "n_outside": 668,
+          "share_inside": 0.062425345543484445,
+          "share_outside": 0.0237688585254768,
+          "enrichment": 2.6263501663983333
+        },
+        {
+          "conditions": "none",
+          "n_inside": 21062,
+          "n_outside": 13616,
+          "share_inside": 0.5989989192878676,
+          "share_outside": 0.48448619413606603,
+          "enrichment": 1.2363591089649113
+        },
+        {
+          "conditions": "37",
+          "n_inside": 6342,
+          "n_outside": 11880,
+          "share_inside": 0.18036516694158466,
+          "share_outside": 0.4227156276686593,
+          "enrichment": 0.4266820413911023
+        },
+        {
+          "conditions": "7,37,41",
+          "n_inside": 4,
+          "n_outside": 181,
+          "share_inside": 0.00011375917183322905,
+          "share_outside": 0.006440364360945061,
+          "enrichment": 0.017663468316028007
+        },
+        {
+          "conditions": "7,41",
+          "n_inside": 0,
+          "n_outside": 129,
+          "share_inside": 0.0,
+          "share_outside": 0.004590093936806148,
+          "enrichment": 0.0
+        }
+      ],
+      "identity_collapse": {
+        "prints_before": 63266,
+        "prints_after": 45185,
+        "removed": 18081,
+        "retained_share": 0.7142066828944457
+      }
+    }
+  }
+}
