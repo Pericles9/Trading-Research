@@ -1,6 +1,20 @@
 # Draft amendment to `docs/Agent_Prompt_Standard.md` — Control Standard, Retraction Sweep, envelope invariance
 
-**Date:** 2026-09-10 · **Status: DRAFT. Records nothing. For Cooper to mark up, fold in, or reject.**
+> **FOLDED IN, 2026-09-12 — this draft is now `docs/Agent_Prompt_Standard.md` v1.4.** Cooper
+> approved it and instructed that where it and the pre-existing, separately-drafted v1.4 changes
+> (Plan Authorship, two-tier escalation, async gate mode) conflict, this — the more recent
+> decision — wins. No actual conflicts were found; the two live on different axes (this draft
+> governs whether a claim is trustworthy, the other governs who plans and when Cooper is blocked
+> live) and were merged rather than sequenced. §A/§A2/§C landed as **The Control Standard**
+> (placed after the Evidence Standard); §B landed as the standing **Retraction Sweep** rule (after
+> Git Discipline); §D's three rows are in the Anti-patterns table; §D2 is a field note under the
+> Digest Contract; §E is a callout inside §3 Plan Authorship. **This file is left as written below,
+> per its own Retraction Sweep rule (§B) — a draft that was folded in is bannered, not deleted, so
+> the record of what was proposed and what landed stays legible.** Read
+> `docs/Agent_Prompt_Standard.md` for the adopted text; nothing below is authoritative anymore.
+
+**Date:** 2026-09-10 · **Status: FOLDED IN — see banner above. Originally: DRAFT. Records nothing.
+For Cooper to mark up, fold in, or reject.**
 **Source:** Cooper's proposed amendment of 2026-09-10, plus what the scale arc paid for.
 
 **Why this is a draft file and not an edit to the standard.** `docs/Agent_Prompt_Standard.md` is the

@@ -1,7 +1,7 @@
 <!-- fullWidth: false tocVisible: false tableWrap: true -->
 # Agent Prompt Standard
 
-**Version:** 1.4 (draft — supersedes 1.3 pending your review)
+**Version:** 1.4 (adopted 2026-09-12)
 **Project:** Momentum Event Research — Mom_db
 
 This document defines the standard structure for all Claude Code agent prompts in this project. Every phase prompt must follow this format. Deviations require explicit justification in the prompt itself.
@@ -10,13 +10,22 @@ This document defines the standard structure for all Claude Code agent prompts i
 
 ## Changelog from v1.3
 
-Three changes, discussed 2026-08-31, aimed at cutting round-trips between you and the agent without weakening the evidence trail:
+Two independent proposals landed as v1.4, together, on Cooper's approval 2026-09-12 — merged rather than sequenced, since neither touches the other's territory: one is *who plans the work and when Cooper is blocked live*, the other is *what makes a claim trustworthy enough to report at all*. Where anything in this changelog reads as if it could conflict, the second group (dated 2026-09-10, discussed below) is the more recent decision and is authoritative.
+
+**Group 1 — round-trip and gating changes, discussed 2026-08-31 through 2026-09-02:**
 
 1. **New §3 — Plan Authorship.** Phase prompts state the goal, constraints, escalation criteria, and chart contract; the agent drafts its own task breakdown against them and gets one plan-approval before executing, instead of you writing the T1/T2/T3 list yourself. (Old §3 "Task Checklist" is now §3b — the *format* rules for the resulting plan are unchanged, only *who writes it* changes.)
 2. **§5 Escalation Criteria (renumbered from §4) is now two-tier.** Every condition is tagged `HARD STOP` or `LOG`, decided by you up front when the prompt is written — not improvised by the agent mid-run. `LOG` conditions no longer interrupt.
 3. **§9 Approval Gate (renumbered from §8) defaults to async.** A phase with `Gate Mode: async` auto-continues into the next approved phase when every `HARD STOP` criterion passes; you review the digest and charts after the fact instead of blocking the run. `Gate Mode: sync-required` keeps the old behavior for phases you flag as needing a live decision before anything continues.
 
-Everything else — the Evidence Standard, Chart Contract, Verification Block, Digest Contract, Git Discipline, and the "agent never recommends" rule — is unchanged. This draft is not yet applied; it's here for you to mark up or approve.
+**Group 2 — evidentiary changes, paid for by the scale-field arc, discussed 2026-09-10:**
+
+4. **New section — The Control Standard**, placed immediately after the Evidence Standard. Any claim of the form "real exceeds null" now requires four controls (negative, positive, null-parameter sweep, blindness) and states the regime a robustness or invariance claim holds in, in the same sentence it's made. See below — this is the section that produced four retractions in one arc before it existed as a rule.
+5. **New standing rule — Retraction Sweep** (after Git Discipline). A decision that withdraws a premise now carries, in the same commit, a table of every file that cited it, each marked withdrawn / corrected / unaffected.
+6. **Envelope invariance** is now a stated selection criterion inside the Control Standard section: prefer statistics provably zero under a locally-Poisson rate path; if you don't, say what removes the envelope and what proves it worked.
+7. **Three new Anti-pattern rows** (ratio to a scale-dependent null; a threshold quoted with no reference; feature counts on a dense field with no seed-stability) and one **known-property note** on the Digest Contract (a config's `why` field is covered by the same hash as its computational fields, so a stale rationale is swept, never edited in place).
+
+Nothing in either group touches the Evidence Standard, the Chart Contract, the Verification Block, the Digest Contract's core schema, Git Discipline, or the "agent never recommends" rule — those are unchanged from v1.3 except where the changelog above says otherwise.
 
 ---
 
@@ -28,7 +37,7 @@ Agent prompts have grown organically across phases. Inconsistent structure cause
 2. Results are hard to audit because output contracts vary phase to phase
 3. Claims arrive without the evidence needed to check them
 
-This standard fixes all three. Nothing in v1.4 relaxes any of it — the changes are about *who plans the work* and *which decisions block on you live*, never about *what counts as evidence* or *whether the agent gets to interpret a result*.
+This standard fixes all three. The changes are about *who plans the work*, *which decisions block on you live*, and, as of the second group above, *what counts as evidence in the first place* — never about *whether the agent gets to interpret a result*. That line does not move.
 
 ---
 
@@ -78,9 +87,52 @@ The line: **the agent describes the picture, Cooper decides what the picture mea
 
 ---
 
+## The Control Standard
+
+**Read this alongside the Evidence Standard.** The Evidence Standard governs *how a trustworthy result is reported*; this section governs *whether "real exceeds null" is trustworthy in the first place*. Added 2026-09-10, paid for by a single arc that produced four retractions with one control in place each time — every one caught by a control, none by a review.
+
+### Four controls, not one
+
+**Any claim of the form "real exceeds null" requires four controls.**
+
+| control | asks | consequence of omitting it |
+|---|---|---|
+| **Negative** | does the procedure stay quiet on structureless data? | false positives read as findings |
+| **Positive** | does it fire on known structure at the scale of interest? | cannot distinguish "no signal" from "wrong statistic" |
+| **Null-parameter sweep** | is the boundary the data's, or the null's own free parameter? | a boundary that tracks the null's own bandwidth rather than the data reads as a real finding until swept |
+| **Blindness** | can the procedure still see anything here, or has it been tuned deaf? | nulls read as closure |
+
+**The fourth is normally absent and is structurally invisible unless named.** A negative and a positive control both return "no detection" when the method works *and* when it has been tuned into insensitivity. Only a positive planted **at the edge of detectability** separates those.
+
+**Corollary — the estimated-parameter null.** A null built by estimating a parameter from the data and simulating from the estimate **is not unbiased at any setting of that parameter**: it carries estimator noise as real structure at small bandwidth, and absorbs real structure at large bandwidth. The conclusion must hold **across the family**, not at a chosen member. **A single-bandwidth null is a result with an unreported free parameter.**
+
+> **Worked instance, for calibration.** A crossover statistic tracked its own surrogate's bandwidth at ≈2.6× that bandwidth over a 1–300 s sweep, and a structureless positive control reproduced the real tape's crossover to within 0.5 s — retracting what had read as a genuine 30 s tape property. Separately, a known-Poisson tape read a statistic at 0.628 against the real tape's 0.873 on the same measure — **the control was more anomalous than the data**, which is what identified an apparent deficit as procedure bias rather than a finding.
+
+### Scope conditions on robustness claims
+
+> **A robustness or invariance claim stated without the regime in which it holds becomes a licence.** Every such claim carries the bandwidth, scale range, or sample condition under which it is true, **in the same sentence**. *"X is insensitive to Y"* is not a usable statement; *"X is insensitive to Y for `T ≪ L`"* is.
+
+**Worked instance, and the root cause of a lineage's largest retraction.** A phase prompt stated that a chosen statistic *"tolerates a slowly-varying underlying rate."* True — and true only for scales well below the envelope's own variation scale, because the statistic differences successive counts, which cancels a trend approximately linear across the differencing window; once the window approaches the scale on which the rate actually curves, the cancellation stops. The prompt stated the property and not the regime, and downstream that read as unconditional, after which a year of work rested on it. **It happened twice in one week** on the same arc — the second instance was in an early draft of this very section, which as first written treated an envelope-invariant statistic's property as unconditional when it is not.
+
+**Corollary — a scope condition is measured, not assumed.** When the regime is itself a function of a free parameter, it is swept, not quoted. Reporting a single-bandwidth value for a quantity whose regime depends on the bandwidth is the same failure this corollary exists to name.
+
+### Envelope invariance as a selection criterion
+
+**Prefer statistics that are provably zero under a locally-Poisson rate path. When choosing one that is not, the prompt must say so and say what removes the envelope.**
+
+This is a design criterion, not a caution. A session or activity envelope will masquerade as signal in any statistic not explicitly invariant to it — observed independently across four distinct statistics on one tape in one arc (a rate field, a magnitude-thresholded cell count, a variance-ratio statistic at every rung, and an interval-based divergence measured two ways). **On data with a strong envelope, any statistic not explicitly envelope-invariant will report the envelope.**
+
+A cross-channel divergence of the form `D = m + lograte/ln10 + γ/ln10` is the kind of statistic that satisfies the criterion: identically zero under a locally-Poisson process **at any rate path**, so the envelope cancels by construction rather than by correction. That property is why it is the right instrument to reach for first — asked of a candidate statistic **before it is written, not after its first result needs explaining.**
+
+**A statistic that is not envelope-invariant remains admissible**, but the prompt must then state (i) what removes the envelope, and (ii) which controls prove the removal worked.
+
+> **Caveat that belongs with the criterion.** Envelope invariance is a property of the *population* statistic. A statistic built to be zero under a constant rate is typically zero only where the rate is constant **across its own kernel or window**; within-window rate variation can still drive it away from zero with no real structure present. So invariance narrows what a control must rule out — it does not remove the need for one.
+
+---
+
 ## Prompt Structure
 
-Every agent prompt has these thirteen sections, in this order.
+Every agent prompt has these thirteen sections, in this order. (The Control Standard, above, and the Retraction Sweep, below, are standing rules this document itself applies — not numbered prompt sections a phase author fills in per phase, unlike the thirteen here.)
 
 ---
 
@@ -136,6 +188,8 @@ The agent's first deliverable is a plan, not code: a task breakdown in the §3b 
 This is one round-trip per phase, not one per task. Once the plan is approved, the agent executes it against the same rules as before — each task still ends in a commit, the escalation table still governs when it must stop, and it still isn't allowed to deviate from the approved plan's scope without flagging the deviation and why.
 
 If a phase is small enough, or Cooper already knows exactly how it should be broken down, Cooper may skip plan authorship and hand the agent a pre-written task list directly — in that case this section is simply omitted from the prompt and execution starts at §3b's format with the tasks already filled in. Either way, the *plan itself*, once it exists, follows §3b's rules.
+
+> **When to use plan authorship at all, added 2026-09-10.** Plan authorship (the agent proposes a breakdown; Cooper approves it) is the right mode once a question has been derived far enough to pre-register its numbers — its targets are fixed, so freedom over method is safe. Before that point, a Cooper-authored step-by-step task list (skip this section, per the paragraph above) is the right mode: with soft or undetermined targets, letting the agent choose both the method and the breakdown is an unsupervised agent, not a plan Cooper approved. These are phases of one process, not competing styles, and the choice belongs at prompt-writing time, not mid-phase.
 
 #### 3b. Task Checklist Format
 
@@ -458,6 +512,7 @@ Field notes:
 - **`decisions_log`** captures implementation micro-decisions. Not for approval — so that when a number looks wrong six weeks later, the reason is written down.
 - **`surprises`** is the one field where the agent may volunteer something nobody asked for. It's how undocumented data problems surface, and, as of v1.4, where every `LOG`-tier escalation lands. An empty `surprises` array on a data-touching phase is itself worth a second look.
 - **`gate_mode`** and **`escalation.tier`** are new in v1.4 — they make it possible to tell, from the digest alone, whether a phase auto-continued and whether anything that fired was a `HARD STOP` or a `LOG`.
+- **A config's hash covers every field, including its `why`/rationale strings, not only the computational ones.** *(Known property, recorded 2026-09-10 rather than fixed — flagged so it is not a surprise.)* Outputs are keyed by config hash (§13), so amending a rationale string to correct it would silently re-key every artifact that config produced. **The correction lives in the Retraction Sweep and the decision it belongs to; the config's own `why` field is left as written and marked stale there, not edited.** If the config schema is ever revised to hash computational fields only, rationale text could be corrected in place — not worth doing now, but worth knowing why it currently can't be.
 
 ---
 
@@ -476,6 +531,31 @@ Commits are the audit trail. A phase that runs to completion and commits once at
 | **Commit before every `HARD STOP` escalation** | Hard stop = commit current state first, then post. The failure must be reproducible from the tree. |
 | **Commit before any long run** | Anything over ~10 minutes gets a commit first, so an interrupted run doesn't lose the code that produced the partial output. |
 | **Bisect a regression, don't eyeball it** | If a headline metric regresses between phases with no expected cause, use `git bisect` against the phase's own reproduce command to isolate the exact commit, rather than manually diffing. |
+
+---
+
+## Retraction Sweep — **new in v1.4**
+
+Read this alongside Git Discipline (§13) — it is a standing rule about commit practice, not a numbered section a phase author fills in per prompt, unlike §1–§13 above.
+
+**When a decision withdraws a premise, the same commit carries the list of everything that cited it.**
+
+**The gap this closes.** A decision register is typically append-only and citations run one way, so nothing links a premise back to its citers by default. One retraction on this project's own record had been load-bearing in a build brief, a committed config's rationale field, a phase prompt, two working documents, and — found only by accident, while doing something unrelated — **the blocker rationale of a detector package headed for live use.** No mechanism in the project would have found that citation on purpose.
+
+**Requirement.** A decision that retracts anything includes a sweep table: every file that cited the retracted quantity, each marked
+
+- **`withdrawn`** — the claim goes;
+- **`corrected`** — the claim needs restating, not deleting;
+- **`unaffected — same conclusion, another route`** — the document cites the premise **and is still right**, because its conclusion has an independent derivation.
+
+**The third label matters as much as the first two.** Without it a future reader cannot distinguish a sound conclusion from an unreviewed one, and marking it is a positive statement rather than a dodge.
+
+**Cost.** The search is a grep for the premise's distinctive numbers or name. On the arc that produced this rule, the sweep took minutes.
+
+**Two rules the first sweep produced, worth carrying:**
+
+1. **A committed config's rationale field is swept but not edited.** Outputs are keyed by config hash, so amending a `why` string silently re-keys every artifact that config produced (§12's field note on this). **The correction lives in the decision; the config row says the rationale is stale and points there.**
+2. **Historical prompts are bannered, not rewritten.** A phase prompt is the record of what was asked. A retraction banner at the head preserves the record and warns the reader; editing the body destroys the audit trail this standard exists to protect.
 
 ---
 
@@ -502,3 +582,6 @@ Commits are the audit trail. A phase that runs to completion and commits once at
 | Agent recommends a next step | Conclusions are Cooper's, drawn from charts. An agent recommendation is an interpretation smuggled in as a finding. |
 | **Agent begins implementation before its plan (§3) is approved** | The one round-trip §3 exists to guarantee gets skipped, and scope drifts without Cooper having agreed to it |
 | **Phase set to `async` gate mode with no `HARD STOP` rows at all** | An async phase with nothing that can stop it isn't async, it's unsupervised — every phase needs at least one row that actually blocks |
+| **Ratio to a null whose magnitude is itself scale-dependent** | The denominator can collapse at one end of an axis and the ratio explodes with no real change in the numerator, and the ratio can even be non-monotone in the very quantity it's meant to track. Report absolute excess in a stable unit (e.g. sd units) alongside any ratio |
+| **A threshold quoted without a reference** | A number with no scale is unreadable — a raw statistic can look dramatic until it has a ceiling to compare against, and the ceiling can eat the whole apparent effect |
+| **Feature or object counts on a dense, interacting field, reported without their spread over seeds** | A boolean or count extracted from a continuous, non-isolated field is unstable by construction — there are no gaps to cut at, so seed-dependent counts are the normal case, not a corner case. Either measure the field instead of counting discrete features on it, or report the count distribution and the seed-stable fraction as first-class quantities |
