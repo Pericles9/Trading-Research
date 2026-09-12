@@ -62,11 +62,24 @@ Files added, pre-flight only (F1-T0 through F1-T6 have not run yet):
 - `research/fundamentals_f1/chart_t1_identity_quality.py` — F1-T1d chart, reusing
   `research/phase_9/chart_common.py`'s validated GREEN/YELLOW/RED status triad rather than a new
   palette. `results/fundamentals_f1/charts/t1_identity_quality_by_year.html`.
+- `research/fundamentals_f1/t2_massive_pull.py` — F1-T2, the Massive bulk pull. Run and verified:
+  2,935 distinct CIKs, 8 working endpoints (`ratios` not_found, no reachable path), zero fetch
+  failures after two bugs caught and fixed in dry-run testing (pagination `next_params` crash; four
+  endpoints — `short_interest`, `short_volume`, `float`, `splits` — silently ignoring `cik=` and
+  returning arbitrary unfiltered results, fixed by pulling those by ticker instead).
+  `t2_pull_summary.json` (tracked) in `results/fundamentals_f1/artifacts/`.
+- `data/raw/fundamentals/massive/2026-09-12/<source>/<cik>.json` — raw archive (gitignored under
+  `/data/`), 8 sources × 2,935 CIKs, 23,480 files, 2.17 GB. `fetch_manifest.json` (gitignored, same
+  rule) records per-source endpoint/keying/record-count/checksums.
+- `.gitignore` — added `results/fundamentals_f1/artifacts/_*.json` (internal resumption/progress
+  caches, distinct from the tracked summary JSONs).
+- `docs/data/fundamentals_sources.md` — F1-T2e: per-source field schema, sample record, and a
+  summary table for all 8 archived Massive sources.
 
 **Built so far:** pre-flight (D14 Amendment A1, D27–D33), F1-PF5 (`t0_spine.parquet`), F1-T0 (fired
 escalation row 1), Amendment F1-A1's F1-T0f/F1-T0g (resolved it — Outcome A, row 1 retired, rows
-1a–1c in force), and F1-T1 (identity spine, escalation row 2 does not fire). **F1-T2 unblocked. Not
-yet built:** F1-T2 through F1-T6.
+1a–1c in force), F1-T1 (identity spine, escalation row 2 does not fire), and F1-T2 (Massive bulk
+pull, network step closed). **Not yet built:** F1-T3 through F1-T6.
 
 ## Phase 10 addendum — v3 and v4 (folder-level; branch `phase/10`, 2026-08-06)
 

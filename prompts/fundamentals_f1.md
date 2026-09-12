@@ -25,6 +25,15 @@ rows 1a–1c (§6) and D14 Amendment A1's F1-T0 gap (already closed) are in forc
 unblocked. The task list below reflects both amendments inline, at the sections they touch, rather than
 requiring a second document to be read alongside this one.
 
+**F1-T1 (identity spine) and F1-T2 (Massive bulk pull) both complete, 2026-09-12.** F1-T1: 20,951 events
+resolved to CIK, 97.32% exact, 1.49% ambiguous (37 tickers), 1.18% unresolved — escalation row 2 does not
+fire. F1-T2: 2,935 distinct CIKs pulled across 8 working endpoints (`ratios` not_found, recorded not
+guessed), 23,480 raw files, 2.17 GB, zero fetch failures after two bugs (pagination, silent `cik=`
+mishandling on four endpoints) were caught in dry-run testing and fixed before the full-scale run. The
+network step is closed — everything from F1-T3 onward that touches Massive/SEC EDGAR still needs D14
+Amendment A1's scope, but the bulk archive itself is done and immutable. Full results inline at F1-T1/F1-T2
+below.
+
 ---
 
 ## 0. Standing constraints that apply, restated with values
@@ -268,27 +277,53 @@ a subscription expiry behind them. F1-T0f's Outcome A (2026-09-12) confirms the 
 endpoints themselves are usable too (§4's caution has been resolved in the pull's favor), but the
 provenance marking below stays as designed regardless — it costs nothing and the cross-check value holds.**
 
-- [ ] **F1-T2a** — Confirm the subscription actually includes what is needed. Financials require Stocks
+- [x] **F1-T2a** — Confirm the subscription actually includes what is needed. Financials require Stocks
       Developer or above, **or** Stocks Starter plus the Financials and Ratios expansion. **If an endpoint
       returns an authorization error, stop and post. Do not work around it, do not substitute a different
       endpoint, do not scrape.** Confirmed 2026-09-11 during F1-T0: `GET /vX/reference/financials` returns
-      200 live, entitlement is not the blocker.
-- [ ] **F1-T2b** — Pull, for every Central Index Key in `ticker_identity`, across the full available history
+      200 live, entitlement is not the blocker. **`ratios` has no reachable endpoint** at any of 4 plausible
+      paths tried (all 404) — recorded `not_found`, not substituted or scraped, per this task's own
+      instruction.
+- [x] **F1-T2b** — Pull, for every Central Index Key in `ticker_identity`, across the full available history
       (records begin 2009-03-29): **income statements, balance sheets, cash flow statements, ratios, ticker
       details, ticker events, splits, dividends, short interest, short volume.** Pull by Central Index Key,
       not by ticker. **Amended, Amendment F1-A1 §4:** the fetch manifest for financial statements and
       ratios records `source_of_record: false` — archived as the `companyfacts` cross-check harness and
       the F1-T0f/g evidence base, and per F1-T0f's Outcome A they may now also populate `fin_` directly
       (`fin_source = vendor_archive`), which reverses the original "may not populate `fin_`" default this
-      amendment's first draft set for the Outcome-B case.
-- [ ] **F1-T2c** — Pull the float endpoint too, once, and store it in the raw archive **only**. It is banned
+      amendment's first draft set for the Outcome-B case. **Run 2026-09-12**
+      (`research/fundamentals_f1/t2_massive_pull.py`): all 2,935 distinct resolved CIKs, all 8 working
+      endpoints succeeded. **Two bugs caught and fixed before the full-scale run:** (1) pagination —
+      `next_params` was set to `None` on subsequent pages, which crashed unpacking `**params`; fixed to
+      `{}` (the vendor's `next_url` already carries its full query string). (2) **silent parameter
+      mishandling** — `short_interest`, `short_volume`, `float`, and `splits` return HTTP 200 with an
+      arbitrary *unfiltered* result (observed tickers "A", "DPU", "GECCG" for the same requested CIK across
+      repeated tests) when passed `cik=`, with no error signal at all — worse than an outright rejection,
+      since a script trusting it would have archived confidently wrong data. Fixed by pulling those four
+      endpoints (plus `dividends`, same family) **by ticker** instead, using the F1-T1-verified ticker
+      string per CIK — identity resolution is still respected, just not via a `cik=` parameter these
+      endpoints don't actually honor. Both fixes validated on CLRB (paginated correctly, 78 financials
+      records) before the full run. Result: `financials` 111,459 records, `ticker_details` 3,110,
+      `splits` 2,554, `dividends` 35,356, `short_interest` 440,244, `short_volume` 1,776,508, `float` 2,671,
+      `ticker_events` 2,655 — all 2,935 CIKs, zero failures. Full summary:
+      `results/fundamentals_f1/artifacts/t2_pull_summary.json`.
+- [x] **F1-T2c** — Pull the float endpoint too, once, and store it in the raw archive **only**. It is banned
       from the event layer by D27. Its presence in the archive is so that D27 can be audited later, not so
-      that it can be used.
-- [ ] **F1-T2d** — Write a fetch manifest per source: endpoint, parameters, request timestamp, record count,
+      that it can be used. Done as part of F1-T2b's run — 2,671 records across 2,935 CIKs (264 empty,
+      expected: not every ticker has a float record). `source_of_record: false` in the manifest.
+- [x] **F1-T2d** — Write a fetch manifest per source: endpoint, parameters, request timestamp, record count,
       file checksum. Archive raw responses unmodified.
-- [ ] **F1-T2e** — Document the schema of every archived source in `docs/data/fundamentals_sources.md`,
-      version-controlled.
-- [ ] **F1-T2f** — Commit. **The network step is now closed.**
+      `data/raw/fundamentals/massive/2026-09-12/fetch_manifest.json` — one entry per source (endpoint,
+      keyed_by, source_of_record, n_ciks_pulled, total_records, request_timestamp_utc), plus a per-file
+      SHA256 checksum recorded for every one of the 23,480 archived files. Verified complete: all 8 sources
+      present, all 2,935 CIKs per source.
+- [x] **F1-T2e** — Document the schema of every archived source in `docs/data/fundamentals_sources.md`,
+      version-controlled. Done — per-source field list, sample record, and a summary table (endpoint, key,
+      source_of_record, n, total records) added to `docs/data/fundamentals_sources.md`'s "Massive vendor
+      pull" section. Integrity spot-check (5 random files/source plus a full-population size/zero-length
+      scan, all 8 sources): zero malformed-JSON files, zero non-list payloads, sizes consistent with each
+      endpoint's expected volume. Archive: 23,480 files, 2.17 GB total.
+- [x] **F1-T2f** — Commit. **The network step is now closed.**
 
 > **Note on short interest and short volume.** These are not fundamentals and were not in the original
 > request. They are in the pull because they are rented like everything else, they are event-dated, and they

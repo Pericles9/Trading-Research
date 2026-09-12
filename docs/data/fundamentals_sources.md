@@ -66,9 +66,64 @@ Tiered construction — see `docs/Universe-Decisions.md` D33 for the full reason
   `data/collection_scripts/collect_massive_data.py`, which embeds a live key in plaintext — that file
   is not reused or referenced by this build.
 - Network authorization: `docs/Universe-Decisions.md` D14 Amendment A1, scoped to this task only.
-- Per-source schema: **filled in at F1-T2e**, once the pull actually runs.
 - Float endpoint (`/stocks/vX/float`): archived at F1-T2c for orientation only. **Banned from
   `event_fundamentals` or any downstream table by D27.**
+- **Pull executed 2026-09-12** (`research/fundamentals_f1/t2_massive_pull.py`): all 2,935 distinct
+  resolved CIKs from F1-T1, across 8 working endpoints. Raw archive:
+  `data/raw/fundamentals/massive/2026-09-12/<source>/<key>.json`, one file per (source, key), key =
+  CIK (zero-padded 10-digit string) for every source including the five that are actually queried by
+  ticker — the *file name* is always the CIK so all 8 sources join back to `ticker_identity.parquet`
+  the same way; only the outbound API request differs. Every file is a JSON array (possibly empty —
+  empty means "queried, vendor returned zero records for this CIK," not a fetch failure); manifest and
+  checksums at `data/raw/fundamentals/massive/2026-09-12/fetch_manifest.json`. Integrity spot-check
+  (`n=5` random files per source plus full-population size/zero-length scan, all 8 sources, 2026-09-12):
+  zero malformed-JSON files, zero non-list top-level payloads, sizes consistent with the endpoint's
+  expected record volume. Total archive: 23,480 files, 2.17 GB.
+
+  `ratios` was named in the work order but no endpoint exists at any plausible path (4 tested, all
+  404) — **not_found**, recorded in the manifest, not substituted or guessed further (F1-T2a).
+
+  | source | endpoint | keyed by | source_of_record | n CIKs | total records | notes |
+  |---|---|---|---|---|---|---|
+  | `financials` | `/vX/reference/financials` | `cik` | **false** (D-pending / F1-T0f Outcome A) | 2,935 | 111,459 | bundles 4 statements per filing period, see below. 719/2,935 files empty (no financials filed under that CIK in vendor's coverage window — smallest/newest names). |
+  | `ticker_details` | `/v3/reference/tickers` | `cik` | true | 2,935 | 3,110 | reference/identity record, not a time series |
+  | `splits` | `/v3/reference/splits` | ticker | true | 2,935 | 2,554 | 1,587/2,935 empty (no splits in history — expected for most names) |
+  | `dividends` | `/v3/reference/dividends` | ticker | true | 2,935 | 35,356 | 2,040/2,935 empty (no dividend history — expected, most of this universe is non-dividend-paying momentum names) |
+  | `short_interest` | `/stocks/v1/short-interest` | ticker | true | 2,935 | 440,244 | biweekly settlement-date series; 0 empty files |
+  | `short_volume` | `/stocks/v1/short-volume` | ticker | true | 2,935 | 1,776,508 | daily series; 0 empty files; largest source on disk (940 MB) |
+  | `float` | `/stocks/vX/float` | ticker | **false (D27, archive-only, never a join key)** | 2,935 | 2,671 | single point-in-time record per ticker where available; 264/2,935 empty |
+  | `ticker_events` | `/vX/reference/tickers/{ticker}/events` | ticker (path segment) | true | 2,935 | 2,655 | path-based, not query-param; usually 0-1 event per CIK (ticker-change history) |
+
+  **Per-source field schema** (from a live sample, `0000001750` = AAR Corp / AIR, 2026-09-12):
+
+  - **`financials`** — top level: `cik`, `company_name`, `tickers` (list), `sic`, `fiscal_year`,
+    `fiscal_period` (e.g. `TTM`, `Q1`, `FY`), `timeframe`, `start_date`, `end_date`, `filing_date`,
+    `acceptance_datetime`, `source_filing_url`, `source_filing_file_url`, `financials` (nested dict).
+    `financials.income_statement`, `.balance_sheet`, `.cash_flow_statement`, `.comprehensive_income`
+    are each `{field_name: {value, unit, label, order}}` — GAAP-labeled line items (e.g.
+    `net_income_loss`, `revenues`, `basic_average_shares`, `accounts_payable`, `net_cash_flow`), not
+    raw XBRL tags. One vintage per filing period per the F1-T0f/g finding above — point-in-time, not
+    the restated value, and `source_of_record=false` in the manifest (companyfacts cross-check harness
+    per Amendment F1-A1 §4; may still populate `fin_` directly under F1-T0f's Outcome A).
+  - **`ticker_details`** — `ticker`, `name`, `cik`, `market`, `locale`, `primary_exchange`, `type`
+    (e.g. `CS`), `active` (bool), `currency_name`, `composite_figi`, `share_class_figi`,
+    `last_updated_utc`. Point-in-time reference snapshot only — this pull did not use the `date=`
+    as-of parameter (that's F1-T1's job, already done); this archive is orientation/cross-check.
+  - **`splits`** — `id`, `ticker`, `execution_date`, `split_from`, `split_to`.
+  - **`dividends`** — `id`, `ticker`, `cash_amount`, `currency`, `dividend_type`, `frequency`,
+    `declaration_date`, `ex_dividend_date`, `record_date`, `pay_date`.
+  - **`short_interest`** — `ticker`, `settlement_date`, `short_interest`, `avg_daily_volume`,
+    `days_to_cover`. Biweekly (FINRA settlement schedule).
+  - **`short_volume`** — `ticker`, `date`, `total_volume`, `short_volume`, `short_volume_ratio`,
+    `exempt_volume`, `non_exempt_volume`, plus per-venue breakdowns (`nyse_short_volume`,
+    `nasdaq_carteret_short_volume`, `nasdaq_chicago_short_volume`, `adf_short_volume`, and each
+    venue's `_exempt` counterpart). Daily.
+  - **`float`** — `ticker`, `free_float`, `free_float_percent`, `effective_date`. Single record per
+    ticker where available — not a time series. D27: archive-only, never joined into
+    `event_fundamentals`.
+  - **`ticker_events`** — `cik`, `name`, `composite_figi`, `events` (list of
+    `{type, date, <type>: {...}}`, e.g. `{"type": "ticker_change", "date": ..., "ticker_change":
+    {"ticker": "AIR"}}`).
 
 ## SEC EDGAR pull (F1-T3, F1-T4)
 
