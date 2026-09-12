@@ -53,6 +53,10 @@ results/scale_field/artifacts/*.parquet
 # itself gitignored under /data/) plus committed config + code. digest.json and the
 # fetch manifests, which carry every n, checksum, and provenance field, ARE tracked.
 results/fundamentals_f1/artifacts/*.parquet
+# Underscore-prefixed files under this artifacts/ are internal resumption caches (raw
+# per-(ticker,date) API responses so a multi-thousand-call resolution script can restart
+# without re-querying everything) -- regenerable by re-running the script, not a finding.
+results/fundamentals_f1/artifacts/_*.json
 
 # Per-event chart HTML plus the 4.8 MB offline plotly.min.js each directory needs
 # (D14 forbids a CDN, so the bundle is local and unavoidable). 53 MB for two events,

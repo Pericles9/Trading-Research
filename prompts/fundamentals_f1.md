@@ -223,19 +223,38 @@ F1-T2 are unblocked (Amendment F1-A1 §4); `fin_` may be built from the vendor a
 
 ### F1-T1 — Identity spine
 
-- [ ] **F1-T1a** — Build `ticker_identity`: for every `(ticker, t0)` pair in the in-scope universe
-      (`t0` from `t0_spine.parquet`, F1-PF5 — **not** assumed to exist trivially), resolve
-      the SEC Central Index Key **as of `t0`**, using the vendor's Ticker Details and Ticker Events endpoints
-      and the SEC's own ticker-to-identifier mapping as an independent cross-check.
-- [ ] **F1-T1b** — Store the key zero-padded to 10 digits, as a string. Never as an integer — leading zeros
-      are load-bearing and silently lost on numeric round-trip.
-- [ ] **F1-T1c** — Flag every event whose ticker maps to **more than one** Central Index Key across the
-      2020–2024 window as `resolved_ambiguous`, with both candidates recorded. These are the recycled symbols
-      and they are the whole reason for this task.
-- [ ] **F1-T1d** — Report the count and share of `resolved_exact` / `resolved_ambiguous` / `unresolved`,
-      cross-cut by year and by whether the ticker is currently delisted. Chart the ambiguous and unresolved
-      share by year.
-- [ ] **F1-T1e** — Commit.
+**Done, 2026-09-12 — with a methodology correction caught mid-task, not after.** The first
+implementation pre-filtered tickers via `/v3/reference/tickers?ticker=X&active=true/false`, treating
+a ticker as unambiguous whenever that cheap enumeration found only one CIK, and skipping per-event
+as-of resolution for it. That run found **zero** ambiguous tickers across all 2,930 — suspiciously
+clean for a universe this file's own D30 text describes as "a corner of the market where symbols are
+recycled after delisting and reverse splits are routine." Spot-checking the widest-date-span tickers
+directly (querying `date=<earliest event>` vs. `date=<latest event>`) found a confirmed counter-example
+the pre-filter missed entirely: **`NTRP`** resolves to "Neurotrope, Inc." (CIK `0001513856`) on
+2020-01-22 and "NextTrip, Inc." (CIK `0000788611`) on 2025-10-24 — two different SEC registrants — and
+the `active=true/false` enumeration for that exact ticker string found only one candidate. **The
+shortcut method is unreliable and was not used in the result below** — every one of the 20,951 events
+was resolved independently via its own `date`-parameterized query instead.
+`research/fundamentals_f1/t1_identity.py`, `results/fundamentals_f1/artifacts/t1_identity_summary.json`.
+
+- [x] **F1-T1a** — Built `ticker_identity` (`results/fundamentals_f1/artifacts/ticker_identity.parquet`):
+      every `(ticker, t0)` pair resolved independently via `/v3/reference/tickers?ticker=X&date=<event_date>`
+      (`t0`/event date from `t0_spine.parquet`, F1-PF5). SEC's `company_tickers.json` (current-snapshot
+      cross-check, since SEC publishes no bulk historical ticker→CIK mapping) agrees on **98.66%**
+      (18,083/18,329 checkable events) — a real, non-trivial disagreement rate, reported rather than
+      investigated further here, since it validates only the *current* end of each ticker's history.
+- [x] **F1-T1b** — CIK stored zero-padded to 10 characters, string type, throughout.
+- [x] **F1-T1c** — **37 tickers** (313 events) flagged `resolved_ambiguous` — every event on a ticker
+      whose *own events in this universe* resolved to more than one distinct CIK, with all distinct
+      CIKs recorded per event (not only the events sitting on the "wrong" side of the split). The
+      superseded shortcut method would have missed the CIK entirely for **84 tickers** — reported as
+      `shortcut_blind_spots` in the summary so the discrepancy stays visible rather than disappearing
+      the way it did on the first run.
+- [x] **F1-T1d** — `resolved_exact` 20,390 (97.32%) / `resolved_ambiguous` 313 (1.49%) / `unresolved`
+      248 (1.18%). Combined ambiguous+unresolved = **2.68%**, under the 5% escalation-row-2 threshold —
+      **does not fire.** Cross-cut by year and by currently-delisted status in the summary JSON.
+      Chart: `results/fundamentals_f1/charts/t1_identity_quality_by_year.html`.
+- [x] **F1-T1e** — Committed.
 
 ### F1-T2 — Massive bulk pull. Network step. This is the piece with a deadline.
 
@@ -554,7 +573,7 @@ is superseded by rows 1a–1c below.
 | 1a | F1-T0f shows the vendor serves original as-filed values | comparison in `t0f_t0g_disambiguation_summary.json` | **CONFIRMED, 2026-09-12.** Outcome A. Not a stop — a simplification. `fin_` builds from the vendor archive as originally planned (this file's §4 schema section, revised). |
 | 1b | F1-T0g shows `companyfacts` carries one observation per period | `n_distinct_values` in the same summary | Did not fire — **CONFIRMED multi-vintage, 2026-09-12** (5 observations, 2 distinct values on the tested concept). Retained as a standing row for any future company/concept where it might. |
 | 1c | F1-T3h blast radius exceeds a threshold **Cooper sets before F1-T3 runs** | share of events, from F1-T3h | The flag-only interim is not available; F1-T4b (the `companyfacts`-based `fin_` build) becomes mandatory rather than optional. **Not yet evaluated — F1-T3 has not run.** |
-| 2 | `identity_quality` is not `resolved_exact` for **> 5%** of in-scope events | share of rows, from F1-T1d | **Stop and post.** The join spine is the foundation; a weak one contaminates every group above it. |
+| 2 | `identity_quality` is not `resolved_exact` for **> 5%** of in-scope events | share of rows, from F1-T1d | **Checked, 2026-09-12: 2.68% (561/20,951). Does not fire.** Stop and post. The join spine is the foundation; a weak one contaminates every group above it. |
 | 3 | Any `*_accepted_ns >= t0_ns` in a committed table | assertion in §5 | **Hard stop.** This is a bug in the as-of join, not a data-quality state. |
 | 4 | An endpoint returns an authorization or entitlement error | HTTP status | **Stop and post.** Do not substitute an endpoint, do not scrape, do not proceed with partial coverage silently. |
 | 5 | `shs_quality != 'unavailable'` for **< 70%** of in-scope events | coverage share, from F1-T6a | **Stop and post before any tier 2 or 3 work is scoped.** Threshold is a placeholder — **Cooper sets it before F1-T4 runs**, not after seeing the number. |

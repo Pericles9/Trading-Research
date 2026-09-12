@@ -52,9 +52,21 @@ Files added, pre-flight only (F1-T0 through F1-T6 have not run yet):
   `t0f_t0g_disambiguation_summary.json` tracked; `data/raw/fundamentals/sec/2026-09-12/companyfacts/`
   (gitignored) holds CLRB's archived `companyfacts` response.
 
+- `research/fundamentals_f1/t1_identity.py` — F1-T1, identity spine. First implementation used a
+  ticker-level `active=true/false` pre-filter that found zero ambiguous tickers across 2,930 —
+  disproven by direct spot-check (`NTRP` resolves to two different SEC registrants at different
+  dates, which the pre-filter missed) and superseded, same file, by per-event as-of resolution for
+  all 20,951 events. Run and verified: 37 ambiguous tickers (313 events), 248 unresolved, escalation
+  row 2 does not fire (2.68% < 5%). `ticker_identity.parquet` (gitignored) and `t1_identity_summary.json`
+  (tracked) in `results/fundamentals_f1/artifacts/`.
+- `research/fundamentals_f1/chart_t1_identity_quality.py` — F1-T1d chart, reusing
+  `research/phase_9/chart_common.py`'s validated GREEN/YELLOW/RED status triad rather than a new
+  palette. `results/fundamentals_f1/charts/t1_identity_quality_by_year.html`.
+
 **Built so far:** pre-flight (D14 Amendment A1, D27–D33), F1-PF5 (`t0_spine.parquet`), F1-T0 (fired
-escalation row 1), and Amendment F1-A1's F1-T0f/F1-T0g (resolved it — Outcome A, row 1 retired, rows
-1a–1c in force). **F1-T1 and F1-T2 unblocked. Not yet built:** F1-T1 through F1-T6.
+escalation row 1), Amendment F1-A1's F1-T0f/F1-T0g (resolved it — Outcome A, row 1 retired, rows
+1a–1c in force), and F1-T1 (identity spine, escalation row 2 does not fire). **F1-T2 unblocked. Not
+yet built:** F1-T2 through F1-T6.
 
 ## Phase 10 addendum — v3 and v4 (folder-level; branch `phase/10`, 2026-08-06)
 
