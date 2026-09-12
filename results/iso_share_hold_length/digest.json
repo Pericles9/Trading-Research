@@ -1,0 +1,91 @@
+{
+  "phase": "iso_share_hold_length",
+  "config_hash": null,
+  "status": "hard_stop",
+  "escalation": {
+    "criterion": "prompt Escalation Criteria rows 8 and 9 (negative and positive control failure)",
+    "observed": "T0-T3 complete, dev tier (49/50 primary events). Negative control (placebo, no relationship to real data) produces separations up to 2258 bp, exceeding the smallest required threshold (133.9 bp) and the real iso_share result at 4 of 6 horizons. Positive control (133.9 bp planted) not cleanly recovered -- several horizons detect negative apparent separation. T4 (compare against threshold) does not run: the comparison would report on data the controls have shown is not yet trustworthy at n=49.",
+    "tier": "HARD STOP -- open, awaiting Cooper's review"
+  },
+  "headline_metrics": [
+    {
+      "name": "conditions_column_in_duckdb",
+      "value": false,
+      "n": null,
+      "source": "results/iso_share_hold_length/artifacts/t0_audit.json",
+      "chart": null
+    },
+    {
+      "name": "t2_iso_share_coverage",
+      "value": 0.98,
+      "n": 50,
+      "source": "research/iso_share_hold_length/t2_iso_share.py:main",
+      "chart": null
+    },
+    {
+      "name": "t2_iso_share_median",
+      "value": 0.19161075853732246,
+      "n": 49,
+      "source": "research/iso_share_hold_length/t2_iso_share.py:main",
+      "chart": "results/iso_share_hold_length/charts/01_iso_share_distribution.html"
+    },
+    {
+      "name": "t2_iso_share_share_exactly_zero",
+      "value": 0.0,
+      "n": 49,
+      "source": "research/iso_share_hold_length/t2_iso_share.py:main",
+      "chart": "results/iso_share_hold_length/charts/01_iso_share_distribution.html"
+    },
+    {
+      "name": "t3_real_separation_bp_t3close_median_cut",
+      "value": 794.7416692950528,
+      "n": 49,
+      "source": "research/iso_share_hold_length/t3_separation.py:main",
+      "chart": "results/iso_share_hold_length/charts/02_markout_by_iso_group_and_horizon.html"
+    },
+    {
+      "name": "t3_negative_control_max_abs_separation_bp",
+      "value": 2257.6,
+      "n": 49,
+      "source": "research/iso_share_hold_length/t3_separation.py:main",
+      "chart": "results/iso_share_hold_length/charts/02_markout_by_iso_group_and_horizon.html"
+    },
+    {
+      "name": "t3_positive_control_planted_bp",
+      "value": 133.9,
+      "n": 49,
+      "source": "research/iso_share_hold_length/t3_separation.py:main",
+      "chart": "results/iso_share_hold_length/charts/02_markout_by_iso_group_and_horizon.html"
+    },
+    {
+      "name": "t3close_markout_std_bp_n49",
+      "value": 7121.294643,
+      "n": 49,
+      "source": "research/iso_share_hold_length/t3_separation.py:main",
+      "chart": "results/iso_share_hold_length/charts/02_markout_by_iso_group_and_horizon.html"
+    }
+  ],
+  "surprises": [
+    "T2a: iso_share is not zero-inflated as expected going in (0% of 49 events at exactly zero)",
+    "T3: both the negative and positive controls fail on the first pass -- the raw uncontrolled real-iso_share separation (up to 795 bp) would have looked like a strong finding without them",
+    "T3b required a disclosed deviation from the prompt as written (planted-synthetic positive control instead of reusing candidate (a)'s print-level participation_rate, a grain mismatch)"
+  ],
+  "output_files": [
+    "prompts/iso_share_hold_length.md",
+    "research/iso_share_hold_length/t0_audit.py",
+    "research/iso_share_hold_length/t2_iso_share.py",
+    "research/iso_share_hold_length/t3_separation.py",
+    "research/iso_share_hold_length/chart_01_iso_share_distribution.py",
+    "research/iso_share_hold_length/chart_02_markout_by_iso_group_and_horizon.py",
+    "results/iso_share_hold_length/artifacts/t0_audit.json",
+    "results/iso_share_hold_length/artifacts/t2_iso_share.json",
+    "results/iso_share_hold_length/artifacts/t3_separation.json",
+    "results/iso_share_hold_length/charts/01_iso_share_distribution.html",
+    "results/iso_share_hold_length/charts/02_markout_by_iso_group_and_horizon.html",
+    "results/iso_share_hold_length/REPORT.md",
+    "results/reports/iso_share_hold_length_report.md",
+    "results/iso_share_hold_length/digest.json"
+  ],
+  "source": "results/iso_share_hold_length/REPORT.md",
+  "reproduce": ".venv/Scripts/python.exe research/iso_share_hold_length/{t0_audit,t2_iso_share,t3_separation}.py"
+}

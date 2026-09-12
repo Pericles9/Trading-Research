@@ -707,3 +707,34 @@ statistic on this field is unsafe until this is fixed; per-feature quantities ar
 seed-stable fraction as a first-class quantity rather than discover instability as a finding.
 `research/scale_field/detector/GOING_LIVE.md:134` names this as an open blocker. Unscheduled;
 belongs to whichever phase fixes the F/G channel packages or runs Row 16.
+
+### OPEN — candidate (b), ISO share hold-length: dev-tier controls fail, HARD STOP (2026-09-12)
+
+**Status: open, awaiting Cooper's review.** `claude/what_would_change_a_decision.md` §2(b),
+`prompts/iso_share_hold_length.md`, `results/iso_share_hold_length/REPORT.md`.
+
+Candidate (a) (impact by participation) closed negative on branch `impact-by-participation` (PR #3,
+unmerged as of this entry) without moving the 70.98 bp cost floor enough to relax candidate (b)'s own
+threshold — see this register's entry above once that PR lands. Candidate (b) was run next, per the
+source document's own recommended sequencing. **T0–T2 (dev tier, 49/50 primary events) completed
+cleanly**: `conditions` (needed for the ISO flag) confirmed absent from DuckDB, read from raw
+per-event parquet instead; `iso_share` computed via the existing `det_minute` anchor
+(`results/phase_8/artifacts/a102_detection_anchors.parquet`) and minute-bar timestamps, not zero-
+inflated as expected (median 19.2%, 0% exactly zero).
+
+**T3 (the core measurement) triggered a HARD STOP, not a result.** The raw iso_share separation
+looked real (up to 795 bp at `t3_close`, exceeding every pre-registered required-separation
+threshold). **Both required controls (Agent Prompt Standard v1.4, The Control Standard) failed**: a
+negative-control placebo produced separations up to 2,258 bp — larger than the real result — and a
+planted positive-control effect was not cleanly recovered. Diagnosis: `t3_close` markout at n=49 has
+std=7,121 bp, driven by two outlier events (UCAR +44,768 bp, IMTE −9,640 bp) roughly 50–60× a typical
+event's magnitude — the median-split statistic is dominated by which side of a cut a handful of
+extreme events land on, real or placebo, at this sample size.
+
+**This is not a closed result in either direction.** Unlike candidate (a), candidate (b) has not
+failed — it has not yet produced a measurement the controls certify as distinguishable from noise.
+`what_would_change_a_decision.md` §4's "run nothing" criterion, which needs both candidates to fail,
+**still cannot be invoked**. Open questions for Cooper, stated in the report and not resolved here:
+whether full-tier promotion (~15,337 events, far more resistant to single-outlier domination) is
+worth authorising, and whether the median-split statistic itself is the wrong tool for a distribution
+this fat-tailed independent of sample size.
