@@ -45,9 +45,16 @@ Files added, pre-flight only (F1-T0 through F1-T6 have not run yet):
 - Empty skeleton directory: `results/fundamentals_f1/charts/`.
 - `data/raw/fundamentals/massive/2026-09-11/t0_restatement_test/` — raw archive (gitignored under
   `/data/`), two companies' full unfiltered financials history plus a fetch manifest.
+- `prompts/fundamentals_f1_amendment_a1.md` — Amendment F1-A1 (2026-09-12): named the gap F1-T0 left
+  (one vendor record per period, but which vintage?) and specified F1-T0f/F1-T0g to close it.
+- `research/fundamentals_f1/t0f_t0g_disambiguation.py` — F1-T0f/F1-T0g. Run and verified: Outcome A
+  (vendor serves original as-filed values) and `companyfacts` confirmed multi-vintage.
+  `t0f_t0g_disambiguation_summary.json` tracked; `data/raw/fundamentals/sec/2026-09-12/companyfacts/`
+  (gitignored) holds CLRB's archived `companyfacts` response.
 
-**Built so far:** pre-flight (D14 Amendment A1, D27–D33), F1-PF5 (`t0_spine.parquet`), and F1-T0
-(stopped, escalation row 1 fired). **Not yet built, pending Cooper's amendment:** F1-T1 through F1-T6.
+**Built so far:** pre-flight (D14 Amendment A1, D27–D33), F1-PF5 (`t0_spine.parquet`), F1-T0 (fired
+escalation row 1), and Amendment F1-A1's F1-T0f/F1-T0g (resolved it — Outcome A, row 1 retired, rows
+1a–1c in force). **F1-T1 and F1-T2 unblocked. Not yet built:** F1-T1 through F1-T6.
 
 ## Phase 10 addendum — v3 and v4 (folder-level; branch `phase/10`, 2026-08-06)
 

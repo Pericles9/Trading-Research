@@ -1493,9 +1493,11 @@ at the grain the source actually vintages at, not at the grain of the table's ro
 
 **Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-4
 
-The universe is 2,576 tickers in the corner of the market where symbols are recycled after delisting
-and reverse splits are routine. A ticker-keyed join silently attaches one company's balance sheet to
-another company's event.
+The universe is **2,930 tickers** across the 20,951 in-scope events. (D1's 2,576 is a different, smaller
+frame — 15,763 events — and does not apply here; corrected per Amendment F1-A1 §6, 2026-09-12 — the
+original work order mis-cited D1's count against this build's population.) It is a corner of the market
+where symbols are recycled after delisting and reverse splits are routine. A ticker-keyed join silently
+attaches one company's balance sheet to another company's event.
 
 **Decision.** `ticker_identity` resolves the CIK as of `t0` for every `(ticker, t0)` pair (F1-T1), and
 every fundamentals join downstream resolves on CIK, never ticker. Events whose ticker maps to more

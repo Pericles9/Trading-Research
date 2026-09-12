@@ -6,22 +6,31 @@ Companion to `prompts/fundamentals_f1.md`. Tracked copy of record for `data/raw/
 
 ## Status
 
-**STOPPED at F1-T0 (2026-09-11), escalation row 1 fired.** Pre-flight (D14 Amendment A1, D27–D33) and
-`t0_spine.parquet` (F1-PF5) are built and verified. F1-T0's restatement gate test found Massive's
-financials endpoint is **not point-in-time**: two independent universe companies with a confirmed SEC
-restatement event (AGAE, a 10-K/A; CLRB, a genuine 8-K Item 4.02 non-reliance event) both show zero
-duplicate `(start_date, end_date, timeframe)` records across their complete history, and CLRB's FY2023
-record queried with `filing_date.lt` set before its restatement 8-K returns byte-identical output to an
-unfiltered query. There is no earlier vintage for `filing_date` to gate to. Full record:
-`results/fundamentals_f1/artifacts/t0_restatement_test_summary.json`,
-`research/fundamentals_f1/t0_restatement_test.py`.
+**Amendment F1-A1 (2026-09-12) resolved the F1-T0 stop. F1-T1/F1-T2 unblocked; `fin_` may proceed from
+the vendor as originally planned.** Timeline:
 
-**Consequence: F1-T1 through F1-T6 do not run as originally scoped.** Per `prompts/fundamentals_f1.md`
-§3's own outcome table, the `fin_` group cannot be assembled from Massive's financials endpoint without
-look-ahead bias — every stored value would silently carry whatever the *latest* restatement says, not
-what was knowable at `t0`. The SEC route (raw XBRL per accepted filing, already the plan for `shs_` and
-`flg_`) becomes the source of record for `fin_` too. **This needs a work-order amendment from Cooper
-before F1-T2 or any later task runs** — not a workaround chosen here.
+1. Pre-flight (D14 Amendment A1, D27–D33) and `t0_spine.parquet` (F1-PF5) built and verified, 2026-09-11.
+2. **F1-T0** found exactly one vendor record per period (zero duplicates across two companies' complete
+   history) but did not establish *which* vintage that record is — escalation row 1 fired, correctly, on
+   an incomplete question.
+3. **Amendment F1-A1** named the gap and specified the disambiguating tests.
+4. **F1-T0f/F1-T0g** (2026-09-12) resolved it: CLRB's vendor `NetIncomeLoss` for FY2023 (-37,983,496,
+   `filing_date=2024-03-27`) matches its **original** 10-K exactly, not its restated 10-K/A
+   (-42,770,610, filed 2024-10-29). **The vendor is point-in-time — it is frozen at first-filed and
+   never updated when a restatement lands.** Separately, SEC `companyfacts` is confirmed genuinely
+   multi-vintage (5 observations across 5 accession numbers for the same period, 2 distinct values).
+   Escalation row 1a fires: **not a stop, a simplification** — the full `companyfacts`/XBRL
+   element-mapping rebuild is not mandatory before `fin_` can be built; it remains available for the
+   `fin_superseded_later` flag and as a cross-check harness. Full record:
+   `results/fundamentals_f1/artifacts/t0f_t0g_disambiguation_summary.json`,
+   `research/fundamentals_f1/t0f_t0g_disambiguation.py`.
+
+**Identification method, worth restating as a standing note (Amendment F1-A1 §0):** searching for any
+10-K/A or 10-Q/A in this universe mostly surfaces **administrative, Part-III-only amendments** filed
+~1 month after the original — adding exec-comp disclosure that would otherwise need a proxy statement,
+touching no financial-statement value. **An 8-K Item 4.02 ("Non-Reliance on Previously Issued Financial
+Statements") is the signal that actually means a genuine restatement.** Any future search for restated
+companies in this universe should search Item 4.02 first, not form type alone.
 
 Source schemas below are filled in as F1-T2 (Massive, once amended) and F1-T3 (SEC EDGAR) actually
 run.

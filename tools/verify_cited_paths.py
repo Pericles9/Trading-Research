@@ -158,6 +158,12 @@ EXPECTED_ABSENT = {
     "data/fundamentals/event_fundamentals.parquet":
         "prompts/fundamentals_f1.md §2 -- the event-join layer F1-T5 assembles. Does not exist "
         "until that task runs.",
+    "prompts/fundamentals_build_f1.md":
+        "prompts/fundamentals_f1_amendment_a1.md's own integration note and §6 -- Cooper's amendment "
+        "was drafted referencing this filename; the actual committed file is "
+        "prompts/fundamentals_f1.md (the stem used since pre-flight). Kept verbatim as the record of "
+        "the amendment as given, with the correction noted inline rather than silently rewriting "
+        "Cooper's text.",
 }
 
 # ---------------------------------------------------------------------------

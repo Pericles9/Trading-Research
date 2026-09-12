@@ -16,6 +16,15 @@ git history of this file and this branch (`build/fundamentals-f1`, branched from
 the original draft; §1's decisions are now registered (not proposed), and §3/§4's `t0` references are
 updated to point at the resolution instead of assuming a column that was never there.
 
+**Amendment note (2026-09-12).** F1-T0 fired escalation row 1 as designed (one vendor record per
+period, no duplicates) but that test alone did not establish which vintage the record carried.
+`prompts/fundamentals_f1_amendment_a1.md` named the gap and specified F1-T0f/F1-T0g to close it — both
+run, both resolved: **Outcome A** (the vendor serves original as-filed values, confirmed on CLRB's
+FY2023 `NetIncomeLoss`) and **`companyfacts` confirmed multi-vintage**. Escalation row 1 is retired;
+rows 1a–1c (§6) and D14 Amendment A1's F1-T0 gap (already closed) are in force. F1-T1 and F1-T2 are
+unblocked. The task list below reflects both amendments inline, at the sections they touch, rather than
+requiring a second document to be read alongside this one.
+
 ---
 
 ## 0. Standing constraints that apply, restated with values
@@ -64,9 +73,11 @@ filing share one acceptance timestamp and one accession number, so the provenanc
 once per group rather than once per field. Groups are declared in §4.
 
 **D30 (was DF-4) — Joins resolve on the SEC Central Index Key, resolved as of `t0`, never on ticker.**
-The universe is 2,576 tickers in the corner of the market where symbols are recycled after delisting and
-reverse splits are routine. A ticker-keyed join silently attaches one company's balance sheet to another
-company's event.
+The universe is **2,930 tickers** across the 20,951 in-scope events (D1's 2,576 is a different, smaller
+frame — 15,763 events, per `results/reports/phase_9_report.md` — and does not apply here; the original
+work order mis-cited it against this build's population, corrected per Amendment F1-A1 §6) in the corner
+of the market where symbols are recycled after delisting and reverse splits are routine. A ticker-keyed
+join silently attaches one company's balance sheet to another company's event.
 
 **D31 (was DF-5) — Share counts are stored as filed.**
 No adjustment into any price basis at write time. Split factors are carried as a separate series so that
@@ -186,12 +197,29 @@ returns 200 for a live query (`AAPL`), entitlement is not the blocker.
       CLRB are independent companies, independent restatement mechanisms (administrative 10-K/A vs. a
       genuine Item 4.02 non-reliance event), same result.
 - [x] **F1-T0e** — **Stop and post.** Do not proceed to any other task. **STOPPED HERE, 2026-09-11.**
-      See outcome below — escalation row 1 fires.
+      See outcome below — escalation row 1 fires. **Superseded 2026-09-12 by Amendment F1-A1 and
+      F1-T0f/T0g below — the test above correctly established "one record per period" but not *which*
+      vintage that record is; that question needed a second test.**
+- [x] **F1-T0f** — Amendment F1-A1 §0, the disambiguating query. **Done, 2026-09-12: Outcome A.** CLRB's
+      vendor `NetIncomeLoss` for FY2023 (-37,983,496, `filing_date=2024-03-27`) matches its *original*
+      10-K (accession `0001410578-24-000307`) exactly — not its restated 10-K/A (accession
+      `0001410578-24-001704`, filed 2024-10-29, value -42,770,610). **The vendor is point-in-time; it is
+      frozen at first-filed and never updated on restatement.** `research/fundamentals_f1/t0f_t0g_disambiguation.py`,
+      `results/fundamentals_f1/artifacts/t0f_t0g_disambiguation_summary.json`.
+- [x] **F1-T0g** — Amendment F1-A1 §2, `companyfacts` multi-vintage verification on CLRB. **Done,
+      2026-09-12: multi-vintage confirmed.** `NetIncomeLoss` for CLRB FY2023 has 5 observations across 5
+      distinct accession numbers, 2 distinct values (-37,983,496 pre-restatement, -42,770,610 post), and
+      the restated value correctly propagates into the FY2024 10-K's comparative column. `companyfacts`
+      is genuinely multi-vintage. Same script/summary as F1-T0f.
 
 | outcome | consequence |
 |---|---|
 | Multiple records per period, distinct `filing_date`, differing values | The vendor data is point-in-time. `filing_date < t0` is a valid as-of filter. Proceed as written. |
-| **One record per period carrying the latest values** — **CONFIRMED, 2026-09-11** | **The vendor financials are not point-in-time.** They may still be archived, but they may not be joined at `t0`. The SEC route becomes the only source of record for financials, and the work order needs an amendment before F1-T2 runs. **Full record:** `results/fundamentals_f1/artifacts/t0_restatement_test_summary.json`. **F1-T1 through F1-T6 do not run until this amendment lands — this is escalation row 1, a stop, not a flag.** |
+| One record per period carrying the latest values — CONFIRMED, 2026-09-11, then resolved further | The vendor financials are not point-in-time *in the sense of carrying multiple vintages* — but F1-T0f (2026-09-12) established the single record IS the original as-filed value, not the latest restated one. **Escalation row 1a fires: not a stop, a simplification.** See §6 below for the current escalation state. |
+
+**Full outcome, superseding the row above:** `prompts/fundamentals_f1_amendment_a1.md` §0/§8. F1-T1 and
+F1-T2 are unblocked (Amendment F1-A1 §4); `fin_` may be built from the vendor as originally planned
+(Amendment F1-A1 §5, this file's §4 schema section).
 
 ### F1-T1 — Identity spine
 
@@ -212,16 +240,28 @@ returns 200 for a live query (`AAPL`), entitlement is not the blocker.
 ### F1-T2 — Massive bulk pull. Network step. This is the piece with a deadline.
 
 Runs connected, writes the raw archive, then stops. Everything after it is offline. **Gated on D14
-Amendment A1 being committed first (F1-PF2) — do not start otherwise.**
+Amendment A1 being committed first (F1-PF2) — do not start otherwise.** **Unblocked and the priority,
+per Amendment F1-A1 §4 (2026-09-12): the F1-T0 finding bore on financial-statement vintages only. Six of
+the ten endpoints below are unaffected — ticker details/events (current reference data, F1-T1
+prerequisite), splits/dividends (dated corporate-action records, not restated statements), short
+interest/volume (dated observations with their own settlement dates) — and they are the rented ones with
+a subscription expiry behind them. F1-T0f's Outcome A (2026-09-12) confirms the financials/ratios
+endpoints themselves are usable too (§4's caution has been resolved in the pull's favor), but the
+provenance marking below stays as designed regardless — it costs nothing and the cross-check value holds.**
 
 - [ ] **F1-T2a** — Confirm the subscription actually includes what is needed. Financials require Stocks
       Developer or above, **or** Stocks Starter plus the Financials and Ratios expansion. **If an endpoint
       returns an authorization error, stop and post. Do not work around it, do not substitute a different
-      endpoint, do not scrape.**
+      endpoint, do not scrape.** Confirmed 2026-09-11 during F1-T0: `GET /vX/reference/financials` returns
+      200 live, entitlement is not the blocker.
 - [ ] **F1-T2b** — Pull, for every Central Index Key in `ticker_identity`, across the full available history
       (records begin 2009-03-29): **income statements, balance sheets, cash flow statements, ratios, ticker
       details, ticker events, splits, dividends, short interest, short volume.** Pull by Central Index Key,
-      not by ticker.
+      not by ticker. **Amended, Amendment F1-A1 §4:** the fetch manifest for financial statements and
+      ratios records `source_of_record: false` — archived as the `companyfacts` cross-check harness and
+      the F1-T0f/g evidence base, and per F1-T0f's Outcome A they may now also populate `fin_` directly
+      (`fin_source = vendor_archive`), which reverses the original "may not populate `fin_`" default this
+      amendment's first draft set for the Outcome-B case.
 - [ ] **F1-T2c** — Pull the float endpoint too, once, and store it in the raw archive **only**. It is banned
       from the event layer by D27. Its presence in the archive is so that D27 can be audited later, not so
       that it can be used.
@@ -267,6 +307,14 @@ on D14 Amendment A1 (F1-PF2).**
       that tier. If it is not zero, **stop and post** — it needs a decision, not a default.
 - [ ] **F1-T3g** — Chart: distribution of time-since-nearest-filing, and the form-type mix of the nearest
       prior filing. Commit.
+- [ ] **F1-T3h** — **New, Amendment F1-A1 §3.** From the filing index F1-T3 builds anyway: count in-scope
+      **companies** and **events** where an 8-K Item 4.02, a 10-K/A, or a 10-Q/A **amending financial
+      statements** (not a Part-III-only amendment — see the identification-method note in
+      `docs/data/fundamentals_sources.md`) was accepted **after** the event's `fin_` vintage. Report as a
+      share of the 20,951, cross-cut by year. Free — uses data already required for D28. **Decides
+      escalation row 1c**: small (single-digit percent) means `fin_superseded_later` as a flag is
+      adequate and F1-T4b stays optional; large means F1-T4b becomes mandatory. **The threshold is
+      Cooper's, set before F1-T3 runs, not after seeing the number** (Amendment F1-A1 §9).
 
 ### F1-T4 — Float tier 1: shares outstanding
 
@@ -286,6 +334,18 @@ the `shs_quality` coverage floor (escalation row 5, suggested placeholder 70%). 
       disagreement distribution.** Do not reconcile them, do not pick a winner — report it. A systematic
       disagreement is a finding about the sources and belongs in the digest.
 - [ ] **F1-T4e** — Commit.
+- [ ] **F1-T4f** — **New, Amendment F1-A1 §2/§7 — renumbered from the amendment's "F1-T4b" to avoid
+      colliding with the existing F1-T4b above (shares-outstanding extraction), which the amendment's
+      own task-order table did not account for.** Build `fin_` from `companyfacts` element mapping, per
+      Amendment F1-A1 §2: a declared element-priority list per `fin_` line item (nine concepts — revenue,
+      net income, cash and equivalents, total assets, total liabilities, stockholders' equity, operating
+      cash flow, basic/diluted shares — each may be tagged under multiple US-GAAP element names across
+      filers), written into `docs/data/fundamentals_sources.md` before this task runs. **Invoke
+      `reuse-before-build`/`prior-art-check` before writing the mapping by hand** — element
+      normalization over `companyfacts` is solved in maintained libraries. **Conditional: only mandatory
+      if F1-T3h's blast radius exceeds Cooper's threshold (escalation row 1c); otherwise optional**,
+      since F1-T0f's Outcome A means the vendor archive already satisfies `fin_`'s primary path and this
+      task's output would serve `fin_n_vintages`/`fin_superseded_later` and the cross-check harness only.
 
 ### F1-T5 — Assemble `event_fundamentals`
 
@@ -376,18 +436,21 @@ measurement; the second is an absence of measurement.
 `docs/data/fundamentals_sources.md` before the build runs**, not chosen after seeing the distribution.
 Suggested starting value: 45 days. **Cooper sets it — F1-T4 does not start until this is recorded.**
 
-### Group `fin_` — financial statement vintage (source: per F1-T0 outcome)
+### Group `fin_` — financial statement vintage (source: per F1-T0f outcome — Amendment F1-A1 §5)
 
 | column | type | notes |
 |---|---|---|
-| `fin_accession` | str, nullable | the single filing this whole group came from |
+| `fin_source` | enum | **new, Amendment F1-A1.** `companyfacts` / `vendor_archive` / `unavailable`. No row's provenance may be ambiguous once two possible sources exist. |
+| `fin_accession` | str, nullable | the single filing this whole group came from — now sourced from the observation's `accn` when `fin_source = companyfacts` |
 | `fin_accepted_ns` | int64, nullable | **strictly less than `t0_ns`** |
 | `fin_period_end` | date, nullable | |
 | `fin_fiscal_year` | int16, nullable | |
 | `fin_fiscal_quarter` | int8, nullable | |
 | `fin_timeframe` | enum, nullable | `quarterly` / `annual` / `trailing_twelve_months` |
 | `fin_lag_ns` | int64, nullable | `t0_ns − fin_period_end` |
-| `fin_quality` | enum | `as_filed` / `restated_unknown_vintage` / `unavailable` |
+| `fin_quality` | enum | **revised, Amendment F1-A1:** `as_filed` / `as_filed_superseded_later` / `restated_unknown_vintage` / `unavailable`. `as_filed_superseded_later` is the honest state for a correctly point-in-time figure a later filing revised — not a defect, and collapsing it into either neighbour loses the distinction. |
+| `fin_n_vintages` | int16 | **new, Amendment F1-A1.** Count of distinct accession numbers reporting this period at or before `t0`. 1 is normal; higher means the period was already revised before the event. |
+| `fin_superseded_later` | bool | **new, Amendment F1-A1.** True when any filing *after* `t0` revised this period. **Strictly a diagnostic — knowable only after the fact, and must never enter a computed quantity.** Same quarantine shape as D27 (the Massive float endpoint) and D4. |
 | `fin_revenue` | float64, nullable | |
 | `fin_net_income` | float64, nullable | |
 | `fin_cash_and_equivalents` | float64, nullable | |
@@ -398,9 +461,16 @@ Suggested starting value: 45 days. **Cooper sets it — F1-T4 does not start unt
 | `fin_shares_basic` | float64, nullable | |
 | `fin_shares_diluted` | float64, nullable | |
 
-**`restated_unknown_vintage` is the flag that carries the F1-T0 outcome into every row.** If the test shows
-the vendor serves only latest-restated values, every row gets that flag and the contamination stays visible
-at the point of use rather than living in a document nobody opens.
+**F1-T0f/F1-T0g resolved the outcome (2026-09-12): Outcome A.** The vendor serves original as-filed
+values (confirmed on CLRB's FY2023 `NetIncomeLoss`: vendor matches the original 10-K exactly, not the
+restated 10-K/A), and is frozen at first-filed rather than updated on restatement. `fin_source =
+vendor_archive` is therefore the primary path, `fin_quality = as_filed` the default outcome, and
+`restated_unknown_vintage` applies only where a later `companyfacts`/8-K-Item-4.02 cross-check (F1-T3h)
+finds the vendor's period was actually superseded and the vendor's own record shows no sign of it.
+**`companyfacts` is confirmed genuinely multi-vintage** (F1-T0g: 5 observations, 2 distinct values, one
+CLRB period) and remains available as the cross-check harness and the source for `fin_n_vintages` /
+`fin_superseded_later`, per Amendment F1-A1 §2 — not as the mandatory primary source it would have been
+under Outcome B.
 
 **No derived metrics are stored.** Cash runway, burn rate, and every ratio are computed in analysis from these
 line items, so the derivation is visible and versioned in the code that uses it rather than frozen into the
@@ -476,9 +546,14 @@ exists to close.
 Each row has been checked against the four-check audit — measurable, threshold set, reachable, and
 non-contradictory with every other row.
 
+**Row 1 is retired (Amendment F1-A1 §8, 2026-09-12).** It fired 2026-09-11, produced Amendment F1-A1, and
+is superseded by rows 1a–1c below.
+
 | # | condition | measurable as | action |
 |---|---|---|---|
-| 1 | F1-T0 shows one record per period carrying latest values | record count per `(cik, period)` in the unfiltered response | **Stop.** Vendor financials are not point-in-time. The work order needs an amendment before F1-T2. |
+| 1a | F1-T0f shows the vendor serves original as-filed values | comparison in `t0f_t0g_disambiguation_summary.json` | **CONFIRMED, 2026-09-12.** Outcome A. Not a stop — a simplification. `fin_` builds from the vendor archive as originally planned (this file's §4 schema section, revised). |
+| 1b | F1-T0g shows `companyfacts` carries one observation per period | `n_distinct_values` in the same summary | Did not fire — **CONFIRMED multi-vintage, 2026-09-12** (5 observations, 2 distinct values on the tested concept). Retained as a standing row for any future company/concept where it might. |
+| 1c | F1-T3h blast radius exceeds a threshold **Cooper sets before F1-T3 runs** | share of events, from F1-T3h | The flag-only interim is not available; F1-T4b (the `companyfacts`-based `fin_` build) becomes mandatory rather than optional. **Not yet evaluated — F1-T3 has not run.** |
 | 2 | `identity_quality` is not `resolved_exact` for **> 5%** of in-scope events | share of rows, from F1-T1d | **Stop and post.** The join spine is the foundation; a weak one contaminates every group above it. |
 | 3 | Any `*_accepted_ns >= t0_ns` in a committed table | assertion in §5 | **Hard stop.** This is a bug in the as-of join, not a data-quality state. |
 | 4 | An endpoint returns an authorization or entitlement error | HTTP status | **Stop and post.** Do not substitute an endpoint, do not scrape, do not proceed with partial coverage silently. |
@@ -487,7 +562,8 @@ non-contradictory with every other row.
 | 7 | `companyfacts.zip` exceeds the available disk budget | file size checked before download | **Stop and post.** Do not partially extract and proceed. |
 
 Row 5 and row 2 do not conflict: row 2 gates on identity resolution and fires earlier; row 5 gates on share
-count coverage and can only be evaluated after F1-T4.
+count coverage and can only be evaluated after F1-T4. **Row 1c's threshold is Cooper's, per Amendment
+F1-A1 §9 — not yet set, and F1-T3 does not run until it is.**
 
 ---
 
