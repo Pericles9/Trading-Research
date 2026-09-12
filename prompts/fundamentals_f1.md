@@ -25,7 +25,7 @@ Restated rather than cited, per the rule that a brief must carry its numbers inl
 | constraint | what it means here |
 |---|---|
 | **D4 — spine numerics quarantined** | `momentum_events_canonical` numeric columns are diagnostic-display only. This build **reads** `ticker`, `event_date_canonical`, `momentum_pct`, and `in_scope` from it and **writes nothing to it**. No output table may carry a spine numeric column under any name, including a transform of one. |
-| **D14 — offline environment, amended for this build only** | The archive is offline by default. **D14 Amendment A1** authorizes network access narrowly for F1-T2 (Massive pull) and F1-T3 (SEC EDGAR pull) — immutable raw archives, written once, then stopped. Every other task, and every task after those two, runs offline against those archives. |
+| **D14 — offline environment, amended for this build only** | The archive is offline by default. **D14 Amendment A1** authorizes network access narrowly for F1-T0 (the restatement gate test, queries the same Massive endpoint F1-T2 will pull in bulk), F1-T2 (Massive pull), and F1-T3 (SEC EDGAR pull) — immutable raw archives, written once, then stopped. Every other task runs offline against those archives. |
 | **Flag, never delete** | An event with no usable value is a row with an explicit `unavailable` quality flag. Never dropped, never imputed, never forward-filled silently. |
 | **Executable assertions** | Every membership or coverage claim in the digest must be produced by a script-level assertion that fails loudly, in the structured drift-dict + exit-code style of `tools/verify_cited_paths.py` / `tools/verify_claude_md_indices.py` — not a bare `assert`. Prose statements of membership are insufficient — this is the recurring defect pattern (the VEEE/CODX swap, the ticker `.nunique()` bug). |
 | **Universe membership** | Inner join to `momentum_events_canonical WHERE in_scope = TRUE`. Target row count: **20,951** — confirmed against `results/phase_5/artifacts/quotes_bitmaps_all.parquet` (D15's own materialization, 20,951 rows), not a live `COUNT(*)` against the view, which is expensive (observed still under 10% complete after ~40 minutes; the view's staged construction joins `filtered_trades`/`filtered_quotes`, 4.9B/3.8B rows, for coverage flags regardless of which columns are selected). |
@@ -140,7 +140,8 @@ expensive float tiers come after the coverage report says which events they woul
 
 - [x] **F1-PF1** — Register D27–D33 in `docs/Universe-Decisions.md`; update `CLAUDE.md`'s decision index
       in the same commit.
-- [x] **F1-PF2** — Draft D14 Amendment A1 (scoped network exception for F1-T2/F1-T3).
+- [x] **F1-PF2** — Draft D14 Amendment A1 (scoped network exception for F1-T0/F1-T2/F1-T3 — F1-T0
+      was missing from the first draft of this amendment and was added before F1-T0 ran, not after).
 - [x] **F1-PF3** — Commit this file (`prompts/fundamentals_f1.md`), create `research/fundamentals_f1/`,
       `config/fundamentals_f1.json` skeleton.
 - [x] **F1-PF4** — Branch `build/fundamentals-f1` (off `phase/10e`, not `master` — see the reconciliation

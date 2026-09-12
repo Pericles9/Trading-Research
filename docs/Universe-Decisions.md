@@ -661,8 +661,14 @@ requires two staging pulls — a Massive vendor bulk pull (F1-T2) and an SEC EDG
 network reachability (`curl` to `api.massive.com` and `www.sec.gov` both returned live HTTP
 responses, not connection failures).
 
-**Decision.** Network access is authorized, narrowly, for exactly these two staging steps:
+**Decision.** Network access is authorized, narrowly, for exactly these three staging steps:
 
+- F1-T0 (the restatement gate test) — queries Massive's income statement endpoint, unfiltered by
+  `filing_date`, for two companies independently, to determine whether vendor financials are
+  point-in-time before any bulk pull commits to that assumption. Writes raw responses under
+  `data/raw/fundamentals/massive/<fetch_date>/t0_restatement_test/`. **Omitted from this amendment's
+  first draft** (2026-09-11) — added here before F1-T0 ran, not after, once the gap was noticed: F1-T0
+  hits the same API as F1-T2 and was always going to need the same authorization.
 - F1-T2 (Massive bulk pull: financials, ticker reference/events, splits, dividends, short interest /
   volume, and the float endpoint for archival only per D27) — writes immutable raw responses under
   `data/raw/fundamentals/massive/<fetch_date>/` plus a fetch manifest (endpoint, params, timestamp,
@@ -671,10 +677,10 @@ responses, not connection failures).
   `data/raw/fundamentals/sec/<fetch_date>/`, with a declared User-Agent and the published rate limit
   respected.
 
-**Both steps write once, to an immutable raw archive, and stop.** No task after F1-T2/F1-T3 reaches
-the network. D14's offline constraint is otherwise unchanged and continues to bind everywhere else in
-this programme — this amendment does not reopen network access generally, and it does not authorize
-any other phase or task to fetch anything.
+**Every step writes once, to an immutable raw archive, and stops.** No task after F1-T0/F1-T2/F1-T3
+reaches the network. D14's offline constraint is otherwise unchanged and continues to bind everywhere
+else in this programme — this amendment does not reopen network access generally, and it does not
+authorize any other phase or task to fetch anything.
 
 **Standing rule.** Any future task that wants network access states so explicitly, in the same way,
 before it runs — D14 is still the default and this is still the exception.
