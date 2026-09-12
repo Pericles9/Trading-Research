@@ -1,11 +1,11 @@
 {
   "phase": "impact_by_participation",
   "config_hash": null,
-  "status": "escalated",
+  "status": "complete",
   "escalation": {
-    "criterion": "prompt-mandated stop after T4 (Approval Gate)",
-    "observed": "T0-T4 complete, dev tier only; T5 and full-tier promotion blocked pending Cooper review",
-    "tier": "HARD STOP (by task design, not a fired numeric threshold)"
+    "criterion": "prompt-mandated stop after T4 (Approval Gate); T5/T6 authorised by Cooper and completed",
+    "observed": "T0-T6 complete. Candidate (a) is closed, negative, measured exactly (not a bound). No full-tier query against filtered_trades/filtered_quotes was run at any point -- T5 read event_minute_bars_v2, an already-materialized cache.",
+    "tier": "resolved -- no HARD STOP remains open"
   },
   "headline_metrics": [
     {
@@ -42,6 +42,34 @@
       "n": 10,
       "source": "research/impact_by_participation/t4_compare.py:main",
       "chart": "results/impact_by_participation/charts/03_cost_by_participation.html"
+    },
+    {
+      "name": "t5_exact_required_round_trip_bp_to_close_gap",
+      "value": 11.01,
+      "n": 5727491,
+      "source": "research/impact_by_participation/t5_exact_reclassification.py:main",
+      "chart": "results/impact_by_participation/charts/01_threshold_sweep.html"
+    },
+    {
+      "name": "t5_exact_p_clear_optimistic_at_baseline_matches_t3",
+      "value": 0.3885,
+      "n": 5727491,
+      "source": "research/impact_by_participation/t5_exact_reclassification.py:main",
+      "chart": "results/impact_by_participation/charts/01_threshold_sweep.html"
+    },
+    {
+      "name": "t6_deciles_clearing_exact_required_threshold",
+      "value": 0,
+      "n": 10,
+      "source": "research/impact_by_participation/t6_final_comparison.py:main",
+      "chart": "results/impact_by_participation/charts/04_final_comparison.html"
+    },
+    {
+      "name": "t6_cheapest_decile_multiple_of_required_threshold",
+      "value": 4.6,
+      "n": 414579,
+      "source": "research/impact_by_participation/t6_final_comparison.py:main",
+      "chart": "results/impact_by_participation/charts/04_final_comparison.html"
     }
   ],
   "decisions_log": [
@@ -62,6 +90,12 @@
       "options_considered": ["(ticker, event_date, minute_index) -- bar-level", "+ sip_timestamp + size -- print-level"],
       "chose": "print-level key, with a small documented dedup for residual ties",
       "why": "the bar-level key produced a 6.1e9-row cartesian blowup (45.6 GiB, OOM) on the first attempt"
+    },
+    {
+      "decision": "T5's data source for the exact reclassification, on Cooper's go-ahead after T4",
+      "options_considered": ["a new pass over filtered_trades/filtered_quotes (full tick data)", "event_minute_bars_v2 (already-materialized minute-bar cache)"],
+      "chose": "event_minute_bars_v2, full universe",
+      "why": "research/phase_10e/t2_excursion.py's own touch-time logic is built entirely from this cache's high/low columns at minute granularity, not raw ticks -- re-parametrising it at a swept round_trip_bp needed no new pass over the 4.9B/3.8B-row base tables"
     }
   ],
   "surprises": [
@@ -69,21 +103,27 @@
     "T2 initially included 6 'flagged_sidecar' events Phase 11's own prompt says are never pooled with the 50 primary events -- caught and corrected before T3 ran.",
     "build_cache() requires a _bounds table that neither it nor Phase 11's own t5a_dev_timing.py actually creates -- a pre-existing gap in Phase 11's code, worked around here rather than left blocking.",
     "go.Histogram/go.Violin embed ALL raw data points client-side when given a full-size array -- chart 02's first attempt was 107 MB (9.5e6 points) and failed GitHub's 100 MB push limit; fixed by pre-binning (chart 02) and subsampling with quartiles computed from the full n (chart 03).",
-    "T3's effective spread is roughly FLAT across deciles 1-9 and rises only at decile 10 -- not the monotonic 'lower participation, lower cost' shape the candidate's premise might suggest."
+    "T3's effective spread is roughly FLAT across deciles 1-9 and rises only at decile 10 -- not the monotonic 'lower participation, lower cost' shape the candidate's premise might suggest.",
+    "T5's exact curve reproduces T3's baseline p_clear_optimistic (0.3885) to the 4th decimal, and sits at or below T1's upper bound at every swept point -- both consistency checks the design called for passed cleanly.",
+    "The required threshold (~11.0 bp) is not close to any measured decile -- the shortfall is roughly 5x, not a near-miss.",
+    "A concurrent peer session checked out a different branch in this shared working directory while T5's ~4hr background query was running; no data was lost (everything committed was safe on origin, uncommitted T5 output survived as untracked files across the branch round-trip), but it was a genuine risk. Flagged to the peer and to Cooper; worktree isolation proposed as the fix."
   ],
   "artifacts": [
     {"path": "results/impact_by_participation/artifacts/t0_audit.json", "sha256": null, "size_bytes": null},
     {"path": "results/impact_by_participation/artifacts/t1_threshold.json", "sha256": null, "size_bytes": null},
     {"path": "results/impact_by_participation/artifacts/t2_participation.json", "sha256": null, "size_bytes": null},
     {"path": "results/impact_by_participation/artifacts/t3_cost_by_decile.json", "sha256": null, "size_bytes": null},
-    {"path": "results/impact_by_participation/artifacts/t4_compare.json", "sha256": null, "size_bytes": null}
+    {"path": "results/impact_by_participation/artifacts/t4_compare.json", "sha256": null, "size_bytes": null},
+    {"path": "results/impact_by_participation/artifacts/t5_exact_reclassification.json", "sha256": null, "size_bytes": null},
+    {"path": "results/impact_by_participation/artifacts/t6_final_comparison.json", "sha256": null, "size_bytes": null}
   ],
-  "artifacts_note": "sha256/size_bytes left null in this digest -- the standard's field notes require them for artifacts a FUTURE phase might need to verify against a frozen state; nothing downstream is frozen against this run yet since T5 has not happened. Populate on the commit that unblocks T5, if any.",
+  "artifacts_note": "sha256/size_bytes left null in this digest -- the standard's field notes require them for artifacts a FUTURE phase might need to verify against a frozen state. This result is final (no further phase is queued to build on it), so populating them would document a state nothing downstream currently depends on; left null and noted rather than populated speculatively.",
   "charts": [
     "results/impact_by_participation/charts/01_threshold_sweep.html",
     "results/impact_by_participation/charts/02_participation_deciles.html",
-    "results/impact_by_participation/charts/03_cost_by_participation.html"
+    "results/impact_by_participation/charts/03_cost_by_participation.html",
+    "results/impact_by_participation/charts/04_final_comparison.html"
   ],
-  "commits": ["844972a", "a7fd756", "86845dc", "146893a", "2cb1246", "af92454"],
-  "reproduce": ".venv/Scripts/python.exe -m research.impact_by_participation.t0_audit && .venv/Scripts/python.exe -m research.impact_by_participation.t1_threshold && .venv/Scripts/python.exe -m research.impact_by_participation.t2_participation && .venv/Scripts/python.exe -m research.impact_by_participation.t3_cost_by_decile && .venv/Scripts/python.exe -m research.impact_by_participation.t4_compare"
+  "commits": ["844972a", "a7fd756", "86845dc", "146893a", "2cb1246", "af92454", "5d3f07f"],
+  "reproduce": ".venv/Scripts/python.exe -m research.impact_by_participation.t0_audit && .venv/Scripts/python.exe -m research.impact_by_participation.t1_threshold && .venv/Scripts/python.exe -m research.impact_by_participation.t2_participation && .venv/Scripts/python.exe -m research.impact_by_participation.t3_cost_by_decile && .venv/Scripts/python.exe -m research.impact_by_participation.t4_compare && .venv/Scripts/python.exe -m research.impact_by_participation.t5_exact_reclassification && .venv/Scripts/python.exe -m research.impact_by_participation.t6_final_comparison"
 }

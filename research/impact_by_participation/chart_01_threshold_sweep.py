@@ -30,6 +30,11 @@ def main() -> None:
     n = data["sweep_n"]
     be = data["p_breakeven"]
 
+    t5 = json.loads((ARTIFACTS / "t5_exact_reclassification.json").read_text())
+    x5 = [r["round_trip_bp"] for r in t5["sweep"]]
+    y5 = [r["p_clear_optimistic"] for r in t5["sweep"]]
+    required_bp = t5["threshold_interpolated_round_trip_bp"]
+
     fig = go.Figure()
     fig.add_hline(y=be, line_dash="dash", line_color=T["muted"],
                   annotation_text=f"p_breakeven = {be:.4f}", annotation_position="top left")
@@ -40,25 +45,34 @@ def main() -> None:
     fig.add_trace(go.Scatter(x=x, y=p_both, mode="lines+markers", name="both reached (order "
                               "determines outcome)", line=dict(color=T["axis"], dash="dot")))
     fig.add_trace(go.Scatter(
+        x=x5, y=y5, mode="lines+markers", name="p_clear_optimistic, EXACT (T5, "
+        "event_minute_bars_v2 reclassification)", line=dict(color="#1a7a4c", width=3)))
+    fig.add_trace(go.Scatter(
         x=[70.98], y=[0.3885], mode="markers", name="T3's actual p_clear_optimistic "
-        "(exact ordering, this cell)", marker=dict(color=T["ink"], size=12, symbol="x")))
+        "(exact ordering, this cell, baseline cost)",
+        marker=dict(color=T["ink"], size=12, symbol="x")))
+    fig.add_vline(x=required_bp, line_dash="dot", line_color="#1a7a4c",
+                  annotation_text=f"exact threshold: {required_bp:.1f} bp",
+                  annotation_position="bottom right")
 
     fig.update_xaxes(type="log", title_text="round_trip_bp (log scale)")
     fig.update_yaxes(title_text="probability", range=[0, 1])
     fig.update_layout(
-        title="01 - Does a smaller round-trip cost close the closest-cell gap?",
+        title="01 - Does a smaller round-trip cost close the closest-cell gap? (bound, then exact)",
         template="plotly_white", plot_bgcolor=T["surface"], paper_bgcolor=T["surface"],
-        font_color=T["ink"], height=560,
+        font_color=T["ink"], height=580,
         annotations=[dict(
             text=(f"n={n:,} entries, latency 1 min, horizon 60 min, profit_k=3/stop_m=2 "
-                  "(closest cell, results/phase_10e/REPORT.md sec.5). Upper bound and stop-"
-                  "reached share are computed from t2_excursion.parquet's mfe_h60/mae_h60 "
-                  "(reached-at-all, order ignored) -- NOT the exact ordering-sensitive "
-                  "quantity T3 measures (marked x). config_hash: n/a (analysis-only, no "
-                  "config committed for this sweep)."),
-            xref="paper", yref="paper", x=0, y=-0.22, showarrow=False, align="left",
+                  "(closest cell, results/phase_10e/REPORT.md sec.5). The upper bound (orange) "
+                  "ignores touch order and was T1's initial, insufficient answer; the EXACT "
+                  "curve (dark green, T5) reclassifies touch order minute-by-minute from "
+                  "event_minute_bars_v2 and matches T3's measured 0.3885 at baseline exactly "
+                  "(marked x). Exact threshold to clear p_breakeven: ~11.0 bp, 15.5% of the "
+                  "70.98 bp baseline -- far below any participation decile T3 measured "
+                  "(50.7-71.5 bp round-trip-equivalent, chart 03)."),
+            xref="paper", yref="paper", x=0, y=-0.26, showarrow=False, align="left",
             font=dict(size=11, color=T["ink2"]))],
-        margin=dict(b=120),
+        margin=dict(b=140),
     )
     CHARTS.mkdir(parents=True, exist_ok=True)
     out = CHARTS / "01_threshold_sweep.html"

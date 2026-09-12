@@ -1,10 +1,16 @@
-# Impact by participation — T0–T4, then STOP
+# Impact by participation — closed, measured
 
 **Governing prompt:** `prompts/impact_by_participation.md`. **Branch:** `impact-by-participation`
 (cut from `phase/10e`, not `master` — see the prompt's own branch note). **Scope executed:**
-T0–T4, dev tier only, read-only against frozen Phase 8/10e/11 artifacts plus one dev-tier run of
-Phase 11's own `build_cache()`. **T5 and any full-tier query are BLOCKED**, per the prompt's
-Approval Gate, pending Cooper's explicit review of this report.
+T0–T4 (dev tier, read-only against frozen Phase 8/10e/11 artifacts), then, on Cooper's go-ahead,
+T5–T6: the exact ordering-sensitive reclassification T1 flagged as needed, run against
+`event_minute_bars_v2` (already-materialized, full universe — not a new pass over
+`filtered_trades`/`filtered_quotes`), and the decisive comparison against T3's measured cost.
+
+**Bottom line, stated once at the top:** closing the closest cell's gap requires round-trip cost
+at or below **~11.0 bp — 15.5% of the 70.98 bp baseline**. The cheapest participation decile T3
+measured is **50.7 bp, 4.6× that threshold. 0 of 10 deciles clear it.** No interpretation of what
+this means for D24/D25 or candidate (b) follows (Evidence Standard) — stated as data.
 
 ---
 
@@ -115,7 +121,7 @@ rendering — quartiles drawn from the full n).
 
 ---
 
-## 6. T4 — comparison against baseline, then STOP
+## 6. T4 — comparison against baseline (the original stop point, before T5/T6 were authorised)
 
 Round-trip-equivalent cost = 2 × T3's one-sided median (entry + exit both cross the spread).
 
@@ -133,63 +139,128 @@ Round-trip-equivalent cost = 2 × T3's one-sided median (entry + exit both cross
 | 10 | 202,353 | 71.46 | 100.7% | no |
 
 **9 of 10 deciles show round-trip-equivalent cost below the 70.98 bp headline** (dev tier, 50
-events, T=0 only). **No interpretation of what this means for D24/D25 follows** — per §2's
-caveat, this shows a lower cost *input* is available at most participation levels; whether
-barriers built from it would also improve the ordering-race probability that actually drives the
-closest cell's shortfall is exactly what T1 flagged as needing the exact reclassification, which
-this phase does not run.
+events, T=0 only). Per §2's caveat, this alone did not establish whether narrower barriers built
+from a cheaper cost would also win the ordering race — that required the exact reclassification,
+authorised by Cooper and run next as T5.
 
 ---
 
-## 7. Escalation check
+## 7. T5 — the exact reclassification (Cooper-authorised, run after T4's stop)
+
+T1 established that `t2_excursion.parquet` cannot support an exact ordering-sensitive
+reclassification at a swept cost. It did **not** establish that no already-materialized data
+could — `research/phase_10e/t2_excursion.py:101-106` shows the touch times it stores are computed
+**entirely from `event_minute_bars_v2`'s `high`/`low` columns at minute granularity**:
+`min(case when b.high >= fill_price*(1+k*rt) then minute_index end)`. That expression is
+re-parametrisable at any swept `rt` directly against the same already-materialized cache Phase
+10e's own Arm 1 already queried at full-universe scale (`research/phase_10e/t3_shares.py`,
+`t4_gate.py`) — not a new pass over `filtered_trades`/`filtered_quotes`. So the exact quantity was
+derivable after all, just not from the one artifact T1 checked.
+
+**Method:** reused `t2_excursion.py`'s SQL pattern and `t3_shares.py`'s optimistic/pessimistic
+tie-break logic, re-run against the **full candidate universe** (15,337 events, 5,727,491 entries
+at latency=1 — `results/phase_10e/artifacts/t1_candidate_entries.parquet`), sweeping
+`round_trip_bp` from 70.98 down to 5.00 (40 log-spaced points) holding `profit_k=3, stop_m=2`
+fixed.
+
+**Consistency checks, both required to pass before trusting the result:**
+- Baseline (`rt_bp=70.98`) reproduces T3's own measured `p_clear_optimistic` **exactly**: 0.3885 =
+  0.3885.
+- Baseline sits **at or below** T1's upper bound at every point (0.3885 ≤ 0.6501) — the bound was
+  a valid upper bound, as claimed.
+
+**The exact result:** `p_clear_optimistic` rises smoothly and monotonically as cost falls, from
+0.3885 at 70.98 bp to 0.6808 at 5.00 bp. **It crosses `p_breakeven` (0.6000) at an interpolated
+round_trip_bp of ≈11.0 — a 84.5% reduction from baseline, to 15.5% of it.** Chart 01 (updated):
+`charts/01_threshold_sweep.html`, now showing the bound, the exact curve, and the crossing point
+together. Full sweep: `results/impact_by_participation/artifacts/t5_exact_reclassification.json`.
+
+---
+
+## 8. T6 — the decisive comparison
+
+Does any measured participation decile reach ≈11.0 bp?
+
+| decile | n | measured round-trip-equivalent bp | × required |
+|---|---|---|---|
+| 1 (lowest participation) | 414,579 | 50.71 | 4.6× |
+| 2 | 412,605 | 51.68 | 4.7× |
+| 3 | 426,078 | 52.56 | 4.8× |
+| 4 | 429,618 | 52.51 | 4.8× |
+| 5 | 420,402 | 53.89 | 4.9× |
+| 6 | 411,869 | 55.71 | 5.1× |
+| 7 | 392,568 | 56.99 | 5.2× |
+| 8 | 342,887 | 54.72 | 5.0× |
+| 9 | 280,967 | 53.84 | 4.9× |
+| 10 (highest participation) | 202,353 | 71.46 | 6.5× |
+
+**0 of 10 deciles clear it. The cheapest decile measured is 4.6× the required threshold.**
+Chart 04: `charts/04_final_comparison.html`. Full table:
+`results/impact_by_participation/artifacts/t6_final_comparison.json`.
+
+**No interpretation of what this means for D24/D25 or candidate (b) follows** (Evidence
+Standard). Stated as data: participation-rate variation, on this dev cohort, was measured to
+achieve a cost reduction (28–29% at the cheapest deciles) that is real but roughly **5× short**
+of what would be needed to close the closest cell's gap.
+
+---
+
+## 9. Escalation check
 
 | # | Condition | Observed | Verdict |
 |---|---|---|---|
 | 1 | Working tree dirty at T0 | clean at every task boundary | pass |
-| 2 | Full-tier pass before T4's Cooper approval | none — `build_cache()` ran on dev tables only | pass |
+| 2 | Full-tier pass before T4's Cooper approval | none through T4 — `build_cache()` ran on dev tables only. T5 (post-approval) queried `event_minute_bars_v2`, an already-materialized cache, not `filtered_trades`/`filtered_quotes` | pass |
 | 3 | Write to `results/phase_8\|10e\|11/` or `src/` | none | pass |
 | 4 | Spine numeric column enters a computed quantity | none — all inputs tick-derived or cost-config | pass |
 | 5 | Short-side/fade construct | none | pass |
 | 6 | T2's definition changed after T3 computed against it | it did change (dev_cohort fix) — T3 was rerun against the corrected T2, not patched in place | handled correctly, not a violation |
 | 7 | Per-decile n < 100 in a headline decile | smallest decile n = 202,353 | pass, not triggered |
-| 8 | T1 finds no `round_trip_bp*` closing the gap in [5, 70.98] | **partially anticipated wrong**: the bound instead crosses breakeven at *every* swept value including baseline — a third outcome this row's two branches didn't name. Reported as found (§2), not forced into either branch | see §2 |
-| 9 | T4 shows cost at/above baseline at every decile | false — 9/10 below | does not fire; candidate (b) still correctly not drafted here regardless |
+| 8 | T1 finds no `round_trip_bp*` closing the gap in [5, 70.98] | **anticipated wrong**: T1's bound crosses breakeven at every swept value including baseline — a third outcome this row's two branches didn't name. T5's exact curve, by contrast, does NOT cross at baseline and crosses only at ≈11.0 bp, which is the outcome this row was actually meant to catch. Reported as found in both cases, not forced into either named branch | see §§2, 7 |
+| 9 | T4 shows cost at/above baseline at every decile | false at T4 (9/10 below baseline) — but T6's later, decisive comparison against the EXACT required threshold (not baseline) shows 0/10 clear it | see §8; candidate (b) still correctly not drafted here regardless, per the prompt's own scope |
 | 10 | Write outside the authorised paths | none | pass |
 
 ---
 
-## 8. Output files
+## 10. Output files
 
 | File | Status |
 |---|---|
 | `prompts/impact_by_participation.md` | committed |
-| `research/impact_by_participation/{t0_audit,t1_threshold,t2_participation,t3_cost_by_decile,t4_compare}.py` | committed |
-| `research/impact_by_participation/chart_{01,02,03}_*.py` | committed |
-| `results/impact_by_participation/artifacts/{t0_audit,t1_threshold,t2_participation,t3_cost_by_decile,t4_compare}.json` | committed |
+| `research/impact_by_participation/{t0_audit,t1_threshold,t2_participation,t3_cost_by_decile,t4_compare,t5_exact_reclassification,t6_final_comparison}.py` | committed |
+| `research/impact_by_participation/chart_{01,02,03,04}_*.py` | committed |
+| `results/impact_by_participation/artifacts/{t0_audit,t1_threshold,t2_participation,t3_cost_by_decile,t4_compare,t5_exact_reclassification,t6_final_comparison}.json` | committed |
 | `results/impact_by_participation/artifacts/*.parquet` | gitignored (regenerable), present locally |
-| `results/impact_by_participation/charts/{01,02,03}_*.html` | committed |
+| `results/impact_by_participation/charts/{01,02,03,04}_*.html` | committed |
 | `results/impact_by_participation/REPORT.md` | this file |
-| `results/reports/impact_by_participation_report.md` | copy, to be written alongside this commit |
-| `docs/Open-Items-Register.md` | not yet annotated — left for the commit that lands after Cooper's review, so the register reflects a reviewed state rather than a mid-flight one |
-| `docs/Claude-Code-Operating-Plan.md` | same — not yet annotated, for the same reason |
+| `results/reports/impact_by_participation_report.md` | copy |
+| `docs/Open-Items-Register.md` | annotated in the same commit as this revision — the wrong-partition entry now carries the exact numbers |
+| `docs/Claude-Code-Operating-Plan.md` | annotated in the same commit — row 18/19's price/size channel now has a closed, measured result for candidate (a) |
 
-No `config/impact_by_participation.json` was needed: T1–T4 read frozen upstream configs
+No `config/impact_by_participation.json` was needed: every task read frozen upstream configs
 (`config/phase_10e.json`'s cell definition, `config/phase_11.json`'s `min_cell_n`) rather than
 introducing new tunables of their own.
 
 ---
 
-## 9. What Cooper is being asked to review
+## 11. What Cooper is being asked to review
 
-1. Whether T1's upper-bound framing (necessary, not sufficient) is an acceptable substitute for
-   the exact reclassification this task couldn't do from existing data — and if not, whether the
-   modest follow-on pass over `event_minute_bars_v2` (not the full tick tables) is worth
-   authorising.
-2. Whether T4's 9-of-10-deciles-below-baseline result, given T1's caveat, is enough to schedule
-   full-tier promotion (T5), or whether it should be read as inconclusive pending the ordering
-   question.
-3. The `phase/10e` → `master` PR (#1, opened this session) and the `impact-by-participation` →
-   `phase/10e` merge this branch will eventually need — both unmerged, both awaiting review, per
-   `CLAUDE.md`'s PR-review requirement.
+**Candidate (a) — impact by participation — is closed, measured, negative.** The two questions
+T4 originally left open (§9, prior revision) are now answered: T5 established the exact required
+threshold (≈11.0 bp), and T6 shows no measured decile is within 4.6× of it. What remains open:
 
-**No recommendation is made on any of the three.**
+1. **The magnitude gap (≈5×) is large enough that it is unlikely to be an artifact of the dev
+   cohort (50 events) or the T=0-only restriction** — but this report does not claim that as
+   established, only as a judgment call for Cooper on whether full-tier confirmation is worth
+   spending given the size of the gap.
+2. **Candidate (b) (ISO share, hold-length)** is the remaining candidate from
+   `claude/what_would_change_a_decision.md` — its own threshold is independent of this result and
+   has not been computed here.
+3. **`what_would_change_a_decision.md` §4's "run nothing" criterion** requires BOTH (a) and (b) to
+   fail. (a) has now failed by a wide margin; (b) has not been run. This report does not invoke
+   §4 — that needs (b)'s own result first.
+4. The `phase/10e` → `master` PR (#1) and the `impact-by-participation` → `phase/10e` merge this
+   branch will eventually need — both unmerged, both awaiting review, per `CLAUDE.md`'s PR-review
+   requirement.
+
+**No recommendation is made on any of these four.**
