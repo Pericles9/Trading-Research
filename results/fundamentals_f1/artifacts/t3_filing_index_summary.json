@@ -1,0 +1,17 @@
+{
+  "n_ciks_pulled": 2935,
+  "sec_filings_rows": 938063,
+  "sec_filings_date_window": [
+    "2019-12-04",
+    "2025-11-05"
+  ],
+  "event_filing_proximity_rows": 20951,
+  "flg_quality_counts": {
+    "observed": 20683,
+    "unavailable": 248,
+    "no_filings_in_window": 20
+  },
+  "flg_dilution_form_before_t0_true": 1726,
+  "event_filings_window_rows": 139039,
+  "config_hash": "3d0aa66cce36"
+}

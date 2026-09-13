@@ -1,0 +1,10 @@
+{
+  "rows": 20951,
+  "tier_counts": {
+    "minute_a102": 15259,
+    "first_trade_fallback": 5582,
+    "nanosecond_poll1": 110
+  },
+  "config_hash": "3d0aa66cce36",
+  "nanosecond_threshold": 1.3
+}

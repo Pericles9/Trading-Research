@@ -1,0 +1,288 @@
+{
+  "method": "per-event as-of resolution (corrected 2026-09-12 -- see module docstring)",
+  "rows": 20951,
+  "unique_tickers": 2930,
+  "ambiguous_ticker_count": 37,
+  "ambiguous_tickers_sample": [
+    "ACIC",
+    "AHT",
+    "AI",
+    "ASRT",
+    "BBBY",
+    "BHVN",
+    "BNTC",
+    "CAMP",
+    "CASI",
+    "CBIO",
+    "CCLD",
+    "CLB",
+    "CTRA",
+    "CZR",
+    "GV",
+    "ICON",
+    "INBX",
+    "JAKK",
+    "LAC",
+    "LB",
+    "LION",
+    "NTRP",
+    "PRE",
+    "QDEL",
+    "RAIN",
+    "S",
+    "SBET",
+    "SBGI",
+    "SES",
+    "SEV"
+  ],
+  "identity_quality_counts": {
+    "resolved_exact": 20390,
+    "resolved_ambiguous": 313,
+    "unresolved": 248
+  },
+  "identity_quality_share": {
+    "resolved_exact": 0.9732232351677724,
+    "resolved_ambiguous": 0.01493962102047635,
+    "unresolved": 0.011837143811751228
+  },
+  "escalation_row_2_threshold": 0.05,
+  "escalation_row_2_fires": false,
+  "by_year": {
+    "2020": {
+      "resolved_ambiguous": 75,
+      "resolved_exact": 3343,
+      "unresolved": 21
+    },
+    "2021": {
+      "resolved_ambiguous": 23,
+      "resolved_exact": 1907,
+      "unresolved": 2
+    },
+    "2022": {
+      "resolved_ambiguous": 36,
+      "resolved_exact": 2177,
+      "unresolved": 66
+    },
+    "2023": {
+      "resolved_ambiguous": 39,
+      "resolved_exact": 2924,
+      "unresolved": 58
+    },
+    "2024": {
+      "resolved_ambiguous": 70,
+      "resolved_exact": 4958,
+      "unresolved": 64
+    },
+    "2025": {
+      "resolved_ambiguous": 70,
+      "resolved_exact": 5081,
+      "unresolved": 37
+    }
+  },
+  "by_currently_delisted": {
+    "False": {
+      "resolved_ambiguous": 241,
+      "resolved_exact": 17998,
+      "unresolved": 191
+    },
+    "True": {
+      "resolved_ambiguous": 72,
+      "resolved_exact": 2392,
+      "unresolved": 57
+    }
+  },
+  "sec_cross_check": {
+    "n_tickers_in_sec_current_map": 2652,
+    "n_events_checkable": 18329,
+    "n_events_agree": 18083,
+    "agree_rate": 0.9865786458617491,
+    "note": "SEC's company_tickers.json is a CURRENT snapshot only -- this validates the current end of each ticker's history, not historical point-in-time resolution."
+  },
+  "shortcut_blind_spots": {
+    "available": true,
+    "n_tickers_where_shortcut_missed_a_cik": 84,
+    "examples": [
+      {
+        "ticker": "ACIC",
+        "shortcut_found": [
+          "0001401521"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001824502"
+        ]
+      },
+      {
+        "ticker": "AHT",
+        "shortcut_found": [
+          "0001232582"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001823527"
+        ]
+      },
+      {
+        "ticker": "AI",
+        "shortcut_found": [
+          "0001577526"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001209028"
+        ]
+      },
+      {
+        "ticker": "ALF",
+        "shortcut_found": [
+          "0002010930"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001833908"
+        ]
+      },
+      {
+        "ticker": "ALPS",
+        "shortcut_found": [
+          "0002025774"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001882607"
+        ]
+      },
+      {
+        "ticker": "APA",
+        "shortcut_found": [
+          "0001841666"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0000006769"
+        ]
+      },
+      {
+        "ticker": "APO",
+        "shortcut_found": [
+          "0001858681"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001411494"
+        ]
+      },
+      {
+        "ticker": "APXT",
+        "shortcut_found": [
+          "0002079253"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001777921"
+        ]
+      },
+      {
+        "ticker": "ASRT",
+        "shortcut_found": [
+          "0001808665"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001005201"
+        ]
+      },
+      {
+        "ticker": "ATAI",
+        "shortcut_found": [
+          "0002081043"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001840904"
+        ]
+      },
+      {
+        "ticker": "AU",
+        "shortcut_found": [
+          "0001973832"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001067428"
+        ]
+      },
+      {
+        "ticker": "BBBY",
+        "shortcut_found": [
+          "0001130713"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0000886158"
+        ]
+      },
+      {
+        "ticker": "BHVN",
+        "shortcut_found": [
+          "0001935979"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001689813"
+        ]
+      },
+      {
+        "ticker": "BLUW",
+        "shortcut_found": [
+          "0002050501"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001817944"
+        ]
+      },
+      {
+        "ticker": "BNTC",
+        "shortcut_found": [
+          "0001808898"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001674657"
+        ]
+      },
+      {
+        "ticker": "CAAS",
+        "shortcut_found": [
+          "0002037400"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001157762"
+        ]
+      },
+      {
+        "ticker": "CAI",
+        "shortcut_found": [
+          "0002019410"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001388430"
+        ]
+      },
+      {
+        "ticker": "CAMP",
+        "shortcut_found": [
+          "0001736730"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0000730255"
+        ]
+      },
+      {
+        "ticker": "CASI",
+        "shortcut_found": [
+          "0001962738"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0000895051"
+        ]
+      },
+      {
+        "ticker": "CBAT",
+        "shortcut_found": [
+          "0002086841"
+        ],
+        "asof_found_but_shortcut_missed": [
+          "0001117171"
+        ]
+      }
+    ]
+  },
+  "config_hash": "7c59a1df5b40"
+}

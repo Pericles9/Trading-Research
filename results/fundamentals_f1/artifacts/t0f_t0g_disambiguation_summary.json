@@ -1,0 +1,56 @@
+{
+  "f1_t0f": {
+    "concept_tested": "NetIncomeLoss",
+    "vendor_value": -37983496.0,
+    "vendor_filing_date": "2024-03-27",
+    "original_10k_value": -37983496,
+    "original_10k_accn": "0001410578-24-000307",
+    "original_10k_filed": "2024-03-27",
+    "restated_10ka_value": -42770610,
+    "restated_10ka_accn": "0001410578-24-001704",
+    "restated_10ka_filed": "2024-10-29",
+    "matches_original": true,
+    "matches_restated": false,
+    "outcome": "A_original_as_filed"
+  },
+  "f1_t0g": {
+    "concept_tested": "NetIncomeLoss",
+    "period": "2023-01-01 to 2023-12-31",
+    "n_observations": 5,
+    "n_distinct_accn": 5,
+    "n_distinct_values": 2,
+    "observations": [
+      {
+        "accn": "0001410578-24-000307",
+        "filed": "2024-03-27",
+        "form": "10-K",
+        "val": -37983496
+      },
+      {
+        "accn": "0001410578-24-001704",
+        "filed": "2024-10-29",
+        "form": "10-K/A",
+        "val": -42770610
+      },
+      {
+        "accn": "0001410578-25-000329",
+        "filed": "2025-03-13",
+        "form": "10-K",
+        "val": -42770610
+      },
+      {
+        "accn": "0001104659-26-063259",
+        "filed": "2026-05-18",
+        "form": "PRE 14A",
+        "val": -37983496
+      },
+      {
+        "accn": "0001104659-26-067626",
+        "filed": "2026-05-28",
+        "form": "DEF 14A",
+        "val": -37983496
+      }
+    ],
+    "outcome": "multi_vintage_confirmed"
+  }
+}

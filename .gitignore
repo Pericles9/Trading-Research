@@ -48,6 +48,21 @@ run_t5b.sh
 # n and every provenance field, ARE tracked.
 results/scale_field/artifacts/*.parquet
 
+# fundamentals_f1: same rule, applied to this unnumbered work unit. event_fundamentals
+# and every companion table are regenerable from the raw archive (data/raw/fundamentals/,
+# itself gitignored under /data/) plus committed config + code. digest.json and the
+# fetch manifests, which carry every n, checksum, and provenance field, ARE tracked.
+results/fundamentals_f1/artifacts/*.parquet
+# Underscore-prefixed files under this artifacts/ are internal resumption caches (raw
+# per-(ticker,date) API responses so a multi-thousand-call resolution script can restart
+# without re-querying everything) -- regenerable by re-running the script, not a finding.
+results/fundamentals_f1/artifacts/_*.json
+# Same rule, one level deeper: per-CIK parquet parts cached during F1-T3/F1-T4's SEC pulls
+# so a multi-thousand-request run can resume without re-fetching. Same pattern as the
+# existing results/phase_11/artifacts/_t5b_parts/ entry above.
+results/fundamentals_f1/artifacts/_t3_parts/
+results/fundamentals_f1/artifacts/_t4_parts/
+
 # Per-event chart HTML plus the 4.8 MB offline plotly.min.js each directory needs
 # (D14 forbids a CDN, so the bundle is local and unavoidable). 53 MB for two events,
 # regenerable via research/scale_field/plot_scale_field.py. chart_manifest.json is
