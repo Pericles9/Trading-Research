@@ -11,6 +11,40 @@ This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `resea
 
 ---
 
+## Phase 13 addendum — fundamental partition test (folder-level; branch `phase/13`, 2026-09-13)
+
+Cut from `master` once Build F1's PR #5 merged. Executes D32 Amendment A1's gating sentence
+(pre-`t0` partitions vs. the round-trip cost stack), approved by Cooper 2026-09-13 with two
+amendments: T3b/T3c run undirected, and no split is evaluated against a kill-condition margin
+("exploratory, no kill condition") — see `prompts/phase_13.md`'s Approval Gate section.
+
+- `prompts/phase_13.md` — the plan, translated from the architect's signed-off proposal into
+  `Agent_Prompt_Standard.md` v1.4 format, reconciled against actual repo state before posting.
+- `config/phase_13.json` — entry reference (`t0`), horizon grid (5/15/30/60 min), per-event cost-unit
+  source (`event_quote_metrics_v1`, not Phase 11's population aggregate), split definitions.
+- `research/phase_13/common.py` — shared config/DuckDB-connection plumbing.
+  `FUNDAMENTALS_ROOT` routed through `resolve_data_root()` from the start (the class of bug Build F1
+  hit and fixed 2026-09-12/13 — caught here before it could repeat, not after).
+- `research/phase_13/t1_build_p0.py` — T1, the population-scale outcome. Per-event MFE/MAE from `t0`
+  at 4 horizons, in units of that event's own round-trip cost (not a single global constant).
+  **`minute_index` convention checked directly, not assumed:** both `event_minute_bars_v2` and
+  `event_quote_metrics_v1` key it as minutes-since-04:00-ET, continuous across premarket/rth/post —
+  confirmed against a known event before being relied on. **Bulk single-join design, not per-event
+  point queries** — a single-ticker filtered query against `event_minute_bars_v2` (46M rows) was
+  observed to be pathologically slow during reconciliation; the bulk join runs in well under the
+  20-minute sleep window used to wait for it. Run and verified: round-trip cost located for
+  15,252/20,951 events (72.8%); minute-bar coverage 15,763/20,951 (75.2%) — **this number exactly
+  matches Build F1's own `a102_detection_anchors.parquet` row count**, meaning `event_minute_bars_v2`
+  covers a specific historical Phase 8 cohort, not the full Build-F1 universe. Reported plainly
+  (escalation row 5, LOG tier, fires at 75.2% < 80%), not silently absorbed.
+  `results/phase_13/artifacts/p0_outcome.parquet` (gitignored, regenerable),
+  `p0_coverage_summary.json` (tracked).
+
+**Built so far:** T0 (branch, config), T1 (P0 outcome). **Not yet built:** T2 (arm zero), T3
+(partitions), T4 (conditional tick confirmation), charts, digest, REPORT.md.
+
+---
+
 ## Build F1 addendum — fundamental data and float layer, pre-flight (folder-level; branch `build/fundamentals-f1`, 2026-09-11)
 
 Unnumbered work unit (see `07af342`'s exact-stem convention, `tools/verify_cited_paths.py`), not a
