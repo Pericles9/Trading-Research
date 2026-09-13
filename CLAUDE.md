@@ -181,7 +181,10 @@
     acceptance timestamp strictly before t0** · **D29 fundamentals provenance is carried per
     source vintage, not per field** · **D30 fundamentals joins resolve on CIK as of t0, never
     ticker** · **D31 share counts are stored as filed, no basis adjustment at write time** ·
-    **D32 no fundamental column goes against any outcome variable under Build F1** ·
+    **D32 no fundamental column goes against any outcome variable under Build F1** (**A1**: the
+    written gating sentence signed off by Cooper 2026-09-13 -- a pre-`t0` partition clearing the
+    round-trip cost stack reopens D24/D25 and changes the universe definition; no partition
+    clearing it means the fundamental layer is documentation) ·
     **D33 Build F1's t0 is a tiered construction -- nanosecond anchor for 110 events, minute
     anchor (resolved via event_minute_bars_v2) for 15,259, first-trade fallback (read from
     each event's own filtered/ folder) for 5,582, zero unavailable -- since no single anchor

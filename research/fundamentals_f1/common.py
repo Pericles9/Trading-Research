@@ -26,8 +26,14 @@ from src.data.paths import resolve_data_root, resolve_duckdb_path
 CFG = "config/fundamentals_f1.json"
 ART = "results/fundamentals_f1/artifacts"
 CHARTS = "results/fundamentals_f1/charts"
-RAW_ROOT = "data/raw/fundamentals"
-NORMALIZED_ROOT = "data/fundamentals"
+# Routed through resolve_data_root(), NOT a cwd-relative literal -- CLAUDE.md's data root is a
+# single shared location (E:\Trading Research\data) regardless of which worktree code runs from.
+# Fixed 2026-09-13 after discovering the entire Build F1 raw archive and event_fundamentals.parquet
+# had been silently written to this worktree's own local data/ folder instead (same bug class as
+# t0_assemble.py's FILTERED_ROOT, fixed 2026-09-12) -- migrated the data to the canonical root and
+# fixed every script that had its own hardcoded "data/..." literal, not just these two constants.
+RAW_ROOT = str(pathlib.Path(resolve_data_root()) / "raw" / "fundamentals").replace("\\", "/")
+NORMALIZED_ROOT = str(pathlib.Path(resolve_data_root()) / "fundamentals").replace("\\", "/")
 
 # D33 tier artifacts, read-only inputs to t0_assemble.py -- never re-derived elsewhere.
 NANOSECOND_ANCHOR_PATH = "results/phase_10/artifacts/v2_r13_detection.parquet"
