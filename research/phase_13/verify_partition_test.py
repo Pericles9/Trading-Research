@@ -29,11 +29,14 @@ FORBIDDEN_PATTERNS = [
     r"\bclears?\b", r"\bcleared\b", r"\bpass(?:es|ed)?\b", r"\bwins?\b", r"\bwon\b", r"\bwinner\b",
     r"\bkill[- ]condition\b", r"\bthe finding\b", r"\bheadline\b",
 ]
-# A hit immediately preceded by a negation is describing the ABSENCE of a verdict
-# ("no kill condition", "no pass/fail declaration") -- exactly what this phase's design
-# requires it to say. Only a hit with no preceding negation is a real candidate.
-NEGATION_WINDOW = 20
-NEGATION_RE = re.compile(r"\b(no|not|n't|without|never)\b[^a-z]{0,6}$", re.IGNORECASE)
+# A hit somewhere near a negation word is describing the ABSENCE of a verdict
+# ("no kill condition", "not a pass/fail line", "not to declare ... a winner") --
+# exactly what this phase's design requires it to say. A wide, non-adjacency-anchored
+# window is used deliberately: real sentences put a few words between the negation
+# and the flagged term ("not to declare a comparison's winner"). Only a hit with no
+# negation anywhere in the window is a real candidate.
+NEGATION_WINDOW = 50
+NEGATION_RE = re.compile(r"\b(no|not|n't|without|never|neither)\b", re.IGNORECASE)
 
 
 def check_p0_row_count_and_coverage() -> dict:
