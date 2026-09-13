@@ -1,0 +1,63 @@
+{
+  "_meta": {
+    "prompt": "prompts/phase_13.md",
+    "branch": "phase/13",
+    "branched_from": "master",
+    "branched_from_note": "Cut once PR #5 (build/fundamentals-f1 -> master) merged, per T0's instruction -- event_fundamentals.parquet and D32 Amendment A1 are both on master as of this branch.",
+    "decisions_referenced": ["D4", "D5", "D19", "D22", "D23", "D24", "D25", "D32", "D32 Amendment A1"],
+    "amendment_note": "Cooper approved the plan 2026-09-13 ('approved, proceed') with two amendments made in the same exchange: T3b/T3c run undirected (not pre-registered), and no split -- including T3a -- is evaluated against a kill-condition margin ('exploratory, no kill condition'). See prompts/phase_13.md's Approval Gate section for the full account."
+  },
+  "universe": {
+    "source": "data/fundamentals/event_fundamentals.parquet",
+    "target_row_count": 20951,
+    "note": "Build F1's output, read directly -- not re-derived. All 9 of F1's Verification Block checks pass on this table as of the branch point."
+  },
+  "p0_outcome": {
+    "entry_reference": "t0",
+    "entry_reference_source": "results/fundamentals_f1/artifacts/t0_spine.parquet, t0_ns column",
+    "entry_reference_note": "Proposed as the default (same anchor this whole programme's detection work already uses) and not challenged when posted -- adopted as written, distinct from the two items Cooper did amend.",
+    "horizons_minutes": [5, 15, 30, 60],
+    "horizons_note": "Matches Phase 11's named-cell horizon (hold 30 min) and Phase 9's grid -- adopted default, not separately re-confirmed.",
+    "source_table": "event_minute_bars_v2",
+    "source_table_note": "45,925,350 rows, built by research/phase_6b/build_minute_bars_v2.py directly from filtered_trades/filtered_trades_dev_v4 -- same tick-derived basis as everything else this programme measures on. Checked directly 2026-09-13, not assumed.",
+    "cost_unit_source": "main_db.event_quote_metrics_v1",
+    "cost_unit_note": "9,017,475 rows, keyed (ticker, event_date, minute_index, segment). Round-trip cost per event = 2 x tw_spread_bp at the entry reference's minute, matching Phase 11's round-trip convention (T6/T7). Per-event, not Phase 11's 70.98bp population aggregate.",
+    "reference_aggregate_bp": 70.98,
+    "reference_aggregate_note": "Phase 11 T7 named cell (fixed_horizon, RTH, latency 5min, hold 30min), n=10,544, 52.86% non-positive realized capture -- population-level reference only, not the per-event denominator this phase actually uses."
+  },
+  "arm_zero": {
+    "partition_source": "results/fundamentals_f1/artifacts/t6_context.parquet",
+    "partition_column": "detection_price_decile",
+    "note": "Reused from F1-T6 (tick-derived detection price, D4-compliant), not rebuilt."
+  },
+  "splits": {
+    "t3a_flg_dilution": {
+      "column": "flg_dilution_form_before_t0",
+      "source": "event_fundamentals.parquet (Build F1)",
+      "direction": "pre_registered",
+      "declared_direction": "events with a dilution filing before t0 show worse continuation and a faster flip than events without one",
+      "direction_set_by": "the architect's proposal, signed off by Cooper before the 2026-09-13 amendment -- not invented by this phase"
+    },
+    "t3b_share_turnover": {
+      "construction": "event volume (tick-derived) / shs_shares_outstanding, split-adjusted using spl_ history",
+      "source": "event_fundamentals.parquet shs_/spl_ groups + tick volume",
+      "direction": "undirected",
+      "note": "Cooper's 2026-09-13 amendment: no pre-registered direction. Both tails reported."
+    },
+    "t3c_spl_reverse_split": {
+      "column": "spl_reverse_split_365d",
+      "source": "event_fundamentals.parquet (Build F1)",
+      "direction": "undirected",
+      "note": "Same amendment as T3b."
+    }
+  },
+  "kill_condition": {
+    "enabled": false,
+    "note": "Cooper's 2026-09-13 amendment: 'exploratory, no kill condition.' No split, including T3a, is evaluated against a pass/fail margin. Escalation rows 2/3 in prompts/phase_13.md hard-stop if any script or chart declares a split as having cleared, passed, or been singled out as a finding."
+  },
+  "cross_cuts": {
+    "by": ["event_year", "detection_price_decile"],
+    "min_cell_n_log_threshold": 200,
+    "note": "Nested within year (coverage is collinear with the vendor calendar cliff, per F1-T6c) and within price decile (arm zero's control, per the design's SS5 nested-comparison instruction)."
+  }
+}
