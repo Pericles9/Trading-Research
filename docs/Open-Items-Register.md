@@ -709,3 +709,61 @@ statistic on this field is unsafe until this is fixed; per-feature quantities ar
 seed-stable fraction as a first-class quantity rather than discover instability as a finding.
 `research/scale_field/detector/GOING_LIVE.md:134` names this as an open blocker. Unscheduled;
 belongs to whichever phase fixes the F/G channel packages or runs Row 16.
+
+### CLOSED — candidate (b), ISO share hold-length: not pursued further, not a measured result (2026-09-12/13)
+
+**Status: open, awaiting Cooper's review.** `claude/what_would_change_a_decision.md` §2(b),
+`prompts/iso_share_hold_length.md`, `results/iso_share_hold_length/REPORT.md`.
+
+Candidate (a) (impact by participation) closed negative on branch `impact-by-participation` (PR #3,
+unmerged as of this entry) without moving the 70.98 bp cost floor enough to relax candidate (b)'s own
+threshold — see this register's entry above once that PR lands. Candidate (b) was run next, per the
+source document's own recommended sequencing. **T0–T2 (dev tier, 49/50 primary events) completed
+cleanly**: `conditions` (needed for the ISO flag) confirmed absent from DuckDB, read from raw
+per-event parquet instead; `iso_share` computed via the existing `det_minute` anchor
+(`results/phase_8/artifacts/a102_detection_anchors.parquet`) and minute-bar timestamps, not zero-
+inflated as expected (median 19.2%, 0% exactly zero).
+
+**T3 (the core measurement) triggered a HARD STOP, not a result.** The raw iso_share separation
+looked real (up to 795 bp at `t3_close`, exceeding every pre-registered required-separation
+threshold). **Both required controls (Agent Prompt Standard v1.4, The Control Standard) failed**: a
+negative-control placebo produced separations up to 2,258 bp — larger than the real result — and a
+planted positive-control effect was not cleanly recovered. Diagnosis: `t3_close` markout at n=49 has
+std=7,121 bp, driven by two outlier events (UCAR +44,768 bp, IMTE −9,640 bp) roughly 50–60× a typical
+event's magnitude — the median-split statistic is dominated by which side of a cut a handful of
+extreme events land on, real or placebo, at this sample size.
+
+**This is not a closed result in either direction.** Unlike candidate (a), candidate (b) has not
+failed — it has not yet produced a measurement the controls certify as distinguishable from noise.
+`what_would_change_a_decision.md` §4's "run nothing" criterion, which needs both candidates to fail,
+**still cannot be invoked**. Open questions for Cooper, stated in the report and not resolved here:
+whether full-tier promotion (~15,337 events) is worth authorising, and whether the median-split
+statistic itself is the wrong tool for a distribution this fat-tailed independent of sample size.
+
+**Follow-up, same day — T4 added, and the diagnosis above corrected.** The "driven by two outlier
+events" language above overstates their role — a median is outlier-resistant by construction; the
+real mechanism is bulk dispersion (`t3_close` IQR ≈ 3,100 bp at n=49), which drives the standard
+error of a difference-of-medians to ≈575 bp at this n, well within the negative control's observed
+2,258 bp. A bootstrap precheck (T4, `results/iso_share_hold_length/artifacts/t4_bootstrap_precheck.json`)
+run read-only against the already-committed, already-full-universe markout grid — zero new tick
+reads — shows the required separation clears the same null's 5,000-repetition maximum by **12.7–19.2×
+its own standard deviation at every horizon** (`P(null ≥ required) = 0/5000` everywhere). **The
+dev-tier failure was a sample-size problem, not a validity problem**, and full tier is a well-powered
+regime for this exact test if a real ISO-share effect exists. This does not itself authorise T5 (the
+full-tier build, which has a real per-event read cost with no DuckDB shortcut) — that remains
+Cooper's call, alongside a raised-but-unresolved caveat that the day-scale horizons' required
+separations (646–862 bp) may already exceed what the cited ISO literature documents, independent of
+sample size (`results/iso_share_hold_length/REPORT.md` §5).
+
+**Final disposition, 2026-09-13 — Cooper declined T5.** Candidate (b) closes at T0–T4.
+**This is a scoping decision, not a data-driven result** — despite T4's strong statistical case
+(12.7–19.2× the noise band), no measurement of whether ISO share carries a real hold-length effect
+was ever made, because T5 (the one task that would have measured it) did not run. **Recorded
+explicitly as "not pursued further," distinct from candidate (a)'s "closed, negative"** — the two
+should never be conflated when this item is cited later. `what_would_change_a_decision.md` §4's "run
+nothing" criterion is **not** formally invoked: its literal text needs (a) at or above the assumed
+cost stack (it returned below, just not low enough) and (b)'s threshold computed to exceed the
+literature (raised as a caveat, never computed as a verdict) — neither condition was literally met.
+Candidate (c) (book-walk depth as a universe filter)'s rescue condition — "(a) and (b) both return
+null" — is also not satisfied, since (b) did not return a null, it returned no measurement at all.
+Candidate (c) remains unrescued and unscoped as its own phase.

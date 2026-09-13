@@ -1,5 +1,20 @@
 # What result would change what decision
 
+> **OUTCOME, 2026-09-13 — both candidates now have a final disposition; neither invokes §4.**
+> **(a) impact by participation** ran T0–T6 and closed negative, measured exactly:
+> `results/impact_by_participation/REPORT.md` (branch `impact-by-participation`, PR #3). **(b) ISO
+> share hold-length** ran T0–T4; its dev-tier controls failed for a sample-size reason a full-tier
+> bootstrap precheck confirmed was resolvable (12.7–19.2× the noise band at every horizon), but
+> **Cooper declined T5** and it closes as *not pursued further* — explicitly not the same
+> disposition as (a): no measurement of a real ISO-share effect was made either way.
+> `results/iso_share_hold_length/REPORT.md` §8 (branch `iso-share-hold-length`, PR #4). **§4's "run
+> nothing" criterion is not formally invoked** — its literal text needs (a) at or above the assumed
+> cost stack (it wasn't) and (b)'s threshold computed to exceed the literature (never computed as a
+> verdict, only raised as a caveat). **(c) book-walk depth** remains unrescued: its condition needed
+> both (a) and (b) to return null, and (b) returned no measurement at all, not a null. This banner
+> records the final state; the analysis below is left as written, per this repo's banner-not-delete
+> convention.
+
 **Date:** 2026-09-10 · **Type:** scoping note. Records no decision. **Written before any next phase is
 briefed**, per the standing question raised at review on 2026-09-09.
 

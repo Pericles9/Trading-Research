@@ -288,7 +288,19 @@ and are where rows 11, 18, 19 already live.**
 - **Row 17 — the end-detector half has no object.** Bursts that never isolate do not end. The
   entry-signal half is settled by evidence rather than by decision: nothing in this programme has
   predicted an onset, and D26 adds that in the timing channel **there was no onset to predict**.
-- **Rows 18, 19 — untouched.** Price/size channel.
+- **Rows 18, 19 — one price/size-channel pass run and closed, not pursued further (2026-09-12/13).**
+  `claude/what_would_change_a_decision.md`'s candidate (b), ISO share as a hold-length state
+  variable, ran T0–T4 (`prompts/iso_share_hold_length.md`, `results/iso_share_hold_length/REPORT.md`).
+  T3's dev-tier controls (negative, positive — The Control Standard) failed at n=49, and a follow-up
+  bootstrap precheck (T4) showed this was a pure sample-size effect — full tier would clear the
+  required separation by 12.7–19.2× the noise band, zero new tick reads to find that out. **Cooper
+  declined T5 (2026-09-13) despite the strong precheck case.** Recorded explicitly as "not pursued
+  further" — **not** "closed negative": no measurement of a real ISO-share effect was ever made, since
+  T5 is the task that would have made it. Candidate (a) (impact by participation) closed negative on
+  the separate, unmerged `impact-by-participation` branch (PR #3). Candidate (c) (book-walk depth)
+  remains unrescued — its condition needed both (a) and (b) to return null, and (b) returned no
+  measurement at all. Price/size channel has no further candidate queued from
+  `what_would_change_a_decision.md`.
 - **Parallel (unconditional universe scan) — untouched, and still the oldest open blocker.** It gates
   capital, multiplies every result in the programme, and did not move while this arc ran.
 
