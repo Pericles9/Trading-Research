@@ -186,8 +186,13 @@
     anchor (resolved via event_minute_bars_v2) for 15,259, first-trade fallback (read from
     each event's own filtered/ folder) for 5,582, zero unavailable -- since no single anchor
     covers the ~20,951-event universe** (D27-D33, 2026-09-11, Build F1 pre-flight; tier counts
-    confirmed by the actual F1-PF5 run).
-  - **Next free number: D34.**
+    confirmed by the actual F1-PF5 run) · **D34 Cooper authorized one-time live research to
+    verify Phase 12's LULD parameters against Nasdaq's actual policy -- caught and fixed a
+    backwards doubling-boundary direction ($3.00 itself doubles, not excluded) and a
+    pre-Amendment-18 regime gap affecting one dev event; D14 and Escalation row 4 stand
+    unchanged for every other value and every future phase** (2026-09-13,
+    docs/data/luld_plan_reference.md).
+  - **Next free number: D35.**
 - Repo map: docs/Research-Library-Map.md. Data layout: docs/data/Schema.md (tracked copy of
   record; `data/Schema.md` is a local, untracked mirror — `.gitignore` excludes `/data/` wholly,
   so edit the tracked copy and mirror the change there). Corrected 2026-09-10 — `data/Schema.md`

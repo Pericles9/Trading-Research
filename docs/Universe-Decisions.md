@@ -1606,3 +1606,70 @@ anchor artifact happens to be at hand.
 **Numbering note.** Recorded as D27 through D33, confirmed free by reading this file — register
 highest was D26, next free D27. `CLAUDE.md`'s pointer list is updated in the same commit.
 **Next free number: D34.**
+
+---
+
+## D34 — Cooper authorized one-time live research to verify Phase 12's LULD parameters; D14 and row 4 stand unchanged for everything else
+
+**Date:** 2026-09-13 · **Gate:** Cooper's explicit chat authorization, quoted in full below, given
+after Phase 12's T0a/T0b ran and T0c reported its 7 remaining unfilled `[Cooper]` slots.
+
+**What was authorized, verbatim:** *"i sign off on everything and authorize you to fill empty slots
+with your best intuition. though these are to be flexible. look at the drafts 1 is most likely a much
+closer match to the nasdaq's real luld policy, research that and verify."*
+
+**Decision.** For Phase 12's `config/phase_12.json` specifically, and for this instance only, the
+agent was authorized to (a) perform live web research (WebSearch/WebFetch — tools available to this
+session despite D14 describing the *research pipeline's* environment as offline) to verify the LULD
+band parameters against Nasdaq's actual policy, and (b) fill the remaining numeric `[Cooper]`
+thresholds with the values the config file itself had already proposed, explicitly marked flexible.
+
+**Why this does not weaken D14 or Escalation row 4.** D14 ("environment is offline") describes what
+Phase 12's own committed scripts (`prompts/phase_12.md`'s task list, not yet run past T0c as of this
+decision) can do at run time — no network fetch happens inside any committed script, now or after
+this decision. Escalation row 4 ("no band parameter used that does not cite a
+config key") is unaffected — every parameter still must and does cite a key in `luld_bands`. What
+changed is narrower and one-directional: **Cooper personally directed a specific sourcing task in
+chat**, which is different in kind from the agent silently inferring a value from memory or from the
+data (the thing row 4 and D14 actually exist to prevent). No future phase inherits this authorization
+automatically — an agent citing this decision as license to source its own exchange-mechanics data
+without a fresh, explicit instruction has misread it.
+
+**What the research found, in brief** (full account with per-fact confidence levels:
+`docs/data/luld_plan_reference.md`; the specific corrections: `config/phase_12.json`'s
+`_corrections_2026_09_13` block):
+
+1. **A real error was caught and fixed.** The 2026-08-31 draft had the Tier-2 closing-window
+   doubling boundary backwards — it read "priced BELOW $3.00 doubles, at or above does not."
+   Corroborated across Cboe's technical-spec FAQ and independent NYSE/CTA-Plan/Nasdaq-Trader
+   trader-notice sources (Amendment 18, effective 2020-02-24): the boundary is **"reference price at
+   or below $3.00 doubles; above $3.00 does not"** — the $3.00 case itself doubles, the opposite of
+   the draft. This is exactly the boundary the config's own note already flagged as load-bearing for
+   this universe (median event crosses $3.00 mid-event, per Phase 11 A2-6).
+2. **A population-relevant gap was found and closed.** This cohort's dev sample includes an event
+   (AACG, 2020-02-18) six calendar days before Amendment 18 took effect. Pre-Amendment-18, doubling
+   applied in *both* a 9:30–9:45am window (since eliminated for all securities) and the 3:35–4:00pm
+   window, for *all* tiers with no Tier-2 price exclusion. `config.luld_bands.pre_amendment_18_regime`
+   now carries this branch; no further band/tier/doubling changes were found between 2020-02-24 and
+   2024, so the rest of the cohort (`era_2022_2024`) needs no further branching.
+3. **Cooper's own hunch about the two draft sources was directionally right and is recorded as
+   answered, not just accepted:** draft source 1 (luldplan.com) reproduced the correct band table and
+   the correct previous-close-selects-the-bracket rule, but also reproduced the boundary-direction
+   error above; draft source 2's content could not be independently re-extracted as text this session
+   (PDF extraction failed), so the correction came from a third, converging set of sources rather than
+   from directly arbitrating between the two drafts. Recorded honestly rather than claiming source 1
+   was confirmed superior on every point.
+4. **Two secondary sub-details remain moderate-confidence, flagged rather than resolved**: the
+   reference price's exact recalculation cadence, and whether sub-$0.75 doubling is a distinct rule
+   or a minimum-price-variation-floor consequence. Neither is load-bearing at this universe's
+   observed price range (~$2.21–$4.52).
+
+**Provenance boundary.** `docs/data/luld_plan_reference.md` is a **secondary, compiled** reference —
+it cites and quotes primary-adjacent sources (FINRA, Cboe's FAQ, luldplan.com, and a search synthesis
+of NYSE/CTA-Plan/Nasdaq-Trader/SEC-DERA notices) but is not a transcription of the LULD Plan's own
+legal text or an SRO rule filing, which did not extract as readable text with the tools available
+this session. `config/phase_12.json`'s `_STATUS` field is worded accordingly
+("VERIFIED WITH NOTED EXCEPTIONS," not "VERIFIED").
+
+**Numbering note.** Recorded as D34, confirmed free by reading this file — register highest was D33,
+next free D34. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D35.**
