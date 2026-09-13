@@ -66,9 +66,26 @@ amendments: T3b/T3c run undirected, and no split is evaluated against a kill-con
   no pass/fail language anywhere in the script or its output.
   `results/phase_13/artifacts/t3_partition_summary.json` (tracked).
 
-**Built so far:** T0 (branch, config), T1 (P0 outcome), T2 (arm zero), T3 (fundamental partitions).
-**Not yet built:** T4 (conditional tick confirmation, not auto-triggered), charts, Verification Block,
-digest, REPORT.md.
+- `research/phase_13/{chart_common,chart_01..chart_06}.py`, `results/phase_13/charts/01-06*.{html,png}`
+  — the Chart Contract, all 6 charts, kaleido-verified. Chart 01 surfaced a hard temporal cutoff in
+  `event_minute_bars_v2`/`event_quote_metrics_v1`: 2020-2024 sit at exactly 100% minute-bar coverage,
+  2025 at exactly 0% (5,188/5,188 events, zero bars) -- not a scattered gap, and exactly what makes
+  Build F1's `a102_detection_anchors.parquet` row count (15,763) equal the 2020-2024 sum. Charts 03-05
+  share a `small_multiples_split_chart()` builder (year x price-decile grid, horizon/metric buttons);
+  chart 06 is the population-aggregate one-look comparison with no reference line, no ranking.
+- `research/phase_13/verify_partition_test.py` — 7 checks, all pass: P0 coverage recomputed directly;
+  every split's cross-cut cell n's conserve against an independent recount; no spine numeric column
+  (D4) or fundamental-as-outcome-input (D32/A1); no chart or artifact declares a pass/fail verdict
+  (a negation- and check-context-aware text scan, refined twice after it correctly caught real false
+  hits on its own first runs against actual chart/report text); every artifact's `config_hash` matches;
+  `kill_condition.enabled` confirmed `false`.
+- `results/phase_13/{digest.json, REPORT.md}` + `results/reports/phase_13_report.md` — phase complete
+  per the Digest Contract, `status: "complete"`, gate mode `sync-required`. T4 (tick-level confirmation)
+  stays conditional and Cooper-gated, not required for this phase's own completion.
+
+**Built:** T0 (branch, config), T1 (P0 outcome), T2 (arm zero), T3 (fundamental partitions), T5
+(charts, Verification Block, digest, REPORT.md). **Not built, by design:** T4 (conditional tick
+confirmation -- only runs if Cooper names a specific cross-cut after reviewing this phase's charts).
 
 ---
 
