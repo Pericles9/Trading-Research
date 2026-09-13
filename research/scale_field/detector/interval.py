@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# CLOSED BY D26 (2026-09-11). Synthetic tapes only -- do not point this at cohort data.
+# Correctness is not in question; the cohort question it answered is. See GOING_LIVE.md.
 """The interval channel: G, its derivatives, and a two-sided ridge detector.
 
 Source: claude/field_feature_extraction_methods.md section 7, and the brief of 2026-09-09.

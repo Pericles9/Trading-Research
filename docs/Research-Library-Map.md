@@ -1976,3 +1976,70 @@ map; assembled here from where each is actually used:
   hold-length state variable — the open item this section's Library Map neighbor,
   `docs/Open-Items-Register.md`'s wrong-partition entry, names as one of the two candidates that
   could still reopen D24/D25.
+
+---
+
+## Scale-field detector — closed against D26 (2026-09-11)
+
+**Documentation closeout. No logic change, no cohort file touched, records no decision — D26 is the
+decision.** Occasioned by `claude/scale_field_arc_closeout.md`, which flagged an unreconciled detector
+implementation sitting in territory D26 had just closed as how a closed line gets restarted by accident.
+
+**Status rewritten, not appended.** `research/scale_field/detector/GOING_LIVE.md` previously read as
+BLOCKED on two pending inputs. It now reads **CLOSED BY D26, NOT PENDING ON D26'S INPUTS** — a real
+distinction, because a reader skimming for "what is still needed" should not go hunting for a null
+constant that no longer matters. Both blockers are answered in
+`claude/going_live_blockers_answered.md`, and each resolution is now recorded in place:
+
+- **Blocker 2 (collapse convention) — answered.** Both rules exist and are measured: the identity rule
+  (`research/scale_field/fragmentation_identity.py`) retaining ~70% of prints, and a **10 ms** time
+  tolerance whose crossing is scale-invariant at `s` = 1 s, 8 s and 64 s. **For `G` the answer is the
+  10 ms tolerance**, because the identity rule's conservatism leaves a −0.84 decade residual that is not
+  market structure.
+- **Blocker 1 (null constant) — answered, and this section's own rationale was WITHDRAWN.** The
+  conclusion stands (no fixed matched-null reference exists), but the stated reason for rejecting `0.87`
+  does not: D26 withdrew the Allan curve as a clustering measurement, and on a 10 ms collapsed tape
+  `A(15.6 ms)` falls 9.79 → **0.91**, so at fine scales `0.87` is very nearly right. The coarse-scale
+  departure is the **rate envelope**, not clustering. **Going live on the previous text would have
+  imported a retracted premise into a running detector** — the retraction sweep catching a live consumer.
+- **The surviving open item is `persistence_octaves`**, still a grid quantity. Left unfixed deliberately:
+  the fix is a design change to tested code and, with the cohort question closed, there is no longer a
+  reason to spend it.
+
+**Three pointer comments added** at the top of `moments.py`, `ridge.py` and `interval.py` — closed by
+D26, synthetic only, see `GOING_LIVE.md`. Same discipline as this package's convention test: the thing
+most likely to bite later is a silent assumption nobody restates.
+
+**Two in-code claims corrected in the same pass, comments only.** `moments.py`'s
+`POISSON_NOISE_CONSTANT` block carried the withdrawn `sqrt(A(s))` rationale verbatim, and `ridge.py` §6
+still said the duration fit is "within 16% / 6%" where the artifact says 20% / 5%. **33 tests pass and
+2 xfail, unchanged**, and the diff is comments and docstrings only.
+
+**`a24fecd` reconciled.** It was flagged as possibly another session's independent detector. **It is
+this package** — same author, and its commit message is the one written when `moments.py` and `ridge.py`
+were first promoted. There is no second implementation and nothing to merge. *(The flag was raised in a
+document cited as `timing_line_close_draft.md`, which does not exist in this checkout or in git history;
+the reconciliation was done against the commit itself, which does.)*
+
+**Git structure.** Four fully-merged local branches pruned with `git branch -d`: `phase/10d`
+(`8ee1734`), `phase/10d-diag1` (`e22663e`), `scale-field` (`0ff37d1`), `scope/universe-scan`
+(`6fe3608`). `origin/master` was **52 commits behind** the real state of the research (11 on local
+`master` never pushed, plus 41 on `phase/10e`); nothing was at risk, since `origin/phase/10e` already
+contained all 52.
+
+> **CORRECTION, same day.** This entry first read *"not fixable from here … opening that PR is a Cooper
+> action"*, reasoning from `gh` not being installed to there being no route at all. **That inference was
+> wrong.** Stored git credentials plus a direct GitHub API call work — confirmed by reading the result
+> back over the same API. **[PR #1](https://github.com/Pericles9/Trading-Research/pull/1) — "Phase 10e,
+> D23–D26, and the scale-field arc closeout", `phase/10e` → `master`, 52 commits, 179 files, mergeable
+> clean — is open**, raised by a peer session on 2026-09-11. The absent tool was a true fact and a bad
+> premise, which is the same shape as the `sqrt(A(s))` correction two paragraphs above.
+>
+> **What was right is that MERGING is Cooper's call**, not opening: CLAUDE.md requires review, and the
+> PR is deliberately unmerged. **Note also that this closeout commit is NOT in PR #1** — it sits on
+> `impact-by-participation`, which is 1 commit ahead of `phase/10e`'s tip (`07af342`), so it reaches
+> `master` by a later PR from that branch.
+
+**Also flagged, not fixed:** `claude/fragmentation_and_the_closure.md` is tracked but appears nowhere in
+this map, against the standing rule that any phase adding files updates it in the same phase. It belongs
+to the gates thread, so its entry is left to that thread rather than written here.

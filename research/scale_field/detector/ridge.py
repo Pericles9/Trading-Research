@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# CLOSED BY D26 (2026-09-11). Synthetic tapes only -- do not point this at cohort data.
+# Correctness is not in question; the cohort question it answered is. See GOING_LIVE.md.
 """The ridge-first detection pipeline, and the ordering result behind it.
 
 Source: claude/field_feature_extraction_methods.md sections 3, 5, 5.1 and 6.
@@ -16,10 +18,10 @@ small enough to read as noise, large enough to make every duration comparison ac
 meaningless, which is the one thing the detector exists to produce.
 
 NO THRESHOLD HAS A DEFAULT. detect() requires noise_constant and kappa as explicit
-arguments. That is deliberate and it is the code-level half of the kappa gate in
-config/scale_field_detector.json: the Poisson constant 0.87 is wrong on this tape and the
-matched null that should replace it is, as of 2026-09-09, under retraction. A cohort run
-cannot happen here without someone naming both numbers.
+arguments, so a cohort run cannot happen here without someone naming both numbers. That
+guard stays. As of D26 it is belt-and-braces rather than the load-bearing gate it was: the
+cohort question it protected has been closed by measurement, so there is no longer a number
+whose arrival would unlock anything. See GOING_LIVE.md.
 """
 from __future__ import annotations
 
@@ -176,7 +178,9 @@ def polish_scale(prints, t_seed, u_lo, u_hi, span, noise_constant, iters=80):
 # ---------------------------------------------------------------------------------------
 # Section 6 -- the duration readout. The -0.5 crossing is the c=0 special case of this fit,
 # which is exactly why it reads high: +14% to +85% on synthetic bumps, and it fails outright
-# on the widest. The fit is within 16% everywhere and within 6% mid-range.
+# on the widest. The fit is within 20% everywhere and within 5% mid-range -- the source's own
+# "16% / 6%" table predates its section 5.1 scale polish; corrected 2026-09-09 against
+# results/scale_field/artifacts/detector/synthetic_validation.json.
 #   F(s) = -( s^2/(sigma^2+s^2) ) / ( 1 + c*sqrt(sigma^2+s^2) ),  c = b*sqrt(2pi)/N
 # ---------------------------------------------------------------------------------------
 

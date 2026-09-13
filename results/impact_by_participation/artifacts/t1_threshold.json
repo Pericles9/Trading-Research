@@ -1,0 +1,442 @@
+{
+  "task": "T1",
+  "phase": "impact_by_participation",
+  "cell": {
+    "latency_minutes": 1,
+    "horizon_minutes": 60,
+    "profit_k": 3,
+    "stop_m": 2
+  },
+  "p_breakeven": 0.6,
+  "p_randomwalk": 0.4,
+  "baseline_round_trip_bp": 70.98,
+  "baseline_gap": 0.05012742927051306,
+  "what_this_bound_is": "p_clear_upper_bound = P(MFE ratio over horizon 60 >= profit_k * round_trip_bp), i.e. whether the shrunk profit barrier was reached AT ALL by horizon, ignoring whether the stop barrier was reached first. This is an UPPER BOUND on the true p_clear_optimistic T3 would compute with exact touch-time ordering -- true p_clear_optimistic <= this bound at every round_trip_bp, because reaching the level is necessary but not sufficient (the stop may still have been touched first). It is NOT the closest-cell's exact quantity and is not reported as such.",
+  "what_it_is_not": "Not T3's optimistic/pessimistic p_clear. t2_excursion.parquet has no touch TIME at arbitrary barrier levels (only at the six preset profit_k/stop_m combinations already in the grid, all at round_trip_bp=70.98) -- reconstructing exact ordering at a swept level needs a new pass over event_minute_bars_v2, generalizing research/phase_10e/t2_excursion.py's own touch-time logic to an arbitrary level. Named as the follow-on this task does NOT do, not silently approximated.",
+  "sweep_n": 5727491,
+  "sweep": [
+    {
+      "round_trip_bp": 70.98,
+      "profit_barrier_bp": 212.94,
+      "stop_barrier_bp": 141.96,
+      "p_clear_upper_bound": 0.650127429270513,
+      "p_stop_reached_share": 0.7606548836130864,
+      "p_reached_neither_true_expiry": 0.06288425420485165,
+      "p_reached_both_order_unknown": 0.4736665670884511,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 66.31217569549483,
+      "profit_barrier_bp": 198.9365270864845,
+      "stop_barrier_bp": 132.62435139098966,
+      "p_clear_upper_bound": 0.6676003506596518,
+      "p_stop_reached_share": 0.7738557773377558,
+      "p_reached_neither_true_expiry": 0.0545959827784976,
+      "p_reached_both_order_unknown": 0.49605211077590516,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 61.95131932192414,
+      "profit_barrier_bp": 185.85395796577242,
+      "stop_barrier_bp": 123.90263864384828,
+      "p_clear_upper_bound": 0.6847202378842673,
+      "p_stop_reached_share": 0.7861093103419979,
+      "p_reached_neither_true_expiry": 0.047349528790180555,
+      "p_reached_both_order_unknown": 0.5181790770164457,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 57.8772438918447,
+      "profit_barrier_bp": 173.63173167553407,
+      "stop_barrier_bp": 115.75448778368938,
+      "p_clear_upper_bound": 0.7011033277922217,
+      "p_stop_reached_share": 0.797620808133963,
+      "p_reached_neither_true_expiry": 0.041120099533984426,
+      "p_reached_both_order_unknown": 0.5398442354601692,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 54.071089965159366,
+      "profit_barrier_bp": 162.2132698954781,
+      "stop_barrier_bp": 108.14217993031873,
+      "p_clear_upper_bound": 0.7166509733494125,
+      "p_stop_reached_share": 0.8082980837508081,
+      "p_reached_neither_true_expiry": 0.035601103519848395,
+      "p_reached_both_order_unknown": 0.560550160620069,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 50.5152383462462,
+      "profit_barrier_bp": 151.5457150387386,
+      "stop_barrier_bp": 101.0304766924924,
+      "p_clear_upper_bound": 0.7312467186766421,
+      "p_stop_reached_share": 0.8185573752974906,
+      "p_reached_neither_true_expiry": 0.03082815843796175,
+      "p_reached_both_order_unknown": 0.5806322524120946,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 47.193228522345386,
+      "profit_barrier_bp": 141.57968556703617,
+      "stop_barrier_bp": 94.38645704469077,
+      "p_clear_upper_bound": 0.7453721009775485,
+      "p_stop_reached_share": 0.828938186022466,
+      "p_reached_neither_true_expiry": 0.02657882832116192,
+      "p_reached_both_order_unknown": 0.6008891153211764,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 44.08968246564391,
+      "profit_barrier_bp": 132.26904739693174,
+      "stop_barrier_bp": 88.17936493128782,
+      "p_clear_upper_bound": 0.758569502771807,
+      "p_stop_reached_share": 0.8387885725180537,
+      "p_reached_neither_true_expiry": 0.022999774246698947,
+      "p_reached_both_order_unknown": 0.6203578495365597,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 41.19023344632793,
+      "profit_barrier_bp": 123.57070033898378,
+      "stop_barrier_bp": 82.38046689265586,
+      "p_clear_upper_bound": 0.7708830969791135,
+      "p_stop_reached_share": 0.8481225025058966,
+      "p_reached_neither_true_expiry": 0.019886369092504904,
+      "p_reached_both_order_unknown": 0.638891968577515,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 38.48145952706884,
+      "profit_barrier_bp": 115.44437858120652,
+      "stop_barrier_bp": 76.96291905413769,
+      "p_clear_upper_bound": 0.7825978251209823,
+      "p_stop_reached_share": 0.8564828822952318,
+      "p_reached_neither_true_expiry": 0.017316308310218208,
+      "p_reached_both_order_unknown": 0.6563970157264324,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 35.95082143108005,
+      "profit_barrier_bp": 107.85246429324016,
+      "stop_barrier_bp": 71.9016428621601,
+      "p_clear_upper_bound": 0.7934680298930195,
+      "p_stop_reached_share": 0.8645254964171921,
+      "p_reached_neither_true_expiry": 0.01509194863859236,
+      "p_reached_both_order_unknown": 0.6730854749488039,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 33.58660449612766,
+      "profit_barrier_bp": 100.75981348838297,
+      "stop_barrier_bp": 67.17320899225533,
+      "p_clear_upper_bound": 0.8041283696473727,
+      "p_stop_reached_share": 0.8718512172258324,
+      "p_reached_neither_true_expiry": 0.013131928099057685,
+      "p_reached_both_order_unknown": 0.6891115149722628,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 31.377864445791968,
+      "profit_barrier_bp": 94.13359333737591,
+      "stop_barrier_bp": 62.755728891583935,
+      "p_clear_upper_bound": 0.8145416553251676,
+      "p_stop_reached_share": 0.8788188405708538,
+      "p_reached_neither_true_expiry": 0.01148303855911777,
+      "p_reached_both_order_unknown": 0.7048435344551393,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 29.314376726948115,
+      "profit_barrier_bp": 87.94313018084435,
+      "stop_barrier_bp": 58.62875345389623,
+      "p_clear_upper_bound": 0.8243016008231179,
+      "p_stop_reached_share": 0.8852240885232294,
+      "p_reached_neither_true_expiry": 0.010059727723710086,
+      "p_reached_both_order_unknown": 0.7195854170700574,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 27.38658917894207,
+      "profit_barrier_bp": 82.15976753682621,
+      "stop_barrier_bp": 54.77317835788414,
+      "p_clear_upper_bound": 0.8337308605111732,
+      "p_stop_reached_share": 0.8911891786473344,
+      "p_reached_neither_true_expiry": 0.008807172285386394,
+      "p_reached_both_order_unknown": 0.733727211443894,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 25.585577815361283,
+      "profit_barrier_bp": 76.75673344608384,
+      "stop_barrier_bp": 51.171155630722566,
+      "p_clear_upper_bound": 0.8424872252090837,
+      "p_stop_reached_share": 0.8966814613938284,
+      "p_reached_neither_true_expiry": 0.007784735061128861,
+      "p_reached_both_order_unknown": 0.746953421664041,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 23.903005513707974,
+      "profit_barrier_bp": 71.70901654112392,
+      "stop_barrier_bp": 47.80601102741595,
+      "p_clear_upper_bound": 0.8507693857572189,
+      "p_stop_reached_share": 0.9021487768378859,
+      "p_reached_neither_true_expiry": 0.006823755812099923,
+      "p_reached_both_order_unknown": 0.7597419184072048,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 22.33108342174394,
+      "profit_barrier_bp": 66.99325026523182,
+      "stop_barrier_bp": 44.66216684348788,
+      "p_clear_upper_bound": 0.8584528548364371,
+      "p_stop_reached_share": 0.9069845766671655,
+      "p_reached_neither_true_expiry": 0.006051166208729092,
+      "p_reached_both_order_unknown": 0.7714885977123316,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 20.862534901851742,
+      "profit_barrier_bp": 62.58760470555523,
+      "stop_barrier_bp": 41.725069803703484,
+      "p_clear_upper_bound": 0.8653150218830549,
+      "p_stop_reached_share": 0.9117149201980413,
+      "p_reached_neither_true_expiry": 0.005368668409954726,
+      "p_reached_both_order_unknown": 0.782398610491051,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 19.490561846505855,
+      "profit_barrier_bp": 58.471685539517566,
+      "stop_barrier_bp": 38.98112369301171,
+      "p_clear_upper_bound": 0.8720087032873557,
+      "p_stop_reached_share": 0.9159111729725983,
+      "p_reached_neither_true_expiry": 0.004778008380982178,
+      "p_reached_both_order_unknown": 0.7926978846409362,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 18.2088132089237,
+      "profit_barrier_bp": 54.6264396267711,
+      "stop_barrier_bp": 36.4176264178474,
+      "p_clear_upper_bound": 0.8782660679868375,
+      "p_stop_reached_share": 0.9197514234417828,
+      "p_reached_neither_true_expiry": 0.004298566335590924,
+      "p_reached_both_order_unknown": 0.8023160577642112,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 17.01135560322057,
+      "profit_barrier_bp": 51.0340668096617,
+      "stop_barrier_bp": 34.02271120644114,
+      "p_clear_upper_bound": 0.88385560099527,
+      "p_stop_reached_share": 0.923507169195028,
+      "p_reached_neither_true_expiry": 0.0038156323597889545,
+      "p_reached_both_order_unknown": 0.8111784025500869,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 15.892645837972704,
+      "profit_barrier_bp": 47.67793751391811,
+      "stop_barrier_bp": 31.78529167594541,
+      "p_clear_upper_bound": 0.8894618952696739,
+      "p_stop_reached_share": 0.9269234993123516,
+      "p_reached_neither_true_expiry": 0.0034261075224736276,
+      "p_reached_both_order_unknown": 0.8198115021044992,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 14.847505256042838,
+      "profit_barrier_bp": 44.54251576812851,
+      "stop_barrier_bp": 29.695010512085677,
+      "p_clear_upper_bound": 0.8945351463668821,
+      "p_stop_reached_share": 0.930023635130985,
+      "p_reached_neither_true_expiry": 0.0031111353994270788,
+      "p_reached_both_order_unknown": 0.8276699168972941,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 13.871095761883566,
+      "profit_barrier_bp": 41.6132872856507,
+      "stop_barrier_bp": 27.742191523767133,
+      "p_clear_upper_bound": 0.8993353285059723,
+      "p_stop_reached_share": 0.9327593880112601,
+      "p_reached_neither_true_expiry": 0.0027982584346269595,
+      "p_reached_both_order_unknown": 0.8348929749518593,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 12.958897425345967,
+      "profit_barrier_bp": 38.8766922760379,
+      "stop_barrier_bp": 25.917794850691934,
+      "p_clear_upper_bound": 0.9038102373273044,
+      "p_stop_reached_share": 0.9352437219019637,
+      "p_reached_neither_true_expiry": 0.002540728566836683,
+      "p_reached_both_order_unknown": 0.8415946877961048,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 12.106687558318361,
+      "profit_barrier_bp": 36.32006267495508,
+      "stop_barrier_bp": 24.213375116636723,
+      "p_clear_upper_bound": 0.9079853639228765,
+      "p_stop_reached_share": 0.9375372217957217,
+      "p_reached_neither_true_expiry": 0.002298388596333019,
+      "p_reached_both_order_unknown": 0.8478209743149313,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 11.310521167338242,
+      "profit_barrier_bp": 33.931563502014725,
+      "stop_barrier_bp": 22.621042334676485,
+      "p_clear_upper_bound": 0.9118320744633208,
+      "p_stop_reached_share": 0.9395946671937153,
+      "p_reached_neither_true_expiry": 0.0020792699630606142,
+      "p_reached_both_order_unknown": 0.8535060116200969,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 10.566712691689867,
+      "profit_barrier_bp": 31.7001380750696,
+      "stop_barrier_bp": 21.133425383379734,
+      "p_clear_upper_bound": 0.9154610631426571,
+      "p_stop_reached_share": 0.9415297204308134,
+      "p_reached_neither_true_expiry": 0.0018819758948551818,
+      "p_reached_both_order_unknown": 0.8588727594683256,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 9.871818942450739,
+      "profit_barrier_bp": 29.61545682735222,
+      "stop_barrier_bp": 19.74363788490148,
+      "p_clear_upper_bound": 0.9186622903466806,
+      "p_stop_reached_share": 0.9432891295682525,
+      "p_reached_neither_true_expiry": 0.0017070301812783294,
+      "p_reached_both_order_unknown": 0.8636584500962114,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 9.222623163509548,
+      "profit_barrier_bp": 27.667869490528645,
+      "stop_barrier_bp": 18.445246327019095,
+      "p_clear_upper_bound": 0.9217332685463845,
+      "p_stop_reached_share": 0.9448728946060325,
+      "p_reached_neither_true_expiry": 0.0015844634238622113,
+      "p_reached_both_order_unknown": 0.8681906265762792,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 8.616120140771843,
+      "profit_barrier_bp": 25.84836042231553,
+      "stop_barrier_bp": 17.232240281543685,
+      "p_clear_upper_bound": 0.9243527401439827,
+      "p_stop_reached_share": 0.9464217403397055,
+      "p_reached_neither_true_expiry": 0.0014641664212130582,
+      "p_reached_both_order_unknown": 0.8722386469049013,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 8.049502290622064,
+      "profit_barrier_bp": 24.148506871866193,
+      "stop_barrier_bp": 16.099004581244127,
+      "p_clear_upper_bound": 0.9269006271681615,
+      "p_stop_reached_share": 0.947819560083115,
+      "p_reached_neither_true_expiry": 0.0013576625436862318,
+      "p_reached_both_order_unknown": 0.8760778497949626,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 7.520146663243425,
+      "profit_barrier_bp": 22.560439989730277,
+      "stop_barrier_bp": 15.040293326486852,
+      "p_clear_upper_bound": 0.9290610845132712,
+      "p_stop_reached_share": 0.949076131241411,
+      "p_reached_neither_true_expiry": 0.0012715864590620918,
+      "p_reached_both_order_unknown": 0.8794088022137442,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 7.025602800632392,
+      "profit_barrier_bp": 21.076808401897175,
+      "stop_barrier_bp": 14.051205601264783,
+      "p_clear_upper_bound": 0.9311015940487728,
+      "p_stop_reached_share": 0.9502920214104221,
+      "p_reached_neither_true_expiry": 0.001175907565808484,
+      "p_reached_both_order_unknown": 0.8825695230250035,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 6.5635813931008125,
+      "profit_barrier_bp": 19.69074417930244,
+      "stop_barrier_bp": 13.127162786201625,
+      "p_clear_upper_bound": 0.9330823915742513,
+      "p_stop_reached_share": 0.9513628218708681,
+      "p_reached_neither_true_expiry": 0.001105894361073636,
+      "p_reached_both_order_unknown": 0.885551107806193,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 6.131943681755169,
+      "profit_barrier_bp": 18.395831045265506,
+      "stop_barrier_bp": 12.263887363510339,
+      "p_clear_upper_bound": 0.9347829616842698,
+      "p_stop_reached_share": 0.9523342769111292,
+      "p_reached_neither_true_expiry": 0.001052467825789687,
+      "p_reached_both_order_unknown": 0.8881697064211886,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 5.728691557895579,
+      "profit_barrier_bp": 17.186074673686736,
+      "stop_barrier_bp": 11.45738311579116,
+      "p_clear_upper_bound": 0.936391868621007,
+      "p_stop_reached_share": 0.9532393852735866,
+      "p_reached_neither_true_expiry": 0.00101178683650485,
+      "p_reached_both_order_unknown": 0.8906430407310985,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 5.351958313503376,
+      "profit_barrier_bp": 16.055874940510126,
+      "stop_barrier_bp": 10.703916627006752,
+      "p_clear_upper_bound": 0.9378768120281639,
+      "p_stop_reached_share": 0.9540692425356933,
+      "p_reached_neither_true_expiry": 0.0009691852854941195,
+      "p_reached_both_order_unknown": 0.8929152398493512,
+      "n": 5727491
+    },
+    {
+      "round_trip_bp": 4.999999999999999,
+      "profit_barrier_bp": 14.999999999999996,
+      "stop_barrier_bp": 9.999999999999998,
+      "p_clear_upper_bound": 0.9392814410358742,
+      "p_stop_reached_share": 0.9547801995673149,
+      "p_reached_neither_true_expiry": 0.0009340913848664275,
+      "p_reached_both_order_unknown": 0.8949957319880555,
+      "n": 5727491
+    }
+  ],
+  "threshold_bound_crosses_breakeven_at": {
+    "round_trip_bp": 4.999999999999999,
+    "profit_barrier_bp": 14.999999999999996,
+    "stop_barrier_bp": 9.999999999999998,
+    "p_clear_upper_bound": 0.9392814410358742,
+    "p_stop_reached_share": 0.9547801995673149,
+    "p_reached_neither_true_expiry": 0.0009340913848664275,
+    "p_reached_both_order_unknown": 0.8949957319880555,
+    "n": 5727491.0
+  },
+  "threshold_bound_first_crosses_at": {
+    "round_trip_bp": 70.98,
+    "profit_barrier_bp": 212.94,
+    "stop_barrier_bp": 141.96,
+    "p_clear_upper_bound": 0.650127429270513,
+    "p_stop_reached_share": 0.7606548836130864,
+    "p_reached_neither_true_expiry": 0.06288425420485165,
+    "p_reached_both_order_unknown": 0.4736665670884511,
+    "n": 5727491.0
+  },
+  "interpretation_left_to_cooper": "If the bound does not cross 0.6000 at any round_trip_bp down to 5 bp, that is a strong negative signal without needing exact ordering (an upper bound failing to clear means the exact quantity, which is <= the bound, also fails to clear). If the bound DOES cross, that is necessary-but-not-sufficient and inconclusive on its own -- T4/T5's comparison should be read against this bound with that caveat stated, and an exact reclassification is a candidate follow-on before treating a crossing as evidence the gap actually closes.",
+  "source": "research/impact_by_participation/t1_threshold.py:main",
+  "reproduce": ".venv/Scripts/python.exe -m research.impact_by_participation.t1_threshold"
+}

@@ -1,0 +1,95 @@
+{
+  "task": "T4",
+  "phase": "impact_by_participation",
+  "comparison_method": "round_trip_equivalent_bp_p50 = 2 * eff_bp_p50 (T3's one-sided median effective spread, doubled for a round-trip-comparable unit) vs. Phase 11's flat 70.98 bp round-trip headline (results/phase_11/artifacts/t7_cost_vs_capture.json).",
+  "caveat_from_t1": "p_clear_upper_bound = P(MFE ratio over horizon 60 >= profit_k * round_trip_bp), i.e. whether the shrunk profit barrier was reached AT ALL by horizon, ignoring whether the stop barrier was reached first. This is an UPPER BOUND on the true p_clear_optimistic T3 would compute with exact touch-time ordering -- true p_clear_optimistic <= this bound at every round_trip_bp, because reaching the level is necessary but not sufficient (the stop may still have been touched first). It is NOT the closest-cell's exact quantity and is not reported as such.",
+  "caveat_stated_again_here": "T1 found the reachability bound already clears p_breakeven at the FULL 70.98 bp cost (0.6501 vs 0.6000), and the ~0.26 shortfall against T3's actual p_clear_optimistic (0.3885) is dominated by ORDER (which barrier is touched first), not by barrier magnitude. So even where this comparison shows a decile's cost below baseline, that does NOT by itself establish the D24/D25 gap closes -- it establishes only that a narrower cost input is available; whether narrower barriers built from it would also improve the win-the-race probability is exactly what T1 flagged as needing the exact reclassification, not run here.",
+  "by_decile": [
+    {
+      "decile": 1,
+      "n": 414579,
+      "eff_bp_p50_one_sided": 25.355756791721223,
+      "round_trip_equivalent_bp_p50": 50.711513583442446,
+      "below_baseline_70_98bp": true,
+      "pct_of_baseline": 0.7144479231254218
+    },
+    {
+      "decile": 2,
+      "n": 412605,
+      "eff_bp_p50_one_sided": 25.839793281653197,
+      "round_trip_equivalent_bp_p50": 51.679586563306394,
+      "below_baseline_70_98bp": true,
+      "pct_of_baseline": 0.7280865957073315
+    },
+    {
+      "decile": 3,
+      "n": 426078,
+      "eff_bp_p50_one_sided": 26.28120893561048,
+      "round_trip_equivalent_bp_p50": 52.56241787122096,
+      "below_baseline_70_98bp": true,
+      "pct_of_baseline": 0.7405243430715829
+    },
+    {
+      "decile": 4,
+      "n": 429618,
+      "eff_bp_p50_one_sided": 26.254826254824508,
+      "round_trip_equivalent_bp_p50": 52.509652509649015,
+      "below_baseline_70_98bp": true,
+      "pct_of_baseline": 0.7397809595611301
+    },
+    {
+      "decile": 5,
+      "n": 420402,
+      "eff_bp_p50_one_sided": 26.946042145536637,
+      "round_trip_equivalent_bp_p50": 53.892084291073274,
+      "below_baseline_70_98bp": true,
+      "pct_of_baseline": 0.7592573160196291
+    },
+    {
+      "decile": 6,
+      "n": 411869,
+      "eff_bp_p50_one_sided": 27.8551532033445,
+      "round_trip_equivalent_bp_p50": 55.710306406689,
+      "below_baseline_70_98bp": true,
+      "pct_of_baseline": 0.7848732939798393
+    },
+    {
+      "decile": 7,
+      "n": 392568,
+      "eff_bp_p50_one_sided": 28.495435891786286,
+      "round_trip_equivalent_bp_p50": 56.99087178357257,
+      "below_baseline_70_98bp": true,
+      "pct_of_baseline": 0.8029145080807631
+    },
+    {
+      "decile": 8,
+      "n": 342887,
+      "eff_bp_p50_one_sided": 27.35978112175044,
+      "round_trip_equivalent_bp_p50": 54.71956224350088,
+      "below_baseline_70_98bp": true,
+      "pct_of_baseline": 0.7709152189842333
+    },
+    {
+      "decile": 9,
+      "n": 280967,
+      "eff_bp_p50_one_sided": 26.917900403770325,
+      "round_trip_equivalent_bp_p50": 53.83580080754065,
+      "below_baseline_70_98bp": true,
+      "pct_of_baseline": 0.7584643675336806
+    },
+    {
+      "decile": 10,
+      "n": 202353,
+      "eff_bp_p50_one_sided": 35.72815533980534,
+      "round_trip_equivalent_bp_p50": 71.45631067961068,
+      "below_baseline_70_98bp": false,
+      "pct_of_baseline": 1.006710491400545
+    }
+  ],
+  "n_deciles_below_baseline": 9,
+  "n_deciles_total": 10,
+  "no_recommendation": "Per the Evidence Standard, no interpretation of what this means for D24/D25 follows. Comparison stated as data.",
+  "STOP": "T0-T4 complete. No full-tier query has been run. T5 (full-tier promotion and the loop-closing p_clear recomputation) is BLOCKED pending Cooper's explicit review of T0-T4, per this prompt's Approval Gate.",
+  "source": "research/impact_by_participation/t4_compare.py:main",
+  "reproduce": ".venv/Scripts/python.exe -m research.impact_by_participation.t4_compare"
+}

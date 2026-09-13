@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# CLOSED BY D26 (2026-09-11). Synthetic tapes only -- do not point this at cohort data.
+# Correctness is not in question; the cohort question it answered is. See GOING_LIVE.md.
 """The moment machinery: closed-form derivatives of the scale field to any order.
 
 WHAT THIS IS. lambda-hat(t,s) is a sum of Gaussians over the prints, so F is an ANALYTIC
@@ -30,11 +32,17 @@ import numpy as np
 # Kernel truncation. Derived, not chosen: exp(-18) ~= 1.5e-8. config/scale_field_detector.json
 CUT = 6.0
 
-# The Poisson sampling-noise constant, sd(F) ~= 0.87/sqrt(n_eff). It is defined here so it
-# can be named, and it is NOT a default anywhere: on a tape whose Allan factor runs 5.99 at
-# 15.6 ms to 1245 at 4096 s the true sd is larger by roughly sqrt(A(s)), so a z built on
-# this constant is inflated ~2.4x at the fine end and ~35x at the coarse end. See the
-# kappa_gate block in config/scale_field_detector.json.
+# The Poisson sampling-noise constant, sd(F) ~= 0.87/sqrt(n_eff). Defined here so it can be
+# named; NOT a default anywhere.
+#
+# THE RATIONALE THAT USED TO SIT HERE HAS BEEN WITHDRAWN (2026-09-11). It read: the Allan
+# factor runs 5.99 at 15.6 ms to 1245 at 4096 s, so the true sd is larger by roughly
+# sqrt(A(s)) and a z built on 0.87 is inflated ~2.4x at the fine end. D26 withdrew that curve
+# as a clustering measurement -- A(T) measures rate variation OR clustering and was never
+# rate-matched. On a 10 ms collapsed tape A(15.6 ms) falls from 9.79 to 0.91, so at fine
+# scales the inflation is ~1.0 and this constant is very nearly right there. At coarse scales
+# the departure is real but it is the RATE ENVELOPE, not clustering, which is the dependence
+# commit 1a34975 retracted. See GOING_LIVE.md and claude/going_live_blockers_answered.md S2.
 POISSON_NOISE_CONSTANT = 0.87
 
 SQRT2 = np.sqrt(2.0)
