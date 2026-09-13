@@ -87,7 +87,16 @@ def cross_cut(df: pd.DataFrame, split_col: str, horizon: int, min_cell_n: int) -
     return rows
 
 
-def main():
+SPLITS = {
+    "t3a_flg_dilution_form_before_t0": "flg_dilution_form_before_t0",
+    "t3b_high_turnover_above_median": "t3b_high_turnover",
+    "t3c_spl_reverse_split_365d": "spl_reverse_split_365d",
+}
+
+
+def build_df() -> tuple[pd.DataFrame, dict]:
+    """Rebuilds T3's merged, gated dataframe. Shared by main() and the Verification
+    Block so the verify step re-derives the same object, not just re-parses its JSON."""
     ef = pd.read_parquet(f"{C.FUNDAMENTALS_ROOT}/event_fundamentals.parquet")
     p0 = pd.read_parquet(f"{C.ART}/p0_outcome.parquet")
     ctx = pd.read_parquet("results/fundamentals_f1/artifacts/t6_context.parquet",
@@ -117,22 +126,28 @@ def main():
     df = df.merge(t3b_high, left_on="event_id", right_index=True, how="left")
     df["event_year"] = df["event_id"].str.extract(r"_(\d{4})-\d{2}-\d{2}_")[0]
 
+    meta = {
+        "median_turnover": float(median_turnover),
+        "n_excluded_flg": int((~flg_known).sum()),
+        "n_excluded_spl": int((~spl_known).sum()),
+        "n_excluded_turnover": int(turnover.isna().sum()),
+    }
+    return df, meta
+
+
+def main():
+    df, meta = build_df()
     cfg = C.load_cfg()
     min_cell_n = cfg["cross_cuts"]["min_cell_n_log_threshold"]
-
-    splits = {
-        "t3a_flg_dilution_form_before_t0": "flg_dilution_form_before_t0",
-        "t3b_high_turnover_above_median": "t3b_high_turnover",
-        "t3c_spl_reverse_split_365d": "spl_reverse_split_365d",
-    }
+    splits = SPLITS
 
     summary = {
-        "median_turnover_used_for_t3b_split": float(median_turnover),
+        "median_turnover_used_for_t3b_split": meta["median_turnover"],
         "n_total": len(df),
         "quality_gating": {
-            "t3a_excluded_unknown_flg_quality": int((~flg_known).sum()),
-            "t3c_excluded_unknown_spl_quality": int((~spl_known).sum()),
-            "t3b_excluded_undefined_turnover": int(turnover.isna().sum()),
+            "t3a_excluded_unknown_flg_quality": meta["n_excluded_flg"],
+            "t3c_excluded_unknown_spl_quality": meta["n_excluded_spl"],
+            "t3b_excluded_undefined_turnover": meta["n_excluded_turnover"],
             "note": "flg_/spl_ boolean columns default False when quality is 'unavailable' -- "
                     "those rows are excluded from that split entirely (set to unknown), not "
                     "counted as the 'no' side.",
