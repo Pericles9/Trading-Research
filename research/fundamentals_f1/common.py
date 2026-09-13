@@ -18,6 +18,7 @@ import json
 import pathlib
 
 import duckdb
+import pandas as pd
 
 from src.data.db import get_connection
 from src.data.paths import resolve_data_root, resolve_duckdb_path
@@ -76,6 +77,17 @@ def load_massive_api_key() -> str:
     fetch_ticker_reference.py does. Never print, log, or write this into any artifact."""
     with open(".secrets/polygon_api_key.txt") as f:
         return f.read().strip()
+
+
+def build_cik_identity_map() -> pd.DataFrame:
+    """One row per resolved CIK, with a representative ticker -- the most frequent ticker
+    string F1-T1 mapped to it. Shared by every F1-Tn script that pulls per-CIK (F1-T2,
+    F1-T3, F1-T4); do not re-derive independently per script."""
+    spine = pd.read_parquet(f"{ART}/ticker_identity.parquet")
+    resolved = spine.dropna(subset=["cik"])
+    rep = (resolved.groupby(["cik", "ticker"]).size().reset_index(name="n")
+           .sort_values("n", ascending=False).drop_duplicates(subset="cik"))
+    return rep[["cik", "ticker"]].reset_index(drop=True)
 
 
 def write_json(path: str, obj: dict) -> None:

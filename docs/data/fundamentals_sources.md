@@ -74,8 +74,11 @@ Tiered construction — see `docs/Universe-Decisions.md` D33 for the full reason
   CIK (zero-padded 10-digit string) for every source including the five that are actually queried by
   ticker — the *file name* is always the CIK so all 8 sources join back to `ticker_identity.parquet`
   the same way; only the outbound API request differs. Every file is a JSON array (possibly empty —
-  empty means "queried, vendor returned zero records for this CIK," not a fetch failure); manifest and
-  checksums at `data/raw/fundamentals/massive/2026-09-12/fetch_manifest.json`. Integrity spot-check
+  empty means "queried, vendor returned zero records for this CIK," not a fetch failure); manifest at
+  `data/raw/fundamentals/massive/2026-09-12/fetch_manifest.json`, per-file SHA256 checksums at the
+  sibling `checksums.json` (added 2026-09-12 as a correction — the manifest itself only ever carried
+  aggregate per-source stats; checksums were computed during the pull but not persisted until this fix,
+  caught while drafting F1-T5d's verification script). Integrity spot-check
   (`n=5` random files per source plus full-population size/zero-length scan, all 8 sources, 2026-09-12):
   zero malformed-JSON files, zero non-list top-level payloads, sizes consistent with the endpoint's
   expected record volume. Total archive: 23,480 files, 2.17 GB.
@@ -127,25 +130,60 @@ Tiered construction — see `docs/Universe-Decisions.md` D33 for the full reason
 
 ## SEC EDGAR pull (F1-T3, F1-T4)
 
-- Network authorization: D14 Amendment A1, scoped to this task only.
-- User-Agent: **PENDING** — set in `config/fundamentals_f1.json`'s `sec_edgar.user_agent` before F1-T3
-  runs. SEC requires a descriptive User-Agent with a real contact address on every request.
-- Per-source schema: **filled in at F1-T3/F1-T4**, once the pull actually runs.
+- Network authorization: `docs/Universe-Decisions.md` D14 Amendment A1. That decision's text names
+  "F1-T3 (SEC EDGAR daily index and `companyfacts.zip` pull)" as one bundled step — a 2026-09-12
+  clarification note appended to the same decision confirms this covers both the work order's F1-T3
+  (filing index) and F1-T4 (shares outstanding, the actual `companyfacts` caller), which didn't exist
+  as separate numbered tasks when the amendment was first drafted.
+- User-Agent: `Mom_db Research fundamentals_f1 (cleeming29@gmail.com)`, set in
+  `config/fundamentals_f1.json`'s `sec_edgar.user_agent`, used on every SEC request across F1-T0/T3/T4.
+- **F1-T3 pull (2026-09-12, `research/fundamentals_f1/t3_filing_index.py`):** per-CIK
+  `data.sec.gov/submissions/CIK##########.json`, not the daily/full-index bulk archive — that archive
+  carries filing DATE only, no acceptance time, and `accepted_ns` is this task's load-bearing column.
+  Full reasoning and the empirical UTC-timezone check (cross-checked one filing's JSON
+  `acceptanceDateTime` against its own human-readable index page) are in that script's docstring.
+  2,935/2,935 CIKs pulled; raw archive at `data/raw/fundamentals/sec/2026-09-12/submissions/`.
+  **Field schema** (submissions API, per filing): `accessionNumber`, `form`, `filingDate`,
+  `reportDate` (nullable — not every form has a period of report, e.g. `SCHEDULE 13G`), `items`
+  (populated mainly for `8-K`, comma-separated item numbers e.g. `"3.02"` or `"4.02"`),
+  `acceptanceDateTime` (verified genuine UTC despite the ambiguous-looking `"Z"` suffix),
+  `isXBRL`/`isInlineXBRL` (checked directly and found **not** a reliable genuine-restatement
+  classifier for `10-K/A`/`10-Q/A` — see F1-T3h below), `primaryDocDescription`, `size`.
+- **F1-T4 pull (2026-09-12, `research/fundamentals_f1/t4_shares_outstanding.py`):** per-CIK
+  `data.sec.gov/api/xbrl/companyfacts/CIK##########.json`, **not** the `companyfacts.zip` bulk archive
+  F1-T4a's literal text names — checked its actual size first (`HEAD` returned Content-Length
+  1,408,785,961 bytes, 1.4 GB) and chose per-CIK instead because the bulk archive covers ~800,000+
+  filers to serve 2,935 (0.4%), and this build already hit real friction extracting a 23,480-file
+  archive on this Windows/NTFS setup in F1-T2. Same data, server-side filtered to one CIK; full
+  reasoning in that script's docstring. Extracts `dei:EntityCommonStockSharesOutstanding` only (the
+  cover-page share count F1-T4b asks for). Field schema per observation: `end` (as-of date, date-only
+  precision), `val` (shares), `accn` (accession), `fy`/`fp` (fiscal year/period), `form`, `filed`
+  (date-only — **no time-of-day**, which is why `shs_accepted_ns` is sourced from F1-T3's
+  `sec_filings` by `(cik, accession)` join instead of promoted from this date).
 
 ## Declared dilution form set (F1-T3e)
 
-**PENDING finalization** — starting set in `config/fundamentals_f1.json`'s `dilution_form_set` block
-(the 424B family, S-1/S-3 and their amendments, 8-A registrations, 8-K Item 3.02). Confirmed here, not
-left as an inline literal in code, per the work order's own requirement. Finalize before F1-T3e runs.
+**Finalized, 2026-09-12** — `config/fundamentals_f1.json`'s `dilution_form_set.minimum_forms`:
+`424B1`, `424B2`, `424B3`, `424B4`, `424B5`, `424B7`, `424B8`, `S-1`, `S-1/A`, `S-3`, `S-3/A`,
+`8-A12B`, `8-A12G`, plus `8-K` filings whose `items` field contains `3.02` (checked against the
+`items` array directly, not form type alone — `8-K` itself is not in the form-type set). Used
+exactly as written, no additions during F1-T3e. `flg_dilution_form_before_t0 = TRUE` for
+1,726/20,951 events (8.2%).
 
-## Cooper-set thresholds (F1-T4 gate)
+## Cooper-set thresholds (F1-T3/F1-T4 gate)
 
-Neither has been set yet. **F1-T4 does not run until both are recorded here with Cooper's actual
-values** — the placeholders in `config/fundamentals_f1.json` are suggestions, not defaults to adopt
-silently:
+**All three set by Cooper, 2026-09-12** (`config/fundamentals_f1.json`'s `cooper_pending` block):
 
-- `filed_stale_days` — placeholder 45. Governs `shs_quality`'s `filed_exact` vs. `filed_stale` split.
-- `shs_quality_coverage_floor` — placeholder 0.70. Escalation row 5 in `prompts/fundamentals_f1.md` §6.
+- `filed_stale_days = 45` — accepted the work order's suggested placeholder. Governs `shs_quality`'s
+  `filed_exact` vs. `filed_stale` split.
+- `shs_quality_coverage_floor = 0.70` — accepted the work order's suggested placeholder. Escalation
+  row 5 in `prompts/fundamentals_f1.md` §6.
+- `blast_radius_threshold_row1c = 0.10` — no placeholder existed for this one. Cooper chose 10% over
+  the 5% alternative (which would have mirrored escalation row 2's identity-resolution threshold): a
+  looser bar, so only a materially large restatement rate (share of in-scope events with a post-vintage
+  restatement-affecting filing found after the event's `fin_` vintage) forces F1-T4f's
+  `companyfacts`-based `fin_` rebuild to become mandatory. Below 10%, the flag-only interim
+  (`fin_superseded_later`) stays adequate. Decides escalation row 1c, evaluated at F1-T3h.
 
 ## Vendor-vs-SEC share count disagreement (F1-T4d)
 

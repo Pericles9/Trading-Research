@@ -682,6 +682,18 @@ reaches the network. D14's offline constraint is otherwise unchanged and continu
 else in this programme — this amendment does not reopen network access generally, and it does not
 authorize any other phase or task to fetch anything.
 
+**Clarification, 2026-09-12, added before F1-T4 ran, not after** — the same drift class this
+amendment's own F1-T0 gap already was: the work order's task numbering split what this decision
+called "F1-T3 (SEC EDGAR daily index and `companyfacts.zip` pull)" into two separate numbered
+tasks — F1-T3 (the filing index, `sec_filings`/`event_filing_proximity`) and **F1-T4** (shares
+outstanding, which is what actually calls `companyfacts`). This decision's authorization was written
+against the bundled SEC network step as a whole, before that split existed in the task list, and
+covers **both** F1-T3 and F1-T4 under the same immutable-raw-archive, write-once-and-stop terms —
+it does not newly authorize F1-T4 by extension, it was already written to include the work this task
+does, under a label that no longer matches the current task numbering. `prompts/fundamentals_f1.md`'s
+own F1-T4 checklist is not separately gated by anything beyond the Cooper-set thresholds already
+recorded in `docs/data/fundamentals_sources.md`.
+
 **Standing rule.** Any future task that wants network access states so explicitly, in the same way,
 before it runs — D14 is still the default and this is still the exception.
 

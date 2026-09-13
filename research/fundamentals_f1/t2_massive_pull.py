@@ -63,6 +63,7 @@ BASE_URL = "https://api.massive.com"
 FETCH_DATE = "2026-09-12"
 RAW_ROOT = f"data/raw/fundamentals/massive/{FETCH_DATE}"
 MANIFEST_PATH = f"{RAW_ROOT}/fetch_manifest.json"
+CHECKSUMS_PATH = f"{RAW_ROOT}/checksums.json"
 PROGRESS_PATH = f"{C.ART}/_t2_progress.json"
 SUMMARY_PATH = f"{C.ART}/t2_pull_summary.json"
 
@@ -115,16 +116,6 @@ def fetch_all_pages(session, url, params, key, cap=None):
     return results
 
 
-def build_cik_identity_map() -> pd.DataFrame:
-    """One row per CIK actually resolved in F1-T1, with a representative ticker."""
-    spine = pd.read_parquet(f"{C.ART}/ticker_identity.parquet")
-    resolved = spine.dropna(subset=["cik"])
-    # representative ticker per CIK: the most frequent ticker string mapped to it
-    rep = (resolved.groupby(["cik", "ticker"]).size().reset_index(name="n")
-           .sort_values("n", ascending=False).drop_duplicates(subset="cik"))
-    return rep[["cik", "ticker"]].reset_index(drop=True)
-
-
 def write_raw(source: str, key_value: str, records: list) -> tuple[str, int, str]:
     d = os.path.join(RAW_ROOT, source)
     os.makedirs(d, exist_ok=True)
@@ -138,7 +129,7 @@ def write_raw(source: str, key_value: str, records: list) -> tuple[str, int, str
 
 def main():
     key = C.load_massive_api_key()
-    cik_map = build_cik_identity_map()
+    cik_map = C.build_cik_identity_map()
     print(f"{len(cik_map)} distinct CIKs to pull (of {C.TARGET_ROW_COUNT} events, "
           f"{pd.read_parquet(f'{C.ART}/ticker_identity.parquet')['cik'].isna().sum()} unresolved and skipped)")
 
@@ -221,6 +212,19 @@ def main():
             "request_timestamp_utc": datetime.now(timezone.utc).isoformat(),
         }
     C.write_json(MANIFEST_PATH, manifest)
+
+    # Per-file SHA256, keyed by source -> filename -> checksum. Kept as a separate file from
+    # MANIFEST_PATH rather than inlined (23,480 entries would dominate the manifest); both
+    # live under data/raw/, gitignored the same way. F1-T2d requires this be recorded, not
+    # merely computed and discarded -- caught late (2026-09-12, during F1-T5d verification
+    # script drafting) that the checksums computed above into file_records were never
+    # actually persisted anywhere; this call is the fix, and CHECKSUMS_PATH is now written
+    # every run, not retrofitted once.
+    checksums = {
+        source: {os.path.basename(r["path"]): r["sha256"] for r in records}
+        for source, records in file_records.items()
+    }
+    C.write_json(CHECKSUMS_PATH, checksums)
 
     summary = {
         "cik_count": len(cik_map),

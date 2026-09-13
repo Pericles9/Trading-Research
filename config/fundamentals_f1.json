@@ -77,12 +77,12 @@
     "minimum_forms": ["424B1", "424B2", "424B3", "424B4", "424B5", "424B7", "424B8", "S-1", "S-1/A", "S-3", "S-3/A", "8-A12B", "8-A12G", "8-K (Item 3.02)"]
   },
   "cooper_pending": {
-    "filed_stale_days": null,
-    "filed_stale_days_placeholder": 45,
-    "filed_stale_days_note": "PENDING -- Cooper sets this before F1-T4 runs (work order section 4, shs_ group). Suggested value is a placeholder, not a default to adopt silently.",
-    "shs_quality_coverage_floor": null,
-    "shs_quality_coverage_floor_placeholder": 0.70,
-    "shs_quality_coverage_floor_note": "PENDING -- Cooper sets this before F1-T4 runs (escalation row 5). Suggested value is a placeholder, not a default to adopt silently."
+    "filed_stale_days": 45,
+    "filed_stale_days_note": "SET by Cooper 2026-09-12 (accepted the work order's own suggested placeholder). Governs shs_quality: filed_exact vs filed_stale.",
+    "shs_quality_coverage_floor": 0.70,
+    "shs_quality_coverage_floor_note": "SET by Cooper 2026-09-12 (accepted the work order's own suggested placeholder). Escalation row 5 -- F1-T6 stop/post threshold.",
+    "blast_radius_threshold_row1c": 0.10,
+    "blast_radius_threshold_row1c_note": "SET by Cooper 2026-09-12. No placeholder existed for this one in the work order -- Cooper chose 10% over the 5% alternative (which mirrors escalation row 2's identity-resolution threshold), a looser bar: only a materially large restatement rate forces F1-T4f's companyfacts-based fin_ rebuild to become mandatory; smaller rates stay served by the flag-only interim (fin_superseded_later)."
   },
   "quality_enums": {
     "identity_quality": ["resolved_exact", "resolved_ambiguous", "unresolved"],

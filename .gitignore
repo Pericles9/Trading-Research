@@ -57,6 +57,11 @@ results/fundamentals_f1/artifacts/*.parquet
 # per-(ticker,date) API responses so a multi-thousand-call resolution script can restart
 # without re-querying everything) -- regenerable by re-running the script, not a finding.
 results/fundamentals_f1/artifacts/_*.json
+# Same rule, one level deeper: per-CIK parquet parts cached during F1-T3/F1-T4's SEC pulls
+# so a multi-thousand-request run can resume without re-fetching. Same pattern as the
+# existing results/phase_11/artifacts/_t5b_parts/ entry above.
+results/fundamentals_f1/artifacts/_t3_parts/
+results/fundamentals_f1/artifacts/_t4_parts/
 
 # Per-event chart HTML plus the 4.8 MB offline plotly.min.js each directory needs
 # (D14 forbids a CDN, so the bundle is local and unavoidable). 53 MB for two events,

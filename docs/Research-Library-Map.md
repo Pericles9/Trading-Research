@@ -70,16 +70,41 @@ Files added, pre-flight only (F1-T0 through F1-T6 have not run yet):
   `t2_pull_summary.json` (tracked) in `results/fundamentals_f1/artifacts/`.
 - `data/raw/fundamentals/massive/2026-09-12/<source>/<cik>.json` — raw archive (gitignored under
   `/data/`), 8 sources × 2,935 CIKs, 23,480 files, 2.17 GB. `fetch_manifest.json` (gitignored, same
-  rule) records per-source endpoint/keying/record-count/checksums.
+  rule) records per-source endpoint/keying/record-count; sibling `checksums.json` (added 2026-09-12
+  as a correction, see `prompts/fundamentals_f1.md`'s F1-T2d note) carries the per-file SHA256s.
 - `.gitignore` — added `results/fundamentals_f1/artifacts/_*.json` (internal resumption/progress
   caches, distinct from the tracked summary JSONs).
 - `docs/data/fundamentals_sources.md` — F1-T2e: per-source field schema, sample record, and a
   summary table for all 8 archived Massive sources.
+- `research/fundamentals_f1/t3_filing_index.py` — F1-T3a-e, the SEC filing index. Per-CIK
+  `submissions.json` (not the daily/full-index bulk archive — see docstring), 2,935/2,935 CIKs.
+  Built `sec_filings.parquet` (938,063 rows), `event_filing_proximity.parquet` (20,951 rows),
+  `event_filings_window.parquet` (139,039 rows), `item402_filings_full_history.parquet` (unbounded
+  look-forward for F1-T3h). Raw archive: `data/raw/fundamentals/sec/2026-09-12/submissions/`
+  (gitignored).
+- `research/fundamentals_f1/t3f_poll_boundary.py` — F1-T3f. Nanosecond_poll1 tier only (110 events):
+  zero filings in the poll-boundary window, escalation row 6 does not fire.
+- `research/fundamentals_f1/chart_t3_filing_proximity.py` — F1-T3g chart.
+  `results/fundamentals_f1/charts/t3_filing_proximity.html`.
+- `research/fundamentals_f1/t3h_blast_radius.py` — F1-T3h (Amendment F1-A1 §3). 8-K Item 4.02 only
+  as the genuine-restatement signal (isXBRL/isInlineXBRL checked directly and found unreliable as a
+  classifier). 3.70% of the universe (776/20,951) — below Cooper's 10% threshold, escalation row 1c
+  does not fire, F1-T4f stays optional. Side finding carried to F1-T6: vendor financials coverage
+  before `t0` is only 39.6% universe-wide, concentrated almost entirely in 2023+ events.
+- `research/fundamentals_f1/t5_prep_flatten.py` — flattens the F1-T2 vendor raw archive
+  (financials/short_interest/splits) into `financials_vintages.parquet`, `short_interest_flat.parquet`,
+  `splits_flat.parquet` for F1-T5's ASOF joins. Offline, no network call.
+- `.gitignore` — added `results/fundamentals_f1/artifacts/_t3_parts/` and `_t4_parts/` (per-CIK
+  parquet resumption caches, same pattern as the existing `_t5b_parts/` entry).
+- `docs/Universe-Decisions.md` — D14 Amendment A1 clarification note (2026-09-12): the decision's
+  "F1-T3 (SEC EDGAR ... `companyfacts.zip` pull)" wording bundled what the work order later split
+  into F1-T3 and F1-T4; the authorization covers both.
 
 **Built so far:** pre-flight (D14 Amendment A1, D27–D33), F1-PF5 (`t0_spine.parquet`), F1-T0 (fired
 escalation row 1), Amendment F1-A1's F1-T0f/F1-T0g (resolved it — Outcome A, row 1 retired, rows
-1a–1c in force), F1-T1 (identity spine, escalation row 2 does not fire), and F1-T2 (Massive bulk
-pull, network step closed). **Not yet built:** F1-T3 through F1-T6.
+1a–1c in force), F1-T1 (identity spine, escalation row 2 does not fire), F1-T2 (Massive bulk pull,
+network step closed), and F1-T3 (filing index — escalation rows 6 and 1c both checked, neither
+fires). **Not yet built:** F1-T4 through F1-T6.
 
 ## Phase 10 addendum — v3 and v4 (folder-level; branch `phase/10`, 2026-08-06)
 

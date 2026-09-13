@@ -314,9 +314,14 @@ provenance marking below stays as designed regardless — it costs nothing and t
 - [x] **F1-T2d** — Write a fetch manifest per source: endpoint, parameters, request timestamp, record count,
       file checksum. Archive raw responses unmodified.
       `data/raw/fundamentals/massive/2026-09-12/fetch_manifest.json` — one entry per source (endpoint,
-      keyed_by, source_of_record, n_ciks_pulled, total_records, request_timestamp_utc), plus a per-file
-      SHA256 checksum recorded for every one of the 23,480 archived files. Verified complete: all 8 sources
-      present, all 2,935 CIKs per source.
+      keyed_by, source_of_record, n_ciks_pulled, total_records, request_timestamp_utc).
+      **Self-caught correction, 2026-09-12, during F1-T5d verification-script drafting:** per-file SHA256
+      checksums were computed during the pull but never actually persisted anywhere — `fetch_manifest.json`
+      only ever carried the aggregate per-source stats above. Fixed two ways: (1) `t2_massive_pull.py`
+      now writes a separate `checksums.json` (source → filename → sha256) every run, not just this one;
+      (2) retroactively computed and persisted `checksums.json` for the already-pulled archive (files
+      unchanged since the pull, safe to hash after the fact). Verified complete: all 8 sources present,
+      all 2,935 CIKs per source, 23,480 files, 23,480 checksums recorded.
 - [x] **F1-T2e** — Document the schema of every archived source in `docs/data/fundamentals_sources.md`,
       version-controlled. Done — per-source field list, sample record, and a summary table (endpoint, key,
       source_of_record, n, total records) added to `docs/data/fundamentals_sources.md`'s "Massive vendor
@@ -335,23 +340,37 @@ provenance marking below stays as designed regardless — it costs nothing and t
 Free, permanent, and a prerequisite for D28 — the acceptance timestamp exists nowhere else. **Also gated
 on D14 Amendment A1 (F1-PF2).**
 
-- [ ] **F1-T3a** — Download the EDGAR daily index for 2020-01-01 through the universe end date. Declare a
+- [x] **F1-T3a** — Download the EDGAR daily index for 2020-01-01 through the universe end date. Declare a
       descriptive User-Agent with a contact address, as the SEC requires, and respect the published request
       rate. Prefer the bulk archives over per-company calls wherever both exist.
-- [ ] **F1-T3b** — Build `sec_filings`: `cik`, `accession`, `form_type`, `accepted_ns`, `period_of_report`,
-      `filing_date`. `accepted_ns` is the load-bearing column.
-- [ ] **F1-T3c** — Build `event_filing_proximity`, one row per event: the nearest filing with
+      **Deviates from "prefer bulk" after checking why the bulk route doesn't actually satisfy F1-T3b:**
+      the daily/full-index files carry a filing DATE only, no time, and `accepted_ns` is explicitly the
+      load-bearing column. Used per-CIK `data.sec.gov/submissions/CIK##########.json` instead (itself a
+      bulk-per-company pull, ~1 request/CIK, older-history pages fetched only when a CIK's "recent" window
+      didn't reach back far enough) — full reasoning in `research/fundamentals_f1/t3_filing_index.py`'s
+      docstring. **Timezone verified, not assumed:** cross-checked one filing's JSON `acceptanceDateTime`
+      (`"...Z"` suffix) against its own human-readable index page, which independently confirmed the JSON
+      value is genuine UTC. Run 2026-09-12: 2,935/2,935 CIKs pulled, paced at ~9 req/s.
+- [x] **F1-T3b** — Build `sec_filings`: `cik`, `accession`, `form_type`, `accepted_ns`, `period_of_report`,
+      `filing_date`. `accepted_ns` is the load-bearing column. **938,063 rows** after filtering to
+      `[2019-12-04, 2025-11-05]` (2020-01-01 floor padded −30d/+5d for F1-T3d) and dropping rows with no
+      parseable `accepted_ns`. `results/fundamentals_f1/artifacts/sec_filings.parquet`.
+- [x] **F1-T3c** — Build `event_filing_proximity`, one row per event: the nearest filing with
       `accepted_ns < t0_ns`, its form type, its accession, and the elapsed time. Plus counts of filings in the
-      preceding 24 hours and 72 hours.
-- [ ] **F1-T3d** — Build `event_filings_window`, one row per `(event_id, accession)` for every filing within
+      preceding 24 hours and 72 hours. **20,951 rows** (exact universe). `flg_quality`: observed=20,683,
+      unavailable=248 (matches F1-T1's unresolved-identity count exactly), no_filings_in_window=20.
+      `results/fundamentals_f1/artifacts/event_filing_proximity.parquet`.
+- [x] **F1-T3d** — Build `event_filings_window`, one row per `(event_id, accession)` for every filing within
       **−30 days to +5 days** of `t0`. This is the long companion table; nothing is lost to the as-of
-      collapse in F1-T3c.
-- [ ] **F1-T3e** — Derive `flg_dilution_form_before_t0`: true when the nearest prior filing, or any filing in
+      collapse in F1-T3c. **139,039 rows.** `results/fundamentals_f1/artifacts/event_filings_window.parquet`.
+- [x] **F1-T3e** — Derive `flg_dilution_form_before_t0`: true when the nearest prior filing, or any filing in
       the preceding 72 hours, is in the **declared dilution form set**. Write the set out explicitly in
       `docs/data/fundamentals_sources.md` — at minimum the 424B prospectus-supplement family, S-1, S-3, and
       their effectiveness amendments, and 8-K filings reporting unregistered sales of equity securities. **The
-      set is a documented decision, not an inline literal buried in code.**
-- [ ] **F1-T3f** — **Report a number this programme specifically needs:** the count of events where a filing
+      set is a documented decision, not an inline literal buried in code.** Set already recorded in
+      `config/fundamentals_f1.json`'s `dilution_form_set` (F1-PF3); 8-K rows also checked for Item 3.02 in
+      the `items` field, not form type alone. **TRUE for 1,726/20,951 events (8.2%).**
+- [x] **F1-T3f** — **Report a number this programme specifically needs:** the count of events where a filing
       is accepted **between the instantaneous threshold crossing and the 60-second poll boundary.** D7 makes
       detection a family indexed by polling interval, so a filing landing inside that window means filing
       proximity is also a family, not a scalar. **Per D33, this is answerable only for the `nanosecond_poll1`
@@ -359,9 +378,11 @@ on D14 Amendment A1 (F1-PF2).**
       precision, and this task reports that limitation explicitly rather than extrapolating from a coarser
       tier. If the count on that tier is zero, that is a sentence in the digest and the question is closed for
       that tier. If it is not zero, **stop and post** — it needs a decision, not a default.
-- [ ] **F1-T3g** — Chart: distribution of time-since-nearest-filing, and the form-type mix of the nearest
-      prior filing. Commit.
-- [ ] **F1-T3h** — **New, Amendment F1-A1 §3.** From the filing index F1-T3 builds anyway: count in-scope
+      **Run: count is zero (0/110). Escalation row 6 does not fire — closed for this tier.**
+      `results/fundamentals_f1/artifacts/t3f_poll_boundary_summary.json`.
+- [x] **F1-T3g** — Chart: distribution of time-since-nearest-filing, and the form-type mix of the nearest
+      prior filing. Commit. `results/fundamentals_f1/charts/t3_filing_proximity.html`.
+- [x] **F1-T3h** — **New, Amendment F1-A1 §3.** From the filing index F1-T3 builds anyway: count in-scope
       **companies** and **events** where an 8-K Item 4.02, a 10-K/A, or a 10-Q/A **amending financial
       statements** (not a Part-III-only amendment — see the identification-method note in
       `docs/data/fundamentals_sources.md`) was accepted **after** the event's `fin_` vintage. Report as a
@@ -369,6 +390,24 @@ on D14 Amendment A1 (F1-PF2).**
       escalation row 1c**: small (single-digit percent) means `fin_superseded_later` as a flag is
       adequate and F1-T4b stays optional; large means F1-T4b becomes mandatory. **The threshold is
       Cooper's, set before F1-T3 runs, not after seeing the number** (Amendment F1-A1 §9).
+      **Signal used: 8-K Item 4.02 only** — checked directly (not assumed) whether `isXBRL`/`isInlineXBRL`
+      metadata could cheaply separate genuine 10-K/A restatements from the Part-III-only administrative
+      ones F1-T0 already found dominate this universe; it cannot (CLRB's own confirmed Part-III-only 2021
+      10-K/A and confirmed genuine 2024 restatement both show `isXBRL=1`). Raw 10-K/A/10-Q/A-after-vintage
+      counts reported separately, unclassified, never folded into the primary share. **Result: 776/20,951
+      events (3.70% of the universe; 9.35% of the 8,303 events that had a measurable `fin_` vintage at
+      all) — below Cooper's 10% threshold. Escalation row 1c does not fire; F1-T4f stays optional.**
+      By year: 2020=0.73%, 2021=0.16%, 2022=0.35%, 2023=5.53%, 2024=7.36%, 2025=3.82%.
+      `results/fundamentals_f1/artifacts/t3h_blast_radius_summary.json`.
+      **Side finding, worth carrying into F1-T6:** only 8,303/20,951 events (39.6%) have ANY vendor
+      financials record dated before `t0` at all. Diagnosed, not just observed — of events whose CIK has
+      *some* financials record, the share where even the *earliest* one is still after `t0` is 93–97% for
+      2020–2022 events but only 2–3% for 2024–2025. This reads as the vendor's financials coverage for this
+      specific (small/thin, momentum-event) universe genuinely starting around 2022–2023, not a join bug —
+      confirmed via `pd.read_parquet('financials_vintages.parquet')`'s own `accepted_ns` range (2009–2026,
+      so the vendor has old data for *some* companies, just not most of the ones in this universe before
+      that point). Carried into F1-T6a's coverage-by-year cross-cut, not silently absorbed into `fin_quality
+      = unavailable` without comment.
 
 ### F1-T4 — Float tier 1: shares outstanding
 
