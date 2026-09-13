@@ -1,0 +1,27 @@
+{
+  "task": "T2c -- agreement matrix, dev tier",
+  "grain_note": "Route 1 is gap-level (n=1991 candidate gaps); route 3 is minute-bar-level. Corroboration is approximated at the EVENT level here (does the same event show ANY route-3 band touch, not necessarily overlapping the exact gap window) -- coarser than a strict time-overlap join, disclosed as an approximation given the minute-bar/nanosecond grain mismatch, not presented as an exact per-gap corroboration.",
+  "route_2_note": "Route 2 identifies ZERO candidates by construction (dictionary_path=NONE, D34) -- not a data finding, a structural consequence of having no code dictionary. Excluded from this matrix; see t2_code_census.json for its (uninterpreted) code frequencies.",
+  "route_1_candidates_n": 1991,
+  "route_1_candidate_events_n": 42,
+  "route_3_total_events_n": 55,
+  "route_3_touched_events_n": 13,
+  "agreement_by_gap": {
+    "n_route1_gaps": 1991,
+    "n_corroborated_by_route3_event": 194,
+    "n_route1_only_gaps": 1797,
+    "share_route1_only": 0.9025615268709192
+  },
+  "agreement_by_event": {
+    "n_route1_events": 42,
+    "n_route3_touched_events": 13,
+    "n_both": 9,
+    "n_route1_only": 33,
+    "n_route3_only": 4
+  },
+  "single_route_only_share_gap_level": 0.9025615268709192,
+  "cooper_threshold_row_10_min": 50,
+  "cooper_threshold_row_11_max_share": 0.6,
+  "source": "research/phase_12/t2c_agreement_matrix.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/phase_12/t2c_agreement_matrix.py"
+}
