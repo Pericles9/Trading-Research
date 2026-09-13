@@ -1,11 +1,11 @@
 {
   "phase": "iso_share_hold_length",
   "config_hash": null,
-  "status": "hard_stop",
+  "status": "closed_not_pursued",
   "escalation": {
-    "criterion": "prompt Escalation Criteria rows 8 and 9 (negative and positive control failure)",
-    "observed": "T0-T3 complete, dev tier (49/50 primary events). Negative control (placebo, no relationship to real data) produces separations up to 2258 bp, exceeding the smallest required threshold (133.9 bp) and the real iso_share result at 4 of 6 horizons. Positive control (133.9 bp planted) not cleanly recovered -- several horizons detect negative apparent separation. T4's original framing (compare against threshold) does not run: the comparison would report on data the controls have shown is not yet trustworthy at n=49. T4 was rescoped to a full-tier noise-band precheck (zero new tick reads, bootstrap over an already-committed full-universe artifact): the required separation clears the null's 5000-rep maximum by 12.7-19.2x its own std at every horizon, P(null>=required)=0/5000 everywhere -- the dev-tier failure was a sample-size problem, not a validity problem. T5 (full-tier ISO-share build) remains blocked on Cooper's explicit authorisation.",
-    "tier": "HARD STOP -- open, awaiting Cooper's review (T5 authorisation)"
+    "criterion": "prompt Escalation Criteria rows 8 and 9 (negative and positive control failure); resolved by Cooper decision, not by further measurement",
+    "observed": "T0-T3 complete, dev tier (49/50 primary events). Negative control (placebo, no relationship to real data) produces separations up to 2258 bp, exceeding the smallest required threshold (133.9 bp) and the real iso_share result at 4 of 6 horizons. Positive control (133.9 bp planted) not cleanly recovered. T4 (full-tier bootstrap precheck, zero new tick reads): the required separation clears the null's 5000-rep maximum by 12.7-19.2x its own std at every horizon, P(null>=required)=0/5000 everywhere -- the dev-tier failure was a sample-size problem, not a validity problem, and full tier would have been well-powered. Cooper declined T5 (2026-09-13): candidate (b) is NOT closed negative -- no measurement was made of whether ISO share has a real effect -- it is closed as 'not pursued further', a scoping decision distinct from a measured result. what_would_change_a_decision.md Sec4's 'run nothing' criterion is not formally invoked (its literal conditions were not both met).",
+    "tier": "resolved -- closed by scoping decision, not a HARD STOP awaiting further action"
   },
   "headline_metrics": [
     {
@@ -91,7 +91,8 @@
     "T3: both the negative and positive controls fail on the first pass -- the raw uncontrolled real-iso_share separation (up to 795 bp) would have looked like a strong finding without them",
     "T3b required a disclosed deviation from the prompt as written (planted-synthetic positive control instead of reusing candidate (a)'s print-level participation_rate, a grain mismatch)",
     "T4 (added after review): the dev-tier control failure was a pure sample-size effect -- the same bootstrap at full tier clears the required separation by 12.7-19.2x, at zero read cost, before any full-tier ISO-share build was authorised",
-    "T4 also corrected an imprecise diagnosis in the original REPORT.md: the failure is bulk dispersion (IQR ~3100 bp) driving median standard error, not 'outlier events dominating the median' as first written -- a median is outlier-resistant by construction"
+    "T4 also corrected an imprecise diagnosis in the original REPORT.md: the failure is bulk dispersion (IQR ~3100 bp) driving median standard error, not 'outlier events dominating the median' as first written -- a median is outlier-resistant by construction",
+    "Final disposition (2026-09-13): Cooper declined T5 despite the strong precheck case. Candidate (b) closes as 'not pursued further' -- explicitly NOT the same as 'closed negative' (candidate (a)'s disposition), since no measurement of a real ISO-share effect was ever made"
   ],
   "output_files": [
     "prompts/iso_share_hold_length.md",

@@ -1,4 +1,4 @@
-# ISO share as a hold-length state variable — dev tier, controls fail; full-tier precheck resolves why
+# ISO share as a hold-length state variable — T0-T4 complete, T5 declined, not pursued further
 
 **Governing prompt:** `prompts/iso_share_hold_length.md`. **Branch:** `iso-share-hold-length` (cut
 from `master`, current as of 2026-09-12). **Scope executed:** T0–T3 (dev tier, read-only against
@@ -226,32 +226,34 @@ candidate (a)'s own T1 finding that no new tunables were introduced.
 
 ---
 
-## 8. What Cooper is being asked to review
+## 8. Disposition — Cooper declined T5, 2026-09-13
 
-**This is a HARD STOP per the prompt's own Escalation Criteria rows 8 and 9 — not a closed result
-either way.** Unlike candidate (a), this is not "closed, negative"; it is "not yet measurable at
-n=49, and now shown to be measurable at full tier if a real effect exists." Three things follow,
-in order:
+**T5 is not authorised. Candidate (b) stops at T0–T4.** This is a scoping decision, not a data-driven
+result, and is recorded as one rather than dressed up as either: **candidate (b) is not "closed,
+negative"** the way candidate (a) is — §5's precheck shows the test would have been well-powered
+(12.7–19.2× the noise band at every horizon) if run. It is **"not pursued further,"** a distinct
+disposition from a measured failure. No claim is made about whether ISO share carries a real
+hold-length effect on this cohort; none was measured, because T5 — the one task that would have
+measured it — did not run.
 
-1. **Full-tier promotion's statistical case is now established, not a judgment call — T5 itself
-   still needs Cooper's authorisation.** §5's precheck shows the required separation clears the
-   full-tier noise band by 12.7–19.2× at every horizon, at zero cost (no new tick reads). What T5
-   would cost is real: ~15,337 events' worth of raw per-event `conditions` reads, with no DuckDB
-   shortcut (T0). This report recommends running the precheck was worth it; it does not recommend
-   spending T5's budget — that weighing is Cooper's.
-2. **The literature-ceiling caveat (§5) may bear on which horizons are worth promoting.** `det+15`'s
-   134 bp requirement sits closer to the timescale Chakravarty et al. (2012) actually document;
-   `t1_close`/`t3_close`'s 646–862 bp requirements may already exceed what that literature supports,
-   independent of sample size. This report does not evaluate that ceiling quantitatively and does
-   not choose a subset of horizons to promote.
-3. **The statistic itself was not changed, and should not be tuned now that a full-tier path looks
-   promising.** Reaching for a trimmed or rank-based statistic after seeing an unfavorable dev-tier
-   result would be exactly the tune-until-it-fires pattern the Control Standard exists to prevent.
-   If full tier is authorised, T5 uses the same median-split procedure T3 specified, with the same
-   controls, at the sample size §5 shows can support them.
-4. **`what_would_change_a_decision.md` §4's "run nothing" criterion still cannot be invoked.** It
-   requires both candidates to fail; candidate (a) failed by a clear margin, but candidate (b) has
-   not yet produced a trustworthy result in either direction — an inconclusive-but-now-well-powered
-   read is not the same as a failed one, and this report does not treat it as such.
+**`what_would_change_a_decision.md` §4's "run nothing" criterion is still not formally invoked.**
+Its literal text requires (a) to return realised impact *at or above* the assumed 70.98 bp stack
+(it did not — it returned materially below, just not low enough to matter, §1) and (b)'s
+pre-registered separation to be *computed* to exceed the ISO literature (§5 raised this as an
+unresolved caveat, never computed as a verdict). Neither condition was literally met, so this
+report does not claim §4 fired — the actual disposition is Cooper choosing not to spend T5's read
+budget, weighing the literature-ceiling caveat and the resource cost against the statistical case
+§5 established, which is a real and legitimate way for a research line to end but a different one
+from the criterion §4 describes. **Recorded plainly so a future reader does not mistake a scoping
+call for a measured closure.**
 
-**No recommendation is made on any of these three.**
+**Consequence for candidate (c)** (book-walk depth as a universe filter,
+`claude/what_would_change_a_decision.md` §2(c)): its stated rescue condition — "only if run as a
+stratifier inside (a) or (b)... if (a) and (b) both return null" — is not satisfied either. (a)
+returned null; (b) did not return anything, by disposition rather than measurement. Candidate (c)
+remains unrescued and unscoped as its own phase, exactly as originally recorded.
+
+**What is carried forward.** T4's method (a full-tier bootstrap precheck against an already-
+committed artifact, run before spending a real per-event read budget) is reusable practice for any
+future candidate in this channel — calibrate the noise floor at the sample size a promotion would
+actually use before authorising the read, not after a small-n result comes back ambiguous.

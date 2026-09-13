@@ -708,7 +708,7 @@ seed-stable fraction as a first-class quantity rather than discover instability 
 `research/scale_field/detector/GOING_LIVE.md:134` names this as an open blocker. Unscheduled;
 belongs to whichever phase fixes the F/G channel packages or runs Row 16.
 
-### OPEN — candidate (b), ISO share hold-length: dev-tier controls fail, HARD STOP (2026-09-12)
+### CLOSED — candidate (b), ISO share hold-length: not pursued further, not a measured result (2026-09-12/13)
 
 **Status: open, awaiting Cooper's review.** `claude/what_would_change_a_decision.md` §2(b),
 `prompts/iso_share_hold_length.md`, `results/iso_share_hold_length/REPORT.md`.
@@ -752,3 +752,16 @@ full-tier build, which has a real per-event read cost with no DuckDB shortcut) �
 Cooper's call, alongside a raised-but-unresolved caveat that the day-scale horizons' required
 separations (646–862 bp) may already exceed what the cited ISO literature documents, independent of
 sample size (`results/iso_share_hold_length/REPORT.md` §5).
+
+**Final disposition, 2026-09-13 — Cooper declined T5.** Candidate (b) closes at T0–T4.
+**This is a scoping decision, not a data-driven result** — despite T4's strong statistical case
+(12.7–19.2× the noise band), no measurement of whether ISO share carries a real hold-length effect
+was ever made, because T5 (the one task that would have measured it) did not run. **Recorded
+explicitly as "not pursued further," distinct from candidate (a)'s "closed, negative"** — the two
+should never be conflated when this item is cited later. `what_would_change_a_decision.md` §4's "run
+nothing" criterion is **not** formally invoked: its literal text needs (a) at or above the assumed
+cost stack (it returned below, just not low enough) and (b)'s threshold computed to exceed the
+literature (raised as a caveat, never computed as a verdict) — neither condition was literally met.
+Candidate (c) (book-walk depth as a universe filter)'s rescue condition — "(a) and (b) both return
+null" — is also not satisfied, since (b) did not return a null, it returned no measurement at all.
+Candidate (c) remains unrescued and unscoped as its own phase.
