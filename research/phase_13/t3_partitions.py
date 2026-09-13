@@ -40,8 +40,12 @@ def describe(s: pd.Series) -> dict:
     s = s.dropna()
     if len(s) == 0:
         return {"n": 0}
-    return {"n": int(len(s)), "median": float(s.median()),
-            "p25": float(s.quantile(0.25)), "p75": float(s.quantile(0.75))}
+    return {
+        "n": int(len(s)),
+        "p10": float(s.quantile(0.10)), "p25": float(s.quantile(0.25)),
+        "median": float(s.median()), "p75": float(s.quantile(0.75)), "p90": float(s.quantile(0.90)),
+        "mean": float(s.mean()),
+    }
 
 
 def build_turnover(ef: pd.DataFrame) -> pd.Series:
