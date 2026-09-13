@@ -151,13 +151,6 @@ EXPECTED_ABSENT = {
         "cited to record that the original work order's companion doc does not exist in this "
         "checkout, not asserted as present. The original draft's own text says no task depends on "
         "it (numbers are restated inline), so this is documented rather than treated as a blocker.",
-    "data/fundamentals/":
-        "docs/Research-Library-Map.md and docs/data/fundamentals_sources.md -- the normalized-facts "
-        "layer F1-T2/F1-T4 write to. Does not exist until those tasks run; under the wholly-"
-        "gitignored /data/ root regardless.",
-    "data/fundamentals/event_fundamentals.parquet":
-        "prompts/fundamentals_f1.md §2 -- the event-join layer F1-T5 assembles. Does not exist "
-        "until that task runs.",
     "prompts/fundamentals_build_f1.md":
         "prompts/fundamentals_f1_amendment_a1.md's own integration note and §6 -- Cooper's amendment "
         "was drafted referencing this filename; the actual committed file is "

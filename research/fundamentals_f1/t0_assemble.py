@@ -38,6 +38,19 @@ builds the tiered fallback, finest anchor available first:
 Confirmed tier counts (results/fundamentals_f1/artifacts/t0_assemble_summary.json):
 nanosecond_poll1=110, minute_a102=15,259, first_trade_fallback=5,582, unavailable=0. Sum=20,951.
 
+**Path-resolution bug, caught 2026-09-12 while writing F1-T6's context prep script, fixed
+here retroactively:** FILTERED_ROOT was a cwd-relative literal ("data/filtered"), not routed
+through src/data/paths.py's resolve_data_root() the way CLAUDE.md's data-root convention
+requires. This build runs inside a git worktree (E:\Trading-Research-f1) that has no
+data/filtered/ of its own -- /data/ is wholly gitignored and a worktree gets its own empty
+working directory for anything git doesn't track. The relative path happened to resolve
+correctly on the original 2026-09-11 run only because the process's cwd was the main
+checkout at that moment; it would silently return zero fallback events (first_trade_fallback_one
+returns None on a missing folder, not an error) if re-run with cwd set to the worktree.
+Fixed to `str(C.data_root() / "filtered")`, which resolves correctly regardless of cwd or
+which worktree the process runs in. Re-ran after the fix: identical 5,582 fallback events,
+confirming the original count was correct, not an artifact of the fragile path.
+
 Usage: .venv/Scripts/python.exe research/fundamentals_f1/t0_assemble.py
 """
 from __future__ import annotations
@@ -56,7 +69,7 @@ OUT_PATH = f"{C.ART}/t0_spine.parquet"
 SUMMARY_PATH = f"{C.ART}/t0_assemble_summary.json"
 THRESHOLD = 1.3  # config/fundamentals_f1.json: t0_spine.tiers.1_nanosecond_poll1.threshold
 
-FILTERED_ROOT = "data/filtered"
+FILTERED_ROOT = str(C.data_root() / "filtered")
 RTH_OPEN = "09:30:00"
 RTH_CLOSE = "16:00:00"
 

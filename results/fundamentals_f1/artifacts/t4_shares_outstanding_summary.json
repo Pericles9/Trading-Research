@@ -1,0 +1,9 @@
+{
+  "n_ciks_pulled": 2935,
+  "n_no_companyfacts_record": 13,
+  "n_no_shares_outstanding_concept": 380,
+  "shares_outstanding_observations_rows": 84826,
+  "n_distinct_ciks_with_observations": 2542,
+  "n_missing_accepted_ns": 43044,
+  "config_hash": "3d0aa66cce36"
+}

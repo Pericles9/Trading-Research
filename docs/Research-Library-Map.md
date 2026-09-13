@@ -99,12 +99,37 @@ Files added, pre-flight only (F1-T0 through F1-T6 have not run yet):
 - `docs/Universe-Decisions.md` — D14 Amendment A1 clarification note (2026-09-12): the decision's
   "F1-T3 (SEC EDGAR ... `companyfacts.zip` pull)" wording bundled what the work order later split
   into F1-T3 and F1-T4; the authorization covers both.
+- `research/fundamentals_f1/t4_shares_outstanding.py` — F1-T4a-d. Per-CIK `companyfacts` API, not the
+  1.4 GB bulk zip (see docstring). `shares_outstanding_observations.parquet` (84,826 rows, 2,542
+  CIKs). F1-T4d: vendor-vs-SEC share-count disagreement reported (median ratio 1.03, extreme tail to
+  13.4M×), not reconciled. Raw archive: `data/raw/fundamentals/sec/2026-09-12/companyfacts/`.
+- `research/fundamentals_f1/t5_prep_flatten.py` + `t6_prep_context.py` — companion-table flattening
+  (financials/short_interest/splits) and per-event context (detection price decile, tick-derived not
+  D4-restricted; exchange/delisted status from F1-T2's `ticker_details`).
+- `research/fundamentals_f1/t5_assemble.py` — F1-T5, assembles `data/fundamentals/event_fundamentals.parquet`
+  (20,951 rows, gitignored). `shs_` uses a window-function nearest-match (not a plain ASOF join) after
+  F1-T5d's verification caught 5 rows where a SEC cover-page date genuinely postdated its own filing's
+  acceptance timestamp — see `research/fundamentals_f1/verify_event_fundamentals.py`'s F1-T5d account
+  in `prompts/fundamentals_f1.md`.
+- `research/fundamentals_f1/verify_event_fundamentals.py` — F1-T5d Verification Block, structured
+  drift-dict + exit-code + `--json` style. Found and fixed 3 real defects on its first run (a
+  verification-script datetime-formatting bug, the `shs_asof_ns` hard-stop above, and a stale
+  `fin_quality` enum in config) plus, via the suspicious 100%-clean `spl_quality` it made visible, a
+  `COUNT(*)`-over-`LEFT JOIN` bug that also silently affected the already-committed
+  `flg_n_filings_72h` (both fixed). **All 9 checks pass on the corrected table.**
+- `research/fundamentals_f1/t6_coverage_report.py` + `chart_t6_coverage.py` + `chart_t6_lag_distributions.py`
+  — F1-T6a/b, the coverage report and its two charts. Escalation row 5 does not fire (`shs_` coverage
+  76.8% clears Cooper's 70% floor). Coverage is not missing at random, but the dominant axis is a
+  vendor historical-backfill year boundary (2022→2023), not company quality — delisted-status and
+  price-decile cross-cuts show little to no gradient.
+- `results/fundamentals_f1/REPORT.md` (+ copy at `results/reports/fundamentals_f1_report.md`) — the
+  full digest, in `prompts/fundamentals_f1.md` §7's exact order. **Build F1 complete.**
 
-**Built so far:** pre-flight (D14 Amendment A1, D27–D33), F1-PF5 (`t0_spine.parquet`), F1-T0 (fired
-escalation row 1), Amendment F1-A1's F1-T0f/F1-T0g (resolved it — Outcome A, row 1 retired, rows
-1a–1c in force), F1-T1 (identity spine, escalation row 2 does not fire), F1-T2 (Massive bulk pull,
-network step closed), and F1-T3 (filing index — escalation rows 6 and 1c both checked, neither
-fires). **Not yet built:** F1-T4 through F1-T6.
+**Built:** the full F1-T0 through F1-T6 sequence, pre-flight through the coverage-report gate. See
+`results/fundamentals_f1/REPORT.md` for the complete digest. **Out of scope by design:** float tiers 2
+and 3 (§3 of the work order — scoped against this report, not before it) and F1-T4f (the
+`companyfacts`-based `fin_` rebuild, stayed optional since F1-T3h's blast radius did not clear
+Cooper's mandatory threshold).
 
 ## Phase 10 addendum — v3 and v4 (folder-level; branch `phase/10`, 2026-08-06)
 

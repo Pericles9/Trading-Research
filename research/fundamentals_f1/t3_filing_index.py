@@ -214,9 +214,15 @@ def main():
               ON e.cik = f.cik AND f.accepted_ns < e.t0_ns
         ),
         counts AS (
+            -- count(f.accepted_ns), NOT count(*): a LEFT JOIN with zero matches still emits
+            -- one row (all f.* NULL) per left-side event, and count(*) would count that
+            -- phantom row as 1 -- caught 2026-09-12 via t5_assemble.py's spl_n_splits_365d
+            -- showing the identical symptom (every event's count >= 1, never 0). Confirmed
+            -- here too: pre-fix, flg_quality='unavailable' events (no cik, cannot possibly
+            -- match anything) showed flg_n_filings_72h=1, not 0.
             SELECT e.event_id,
-                   count(*) FILTER (WHERE f.accepted_ns >= e.t0_ns - {ns_24h}) AS flg_n_filings_24h,
-                   count(*) AS flg_n_filings_72h
+                   count(f.accepted_ns) FILTER (WHERE f.accepted_ns >= e.t0_ns - {ns_24h}) AS flg_n_filings_24h,
+                   count(f.accepted_ns) AS flg_n_filings_72h
             FROM events e
             LEFT JOIN filings f
               ON e.cik = f.cik AND f.accepted_ns >= e.t0_ns - {ns_72h} AND f.accepted_ns < e.t0_ns

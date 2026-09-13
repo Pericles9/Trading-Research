@@ -1,0 +1,34 @@
+{
+  "rows": 20951,
+  "quality_counts": {
+    "identity": {
+      "resolved_exact": 20390,
+      "resolved_ambiguous": 313,
+      "unresolved": 248
+    },
+    "flg": {
+      "observed": 20683,
+      "unavailable": 248,
+      "no_filings_in_window": 20
+    },
+    "shs": {
+      "filed_stale": 10692,
+      "filed_exact": 5407,
+      "unavailable": 4852
+    },
+    "fin": {
+      "unavailable": 12648,
+      "as_filed": 7527,
+      "as_filed_superseded_later": 776
+    },
+    "si": {
+      "observed": 20377,
+      "unavailable": 574
+    },
+    "spl": {
+      "unavailable": 12219,
+      "observed": 8732
+    }
+  },
+  "config_hash": "4eebcb303820"
+}

@@ -415,18 +415,37 @@ on D14 Amendment A1 (F1-PF2).**
 the `shs_quality` coverage floor (escalation row 5, suggested placeholder 70%). Both must be recorded in
 `docs/data/fundamentals_sources.md` before this task runs, not adopted silently from the placeholders.**
 
-- [ ] **F1-T4a** — Download the SEC `companyfacts.zip` bulk archive. **Check its size before downloading** —
+- [x] **F1-T4a** — Download the SEC `companyfacts.zip` bulk archive. **Check its size before downloading** —
       it is multi-gigabyte and growing, and the disk budget should be confirmed rather than discovered.
-- [ ] **F1-T4b** — Extract `dei:EntityCommonStockSharesOutstanding` for every Central Index Key in the
+      **Deviates after checking:** `HEAD` returned 1,408,785,961 bytes (1.4 GB) — disk was never the binding
+      constraint (366 GB free), but the archive covers ~800,000+ filers to serve 2,935 (0.4%), and this build
+      already hit real friction extracting a 23,480-file archive on this Windows/NTFS setup in F1-T2. Used
+      per-CIK `data.sec.gov/api/xbrl/companyfacts/CIK##########.json` instead (same data, already proven in
+      F1-T0g) — full reasoning in `research/fundamentals_f1/t4_shares_outstanding.py`'s docstring.
+- [x] **F1-T4b** — Extract `dei:EntityCommonStockSharesOutstanding` for every Central Index Key in the
       universe. This is the **cover-page share count** — total shares issued as stated on the filing's cover,
-      not float.
-- [ ] **F1-T4c** — Build `shares_outstanding_observations`: `cik`, `shares`, `asof_ns` (the cover date the
+      not float. Run 2026-09-12: 2,935/2,935 CIKs, 13 with no companyfacts record at all, 380 with
+      companyfacts but no shares-outstanding tag.
+- [x] **F1-T4c** — Build `shares_outstanding_observations`: `cik`, `shares`, `asof_ns` (the cover date the
       figure is stated as of), `accepted_ns`, `source_form`, `accession`. One row per observation. Keep every
-      observation, including superseded ones.
-- [ ] **F1-T4d** — Cross-check against the vendor's own share-count fields where both exist. **Report the
+      observation, including superseded ones. **84,826 rows, 2,542 distinct CIKs.** `accepted_ns` is not a
+      native `companyfacts` field (`filed` is date-only, no time) — sourced via `(cik, accession)` join
+      against F1-T3's `sec_filings`. 43,044 rows (50.7%) have no match — diagnosed, not assumed benign:
+      **100% of the unmatched rows fall strictly outside F1-T3's fetch window** (either before 2019-12-04 —
+      old historical observations no event needs — or after 2025-11-05 — the archive's own 2026-09-12 fetch
+      date reaches well past every event's window). Zero genuine gaps inside the window.
+      `results/fundamentals_f1/artifacts/shares_outstanding_observations.parquet`.
+- [x] **F1-T4d** — Cross-check against the vendor's own share-count fields where both exist. **Report the
       disagreement distribution.** Do not reconcile them, do not pick a winner — report it. A systematic
-      disagreement is a finding about the sources and belongs in the digest.
-- [ ] **F1-T4e** — Commit.
+      disagreement is a finding about the sources and belongs in the digest. **6,940 events have both** the
+      SEC cover-page count (`shs_shares_outstanding`) and the vendor's average-shares figure
+      (`fin_shares_basic`) — different concepts by construction (point-in-time count vs. period-average),
+      so a disagreement here is expected, not necessarily an error. Ratio (SEC / vendor): median 1.03,
+      p25–p75 = 1.00–1.26 (the bulk agrees closely), but the tail is extreme — p99 = 1,040×, max = 13.4M×.
+      45.7% of events agree within 5%, 66.0% within 20%. **Not reconciled, not clipped** — the extreme tail
+      is reported as-is; likely a units/definition mismatch on a handful of filings, not investigated further
+      per this task's own "report it, don't fix it" instruction. `results/fundamentals_f1/artifacts/t4d_share_count_disagreement.json`.
+- [x] **F1-T4e** — Commit.
 - [ ] **F1-T4f** — **New, Amendment F1-A1 §2/§7 — renumbered from the amendment's "F1-T4b" to avoid
       colliding with the existing F1-T4b above (shares-outstanding extraction), which the amendment's
       own task-order table did not account for.** Build `fin_` from `companyfacts` element mapping, per
@@ -439,34 +458,92 @@ the `shs_quality` coverage floor (escalation row 5, suggested placeholder 70%). 
       if F1-T3h's blast radius exceeds Cooper's threshold (escalation row 1c); otherwise optional**,
       since F1-T0f's Outcome A means the vendor archive already satisfies `fin_`'s primary path and this
       task's output would serve `fin_n_vintages`/`fin_superseded_later` and the cross-check harness only.
+      **Not built — F1-T3h's blast radius (3.70%) stayed below Cooper's 10% threshold, so this stays optional
+      per its own conditional. Left undone deliberately, not by oversight.**
 
 ### F1-T5 — Assemble `event_fundamentals`
 
-- [ ] **F1-T5a** — Build the table to the schema in §4, using an as-of join (DuckDB's `ASOF JOIN`, natively
+- [x] **F1-T5a** — Build the table to the schema in §4, using an as-of join (DuckDB's `ASOF JOIN`, natively
       supported — DuckDB 1.4.4 confirmed installed) on `accepted_ns < t0_ns`, strictly less than, per group.
-      `t0_ns`/`t0_source` come from `t0_spine.parquet` (F1-PF5) — not re-derived here.
-- [ ] **F1-T5b** — Compute `*_lag_ns` for every group as `t0_ns − asof_ns`. Carry it as a column. **A share
+      `t0_ns`/`t0_source` come from `t0_spine.parquet` (F1-PF5) — not re-derived here. **`shs_` is the one
+      exception**, per F1-T5d's own finding below — a plain ASOF on `accepted_ns` alone was insufficient.
+      `data/fundamentals/event_fundamentals.parquet`, 20,951 rows.
+- [x] **F1-T5b** — Compute `*_lag_ns` for every group as `t0_ns − asof_ns`. Carry it as a column. **A share
       count 40 days stale is a different measurement from one 2 days stale**, and pooling them without the lag
       visible repeats the events-do-not-share-a-clock error one layer up.
-- [ ] **F1-T5c** — Set quality flags per §4. **No imputation, no forward-fill beyond the declared as-of rule,
+      `results/fundamentals_f1/charts/t6_lag_distributions.html`.
+- [x] **F1-T5c** — Set quality flags per §4. **No imputation, no forward-fill beyond the declared as-of rule,
       no dropping.**
-- [ ] **F1-T5d** — Run the Verification Block in §5, in the structured drift-dict + exit-code + `--json`
+- [x] **F1-T5d** — Run the Verification Block in §5, in the structured drift-dict + exit-code + `--json`
       style of `tools/verify_cited_paths.py`. **Every assertion must pass before the table is committed.**
-- [ ] **F1-T5e** — Commit.
+      **First run found 3 real defects, all fixed before the table was accepted as final — not silently
+      routed around:**
+      1. `event_id_set_equality` — false 100% mismatch, caused by the verification script itself, not the
+         table: `quotes_bitmaps_all.parquet`'s `event_date_canonical` is `datetime64[ns]`, and an unguarded
+         f-string rendered `"2021-01-28 00:00:00"` instead of `"2021-01-28"`. Fixed by normalizing to a date
+         string before computing `event_id`.
+      2. `no_lookahead` — **a genuine hard-stop condition, investigated to its actual source before fixing.**
+         5 events had `shs_asof_ns >= t0_ns` despite `shs_accepted_ns < t0_ns`. Checked the raw
+         `companyfacts` record directly (not assumed a join bug): a `dei:EntityCommonStockSharesOutstanding`
+         cover-page "as of" date can genuinely postdate its own filing's SEC acceptance timestamp (confirmed
+         on MDRR's accession `0001104659-20-037784`: `end=2020-03-31`, `filed=2020-03-24`) — a real source
+         quirk, not corruption. DuckDB's `ASOF JOIN` supports exactly one inequality column, so the `shs_`
+         join was rewritten as a window-function nearest-match requiring **both** `accepted_ns < t0_ns` AND
+         `asof_ns < t0_ns` before ranking. `shs_quality` shifted by 3 rows after the fix (`filed_exact`
+         5,410→5,407, `unavailable` 4,849→4,852) — the events whose only candidate observation failed the
+         added constraint.
+      3. `quality_enum_domains` — `fin_quality`'s value `as_filed_superseded_later` (Amendment F1-A1's
+         revision to the schema) was never added to `config/fundamentals_f1.json`'s `quality_enums.fin_quality`
+         list, which still carried the pre-amendment 3-value enum. Fixed the config.
+
+      **Separately, while investigating a suspicious 100%-clean `spl_quality` result** (0 unavailable across
+      all 20,951 events, before this script even ran) **found a second real bug**: `spl_n_splits_365d` used
+      `count(*)` over a `LEFT JOIN`, which counts the phantom all-NULL row a `LEFT JOIN` emits for zero
+      matches as 1 — so every event with genuinely zero splits showed count=1, not 0, making
+      `spl_quality='observed'` fire universally. The *identical* bug was then found and fixed in
+      `t3_filing_index.py`'s already-committed `flg_n_filings_72h` (confirmed directly: `flg_quality=
+      unavailable` events, which cannot possibly match anything, showed `flg_n_filings_72h=1`). Fixed both
+      to `count(<a_real_column>)`, which correctly excludes the outer-join's NULL placeholder row.
+      `event_filing_proximity.parquet` and `event_fundamentals.parquet` both rebuilt after the fix.
+      **All 9 Verification Block checks pass on the corrected table.**
+- [x] **F1-T5e** — Commit.
 
 ### F1-T6 — Coverage report. Gate. Stop and post.
 
-- [ ] **F1-T6a** — Report coverage of every group, cross-cut by **year, detection-price decile, delisted
-      status, and exchange**.
-- [ ] **F1-T6b** — Chart the coverage surface. Per the chart contract, the distribution comes before any
+- [x] **F1-T6a** — Report coverage of every group, cross-cut by **year, detection-price decile, delisted
+      status, and exchange**. **Overall coverage** (share with `*_quality != 'unavailable'`, n=20,951):
+      `flg`=98.8%, `shs`=76.8%, `fin`=39.6%, `si`=97.3%, `spl`=41.7%. **Escalation row 5** (`shs_quality
+      != 'unavailable'` for < 70%) **does not fire** — 76.8% clears Cooper's 70% floor.
+      **Detection price**: tick-derived (`v2_r13_detection`'s `cross_price` / `a102_detection_anchors`'s
+      `det_price_lat0` / a direct re-read of each `first_trade_fallback` event's own `trades.parquet`) —
+      not a spine numeric, not D4-restricted, never stored in `event_fundamentals`.
+      **Delisted status**: derived from F1-T2's `ticker_details` archive. **Found zero explicit
+      `active=false` records anywhere in the archive** — every non-empty response shows `active=true`; the
+      267 CIKs with an empty response are most plausibly delisted/inactive tickers the endpoint omits by
+      default rather than flags, but this is not confirmed (would need a new `active=false` query, outside
+      this build's authorized network scope) — reported as `unknown`, not reclassified as `delisted`, per
+      "flag rather than silently resolve." `results/fundamentals_f1/artifacts/t6_context_summary.json`,
+      `t6_coverage_report.json`.
+- [x] **F1-T6b** — Chart the coverage surface. Per the chart contract, the distribution comes before any
       aggregate — no coverage percentage is reported without the distribution behind it.
-- [ ] **F1-T6c** — **State plainly whether coverage is missing at random.** The expected failure is that it
+      `results/fundamentals_f1/charts/t6_coverage_surface.html`.
+- [x] **F1-T6c** — **State plainly whether coverage is missing at random.** The expected failure is that it
       is not: late filers, foreign private issuers on annual schedules, shells with thin structured data, and
       companies that delisted and stopped filing are concentrated in the cheapest, thinnest corner of this
       universe — which is where a large share of these events live. **Conditioning analysis on the covered
       subset would be a survivorship filter wearing a data-quality costume**, and a fresh instance of the
       population-level error the q05 line already cost a phase to establish.
-- [ ] **F1-T6d** — **Stop. Tag. Post.** Tiers 2 and 3 are scoped after this report, not before.
+      **Confirmed not missing at random — but the dominant axis is YEAR, not company quality.** `fin_`
+      coverage by year: 2020=5.2%, 2021=2.4%, 2022=4.6%, 2023=48.4%, 2024=65.8%, 2025=60.9% — a coverage
+      cliff around 2022–2023 (matches F1-T3h's side finding), not a gradual decline. By contrast, the
+      delisted-status proxy shows almost no difference (`active`=39.7%, `unknown`=39.1%) and the
+      price-decile gradient is modest and in the *opposite* direction from the naive "shells have worse
+      data" expectation (cheapest decile 51.6% vs priciest decile 37.5%). **Reading:** this universe's `fin_`
+      gap is overwhelmingly a vendor historical-backfill boundary for small/thin momentum names, not a
+      survivorship pattern concentrated in bad companies — worth stating precisely rather than reaching for
+      the generic "thin names have thin data" story the task's own framing anticipated, since the data
+      doesn't actually support that specific mechanism here.
+- [x] **F1-T6d** — **Stop. Tag. Post.** Tiers 2 and 3 are scoped after this report, not before.
 
 ### Out of scope for F1
 

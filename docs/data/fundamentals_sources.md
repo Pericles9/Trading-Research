@@ -32,8 +32,10 @@ touching no financial-statement value. **An 8-K Item 4.02 ("Non-Reliance on Prev
 Statements") is the signal that actually means a genuine restatement.** Any future search for restated
 companies in this universe should search Item 4.02 first, not form type alone.
 
-Source schemas below are filled in as F1-T2 (Massive, once amended) and F1-T3 (SEC EDGAR) actually
-run.
+**Build complete, 2026-09-12.** F1-T0 through F1-T6 all run and verified; `event_fundamentals.parquet`
+(20,951 rows) assembled and passes all 9 Verification Block assertions. Full digest:
+`results/fundamentals_f1/REPORT.md`. Source schemas below reflect the actual F1-T2 (Massive) and F1-T3/
+F1-T4 (SEC EDGAR) pulls, not the pre-pull plan.
 
 ## Identity key
 
@@ -187,5 +189,28 @@ exactly as written, no additions during F1-T3e. `flg_dilution_form_before_t0 = T
 
 ## Vendor-vs-SEC share count disagreement (F1-T4d)
 
-**Filled in once F1-T4 runs.** Reported, not reconciled — a systematic disagreement is itself a finding
-about the sources.
+**Run 2026-09-12.** 6,940 events carry both the SEC cover-page count (`shs_shares_outstanding`, a
+point-in-time count) and the vendor's period-average count (`fin_shares_basic`, an EPS-denominator
+average) — different concepts by construction, so disagreement is expected, not necessarily an error.
+Ratio (SEC ÷ vendor): median 1.03, IQR 1.00–1.26 (the bulk agrees closely); the tail is extreme —
+p99 = 1,040×, max = 13.4M×. 45.7% agree within 5%, 66.0% within 20%. **Not reconciled, not clipped** —
+reported as-is per this task's own instruction. Full distribution:
+`results/fundamentals_f1/artifacts/t4d_share_count_disagreement.json`.
+
+## Config correction: `fin_quality` enum (caught 2026-09-12, F1-T5d)
+
+`config/fundamentals_f1.json`'s `quality_enums.fin_quality` still carried the pre-Amendment-F1-A1
+3-value enum (`as_filed` / `restated_unknown_vintage` / `unavailable`) after the amendment revised §4's
+schema to add a 4th value, `as_filed_superseded_later` — nobody had gone back to update the config once
+the schema section changed. Caught by F1-T5d's Verification Block (`quality_enum_domains` failed on the
+first run), not by inspection. Fixed to the full 4-value enum matching §4.
+
+## Delisted-status derivation limitation (F1-T6a)
+
+F1-T2's `ticker_details` archive contains **zero** explicit `active=false` records across all 2,935
+CIKs — every non-empty response shows `active=true`. The 267 CIKs with an empty response are most
+plausibly delisted/inactive tickers this endpoint omits by default (queried without an explicit
+`active=false` parameter) rather than flags — a reasonable inference, but not confirmed without a new
+query outside this build's authorized network scope. `delisted_status` in `t6_context.parquet` is
+therefore `active` / `unknown`, never `delisted` — reported honestly as an inference limitation, not
+silently upgraded to a confirmed classification.

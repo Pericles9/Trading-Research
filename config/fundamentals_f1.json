@@ -88,7 +88,7 @@
     "identity_quality": ["resolved_exact", "resolved_ambiguous", "unresolved"],
     "flg_quality": ["observed", "no_filings_in_window", "unavailable"],
     "shs_quality": ["filed_exact", "filed_stale", "unavailable"],
-    "fin_quality": ["as_filed", "restated_unknown_vintage", "unavailable"],
+    "fin_quality": ["as_filed", "as_filed_superseded_later", "restated_unknown_vintage", "unavailable"],
     "si_quality": ["observed", "unavailable"],
     "spl_quality": ["observed", "unavailable"]
   }
