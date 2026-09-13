@@ -37,6 +37,11 @@ FORBIDDEN_PATTERNS = [
 # negation anywhere in the window is a real candidate.
 NEGATION_WINDOW = 50
 NEGATION_RE = re.compile(r"\b(no|not|n't|without|never|neither)\b", re.IGNORECASE)
+# "all checks pass" / "verification ... passed" is test-status language, not a split
+# verdict -- distinct enough from "the split clears/passes" that a nearby "check(s)" or
+# "verification" mention (either side of the hit) is treated as the safe reading.
+CHECK_CONTEXT_WINDOW = 30
+CHECK_CONTEXT_RE = re.compile(r"\bcheck(s|ed|ing)?\b|\bverification\b", re.IGNORECASE)
 
 
 def check_p0_row_count_and_coverage() -> dict:
@@ -143,6 +148,9 @@ def check_no_pass_fail_language() -> dict:
         for m in pattern.finditer(text):
             preceding = text[max(0, m.start() - NEGATION_WINDOW):m.start()]
             if NEGATION_RE.search(preceding):
+                continue
+            context = text[max(0, m.start() - CHECK_CONTEXT_WINDOW):m.end() + CHECK_CONTEXT_WINDOW]
+            if CHECK_CONTEXT_RE.search(context):
                 continue
             found.append(m.group(0).lower())
         if found:
