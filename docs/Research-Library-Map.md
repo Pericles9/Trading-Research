@@ -40,8 +40,35 @@ amendments: T3b/T3c run undirected, and no split is evaluated against a kill-con
   `results/phase_13/artifacts/p0_outcome.parquet` (gitignored, regenerable),
   `p0_coverage_summary.json` (tracked).
 
-**Built so far:** T0 (branch, config), T1 (P0 outcome). **Not yet built:** T2 (arm zero), T3
-(partitions), T4 (conditional tick confirmation), charts, digest, REPORT.md.
+- `research/phase_13/t2_arm_zero.py` — T2, the price-decile control arm. No fundamental data at all —
+  the competing explanation T3 must be read against (cheap stocks file more, dilute more, reverse-split
+  more, and cost more to trade, so a fundamental split can be a price split in different clothes).
+  `results/phase_13/artifacts/t2_arm_zero_summary.json` (tracked). Run: decile 0 (cheapest) shows the
+  highest median MFE cost-multiple at every horizon (1.43x -> 2.66x, 5min -> 60min); no clean
+  monotonic gradient in the middle deciles.
+- `research/phase_13/t3_partitions.py` — T3, the three fundamental splits, cross-cut by event year and
+  by detection-price decile exactly as `config.cross_cuts` specifies (same decile T2 uses, not a
+  coarser bucket). A cell below `config.cross_cuts.min_cell_n_log_threshold` (200) is flagged rather
+  than reported at equal weight — 344-472 of ~560 cells per split fall below that floor, a direct
+  consequence of the year x decile x split-value granularity, reported plainly as a LOG-tier surprise,
+  not hidden by coarsening the cut. **Quality-gating fix, caught before writing any split, not after:** `flg_dilution_form_before_t0` and `spl_reverse_split_365d`
+  both default to `False` when their quality column reads `unavailable` (confirmed by direct
+  crosstab — 248/20,951 for `flg_`, 12,219/20,951 — 58% — for `spl_`), so splitting on the raw
+  boolean would fold "we don't know" into the "no dilution"/"no reverse split" side. Both splits are
+  gated to quality-known rows only (`observed`, plus `no_filings_in_window` for `flg_`, a genuine
+  negative not a missing value); excluded events are counted and reported, never silently dropped.
+  T3b (share-turnover proxy) is a new construction: event-day tick volume
+  (`event_minute_bars_v2`, `session_offset=0`) over shares outstanding, split-adjusted by
+  `spl_last_split_ratio` when `spl_last_split_ns` falls strictly between `shs_asof_ns` and `t0_ns`
+  (1,741/20,951 events needed the adjustment); split at the population median (11,971 events have a
+  defined turnover value, 8,980 don't and are excluded rather than mis-binned). T3a keeps the
+  pre-registered direction from the signed-off proposal; T3b/T3c are undirected, both tails reported,
+  no pass/fail language anywhere in the script or its output.
+  `results/phase_13/artifacts/t3_partition_summary.json` (tracked).
+
+**Built so far:** T0 (branch, config), T1 (P0 outcome), T2 (arm zero), T3 (fundamental partitions).
+**Not yet built:** T4 (conditional tick confirmation, not auto-triggered), charts, Verification Block,
+digest, REPORT.md.
 
 ---
 
