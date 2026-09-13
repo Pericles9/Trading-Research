@@ -4,8 +4,8 @@
   "status": "hard_stop",
   "escalation": {
     "criterion": "prompt Escalation Criteria rows 8 and 9 (negative and positive control failure)",
-    "observed": "T0-T3 complete, dev tier (49/50 primary events). Negative control (placebo, no relationship to real data) produces separations up to 2258 bp, exceeding the smallest required threshold (133.9 bp) and the real iso_share result at 4 of 6 horizons. Positive control (133.9 bp planted) not cleanly recovered -- several horizons detect negative apparent separation. T4 (compare against threshold) does not run: the comparison would report on data the controls have shown is not yet trustworthy at n=49.",
-    "tier": "HARD STOP -- open, awaiting Cooper's review"
+    "observed": "T0-T3 complete, dev tier (49/50 primary events). Negative control (placebo, no relationship to real data) produces separations up to 2258 bp, exceeding the smallest required threshold (133.9 bp) and the real iso_share result at 4 of 6 horizons. Positive control (133.9 bp planted) not cleanly recovered -- several horizons detect negative apparent separation. T4's original framing (compare against threshold) does not run: the comparison would report on data the controls have shown is not yet trustworthy at n=49. T4 was rescoped to a full-tier noise-band precheck (zero new tick reads, bootstrap over an already-committed full-universe artifact): the required separation clears the null's 5000-rep maximum by 12.7-19.2x its own std at every horizon, P(null>=required)=0/5000 everywhere -- the dev-tier failure was a sample-size problem, not a validity problem. T5 (full-tier ISO-share build) remains blocked on Cooper's explicit authorisation.",
+    "tier": "HARD STOP -- open, awaiting Cooper's review (T5 authorisation)"
   },
   "headline_metrics": [
     {
@@ -63,29 +63,56 @@
       "n": 49,
       "source": "research/iso_share_hold_length/t3_separation.py:main",
       "chart": "results/iso_share_hold_length/charts/02_markout_by_iso_group_and_horizon.html"
+    },
+    {
+      "name": "t4_p_null_exceeds_required_worst_horizon",
+      "value": 0.0,
+      "n": 15330,
+      "source": "research/iso_share_hold_length/t4_bootstrap_precheck.py:main",
+      "chart": "results/iso_share_hold_length/charts/03_noise_band_precheck.html"
+    },
+    {
+      "name": "t4_min_sigma_multiple_required_over_null_std",
+      "value": 12.69,
+      "n": 15344,
+      "source": "research/iso_share_hold_length/t4_bootstrap_precheck.py:main",
+      "chart": "results/iso_share_hold_length/charts/03_noise_band_precheck.html"
+    },
+    {
+      "name": "t4_dev_tier_sanity_check_null_max_bp_t3close",
+      "value": 2507.2,
+      "n": 49,
+      "source": "research/iso_share_hold_length/t4_bootstrap_precheck.py:main",
+      "chart": "results/iso_share_hold_length/charts/03_noise_band_precheck.html"
     }
   ],
   "surprises": [
     "T2a: iso_share is not zero-inflated as expected going in (0% of 49 events at exactly zero)",
     "T3: both the negative and positive controls fail on the first pass -- the raw uncontrolled real-iso_share separation (up to 795 bp) would have looked like a strong finding without them",
-    "T3b required a disclosed deviation from the prompt as written (planted-synthetic positive control instead of reusing candidate (a)'s print-level participation_rate, a grain mismatch)"
+    "T3b required a disclosed deviation from the prompt as written (planted-synthetic positive control instead of reusing candidate (a)'s print-level participation_rate, a grain mismatch)",
+    "T4 (added after review): the dev-tier control failure was a pure sample-size effect -- the same bootstrap at full tier clears the required separation by 12.7-19.2x, at zero read cost, before any full-tier ISO-share build was authorised",
+    "T4 also corrected an imprecise diagnosis in the original REPORT.md: the failure is bulk dispersion (IQR ~3100 bp) driving median standard error, not 'outlier events dominating the median' as first written -- a median is outlier-resistant by construction"
   ],
   "output_files": [
     "prompts/iso_share_hold_length.md",
     "research/iso_share_hold_length/t0_audit.py",
     "research/iso_share_hold_length/t2_iso_share.py",
     "research/iso_share_hold_length/t3_separation.py",
+    "research/iso_share_hold_length/t4_bootstrap_precheck.py",
     "research/iso_share_hold_length/chart_01_iso_share_distribution.py",
     "research/iso_share_hold_length/chart_02_markout_by_iso_group_and_horizon.py",
+    "research/iso_share_hold_length/chart_03_noise_band_precheck.py",
     "results/iso_share_hold_length/artifacts/t0_audit.json",
     "results/iso_share_hold_length/artifacts/t2_iso_share.json",
     "results/iso_share_hold_length/artifacts/t3_separation.json",
+    "results/iso_share_hold_length/artifacts/t4_bootstrap_precheck.json",
     "results/iso_share_hold_length/charts/01_iso_share_distribution.html",
     "results/iso_share_hold_length/charts/02_markout_by_iso_group_and_horizon.html",
+    "results/iso_share_hold_length/charts/03_noise_band_precheck.html",
     "results/iso_share_hold_length/REPORT.md",
     "results/reports/iso_share_hold_length_report.md",
     "results/iso_share_hold_length/digest.json"
   ],
   "source": "results/iso_share_hold_length/REPORT.md",
-  "reproduce": ".venv/Scripts/python.exe research/iso_share_hold_length/{t0_audit,t2_iso_share,t3_separation}.py"
+  "reproduce": ".venv/Scripts/python.exe research/iso_share_hold_length/{t0_audit,t2_iso_share,t3_separation,t4_bootstrap_precheck}.py"
 }

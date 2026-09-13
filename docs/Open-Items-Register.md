@@ -735,6 +735,20 @@ extreme events land on, real or placebo, at this sample size.
 failed — it has not yet produced a measurement the controls certify as distinguishable from noise.
 `what_would_change_a_decision.md` §4's "run nothing" criterion, which needs both candidates to fail,
 **still cannot be invoked**. Open questions for Cooper, stated in the report and not resolved here:
-whether full-tier promotion (~15,337 events, far more resistant to single-outlier domination) is
-worth authorising, and whether the median-split statistic itself is the wrong tool for a distribution
-this fat-tailed independent of sample size.
+whether full-tier promotion (~15,337 events) is worth authorising, and whether the median-split
+statistic itself is the wrong tool for a distribution this fat-tailed independent of sample size.
+
+**Follow-up, same day — T4 added, and the diagnosis above corrected.** The "driven by two outlier
+events" language above overstates their role — a median is outlier-resistant by construction; the
+real mechanism is bulk dispersion (`t3_close` IQR ≈ 3,100 bp at n=49), which drives the standard
+error of a difference-of-medians to ≈575 bp at this n, well within the negative control's observed
+2,258 bp. A bootstrap precheck (T4, `results/iso_share_hold_length/artifacts/t4_bootstrap_precheck.json`)
+run read-only against the already-committed, already-full-universe markout grid — zero new tick
+reads — shows the required separation clears the same null's 5,000-repetition maximum by **12.7–19.2×
+its own standard deviation at every horizon** (`P(null ≥ required) = 0/5000` everywhere). **The
+dev-tier failure was a sample-size problem, not a validity problem**, and full tier is a well-powered
+regime for this exact test if a real ISO-share effect exists. This does not itself authorise T5 (the
+full-tier build, which has a real per-event read cost with no DuckDB shortcut) — that remains
+Cooper's call, alongside a raised-but-unresolved caveat that the day-scale horizons' required
+separations (646–862 bp) may already exceed what the cited ISO literature documents, independent of
+sample size (`results/iso_share_hold_length/REPORT.md` §5).

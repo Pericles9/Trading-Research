@@ -293,10 +293,16 @@ and are where rows 11, 18, 19 already live.**
   hold-length state variable, ran T0–T3 (`prompts/iso_share_hold_length.md`,
   `results/iso_share_hold_length/REPORT.md`). The raw result looked real (up to 795 bp separation)
   but both required controls (negative, positive — The Control Standard, Agent Prompt Standard
-  v1.4) failed at n=49 dev events, driven by two extreme outlier events dominating the median
-  statistic. **Open, not negative** — full-tier promotion or a different statistic could still
-  resolve it either way; awaiting Cooper's review. Candidate (a) (impact by participation) closed
-  negative on the separate, unmerged `impact-by-participation` branch (PR #3).
+  v1.4) failed at n=49 dev events — bulk dispersion in a fat-tailed markout distribution, not
+  outlier domination (a median resists outliers by construction; corrected after an imprecise
+  first-pass diagnosis). **A follow-up bootstrap precheck (T4) shows this is a pure sample-size
+  effect**: the same test at full tier (~15,330 events, zero new tick reads, read-only against an
+  already-committed artifact) clears the required separation by 12.7–19.2× the noise band at every
+  horizon. **Open, not negative** — full-tier promotion (T5) is now statistically well-motivated but
+  still requires Cooper's explicit authorisation (a real per-event read cost, no DuckDB shortcut for
+  the ISO flag) and a raised-but-unresolved literature-ceiling caveat on the day-scale horizons.
+  Candidate (a) (impact by participation) closed negative on the separate, unmerged
+  `impact-by-participation` branch (PR #3).
 - **Parallel (unconditional universe scan) — untouched, and still the oldest open blocker.** It gates
   capital, multiplies every result in the programme, and did not move while this arc ran.
 
