@@ -1,0 +1,31 @@
+{
+  "task": "T1 -- route 1 tape gap census, dev tier",
+  "tier": "dev (56 events, all cohorts)",
+  "gap_threshold_seconds_config": 60,
+  "interpretation_note": "Every inter-print RTH gap is enumerated regardless of size; is_candidate flags duration_s >= gap_threshold_seconds on top of the full distribution, per this script's own docstring.",
+  "n_events": 56,
+  "n_events_ok": 56,
+  "status_counts": {
+    "ok": 56
+  },
+  "gap_distribution": {
+    "n_gaps_total": 3062919,
+    "n_candidates_ge_threshold": 1991,
+    "share_candidates": 0.0006500335137821143,
+    "p50": 0.001632466,
+    "p75": 0.057592064,
+    "p90": 0.3884104598,
+    "p95": 1.0682417767,
+    "p99": 6.361073842699953,
+    "max": 4776.424,
+    "min": 5.1e-08
+  },
+  "trailing_gap_to_close_s_summary": {
+    "n": 56,
+    "median": 1.0418597274999999,
+    "max": 502.869,
+    "note": "Trailing gaps (last print to RTH close) are NOT candidates -- config.route_1_tape_gaps.resumption_note: no resumption means session end or delisting, not a halt."
+  },
+  "source": "research/phase_12/t1_gap_census.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/phase_12/t1_gap_census.py"
+}
