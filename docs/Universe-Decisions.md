@@ -1718,3 +1718,45 @@ re-searched-for each time it's cited.
 
 **Numbering note.** Recorded as D35, confirmed free by reading this file — register highest was
 D34, next free D35. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D36.**
+
+---
+
+## D36 — Reg SHO 201 researched and measured as a first step; D5's long-only constraint is unchanged
+
+**Date:** 2026-09-14 · **Gate:** Cooper's explicit authorization via a structured decision request
+(same request as D35's — Phase 12's Stage A gate result was presented alongside a separate
+short-side question; Cooper selected "Yes, research Reg SHO 201 as a first step").
+
+**Scope, stated first because it is the most important line in this entry.** This decision
+authorizes exactly one thing: researching SEC Regulation SHO Rule 201 (the short-sale circuit
+breaker) and measuring, per historical event, whether and when it would have triggered. **It does
+not authorize, imply, or begin any short-side strategy work.** D5 ("Long-only... Do not specify,
+implement, or measure short-side or fade variants. Do not implement SSR or borrow logic") stands
+completely unchanged. `docs/Universe-Decisions.md` D25 named three things that could each
+independently close the short-side question this programme has left open since D5: locate/borrow
+availability, halt/reopen risk, and Reg SHO 201 status. This decision supplies research on the
+third; the first remains unavailable in this checkout and the second (Phase 12) is measured for
+the long side only and would need separate work to condition on a short entry.
+
+**What was done.** Live web research (WebSearch/WebFetch), same method as D34/D35, sourced
+directly from the SEC's own FAQ page on Rule 201
+(`docs/data/reg_sho_201_reference.md`). **Rule, verified**: a 10%-or-more intraday decline from the
+prior day's regular-hours closing price (measured on traded prices, not the bid/ask) triggers a
+short-sale price-test restriction for the remainder of that day and the following full trading
+day. Previous close computed from tick data (D4-safe), reusing Phase 12's own construction
+(`research/phase_12/t2b_band_arithmetic.py`) rather than rebuilding it.
+
+**What was measured.** Per-event trigger check on the 56-event dev sample
+(`research/reg_sho_201/t1_trigger_check.py`, `results/reg_sho_201/REPORT.md`). 3 of 55 events
+(5.5%; 1 excluded, no computable previous close) trigger Rule 201 on the event day. The median
+event's own day-low never falls below its prior close (median max intraday decline: −1.8%) —
+consistent with a momentum-selected cohort chosen for sharp upward moves. **No interpretation of
+what this means for tradeability is offered** — Evidence Standard.
+
+**What remains closed.** The short-side question itself. Answering it fully still needs
+borrow/locate availability (unavailable) and a short-conditioned halt-risk measurement (not yet
+run). This decision closes nothing and opens nothing beyond the fact recorded here; it is a data
+point, not a reopening.
+
+**Numbering note.** Recorded as D36, confirmed free by reading this file — register highest was
+D35, next free D36. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D37.**

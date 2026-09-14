@@ -196,8 +196,12 @@
     via D26), but the two codes that actually matter for Phase 12's route 2 (quote indicators
     3 and 7) could not be resolved after ~12 search/fetch attempts; route 2 still identifies
     nothing and the Stage A gate result is unchanged** (2026-09-14,
-    docs/data/condition_indicator_code_reference.md).
-  - **Next free number: D36.**
+    docs/data/condition_indicator_code_reference.md) · **D36 Reg SHO 201 (the short-sale
+    circuit breaker) researched and measured as an explicitly authorized first step -- 3 of
+    55 dev events trigger a 10%+ intraday decline from prior close; D5's long-only constraint
+    is unchanged and this closes nothing about the short side** (2026-09-14,
+    docs/data/reg_sho_201_reference.md).
+  - **Next free number: D37.**
 - Repo map: docs/Research-Library-Map.md. Data layout: docs/data/Schema.md (tracked copy of
   record; `data/Schema.md` is a local, untracked mirror — `.gitignore` excludes `/data/` wholly,
   so edit the tracked copy and mirror the change there). Corrected 2026-09-10 — `data/Schema.md`
