@@ -1,8 +1,42 @@
 # Phase 13 — Fundamental Partition Test — REPORT
 
 **Branch:** `phase/13` · **Config hash:** `b15ff5a2e0d0` · **Gate mode:** sync-required
-**Status:** complete (T0-T3, T5's charts/verify/digest). T4 (tick-level confirmation) is
-conditional and Cooper-gated — not triggered, not required for this phase's completion.
+**Status:** **CLOSED, 2026-09-14 — as read, uncorrected. See the banner immediately below
+before reading any number in this report.**
+
+> ## CLOSURE BANNER, 2026-09-14 — read this before any number below
+>
+> **T4 (tick-level confirmation, Cooper-triggered 2026-09-14, targeting T3b) found a real,
+> quantified, one-directional look-ahead bias in every headline number in this report.**
+> `research/phase_13/t1_build_p0.py`'s window selection
+> (`minute_index <= t0_minute_index + h`) always includes the full final minute bucket,
+> whose clock-time end lands up to 60 seconds past the intended `t0 + h minutes` mark.
+> Population median excess: **59.14 seconds** (73% of events use a minute-bucket-constructed
+> `t0`, so the offset into that final minute is under 1 second for most of the population —
+> not a random ~30s average). As a share of the labeled horizon, median excess is **19.7% at
+> 5 min, 6.6% at 15 min, 3.3% at 30 min, 1.6% at 60 min.** Confirmed directly: on 50 dev-tier
+> events, tick-derived and bar-derived MFE cost-multiple disagreed one-directionally
+> (bar-derived value never smaller) in 36% of events at 5 min, 14% at 15/30/60 min. Full
+> diagnosis: `research/phase_13/t4b_lookahead_diagnosis.py`,
+> `results/phase_13/artifacts/t4b_lookahead_diagnosis.json`.
+>
+> **Every number below except T1's coverage stats is affected** (coverage asks whether a bar
+> exists at all, not the window's exact length — unaffected). This reaches T1 (P0 itself), T2
+> (the price-decile control arm), and T3a/b/c (all three fundamental splits) — every MFE/MAE
+> figure in this document runs slightly rich, worst at the shortest horizon.
+>
+> **Cooper's decision, 2026-09-14: close as read, uncorrected.** No rebuild was authorized.
+> Per `CLAUDE.md`'s Escalation rule, this is the "wait for instruction" outcome, not silence —
+> instruction was given, and it was not to spend the compute on a full T1-T3 rebuild. This is
+> a defensible close, not a shortcut: Phase 13 was already explicitly **"exploratory, no kill
+> condition"** (Cooper's own 2026-09-13 amendment, see below) — no decision or threshold ever
+> hinged on these exact numbers being unbiased, only on the general shape of the
+> distributions, which a bias worst at 19.7% of the shortest horizon and shrinking to 1.6% by
+> 60 min is unlikely to reverse for the largest separations reported (T3b's ~3x population
+> gap, for instance). **Every number in this report should be read as biased slightly toward
+> larger MFE/MAE than the true tick-level value, worse at short horizons, and no split
+> comparison here should be treated as more precise than that.** Full record:
+> `docs/Universe-Decisions.md` D37.
 
 This phase executes D32 Amendment A1: it partitions the universe on three pre-`t0`
 fundamental observables against a newly built population-scale outcome (P0), with
@@ -142,6 +176,7 @@ Cooper compare without any category being visually marked a winner.
 | 7 | Cross-cut cell below `min_cell_n_log_threshold` | LOG | 344/356/472 cells | **Yes** |
 | 8 | Spine numeric column reaches a computation | HARD STOP | 0 (verified) | No |
 | 9 | Write outside the phase's allowed paths | HARD STOP | none | No |
+| 10 | *(added retroactively, T4, 2026-09-14)* A reported outcome variable's window carries a look-ahead defect | HARD STOP | T1's window selection always includes up to 60s past the labeled horizon; confirmed by tick-level test | **Yes — see §10** |
 
 ## 6. Surprises (full list in `digest.json`)
 
@@ -178,6 +213,9 @@ artifact's `config_hash` matches; `kill_condition.enabled` confirmed `false`.
 | `results/phase_13/charts/01–06*.{html,png}` | committed |
 | `results/phase_13/{digest.json, REPORT.md}` | committed |
 | `results/reports/phase_13_report.md` | committed (copy) |
+| `research/phase_13/{t4_tick_confirm,t4b_lookahead_diagnosis}.py` | committed (T4, §10) |
+| `results/phase_13/artifacts/t4b_lookahead_diagnosis.json` | committed (T4, §10) |
+| `results/phase_13/artifacts/t4_tick_confirmation.json` | not committed, test-scale byproduct only (§10) |
 
 ## 9. Approval Gate
 
@@ -185,3 +223,40 @@ artifact's `config_hash` matches; `kill_condition.enabled` confirmed `false`.
 follow-on phase until Cooper has reviewed the charts and this report, and either names
 a specific cross-cut worth confirming at tick level or closes the phase as read. Per
 `prompts/phase_13.md`'s Approval Gate: this phase's own completion does not require T4.
+
+## 10. T4 and closure (2026-09-14)
+
+Cooper triggered T4a, targeting T3b (share turnover) for tick-level confirmation.
+`research/phase_13/t4_tick_confirm.py` ran on the 50-event dev sample per two-tier
+discipline (full-population T4a was never run — see below). It surfaced a defect, not
+a confirmation: bar-derived and tick-derived MFE cost-multiple disagreed
+one-directionally (bar-derived value never smaller than tick-derived) in 36% of events
+at the 5-minute horizon, 14% at 15/30/60 minutes. Traced directly
+(`research/phase_13/t4b_lookahead_diagnosis.py`) to `t1_build_p0.py`'s window
+selection: `minute_index <= t0_minute_index + h` always includes the full final minute
+bucket, whose clock-time end lands up to 60 seconds past the intended `t0 + h minutes`
+mark. Population median excess is 59.14 seconds — essentially the full minute — because
+73% of events (per D33's minute_a102 t0 tier) construct `t0_ns` as the start of a
+minute bucket, so the offset into that final minute is under 1 second for most of the
+population, not a random draw averaging ~30s. As a share of the labeled horizon, this
+is a median 19.7% excess window at 5 min, 6.6% at 15 min, 3.3% at 30 min, 1.6% at 60
+min.
+
+**This is a HARD STOP per Escalation** (it is a look-ahead defect reaching a reported
+outcome — the same class of thing rows 2/4/8 exist to catch, even though no single
+numbered row in §5's table was written to name this specific mechanism). Per
+`CLAUDE.md`'s Escalation rule, nothing already committed at T0–T5 was touched to fix
+it: the diagnosis script and its output are committed; `t1_build_p0.py` was not
+patched; T4a's own full-population run (the tick-vs-bar comparison and a corrected
+re-run of T3b) was not executed, since running it against known-biased P0 data would
+just produce a second set of numbers needing the same correction. The 50-event test
+artifact (`t4_tick_confirmation.json`) is deliberately not committed — it is a
+test-scale byproduct, not a deliverable.
+
+**Cooper's decision, 2026-09-14: close as read, uncorrected.** No fix, no rebuild.
+Every number in §§2–4 above is confirmed biased toward larger MFE/MAE than the true
+tick-level value, worst at the shortest horizon (5 min) and smallest at the longest
+(60 min) — see the closure banner at the top of this report for the full statement of
+what that does and does not mean for reading this phase's distributions. Recorded as
+`docs/Universe-Decisions.md` D37. This phase is now closed; no further task in
+`prompts/phase_13.md` runs against it.

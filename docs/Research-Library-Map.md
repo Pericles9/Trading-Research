@@ -87,6 +87,17 @@ amendments: T3b/T3c run undirected, and no split is evaluated against a kill-con
 (charts, Verification Block, digest, REPORT.md). **Not built, by design:** T4 (conditional tick
 confirmation -- only runs if Cooper names a specific cross-cut after reviewing this phase's charts).
 
+**CLOSED, 2026-09-14 -- read this before trusting any number above.** Cooper triggered T4
+(tick-level confirmation, targeting T3b) after all. It found a real, one-directional look-ahead
+bias in T1's window selection (`t1_build_p0.py`): the window always runs up to 60 seconds past the
+labeled horizon, inflating every MFE/MAE figure above by a median 19.7% of the horizon at 5 min,
+shrinking to 1.6% at 60 min -- T1's coverage stats are the sole exception. Cooper's decision:
+**close as read, uncorrected** -- defensible because this phase was already exploratory with no
+kill condition, so nothing here ever hinged on the exact numbers. New files:
+`research/phase_13/{t4_tick_confirm,t4b_lookahead_diagnosis}.py`,
+`results/phase_13/artifacts/t4b_lookahead_diagnosis.json`. Full record:
+`docs/Universe-Decisions.md` D37, `results/phase_13/REPORT.md` §10.
+
 ---
 
 ## Build F1 addendum — fundamental data and float layer, pre-flight (folder-level; branch `build/fundamentals-f1`, 2026-09-11)

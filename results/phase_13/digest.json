@@ -1,9 +1,25 @@
 {
   "phase": "13",
   "config_hash": "b15ff5a2e0d0",
-  "status": "complete",
+  "status": "closed_with_known_bias",
   "gate_mode": "sync-required",
-  "escalation": { "criterion": null, "observed": null, "tier": null },
+  "escalation": { "criterion": "row 10 (retroactive, T4): reported outcome window carries a look-ahead defect", "observed": "median excess window 19.7% of horizon at 5min, 6.6% at 15min, 3.3% at 30min, 1.6% at 60min", "tier": "HARD STOP" },
+  "closure": {
+    "date": "2026-09-14",
+    "trigger": "T4a (tick-level confirmation, Cooper-triggered, targeting T3b), dev-tier 50-event test",
+    "defect": "t1_build_p0.py window selection (minute_index <= t0_minute_index + h) always includes the full final minute bucket, whose clock-time end lands up to 60s past the intended t0 + h minutes mark",
+    "magnitude_median_excess_seconds": 59.14,
+    "magnitude_share_of_horizon": { "5min": 0.197, "15min": 0.066, "30min": 0.033, "60min": 0.016 },
+    "direction": "one-directional -- bar-derived MFE/MAE never smaller than tick-derived value",
+    "tick_vs_bar_disagreement_rate_50_event_test": { "5min": 0.36, "15min": 0.14, "30min": 0.14, "60min": 0.14 },
+    "affected": "T1 (P0 itself), T2 (arm zero), T3a/b/c (all three splits) -- every headline_metrics entry below except p0_minute_bar_coverage_* (coverage asks whether a bar exists, not the window's exact length)",
+    "not_affected": ["p0_minute_bar_coverage_population", "p0_minute_bar_coverage_2025", "p0_minute_bar_coverage_2020_through_2024"],
+    "cooper_decision": "close as read, uncorrected -- no fix, no rebuild authorized",
+    "rationale": "phase was already exploratory with no kill condition (Cooper's 2026-09-13 amendment); no decision or threshold hinged on these exact numbers being unbiased, only the general shape of the distributions",
+    "decision_record": "docs/Universe-Decisions.md D37",
+    "diagnosis_script": "research/phase_13/t4b_lookahead_diagnosis.py",
+    "diagnosis_artifact": "results/phase_13/artifacts/t4b_lookahead_diagnosis.json"
+  },
   "headline_metrics": [
     {
       "name": "p0_minute_bar_coverage_population",
@@ -147,7 +163,7 @@
   ],
   "commits": [
     "e0ed9a3", "9d57f63", "a1259f9", "0a163f2", "6e86148",
-    "7363471", "e7a5ed8", "8895bbb"
+    "7363471", "e7a5ed8", "8895bbb", "392bec2", "14e1230", "8951383"
   ],
   "reproduce": "cd research/phase_13 && ../../.venv/Scripts/python.exe t1_build_p0.py && python t2_arm_zero.py && python t3_partitions.py && python verify_partition_test.py && python chart_01.py && python chart_02.py && python chart_03.py && python chart_04.py && python chart_05.py && python chart_06.py"
 }
