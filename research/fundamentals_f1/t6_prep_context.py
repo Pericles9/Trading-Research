@@ -35,7 +35,7 @@ from research.fundamentals_f1 import common as C  # noqa: E402
 FILTERED_ROOT = str(C.data_root() / "filtered")  # resolve_data_root()-based, not cwd-relative --
 # see t0_assemble.py's docstring for why a bare "data/filtered" literal is wrong in a worktree
 RTH_OPEN, RTH_CLOSE = "09:30:00", "16:00:00"
-TICKER_DETAILS_ROOT = "data/raw/fundamentals/massive/2026-09-12/ticker_details"
+TICKER_DETAILS_ROOT = f"{C.RAW_ROOT}/massive/2026-09-12/ticker_details"
 OUT_PATH = f"{C.ART}/t6_context.parquet"
 
 

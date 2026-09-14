@@ -1,0 +1,96 @@
+{
+  "phase": "12",
+  "config_hash": null,
+  "status": "stage_a_gate_fired",
+  "escalation": {
+    "criterion": "Escalation rows 10 and 11 (Stage A gate: corroborated-halt count floor, single-route-only share ceiling)",
+    "observed": "Dev tier, 56 events. Route 1 (tape gaps): 1991 candidates across 42 events, a real modest signature near the 300s pause length (T1b). Route 2 (condition codes): identifies zero candidates by construction, no dictionary on disk. Route 3 (band arithmetic): 13/55 events touch a band edge. Agreement: only 9 events corroborated by 2+ routes vs a floor of 50 (row 10 -- but likely miscalibrated for a 56-event sample, flagged as uninformative at this n); single-route-only share 0.903 vs a 0.6 ceiling (row 11, a share, not floor-sensitive, read as more informative here). Both rows fire.",
+    "tier": "Stage A gate fired -- Stage B unauthorised until Cooper clears rows 10/11 in writing per the Approval Gate"
+  },
+  "headline_metrics": [
+    {
+      "name": "t0c_cooper_slots_unfilled_then_filled",
+      "value": 7,
+      "n": null,
+      "source": "docs/Universe-Decisions.md D34",
+      "chart": null
+    },
+    {
+      "name": "t1_n_rth_gaps_total",
+      "value": 3062919,
+      "n": 56,
+      "source": "research/phase_12/t1_gap_census.py:main",
+      "chart": "results/phase_12/charts/01_gap_duration.html"
+    },
+    {
+      "name": "t1_n_candidates_ge_60s",
+      "value": 1991,
+      "n": 56,
+      "source": "research/phase_12/t1_gap_census.py:main",
+      "chart": "results/phase_12/charts/01_gap_duration.html"
+    },
+    {
+      "name": "t2b_share_events_touched_band",
+      "value": 0.236,
+      "n": 55,
+      "source": "research/phase_12/t2b_band_arithmetic.py:main",
+      "chart": null
+    },
+    {
+      "name": "t2b_share_events_crossed_bracket",
+      "value": 0.127,
+      "n": 55,
+      "source": "research/phase_12/t2b_band_arithmetic.py:main",
+      "chart": null
+    },
+    {
+      "name": "t3_corroborated_halt_count_events",
+      "value": 9,
+      "n": 55,
+      "source": "research/phase_12/t3_gate.py:main",
+      "chart": "results/phase_12/charts/02_route_agreement.html"
+    },
+    {
+      "name": "t3_single_route_only_share_gap_level",
+      "value": 0.9026,
+      "n": 1991,
+      "source": "research/phase_12/t3_gate.py:main",
+      "chart": "results/phase_12/charts/02_route_agreement.html"
+    }
+  ],
+  "surprises": [
+    "T1b: candidate-gap counts reverse from a smooth decline right at the 300s pause length (19 at 280-300s, 31 at 300-320s) -- a real signature, not the flat/smooth null the prompt's own chart contract names as the failure case",
+    "T2a: quote indicator codes 3 and 7 are exclusive to candidate-gap windows in this sample (54 and 63 occurrences vs 0 in the matched non-candidate sample) -- reported as an opaque frequency fact, not interpreted",
+    "T2b: exactly 1 of 55 dev events (AACG, 2020-02-18) falls before Amendment 18's 2020-02-24 effective date, requiring the separate pre-Amendment-18 doubling regime D34 added",
+    "T3: row 10's 50-event floor is almost certainly calibrated for full-tier (~20,951 events), not the 56-event dev sample -- flagged as likely uninformative at this tier rather than silently treated as a conclusive negative",
+    "D35 (2026-09-14): Cooper authorized live research to resolve the condition/indicator code dictionary. 3 codes resolved (none halt-relevant); the two that matter (indicators 3, 7) could not be resolved after ~12 attempts -- dictionary_path stays NONE, Stage A gate result unchanged"
+  ],
+  "output_files": [
+    "prompts/phase_12.md",
+    "config/phase_12.json",
+    "docs/data/luld_plan_reference.md",
+    "research/phase_12/t0d_audit.py",
+    "research/phase_12/t1_gap_census.py",
+    "research/phase_12/t2a_condition_census.py",
+    "research/phase_12/t2b_band_arithmetic.py",
+    "research/phase_12/t2c_agreement_matrix.py",
+    "research/phase_12/t3_gate.py",
+    "research/phase_12/chart_01_gap_duration.py",
+    "research/phase_12/chart_02_route_agreement.py",
+    "results/phase_12/artifacts/t0d_satisfiability_audit.json",
+    "results/phase_12/artifacts/t1_gap_census.json",
+    "results/phase_12/artifacts/t2_code_census.json",
+    "results/phase_12/artifacts/t2b_band_arithmetic.json",
+    "results/phase_12/artifacts/t2_agreement_matrix.json",
+    "results/phase_12/artifacts/t3_gate.json",
+    "results/phase_12/charts/01_gap_duration.html",
+    "results/phase_12/charts/02_route_agreement.html",
+    "results/phase_12/REPORT.md",
+    "results/reports/phase_12_report.md",
+    "results/phase_12/digest.json",
+    "docs/Universe-Decisions.md",
+    "CLAUDE.md"
+  ],
+  "source": "results/phase_12/REPORT.md",
+  "reproduce": ".venv/Scripts/python.exe research/phase_12/{t0d_audit,t1_gap_census,t2a_condition_census,t2b_band_arithmetic,t2c_agreement_matrix,t3_gate}.py"
+}

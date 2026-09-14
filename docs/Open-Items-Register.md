@@ -689,6 +689,19 @@ covariate check inside whichever of (a) or (b) runs first. Cooper decision on se
 recommended first since a null result there converts "costs bind, assumed" into "costs bind,
 measured" without risking a real effect that fails to clear an unmeasured cost floor.
 
+**Update, 2026-09-12 — candidate (a) ran and returned null, with an exact threshold rather than a
+bound.** `prompts/impact_by_participation.md`, branch `impact-by-participation`. The closest
+barrier cell (Phase 10e Arm 1, latency 1/horizon 60/profit_k=3/stop_m=2) needs round-trip cost at
+or below **≈11.0 bp (15.5% of the 70.98 bp baseline)** to clear `p_breakeven` — established
+exactly, by reclassifying touch order minute-by-minute against `event_minute_bars_v2` (already
+materialized, full 15,337-event universe, not a new tick pass), reproducing the closest cell's own
+measured `p_clear_optimistic` (0.3885) exactly as a consistency check. Realised effective spread
+by participation decile (dev tier, 50 events, T=0 only) ranges **50.7–71.5 bp round-trip-
+equivalent — the cheapest decile is 4.6× the required threshold, and 0 of 10 deciles clear it.**
+Full record: `results/impact_by_participation/REPORT.md`. **(a) is null.** Per this entry's own
+"if both (a) and (b)" condition, the wrong-partition question does not yet become live — (b) (ISO
+share, hold-length) has not been run.
+
 ### OPEN — `persistence_octaves` feature-count instability needs fixing as a class (2026-09-10)
 
 **Status: open, unscheduled.** Logged from `claude/scale_field_arc_closeout.md` §5 and
@@ -767,3 +780,26 @@ literature (raised as a caveat, never computed as a verdict) — neither conditi
 Candidate (c) (book-walk depth as a universe filter)'s rescue condition — "(a) and (b) both return
 null" — is also not satisfied, since (b) did not return a null, it returned no measurement at all.
 Candidate (c) remains unrescued and unscoped as its own phase.
+
+### OPEN — Phase 12 Stage A gate fires, dev tier; Stage B awaits Cooper's written clearance (2026-09-13)
+
+**Status: open, awaiting Cooper's review.** `prompts/phase_12.md`, `results/phase_12/REPORT.md`,
+`docs/Universe-Decisions.md` D34.
+
+Phase 12 (Halts & LULD) ran Stage A (T0a–T3) on the 56-event dev sample, after Cooper authorized
+live research to fill the phase's 7 remaining `[Cooper]` slots (D34 — a one-time exception to
+Escalation row 4/D14, not a standing change). **Both Stage A gate rows fired**: corroborated-halt
+count (9, floor 50, row 10) and single-route-only share (0.903, ceiling 0.6, row 11). Route 1 (tape
+gaps) shows a real, modest excess right at the 300-second pause length; route 2 (condition codes)
+identifies nothing by construction (no dictionary on disk, confirming Phase 11 A2-11 again); route
+3 (band arithmetic) touches a band edge in 13/55 events. **Flagged, not smoothed over: row 10's
+50-event floor almost certainly assumed a full-tier population (~20,951 events) — 50/56 would need
+~89% corroboration on the entire dev cohort, an implausible bar regardless of the true halt rate.**
+Row 11 (a share, not a count) does not have that problem and is read as the more informative
+signal at this tier.
+
+Three concrete, named things would close the gap, none run yet: a partial code dictionary for the
+two candidate-exclusive indicator codes (3, 7, found in T2a's census); full-tier promotion; tick-
+level (not minute-bar) band arithmetic to remove the coarsest source of route-1/route-3 grain
+mismatch. Per the Approval Gate, Stage B (time-to-halt, reopen-gap, the sizing arithmetic) does not
+run until Cooper clears rows 10/11 in writing.

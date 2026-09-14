@@ -42,7 +42,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 from research.fundamentals_f1 import common as C  # noqa: E402
 
 FETCH_DATE_MASSIVE = "2026-09-12"
-FIN_RAW_ROOT = f"data/raw/fundamentals/massive/{FETCH_DATE_MASSIVE}/financials"
+FIN_RAW_ROOT = f"{C.RAW_ROOT}/massive/{FETCH_DATE_MASSIVE}/financials"
 ITEM402_PATH = f"{C.ART}/item402_filings_full_history.parquet"
 OUT_PATH = f"{C.ART}/t3h_blast_radius_summary.json"
 

@@ -1,0 +1,31 @@
+{
+  "task": "T3 -- THE STAGE A GATE, dev tier",
+  "T3a_observed": {
+    "corroborated_halt_count_events": 9,
+    "detection_universe_events": 55,
+    "detection_universe_events_note": "55 dev events had route-3 data computed (the full dev-tier population reaching this task); 42 of those also had at least one route-1 candidate gap -- see t2_agreement_matrix.json for the full breakdown.",
+    "single_route_only_share_gap_level": 0.9025615268709192,
+    "single_route_only_share_event_level": 0.8043478260869565
+  },
+  "T3b_escalation_evaluation": {
+    "row_10": {
+      "condition": "corroborated_halt_count < config threshold",
+      "threshold": 50,
+      "observed": 9,
+      "fires": true,
+      "action_if_fires": "Hard stop at T3 -- too few to measure a reopen distribution"
+    },
+    "row_11": {
+      "condition": "single_route_only_share > config threshold",
+      "threshold": 0.6,
+      "observed": 0.9026,
+      "fires": true,
+      "action_if_fires": "Hard stop at T3 -- routes do not corroborate"
+    },
+    "gate_fires": true
+  },
+  "methodological_caveat": "row_10's threshold (50) was almost certainly calibrated for a full-tier population (~20,951 events), not this 56-event dev sample -- 50/56 would require corroboration on ~89% of the entire cohort. This dev-tier row-10 firing is expected at this sample size and should not be read as a conclusive archive-wide finding. row_11 is a SHARE, not a count, and does not have the same small-n floor problem -- its firing (0.903 vs. a 0.6 ceiling) is the more informative of the two at dev tier.",
+  "T3c_feasibility_finding": "STAGE A GATE FIRES on both rows at dev tier. Per the prompt's own T3c: this is a complete and reportable phase outcome, not a failure. On the 56-event dev sample: route 1 (tape gaps) finds a real, if modest, signature near the 300s pause length (T1b) but produces 1,991 candidate gaps across only 42 events -- far more candidates than plausible halts, meaning most are thin-tape artifacts, not pauses. Route 2 (condition/indicator codes) identifies nothing by construction -- no dictionary exists on disk (Phase 11 A2-11, confirmed again here). Route 3 (band arithmetic) finds 13 of 55 events touching a band edge at minute-bar resolution. Only 9 events show agreement between routes 1 and 3 (event-level approximation). What data would close this: (a) a condition/indicator code dictionary, even a partial one mapping just the codes found exclusive to candidate windows (3, 7 -- t2_code_census.json), would let route 2 actually identify rather than only census; (b) full-tier promotion (~20,951 events) would test whether row 10's count floor is reachable at scale, which 56 events structurally cannot answer regardless of the true halt rate; (c) tick-level (not minute-bar) band arithmetic would remove the coarsest source of route-1/route-3 grain mismatch this dev-tier pass had to approximate around.",
+  "source": "research/phase_12/t3_gate.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/phase_12/t3_gate.py"
+}

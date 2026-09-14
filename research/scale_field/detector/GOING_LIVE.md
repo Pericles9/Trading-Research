@@ -1,20 +1,70 @@
-# GOING_LIVE — what this package needs before it touches the cohort
+# GOING_LIVE — CLOSED. This package is not waiting for anything.
 
-**Date:** 2026-09-09, updated 2026-09-10 for D26. **Status: BLOCKED, on three items, none of
-them owned here.** Two are technical; the third is a standing decision.
+**Date:** 2026-09-09 · updated 2026-09-10 for D26 · **status rewritten 2026-09-11.**
 
-Everything in `research/scale_field/detector/` has been built and validated on synthetic
-tapes only. No file in this package has ever opened a real-data path, and `detect()` and
-`detect_interval()` both raise rather than run without the numbers below. This file states
-exactly what is missing so that landing it is a config change against tested code.
+> **STATUS: CLOSED BY D26, NOT PENDING ON D26'S INPUTS.** That distinction is the whole point
+> of this rewrite. An earlier version of this file listed two inputs to wait for. **Do not go
+> looking for them.** Both were answered, and the question they were inputs *to* has since been
+> closed by measurement. There is no number whose arrival would change what this package should
+> do next.
+
+**What D26 says, precisely, because the precise version matters and the loose one is wrong in
+both directions.** D26 does **not** close this package — it says so in its own text, and the
+cross-thread note at `claude/going_live_blockers_answered.md` §4 says so again: *"D26 closes
+cohort timing work, not instrument work on synthetic data."* The synthetic instrument work here
+remains permitted and remains valid. What D26 closes is **the cohort question this package's
+gate was built to answer safely**: above 10 ms both channels return the session envelope and
+nothing else under four controls, and below 10 ms the structure is order fragmentation on a
+cohort already unable to measure there.
+
+**So the operative statement is not "the detector is forbidden" but "there is nothing left for
+it to be pointed at."** Pointing `detect()` or `detect_interval()` at the cohort today would
+not change any decision, because the decision it would inform has been taken on stronger
+evidence than this package could produce — a surrogate bandwidth swept 1–300 s and a
+structureless positive control planted at the edge of detectability. If this package is ever
+revived for cohort work, **the case has to be made on something other than "the field might
+find bursts", because that question is answered in both channels.**
+
+**Nothing about the package's correctness is in question.** Every derivation, the moment
+machinery, both channels and the 33-test battery stand exactly as validated. No file here has
+ever opened a real-data path, and `detect()` / `detect_interval()` still raise without an
+explicit `noise_constant` and `kappa` — that guard stays, and is now belt-and-braces rather
+than the load-bearing gate it was.
 
 ---
 
-## The two blockers
+## The two blockers, and how each was answered
 
-### 1. The bandwidth-audited matched-null constant
+**Both are resolved. Neither resolved by a value arriving.** The sections below are kept as the
+record of what was asked and what came back — including one case where the answer invalidated
+the question's own stated rationale, which is worth more than the answer was.
 
-**What is needed:** the per-scale spread of the statistic under a null whose bandwidth
+Source for both: `claude/going_live_blockers_answered.md` (2026-09-10), and D26.
+
+### 1. The bandwidth-audited matched-null constant — ANSWERED, and this section's own rationale was WITHDRAWN
+
+> **RESOLUTION (2026-09-11).** The audit was done; it is in D26. The surrogate bandwidth was
+> swept 1–300 s, the crossover tracks `h` at ≈2.6h, and a structureless positive control
+> returned 89.2 s at `h = 30` against the real tape's 86.9 s. **So no fixed matched-null
+> reference exists to take a constant from, and the conclusion below — that this stays
+> unresolved — is correct.**
+>
+> **But the reason given below for rejecting `0.87` no longer holds, and that matters more
+> than the conclusion.** This section rejects the Poisson constant on the grounds that the
+> Allan factor runs 5.99 at 15.6 ms to 1,245 at 4,096 s, inflating `z` by ~2.4× at the fine
+> end. **D26 withdrew that curve as a clustering measurement** — `A(T)` measures rate
+> variation *or* clustering and was never rate-matched. On the 10 ms collapsed tape
+> `A(15.6 ms)` falls from 9.79 to **0.91**, so at fine scales the inflation factor is ≈1.0 and
+> **`0.87` is very nearly right there**; the correction this section assumes is necessary at
+> the fine end is not. At coarse scales the departure is real but it is the **rate envelope**,
+> not clustering — an `h = 1` surrogate reproduces it at or above the real value at every rung
+> — which is precisely the dependence commit `1a34975` retracted.
+>
+> This is the retraction sweep catching a live detector's blocker rationale resting on a
+> withdrawn curve. **Going live on the version below would have imported a retracted premise
+> into a running detector.** Detail: `claude/going_live_blockers_answered.md` §2.
+
+**What was needed:** the per-scale spread of the statistic under a null whose bandwidth
 content is *audited rather than assumed, and swept rather than picked*.
 
 **Why the obvious answer is wrong.** `field_feature_extraction_methods.md` §4.3 prescribes
@@ -48,9 +98,31 @@ could force, and it is contained.
 **Config slots, already present and null:** `config/scale_field_detector.json` →
 `parameters.noise_constant`, `parameters.kappa`, and the `kappa_gate` block.
 
-### 2. The fragmentation collapse convention
+### 2. The fragmentation collapse convention — ANSWERED, both rules exist and are measured
 
-**What is needed:** the rule for turning one order reported as several prints into one
+> **RESOLUTION (2026-09-11).** Both rules now exist, both are measured, and **this section's
+> instinct was right and understated**: `collapse_exact_ties=True` is not adequate for real
+> tape, because 40–57% of inter-print intervals on this cohort are under one millisecond and
+> exact ties are a small part of that.
+>
+> **The identity rule** (`research/scale_field/fragmentation_identity.py::collapse_identity`):
+> within runs separated by < 1 ms, collapse to one arrival if the run is price-monotone AND
+> (multi-venue OR sequence-contiguous). Sub-ms runs are sequence-contiguous 0.933 of the time
+> against a permutation null of 0.000, and enriched 7–15× in condition code 14, `Intermarket
+> Sweep`. Retains ~70% of prints.
+>
+> **The time-tolerance rule is 10 ms**, and it is a measured boundary of the reporting process
+> rather than a tuned parameter: the cross-channel divergence crosses zero **simultaneously at
+> `s` = 1 s, 8 s and 64 s**, bracketed by under-collapse (−0.36 at 1 ms) and over-collapse into
+> artificial regularity (+0.17 at 100 ms). Scale-invariance of the crossing is what earns it.
+>
+> **For `G` specifically, the answer is the 10 ms tolerance, not the identity rule.** The
+> identity rule's conservatism leaves residual fragmentation worth a −0.84 decade divergence
+> gap, which is not market structure — and this section is right that `G` sees fragmentation as
+> the single largest departure available in the statistic. Detail:
+> `claude/going_live_blockers_answered.md` §1.
+
+**What was needed:** the rule for turning one order reported as several prints into one
 arrival — identity-based or time-tolerance, and if time-tolerance, the tolerance.
 
 **Why this package cannot proceed without it, and why it bites `G` far harder than `F`.**
@@ -129,7 +201,17 @@ constraint, and it is a decision, not a missing number.
 
 ---
 
-## A fourth item, owned here, that is not a blocker for `F` but is one for any dense-tape claim
+## The one item that outlived both blockers — owned here, and now the only open defect
+
+> **STANDING (2026-09-11).** With blockers 1 and 2 answered, this is the only unresolved
+> technical item in the package, and the cross-thread note would rank it **ahead of either
+> named blocker** for any statistic aggregated over counts
+> (`claude/going_live_blockers_answered.md` §3). The gates thread independently confirmed why:
+> every quantile of the negative-run width sits at or below the Poisson value and never above
+> — the signature of features packed closer than `2s` and truncating each other. **Measured,
+> dense-and-interacting is not one regime among several on this cohort; it is the only one.**
+> It is left unfixed deliberately: the fix is a design change to tested code, and with the
+> cohort question closed there is no longer a reason to spend it.
 
 **`persistence_octaves` is a grid quantity, and it gates the feature count.** Found
 2026-09-09; recorded as two `strict=True` xfail tests
