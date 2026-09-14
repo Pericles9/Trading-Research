@@ -1,0 +1,47 @@
+{
+  "finding": "t1_build_p0.py's window selection (minute_index <= t0_minute_index + h) always includes the full final minute bucket, whose clock-time end is (60 - offset_into_minute) seconds past the intended t0 + h*60s mark. This is a one-directional look-ahead excess in every horizon's MFE/MAE, present in the whole P0 population, not a data-quality issue in filtered_trades or event_minute_bars_v2 (both confirmed to agree with each other's own content; see t4a's own tick-vs-bar comparison).",
+  "n_events": 20951,
+  "offset_into_minute_seconds": {
+    "min": 0.0,
+    "median": 0.863111936,
+    "mean": 4.910134959941196,
+    "max": 59.970239744
+  },
+  "excess_lookahead_seconds": {
+    "min": 0.029760256000002983,
+    "median": 59.136888064,
+    "mean": 55.0898650400588,
+    "max": 60.0
+  },
+  "excess_as_pct_of_horizon": {
+    "5": {
+      "median_pct": 19.71,
+      "mean_pct": 18.36
+    },
+    "15": {
+      "median_pct": 6.57,
+      "mean_pct": 6.12
+    },
+    "30": {
+      "median_pct": 3.29,
+      "mean_pct": 3.06
+    },
+    "60": {
+      "median_pct": 1.64,
+      "mean_pct": 1.53
+    }
+  },
+  "why_offset_is_near_zero_for_most_events": "D33's tiered t0 construction: 15,259/20,951 events (73%) use the minute_a102 tier, whose t0_ns is built AS the start of a minute bucket by construction -- offset_into_minute ~= 0 for that tier, so the excess is close to the full 60 seconds for most of the population, not a random draw averaging ~30s.",
+  "affects": [
+    "results/phase_13/artifacts/p0_outcome.parquet (mfe_/mae_/n_bars_ columns, all 4 horizons)",
+    "results/phase_13/artifacts/t2_arm_zero_summary.json (every decile x horizon cell)",
+    "results/phase_13/artifacts/t3_partition_summary.json (every split x cell)",
+    "results/phase_13/{REPORT.md, digest.json}, results/reports/phase_13_report.md (every headline MFE/MAE cost-multiple number already reported)"
+  ],
+  "does_not_affect": [
+    "T1's coverage statistics (n_bars_h.notna() share) -- coverage is about whether ANY bar exists in the window, not the window's precise length",
+    "the QUALITATIVE direction of T3's group comparisons is plausibly robust (the excess applies to both sides of every split in roughly the same way, since it depends on t0's own minute-offset, not on the split value) -- NOT independently verified here; flagged as an open question for whoever resolves this, not asserted as fact"
+  ],
+  "not_yet_done_pending_instruction": "t1_build_p0.py is NOT patched and P0/T2/T3 are NOT re-run by this script, per CLAUDE.md's Escalation rule -- this is a HARD STOP, reported as found, not fixed.",
+  "config_hash": "9ce495413f2a"
+}
