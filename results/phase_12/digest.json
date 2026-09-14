@@ -62,7 +62,8 @@
     "T1b: candidate-gap counts reverse from a smooth decline right at the 300s pause length (19 at 280-300s, 31 at 300-320s) -- a real signature, not the flat/smooth null the prompt's own chart contract names as the failure case",
     "T2a: quote indicator codes 3 and 7 are exclusive to candidate-gap windows in this sample (54 and 63 occurrences vs 0 in the matched non-candidate sample) -- reported as an opaque frequency fact, not interpreted",
     "T2b: exactly 1 of 55 dev events (AACG, 2020-02-18) falls before Amendment 18's 2020-02-24 effective date, requiring the separate pre-Amendment-18 doubling regime D34 added",
-    "T3: row 10's 50-event floor is almost certainly calibrated for full-tier (~20,951 events), not the 56-event dev sample -- flagged as likely uninformative at this tier rather than silently treated as a conclusive negative"
+    "T3: row 10's 50-event floor is almost certainly calibrated for full-tier (~20,951 events), not the 56-event dev sample -- flagged as likely uninformative at this tier rather than silently treated as a conclusive negative",
+    "D35 (2026-09-14): Cooper authorized live research to resolve the condition/indicator code dictionary. 3 codes resolved (none halt-relevant); the two that matter (indicators 3, 7) could not be resolved after ~12 attempts -- dictionary_path stays NONE, Stage A gate result unchanged"
   ],
   "output_files": [
     "prompts/phase_12.md",

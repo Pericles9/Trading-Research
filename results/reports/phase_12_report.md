@@ -71,6 +71,18 @@ any code (Escalation row 5); `dictionary_path = NONE` (D34, confirming Phase 11 
 finding), so route 2 produces a census only and identifies nothing. Full table:
 `artifacts/t2_code_census.json`.
 
+**Follow-up, 2026-09-14 (D35) — dictionary research authorized and attempted, load-bearing codes
+still unresolved.** Cooper authorized live research (same method as D34's LULD verification) to
+find a real code dictionary. Trade condition codes 37 (Odd Lot Trade) and 2 (Average Price Trade)
+were resolved with high confidence, and 14 (Intermarket Sweep) cross-referenced against D26's
+existing confirmation — **none bear on halt identification.** The two codes that actually matter,
+quote indicators 3 and 7, **could not be resolved** after roughly a dozen search/fetch attempts
+(full account: `docs/data/condition_indicator_code_reference.md`) — the vendor's specific numeric
+mapping sits behind an authenticated API endpoint this session has no key for, and every primary
+regulatory-specification PDF tried failed to extract as readable text, the same failure mode D34
+hit for a different set of documents. **`dictionary_path` stays `NONE`; route 2 still identifies
+nothing; the Stage A gate result below is unchanged by this research.**
+
 ## 5. T2b — route 3, band arithmetic
 
 Reference price (5-minute rolling VWAP, 1% hysteresis) and band edges computed from

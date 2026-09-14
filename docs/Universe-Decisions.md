@@ -1673,3 +1673,48 @@ this session. `config/phase_12.json`'s `_STATUS` field is worded accordingly
 
 **Numbering note.** Recorded as D34, confirmed free by reading this file — register highest was D33,
 next free D34. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D35.**
+
+---
+
+## D35 — Condition/indicator code dictionary research authorized and attempted; the two codes that matter remain unresolved
+
+**Date:** 2026-09-14 · **Gate:** Cooper's explicit authorization via a structured decision request
+("Look up the code dictionary first," in response to a question laying out Phase 12's Stage A gate
+result and three options). Same shape as D34, scoped to this instance only.
+
+**What was authorized.** Route 2 of Phase 12 (condition/indicator codes) identifies zero candidate
+halts because no code dictionary exists on disk (`config.phase_12.json`'s `dictionary_path = NONE`,
+confirming Phase 11 A2-11). Cooper authorized live web research to find and verify a real
+dictionary, the same method as D34's LULD research, specifically to see whether it would let route
+2 contribute to the Stage A gate.
+
+**What happened — a good-faith attempt that did not resolve the load-bearing codes.** Full account:
+`docs/data/condition_indicator_code_reference.md`. Three codes were resolved with high confidence
+(trade condition 37 = Odd Lot Trade; 2 = Average Price Trade; 14 = Intermarket Sweep, already
+confirmed in this repo via D26, cross-referenced not re-derived). **None of the three bear on halt
+identification.** The two codes that actually matter — quote indicator codes 3 and 7, found
+exclusive to candidate-gap windows in T2a's census — **could not be resolved.** Roughly a dozen
+search/fetch attempts across the vendor's own documentation, an authenticated API endpoint (no key
+available), primary regulatory specifications (NYSE, Nasdaq/UTP, CTA — all PDF, none extracted as
+readable text in this session, the same failure mode D34 hit for a different set of documents), a
+GitHub API-wrapper repository, and a market-microstructure glossary site (403 Forbidden) all failed
+to surface the vendor's specific numeric-code mapping. The raw regulatory letter-coded quote
+conditions (`R`, `A`, `B`, `H`, `W`, `O`) were found, but the vendor (Polygon/Massive, per its own
+documentation) re-numbers these into its own proprietary numeric scheme, which was not independently
+recoverable without the authenticated endpoint.
+
+**Consequence.** `config/phase_12.json`'s `dictionary_path` **stays `NONE`.** Route 2 still
+identifies nothing; the Stage A gate result (`results/phase_12/artifacts/t3_gate.json` — 9
+corroborated events vs. a floor of 50; 90.3% single-route-only share vs. a 60% ceiling) is
+**unchanged** by this research. No task was re-run on the strength of a partial dictionary that
+doesn't cover the two decision-relevant codes — doing so would have been exactly the kind of
+"looks resolved but isn't" result this programme's culture exists to avoid.
+
+**Why this is recorded as a decision despite resolving nothing.** So a future session does not
+re-attempt the same dead ends without knowing they were already tried, and so "we looked and
+couldn't find it" is distinguished from "we didn't look" in the permanent record — the same reason
+`claude/scale_space_lessons.md`'s absence is tracked as an open defect rather than silently
+re-searched-for each time it's cited.
+
+**Numbering note.** Recorded as D35, confirmed free by reading this file — register highest was
+D34, next free D35. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D36.**
