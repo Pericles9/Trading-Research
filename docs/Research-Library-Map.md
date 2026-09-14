@@ -2096,3 +2096,35 @@ map; assembled here from where each is actually used:
   hold-length state variable — the open item this section's Library Map neighbor,
   `docs/Open-Items-Register.md`'s wrong-partition entry, names as one of the two candidates that
   could still reopen D24/D25.
+
+## Phase 12 — Halts & LULD, Stage A (dev tier, 2026-09-13)
+
+**Type:** measurement phase, two-stage. Stage A (T0a–T3) run this pass; Stage B unauthorised —
+Escalation rows 10/11 fired at T3 and the Approval Gate blocks Stage B until Cooper clears them in
+writing. `docs/Universe-Decisions.md` D34, `docs/data/luld_plan_reference.md`,
+`results/phase_12/REPORT.md`.
+
+**Code — `research/phase_12/`.** `t0d_audit.py` (satisfiability audit, all 17 escalation rows,
+reused methodology from `research/phase_10e/t0d_audit.py`); `t1_gap_census.py` (route 1: every RTH
+inter-print gap, dev tier, `is_candidate` flag at ≥60s on top of the full distribution);
+`t2a_condition_census.py` (route 2: opaque code-frequency census, candidates vs. a matched
+non-candidate sample — no dictionary exists, so this task identifies nothing by construction);
+`t2b_band_arithmetic.py` (route 3: reference price and band edges from `event_minute_bars_v2`,
+minute-bar granularity, D4-safe — previous close from tick data, never a spine column);
+`t2c_agreement_matrix.py` (the three-route agreement read, route 2 contributing zero by
+construction); `t3_gate.py` (the Stage A gate itself). `chart_01_gap_duration.py`,
+`chart_02_route_agreement.py`.
+
+**Data — `docs/data/luld_plan_reference.md` (new).** A secondary, compiled reference on LULD band
+mechanics, produced by live web research under Cooper's explicit one-time authorization (D34) —
+corrects a backwards doubling-boundary direction in the original 2026-08-31 draft and adds a
+pre-Amendment-18 (2020-02-24) regime branch this cohort's earliest dev event needs.
+
+**Finding, stated once:** route 1 shows a real, modest excess in candidate-gap counts right at the
+300-second LULD pause length (not the smooth, featureless null the chart contract names as the
+failure case); route 3 touches a band edge in 13/55 dev events; only 9 events show cross-route
+agreement, and the single-route-only share (90.3%) exceeds Cooper's 60% ceiling. Route 2
+contributes nothing — no code dictionary exists on disk, confirming Phase 11 A2-11's own finding
+again on this task's own read. Three concrete, named things would close the gap: a partial
+dictionary for the two candidate-exclusive indicator codes (3, 7); full-tier promotion; tick-level
+(not minute-bar) band arithmetic.

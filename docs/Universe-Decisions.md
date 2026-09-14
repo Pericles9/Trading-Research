@@ -1606,3 +1606,115 @@ anchor artifact happens to be at hand.
 **Numbering note.** Recorded as D27 through D33, confirmed free by reading this file — register
 highest was D26, next free D27. `CLAUDE.md`'s pointer list is updated in the same commit.
 **Next free number: D34.**
+
+---
+
+## D34 — Cooper authorized one-time live research to verify Phase 12's LULD parameters; D14 and row 4 stand unchanged for everything else
+
+**Date:** 2026-09-13 · **Gate:** Cooper's explicit chat authorization, quoted in full below, given
+after Phase 12's T0a/T0b ran and T0c reported its 7 remaining unfilled `[Cooper]` slots.
+
+**What was authorized, verbatim:** *"i sign off on everything and authorize you to fill empty slots
+with your best intuition. though these are to be flexible. look at the drafts 1 is most likely a much
+closer match to the nasdaq's real luld policy, research that and verify."*
+
+**Decision.** For Phase 12's `config/phase_12.json` specifically, and for this instance only, the
+agent was authorized to (a) perform live web research (WebSearch/WebFetch — tools available to this
+session despite D14 describing the *research pipeline's* environment as offline) to verify the LULD
+band parameters against Nasdaq's actual policy, and (b) fill the remaining numeric `[Cooper]`
+thresholds with the values the config file itself had already proposed, explicitly marked flexible.
+
+**Why this does not weaken D14 or Escalation row 4.** D14 ("environment is offline") describes what
+Phase 12's own committed scripts (`prompts/phase_12.md`'s task list, not yet run past T0c as of this
+decision) can do at run time — no network fetch happens inside any committed script, now or after
+this decision. Escalation row 4 ("no band parameter used that does not cite a
+config key") is unaffected — every parameter still must and does cite a key in `luld_bands`. What
+changed is narrower and one-directional: **Cooper personally directed a specific sourcing task in
+chat**, which is different in kind from the agent silently inferring a value from memory or from the
+data (the thing row 4 and D14 actually exist to prevent). No future phase inherits this authorization
+automatically — an agent citing this decision as license to source its own exchange-mechanics data
+without a fresh, explicit instruction has misread it.
+
+**What the research found, in brief** (full account with per-fact confidence levels:
+`docs/data/luld_plan_reference.md`; the specific corrections: `config/phase_12.json`'s
+`_corrections_2026_09_13` block):
+
+1. **A real error was caught and fixed.** The 2026-08-31 draft had the Tier-2 closing-window
+   doubling boundary backwards — it read "priced BELOW $3.00 doubles, at or above does not."
+   Corroborated across Cboe's technical-spec FAQ and independent NYSE/CTA-Plan/Nasdaq-Trader
+   trader-notice sources (Amendment 18, effective 2020-02-24): the boundary is **"reference price at
+   or below $3.00 doubles; above $3.00 does not"** — the $3.00 case itself doubles, the opposite of
+   the draft. This is exactly the boundary the config's own note already flagged as load-bearing for
+   this universe (median event crosses $3.00 mid-event, per Phase 11 A2-6).
+2. **A population-relevant gap was found and closed.** This cohort's dev sample includes an event
+   (AACG, 2020-02-18) six calendar days before Amendment 18 took effect. Pre-Amendment-18, doubling
+   applied in *both* a 9:30–9:45am window (since eliminated for all securities) and the 3:35–4:00pm
+   window, for *all* tiers with no Tier-2 price exclusion. `config.luld_bands.pre_amendment_18_regime`
+   now carries this branch; no further band/tier/doubling changes were found between 2020-02-24 and
+   2024, so the rest of the cohort (`era_2022_2024`) needs no further branching.
+3. **Cooper's own hunch about the two draft sources was directionally right and is recorded as
+   answered, not just accepted:** draft source 1 (luldplan.com) reproduced the correct band table and
+   the correct previous-close-selects-the-bracket rule, but also reproduced the boundary-direction
+   error above; draft source 2's content could not be independently re-extracted as text this session
+   (PDF extraction failed), so the correction came from a third, converging set of sources rather than
+   from directly arbitrating between the two drafts. Recorded honestly rather than claiming source 1
+   was confirmed superior on every point.
+4. **Two secondary sub-details remain moderate-confidence, flagged rather than resolved**: the
+   reference price's exact recalculation cadence, and whether sub-$0.75 doubling is a distinct rule
+   or a minimum-price-variation-floor consequence. Neither is load-bearing at this universe's
+   observed price range (~$2.21–$4.52).
+
+**Provenance boundary.** `docs/data/luld_plan_reference.md` is a **secondary, compiled** reference —
+it cites and quotes primary-adjacent sources (FINRA, Cboe's FAQ, luldplan.com, and a search synthesis
+of NYSE/CTA-Plan/Nasdaq-Trader/SEC-DERA notices) but is not a transcription of the LULD Plan's own
+legal text or an SRO rule filing, which did not extract as readable text with the tools available
+this session. `config/phase_12.json`'s `_STATUS` field is worded accordingly
+("VERIFIED WITH NOTED EXCEPTIONS," not "VERIFIED").
+
+**Numbering note.** Recorded as D34, confirmed free by reading this file — register highest was D33,
+next free D34. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D35.**
+
+---
+
+## D35 — Condition/indicator code dictionary research authorized and attempted; the two codes that matter remain unresolved
+
+**Date:** 2026-09-14 · **Gate:** Cooper's explicit authorization via a structured decision request
+("Look up the code dictionary first," in response to a question laying out Phase 12's Stage A gate
+result and three options). Same shape as D34, scoped to this instance only.
+
+**What was authorized.** Route 2 of Phase 12 (condition/indicator codes) identifies zero candidate
+halts because no code dictionary exists on disk (`config.phase_12.json`'s `dictionary_path = NONE`,
+confirming Phase 11 A2-11). Cooper authorized live web research to find and verify a real
+dictionary, the same method as D34's LULD research, specifically to see whether it would let route
+2 contribute to the Stage A gate.
+
+**What happened — a good-faith attempt that did not resolve the load-bearing codes.** Full account:
+`docs/data/condition_indicator_code_reference.md`. Three codes were resolved with high confidence
+(trade condition 37 = Odd Lot Trade; 2 = Average Price Trade; 14 = Intermarket Sweep, already
+confirmed in this repo via D26, cross-referenced not re-derived). **None of the three bear on halt
+identification.** The two codes that actually matter — quote indicator codes 3 and 7, found
+exclusive to candidate-gap windows in T2a's census — **could not be resolved.** Roughly a dozen
+search/fetch attempts across the vendor's own documentation, an authenticated API endpoint (no key
+available), primary regulatory specifications (NYSE, Nasdaq/UTP, CTA — all PDF, none extracted as
+readable text in this session, the same failure mode D34 hit for a different set of documents), a
+GitHub API-wrapper repository, and a market-microstructure glossary site (403 Forbidden) all failed
+to surface the vendor's specific numeric-code mapping. The raw regulatory letter-coded quote
+conditions (`R`, `A`, `B`, `H`, `W`, `O`) were found, but the vendor (Polygon/Massive, per its own
+documentation) re-numbers these into its own proprietary numeric scheme, which was not independently
+recoverable without the authenticated endpoint.
+
+**Consequence.** `config/phase_12.json`'s `dictionary_path` **stays `NONE`.** Route 2 still
+identifies nothing; the Stage A gate result (`results/phase_12/artifacts/t3_gate.json` — 9
+corroborated events vs. a floor of 50; 90.3% single-route-only share vs. a 60% ceiling) is
+**unchanged** by this research. No task was re-run on the strength of a partial dictionary that
+doesn't cover the two decision-relevant codes — doing so would have been exactly the kind of
+"looks resolved but isn't" result this programme's culture exists to avoid.
+
+**Why this is recorded as a decision despite resolving nothing.** So a future session does not
+re-attempt the same dead ends without knowing they were already tried, and so "we looked and
+couldn't find it" is distinguished from "we didn't look" in the permanent record — the same reason
+`claude/scale_space_lessons.md`'s absence is tracked as an open defect rather than silently
+re-searched-for each time it's cited.
+
+**Numbering note.** Recorded as D35, confirmed free by reading this file — register highest was
+D34, next free D35. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D36.**
