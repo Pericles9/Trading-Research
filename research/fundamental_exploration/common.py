@@ -104,6 +104,31 @@ def load_detection_price() -> pd.DataFrame:
     return pd.read_parquet(path)[["event_id", "detection_price", "detection_price_decile"]]
 
 
+def add_corrected_shares_outstanding(df: pd.DataFrame) -> pd.DataFrame:
+    """shs_shares_outstanding is as-filed, on whatever basis was in effect when the SEC
+    filing itself was made (shs_asof_ns) -- if the nearest split strictly before t0
+    (spl_last_split_ratio/spl_last_split_ns, research/fundamentals_f1/t5_assemble.py:
+    165-169, ASOF, unbounded lookback) happened AFTER that filing's as-of date, the raw
+    count is on the pre-split basis and needs multiplying by spl_last_split_ratio (ratio
+    = new/old shares, ratio<1 = reverse per the same script's line 173) to read on the
+    same basis as t0. If the filing came after the split (or no split is on record),
+    the raw count is already correct as filed. Adds shs_shares_outstanding_corrected;
+    never overwrites the raw column. Per the brief's own caveat (SS1): every task using
+    the share count carries both columns, or states the cohort has no reverse split."""
+    df = df.copy()
+    needs_correction = (
+        df["spl_last_split_ns"].notna()
+        & df["shs_asof_ns"].notna()
+        & (df["shs_asof_ns"] < df["spl_last_split_ns"])
+    )
+    df["shs_shares_outstanding_corrected"] = df["shs_shares_outstanding"]
+    df.loc[needs_correction, "shs_shares_outstanding_corrected"] = (
+        df.loc[needs_correction, "shs_shares_outstanding"] * df.loc[needs_correction, "spl_last_split_ratio"]
+    )
+    df["shs_correction_applied"] = needs_correction
+    return df
+
+
 def write_json(path: str, obj: dict) -> None:
     p = pathlib.Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)

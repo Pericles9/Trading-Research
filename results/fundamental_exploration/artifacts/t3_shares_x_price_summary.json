@@ -1,0 +1,19 @@
+{
+  "task": "E1-T3 shares-outstanding x detection-price, two-way",
+  "config_hash": "042eac1aebb5",
+  "n_total": 20951,
+  "n_with_shs_data": 16099,
+  "n_no_shs_data": 4852,
+  "n_with_price_data": 20951,
+  "n_split_correction_applied": 1741,
+  "n_correction_applied_note": "events where the shares-outstanding filing predated the nearest pre-t0 split, so the raw count needed rescaling by spl_last_split_ratio",
+  "n_events_changing_decile_after_correction": 12222,
+  "raw_table_shape": [
+    11,
+    10
+  ],
+  "corrected_table_shape": [
+    11,
+    10
+  ]
+}
