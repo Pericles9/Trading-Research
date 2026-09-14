@@ -157,6 +157,37 @@ EXPECTED_ABSENT = {
         "prompts/fundamentals_f1.md (the stem used since pre-flight). Kept verbatim as the record of "
         "the amendment as given, with the correction noted inline rather than silently rewriting "
         "Cooper's text.",
+    # -- Build F1, post-build (2026-09-13, found running this gate on a checkout that never ran
+    #    F1 locally): real outputs the build DID produce, on the machine that ran it -- not
+    #    invented, not pre-flight-only. Two reasons they read as absent here specifically:
+    #    (a) data/fundamentals/ and data/raw/fundamentals/ sit under /data/, which .gitignore
+    #    excludes wholly (CLAUDE.md's Data layout note), so they were never going to be in any
+    #    checkout's tracked tree; (b) results/fundamentals_f1/artifacts/_t3_parts/ and
+    #    t0_spine.parquet are the build's own declared-gitignored regenerable artifacts
+    #    (results/fundamentals_f1/REPORT.md's Companion artifacts list). Both classes are
+    #    self-resolving on THIS checkout the same way the pre-flight entries above are -- run
+    #    the relevant F1 task locally and the staleness check below will flag it as no longer
+    #    absent, which is the signal to remove the entry, not a re-fetch of the raw vendor data.
+    "data/fundamentals/":
+        "docs/Research-Library-Map.md:31, docs/data/fundamentals_sources.md:4 -- under /data/, "
+        "gitignored wholly; exists on the machine that ran Build F1, not on a checkout that hasn't.",
+    "data/fundamentals/event_fundamentals.parquet":
+        "docs/Research-Library-Map.md:109 -- same as data/fundamentals/ above; the build's own "
+        "committed event table path (results/fundamentals_f1/REPORT.md's Companion artifacts).",
+    "data/raw/fundamentals/massive/2026-09-12/fetch_manifest.json":
+        "docs/data/fundamentals_sources.md:80, prompts/fundamentals_f1.md:316 -- raw fetch staging "
+        "under /data/, gitignored wholly; the dated subfolder is this build's actual fetch, not a "
+        "placeholder.",
+    "data/raw/fundamentals/sec/2026-09-12/submissions/":
+        "docs/data/fundamentals_sources.md:147 -- same as the massive/ fetch path above.",
+    "results/fundamentals_f1/artifacts/_t3_parts/":
+        "docs/Research-Library-Map.md:97 -- an intermediate/partitioned output of F1-T3, gitignored "
+        "as a regenerable artifact per results/fundamentals_f1/REPORT.md's own Companion artifacts "
+        "list, not committed on any checkout.",
+    "results/fundamentals_f1/artifacts/t0_spine.parquet":
+        "docs/Universe-Decisions.md:1590 (D33) -- gitignored regenerable artifact, same list as "
+        "above; D33's own text reports its tier counts from t0_assemble_summary.json (committed) "
+        "rather than depending on the parquet being present.",
 }
 
 # ---------------------------------------------------------------------------
