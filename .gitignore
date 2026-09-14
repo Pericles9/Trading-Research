@@ -87,3 +87,8 @@ results/iso_share_hold_length/charts/plotly.min.js
 results/iso_share_hold_length/artifacts/*.parquet
 results/reg_sho_201/charts/plotly.min.js
 results/reg_sho_201/artifacts/*.parquet
+
+# fundamental_exploration (E1): same rule as fundamentals_f1/reg_sho_201 above --
+# artifact parquets are regenerable from committed scripts + config, charts embed
+# plotly inline (no plotly.min.js sidecar to exclude).
+results/fundamental_exploration/artifacts/*.parquet

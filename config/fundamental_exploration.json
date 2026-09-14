@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "prompt": "prompts/fundamental_exploration_e1.md",
+    "branch": "explore/fundamental-e1",
+    "branched_from": "master",
+    "branched_from_note": "master already carries build/fundamentals-f1 (PR #5) -- event_fundamentals.parquet and its D27-D33 decisions are on master. phase/13 is NOT a dependency: it is unmerged, and its HARD STOP (look-ahead defect in its own outcome construction) touches no variable this exploration reads. See prompts/fundamental_exploration_e1.md SS8.",
+    "decisions_consumed": [],
+    "decisions_consumed_note": "Descriptive only; no Universe-Decisions.md entry. Consumes no decision number, same as D33's Build F1 clause (c)-style items."
+  },
+  "universe": {
+    "target_row_count": 20951,
+    "membership_rule": "inner join to momentum_events_canonical WHERE in_scope = TRUE",
+    "materialization_path": "results/phase_5/artifacts/quotes_bitmaps_all.parquet",
+    "materialization_note": "Reused verbatim from config/fundamentals_f1.json -- a live SELECT against momentum_events_canonical is pathologically slow regardless of projected columns (the view's staged construction joins filtered_trades/filtered_quotes for coverage flags unconditionally). E1-T0 checks set equality against this materialization, not a live view scan, exactly as research/fundamentals_f1/verify_event_fundamentals.py already does.",
+    "cohort_key": ["ticker", "event_date_canonical", "momentum_pct"]
+  },
+  "identity_key": {
+    "rule": "event_id = f\"{ticker}_{event_date_canonical}_{momentum_pct:.2f}\"",
+    "source": "research/phase_10/common.py:215, reused verbatim (D30/reuse-before-build)"
+  },
+  "event_fundamentals_path": "data/fundamentals/event_fundamentals.parquet",
+  "tape_side": {
+    "detection_price_source": "results/fundamentals_f1/artifacts/t6_context.parquet",
+    "detection_price_source_note": "Reused, not re-derived (reuse-before-build/D30) -- F1-T6 already built a D4-compliant, tick-derived detection_price and detection_price_decile for all 20,951 events. E1 does not re-read v2_r13_detection/a102_detection_anchors/first-trade fallback itself.",
+    "event_volume_and_prints_source": "computed fresh in E1-T0/T4 directly from filtered_trades via DuckDB SQL, joined through momentum_events_canonical WHERE in_scope, grouped per event -- never materialized to a dataframe (CLAUDE.md: DuckDB SQL over pandas)",
+    "event_volume_window": "full event_date_canonical regular session (09:30-16:00 America/New_York, XNYS calendar) -- a single declared window, not a horizon grid. No sub-session-boundary arithmetic of the kind that produced phase/13's HARD STOP.",
+    "session_bucketing": "each print classified pre-market (<09:30) / regular (09:30-16:00) / after-hours (>16:00) America/New_York, XNYS session calendar, same pinned convention as CLAUDE.md's Session calendar rule"
+  },
+  "deciles": {
+    "n": 10,
+    "method": "pandas.qcut(duplicates='drop')",
+    "labels": "0=lowest, 9=highest (or fewer bins if qcut drops duplicate edges -- reported, not hidden)"
+  },
+  "min_cell_n_display_floor": 20,
+  "min_cell_n_display_floor_note": "Below this, a table/heatmap cell is shown as 'n<20' rather than a computed statistic -- display-floor only, never a population filter (brief SS4: 'does not filter the population on coverage').",
+  "collinearity": {
+    "continuous_method": "spearman",
+    "categorical_association": "cramers_v"
+  },
+  "subsampling": {
+    "strip_overlay_cap": 5000,
+    "seed": 42,
+    "note": "Disclosed in-caption per any chart whose raw overlay is sub-sampled, per research-charts skill SS2."
+  },
+  "chart_theme": {
+    "source": "copied by value from research/phase_13/chart_common.py (most recent), matching phase_6/8/9/11 and fundamentals_f1's inline usage",
+    "palette": {"BLUE": "#2a78d6", "ORANGE": "#eb6834", "AQUA": "#1baf7a", "YELLOW": "#eda100", "GREEN": "#008300",
+                "VIOLET": "#4a3aa7", "RED": "#e34948", "PINK": "#e87ba4",
+                "INK": "#0b0b0b", "INK2": "#52514e", "GRID": "#e1e0d9", "SURFACE": "#fcfcfb"},
+    "deviation_from_brief": "brief SS3 said 'dark theme' -- no dark-theme chart exists anywhere in this repo's history, treated as a drafting slip. See prompts/fundamental_exploration_e1.md SS7."
+  }
+}
