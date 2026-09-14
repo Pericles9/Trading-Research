@@ -59,5 +59,16 @@
     "by": ["event_year", "detection_price_decile"],
     "min_cell_n_log_threshold": 200,
     "note": "Nested within year (coverage is collinear with the vendor calendar cliff, per F1-T6c) and within price decile (arm zero's control, per the design's SS5 nested-comparison instruction)."
+  },
+  "t4_tick_confirmation": {
+    "triggered": true,
+    "triggered_by": "Cooper, 2026-09-14: 'proceed with tick confg' -- confirmed via AskUserQuestion to mean T3b (share turnover), the recommended option (largest population-aggregate separation of the three splits, ~3x median MFE cost-multiple at 15min).",
+    "target_split": "t3b_share_turnover",
+    "source_table": "filtered_trades",
+    "source_table_note": "Raw ticks, not event_minute_bars_v2 -- the point of T4 is to confirm the bar-derived finding holds against the tick data the bars were themselves built from, not to re-derive it from the same aggregate. build_minute_bars_v2.py applies no trade-condition/correction filter beyond filtered_trades' own contents, so this is an apples-to-apples comparison, not a stricter/looser filter.",
+    "join_keys": ["ticker", "event_date (filtered_trades) = event_date_canonical (events)", "ROUND(momentum_pct, 2)"],
+    "time_filter": "sip_timestamp BETWEEN t0_ns AND t0_ns + horizon_minutes * 60 * 1e9, filtered on the raw BIGINT column directly (a converted-timestamp filter defeats DuckDB's row-group pruning, confirmed elsewhere in this repo)",
+    "horizons_minutes": [5, 15, 30, 60],
+    "population": "the 11,971 T3b-covered events (defined turnover value) -- same population t3_partitions.py's T3b split already uses, no further sampling (bulk full-table join benchmarked elsewhere in this repo at ~25 min for a heavier per-minute aggregation over 15,763 events; this single-window MAX/MIN pass is lighter)."
   }
 }

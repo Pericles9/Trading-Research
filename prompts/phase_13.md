@@ -119,10 +119,32 @@ year and price decile.
         is flagged, not reported at equal weight.
   - [ ] T3e — Commit.
 
-- [ ] **T4 — Tick-level confirmation** *(conditional, Cooper-gated)*. Not auto-triggered by
+- [x] **T4 — Tick-level confirmation** *(conditional, Cooper-gated)*. Not auto-triggered by
       anything — no kill condition exists to trigger it. Runs only if Cooper explicitly names a
       specific cross-cut worth confirming after reviewing T3's charts. Not part of this phase's
       own completion.
+
+      **Triggered 2026-09-14.** Cooper: "proceed with tick confg" — the target was not named in
+      that message, so a follow-up `AskUserQuestion` was posted rather than guessed; Cooper chose
+      the recommended option: **T3b, share turnover** (the largest population-aggregate separation
+      of the three splits, ~3x median MFE cost-multiple at 15 min). Confirms T3b's minute-bar-derived
+      MFE/MAE against `filtered_trades` (raw ticks) directly, over the same population and horizons
+      T3b already used — not a new claim, a check on whether the existing one survives contact with
+      the tick data the bars were built from. Same no-kill-condition, no-pass/fail rule as every
+      other task in this phase (escalation rows 2/3 still apply).
+      - [ ] T4a — Per-event tick-level MFE/MAE from `filtered_trades`, all 4 horizons, one bulk
+            join (register the events frame, `MAX(price)`/`MIN(price)` `GROUP BY event_id`,
+            filtered on the raw `sip_timestamp` BIGINT column — not a converted timestamp, which
+            defeats row-group pruning elsewhere in this repo). Tested on a small subset before the
+            full ~11,971-event population per the standing two-tier-execution discipline.
+      - [ ] T4b — Per-event tick-vs-bar agreement: share of events where tick MAX/MIN differs from
+            `event_minute_bars_v2`'s bar high/low in the same window, and by how much. A real
+            disagreement is a finding about the bar-build pipeline, not about T3b.
+      - [ ] T4c — Re-run T3b's above/below-median-turnover distribution comparison using
+            tick-derived MFE/MAE cost-multiple instead of bar-derived. Report whether the same
+            qualitative separation holds — as a distribution comparison, not a verdict.
+      - [ ] T4d — Chart `07_t4_tick_vs_bar_confirmation.html` (added to the Chart Contract, §7).
+      - [ ] T4e — Commit.
 
 - [ ] **T5 — Charts, Verification Block, digest, report.** Every chart in the Chart Contract,
       `research/phase_13/verify_partition_test.py` per §11, `results/phase_13/digest.json` per
@@ -147,6 +169,7 @@ are recorded in `digest.json`'s `surprises`. Table order is priority order.
 | 7 | A cross-cut cell below `config.cross_cuts.min_cell_n_log_threshold` | any | LOG | Continue; flagged in the cell itself, not hidden by coarsening the cut |
 | 8 | A spine numeric column (D4) reaches any computation path | any | HARD STOP | |
 | 9 | Write outside `results/phase_13/`, `prompts/`, `config/`, `research/phase_13/` | any | HARD STOP | |
+| 10 | Tick-derived MFE/MAE disagrees with `event_minute_bars_v2`'s bar-derived value for the same event/window | > 5% of covered events, or any single event by > 2x | LOG | Continue; record in `surprises` — this is a finding about the bar-build pipeline (research/phase_6b/build_minute_bars_v2.py), not about T3b, and does not block T4's own reporting |
 
 If no escalation criteria apply to a task, that is stated explicitly in that task's commit message.
 
@@ -161,10 +184,12 @@ If no escalation criteria apply to a task, that is stated explicitly in that tas
 | `research/phase_13/t1_build_p0.py`, `results/phase_13/artifacts/p0_coverage_summary.json` | T1 | [x] |
 | `research/phase_13/t2_arm_zero.py`, `results/phase_13/artifacts/t2_arm_zero_summary.json` | T2 | [x] |
 | `research/phase_13/t3_partitions.py`, `results/phase_13/artifacts/t3_partition_summary.json` | T3 | [x] |
-| `research/phase_13/verify_partition_test.py` | Verification Block, §11 | [ ] |
-| `results/phase_13/charts/01-06*.html` | Per Chart Contract | [ ] |
-| `results/phase_13/{digest.json, REPORT.md}` | Per §12/§7 | [ ] |
-| `results/reports/phase_13_report.md` | Cross-phase copy | [ ] |
+| `research/phase_13/verify_partition_test.py` | Verification Block, §11 | [x] |
+| `research/phase_13/{chart_common,chart_01..chart_06}.py`, `results/phase_13/charts/01-06*.{html,png}` | Per Chart Contract | [x] |
+| `research/phase_13/t4_tick_confirm.py`, `results/phase_13/artifacts/t4_tick_confirmation.json` | T4, Cooper-triggered 2026-09-14 (T3b) | [ ] |
+| `research/phase_13/chart_07.py`, `results/phase_13/charts/07_t4_tick_vs_bar_confirmation.{html,png}` | T4d, added to Chart Contract | [ ] |
+| `results/phase_13/{digest.json, REPORT.md}` | Per §12/§7 | [x] |
+| `results/reports/phase_13_report.md` | Cross-phase copy | [x] |
 | `docs/Research-Library-Map.md` | Folder-level addendum, updated every task boundary | [x] |
 
 `results/phase_13/artifacts/p0_outcome.parquet` and `results/phase_13/artifacts/*.parquet`
@@ -182,9 +207,10 @@ On completion, post:
 3. T2's price-decile distribution table
 4. T3's cross-cut tables, all three splits, both tails, every horizon — **no split ranked, no
    split declared a finding**
-5. Escalation check table, all 9 rows, tier and observed value
-6. Output file table with final status
-7. Verification Block result
+5. T4's tick-vs-bar agreement table and the tick-derived T3b comparison, if T4 was triggered
+6. Escalation check table, all 10 rows, tier and observed value
+7. Output file table with final status
+8. Verification Block result
 
 On HARD STOP escalation, post the criterion, the observed value, the state up to that point, and
 no recommendation.
@@ -203,6 +229,7 @@ Every posted table carries n. Every claim cites its chart.
 | 04 | `charts/04_shs_turnover_split.html` | Does share turnover (split-adjusted) associate with the outcome, in either direction? | Same layout as 03 | n per cell, sparse cells hatched | A reference line or shading implying a threshold — this split has no pre-registered direction and no kill condition |
 | 05 | `charts/05_spl_reverse_split.html` | Does a reverse split in the trailing 365 days associate with the outcome, in either direction? | Same layout as 03 | n per cell, sparse cells hatched | Same failure mode as 04 |
 | 06 | `charts/06_all_splits_summary.html` | How do all three splits compare to arm zero, side by side? | All three splits + arm zero on one page, same y-axis scale, **no reference line, no pass/fail shading, no ranking** | n per split/side | Any visual cue (color, ordering, annotation) that implies one split "won" — this chart exists to let Cooper compare, not to declare a comparison's winner |
+| 07 | `charts/07_t4_tick_vs_bar_confirmation.html` | Added at T4 (Cooper-triggered 2026-09-14). Does T3b's bar-derived finding hold against raw ticks? | Two panels: (a) tick-vs-bar MFE/MAE agreement, one point per event; (b) T3b's above/below-median-turnover distribution comparison, tick-derived vs. bar-derived side by side | n per panel | Tick and bar values disagree substantially with no explanation — a pipeline discrepancy, not a finding about T3b itself |
 
 ---
 
