@@ -1,0 +1,143 @@
+{
+  "task": "T3",
+  "phase": "impact_by_participation",
+  "cell": {
+    "latency_minutes": 1,
+    "horizon_minutes": 60
+  },
+  "cell_note": "effective spread is not itself horizon-conditioned; restricted to T=0 prints to match T1's cell being on the event day.",
+  "effective_spread_definition": "2*|price-mid|/mid (T8's eff_frac, direction-agnostic; Lee & Ready sign carried but not required for this magnitude measure)",
+  "build_cache_wall_seconds": 7.7,
+  "n_prints_with_contemporaneous_mid": 3755901,
+  "n_joined_raw_before_dedup": 3815121,
+  "n_joined_to_a_participation_decile": 3733926,
+  "join_rate": 0.9941492068081667,
+  "dedup_note": "joined_raw exceeded n_prints_with_mid by 59,220 rows (1.58%) before dedup -- a small residual tie population on (ticker, event_date, minute_index, sip_timestamp, size), consistent with Phase 11's T4c tie audit. Deduplicated on the print's own (price, size) added; sequence_number would resolve these fully but is not carried through _t2.",
+  "by_decile": [
+    {
+      "decile": 1,
+      "n": 414579,
+      "eff_bp_p25": 11.095305832149874,
+      "eff_bp_p50": 25.355756791721223,
+      "eff_bp_p75": 48.50444624090438,
+      "eff_cents_p25": 0.9000000000000341,
+      "eff_cents_p50": 1.1999999999998678,
+      "eff_cents_p75": 3.9999999999999147,
+      "participation_rate_min": 0.0,
+      "participation_rate_max": 2.695781102574471e-05
+    },
+    {
+      "decile": 2,
+      "n": 412605,
+      "eff_bp_p25": 10.946907498629459,
+      "eff_bp_p50": 25.839793281653197,
+      "eff_bp_p75": 47.02194357366671,
+      "eff_cents_p25": 0.999999999999801,
+      "eff_cents_p50": 1.559999999999917,
+      "eff_cents_p75": 3.9999999999999147,
+      "participation_rate_min": 2.6965807356272247e-05,
+      "participation_rate_max": 8.79510112867133e-05
+    },
+    {
+      "decile": 3,
+      "n": 426078,
+      "eff_bp_p25": 12.465543864003896,
+      "eff_bp_p50": 26.28120893561048,
+      "eff_bp_p75": 50.76142131979587,
+      "eff_cents_p25": 0.999999999999801,
+      "eff_cents_p50": 1.0000000000001563,
+      "eff_cents_p75": 3.9999999999999147,
+      "participation_rate_min": 8.795693628399536e-05,
+      "participation_rate_max": 0.00018849746575629373
+    },
+    {
+      "decile": 4,
+      "n": 429618,
+      "eff_bp_p25": 12.187690432664915,
+      "eff_bp_p50": 26.254826254824508,
+      "eff_bp_p75": 50.8905852417292,
+      "eff_cents_p25": 0.999999999999801,
+      "eff_cents_p50": 1.0000000000001563,
+      "eff_cents_p75": 3.9800000000003166,
+      "participation_rate_min": 0.00018850496710588323,
+      "participation_rate_max": 0.00035348526653771
+    },
+    {
+      "decile": 5,
+      "n": 420402,
+      "eff_bp_p25": 12.89907702030794,
+      "eff_bp_p50": 26.946042145536637,
+      "eff_bp_p75": 52.49343832021119,
+      "eff_cents_p25": 0.9999999999999787,
+      "eff_cents_p50": 1.0000000000001563,
+      "eff_cents_p75": 3.8999999999997925,
+      "participation_rate_min": 0.0003534883720930233,
+      "participation_rate_max": 0.0006471389645776567
+    },
+    {
+      "decile": 6,
+      "n": 411869,
+      "eff_bp_p25": 13.192612137202884,
+      "eff_bp_p50": 27.8551532033445,
+      "eff_bp_p75": 54.79452054794646,
+      "eff_cents_p25": 0.9999999999999787,
+      "eff_cents_p50": 1.0000000000001563,
+      "eff_cents_p75": 3.9999999999995595,
+      "participation_rate_min": 0.0006471467581677078,
+      "participation_rate_max": 0.0011943150603129105
+    },
+    {
+      "decile": 7,
+      "n": 392568,
+      "eff_bp_p25": 13.210039630118608,
+      "eff_bp_p50": 28.495435891786286,
+      "eff_bp_p75": 55.28455284552717,
+      "eff_cents_p25": 0.999999999999801,
+      "eff_cents_p50": 1.0000000000001563,
+      "eff_cents_p75": 3.980000000000139,
+      "participation_rate_min": 0.00119432345089223,
+      "participation_rate_max": 0.00240678713973405
+    },
+    {
+      "decile": 8,
+      "n": 342887,
+      "eff_bp_p25": 11.235567809754327,
+      "eff_bp_p50": 27.35978112175044,
+      "eff_bp_p75": 54.79452054794622,
+      "eff_cents_p25": 0.999999999999801,
+      "eff_cents_p50": 1.0000000000001563,
+      "eff_cents_p75": 3.9999999999999147,
+      "participation_rate_min": 0.0024068086587116324,
+      "participation_rate_max": 0.005421612906267384
+    },
+    {
+      "decile": 9,
+      "n": 280967,
+      "eff_bp_p25": 10.31991744066209,
+      "eff_bp_p50": 26.917900403770325,
+      "eff_bp_p75": 56.33802816901539,
+      "eff_cents_p25": 0.9999999999990905,
+      "eff_cents_p50": 1.0000000000001563,
+      "eff_cents_p75": 3.9999999999999147,
+      "participation_rate_min": 0.005421660618503043,
+      "participation_rate_max": 0.01621378171445729
+    },
+    {
+      "decile": 10,
+      "n": 202353,
+      "eff_bp_p25": 14.255167498217801,
+      "eff_bp_p50": 35.72815533980534,
+      "eff_bp_p75": 75.18796992481376,
+      "eff_cents_p25": 0.9599999999999831,
+      "eff_cents_p50": 1.0000000000005116,
+      "eff_cents_p75": 4.000000000000092,
+      "participation_rate_min": 0.016214288030612575,
+      "participation_rate_max": 1.0
+    }
+  ],
+  "monotonic_decreasing_in_participation": false,
+  "monotonic_increasing_in_participation": false,
+  "baseline_round_trip_bp_for_reference": 70.98,
+  "source": "research/impact_by_participation/t3_cost_by_decile.py:main",
+  "reproduce": ".venv/Scripts/python.exe -m research.impact_by_participation.t3_cost_by_decile"
+}

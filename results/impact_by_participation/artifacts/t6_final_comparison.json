@@ -1,0 +1,97 @@
+{
+  "task": "T6 (final comparison)",
+  "phase": "impact_by_participation",
+  "required_round_trip_bp_to_close_closest_cell_gap": 11.00619366256028,
+  "baseline_round_trip_bp": 70.98,
+  "required_as_pct_of_baseline": 0.1550604911603308,
+  "by_decile": [
+    {
+      "decile": 1,
+      "n": 414579,
+      "measured_round_trip_equivalent_bp": 50.711513583442446,
+      "required_round_trip_bp": 11.00619366256028,
+      "multiple_of_required": 4.6075432741064315,
+      "clears_required_threshold": false
+    },
+    {
+      "decile": 2,
+      "n": 412605,
+      "measured_round_trip_equivalent_bp": 51.679586563306394,
+      "required_round_trip_bp": 11.00619366256028,
+      "multiple_of_required": 4.695500383489036,
+      "clears_required_threshold": false
+    },
+    {
+      "decile": 3,
+      "n": 426078,
+      "measured_round_trip_equivalent_bp": 52.56241787122096,
+      "required_round_trip_bp": 11.00619366256028,
+      "multiple_of_required": 4.775712610802252,
+      "clears_required_threshold": false
+    },
+    {
+      "decile": 4,
+      "n": 429618,
+      "measured_round_trip_equivalent_bp": 52.509652509649015,
+      "required_round_trip_bp": 11.00619366256028,
+      "multiple_of_required": 4.7709184591464044,
+      "clears_required_threshold": false
+    },
+    {
+      "decile": 5,
+      "n": 420402,
+      "measured_round_trip_equivalent_bp": 53.892084291073274,
+      "required_round_trip_bp": 11.00619366256028,
+      "multiple_of_required": 4.896523352519022,
+      "clears_required_threshold": false
+    },
+    {
+      "decile": 6,
+      "n": 411869,
+      "measured_round_trip_equivalent_bp": 55.710306406689,
+      "required_round_trip_bp": 11.00619366256028,
+      "multiple_of_required": 5.061723254625121,
+      "clears_required_threshold": false
+    },
+    {
+      "decile": 7,
+      "n": 392568,
+      "measured_round_trip_equivalent_bp": 56.99087178357257,
+      "required_round_trip_bp": 11.00619366256028,
+      "multiple_of_required": 5.17807277709806,
+      "clears_required_threshold": false
+    },
+    {
+      "decile": 8,
+      "n": 342887,
+      "measured_round_trip_equivalent_bp": 54.71956224350088,
+      "required_round_trip_bp": 11.00619366256028,
+      "multiple_of_required": 4.9717062884001555,
+      "clears_required_threshold": false
+    },
+    {
+      "decile": 9,
+      "n": 280967,
+      "measured_round_trip_equivalent_bp": 53.83580080754065,
+      "required_round_trip_bp": 11.00619366256028,
+      "multiple_of_required": 4.891409551575824,
+      "clears_required_threshold": false
+    },
+    {
+      "decile": 10,
+      "n": 202353,
+      "measured_round_trip_equivalent_bp": 71.45631067961068,
+      "required_round_trip_bp": 11.00619366256028,
+      "multiple_of_required": 6.492372646747376,
+      "clears_required_threshold": false
+    }
+  ],
+  "n_deciles_clearing_required_threshold": 0,
+  "n_deciles_total": 10,
+  "cheapest_decile_measured_bp": 50.711513583442446,
+  "cheapest_decile_multiple_of_required": 4.6075432741064315,
+  "finding": "0 of 10 participation deciles reach the required ~11.0 bp round-trip cost. Even the cheapest measured decile (50.7 bp round-trip-equivalent) is 4.6x the threshold that would close the closest cell's gap. The required cost is a large reduction from baseline (15.5% of 70.98 bp) -- far beyond what participation-rate variation alone was measured to achieve on this dev cohort.",
+  "no_recommendation": "Per the Evidence Standard, no interpretation of what this means for D24/D25/candidate (b) follows. Stated as data.",
+  "source": "research/impact_by_participation/t6_final_comparison.py:main",
+  "reproduce": ".venv/Scripts/python.exe -m research.impact_by_participation.t6_final_comparison"
+}

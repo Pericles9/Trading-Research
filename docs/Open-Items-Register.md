@@ -689,6 +689,19 @@ covariate check inside whichever of (a) or (b) runs first. Cooper decision on se
 recommended first since a null result there converts "costs bind, assumed" into "costs bind,
 measured" without risking a real effect that fails to clear an unmeasured cost floor.
 
+**Update, 2026-09-12 — candidate (a) ran and returned null, with an exact threshold rather than a
+bound.** `prompts/impact_by_participation.md`, branch `impact-by-participation`. The closest
+barrier cell (Phase 10e Arm 1, latency 1/horizon 60/profit_k=3/stop_m=2) needs round-trip cost at
+or below **≈11.0 bp (15.5% of the 70.98 bp baseline)** to clear `p_breakeven` — established
+exactly, by reclassifying touch order minute-by-minute against `event_minute_bars_v2` (already
+materialized, full 15,337-event universe, not a new tick pass), reproducing the closest cell's own
+measured `p_clear_optimistic` (0.3885) exactly as a consistency check. Realised effective spread
+by participation decile (dev tier, 50 events, T=0 only) ranges **50.7–71.5 bp round-trip-
+equivalent — the cheapest decile is 4.6× the required threshold, and 0 of 10 deciles clear it.**
+Full record: `results/impact_by_participation/REPORT.md`. **(a) is null.** Per this entry's own
+"if both (a) and (b)" condition, the wrong-partition question does not yet become live — (b) (ISO
+share, hold-length) has not been run.
+
 ### OPEN — `persistence_octaves` feature-count instability needs fixing as a class (2026-09-10)
 
 **Status: open, unscheduled.** Logged from `claude/scale_field_arc_closeout.md` §5 and

@@ -309,6 +309,20 @@ positive, null-parameter sweep, **blindness**), the retraction-sweep requirement
 robustness claims, envelope invariance as a selection criterion, and the identity-collapse rule plus the
 condition-code 14 mapping as data-layer facts.
 
+**Insert, 2026-09-12 — the price/size channel's first candidate returns null, exactly.**
+**Insert-only.** `claude/what_would_change_a_decision.md`'s candidate (a), impact by participation,
+ran (`prompts/impact_by_participation.md`, branch `impact-by-participation`,
+`results/impact_by_participation/REPORT.md`) and is closed, negative: the closest barrier cell
+(Phase 10e Arm 1) needs round-trip cost at or below **≈11.0 bp (15.5% of the 70.98 bp baseline)**
+to clear `p_breakeven`, established exactly against `event_minute_bars_v2`, not a bound. Realised
+cost by participation decile (dev tier) ranges 50.7–71.5 bp round-trip-equivalent — **the cheapest
+decile is 4.6× the required threshold; 0 of 10 clear it.** This does not touch Rows 18/19
+directly (their own specs are unchanged and unrun) but it is the first measured result in the
+price/size channel D26 left open, and it narrows what those rows can assume about the cost stack
+going in: the 70.98 bp figure does not soften materially under participation-rate variation on
+this cohort. Candidate (b) (ISO share, hold-length) is unrun; `what_would_change_a_decision.md`
+§4's "run nothing" criterion needs both candidates, not one, and is not invoked here.
+
 **Numbering, from 2026-08-03 onward.** Rows 8 and up are prompt filenames — row *n* is `prompts/phase_{n}.md`. Rows 0–7 are the original plan slots and are left untouched; they never tracked filenames, because the executed program inserted 0a/0b/0c/1b/1c/2b/5a and re-scoped several phases along the way. The crosswalk for the two plan rows that did get executed under different numbers: the old row 8 (*Measurement 1 — concentration*) ran as **Phase 6**, and the old row 12 (*Event-study grid — T+1*) ran as **Phase 8** in the re-scoped, tradeable-anchor form recorded above.
 
 Ordering note *(superseded — retained for the record)*: **12 comes before the detector work**, deliberately. T+1 is the cleanest surface and the fastest read on whether there's anything here. If the markout grid is flat, you've saved six weeks of detector development.
