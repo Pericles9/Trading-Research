@@ -1,0 +1,23 @@
+{
+  "task": "Reg SHO 201 -- per-event trigger check, dev tier",
+  "rule_source": "docs/data/reg_sho_201_reference.md",
+  "decline_threshold": 0.1,
+  "prev_close_construction": "last T-1 RTH minute bar's last_price from event_minute_bars_v2 -- tick-derived, D4-safe, same as research/phase_12/t2b_band_arithmetic.py",
+  "n_events": 56,
+  "n_ok": 55,
+  "status_counts": {
+    "ok": 55,
+    "no_prev_close": 1
+  },
+  "n_triggered_t0": 3,
+  "share_triggered_t0": 0.05454545454545454,
+  "max_intraday_decline_summary": {
+    "median": -0.018018018018017834,
+    "p75": 0.009175737634428699,
+    "p90": 0.04515665140176483,
+    "max": 0.2519019442096366
+  },
+  "scope_note": "Measurement only. Reports whether/when Rule 201 would have triggered on T=0 for each event. Does not model the restriction mechanics, does not evaluate T+1 coverage, and does not imply, authorize, or measure any short-side execution -- D5 stands unchanged.",
+  "source": "research/reg_sho_201/t1_trigger_check.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/reg_sho_201/t1_trigger_check.py"
+}
