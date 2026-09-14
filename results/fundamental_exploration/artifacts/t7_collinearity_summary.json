@@ -1,0 +1,48 @@
+{
+  "task": "E1-T7 collinearity map",
+  "config_hash": "042eac1aebb5",
+  "variables": [
+    "shs_shares_outstanding_corrected",
+    "shs_lag_ns",
+    "flg_lag_ns",
+    "flg_n_filings_24h",
+    "flg_n_filings_72h",
+    "flg_dilution_form_before_t0_num",
+    "spl_n_splits_365d",
+    "spl_reverse_split_365d_num",
+    "spl_last_split_ratio",
+    "si_shares_short",
+    "si_lag_ns",
+    "detection_price"
+  ],
+  "n_total": 20951,
+  "gap_note": "categorical quality enums (flg_quality, shs_quality, si_quality, spl_quality) are not in this numeric Spearman matrix -- a categorical-association measure (config.collinearity.categorical_association = cramers_v) was not run here.",
+  "spearman_vs_detection_price": {
+    "flg_n_filings_24h": 0.15446561368622636,
+    "flg_n_filings_72h": 0.14738661022350752,
+    "flg_lag_ns": -0.1442634837258461,
+    "si_shares_short": 0.10952961314556175,
+    "shs_lag_ns": -0.09670417678551155,
+    "spl_last_split_ratio": 0.07582922480806155,
+    "si_lag_ns": 0.019201561274663628,
+    "spl_reverse_split_365d_num": -0.018290243896719564,
+    "spl_n_splits_365d": -0.010192822152546207,
+    "shs_shares_outstanding_corrected": 0.006610010193862355,
+    "flg_dilution_form_before_t0_num": 0.004933343661014241
+  },
+  "n_vs_detection_price": {
+    "flg_n_filings_24h": 20951,
+    "flg_n_filings_72h": 20951,
+    "flg_lag_ns": 20683,
+    "si_shares_short": 20377,
+    "shs_lag_ns": 16099,
+    "spl_last_split_ratio": 8732,
+    "si_lag_ns": 20377,
+    "spl_reverse_split_365d_num": 20951,
+    "spl_n_splits_365d": 20951,
+    "shs_shares_outstanding_corrected": 16099,
+    "flg_dilution_form_before_t0_num": 20951
+  },
+  "thin_pairs_below_display_floor": [],
+  "min_cell_n_display_floor": 20
+}
