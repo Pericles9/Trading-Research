@@ -1,0 +1,25 @@
+{
+  "n_total_events": 20951,
+  "n_missing_detection_price": 0,
+  "n_missing_round_trip_cost": 6087,
+  "coverage_by_horizon": {
+    "5": {
+      "n_covered": 15763,
+      "share": 0.7523745883251396
+    },
+    "15": {
+      "n_covered": 15763,
+      "share": 0.7523745883251396
+    },
+    "30": {
+      "n_covered": 15763,
+      "share": 0.7523745883251396
+    },
+    "60": {
+      "n_covered": 15763,
+      "share": 0.7523745883251396
+    }
+  },
+  "cost_minute_offset_median": 0.0,
+  "config_hash": "b15ff5a2e0d0"
+}

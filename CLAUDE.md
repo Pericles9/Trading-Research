@@ -203,8 +203,12 @@
     circuit breaker) researched and measured as an explicitly authorized first step -- 3 of
     55 dev events trigger a 10%+ intraday decline from prior close; D5's long-only constraint
     is unchanged and this closes nothing about the short side** (2026-09-14,
-    docs/data/reg_sho_201_reference.md).
-  - **Next free number: D37.**
+    docs/data/reg_sho_201_reference.md) · **D37 Phase 13 closes as read, uncorrected -- T4's
+    tick-level confirmation found a real, one-directional look-ahead bias in T1's window
+    selection (median excess 19.7% of horizon at 5min, shrinking to 1.6% at 60min), affecting
+    every headline number in T1/T2/T3; Cooper declined a rebuild, the bias stands as a
+    documented caveat on the existing report** (2026-09-14, results/phase_13/REPORT.md §10).
+  - **Next free number: D38.**
 - Repo map: docs/Research-Library-Map.md. Data layout: docs/data/Schema.md (tracked copy of
   record; `data/Schema.md` is a local, untracked mirror — `.gitignore` excludes `/data/` wholly,
   so edit the tracked copy and mirror the change there). Corrected 2026-09-10 — `data/Schema.md`

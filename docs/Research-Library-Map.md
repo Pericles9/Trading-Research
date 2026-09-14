@@ -11,6 +11,95 @@ This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `resea
 
 ---
 
+## Phase 13 addendum — fundamental partition test (folder-level; branch `phase/13`, 2026-09-13)
+
+Cut from `master` once Build F1's PR #5 merged. Executes D32 Amendment A1's gating sentence
+(pre-`t0` partitions vs. the round-trip cost stack), approved by Cooper 2026-09-13 with two
+amendments: T3b/T3c run undirected, and no split is evaluated against a kill-condition margin
+("exploratory, no kill condition") — see `prompts/phase_13.md`'s Approval Gate section.
+
+- `prompts/phase_13.md` — the plan, translated from the architect's signed-off proposal into
+  `Agent_Prompt_Standard.md` v1.4 format, reconciled against actual repo state before posting.
+- `config/phase_13.json` — entry reference (`t0`), horizon grid (5/15/30/60 min), per-event cost-unit
+  source (`event_quote_metrics_v1`, not Phase 11's population aggregate), split definitions.
+- `research/phase_13/common.py` — shared config/DuckDB-connection plumbing.
+  `FUNDAMENTALS_ROOT` routed through `resolve_data_root()` from the start (the class of bug Build F1
+  hit and fixed 2026-09-12/13 — caught here before it could repeat, not after).
+- `research/phase_13/t1_build_p0.py` — T1, the population-scale outcome. Per-event MFE/MAE from `t0`
+  at 4 horizons, in units of that event's own round-trip cost (not a single global constant).
+  **`minute_index` convention checked directly, not assumed:** both `event_minute_bars_v2` and
+  `event_quote_metrics_v1` key it as minutes-since-04:00-ET, continuous across premarket/rth/post —
+  confirmed against a known event before being relied on. **Bulk single-join design, not per-event
+  point queries** — a single-ticker filtered query against `event_minute_bars_v2` (46M rows) was
+  observed to be pathologically slow during reconciliation; the bulk join runs in well under the
+  20-minute sleep window used to wait for it. Run and verified: round-trip cost located for
+  15,252/20,951 events (72.8%); minute-bar coverage 15,763/20,951 (75.2%) — **this number exactly
+  matches Build F1's own `a102_detection_anchors.parquet` row count**, meaning `event_minute_bars_v2`
+  covers a specific historical Phase 8 cohort, not the full Build-F1 universe. Reported plainly
+  (escalation row 5, LOG tier, fires at 75.2% < 80%), not silently absorbed.
+  `results/phase_13/artifacts/p0_outcome.parquet` (gitignored, regenerable),
+  `p0_coverage_summary.json` (tracked).
+
+- `research/phase_13/t2_arm_zero.py` — T2, the price-decile control arm. No fundamental data at all —
+  the competing explanation T3 must be read against (cheap stocks file more, dilute more, reverse-split
+  more, and cost more to trade, so a fundamental split can be a price split in different clothes).
+  `results/phase_13/artifacts/t2_arm_zero_summary.json` (tracked). Run: decile 0 (cheapest) shows the
+  highest median MFE cost-multiple at every horizon (1.43x -> 2.66x, 5min -> 60min); no clean
+  monotonic gradient in the middle deciles.
+- `research/phase_13/t3_partitions.py` — T3, the three fundamental splits, cross-cut by event year and
+  by detection-price decile exactly as `config.cross_cuts` specifies (same decile T2 uses, not a
+  coarser bucket). A cell below `config.cross_cuts.min_cell_n_log_threshold` (200) is flagged rather
+  than reported at equal weight — 344-472 of ~560 cells per split fall below that floor, a direct
+  consequence of the year x decile x split-value granularity, reported plainly as a LOG-tier surprise,
+  not hidden by coarsening the cut. **Quality-gating fix, caught before writing any split, not after:** `flg_dilution_form_before_t0` and `spl_reverse_split_365d`
+  both default to `False` when their quality column reads `unavailable` (confirmed by direct
+  crosstab — 248/20,951 for `flg_`, 12,219/20,951 — 58% — for `spl_`), so splitting on the raw
+  boolean would fold "we don't know" into the "no dilution"/"no reverse split" side. Both splits are
+  gated to quality-known rows only (`observed`, plus `no_filings_in_window` for `flg_`, a genuine
+  negative not a missing value); excluded events are counted and reported, never silently dropped.
+  T3b (share-turnover proxy) is a new construction: event-day tick volume
+  (`event_minute_bars_v2`, `session_offset=0`) over shares outstanding, split-adjusted by
+  `spl_last_split_ratio` when `spl_last_split_ns` falls strictly between `shs_asof_ns` and `t0_ns`
+  (1,741/20,951 events needed the adjustment); split at the population median (11,971 events have a
+  defined turnover value, 8,980 don't and are excluded rather than mis-binned). T3a keeps the
+  pre-registered direction from the signed-off proposal; T3b/T3c are undirected, both tails reported,
+  no pass/fail language anywhere in the script or its output.
+  `results/phase_13/artifacts/t3_partition_summary.json` (tracked).
+
+- `research/phase_13/{chart_common,chart_01..chart_06}.py`, `results/phase_13/charts/01-06*.{html,png}`
+  — the Chart Contract, all 6 charts, kaleido-verified. Chart 01 surfaced a hard temporal cutoff in
+  `event_minute_bars_v2`/`event_quote_metrics_v1`: 2020-2024 sit at exactly 100% minute-bar coverage,
+  2025 at exactly 0% (5,188/5,188 events, zero bars) -- not a scattered gap, and exactly what makes
+  Build F1's `a102_detection_anchors.parquet` row count (15,763) equal the 2020-2024 sum. Charts 03-05
+  share a `small_multiples_split_chart()` builder (year x price-decile grid, horizon/metric buttons);
+  chart 06 is the population-aggregate one-look comparison with no reference line, no ranking.
+- `research/phase_13/verify_partition_test.py` — 7 checks, all pass: P0 coverage recomputed directly;
+  every split's cross-cut cell n's conserve against an independent recount; no spine numeric column
+  (D4) or fundamental-as-outcome-input (D32/A1); no chart or artifact declares a pass/fail verdict
+  (a negation- and check-context-aware text scan, refined twice after it correctly caught real false
+  hits on its own first runs against actual chart/report text); every artifact's `config_hash` matches;
+  `kill_condition.enabled` confirmed `false`.
+- `results/phase_13/{digest.json, REPORT.md}` + `results/reports/phase_13_report.md` — phase complete
+  per the Digest Contract, `status: "complete"`, gate mode `sync-required`. T4 (tick-level confirmation)
+  stays conditional and Cooper-gated, not required for this phase's own completion.
+
+**Built:** T0 (branch, config), T1 (P0 outcome), T2 (arm zero), T3 (fundamental partitions), T5
+(charts, Verification Block, digest, REPORT.md). **Not built, by design:** T4 (conditional tick
+confirmation -- only runs if Cooper names a specific cross-cut after reviewing this phase's charts).
+
+**CLOSED, 2026-09-14 -- read this before trusting any number above.** Cooper triggered T4
+(tick-level confirmation, targeting T3b) after all. It found a real, one-directional look-ahead
+bias in T1's window selection (`t1_build_p0.py`): the window always runs up to 60 seconds past the
+labeled horizon, inflating every MFE/MAE figure above by a median 19.7% of the horizon at 5 min,
+shrinking to 1.6% at 60 min -- T1's coverage stats are the sole exception. Cooper's decision:
+**close as read, uncorrected** -- defensible because this phase was already exploratory with no
+kill condition, so nothing here ever hinged on the exact numbers. New files:
+`research/phase_13/{t4_tick_confirm,t4b_lookahead_diagnosis}.py`,
+`results/phase_13/artifacts/t4b_lookahead_diagnosis.json`. Full record:
+`docs/Universe-Decisions.md` D37, `results/phase_13/REPORT.md` §10.
+
+---
+
 ## Build F1 addendum — fundamental data and float layer, pre-flight (folder-level; branch `build/fundamentals-f1`, 2026-09-11)
 
 Unnumbered work unit (see `07af342`'s exact-stem convention, `tools/verify_cited_paths.py`), not a
