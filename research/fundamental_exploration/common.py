@@ -15,6 +15,7 @@ from __future__ import annotations
 import hashlib
 import json
 import pathlib
+import re
 
 import duckdb
 import pandas as pd
@@ -45,6 +46,22 @@ DETECTION_PRICE_FALLBACK_PATH = f"{ART}/detection_price.parquet"
 def event_id(row) -> str:
     """Verbatim from research/phase_10/common.py:215 -- do not modify independently."""
     return f"{row['ticker']}_{row['event_date_canonical']}_{row['momentum_pct']:.2f}"
+
+
+_EVENT_ID_RE = re.compile(r"_(\d{4}-\d{2}-\d{2})_(-?\d+\.\d{2})$")
+
+
+def add_identity_fields(df: pd.DataFrame) -> pd.DataFrame:
+    """Adds event_date_canonical, momentum_pct, and year, parsed back out of event_id
+    (the exact inverse of event_id() above) -- event_fundamentals.parquet carries
+    ticker/t0_ns/t0_source directly but not the other two cohort-key fields. Used by
+    every task from E1-T1 on; do not re-derive this regex per script."""
+    df = df.copy()
+    parsed = df["event_id"].apply(lambda eid: _EVENT_ID_RE.search(eid).groups())
+    df["event_date_canonical"] = parsed.apply(lambda p: p[0])
+    df["momentum_pct"] = parsed.apply(lambda p: float(p[1]))
+    df["year"] = df["event_date_canonical"].str[:4]
+    return df
 
 
 def load_cfg() -> dict:

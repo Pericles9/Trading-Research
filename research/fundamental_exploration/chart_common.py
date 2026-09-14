@@ -119,3 +119,48 @@ def box_from_stats(x_labels, stats_list, name: str, color: str, offsetgroup: str
 def load_json(name: str) -> dict:
     with open(f"{ART}/{name}.json") as f:
         return json.load(f)
+
+
+def add_histogram_panel(fig, row: int, col: int, values, panel_title: str, *, log_x: bool = False,
+                         n_total: int, n_unavailable: int = 0, n_not_applicable: int = 0,
+                         color: str = BLUE, nbins: int = 50, x_title: str = ""):
+    """One distribution panel: a histogram of `values` (already the non-null, applicable
+    subset) plus an in-panel n/unavailable/not-applicable breakdown -- per the brief, the
+    unavailable share is stated in the panel itself, never only in the caption, and
+    'unavailable' (data could not be observed) is never collapsed into 'not applicable'
+    (a real, structural zero/absence, e.g. no split in the window)."""
+    import plotly.graph_objects as go
+    import numpy as np
+
+    vals = np.asarray(values, dtype=float)
+    vals = vals[np.isfinite(vals)]
+    n_shown = len(vals)
+    if log_x and n_shown:
+        vals = vals[vals > 0]
+        plot_vals = np.log10(vals)
+    else:
+        plot_vals = vals
+
+    fig.add_trace(
+        go.Histogram(x=plot_vals, nbinsx=nbins, marker_color=color,
+                     hovertemplate="%{x}<br>count=%{y}<extra></extra>"),
+        row=row, col=col,
+    )
+    parts = [f"n shown={n_shown:,}/{n_total:,}"]
+    if n_unavailable:
+        parts.append(f"unavailable={n_unavailable:,} ({n_unavailable/n_total:.1%})")
+    if n_not_applicable:
+        parts.append(f"not applicable={n_not_applicable:,} ({n_not_applicable/n_total:.1%})")
+    subtitle = " · ".join(parts)
+    # xref/yref "x domain"/"y domain" with row/col: plotly resolves these to the
+    # specific subplot's own axes (0-1 within that panel), not the whole figure.
+    fig.add_annotation(
+        text=f"<b>{panel_title}</b><br><span style='font-size:10px'>{subtitle}</span>",
+        xref="x domain", yref="y domain",
+        showarrow=False, x=0.02, y=1.12, xanchor="left", yanchor="bottom",
+        font=dict(size=11, color=INK), align="left",
+        row=row, col=col,
+    )
+    fig.update_xaxes(title=("log10 " + x_title if log_x else x_title), row=row, col=col)
+    fig.update_yaxes(title="count", row=row, col=col)
+    return subtitle
