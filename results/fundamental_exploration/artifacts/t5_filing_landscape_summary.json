@@ -1,0 +1,40 @@
+{
+  "task": "E1-T5 filing proximity landscape",
+  "config_hash": "042eac1aebb5",
+  "n_total": 20951,
+  "n_observed": 20683,
+  "n_no_filings_in_window": 20,
+  "n_unavailable": 248,
+  "top_5_forms": [
+    {
+      "flg_last_form": "8-K",
+      "n": 5389
+    },
+    {
+      "flg_last_form": "6-K",
+      "n": 4357
+    },
+    {
+      "flg_last_form": "4",
+      "n": 2414
+    },
+    {
+      "flg_last_form": "10-Q",
+      "n": 1319
+    },
+    {
+      "flg_last_form": "SC 13G/A",
+      "n": 503
+    }
+  ],
+  "flg_lag_days_summary": {
+    "n": 20683,
+    "p10": 0.32432865285985196,
+    "p50": 5.643774027777778,
+    "p90": 32.72573755092504,
+    "max": 393.02669652153185
+  },
+  "min_cell_n_display_floor": 20,
+  "n_cells_suppressed": 1,
+  "n_cells_total": 60
+}
