@@ -2128,3 +2128,11 @@ contributes nothing — no code dictionary exists on disk, confirming Phase 11 A
 again on this task's own read. Three concrete, named things would close the gap: a partial
 dictionary for the two candidate-exclusive indicator codes (3, 7); full-tier promotion; tick-level
 (not minute-bar) band arithmetic.
+
+## Reg SHO 201 — a first-step measurement, not a phase (2026-09-14)
+
+**Not a numbered phase.** `research/reg_sho_201/t1_trigger_check.py` (per-event Rule 201 trigger
+check, dev tier, reusing Phase 12's D4-safe previous-close construction) and
+`chart_01_decline_distribution.py`. `docs/data/reg_sho_201_reference.md` (the researched, verified
+rule). `docs/Universe-Decisions.md` D36 records the authorization's exact scope: a measurement
+only. **D5's long-only constraint is unchanged; this closes nothing about the short side.**
