@@ -61,7 +61,7 @@ from research.fundamentals_f1 import common as C  # noqa: E402
 
 BASE_URL = "https://api.massive.com"
 FETCH_DATE = "2026-09-12"
-RAW_ROOT = f"data/raw/fundamentals/massive/{FETCH_DATE}"
+RAW_ROOT = f"{C.RAW_ROOT}/massive/{FETCH_DATE}"
 MANIFEST_PATH = f"{RAW_ROOT}/fetch_manifest.json"
 CHECKSUMS_PATH = f"{RAW_ROOT}/checksums.json"
 PROGRESS_PATH = f"{C.ART}/_t2_progress.json"

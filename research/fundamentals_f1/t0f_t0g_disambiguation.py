@@ -34,8 +34,8 @@ UA = "Mom_db Research fundamentals_f1 (cleeming29@gmail.com)"
 CIK = "0001279704"  # CLRB
 ORIG_ACCN = "0001410578-24-000307"
 RESTATED_ACCN = "0001410578-24-001704"
-VENDOR_ARCHIVE = "data/raw/fundamentals/massive/2026-09-11/t0_restatement_test/CLRB_all_unfiltered.json"
-COMPANYFACTS_DIR = "data/raw/fundamentals/sec/2026-09-12/companyfacts"
+VENDOR_ARCHIVE = f"{C.RAW_ROOT}/massive/2026-09-11/t0_restatement_test/CLRB_all_unfiltered.json"
+COMPANYFACTS_DIR = f"{C.RAW_ROOT}/sec/2026-09-12/companyfacts"
 SUMMARY_PATH = f"{C.ART}/t0f_t0g_disambiguation_summary.json"
 
 

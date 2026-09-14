@@ -1546,6 +1546,40 @@ change, and that sentence is Cooper's to write. It is not produced by this build
 **Standing rule.** Same shape as every other "measurement is not permission" boundary in this
 programme (D4's write-boundary test, A13(a)) — F1 may build and report; it may not analyze.
 
+### D32 Amendment A1 — the written sentence, signed off
+
+**Date:** 2026-09-13 · **Gate:** post-F1-T6, the proposal "What the preliminary fundamental research
+should look like" · **Approved by Cooper:** "i sign off"
+
+D32's gate required exactly one written sentence naming the decision a result would change, before
+any fundamental column may be put against any outcome variable. That sentence, as proposed and
+signed off:
+
+> **If a partition of the universe on a pre-`t0` observable produces a sub-population whose
+> net-expectancy distribution clears the round-trip cost stack — where the full population's does
+> not — then D24 and D25's arithmetic reopens on that sub-population, and the universe definition
+> changes to that partition. If no partition does, the fundamental layer is documentation and the
+> line stays closed.**
+
+Two deliberate properties of this wording, carried over from the proposal that drafted it: it names
+**"a pre-`t0` observable"**, not specific columns, so no candidate split is smuggled into the
+question in advance; and it ties a positive result to **the universe definition itself changing**,
+not merely to "the arithmetic reopens" with no consequence — a result that reopens D24/D25 without
+changing what gets traded is the failure mode this amendment exists to foreclose.
+
+**What this unblocks.** A pre-registered partition test (not a regression, not a search across all
+`event_fundamentals` columns) comparing net-expectancy distributions across a small number of
+declared splits, run against a population-scale outcome variable, with the detection-price-decile
+partition run first as a null/competing-explanation control. Full design: the proposal document
+this amendment quotes from (not itself a committed artifact — the design becomes a phase prompt,
+per `docs/Agent_Prompt_Standard.md`, before execution).
+
+**What this does not do.** It does not authorize the `companyfacts`-based `fin_` element mapping
+(F1-T4f, still not built — nothing has changed that conditional). It does not reopen D32's own
+build/report boundary for `event_fundamentals` itself, which stays as constructed. It does not
+pre-approve any specific split, kill condition, or horizon — those are set in the phase prompt that
+executes against this sentence, before that phase's own T0.
+
 ## D33 — t0 for Build F1 is a tiered construction; no single anchor covers the universe
 
 **Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, resolved with Cooper before F1-T1

@@ -137,7 +137,7 @@ def check_fetch_manifests(sample_hash_cap: int = 50_000, seed: int = 42) -> dict
     # cap is a safety valve, not a real sampling limit -- re-hashing the full 23,480-file
     # archive took 5s when measured directly (2026-09-12), so "every file" (SS5's own
     # wording) is checked in full, not sampled, at this archive's current size.
-    massive_root = "data/raw/fundamentals/massive/2026-09-12"
+    massive_root = f"{C.RAW_ROOT}/massive/2026-09-12"
     massive_manifest_path = f"{massive_root}/fetch_manifest.json"
     checksums_path = f"{massive_root}/checksums.json"
     result = {"name": "fetch_manifest_checksums", "manifests_checked": [], "violations": {}}
@@ -185,8 +185,8 @@ def check_fetch_manifests(sample_hash_cap: int = 50_000, seed: int = 42) -> dict
     result["violations"].update(bad_files)
 
     sec_manifests = [
-        "data/raw/fundamentals/sec/2026-09-12/submissions_manifest.json",
-        "data/raw/fundamentals/sec/2026-09-12/companyfacts_manifest.json",
+        f"{C.RAW_ROOT}/sec/2026-09-12/submissions_manifest.json",
+        f"{C.RAW_ROOT}/sec/2026-09-12/companyfacts_manifest.json",
     ]
     for p in sec_manifests:
         if os.path.exists(p):
