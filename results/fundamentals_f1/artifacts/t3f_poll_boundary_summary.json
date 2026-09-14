@@ -1,0 +1,11 @@
+{
+  "tier": "nanosecond_poll1",
+  "n_events_in_tier": 110,
+  "n_unresolved_identity_in_tier": 3,
+  "poll_boundary_seconds": 60,
+  "n_filings_in_poll_boundary_window": 0,
+  "escalation_row_6_fires": false,
+  "hits": [],
+  "other_tiers_note": "minute_a102 (15,259 events) and first_trade_fallback (5,582 events) do not carry instantaneous-crossing precision (D33) and this question is not measurable for them at the required precision -- reported as a limitation, not extrapolated.",
+  "config_hash": "3d0aa66cce36"
+}

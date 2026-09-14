@@ -140,6 +140,23 @@ EXPECTED_ABSENT = {
     "data/metadata/massive_trade_conditions.json":
         "prompts/phase_10c_amendment_6.md:87 -- the location a retrieved dictionary WOULD be "
         "written to, explicitly 'subject to C below' and not acted on.",
+    # -- Build F1, pre-flight only (2026-09-11): planned deliverables of tasks that have not run
+    #    yet, cited in the work order and its companion doc as WHAT WILL be written there. A
+    #    different category from every entry above (nothing invented, nothing renamed, nothing
+    #    historical) -- self-resolving, not permanent. Remove each entry the moment F1-T2/F1-T5
+    #    actually create it; the staleness check below will flag "path now exists on disk" as
+    #    the signal to do so, which is exactly what that check is for.
+    "claude/fundamental_data_float_scoping_note.md":
+        "prompts/fundamentals_f1.md's own reconciliation note and digest contract (§7 item 10) -- "
+        "cited to record that the original work order's companion doc does not exist in this "
+        "checkout, not asserted as present. The original draft's own text says no task depends on "
+        "it (numbers are restated inline), so this is documented rather than treated as a blocker.",
+    "prompts/fundamentals_build_f1.md":
+        "prompts/fundamentals_f1_amendment_a1.md's own integration note and §6 -- Cooper's amendment "
+        "was drafted referencing this filename; the actual committed file is "
+        "prompts/fundamentals_f1.md (the stem used since pre-flight). Kept verbatim as the record of "
+        "the amendment as given, with the correction noted inline rather than silently rewriting "
+        "Cooper's text.",
 }
 
 # ---------------------------------------------------------------------------

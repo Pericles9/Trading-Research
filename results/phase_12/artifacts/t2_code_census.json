@@ -1,0 +1,84 @@
+{
+  "task": "T2a -- route 2 condition-code census, dev tier",
+  "dictionary_path": "NONE",
+  "census_only_note": "No meaning is inferred from any code (Escalation row 5). Codes are opaque integers, reported as frequency counts only.",
+  "n_match": 1991,
+  "match_seed": 20260913,
+  "candidates": {
+    "label": "candidates (>=60s gaps)",
+    "n_gaps": 1991,
+    "n_events_touched": 42,
+    "trade_conditions_before": {
+      "37": 1111,
+      "NULL": 755,
+      "14": 205,
+      "41": 210,
+      "10": 4,
+      "2": 3,
+      "32": 3,
+      "16": 3
+    },
+    "trade_conditions_after": {
+      "37": 1072,
+      "NULL": 758,
+      "14": 248,
+      "41": 269,
+      "7": 1,
+      "32": 2,
+      "18": 20,
+      "9": 14
+    },
+    "quote_indicators_in_window": {
+      "1": 5247,
+      "3": 54,
+      "NULL": 143,
+      "7": 63,
+      "8": 2
+    },
+    "quote_conditions_in_window": {
+      "1": 5400,
+      "81": 461,
+      "2": 57,
+      "20": 45,
+      "82": 4,
+      "19": 3
+    },
+    "n_quote_rows_seen_in_window": 5509
+  },
+  "matched_non_candidates": {
+    "label": "matched non-candidates (<60s gaps, random draw)",
+    "n_gaps": 1991,
+    "n_events_touched": 44,
+    "trade_conditions_before": {
+      "37": 834,
+      "NULL": 902,
+      "10": 3,
+      "2": 2,
+      "41": 438,
+      "14": 436,
+      "13": 1,
+      "32": 3
+    },
+    "trade_conditions_after": {
+      "37": 814,
+      "NULL": 902,
+      "14": 433,
+      "41": 440,
+      "13": 1,
+      "10": 6,
+      "2": 3,
+      "32": 2
+    },
+    "quote_indicators_in_window": {
+      "1": 1159,
+      "8": 1
+    },
+    "quote_conditions_in_window": {
+      "1": 1160,
+      "81": 433
+    },
+    "n_quote_rows_seen_in_window": 1160
+  },
+  "source": "research/phase_12/t2a_condition_census.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/phase_12/t2a_condition_census.py"
+}

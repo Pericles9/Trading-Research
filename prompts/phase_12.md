@@ -31,6 +31,27 @@ no shared artifact, no dependency in either direction.
 > approximately halves as the event runs.** If halt risk rises through an event, part of that rise is
 > mechanical. T4b must carry `price_bracket` and `doubling_window_active` as state variables or it will
 > attribute a guardrail effect to the tape.
+>
+> **Cooper's authorization, 2026-09-13 — the sourcing task is done, and the T0c gate clears.**
+> Cooper directed live research to verify the two draft sources against Nasdaq's actual LULD policy
+> and explicitly authorized filling the remaining `[Cooper]` slots on that basis, flagged flexible.
+> `docs/data/luld_plan_reference.md` is the resulting compiled, cited reference; `config/phase_12.json`
+> `luld_bands.source_document` now points to it (`_STATUS: VERIFIED WITH NOTED EXCEPTIONS`). **This is
+> a one-time, explicitly authorized exception to Escalation row 4 / D14's standing rule that the agent
+> never sources LULD parameters itself** — Cooper personally directed the sourcing task; the standing
+> rule is unchanged for every other value and every future phase (see `config/phase_12.json`'s
+> `_corrections_2026_09_13._scope_note`). **One real error was caught and fixed**: the 2026-08-31 draft
+> had the Tier-2 $3.00 doubling boundary backwards (it said "below $3.00" doubles; the corroborated
+> rule is "at or below $3.00" doubles, above does not) — exactly the boundary case this population's
+> own median-event crossing makes load-bearing. **One new finding not in the original draft**: this
+> cohort's dev sample includes an event (AACG, 2020-02-18) six days before Amendment 18's 2020-02-24
+> effective date, which doubled in *both* the 9:30–9:45am and 3:35–4:00pm windows for *all* tiers with
+> no price exclusion — `config.luld_bands.pre_amendment_18_regime` now carries that branch. Two
+> secondary sub-details remain moderate-confidence and are flagged rather than resolved (see
+> `luld_plan_reference.md` §§3–4) — neither is load-bearing at this universe's price range.
+> Remaining `[Cooper]` slots (`gap_threshold_seconds`, `dictionary_path`, `latency_lag_minutes`,
+> `ruin_thresholds`, both `cooper_thresholds` rows) are filled with the values the file itself already
+> proposed, per Cooper's authorization — **flexible, revise freely.** T0d now runs.
 
 ---
 

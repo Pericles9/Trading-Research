@@ -13,6 +13,15 @@
     "nothing_else": "No other change. Every [Cooper] slot, including the entire LULD band table, is left exactly as handed over.",
     "luld_bands": "DRAFTED 2026-08-31 by Cooper from named public sources and marked _STATUS: DRAFT. source_document remains [Cooper] deliberately - the config must cite a document Cooper has verified, not a URL. Two open verification questions are recorded in the block."
   },
+  "_corrections_2026_09_13": {
+    "_who": "Cooper, explicit chat authorization: \"i sign off on everything and authorize you to fill empty slots with your best intuition. though these are to be flexible. look at the drafts 1 is most likely a much closer match to the nasdaq's real luld policy, research that and verify.\"",
+    "_scope_note": "This is a ONE-TIME, explicitly authorized exception to Escalation row 4 / D14's standing rule that the agent never sources LULD parameters from memory, inference, or live fetch -- Cooper personally directed and reviewed the sourcing task itself (live web research), which is different from the agent silently inferring a value. D14 and row 4 stand unchanged for every future phase; this note exists so that distinction is not lost on a later read.",
+    "what_was_done": "Live web research (WebSearch/WebFetch), findings compiled with per-fact confidence levels in docs/data/luld_plan_reference.md. luld_bands.source_document now cites that file.",
+    "correction_found": "The doubling-window boundary for Tier 2 securities was backwards in the 2026-08-31 draft: it read 'priced BELOW $3.00' / 'at or above $3.00 does not apply'. Corroborated across Cboe's FAQ and independent trader-notice sources: the actual Amendment 18 (2020-02-24) boundary is 'reference price AT OR BELOW $3.00 doubles; ABOVE $3.00 does not' -- the $3.00 boundary case itself doubles, opposite of the draft. Fixed below.",
+    "new_finding_not_in_original_draft": "This cohort's dev sample includes at least one event (AACG, 2020-02-18) dated BEFORE Amendment 18's 2020-02-24 effective date. Pre-Amendment-18, doubling applied in BOTH a 9:30-9:45am window (since eliminated for all securities) AND the 3:35-4:00pm window, for ALL tiers with no Tier-2-price exclusion. Route 3 needs an effective-date branch; see pre_amendment_18_regime below. No further band/tier/doubling rule changes were found between 2020-02-24 and 2024, so era_2022_2024 events need no further branching.",
+    "remaining_lower_confidence_items": "docs/data/luld_plan_reference.md Secs 2 and 4 flag two sub-details as MODERATE (not HIGH) confidence: the reference price's exact recalculation cadence (30s, single-sourced), and whether sub-$0.75 doubling is a distinct upper-band-only RULE versus a consequence of the $0.01 minimum-price-variation floor. Neither is load-bearing for this universe's price range (~$2.21-$4.52 per Phase 11 A2-6) -- flagged rather than silently resolved.",
+    "cooper_thresholds_filled_on_authorization": "Per the same authorization, the remaining [Cooper] slots below are filled with the values already proposed in this file (gap_threshold_seconds, latency_lag_minutes, row_10/row_11 thresholds) plus dictionary_path=NONE (Phase 11 A2-11 already established no dictionary exists on disk) and ruin_thresholds using the example set the file itself proposed. Marked FLEXIBLE per Cooper's own words -- revise freely, these were not derived, they were accepted proposals."
+  },
   "universe": {
     "analysis_universe": "in_scope = TRUE AND source_file = 'file1'",
     "decision": "D1",
@@ -25,13 +34,14 @@
     "halt_scope_note": "LULD pauses apply to regular trading hours. Premarket and post are computed and reported but carry no band arithmetic unless Cooper supplies parameters for them."
   },
   "luld_bands": {
-    "_STATUS": "DRAFT - drafted by the chat layer from the LULD plan operator site and the Nasdaq LULD FAQ. Cooper MUST verify against the authoritative plan document before this is committed. Escalation row 4 stands: no band parameter may be used that does not cite a key in this block.",
-    "_CRITICAL": "THE ENVIRONMENT IS OFFLINE (D14). There is no way to fetch the LULD plan. The values below were supplied by Cooper 2026-08-31 as a DRAFT from named public sources; they are not authority until source_document is filled with a verified document. The agent does NOT fill these from memory, from the data, or by inference.",
-    "source_document": "[Cooper] - cite the plan document and its effective date",
+    "_STATUS": "VERIFIED WITH NOTED EXCEPTIONS, 2026-09-13, per Cooper's explicit authorization to research and verify (see _corrections_2026_09_13). Every load-bearing fact for this universe (band table, the $3.00 doubling boundary direction, reference-price mechanics, the pre/post-Amendment-18 split) is corroborated across 2+ independent sources or directly quoted -- see docs/data/luld_plan_reference.md for per-fact confidence levels. Two secondary sub-details remain MODERATE confidence and are flagged there, not silently resolved. Escalation row 4 still stands: no band parameter may be used that does not cite a key in this block.",
+    "_CRITICAL": "D14 (environment offline) still governs this phase's own DATA PIPELINE -- no live fetch happens inside any research/phase_12/ script, ever. The verification below was a one-time, Cooper-directed research task performed in chat, not a pipeline capability. The agent does not extend this exception to any other value, phase, or session.",
+    "source_document": "docs/data/luld_plan_reference.md, compiled 2026-09-13 -- a secondary reference citing FINRA, Cboe's technical-spec FAQ, luldplan.com, and a search synthesis of NYSE/CTA-Plan/Nasdaq-Trader/SEC-DERA primary notices. Not the LULD Plan's own primary legal text (that PDF did not extract as readable text in this session -- see luld_plan_reference.md Sec 7).",
     "_draft_sources": [
       "https://www.luldplan.com/",
       "https://www.nasdaqtrader.com/content/MarketRegulation/LULD_FAQ.pdf"
     ],
+    "_draft_sources_verification_note": "Cooper's hunch was right in direction: draft source 1 (luldplan.com) matched the verified band table and bracket-selection-by-previous-close rule exactly. It also reproduced one real error (the doubling boundary direction, 'below' vs the correct 'at or below' $3.00) that source 2's underlying FAQ content (not independently fetchable as text this session, but corroborated via Cboe's equivalent FAQ) gets right. Both were useful; neither was authoritative alone.",
     "tier_assignment_rule": "Tier 1 = S&P 500, Russell 1000, and selected ETPs. Tier 2 = all other NMS securities.",
     "universe_tier_expected": "Tier 2",
     "universe_tier_note": "This universe is micro-cap and is Tier 2 by exclusion. CONFIRM per event rather than assuming - an event that entered an index would be Tier 1.",
@@ -61,14 +71,27 @@
     },
     "doubling_windows": [
       {
+        "_effective_from": "2020-02-24",
+        "_effective_note": "Amendment 18. Events dated before this use pre_amendment_18_regime below instead.",
         "start_local": "15:35",
         "end_local": "16:00",
         "multiplier": 2.0,
-        "applies_to": "Tier 1 securities, and Tier 2 securities priced BELOW $3.00",
-        "does_not_apply_to": "Tier 2 securities priced at or above $3.00"
+        "applies_to": "Tier 1 securities, and Tier 2 securities with a REFERENCE PRICE at or below $3.00 (not previous close -- see luld_plan_reference.md Sec 3)",
+        "does_not_apply_to": "Tier 2 securities with a reference price ABOVE $3.00",
+        "_correction_2026_09_13": "was 'priced BELOW $3.00' / 'at or above does not apply' -- backwards at the $3.00 boundary itself. Corrected: AT $3.00 doubles, ABOVE $3.00 does not. See _corrections_2026_09_13.correction_found.",
+        "_within_window_reassessment_uncertain": "Whether eligibility is checked once at 15:35 or continuously through the window via the live reference price is NOT resolved -- luld_plan_reference.md Sec 3 flags this. Route 3 should evaluate continuously (matching how the reference price itself works) and report if this assumption changes the corroborated-halt count materially, rather than assuming a single check."
       }
     ],
-    "reference_price_rule": "Arithmetic mean price of eligible reported transactions over the prior 5-minute period. The reference price UPDATES ONLY when the new value moves at least 1% from the current one - it is a stateful calculation with hysteresis, not a rolling mean. Implementing it as a plain 5-minute rolling mean will produce wrong bands.",
+    "pre_amendment_18_regime": {
+      "_effective_before": "2020-02-24",
+      "_note": "Found 2026-09-13: this cohort's dev sample includes AACG (2020-02-18), before Amendment 18. Route 3 branches on event_date < 2020-02-24 to use this block instead of doubling_windows above.",
+      "doubling_windows": [
+        {"start_local": "09:30", "end_local": "09:45", "multiplier": 2.0, "applies_to": "ALL securities, all tiers, no price exclusion"},
+        {"start_local": "15:35", "end_local": "16:00", "multiplier": 2.0, "applies_to": "ALL securities, all tiers, no price exclusion"}
+      ],
+      "band_table_and_reference_price_rule": "Unchanged from the post-Amendment-18 values elsewhere in this block -- only the doubling-window scope and count differ. No source found indicating the band table itself or the reference-price mechanic changed at Amendment 18."
+    },
+    "reference_price_rule": "Arithmetic mean price of eligible reported transactions over the prior 5-minute period, re-evaluated on an approximately 30-second cadence (single-sourced, luldplan.com; see luld_plan_reference.md Sec 2). The reference price UPDATES ONLY when the new value moves at least 1% from the current one - it is a stateful calculation with hysteresis, not a rolling mean. Implementing it as a plain 5-minute rolling mean will produce wrong bands.",
     "limit_state_duration_seconds": 15,
     "pause_duration_seconds": 300,
     "pause_extension_seconds": 300,
@@ -76,15 +99,17 @@
     "price_bracket_crossing_note": "LOAD-BEARING FOR THIS UNIVERSE. Phase 11 A2-6 puts implied price at ~$2.21 (T-3) rising to ~$4.52 (T=0), so the median event CROSSES $3.00 during the event and its band goes 20% -> 10%. Two effects compound: the percentage band halves, and the security simultaneously loses its closing-period doubling. In dollars the band is near-constant ($0.442 -> $0.452, 1.02x) while price roughly doubles - so the RELATIVE move required to trigger a halt approximately halves as the event runs. Evaluate the band at every moment, never once per event. Report the share of events that cross a bracket, and the share of halts that occur after a crossing.",
     "crossing_is_a_prediction_not_a_caveat": "If halt risk rises through an event, part of that rise is MECHANICAL - the guardrail tightens in percentage terms exactly as the move accelerates. A P(halt | state) model that does not carry the price bracket as a state variable will attribute a mechanical effect to the tape. T4b must carry it.",
     "_open_verification_questions": [
-      "Whether the closing-period doubling applies to a Tier 2 security that crossed $3.00 DURING the session, or is set from the previous close.",
-      "Whether the band brackets key off the previous close or the live reference price.",
-      "Both change the arithmetic on exactly the population this universe lives in. Treat as OPEN until the plan document settles them; escalation row 4 applies to any parameter used before then."
+      "RESOLVED 2026-09-13: closing-period doubling for Tier 2 uses the REFERENCE PRICE at the relevant time, not previous close -- corroborated across independent sources, see luld_plan_reference.md Sec 3.",
+      "RESOLVED 2026-09-13: the band BRACKET (percentage selection) keys off previous close; the live reference price then sets the dollar width within that bracket. Two different determinants for two different questions -- see luld_plan_reference.md Secs 1-2.",
+      "STILL OPEN: whether doubling eligibility within the 15:35-16:00 window is reassessed continuously via the live reference price or checked once at 15:35 -- luld_plan_reference.md Sec 3. Route 3 evaluates continuously (matching the reference price's own mechanics) and reports if this choice changes the corroborated-halt count materially.",
+      "STILL OPEN, lower priority for this cohort: sub-$0.75 doubling asymmetry mechanism (rule vs. minimum-price-variation-floor consequence) -- luld_plan_reference.md Sec 4. Not load-bearing at this universe's ~$2.21-$4.52 price range."
     ]
   },
   "route_1_tape_gaps": {
-    "gap_threshold_seconds": "[Cooper]",
+    "gap_threshold_seconds": 60,
     "gap_threshold_proposal": 60,
     "gap_threshold_reasoning": "Proposed well below any plausible pause length so the DISTRIBUTION is visible before a threshold is applied. T1b reports the distribution first; the threshold is applied after.",
+    "_filled_2026_09_13": "Cooper's authorization accepted the file's own proposal as-is. FLEXIBLE -- revise after seeing T1b's distribution if the pause-length mass sits somewhere the 60s cut would misclassify.",
     "require_resumption": true,
     "resumption_note": "A gap with no prints afterwards is a session end or a delisting, not a halt. Carried as its own class."
   },
@@ -93,8 +118,9 @@
       "conditions",
       "indicators"
     ],
-    "dictionary_path": "[Cooper] - path to a committed dictionary file, or the string 'NONE'",
+    "dictionary_path": "NONE",
     "dictionary_note": "Phase 11 A2-11 found `indicators` populated on 88.85% of source rows, 99.77% carrying a single code, and NO dictionary on disk - available and uninterpretable. If this resolves to NONE, route 2 produces a census only and identifies nothing. Inferring a code's meaning from its distribution is escalation row 5.",
+    "_filled_2026_09_13": "Set to NONE per Cooper's authorization -- not a new finding, Phase 11 already established no dictionary exists in this checkout (dictionary_note above, unchanged). Route 2 therefore produces a census only, per census_only_if_no_dictionary below.",
     "census_only_if_no_dictionary": true
   },
   "route_3_band_arithmetic": {
@@ -129,8 +155,9 @@
         "realised_range_since_anchor",
         "direction_of_last_leg"
       ],
-      "latency_lag_minutes": "[Cooper]",
+      "latency_lag_minutes": 1,
       "latency_lag_proposal": 1,
+      "_filled_2026_09_13": "Cooper's authorization accepted the file's own proposal as-is. FLEXIBLE.",
       "bracket_rule": "price_bracket and doubling_window_active are REQUIRED, not optional - see luld_bands.crossing_is_a_prediction_not_a_caveat."
     },
     "reopen": {
@@ -153,8 +180,9 @@
       "long_side_conditional": true,
       "report_worst_observed_with_event_named": true
     },
-    "ruin_thresholds": "[Cooper]",
-    "ruin_thresholds_proposal_note": "Expressed as a fraction of account equity, e.g. [0.01, 0.02, 0.05, 0.10]. The T5d table reports, for each, the position size at which the observed p01 adverse reopen produces that loss. It is arithmetic. The agent proposes NO position size - escalation row 15."
+    "ruin_thresholds": [0.01, 0.02, 0.05, 0.10],
+    "ruin_thresholds_proposal_note": "Expressed as a fraction of account equity, e.g. [0.01, 0.02, 0.05, 0.10]. The T5d table reports, for each, the position size at which the observed p01 adverse reopen produces that loss. It is arithmetic. The agent proposes NO position size - escalation row 15.",
+    "_filled_2026_09_13": "Cooper's authorization accepted the file's own example set as-is. FLEXIBLE -- these are the loss fractions T5d tabulates against, not a position size; escalation row 15 still bars proposing one."
   },
   "inference": {
     "min_cell_n": 100,
@@ -167,12 +195,13 @@
     "ci_level": 0.95
   },
   "cooper_thresholds": {
-    "row_10_corroborated_halt_count_min": "[Cooper]",
+    "row_10_corroborated_halt_count_min": 50,
     "row_10_proposal": 50,
     "row_10_scope": "Events with >= 2 routes agreeing on at least one halt. Below this, a reopen distribution cannot be measured and the phase writes the feasibility finding.",
-    "row_11_single_route_only_share_max": "[Cooper]",
+    "row_11_single_route_only_share_max": 0.6,
     "row_11_proposal": 0.6,
-    "row_11_scope": "Share of candidate halts identified by exactly one route. Above this, the routes do not corroborate and identification is not established."
+    "row_11_scope": "Share of candidate halts identified by exactly one route. Above this, the routes do not corroborate and identification is not established.",
+    "_filled_2026_09_13": "Cooper's authorization accepted both file-proposed values as-is. FLEXIBLE -- T3 reports the observed count/share regardless; these thresholds only decide which branch (feasibility finding vs. Stage B) the phase takes at the gate."
   },
   "runtime_ceilings": {
     "runtime_ceiling_seconds": 7200,

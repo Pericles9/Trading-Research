@@ -65,6 +65,8 @@ created per Phase 2's T8 addendum instruction to "log verbatim to the register."
 - **Depth, queue position and fill probability are unmeasured — the cost stack is a LOWER BOUND.** Phase 11 measures effective spread, which is the cost of the *average print*, not the cost of a *specific order*. The standing qualifier required verbatim in REPORT §T7 and in the captions of charts 05/06/07 states this. It matters more here than usual because T2c found this universe's top of book is **wide and slow**: the prevailing best quote at a T=0 RTH trade has median age 1,372.6 ms, 54.1% of trades print more than 1 s after the last BBO change and 6.7% more than 60 s. Half-effective-spread therefore understates the cost of getting *size* done against a book that is not refreshing, while staleness inflates `|p − m|` during fast moves — the error is two-sided and neither direction is quantified. Any future phase turning these numbers into an execution assumption must measure depth first. — logged Phase 11 A2-0, 2026-08-18.
 - **DuckDB 1.4.4: ASOF JOIN against an inline filtered scan of a billion-row table fatally crashes the Python binding.** `PyEval_SaveThread: the function must be called with the GIL held`. Materialising **both** sides of the join into temp tables first is the workaround. Dev-tier code never hits it because dev reads small dedicated tables, so both sides are already materialised — which is why Phase 11's T5a passed and then the full-tier pass crashed. **Separately, state accumulates across batches within a single DuckDB process**: per-batch cost rose monotonically 1241 → 1591 → 2322 s while RSS reached 17.6 GB and spill grew 2.6 → 7.4 GB, and restarting the process restored the same batch to 295 s — an ~8× penalty. The fix is to restart the process every ~2 batches with checkpointing so no work is repeated. Both are environment defects, not data findings, and any future phase running a large multi-batch DuckDB job should assume them. — logged Phase 11 T5b, 2026-08-18.
 - **A dev-tier runtime extrapolation does not predict full-tier cost when the tiers read different physical objects.** Phase 11 T5a timed the Stage B pipeline on `filtered_quotes_dev_v4` / `filtered_trades_dev_v4` and predicted 2,271 s; the full-tier pass took ~10 h wall (≈4.3 h of it genuine compute once the process-restart fix was applied). The dev tables are small dedicated objects and never exercise the query plan the full tier takes against 3.8B and 4.95B-row base tables — the dev timing validated *throughput* and said nothing about the *plan*. Escalation row 9 was evaluated against that extrapolation and correctly did not fire; row 26, which measures the pass itself, is what caught it. **Recommendation for any future phase budgeting a full pass: validate on a subset of the FULL table, not on a dev table.** — logged Phase 11 T5a/T5b, 2026-08-18.
+- **Build F1's financials group — escalation row 1 fired, then retired by Amendment F1-A1; F1-T0f found a different vintage question than F1-T0 itself answered.** F1-T0 (2026-09-11) found zero duplicate `(start_date, end_date, timeframe)` records in two companies' complete vendor history (AGAE, CLRB) and concluded the vendor serves only one vintage per period — correct, but silent on *which* vintage. Amendment F1-A1 (2026-09-12) named the gap: a single-vintage record could be either the latest-restated value (contaminated) or the original as-filed value (point-in-time, just blind to later restatements). **F1-T0f resolved it, decisively, on CLRB's FY2023 `NetIncomeLoss`:** the vendor reports -37,983,496 with `filing_date=2024-03-27`, matching CLRB's *original* 10-K (accession `0001410578-24-000307`) exactly — not its restated 10-K/A (accession `0001410578-24-001704`, filed 2024-10-29, value -42,770,610). **Outcome A: the vendor is point-in-time; it is simply frozen at first-filed and never updated when a restatement lands.** F1-T0g, on the same concept, confirmed SEC `companyfacts` is genuinely multi-vintage (5 observations across 5 accession numbers for one period, 2 distinct values, the restated value correctly propagating into the FY2024 10-K's comparative column). Per escalation row 1a: **not a stop — a simplification.** The full companyfacts/XBRL element-mapping rebuild (Amendment F1-A1 §2) is not mandatory before `fin_` can be built from the vendor as originally planned; it remains available for the `fin_superseded_later` flag and as a cross-check harness. Source: `results/fundamentals_f1/artifacts/t0f_t0g_disambiguation_summary.json`, `research/fundamentals_f1/t0f_t0g_disambiguation.py`. — logged Build F1 T0f/T0g, 2026-09-12.
+- **Ticker-count "discrepancy" — resolved, not a discrepancy.** 2,576 and 2,930 are both correct and describe different populations: 2,576 is D1's count against 15,763 events (`results/reports/phase_9_report.md`); 2,930 is the correct count for this build's 20,951-event population. The original work order mis-cited D1's smaller-frame count against the larger population. Corrected in `prompts/fundamentals_f1.md` D30 and `docs/Universe-Decisions.md` D30 per Amendment F1-A1 §6, 2026-09-12. **Closed.**
 
 ## Closed
 
@@ -720,3 +722,84 @@ statistic on this field is unsafe until this is fixed; per-feature quantities ar
 seed-stable fraction as a first-class quantity rather than discover instability as a finding.
 `research/scale_field/detector/GOING_LIVE.md:134` names this as an open blocker. Unscheduled;
 belongs to whichever phase fixes the F/G channel packages or runs Row 16.
+
+### CLOSED — candidate (b), ISO share hold-length: not pursued further, not a measured result (2026-09-12/13)
+
+**Status: open, awaiting Cooper's review.** `claude/what_would_change_a_decision.md` §2(b),
+`prompts/iso_share_hold_length.md`, `results/iso_share_hold_length/REPORT.md`.
+
+Candidate (a) (impact by participation) closed negative on branch `impact-by-participation` (PR #3,
+unmerged as of this entry) without moving the 70.98 bp cost floor enough to relax candidate (b)'s own
+threshold — see this register's entry above once that PR lands. Candidate (b) was run next, per the
+source document's own recommended sequencing. **T0–T2 (dev tier, 49/50 primary events) completed
+cleanly**: `conditions` (needed for the ISO flag) confirmed absent from DuckDB, read from raw
+per-event parquet instead; `iso_share` computed via the existing `det_minute` anchor
+(`results/phase_8/artifacts/a102_detection_anchors.parquet`) and minute-bar timestamps, not zero-
+inflated as expected (median 19.2%, 0% exactly zero).
+
+**T3 (the core measurement) triggered a HARD STOP, not a result.** The raw iso_share separation
+looked real (up to 795 bp at `t3_close`, exceeding every pre-registered required-separation
+threshold). **Both required controls (Agent Prompt Standard v1.4, The Control Standard) failed**: a
+negative-control placebo produced separations up to 2,258 bp — larger than the real result — and a
+planted positive-control effect was not cleanly recovered. Diagnosis: `t3_close` markout at n=49 has
+std=7,121 bp, driven by two outlier events (UCAR +44,768 bp, IMTE −9,640 bp) roughly 50–60× a typical
+event's magnitude — the median-split statistic is dominated by which side of a cut a handful of
+extreme events land on, real or placebo, at this sample size.
+
+**This is not a closed result in either direction.** Unlike candidate (a), candidate (b) has not
+failed — it has not yet produced a measurement the controls certify as distinguishable from noise.
+`what_would_change_a_decision.md` §4's "run nothing" criterion, which needs both candidates to fail,
+**still cannot be invoked**. Open questions for Cooper, stated in the report and not resolved here:
+whether full-tier promotion (~15,337 events) is worth authorising, and whether the median-split
+statistic itself is the wrong tool for a distribution this fat-tailed independent of sample size.
+
+**Follow-up, same day — T4 added, and the diagnosis above corrected.** The "driven by two outlier
+events" language above overstates their role — a median is outlier-resistant by construction; the
+real mechanism is bulk dispersion (`t3_close` IQR ≈ 3,100 bp at n=49), which drives the standard
+error of a difference-of-medians to ≈575 bp at this n, well within the negative control's observed
+2,258 bp. A bootstrap precheck (T4, `results/iso_share_hold_length/artifacts/t4_bootstrap_precheck.json`)
+run read-only against the already-committed, already-full-universe markout grid — zero new tick
+reads — shows the required separation clears the same null's 5,000-repetition maximum by **12.7–19.2×
+its own standard deviation at every horizon** (`P(null ≥ required) = 0/5000` everywhere). **The
+dev-tier failure was a sample-size problem, not a validity problem**, and full tier is a well-powered
+regime for this exact test if a real ISO-share effect exists. This does not itself authorise T5 (the
+full-tier build, which has a real per-event read cost with no DuckDB shortcut) — that remains
+Cooper's call, alongside a raised-but-unresolved caveat that the day-scale horizons' required
+separations (646–862 bp) may already exceed what the cited ISO literature documents, independent of
+sample size (`results/iso_share_hold_length/REPORT.md` §5).
+
+**Final disposition, 2026-09-13 — Cooper declined T5.** Candidate (b) closes at T0–T4.
+**This is a scoping decision, not a data-driven result** — despite T4's strong statistical case
+(12.7–19.2× the noise band), no measurement of whether ISO share carries a real hold-length effect
+was ever made, because T5 (the one task that would have measured it) did not run. **Recorded
+explicitly as "not pursued further," distinct from candidate (a)'s "closed, negative"** — the two
+should never be conflated when this item is cited later. `what_would_change_a_decision.md` §4's "run
+nothing" criterion is **not** formally invoked: its literal text needs (a) at or above the assumed
+cost stack (it returned below, just not low enough) and (b)'s threshold computed to exceed the
+literature (raised as a caveat, never computed as a verdict) — neither condition was literally met.
+Candidate (c) (book-walk depth as a universe filter)'s rescue condition — "(a) and (b) both return
+null" — is also not satisfied, since (b) did not return a null, it returned no measurement at all.
+Candidate (c) remains unrescued and unscoped as its own phase.
+
+### OPEN — Phase 12 Stage A gate fires, dev tier; Stage B awaits Cooper's written clearance (2026-09-13)
+
+**Status: open, awaiting Cooper's review.** `prompts/phase_12.md`, `results/phase_12/REPORT.md`,
+`docs/Universe-Decisions.md` D34.
+
+Phase 12 (Halts & LULD) ran Stage A (T0a–T3) on the 56-event dev sample, after Cooper authorized
+live research to fill the phase's 7 remaining `[Cooper]` slots (D34 — a one-time exception to
+Escalation row 4/D14, not a standing change). **Both Stage A gate rows fired**: corroborated-halt
+count (9, floor 50, row 10) and single-route-only share (0.903, ceiling 0.6, row 11). Route 1 (tape
+gaps) shows a real, modest excess right at the 300-second pause length; route 2 (condition codes)
+identifies nothing by construction (no dictionary on disk, confirming Phase 11 A2-11 again); route
+3 (band arithmetic) touches a band edge in 13/55 events. **Flagged, not smoothed over: row 10's
+50-event floor almost certainly assumed a full-tier population (~20,951 events) — 50/56 would need
+~89% corroboration on the entire dev cohort, an implausible bar regardless of the true halt rate.**
+Row 11 (a share, not a count) does not have that problem and is read as the more informative
+signal at this tier.
+
+Three concrete, named things would close the gap, none run yet: a partial code dictionary for the
+two candidate-exclusive indicator codes (3, 7, found in T2a's census); full-tier promotion; tick-
+level (not minute-bar) band arithmetic to remove the coarsest source of route-1/route-3 grain
+mismatch. Per the Approval Gate, Stage B (time-to-halt, reopen-gap, the sizing arithmetic) does not
+run until Cooper clears rows 10/11 in writing.

@@ -1,0 +1,18 @@
+{
+  "cik_count": 2935,
+  "sources_pulled": {
+    "financials": 111459,
+    "ticker_details": 3110,
+    "splits": 2554,
+    "dividends": 35356,
+    "short_interest": 440244,
+    "short_volume": 1776508,
+    "float": 2671,
+    "ticker_events": 2655
+  },
+  "not_found": [
+    "ratios"
+  ],
+  "manifest_path": "data/raw/fundamentals/massive/2026-09-12/fetch_manifest.json",
+  "config_hash": "7c59a1df5b40"
+}

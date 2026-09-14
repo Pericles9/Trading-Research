@@ -1,0 +1,52 @@
+{
+  "n_total_events": 20951,
+  "n_with_fin_vintage": 8303,
+  "n_no_fin_vintage": 12648,
+  "n_restated_after_vintage_item402_only": 776,
+  "share_of_universe_20951": 0.037038804830318364,
+  "share_of_measurable_with_vintage": 0.09346019511020114,
+  "cooper_threshold_row1c": 0.1,
+  "escalation_row_1c_fires": false,
+  "by_year": [
+    {
+      "year": "2020",
+      "n": 3439,
+      "n_restated": 25,
+      "share": 0.007269555103227682
+    },
+    {
+      "year": "2021",
+      "n": 1932,
+      "n_restated": 3,
+      "share": 0.0015527950310559005
+    },
+    {
+      "year": "2022",
+      "n": 2279,
+      "n_restated": 8,
+      "share": 0.0035103115401491883
+    },
+    {
+      "year": "2023",
+      "n": 3021,
+      "n_restated": 167,
+      "share": 0.05527970870572658
+    },
+    {
+      "year": "2024",
+      "n": 5092,
+      "n_restated": 375,
+      "share": 0.07364493322859388
+    },
+    {
+      "year": "2025",
+      "n": 5188,
+      "n_restated": 198,
+      "share": 0.038164996144949885
+    }
+  ],
+  "auxiliary_unclassified_10ka_10qa_after_vintage": 3164,
+  "auxiliary_note": "10-K/A/10-Q/A after the fin_ vintage, NOT restricted to item 4.02, NOT classified administrative-vs-genuine (isXBRL/isInlineXBRL checked directly on CLRB's own history and confirmed NOT a reliable classifier -- see this script's docstring). Reported for transparency only; never folded into the primary blast-radius share above.",
+  "method_note": "Signal = 8-K Item 4.02 only, matching F1-T0's own established finding that this is the reliable genuine-restatement marker in this universe. fin_ vintage = ASOF nearest vendor financials record strictly before t0, per CIK, from the F1-T2 raw archive.",
+  "config_hash": "3d0aa66cce36"
+}

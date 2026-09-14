@@ -651,6 +651,52 @@ No package index, no R, no network fetch. Any prompt requiring an external packa
 implementation, or a downloaded artifact must state an offline fallback at drafting time.
 `reuse-before-build` applies only to what is already installed.
 
+### D14 Amendment A1 — Scoped network exception for Build F1's staging pulls
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight (`prompts/fundamentals_f1.md`)
+
+D14 as written has no carve-out for any network step. Build F1 (fundamental data and float layer)
+requires two staging pulls — a Massive vendor bulk pull (F1-T2) and an SEC EDGAR daily-index /
+`companyfacts.zip` pull (F1-T3) — and this session confirmed directly that the sandbox has outbound
+network reachability (`curl` to `api.massive.com` and `www.sec.gov` both returned live HTTP
+responses, not connection failures).
+
+**Decision.** Network access is authorized, narrowly, for exactly these three staging steps:
+
+- F1-T0 (the restatement gate test) — queries Massive's income statement endpoint, unfiltered by
+  `filing_date`, for two companies independently, to determine whether vendor financials are
+  point-in-time before any bulk pull commits to that assumption. Writes raw responses under
+  `data/raw/fundamentals/massive/<fetch_date>/t0_restatement_test/`. **Omitted from this amendment's
+  first draft** (2026-09-11) — added here before F1-T0 ran, not after, once the gap was noticed: F1-T0
+  hits the same API as F1-T2 and was always going to need the same authorization.
+- F1-T2 (Massive bulk pull: financials, ticker reference/events, splits, dividends, short interest /
+  volume, and the float endpoint for archival only per D27) — writes immutable raw responses under
+  `data/raw/fundamentals/massive/<fetch_date>/` plus a fetch manifest (endpoint, params, timestamp,
+  record count, checksum) per source.
+- F1-T3 (SEC EDGAR daily index and `companyfacts.zip` pull) — writes immutable raw archives under
+  `data/raw/fundamentals/sec/<fetch_date>/`, with a declared User-Agent and the published rate limit
+  respected.
+
+**Every step writes once, to an immutable raw archive, and stops.** No task after F1-T0/F1-T2/F1-T3
+reaches the network. D14's offline constraint is otherwise unchanged and continues to bind everywhere
+else in this programme — this amendment does not reopen network access generally, and it does not
+authorize any other phase or task to fetch anything.
+
+**Clarification, 2026-09-12, added before F1-T4 ran, not after** — the same drift class this
+amendment's own F1-T0 gap already was: the work order's task numbering split what this decision
+called "F1-T3 (SEC EDGAR daily index and `companyfacts.zip` pull)" into two separate numbered
+tasks — F1-T3 (the filing index, `sec_filings`/`event_filing_proximity`) and **F1-T4** (shares
+outstanding, which is what actually calls `companyfacts`). This decision's authorization was written
+against the bundled SEC network step as a whole, before that split existed in the task list, and
+covers **both** F1-T3 and F1-T4 under the same immutable-raw-archive, write-once-and-stop terms —
+it does not newly authorize F1-T4 by extension, it was already written to include the work this task
+does, under a label that no longer matches the current task numbering. `prompts/fundamentals_f1.md`'s
+own F1-T4 checklist is not separately gated by anything beyond the Cooper-set thresholds already
+recorded in `docs/data/fundamentals_sources.md`.
+
+**Standing rule.** Any future task that wants network access states so explicitly, in the same way,
+before it runs — D14 is still the default and this is still the exception.
+
 ## D15 — Phase 11 reads the quote/trade coverage columns from the Phase 4/5 materializations
 
 **Date:** 2026-08-15 · **Gate:** Phase 11 Amendment 1, approved by Cooper before T1 ran
@@ -1406,3 +1452,311 @@ commit.**
 edit from another session (the 2026-09-08 git-discipline block), and staging it would capture that work
 in an unrelated commit, which `CLAUDE.md`'s own explicit-path rule forbids. **The index update is
 outstanding and is flagged to Cooper.** **Next free number: D27.**
+
+## D27 — The Massive float endpoint is banned from any computed quantity
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-1
+
+`/stocks/vX/float` is documented "Plan History: Not applicable to this endpoint" — a current snapshot
+with no date parameter and no history, marked experimental. Joining it to an event from 2020–2024,
+after an unknown number of offerings and reverse splits in between, is a lookahead of the same class
+as D4's spine contamination.
+
+**Decision.** The float endpoint may be fetched and stored in the raw archive for orientation only
+(F1-T2c). **It may never appear in `event_fundamentals` or any table a downstream phase reads.**
+Treated identically to D4's quarantine: a write boundary, not an intent test.
+
+**Standing rule.** Any future fundamentals/float work touching a current-snapshot vendor endpoint with
+no history applies the same test before use: does the endpoint carry an as-of date that predates the
+event, or does it always describe "now"? If "now," it is archive-only.
+
+## D28 — The as-of anchor for fundamentals is the acceptance timestamp of the latest filing strictly before t0
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-2
+
+Not the event date, not the period end, not `filing_date` — a date, which cannot distinguish a filing
+accepted after the close from one accepted pre-open, a distinction that decides correctness for every
+pre-market event in this universe. Acceptance timestamps come from the SEC filing index
+(`sec_filings.accepted_ns`), never from the vendor.
+
+**Decision.** Every as-of join in F1, and any future fundamentals work, filters strictly on
+`accepted_ns < t0_ns`, never `<=`, and never on a bare date field.
+
+**Standing rule.** `t0_ns` itself is defined in D33, below — this decision governs the join condition,
+not the anchor's construction.
+
+## D29 — Fundamentals provenance is carried per source vintage, not per field
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-3
+
+All financial line items drawn from one filing share one acceptance timestamp and one accession
+number — repeating that provenance once per field, rather than once per group, would multiply the
+same fact across a dozen columns for no benefit and create a chance for it to silently disagree with
+itself.
+
+**Decision.** `event_fundamentals`'s groups (`flg_`, `shs_`, `fin_`, `si_`, `spl_` — schema in
+`prompts/fundamentals_f1.md` §4) each carry exactly one `*_accepted_ns`/`*_asof_ns` and one accession
+column for the whole group, never one per field.
+
+**Standing rule.** Any future group added to this table follows the same rule: provenance is declared
+at the grain the source actually vintages at, not at the grain of the table's rows.
+
+## D30 — Fundamentals joins resolve on the SEC Central Index Key as of t0, never on ticker
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-4
+
+The universe is **2,930 tickers** across the 20,951 in-scope events. (D1's 2,576 is a different, smaller
+frame — 15,763 events — and does not apply here; corrected per Amendment F1-A1 §6, 2026-09-12 — the
+original work order mis-cited D1's count against this build's population.) It is a corner of the market
+where symbols are recycled after delisting and reverse splits are routine. A ticker-keyed join silently
+attaches one company's balance sheet to another company's event.
+
+**Decision.** `ticker_identity` resolves the CIK as of `t0` for every `(ticker, t0)` pair (F1-T1), and
+every fundamentals join downstream resolves on CIK, never ticker. Events whose ticker maps to more
+than one CIK across the window are flagged `resolved_ambiguous` and carried, not dropped or guessed at.
+
+**Standing rule.** Any future join between this universe and an external company-keyed source resolves
+identity first, as its own auditable step, before joining anything else.
+
+## D31 — Share counts are stored as filed; no basis adjustment at write time
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-5
+
+This programme already carries one documented adjustment-basis mismatch (D4: spine numeric columns
+carry inconsistent adjustment bases per ticker and per column). It does not need a second, and
+`shares_outstanding_observations` is exactly the kind of quantity a well-intentioned adjustment step
+would quietly get wrong the same way.
+
+**Decision.** `shs_shares_outstanding` and every raw share-count field are stored exactly as filed.
+Split factors are carried as their own series (`spl_` group) so any later conversion is explicit,
+auditable, and reversible — never baked into the stored count.
+
+## D32 — No fundamental column is put against any outcome variable under Build F1
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, `prompts/fundamentals_f1.md` DF-6
+
+F1 is a data-layer build: it constructs `event_fundamentals`, produces a coverage report, and stops.
+It carries no phase number, tests no hypothesis, and is not the place a regression, split, or
+conditional-expectancy claim against a fundamental column gets made.
+
+**Decision.** The first such use requires a written sentence naming the decision the result would
+change, and that sentence is Cooper's to write. It is not produced by this build, and no task in
+`prompts/fundamentals_f1.md` is authorized to produce it.
+
+**Standing rule.** Same shape as every other "measurement is not permission" boundary in this
+programme (D4's write-boundary test, A13(a)) — F1 may build and report; it may not analyze.
+
+## D33 — t0 for Build F1 is a tiered construction; no single anchor covers the universe
+
+**Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, resolved with Cooper before F1-T1
+
+Neither the canonical spine nor any existing detection artifact carries a `t0` covering all ~20,951
+in-scope events at any single precision:
+
+- `results/phase_10/artifacts/v2_r13_detection.parquet` carries the nanosecond-precision, D7-derived
+  `det_ns_poll1` — "CAUSAL" per `research/phase_10/v4_t5_t6.py:36` — at threshold 1.3 for 114 rows,
+  **110** of which have an actual crossing (4 are `never_crosses = TRUE`, meaning the price never
+  reaches 1.3× the T-1 RTH close, so there is no crossing timestamp to record). Confirmed, by search,
+  to be the only nanosecond-precision detection artifact in the repo; no universe-scale version
+  exists anywhere.
+- `results/phase_8/artifacts/a102_detection_anchors.parquet` has 15,763 rows total, of which
+  **15,369** carry a defined `det_minute` (the other 394 are the same `never_crosses` condition at
+  a larger scale) — matching D15's own, independently recorded "detection-universe" population of
+  15,369 exactly. `config/phase_11.json`'s `reused_frozen` block already treats this artifact as the
+  standing frozen anchor for the most recently completed phase.
+
+Using the nanosecond anchor alone, as its precision would recommend, leaves **20,841 of 20,951 events
+(99.5%) with no anchor at all** — a table that would still pass every row-count assertion in
+`prompts/fundamentals_f1.md` §5 while carrying no filing-proximity or share-count join for nearly the
+whole universe.
+
+**Decision.** F1's `t0_spine` (a new artifact this decision names, not in the original work order)
+takes the finest anchor actually available per event, in this order:
+
+1. `det_ns_poll1` from `v2_r13_detection.parquet`, for the 110 events with an actual crossing
+   (filtered to `threshold = 1.3`, matching this artifact's own pin in `config/phase_10_v4.json` —
+   confirmed before use, not implied by the filename; the file carries three threshold values).
+2. Else, `a102_detection_anchors.parquet`'s `det_minute`, resolved back to that bar's `first_trade_ts`
+   in `event_minute_bars_v2` (the table `a102_detection.py` itself joined to produce `det_minute`),
+   rather than reconstructing wall-clock time from the minute-index grid independently — the source
+   table already carries the exact nanosecond timestamp, so re-deriving it through calendar
+   arithmetic adds DST/early-close risk for no benefit.
+3. Else, the first regular-session (09:30–16:00 ET) trade timestamp of `event_date_canonical` for
+   that ticker, read directly from that event's own `data/filtered/{TICKER}_{DATE}_{MOM:.2f}/`
+   folder (DuckDB-over-pandas is a rule about the 4.9B-row aggregate tables, not a per-event targeted
+   read this small — the same read pattern `research/phase_10/common.py` already established).
+
+Every row carries `t0_source ∈ {nanosecond_poll1, minute_a102, first_trade_fallback, unavailable}`.
+**Run and verified** (`results/fundamentals_f1/artifacts/t0_spine.parquet`,
+`t0_assemble_summary.json`): `nanosecond_poll1` = 110, `minute_a102` = 15,259, `first_trade_fallback`
+= 5,582, `unavailable` = 0. Sum = 20,951, exactly the universe. **F1-T3f's poll-boundary question is
+answered only for the `nanosecond_poll1` tier** and is reported as not-measurable-at-that-precision
+for the other two tiers — stated plainly in the digest, never silently extrapolated from a coarser
+tier.
+
+**Consequence acknowledged.** `t0` under tiers 2 and 3 is coarser than the "moment of detection" D7
+defines. This is acceptable for F1's purpose — filing-proximity and share-count timing operate on a
+scale of hours to months, not seconds, except at the single edge case F1-T3f asks about, which this
+decision scopes to the tier that can actually answer it.
+
+**Standing rule.** Any future work joining fundamentals or any other slow-moving data source to this
+universe's `t0` reuses `t0_spine`, keyed by `event_id` — it does not re-derive t0 by picking whichever
+anchor artifact happens to be at hand.
+
+**Numbering note.** Recorded as D27 through D33, confirmed free by reading this file — register
+highest was D26, next free D27. `CLAUDE.md`'s pointer list is updated in the same commit.
+**Next free number: D34.**
+
+---
+
+## D34 — Cooper authorized one-time live research to verify Phase 12's LULD parameters; D14 and row 4 stand unchanged for everything else
+
+**Date:** 2026-09-13 · **Gate:** Cooper's explicit chat authorization, quoted in full below, given
+after Phase 12's T0a/T0b ran and T0c reported its 7 remaining unfilled `[Cooper]` slots.
+
+**What was authorized, verbatim:** *"i sign off on everything and authorize you to fill empty slots
+with your best intuition. though these are to be flexible. look at the drafts 1 is most likely a much
+closer match to the nasdaq's real luld policy, research that and verify."*
+
+**Decision.** For Phase 12's `config/phase_12.json` specifically, and for this instance only, the
+agent was authorized to (a) perform live web research (WebSearch/WebFetch — tools available to this
+session despite D14 describing the *research pipeline's* environment as offline) to verify the LULD
+band parameters against Nasdaq's actual policy, and (b) fill the remaining numeric `[Cooper]`
+thresholds with the values the config file itself had already proposed, explicitly marked flexible.
+
+**Why this does not weaken D14 or Escalation row 4.** D14 ("environment is offline") describes what
+Phase 12's own committed scripts (`prompts/phase_12.md`'s task list, not yet run past T0c as of this
+decision) can do at run time — no network fetch happens inside any committed script, now or after
+this decision. Escalation row 4 ("no band parameter used that does not cite a
+config key") is unaffected — every parameter still must and does cite a key in `luld_bands`. What
+changed is narrower and one-directional: **Cooper personally directed a specific sourcing task in
+chat**, which is different in kind from the agent silently inferring a value from memory or from the
+data (the thing row 4 and D14 actually exist to prevent). No future phase inherits this authorization
+automatically — an agent citing this decision as license to source its own exchange-mechanics data
+without a fresh, explicit instruction has misread it.
+
+**What the research found, in brief** (full account with per-fact confidence levels:
+`docs/data/luld_plan_reference.md`; the specific corrections: `config/phase_12.json`'s
+`_corrections_2026_09_13` block):
+
+1. **A real error was caught and fixed.** The 2026-08-31 draft had the Tier-2 closing-window
+   doubling boundary backwards — it read "priced BELOW $3.00 doubles, at or above does not."
+   Corroborated across Cboe's technical-spec FAQ and independent NYSE/CTA-Plan/Nasdaq-Trader
+   trader-notice sources (Amendment 18, effective 2020-02-24): the boundary is **"reference price at
+   or below $3.00 doubles; above $3.00 does not"** — the $3.00 case itself doubles, the opposite of
+   the draft. This is exactly the boundary the config's own note already flagged as load-bearing for
+   this universe (median event crosses $3.00 mid-event, per Phase 11 A2-6).
+2. **A population-relevant gap was found and closed.** This cohort's dev sample includes an event
+   (AACG, 2020-02-18) six calendar days before Amendment 18 took effect. Pre-Amendment-18, doubling
+   applied in *both* a 9:30–9:45am window (since eliminated for all securities) and the 3:35–4:00pm
+   window, for *all* tiers with no Tier-2 price exclusion. `config.luld_bands.pre_amendment_18_regime`
+   now carries this branch; no further band/tier/doubling changes were found between 2020-02-24 and
+   2024, so the rest of the cohort (`era_2022_2024`) needs no further branching.
+3. **Cooper's own hunch about the two draft sources was directionally right and is recorded as
+   answered, not just accepted:** draft source 1 (luldplan.com) reproduced the correct band table and
+   the correct previous-close-selects-the-bracket rule, but also reproduced the boundary-direction
+   error above; draft source 2's content could not be independently re-extracted as text this session
+   (PDF extraction failed), so the correction came from a third, converging set of sources rather than
+   from directly arbitrating between the two drafts. Recorded honestly rather than claiming source 1
+   was confirmed superior on every point.
+4. **Two secondary sub-details remain moderate-confidence, flagged rather than resolved**: the
+   reference price's exact recalculation cadence, and whether sub-$0.75 doubling is a distinct rule
+   or a minimum-price-variation-floor consequence. Neither is load-bearing at this universe's
+   observed price range (~$2.21–$4.52).
+
+**Provenance boundary.** `docs/data/luld_plan_reference.md` is a **secondary, compiled** reference —
+it cites and quotes primary-adjacent sources (FINRA, Cboe's FAQ, luldplan.com, and a search synthesis
+of NYSE/CTA-Plan/Nasdaq-Trader/SEC-DERA notices) but is not a transcription of the LULD Plan's own
+legal text or an SRO rule filing, which did not extract as readable text with the tools available
+this session. `config/phase_12.json`'s `_STATUS` field is worded accordingly
+("VERIFIED WITH NOTED EXCEPTIONS," not "VERIFIED").
+
+**Numbering note.** Recorded as D34, confirmed free by reading this file — register highest was D33,
+next free D34. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D35.**
+
+---
+
+## D35 — Condition/indicator code dictionary research authorized and attempted; the two codes that matter remain unresolved
+
+**Date:** 2026-09-14 · **Gate:** Cooper's explicit authorization via a structured decision request
+("Look up the code dictionary first," in response to a question laying out Phase 12's Stage A gate
+result and three options). Same shape as D34, scoped to this instance only.
+
+**What was authorized.** Route 2 of Phase 12 (condition/indicator codes) identifies zero candidate
+halts because no code dictionary exists on disk (`config.phase_12.json`'s `dictionary_path = NONE`,
+confirming Phase 11 A2-11). Cooper authorized live web research to find and verify a real
+dictionary, the same method as D34's LULD research, specifically to see whether it would let route
+2 contribute to the Stage A gate.
+
+**What happened — a good-faith attempt that did not resolve the load-bearing codes.** Full account:
+`docs/data/condition_indicator_code_reference.md`. Three codes were resolved with high confidence
+(trade condition 37 = Odd Lot Trade; 2 = Average Price Trade; 14 = Intermarket Sweep, already
+confirmed in this repo via D26, cross-referenced not re-derived). **None of the three bear on halt
+identification.** The two codes that actually matter — quote indicator codes 3 and 7, found
+exclusive to candidate-gap windows in T2a's census — **could not be resolved.** Roughly a dozen
+search/fetch attempts across the vendor's own documentation, an authenticated API endpoint (no key
+available), primary regulatory specifications (NYSE, Nasdaq/UTP, CTA — all PDF, none extracted as
+readable text in this session, the same failure mode D34 hit for a different set of documents), a
+GitHub API-wrapper repository, and a market-microstructure glossary site (403 Forbidden) all failed
+to surface the vendor's specific numeric-code mapping. The raw regulatory letter-coded quote
+conditions (`R`, `A`, `B`, `H`, `W`, `O`) were found, but the vendor (Polygon/Massive, per its own
+documentation) re-numbers these into its own proprietary numeric scheme, which was not independently
+recoverable without the authenticated endpoint.
+
+**Consequence.** `config/phase_12.json`'s `dictionary_path` **stays `NONE`.** Route 2 still
+identifies nothing; the Stage A gate result (`results/phase_12/artifacts/t3_gate.json` — 9
+corroborated events vs. a floor of 50; 90.3% single-route-only share vs. a 60% ceiling) is
+**unchanged** by this research. No task was re-run on the strength of a partial dictionary that
+doesn't cover the two decision-relevant codes — doing so would have been exactly the kind of
+"looks resolved but isn't" result this programme's culture exists to avoid.
+
+**Why this is recorded as a decision despite resolving nothing.** So a future session does not
+re-attempt the same dead ends without knowing they were already tried, and so "we looked and
+couldn't find it" is distinguished from "we didn't look" in the permanent record — the same reason
+`claude/scale_space_lessons.md`'s absence is tracked as an open defect rather than silently
+re-searched-for each time it's cited.
+
+**Numbering note.** Recorded as D35, confirmed free by reading this file — register highest was
+D34, next free D35. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D36.**
+
+---
+
+## D36 — Reg SHO 201 researched and measured as a first step; D5's long-only constraint is unchanged
+
+**Date:** 2026-09-14 · **Gate:** Cooper's explicit authorization via a structured decision request
+(same request as D35's — Phase 12's Stage A gate result was presented alongside a separate
+short-side question; Cooper selected "Yes, research Reg SHO 201 as a first step").
+
+**Scope, stated first because it is the most important line in this entry.** This decision
+authorizes exactly one thing: researching SEC Regulation SHO Rule 201 (the short-sale circuit
+breaker) and measuring, per historical event, whether and when it would have triggered. **It does
+not authorize, imply, or begin any short-side strategy work.** D5 ("Long-only... Do not specify,
+implement, or measure short-side or fade variants. Do not implement SSR or borrow logic") stands
+completely unchanged. `docs/Universe-Decisions.md` D25 named three things that could each
+independently close the short-side question this programme has left open since D5: locate/borrow
+availability, halt/reopen risk, and Reg SHO 201 status. This decision supplies research on the
+third; the first remains unavailable in this checkout and the second (Phase 12) is measured for
+the long side only and would need separate work to condition on a short entry.
+
+**What was done.** Live web research (WebSearch/WebFetch), same method as D34/D35, sourced
+directly from the SEC's own FAQ page on Rule 201
+(`docs/data/reg_sho_201_reference.md`). **Rule, verified**: a 10%-or-more intraday decline from the
+prior day's regular-hours closing price (measured on traded prices, not the bid/ask) triggers a
+short-sale price-test restriction for the remainder of that day and the following full trading
+day. Previous close computed from tick data (D4-safe), reusing Phase 12's own construction
+(`research/phase_12/t2b_band_arithmetic.py`) rather than rebuilding it.
+
+**What was measured.** Per-event trigger check on the 56-event dev sample
+(`research/reg_sho_201/t1_trigger_check.py`, `results/reg_sho_201/REPORT.md`). 3 of 55 events
+(5.5%; 1 excluded, no computable previous close) trigger Rule 201 on the event day. The median
+event's own day-low never falls below its prior close (median max intraday decline: −1.8%) —
+consistent with a momentum-selected cohort chosen for sharp upward moves. **No interpretation of
+what this means for tradeability is offered** — Evidence Standard.
+
+**What remains closed.** The short-side question itself. Answering it fully still needs
+borrow/locate availability (unavailable) and a short-conditioned halt-risk measurement (not yet
+run). This decision closes nothing and opens nothing beyond the fact recorded here; it is a data
+point, not a reopening.
+
+**Numbering note.** Recorded as D36, confirmed free by reading this file — register highest was
+D35, next free D36. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D37.**

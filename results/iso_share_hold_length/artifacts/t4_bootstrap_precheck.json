@@ -1,0 +1,161 @@
+{
+  "task": "T4 -- full-tier noise-band precheck, read-only against the already-committed full-universe markout grid, zero new tick reads",
+  "grid_source": "results/phase_8/artifacts/a102_detection_markout_grid.parquet",
+  "latency_minutes": 5,
+  "bootstrap_reps": 5000,
+  "bootstrap_seed_base": 20260913,
+  "split": "50/50 random, no covariate -- the pure-noise null a real split-and-compare would see",
+  "full_tier": {
+    "det+15": {
+      "n_events": 15330,
+      "median_markout_bp": -62.873523612623714,
+      "iqr_bp": [
+        -426.8174080620742,
+        222.778223490497
+      ],
+      "required_separation_bp": 133.9,
+      "null_separation_abs_pctiles_bp": {
+        "p50": 5.359012391967429,
+        "p90": 13.934935631680858,
+        "p95": 16.399821470721733,
+        "p99": 21.57982275041892,
+        "max": 30.15007181815845
+      },
+      "null_separation_std_bp": 8.243050110983422,
+      "p_null_exceeds_required": 0.0,
+      "sigma_multiples_of_required_over_null_std": 16.24398714034086
+    },
+    "det+30": {
+      "n_events": 15305,
+      "median_markout_bp": -129.51152347078005,
+      "iqr_bp": [
+        -596.7233148639821,
+        271.7766823981592
+      ],
+      "required_separation_bp": 200.5,
+      "null_separation_abs_pctiles_bp": {
+        "p50": 7.899002909166583,
+        "p90": 17.654498357597618,
+        "p95": 21.49052541151969,
+        "p99": 30.764181331479275,
+        "max": 44.622817851213654
+      },
+      "null_separation_std_bp": 11.234432625363585,
+      "p_null_exceeds_required": 0.0,
+      "sigma_multiples_of_required_over_null_std": 17.846918192142446
+    },
+    "det+60": {
+      "n_events": 15270,
+      "median_markout_bp": -189.7590145900575,
+      "iqr_bp": [
+        -759.1746455757589,
+        325.78120060808294
+      ],
+      "required_separation_bp": 260.7,
+      "null_separation_abs_pctiles_bp": {
+        "p50": 9.418096895283952,
+        "p90": 26.733850647062184,
+        "p95": 32.27826856070987,
+        "p99": 42.29173368556754,
+        "max": 57.467321630734034
+      },
+      "null_separation_std_bp": 16.25853282734618,
+      "p_null_exceeds_required": 0.0,
+      "sigma_multiples_of_required_over_null_std": 16.034657171618424
+    },
+    "t0_close": {
+      "n_events": 15344,
+      "median_markout_bp": -249.51499960222407,
+      "iqr_bp": [
+        -1207.1066086980093,
+        571.5841383994863
+      ],
+      "required_separation_bp": 320.5,
+      "null_separation_abs_pctiles_bp": {
+        "p50": 16.099807198989822,
+        "p90": 42.44554312102805,
+        "p95": 50.66683628762789,
+        "p99": 64.8062946738537,
+        "max": 90.05711933382662
+      },
+      "null_separation_std_bp": 25.259618119371336,
+      "p_null_exceeds_required": 0.0,
+      "sigma_multiples_of_required_over_null_std": 12.688236159604168
+    },
+    "t1_close": {
+      "n_events": 15327,
+      "median_markout_bp": -575.1390620060675,
+      "iqr_bp": [
+        -1775.7898687359975,
+        692.7082046002951
+      ],
+      "required_separation_bp": 646.1,
+      "null_separation_abs_pctiles_bp": {
+        "p50": 22.496597205867204,
+        "p90": 60.5305547476584,
+        "p95": 67.3742053168009,
+        "p99": 89.26663505413026,
+        "max": 171.63691130392226
+      },
+      "null_separation_std_bp": 36.157446897548816,
+      "p_null_exceeds_required": 0.0,
+      "sigma_multiples_of_required_over_null_std": 17.869071392974938
+    },
+    "t3_close": {
+      "n_events": 15330,
+      "median_markout_bp": -790.8575165584405,
+      "iqr_bp": [
+        -2326.5298045454315,
+        803.3450691081176
+      ],
+      "required_separation_bp": 861.8,
+      "null_separation_abs_pctiles_bp": {
+        "p50": 33.30440680200917,
+        "p90": 70.60518502261115,
+        "p95": 84.06785797445721,
+        "p99": 108.21236939759186,
+        "max": 146.90439909657243
+      },
+      "null_separation_std_bp": 44.96993779072273,
+      "p_null_exceeds_required": 0.0,
+      "sigma_multiples_of_required_over_null_std": 19.163913546213283
+    }
+  },
+  "dev_tier_49_sanity_check": {
+    "note": "reproduces T3's actual negative-control finding as a sanity check on this bootstrap's methodology -- compare null_separation_abs_max_bp here to T3's reported 2257.6 bp max",
+    "by_horizon": {
+      "det+15": {
+        "n_events": 49,
+        "null_separation_abs_p95_bp": 345.44247824312953,
+        "null_separation_abs_max_bp": 593.7801242879028
+      },
+      "det+30": {
+        "n_events": 49,
+        "null_separation_abs_p95_bp": 355.5447822803259,
+        "null_separation_abs_max_bp": 675.0530210876645
+      },
+      "det+60": {
+        "n_events": 49,
+        "null_separation_abs_p95_bp": 355.7149651513474,
+        "null_separation_abs_max_bp": 611.987981795449
+      },
+      "t0_close": {
+        "n_events": 49,
+        "null_separation_abs_p95_bp": 975.7322563251008,
+        "null_separation_abs_max_bp": 1386.5954288079602
+      },
+      "t1_close": {
+        "n_events": 49,
+        "null_separation_abs_p95_bp": 1196.4018954807955,
+        "null_separation_abs_max_bp": 1845.7556427554173
+      },
+      "t3_close": {
+        "n_events": 49,
+        "null_separation_abs_p95_bp": 1702.4376132423884,
+        "null_separation_abs_max_bp": 2507.1523165682197
+      }
+    }
+  },
+  "source": "research/iso_share_hold_length/t4_bootstrap_precheck.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/iso_share_hold_length/t4_bootstrap_precheck.py"
+}

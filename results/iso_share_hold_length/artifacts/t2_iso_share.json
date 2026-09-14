@@ -1,0 +1,26 @@
+{
+  "task": "T2 -- per-event ISO share, dev tier, latency=5min entry anchor",
+  "n_events": 50,
+  "n_ok": 49,
+  "coverage": 0.98,
+  "status_counts": {
+    "ok": 49,
+    "no_anchor": 1
+  },
+  "n_no_anchor_row": 1,
+  "n_det_undefined": 1,
+  "iso_share_summary": {
+    "n": 49,
+    "mean": 0.27286878468235837,
+    "median": 0.19161075853732246,
+    "q25": 0.13941086961458973,
+    "q75": 0.3640742466248641,
+    "share_exactly_zero": 0.0,
+    "max": 1.0
+  },
+  "window_definition": "[session_window(event_date,0).start_ns, last_trade_ts @ minute_index=det_minute+5 (or nearest prior non-empty bar)]",
+  "iso_code": 14,
+  "latency_minutes": 5,
+  "source": "research/iso_share_hold_length/t2_iso_share.py:main",
+  "reproduce": ".venv/Scripts/python.exe research/iso_share_hold_length/t2_iso_share.py"
+}

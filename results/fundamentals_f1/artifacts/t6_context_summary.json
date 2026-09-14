@@ -1,0 +1,10 @@
+{
+  "rows": 20951,
+  "n_missing_detection_price": 0,
+  "n_missing_exchange_info": 1968,
+  "delisted_status_counts": {
+    "active": 18983,
+    "unknown": 1968
+  },
+  "config_hash": "4eebcb303820"
+}

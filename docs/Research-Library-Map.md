@@ -11,6 +11,126 @@ This map covers `archive/`, `config/`, `docs/`, `notebooks/`, `prompts/`, `resea
 
 ---
 
+## Build F1 addendum — fundamental data and float layer, pre-flight (folder-level; branch `build/fundamentals-f1`, 2026-09-11)
+
+Unnumbered work unit (see `07af342`'s exact-stem convention, `tools/verify_cited_paths.py`), not a
+numbered phase — no `research/phase_{n}/`/`results/phase_{n}/` pairing applies. Branched from
+`phase/10e`, not `master`: `master`'s `docs/Universe-Decisions.md` does not yet carry D24–D26 (an open
+pull request merging `phase/10e` into `master` is unmerged as of this addendum).
+
+Files added, pre-flight only (F1-T0 through F1-T6 have not run yet):
+
+- `prompts/fundamentals_f1.md` — the work order, reconciled against actual repo state before any task
+  ran (no `event_id`/`t0` spine column exists, the companion scoping note referenced by the original
+  draft does not exist, D14 as written has no network carve-out).
+- `research/fundamentals_f1/common.py` — shared config/DuckDB-connection/identity-key/t0-tier plumbing.
+  `event_id()` reused verbatim from `research/phase_10/common.py:215`.
+- `config/fundamentals_f1.json` — frozen config skeleton; `cooper_pending` block holds the two
+  thresholds (`filed_stale_days`, `shs_quality_coverage_floor`) that must be set before F1-T4 runs.
+- `docs/data/fundamentals_sources.md` — tracked provenance doc for `data/raw/fundamentals/` and
+  `data/fundamentals/` (both under the wholly-gitignored `/data/`), per the same convention as
+  `docs/data/Schema.md`.
+- `docs/Universe-Decisions.md` — **D14 Amendment A1** (scoped network exception for F1-T2/F1-T3) and
+  **D27–D33** (the work order's DF-1..DF-6 registered, plus D33: the tiered t0 construction, a new
+  artifact — `t0_spine.parquet` — not in the original draft). `CLAUDE.md`'s decision index updated in
+  the same commit; next free number is now **D34**.
+- `.gitignore` — added `results/fundamentals_f1/artifacts/*.parquet`, matching the existing
+  `results/scale_field/artifacts/*.parquet` rule for non-`phase_*` work units.
+- `research/fundamentals_f1/t0_assemble.py` — F1-PF5, builds `t0_spine.parquet` (gitignored parquet,
+  20,951 rows) and `t0_assemble_summary.json` (tracked). Run and verified: tier counts
+  `nanosecond_poll1`=110, `minute_a102`=15,259, `first_trade_fallback`=5,582, `unavailable`=0.
+- `research/fundamentals_f1/t0_restatement_test.py` — F1-T0, the restatement gate test. Run and
+  verified: escalation row 1 fires (`t0_restatement_test_summary.json`) — Massive's financials
+  endpoint is not point-in-time via `filing_date`.
+- Empty skeleton directory: `results/fundamentals_f1/charts/`.
+- `data/raw/fundamentals/massive/2026-09-11/t0_restatement_test/` — raw archive (gitignored under
+  `/data/`), two companies' full unfiltered financials history plus a fetch manifest.
+- `prompts/fundamentals_f1_amendment_a1.md` — Amendment F1-A1 (2026-09-12): named the gap F1-T0 left
+  (one vendor record per period, but which vintage?) and specified F1-T0f/F1-T0g to close it.
+- `research/fundamentals_f1/t0f_t0g_disambiguation.py` — F1-T0f/F1-T0g. Run and verified: Outcome A
+  (vendor serves original as-filed values) and `companyfacts` confirmed multi-vintage.
+  `t0f_t0g_disambiguation_summary.json` tracked; `data/raw/fundamentals/sec/2026-09-12/companyfacts/`
+  (gitignored) holds CLRB's archived `companyfacts` response.
+
+- `research/fundamentals_f1/t1_identity.py` — F1-T1, identity spine. First implementation used a
+  ticker-level `active=true/false` pre-filter that found zero ambiguous tickers across 2,930 —
+  disproven by direct spot-check (`NTRP` resolves to two different SEC registrants at different
+  dates, which the pre-filter missed) and superseded, same file, by per-event as-of resolution for
+  all 20,951 events. Run and verified: 37 ambiguous tickers (313 events), 248 unresolved, escalation
+  row 2 does not fire (2.68% < 5%). `ticker_identity.parquet` (gitignored) and `t1_identity_summary.json`
+  (tracked) in `results/fundamentals_f1/artifacts/`.
+- `research/fundamentals_f1/chart_t1_identity_quality.py` — F1-T1d chart, reusing
+  `research/phase_9/chart_common.py`'s validated GREEN/YELLOW/RED status triad rather than a new
+  palette. `results/fundamentals_f1/charts/t1_identity_quality_by_year.html`.
+- `research/fundamentals_f1/t2_massive_pull.py` — F1-T2, the Massive bulk pull. Run and verified:
+  2,935 distinct CIKs, 8 working endpoints (`ratios` not_found, no reachable path), zero fetch
+  failures after two bugs caught and fixed in dry-run testing (pagination `next_params` crash; four
+  endpoints — `short_interest`, `short_volume`, `float`, `splits` — silently ignoring `cik=` and
+  returning arbitrary unfiltered results, fixed by pulling those by ticker instead).
+  `t2_pull_summary.json` (tracked) in `results/fundamentals_f1/artifacts/`.
+- `data/raw/fundamentals/massive/2026-09-12/<source>/<cik>.json` — raw archive (gitignored under
+  `/data/`), 8 sources × 2,935 CIKs, 23,480 files, 2.17 GB. `fetch_manifest.json` (gitignored, same
+  rule) records per-source endpoint/keying/record-count; sibling `checksums.json` (added 2026-09-12
+  as a correction, see `prompts/fundamentals_f1.md`'s F1-T2d note) carries the per-file SHA256s.
+- `.gitignore` — added `results/fundamentals_f1/artifacts/_*.json` (internal resumption/progress
+  caches, distinct from the tracked summary JSONs).
+- `docs/data/fundamentals_sources.md` — F1-T2e: per-source field schema, sample record, and a
+  summary table for all 8 archived Massive sources.
+- `research/fundamentals_f1/t3_filing_index.py` — F1-T3a-e, the SEC filing index. Per-CIK
+  `submissions.json` (not the daily/full-index bulk archive — see docstring), 2,935/2,935 CIKs.
+  Built `sec_filings.parquet` (938,063 rows), `event_filing_proximity.parquet` (20,951 rows),
+  `event_filings_window.parquet` (139,039 rows), `item402_filings_full_history.parquet` (unbounded
+  look-forward for F1-T3h). Raw archive: `data/raw/fundamentals/sec/2026-09-12/submissions/`
+  (gitignored).
+- `research/fundamentals_f1/t3f_poll_boundary.py` — F1-T3f. Nanosecond_poll1 tier only (110 events):
+  zero filings in the poll-boundary window, escalation row 6 does not fire.
+- `research/fundamentals_f1/chart_t3_filing_proximity.py` — F1-T3g chart.
+  `results/fundamentals_f1/charts/t3_filing_proximity.html`.
+- `research/fundamentals_f1/t3h_blast_radius.py` — F1-T3h (Amendment F1-A1 §3). 8-K Item 4.02 only
+  as the genuine-restatement signal (isXBRL/isInlineXBRL checked directly and found unreliable as a
+  classifier). 3.70% of the universe (776/20,951) — below Cooper's 10% threshold, escalation row 1c
+  does not fire, F1-T4f stays optional. Side finding carried to F1-T6: vendor financials coverage
+  before `t0` is only 39.6% universe-wide, concentrated almost entirely in 2023+ events.
+- `research/fundamentals_f1/t5_prep_flatten.py` — flattens the F1-T2 vendor raw archive
+  (financials/short_interest/splits) into `financials_vintages.parquet`, `short_interest_flat.parquet`,
+  `splits_flat.parquet` for F1-T5's ASOF joins. Offline, no network call.
+- `.gitignore` — added `results/fundamentals_f1/artifacts/_t3_parts/` and `_t4_parts/` (per-CIK
+  parquet resumption caches, same pattern as the existing `_t5b_parts/` entry).
+- `docs/Universe-Decisions.md` — D14 Amendment A1 clarification note (2026-09-12): the decision's
+  "F1-T3 (SEC EDGAR ... `companyfacts.zip` pull)" wording bundled what the work order later split
+  into F1-T3 and F1-T4; the authorization covers both.
+- `research/fundamentals_f1/t4_shares_outstanding.py` — F1-T4a-d. Per-CIK `companyfacts` API, not the
+  1.4 GB bulk zip (see docstring). `shares_outstanding_observations.parquet` (84,826 rows, 2,542
+  CIKs). F1-T4d: vendor-vs-SEC share-count disagreement reported (median ratio 1.03, extreme tail to
+  13.4M×), not reconciled. Raw archive: `data/raw/fundamentals/sec/2026-09-12/companyfacts/`.
+- `research/fundamentals_f1/t5_prep_flatten.py` + `t6_prep_context.py` — companion-table flattening
+  (financials/short_interest/splits) and per-event context (detection price decile, tick-derived not
+  D4-restricted; exchange/delisted status from F1-T2's `ticker_details`).
+- `research/fundamentals_f1/t5_assemble.py` — F1-T5, assembles `data/fundamentals/event_fundamentals.parquet`
+  (20,951 rows, gitignored). `shs_` uses a window-function nearest-match (not a plain ASOF join) after
+  F1-T5d's verification caught 5 rows where a SEC cover-page date genuinely postdated its own filing's
+  acceptance timestamp — see `research/fundamentals_f1/verify_event_fundamentals.py`'s F1-T5d account
+  in `prompts/fundamentals_f1.md`.
+- `research/fundamentals_f1/verify_event_fundamentals.py` — F1-T5d Verification Block, structured
+  drift-dict + exit-code + `--json` style. Found and fixed 3 real defects on its first run (a
+  verification-script datetime-formatting bug, the `shs_asof_ns` hard-stop above, and a stale
+  `fin_quality` enum in config) plus, via the suspicious 100%-clean `spl_quality` it made visible, a
+  `COUNT(*)`-over-`LEFT JOIN` bug that also silently affected the already-committed
+  `flg_n_filings_72h` (both fixed). **All 9 checks pass on the corrected table.**
+- `research/fundamentals_f1/t6_coverage_report.py` + `chart_t6_coverage.py` + `chart_t6_lag_distributions.py`
+  — F1-T6a/b, the coverage report and its two charts. Escalation row 5 does not fire (`shs_` coverage
+  76.8% clears Cooper's 70% floor). Coverage is not missing at random, but the dominant axis is a
+  vendor historical-backfill year boundary (2022→2023), not company quality — delisted-status and
+  price-decile cross-cuts show little to no gradient.
+- `results/fundamentals_f1/REPORT.md` (+ copy at `results/reports/fundamentals_f1_report.md`) — the
+  full digest, in `prompts/fundamentals_f1.md` §7's exact order. **Build F1 complete.**
+
+**Built:** the full F1-T0 through F1-T6 sequence, pre-flight through the coverage-report gate. See
+`results/fundamentals_f1/REPORT.md` for the complete digest. **Out of scope by design:** float tiers 2
+and 3 (§3 of the work order — scoped against this report, not before it) and F1-T4f (the
+`companyfacts`-based `fin_` rebuild, stayed optional since F1-T3h's blast radius did not clear
+Cooper's mandatory threshold).
+
 ## Phase 10 addendum — v3 and v4 (folder-level; branch `phase/10`, 2026-08-06)
 
 Supersedes the "ran in two scopes" framing in the Phase 10 section below: the phase ran **four**
@@ -2043,3 +2163,43 @@ contained all 52.
 **Also flagged, not fixed:** `claude/fragmentation_and_the_closure.md` is tracked but appears nowhere in
 this map, against the standing rule that any phase adding files updates it in the same phase. It belongs
 to the gates thread, so its entry is left to that thread rather than written here.
+
+## Phase 12 — Halts & LULD, Stage A (dev tier, 2026-09-13)
+
+**Type:** measurement phase, two-stage. Stage A (T0a–T3) run this pass; Stage B unauthorised —
+Escalation rows 10/11 fired at T3 and the Approval Gate blocks Stage B until Cooper clears them in
+writing. `docs/Universe-Decisions.md` D34, `docs/data/luld_plan_reference.md`,
+`results/phase_12/REPORT.md`.
+
+**Code — `research/phase_12/`.** `t0d_audit.py` (satisfiability audit, all 17 escalation rows,
+reused methodology from `research/phase_10e/t0d_audit.py`); `t1_gap_census.py` (route 1: every RTH
+inter-print gap, dev tier, `is_candidate` flag at ≥60s on top of the full distribution);
+`t2a_condition_census.py` (route 2: opaque code-frequency census, candidates vs. a matched
+non-candidate sample — no dictionary exists, so this task identifies nothing by construction);
+`t2b_band_arithmetic.py` (route 3: reference price and band edges from `event_minute_bars_v2`,
+minute-bar granularity, D4-safe — previous close from tick data, never a spine column);
+`t2c_agreement_matrix.py` (the three-route agreement read, route 2 contributing zero by
+construction); `t3_gate.py` (the Stage A gate itself). `chart_01_gap_duration.py`,
+`chart_02_route_agreement.py`.
+
+**Data — `docs/data/luld_plan_reference.md` (new).** A secondary, compiled reference on LULD band
+mechanics, produced by live web research under Cooper's explicit one-time authorization (D34) —
+corrects a backwards doubling-boundary direction in the original 2026-08-31 draft and adds a
+pre-Amendment-18 (2020-02-24) regime branch this cohort's earliest dev event needs.
+
+**Finding, stated once:** route 1 shows a real, modest excess in candidate-gap counts right at the
+300-second LULD pause length (not the smooth, featureless null the chart contract names as the
+failure case); route 3 touches a band edge in 13/55 dev events; only 9 events show cross-route
+agreement, and the single-route-only share (90.3%) exceeds Cooper's 60% ceiling. Route 2
+contributes nothing — no code dictionary exists on disk, confirming Phase 11 A2-11's own finding
+again on this task's own read. Three concrete, named things would close the gap: a partial
+dictionary for the two candidate-exclusive indicator codes (3, 7); full-tier promotion; tick-level
+(not minute-bar) band arithmetic.
+
+## Reg SHO 201 — a first-step measurement, not a phase (2026-09-14)
+
+**Not a numbered phase.** `research/reg_sho_201/t1_trigger_check.py` (per-event Rule 201 trigger
+check, dev tier, reusing Phase 12's D4-safe previous-close construction) and
+`chart_01_decline_distribution.py`. `docs/data/reg_sho_201_reference.md` (the researched, verified
+rule). `docs/Universe-Decisions.md` D36 records the authorization's exact scope: a measurement
+only. **D5's long-only constraint is unchanged; this closes nothing about the short side.**
