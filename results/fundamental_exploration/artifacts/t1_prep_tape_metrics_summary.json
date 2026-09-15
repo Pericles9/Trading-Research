@@ -1,0 +1,13 @@
+{
+  "task": "E1-T1 prep: tape-side metrics",
+  "rows": 20951,
+  "n_zero_session_prints": 0,
+  "n_zero_t0_prints": 0,
+  "n_null_median_intertrade": 0,
+  "t0_session_counts": {
+    "regular": 16242,
+    "pre_market": 4630,
+    "after_hours": 79
+  },
+  "config_hash": "042eac1aebb5"
+}
