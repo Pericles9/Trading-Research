@@ -2203,3 +2203,38 @@ check, dev tier, reusing Phase 12's D4-safe previous-close construction) and
 `chart_01_decline_distribution.py`. `docs/data/reg_sho_201_reference.md` (the researched, verified
 rule). `docs/Universe-Decisions.md` D36 records the authorization's exact scope: a measurement
 only. **D5's long-only constraint is unchanged; this closes nothing about the short side.**
+
+## Fundamental exploration E1 — descriptive baseline, not a phase (2026-09-15)
+
+**Branch `explore/fundamental-e1`, cut from `master`.** `prompts/fundamental_exploration_e1.md` (the
+brief, with §7 recording two drafting-slip corrections resolved before any code ran: light theme not
+dark, and charts nest under `results/fundamental_exploration/charts/` per every other task's
+convention rather than a new top-level `charts/`) and `config/fundamental_exploration.json`.
+`research/fundamental_exploration/` — `common.py`/`chart_common.py` (shared plumbing, palette carried
+by value from `phase/13`'s own `chart_common.py` — that branch is unmerged, not present on this
+checkout, so copied from its own history rather than imported), `t0_join_and_assert.py` +
+`t0b_detection_price.py` (F1-T6's `detection_price` reconstructed locally, that gitignored
+intermediate isn't present on this checkout), `t1_prep_tape_metrics.py` (bulk DuckDB join against
+`filtered_trades` — see below), `t1_univariate_{fundamentals,tape}.py`, `t2_coverage.py`,
+`t3_shares_x_price.py`, `t4_fundamentals_vs_volume.py`, `t5_filing_landscape.py`,
+`t6_reverse_split_cohort.py`, `t7_collinearity.py`, one `chart_*.py` per task. Descriptive only — no
+fundamental column touches an outcome variable. `results/fundamental_exploration/REPORT.md` (copied
+to `results/reports/fundamental_exploration_report.md` per the cross-phase convention).
+
+Two data-quality findings surfaced while building this, neither acted on in `event_fundamentals`
+itself (Build F1 is closed and separately verified; this reads it, doesn't edit it): `spl_quality`
+conflates a confirmed zero-splits event with a true data gap (both read `"unavailable"`,
+`t5_assemble.py:180-181` — 98% of the "unavailable" rows actually have a resolved CIK); and 54 events
+carry `shs_shares_outstanding == 0.0` exactly, plus a further ~146 with an implausibly small nonzero
+count (<100,000 shares against real trading volume in the tens of millions) — both handled in
+`common.add_corrected_shares_outstanding` (NaN for the exact-zero case; a `shs_share_count_suspect`
+diagnostic, never a filter, for the rest) rather than corrected upstream.
+
+`t1_prep_tape_metrics.py`'s bulk join (event volume/print-count/inter-trade-interval from
+`filtered_trades`, 4.9B rows) OOM'd twice before landing — 20,951 of ~24,726 total event-folders are
+in-scope, so this join touches ~85% of the table, not a small slice, and a window function
+(`LAG` for median inter-trade interval) needs a per-partition sort that blew past DuckDB's 25GB
+default limit (80% of this machine's 32GB RAM). Fixed by isolating the window-function query from the
+cheap aggregates, batching it by event year with per-batch checkpointing, and an automatic
+split-and-retry fallback for a batch that still OOMs on its own connection. Recorded as a standing
+reference note for future bulk joins against `filtered_trades`/`filtered_quotes`.
