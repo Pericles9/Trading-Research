@@ -27,6 +27,14 @@ from src.data.paths import resolve_data_root, resolve_duckdb_path
 CFG = "config/fundamental_exploration.json"
 ART = "results/fundamental_exploration/artifacts"
 CHARTS = "results/fundamental_exploration/charts"
+
+# E2 nests under the same results/fundamental_exploration/ umbrella as E1 (per the brief's own
+# "results/fundamental_exploration/e2/" path) -- "charts/fundamental_exploration/e2/" read literally
+# would be a new top-level charts/ dir, which no phase or task in this repo has (same correction as
+# E1's own SS7/SS8). Nested under e2/charts/ instead.
+CFG_E2 = "config/fundamental_exploration_e2.json"
+ART_E2 = "results/fundamental_exploration/e2/artifacts"
+CHARTS_E2 = "results/fundamental_exploration/e2/charts"
 # Routed through resolve_data_root(), NOT a cwd-relative literal -- same bug class Build F1 found
 # and fixed in its own common.py (2026-09-13, commit 369daab): a cwd-relative "data/..." literal
 # silently resolves to the WRONG location if this code ever runs from a worktree other than the
@@ -73,15 +81,15 @@ def add_identity_fields(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def load_cfg() -> dict:
-    with open(CFG) as f:
+def load_cfg(path: str = CFG) -> dict:
+    with open(path) as f:
         return json.load(f)
 
 
-def cfg_hash() -> str:
+def cfg_hash(path: str = CFG) -> str:
     """sha256[:12] of the committed config, newline-normalised so the hash is identical
     on LF and CRLF checkouts. Matches research/phase_9/common.py's convention."""
-    b = pathlib.Path(CFG).read_bytes().replace(b"\r\n", b"\n")
+    b = pathlib.Path(path).read_bytes().replace(b"\r\n", b"\n")
     return hashlib.sha256(b).hexdigest()[:12]
 
 

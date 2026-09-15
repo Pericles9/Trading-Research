@@ -80,8 +80,8 @@ def legend_inside(fig, x: float = 0.012, y: float = 0.985, xanchor: str = "left"
     return fig
 
 
-def write(fig, subdir: str, name: str) -> str:
-    out_dir = pathlib.Path(CHARTS) / subdir
+def write(fig, subdir: str, name: str, root: str = CHARTS) -> str:
+    out_dir = pathlib.Path(root) / subdir
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"{name}.html"
     fig.write_html(str(path), include_plotlyjs=True)
@@ -116,8 +116,8 @@ def box_from_stats(x_labels, stats_list, name: str, color: str, offsetgroup: str
     )
 
 
-def load_json(name: str) -> dict:
-    with open(f"{ART}/{name}.json") as f:
+def load_json(name: str, root: str = ART) -> dict:
+    with open(f"{root}/{name}.json") as f:
         return json.load(f)
 
 
