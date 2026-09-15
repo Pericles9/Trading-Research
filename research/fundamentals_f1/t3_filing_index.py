@@ -41,8 +41,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 from research.fundamentals_f1 import common as C  # noqa: E402
 
 FETCH_DATE = "2026-09-12"
-RAW_ROOT = f"data/raw/fundamentals/sec/{FETCH_DATE}/submissions"
-MANIFEST_PATH = f"data/raw/fundamentals/sec/{FETCH_DATE}/submissions_manifest.json"
+RAW_ROOT = f"{C.RAW_ROOT}/sec/{FETCH_DATE}/submissions"
+MANIFEST_PATH = f"{C.RAW_ROOT}/sec/{FETCH_DATE}/submissions_manifest.json"
 PROGRESS_PATH = f"{C.ART}/_t3_progress.json"
 
 SEC_FILINGS_PATH = f"{C.ART}/sec_filings.parquet"

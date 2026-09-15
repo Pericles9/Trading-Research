@@ -188,6 +188,15 @@ EXPECTED_ABSENT = {
         "docs/Universe-Decisions.md:1590 (D33) -- gitignored regenerable artifact, same list as "
         "above; D33's own text reports its tier counts from t0_assemble_summary.json (committed) "
         "rather than depending on the parquet being present.",
+    # -- Phase 13 (found while merging this branch for its closure PR, 2026-09-14): same class
+    #    as the F1 artifacts above -- gitignored per results/phase_13/REPORT.md's own Output
+    #    files table ("gitignored, regenerable"), regenerable from t1_build_p0.py + config_hash.
+    #    Never committed on any checkout; pre-existing since T1's original commit, not introduced
+    #    by this phase's closure work.
+    "results/phase_13/artifacts/p0_outcome.parquet":
+        "docs/Research-Library-Map.md:40, results/phase_13/REPORT.md's Output files table -- "
+        "gitignored regenerable artifact of research/phase_13/t1_build_p0.py, same pattern as "
+        "the fundamentals_f1 and iso_share_hold_length artifact exclusions above.",
 }
 
 # ---------------------------------------------------------------------------
