@@ -11,6 +11,13 @@ float (shares outstanding >= float), and only an ordinal ranking, never a level 
 labeled that way on the axis itself, not just the caption, per the brief's own
 instruction.
 
+common.py's shs_share_count_suspect diagnostic (found while building this task,
+generalized in E1-T6) flags events whose corrected share count is implausibly small
+(<100,000, a stated round threshold, never a filter) -- these inflate any cell's MEAN
+turnover sharply (one event alone reaches 790,351x) while leaving the median/IQR the
+box plot foregrounds comparatively unaffected. Reported per cell here so an unusually
+high mean in one panel can be traced back to it rather than read as a real signal.
+
 Usage: .venv/Scripts/python.exe research/fundamental_exploration/t4_fundamentals_vs_volume.py
 """
 from __future__ import annotations
@@ -34,7 +41,7 @@ def stats(s: pd.Series) -> dict:
     if len(s) == 0:
         return {"n": 0}
     return {
-        "n": int(len(s)), "mean": float(s.mean()),
+        "n": int(len(s)), "mean": float(s.mean()), "max": float(s.max()),
         "p10": float(s.quantile(0.10)), "p25": float(s.quantile(0.25)),
         "median": float(s.quantile(0.50)), "p75": float(s.quantile(0.75)),
         "p90": float(s.quantile(0.90)),
@@ -61,6 +68,7 @@ def main() -> int:
             "year": year, "price_decile": int(pdec), "shs_decile": int(sdec),
             "volume_shares": stats(g["volume_shares"]),
             "turnover_lower_bound": stats(g["turnover_lower_bound"]),
+            "n_shs_share_count_suspect": int(g["shs_share_count_suspect"].sum()),
         })
     C.write_json(f"{C.ART}/t4_cells.json", {"cells": cells})
 
@@ -77,6 +85,10 @@ def main() -> int:
             "add_corrected_shares_outstanding) -- shs_shares_outstanding_corrected is NaN for these, so "
             "they're excluded here (n_no_shs_data above includes them), not divided-by-zero into inf.",
         "n_zero_session_volume": n_zero_volume,
+        "n_shs_share_count_suspect": int(df["shs_share_count_suspect"].sum()),
+        "n_shs_share_count_suspect_note": f"shs_shares_outstanding_corrected < "
+            f"{C.SHARE_COUNT_SUSPECT_THRESHOLD:,} shares -- descriptive diagnostic, never a filter "
+            f"(common.py, generalized from this task's own finding). Inflates cell means, not medians.",
         "n_cells_total": n_cells,
         "n_cells_suppressed": n_suppressed,
         "min_cell_n_display_floor": MIN_CELL_N,

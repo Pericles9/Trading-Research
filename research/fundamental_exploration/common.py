@@ -43,6 +43,9 @@ TARGET_ROW_COUNT = 20_951  # confirmed via UNIVERSE_MATERIALIZATION_PATH, not a 
 DETECTION_PRICE_PATH = "results/fundamentals_f1/artifacts/t6_context.parquet"
 DETECTION_PRICE_FALLBACK_PATH = f"{ART}/detection_price.parquet"
 
+SHARE_COUNT_SUSPECT_THRESHOLD = 100_000  # descriptive diagnostic only, never a filter -- see
+# add_corrected_shares_outstanding's docstring below
+
 
 def event_id(row) -> str:
     """Verbatim from research/phase_10/common.py:215 -- do not modify independently."""
@@ -139,6 +142,19 @@ def add_corrected_shares_outstanding(df: pd.DataFrame) -> pd.DataFrame:
     )
     df.loc[df["shs_zero_artifact"], "shs_shares_outstanding_corrected"] = np.nan
     df["shs_correction_applied"] = needs_correction
+
+    # A second, broader problem (found in E1-T6): sorting the corrected column's
+    # smallest nonzero values turns up 1, 1, 1, 12, 12, 17, 100 (x9), 1000 (x6),
+    # 1440 (x9) -- implausible for real, actively-traded companies (one, LAES, trades
+    # ~79M shares against a filed count of 100). Unlike the exact-zero case there is no
+    # clean gap separating these from legitimate small microcap counts, so this is a
+    # DIAGNOSTIC flag only (a stated round threshold, not a data-driven boundary) --
+    # never used to exclude or correct anything. It exists so every consumer of this
+    # column reports it consistently instead of each script picking its own cutoff.
+    df["shs_share_count_suspect"] = (
+        df["shs_shares_outstanding_corrected"].notna()
+        & (df["shs_shares_outstanding_corrected"] < SHARE_COUNT_SUSPECT_THRESHOLD)
+    )
     return df
 
 

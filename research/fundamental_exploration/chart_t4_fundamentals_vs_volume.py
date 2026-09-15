@@ -69,10 +69,16 @@ def main():
                        "y-axis: regular-session event volume, shares (log)", CC.BLUE, log_y=True)
     CC.write(fig1, "t4_fundamentals_vs_volume", "01_volume_by_shs_decile")
 
+    summary = CC.load_json("t4_fundamentals_vs_volume_summary")
     fig2 = build_grid("turnover_lower_bound",
                        "E1-T4: turnover (volume / shares outstanding) by shares-outstanding decile",
                        "y-axis: volume_shares / shs_shares_outstanding_corrected -- LOWER BOUND vs true "
-                       "float, ordinal ranking only, never a level (log)", CC.ORANGE, log_y=True)
+                       "float, ordinal ranking only, never a level (log). "
+                       f"{summary['n_shs_share_count_suspect']} events carry an implausibly small share "
+                       f"count (<{100_000:,}, a diagnostic not a filter) that inflates a cell's MEAN "
+                       "sharply without moving its median much -- read the box's median line, not a mean "
+                       "computed separately from it.",
+                       CC.ORANGE, log_y=True)
     CC.write(fig2, "t4_fundamentals_vs_volume", "02_turnover_lower_bound_by_shs_decile")
 
 
