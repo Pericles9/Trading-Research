@@ -1,0 +1,25 @@
+{
+  "task": "E2-T2a baseline volume B_e (pre-floor)",
+  "config_hash": "8a18fbef1f6b",
+  "n_total": 15763,
+  "n_baseline_sessions_counts": {
+    "0": 21,
+    "1": 140,
+    "2": 107,
+    "3": 15495
+  },
+  "n_zero_baseline_sessions": 21,
+  "n_zero_baseline_sessions_note": "events with none of T-3..T-1 showing rth volume -- B_e is undefined (NaN) for these, not zero. DE-2's window/duration build cannot run for them.",
+  "B_e_distribution_shares_per_10min": {
+    "n": 15742,
+    "min": 0.05128205128205128,
+    "p1": 63.73735042735043,
+    "p5": 290.07735042735044,
+    "p10": 638.6,
+    "p25": 2230.561965811966,
+    "median": 10216.641025641025,
+    "p75": 55986.705128205125,
+    "p90": 291052.37606837595,
+    "max": 32250333.290598292
+  }
+}
