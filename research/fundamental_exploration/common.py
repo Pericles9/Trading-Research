@@ -18,6 +18,7 @@ import pathlib
 import re
 
 import duckdb
+import numpy as np
 import pandas as pd
 
 from src.data.db import get_connection
@@ -114,17 +115,29 @@ def add_corrected_shares_outstanding(df: pd.DataFrame) -> pd.DataFrame:
     same basis as t0. If the filing came after the split (or no split is on record),
     the raw count is already correct as filed. Adds shs_shares_outstanding_corrected;
     never overwrites the raw column. Per the brief's own caveat (SS1): every task using
-    the share count carries both columns, or states the cohort has no reverse split."""
+    the share count carries both columns, or states the cohort has no reverse split.
+
+    Also flags shs_zero_artifact: 54 events (found while building E1-T4) carry
+    shs_shares_outstanding == 0.0 exactly, all shs_quality=='filed_stale' -- a
+    nonsensical value for any of these (real, operating) companies, and not caught by
+    shs_quality's own enum (same class of gap as E1-T2's spl_quality finding: the
+    quality label doesn't fully cover what "the data is unusable" means). Corrected
+    value is set to NaN for these rows so a downstream ratio (E1-T4's turnover) divides
+    by NaN, not 0 -- dividing by a literal 0 produced +inf and corrupted every summary
+    statistic (mean, quantiles) in any cell that happened to contain one of them."""
     df = df.copy()
+    df["shs_zero_artifact"] = df["shs_shares_outstanding"] == 0
     needs_correction = (
         df["spl_last_split_ns"].notna()
         & df["shs_asof_ns"].notna()
         & (df["shs_asof_ns"] < df["spl_last_split_ns"])
+        & ~df["shs_zero_artifact"]
     )
     df["shs_shares_outstanding_corrected"] = df["shs_shares_outstanding"]
     df.loc[needs_correction, "shs_shares_outstanding_corrected"] = (
         df.loc[needs_correction, "shs_shares_outstanding"] * df.loc[needs_correction, "spl_last_split_ratio"]
     )
+    df.loc[df["shs_zero_artifact"], "shs_shares_outstanding_corrected"] = np.nan
     df["shs_correction_applied"] = needs_correction
     return df
 

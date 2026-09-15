@@ -61,9 +61,11 @@ def main():
         extra=(f"{summary['n_split_correction_applied']:,} events had their own raw value rescaled by "
                f"spl_last_split_ratio (their shares-outstanding filing predated the nearest pre-t0 split). "
                f"{summary['n_events_changing_decile_after_correction']:,} events show a different decile "
-               f"label between the two panels -- that larger number is mostly bin-edge movement from "
-               f"those 1,741 rescaled values shifting where all ten deciles fall, not 12,222 individually "
-               f"mismeasured events."),
+               f"label between the two panels -- mostly bin-edge movement from those rescaled values "
+               f"shifting where all ten deciles fall, not individually mismeasured events. "
+               f"{summary['n_shs_zero_artifact']} events carry shs_shares_outstanding==0.0 exactly (a data "
+               f"artifact, not a real value) -- landed in raw's S0 here, excluded into corrected's "
+               f"no_shs_data instead."),
     )
     CC.base_layout(fig, "E1-T3: shares outstanding x detection price, two-way event counts", cap,
                     height=680, cap_y=-0.30, margin_b=230, width=1180)

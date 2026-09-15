@@ -55,12 +55,13 @@ def chart_01_shares_outstanding(df, n_total):
     fig = make_subplots(rows=2, cols=2, vertical_spacing=0.20, horizontal_spacing=0.10,
                          subplot_titles=("", "", "", ""))
     n_unavail_shs = int((df["shs_shares_outstanding"].isna()).sum())
+    n_zero_artifact = int(df["shs_zero_artifact"].sum())
     CC.add_histogram_panel(fig, 1, 1, df["shs_shares_outstanding"], "shs_shares_outstanding (raw, as filed)",
-                            log_x=True, n_total=n_total, n_unavailable=n_unavail_shs, color=CC.BLUE,
-                            x_title="shares")
+                            log_x=True, n_total=n_total, n_unavailable=n_unavail_shs,
+                            n_not_applicable=n_zero_artifact, color=CC.BLUE, x_title="shares")
     CC.add_histogram_panel(fig, 1, 2, df["shs_shares_outstanding_corrected"], "shs_shares_outstanding (split-corrected)",
-                            log_x=True, n_total=n_total, n_unavailable=n_unavail_shs, color=CC.ORANGE,
-                            x_title="shares")
+                            log_x=True, n_total=n_total, n_unavailable=n_unavail_shs + n_zero_artifact,
+                            color=CC.ORANGE, x_title="shares")
     lag_days = df["shs_lag_ns"] / 86_400e9
     CC.add_histogram_panel(fig, 2, 1, lag_days, "shs_lag_ns (staleness, days)",
                             log_x=True, n_total=n_total, n_unavailable=n_unavail_shs, color=CC.BLUE,
@@ -69,8 +70,13 @@ def chart_01_shares_outstanding(df, n_total):
     fig.update_layout(height=760)
     cap = CC.caption(sample=f"n={n_total:,} in-scope events",
                       filters="shs_shares_outstanding: as filed, never split-adjusted unless labeled corrected; "
-                              "never a float, never a market cap (SS1)")
-    CC.base_layout(fig, "E1-T1: shares outstanding", cap, height=820, cap_y=-0.16, margin_b=170)
+                              "never a float, never a market cap (SS1)",
+                      extra=f"'not applicable' in the raw panel = {n_zero_artifact} events with "
+                            f"shs_shares_outstanding==0.0 exactly, a data artifact (not a real value for any "
+                            f"of these companies, not caught by shs_quality's own enum) -- excluded from the "
+                            f"log axis here and folded into 'unavailable' in the corrected panel, since a "
+                            f"corrected value can't be derived from a garbage input.")
+    CC.base_layout(fig, "E1-T1: shares outstanding", cap, height=820, cap_y=-0.22, margin_b=190)
     CC.write(fig, "t1_univariate", "01_shares_outstanding")
 
 

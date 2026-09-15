@@ -61,6 +61,11 @@ def main() -> int:
         "n_total": len(df),
         "n_with_shs_data": int(df["shs_shares_outstanding"].notna().sum()),
         "n_no_shs_data": int(df["shs_shares_outstanding"].isna().sum()),
+        "n_shs_zero_artifact": int(df["shs_zero_artifact"].sum()),
+        "n_shs_zero_artifact_note": "shs_shares_outstanding==0.0 exactly (found while building E1-T4, "
+            "not a real value for any of these companies) -- these land in the RAW table's S0 (lowest) "
+            "decile as filed, but are excluded from the CORRECTED table (shs_shares_outstanding_corrected "
+            "is NaN for them, so they fall into corrected's no_shs_data row instead).",
         "n_with_price_data": int(df["detection_price"].notna().sum()),
         "n_split_correction_applied": n_corrected,
         "n_correction_applied_note": "events where the shares-outstanding filing predated the "

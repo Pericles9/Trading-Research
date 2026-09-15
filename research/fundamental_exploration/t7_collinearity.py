@@ -79,6 +79,10 @@ def main() -> int:
         "gap_note": "categorical quality enums (flg_quality, shs_quality, si_quality, spl_quality) "
                     "are not in this numeric Spearman matrix -- a categorical-association measure "
                     "(config.collinearity.categorical_association = cramers_v) was not run here.",
+        "n_shs_zero_artifact_excluded": int(df["shs_zero_artifact"].sum()),
+        "n_shs_zero_artifact_note": "shs_shares_outstanding==0.0 exactly (E1-T4 finding) is set to NaN in "
+            "shs_shares_outstanding_corrected by common.py -- excluded here via pairwise dropna, not "
+            "included as a real low value.",
         "spearman_vs_detection_price": {k: float(v) for k, v in price_row.items()},
         "n_vs_detection_price": {k: int(n_pairs.loc[k, "detection_price"]) for k in price_row.index},
         "thin_pairs_below_display_floor": thin_pairs,
