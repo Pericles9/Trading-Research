@@ -46,8 +46,12 @@
       "note": "Per-event data availability, not a fixed clock boundary: the last minute bar actually present for that event in event_minute_bars_v2 (max minute_index/last_trade_ts for that (ticker, event_date_canonical, momentum_pct)). An event with no qualifying window end by its own last available bar is censored there, carried, and reported as its own share (DE-3)."
     },
     "de2_baseline_floor": {
-      "status": "PENDING -- Cooper: 'compute B_e's real distribution first, then decide'. E2-T2's full window/duration build is blocked on this; the baseline computation itself (B_e, n_baseline_sessions) is NOT blocked and runs first to produce that distribution.",
-      "units": "shares per 10-minute interval, matching B_e's own units"
+      "status": "DEFERRED 2026-09-15 -- Cooper, after seeing B_e's real distribution: the floor is not a percentile of that distribution, and its relevance is unclear pending the duration build (T2 proper). NOT blocking -- baseline_thin is left uncomputed (not defaulted to false) until Cooper sets a basis; T2's full window/duration build proceeds without it.",
+      "units": "USD per 10-minute interval, matching B_e's own units (revised to dollar volume, see de2_volume_basis below)"
+    },
+    "de2_volume_basis": {
+      "status": "RESOLVED 2026-09-15 -- Cooper: dollar volume (volume x vwap per minute bar), not share volume, for BOTH B_e and the trailing 10-minute moving average used for window-end detection. Corrects e2_t2a_baseline.py's first version, which used share volume.",
+      "confirmed_mechanics": "baseline = mean of T-3..T-1's regular-hours dollar volume (USD per 10-min interval); window end = first point where the trailing 10-minute average dollar volume drops to <= 3x that baseline AND stays there for 10 consecutive minutes. Cooper confirmed this restatement directly."
     }
   },
   "window_definition": {
@@ -55,8 +59,9 @@
     "baseline_hours": "regular",
     "baseline_min_sessions_present": 1,
     "baseline_source": "event_minute_bars_v2",
+    "volume_basis": "dollar volume (volume x vwap per minute bar), not share volume",
     "window_start": "t0",
-    "window_metric": "trailing 10-minute average volume",
+    "window_metric": "trailing 10-minute average dollar volume",
     "window_threshold_multiple": 3.0,
     "duration_units": "minutes"
   },

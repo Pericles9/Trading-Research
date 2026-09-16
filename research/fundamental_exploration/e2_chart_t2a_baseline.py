@@ -1,7 +1,6 @@
 """
-E2-T2a chart: B_e's real distribution (shares per 10-minute interval), faceted by
-n_baseline_sessions -- the empirical picture Cooper asked for before setting the
-baseline floor.
+E2-T2a chart: B_e's real distribution (USD per 10-minute interval, dollar volume basis
+per Cooper's correction), faceted by n_baseline_sessions.
 
 Usage: .venv/Scripts/python.exe research/fundamental_exploration/e2_chart_t2a_baseline.py
 """
@@ -37,17 +36,18 @@ def main():
                                     hovertemplate="log10(B_e)=%{x:.2f}<br>count=%{y}<extra></extra>"),
                       row=1, col=2)
     fig.update_layout(barmode="overlay", height=560)
-    fig.update_xaxes(title="log10(B_e), shares per 10-min interval")
+    fig.update_xaxes(title="log10(B_e), USD per 10-min interval")
     fig.update_yaxes(title="count")
 
-    s = summary["B_e_distribution_shares_per_10min"]
+    s = summary["B_e_distribution_usd_per_10min"]
     cap = CC.caption(
         sample=f"D1, n={summary['n_total']:,} ({summary['n_zero_baseline_sessions']} with "
                f"n_baseline_sessions==0, B_e undefined, excluded from this chart)",
-        filters="B_e = total rth volume across present T-3..T-1 sessions / (n_present x 39 ten-minute intervals)",
-        extra=(f"p1={s['p1']:,.0f} · p5={s['p5']:,.0f} · p10={s['p10']:,.0f} · p25={s['p25']:,.0f} · "
-               f"median={s['median']:,.0f} · p75={s['p75']:,.0f} · p90={s['p90']:,.0f} · max={s['max']:,.0f} "
-               f"shares/10-min. n_baseline_sessions: {summary['n_baseline_sessions_counts']}."),
+        filters="B_e = total rth dollar volume (volume x vwap) across present T-3..T-1 sessions / "
+                "(n_present x 39 ten-minute intervals)",
+        extra=(f"p1=${s['p1']:,.0f} · p5=${s['p5']:,.0f} · p10=${s['p10']:,.0f} · p25=${s['p25']:,.0f} · "
+               f"median=${s['median']:,.0f} · p75=${s['p75']:,.0f} · p90=${s['p90']:,.0f} · "
+               f"max=${s['max']:,.0f} per 10-min. n_baseline_sessions: {summary['n_baseline_sessions_counts']}."),
     )
     CC.base_layout(fig, "E2-T2a: baseline volume B_e, pre-floor", cap, height=620, cap_y=-0.34, margin_b=220)
     CC.legend_inside(fig)
