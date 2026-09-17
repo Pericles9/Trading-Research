@@ -52,12 +52,12 @@ def caption(sample: str, filters: str, extra: str = "") -> str:
 
 def base_layout(fig, title: str, cap: str, height: int = 660,
                  cap_y: float = -0.30, margin_b: int = 200, margin_r: int = 60,
-                 width: int | None = None):
+                 width: int | None = None, margin_t: int = 90):
     fig.update_layout(
         title=dict(text=title, x=0.01, xanchor="left", font=dict(size=16, color=INK)),
         paper_bgcolor="white", plot_bgcolor=SURFACE,
         font=dict(color=INK, size=12),
-        margin=dict(l=75, r=margin_r, t=90, b=margin_b),
+        margin=dict(l=75, r=margin_r, t=margin_t, b=margin_b),
         height=height, width=width,
         hovermode="closest",
         annotations=list(fig.layout.annotations) + [dict(
