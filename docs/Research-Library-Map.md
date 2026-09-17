@@ -2327,3 +2327,39 @@ default limit (80% of this machine's 32GB RAM). Fixed by isolating the window-fu
 cheap aggregates, batching it by event year with per-batch checkpointing, and an automatic
 split-and-retry fallback for a batch that still OOMs on its own connection. Recorded as a standing
 reference note for future bulk joins against `filtered_trades`/`filtered_quotes`.
+
+## Fundamental exploration E2 — momentum magnitude and high-participation duration, not a phase (2026-09-17)
+
+**Branch `explore/fundamental-e2`, cut from `explore/fundamental-e1`** (not `master` — `master` does
+not have E1 merged yet, and E2 depends on E1's plumbing), `origin/master` merged in immediately after
+to pick up Phase 13's closure (D37), `D32 Amendment A1` (the "DF-6" sentence E2's own brief cites),
+and a data-root path bug fix shared with `fundamentals_f1`. `prompts/fundamental_exploration_e2.md`
+(§8 records two live-verification corrections resolved before code ran, same discipline as E1 §7) and
+`config/fundamental_exploration_e2.json` (a `cooper_pending` block, Build-F1-style, for the four
+brief-mandated Cooper decisions — see below).
+
+`research/fundamental_exploration/e2_t0_population.py` through `e2_t7_price_decile_arm_zero.py` (T0
+population/coverage; T1 volume-selection-boundary audit, D4 Amendment A13's exemption; T2a/T2 baseline
+and window build; T3 response distributions; T4 time-of-day confound; T5/T6 fundamentals vs. the two
+responses; T7 price-decile control), one `e2_chart_*.py` per task, all reusing E1's `common.py`/
+`chart_common.py` rather than duplicating them. `results/fundamental_exploration/e2/REPORT.md`
+(copied to `results/reports/fundamental_exploration_e2_report.md`).
+
+Two responses, added on top of E1's fundamentals-only crossing: `momentum_pct` (DE-1, Cooper extended
+D4's exception to cover this narrow, descriptive use) and a high-participation window `duration_min`
+built from `event_minute_bars_v2` (DE-2). Three of DE-2's parameters were explicitly Cooper's to set
+mid-build, not assumed: confirmation window `C`=10 min (as suggested); censoring horizon = "end of
+tick data" (per-event data availability, **not** the brief's suggested "end of extended session");
+baseline floor deferred (Cooper: not a percentile of the shown distribution, relevance unclear pending
+the duration build — `baseline_thin` is absent from every artifact, not computed and not defaulted).
+A real bug surfaced and was corrected mid-build: `B_e` needed to be dollar volume
+(`volume x vwap`), not share volume, for both the baseline and the moving average — caught from
+Cooper's own review of the first version's distribution, not from an internal check.
+
+**Headline, verified twice over:** duration_min is **0% censored across all 15,742 processed
+events**, median exactly 0 (52.2% of events). Verified as a genuine consequence of the flat,
+RTH-based baseline (not a bug) via two independent manual traces (AAL premarket, UAL during the
+2020-03-20 COVID crash), and separately via a self-added assertion (E2-T2's own explicit "no pre-t0
+bar enters the duration" check) that caught and fixed a real few-second boundary bug — the aggregate
+result was unchanged by that fix. Cooper reviewed the 0%-censored finding directly and confirmed
+proceeding with DE-2 as specified rather than revising the baseline design or threshold.

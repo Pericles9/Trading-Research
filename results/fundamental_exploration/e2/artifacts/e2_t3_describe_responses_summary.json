@@ -1,0 +1,94 @@
+{
+  "task": "E2-T3 describe the two responses",
+  "config_hash": "981a74a2f2ed",
+  "n_total_d1": 15763,
+  "n_with_window": 15742,
+  "n_skipped_no_baseline": 21,
+  "momentum_pct_stats": {
+    "n": 15763,
+    "mean": 60.826625642326974,
+    "min": 30.0,
+    "max": 861.54,
+    "p10": 31.61,
+    "p25": 34.56,
+    "median": 42.37,
+    "p75": 62.010000000000005,
+    "p90": 104.07200000000005
+  },
+  "duration_min_stats": {
+    "n": 15742,
+    "mean": 65.20763809550223,
+    "min": 0.0,
+    "max": 7562.368974967467,
+    "p10": 0.0,
+    "p25": 0.0,
+    "median": 0.0,
+    "p75": 32.9991345248,
+    "p90": 146.26458881493326
+  },
+  "duration_min_positive_only_stats": {
+    "n": 7518,
+    "mean": 136.53879208558075,
+    "min": 0.43915559253333336,
+    "max": 7562.368974967467,
+    "p10": 10.040355684266666,
+    "p25": 15.092110564266667,
+    "median": 35.98205336746667,
+    "p75": 111.05345683520001,
+    "p90": 428.94432704384
+  },
+  "n_censored": 0,
+  "censored_share": 0.0,
+  "n_zero_duration": 8224,
+  "zero_duration_share": 0.5224240884258671,
+  "n_positive_duration": 7518,
+  "baseline_thin_status": "NOT COMPUTED -- Cooper deferred the baseline floor (config cooper_pending.de2_baseline_floor); baseline_thin is absent from e2_t2_window.parquet, not defaulted to False.",
+  "by_n_baseline_sessions": {
+    "1": {
+      "n": 140,
+      "n_censored": 0,
+      "duration_stats": {
+        "n": 140,
+        "mean": 20.417440358125713,
+        "min": 0.0,
+        "max": 1188.1280476928,
+        "p10": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 0.0,
+        "p90": 28.18915203882668
+      }
+    },
+    "2": {
+      "n": 107,
+      "n_censored": 0,
+      "duration_stats": {
+        "n": 107,
+        "mean": 7.32515858741433,
+        "min": 0.0,
+        "max": 235.30669180586668,
+        "p10": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 0.0,
+        "p90": 21.521495332693352
+      }
+    },
+    "3": {
+      "n": 15495,
+      "n_censored": 0,
+      "duration_stats": {
+        "n": 15495,
+        "mean": 66.01203002777704,
+        "min": 0.0,
+        "max": 7562.368974967467,
+        "p10": 0.0,
+        "p25": 0.0,
+        "median": 0.0,
+        "p75": 33.50871444053333,
+        "p90": 150.13281313280007
+      }
+    }
+  },
+  "survival_curve_note": "share of events with duration_min > x, for x on a grid spanning the observed range. censored_share is 0 here (E2-T2), so this is the plain empirical survival function, not a Kaplan-Meier estimator (the two coincide when there is no censoring)."
+}

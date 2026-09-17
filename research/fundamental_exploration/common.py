@@ -29,6 +29,20 @@ ART = "results/fundamental_exploration/artifacts"
 CHARTS = "results/fundamental_exploration/charts"
 EVENT_FUNDAMENTALS_PATH = "data/fundamentals/event_fundamentals.parquet"
 
+# E2 nests under the same results/fundamental_exploration/ umbrella as E1 (per the brief's own
+# "results/fundamental_exploration/e2/" path) -- "charts/fundamental_exploration/e2/" read literally
+# would be a new top-level charts/ dir, which no phase or task in this repo has (same correction as
+# E1's own SS7/SS8). Nested under e2/charts/ instead.
+CFG_E2 = "config/fundamental_exploration_e2.json"
+ART_E2 = "results/fundamental_exploration/e2/artifacts"
+CHARTS_E2 = "results/fundamental_exploration/e2/charts"
+# Routed through resolve_data_root(), NOT a cwd-relative literal -- same bug class Build F1 found
+# and fixed in its own common.py (2026-09-13, commit 369daab): a cwd-relative "data/..." literal
+# silently resolves to the WRONG location if this code ever runs from a worktree other than the
+# primary checkout (exactly what happened to F1's entire raw archive). CFG/ART/CHARTS above stay
+# repo-relative on purpose -- they're tracked repo paths, not data-root paths.
+EVENT_FUNDAMENTALS_PATH = str(pathlib.Path(resolve_data_root()) / "fundamentals" / "event_fundamentals.parquet").replace("\\", "/")
+
 # D30/reuse-before-build: this universe's event key, matching research/phase_10/common.py
 # and phase_10e/phase_11/scale_field/fundamentals_f1 exactly. Do not invent a second one.
 COHORT_KEY = ["ticker", "event_date_canonical", "momentum_pct"]
@@ -77,6 +91,15 @@ def cfg_hash() -> str:
     """sha256[:12] of the committed config, newline-normalised so the hash is identical
     on LF and CRLF checkouts. Matches research/phase_9/common.py's convention."""
     b = pathlib.Path(CFG).read_bytes().replace(b"\r\n", b"\n")
+def load_cfg(path: str = CFG) -> dict:
+    with open(path) as f:
+        return json.load(f)
+
+
+def cfg_hash(path: str = CFG) -> str:
+    """sha256[:12] of the committed config, newline-normalised so the hash is identical
+    on LF and CRLF checkouts. Matches research/phase_9/common.py's convention."""
+    b = pathlib.Path(path).read_bytes().replace(b"\r\n", b"\n")
     return hashlib.sha256(b).hexdigest()[:12]
 
 
