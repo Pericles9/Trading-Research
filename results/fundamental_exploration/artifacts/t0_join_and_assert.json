@@ -1,0 +1,35 @@
+{
+  "task": "E1-T0 join and assert membership",
+  "config_hash": "042eac1aebb5",
+  "n_checks": 3,
+  "n_fail": 0,
+  "checks": [
+    {
+      "name": "row_count_and_uniqueness",
+      "pass": true,
+      "n_rows": 20951,
+      "expected": 20951,
+      "n_unique_event_id": 20951
+    },
+    {
+      "name": "event_id_set_equality_vs_in_scope_universe",
+      "pass": true,
+      "n_universe": 20951,
+      "n_table": 20951,
+      "n_only_in_universe": 0,
+      "n_only_in_table": 0,
+      "sample_only_in_universe": [],
+      "sample_only_in_table": [],
+      "note": "checked against results/phase_5/artifacts/quotes_bitmaps_all.parquet (D15's materialization of momentum_events_canonical WHERE in_scope=TRUE), not a live view scan -- see this script's module docstring."
+    },
+    {
+      "name": "detection_price_join_health",
+      "pass": true,
+      "n_detection_price_rows": 20951,
+      "n_missing_from_detection_price": 0,
+      "n_null_detection_price": 0,
+      "note": "join-health precondition for E1-T3/T4/T7, not one of E1-T0's brief-mandated assertions -- confirms the detection-price side is complete before building on it."
+    }
+  ],
+  "output_parquet": "results/fundamental_exploration/artifacts/e1_joined.parquet"
+}

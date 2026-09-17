@@ -1,0 +1,15 @@
+{
+  "task": "E1-T4 fundamentals against volume",
+  "config_hash": "042eac1aebb5",
+  "n_total": 20951,
+  "n_no_shs_data": 4906,
+  "n_shs_zero_artifact": 54,
+  "n_shs_zero_artifact_note": "shs_shares_outstanding==0.0 exactly, a data artifact (common.py's add_corrected_shares_outstanding) -- shs_shares_outstanding_corrected is NaN for these, so they're excluded here (n_no_shs_data above includes them), not divided-by-zero into inf.",
+  "n_zero_session_volume": 0,
+  "n_shs_share_count_suspect": 146,
+  "n_shs_share_count_suspect_note": "shs_shares_outstanding_corrected < 100,000 shares -- descriptive diagnostic, never a filter (common.py, generalized from this task's own finding). Inflates cell means, not medians.",
+  "n_cells_total": 585,
+  "n_cells_suppressed": 200,
+  "min_cell_n_display_floor": 20,
+  "turnover_definition": "volume_shares (regular-session, event_date_canonical) / shs_shares_outstanding_corrected -- a LOWER BOUND vs true float, ordinal ranking only, never a level."
+}

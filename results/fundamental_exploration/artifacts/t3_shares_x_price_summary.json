@@ -1,0 +1,21 @@
+{
+  "task": "E1-T3 shares-outstanding x detection-price, two-way",
+  "config_hash": "042eac1aebb5",
+  "n_total": 20951,
+  "n_with_shs_data": 16099,
+  "n_no_shs_data": 4852,
+  "n_shs_zero_artifact": 54,
+  "n_shs_zero_artifact_note": "shs_shares_outstanding==0.0 exactly (found while building E1-T4, not a real value for any of these companies) -- these land in the RAW table's S0 (lowest) decile as filed, but are excluded from the CORRECTED table (shs_shares_outstanding_corrected is NaN for them, so they fall into corrected's no_shs_data row instead).",
+  "n_with_price_data": 20951,
+  "n_split_correction_applied": 1734,
+  "n_correction_applied_note": "events where the shares-outstanding filing predated the nearest pre-t0 split, so the raw count needed rescaling by spl_last_split_ratio",
+  "n_events_changing_decile_after_correction": 12085,
+  "raw_table_shape": [
+    11,
+    10
+  ],
+  "corrected_table_shape": [
+    11,
+    10
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "task": "E2-T5 fundamentals against momentum_pct",
+  "config_hash": "981a74a2f2ed",
+  "n_total": 15763,
+  "splits": [
+    "shs_decile",
+    "flg_dilution_form_before_t0",
+    "spl_reverse_split_365d",
+    "flg_lag_bucket",
+    "si_quality"
+  ],
+  "n_cells_total": 1142,
+  "n_cells_suppressed": 411,
+  "min_cell_n_display_floor": 20,
+  "overall_momentum_pct": {
+    "n": 15763,
+    "mean": 60.826625642326974,
+    "p10": 31.61,
+    "p25": 34.56,
+    "median": 42.37,
+    "p75": 62.010000000000005,
+    "p90": 104.07200000000005
+  }
+}

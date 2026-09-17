@@ -1,0 +1,180 @@
+{
+  "task": "E2-T0 population, membership, coverage",
+  "config_hash": "8a18fbef1f6b",
+  "n_checks": 3,
+  "n_fail": 0,
+  "checks": [
+    {
+      "name": "d1_row_count_and_source_file",
+      "pass": true,
+      "n_rows": 15763,
+      "expected": 15763,
+      "n_source_file_file1": 15763
+    },
+    {
+      "name": "d1_event_id_unique",
+      "pass": true,
+      "n_rows": 15763,
+      "n_unique": 15763
+    },
+    {
+      "name": "d1_subset_of_event_fundamentals",
+      "pass": true,
+      "n_d1": 15763,
+      "n_event_fundamentals_total": 20951,
+      "n_d1_missing_from_event_fundamentals": 0,
+      "n_matched": 15763,
+      "sample_missing": [],
+      "note": "checks D1 (sampling_frame.parquet) is fully contained in event_fundamentals -- event_fundamentals also carries file2 events (a larger population), so the reverse direction (event_fundamentals subset of D1) is not expected to hold and is not asserted."
+    }
+  ],
+  "n_by_year": {
+    "2020": 3439,
+    "2021": 1932,
+    "2022": 2279,
+    "2023": 3021,
+    "2024": 5092
+  },
+  "coverage_by_year": [
+    {
+      "group": "flg",
+      "year": "2020",
+      "n_total": 3439,
+      "n_covered": 3418,
+      "coverage_share": 0.9938935737132888
+    },
+    {
+      "group": "flg",
+      "year": "2021",
+      "n_total": 1932,
+      "n_covered": 1930,
+      "coverage_share": 0.9989648033126294
+    },
+    {
+      "group": "flg",
+      "year": "2022",
+      "n_total": 2279,
+      "n_covered": 2213,
+      "coverage_share": 0.9710399297937692
+    },
+    {
+      "group": "flg",
+      "year": "2023",
+      "n_total": 3021,
+      "n_covered": 2963,
+      "coverage_share": 0.9808010592519033
+    },
+    {
+      "group": "flg",
+      "year": "2024",
+      "n_total": 5092,
+      "n_covered": 5028,
+      "coverage_share": 0.9874312647289867
+    },
+    {
+      "group": "shs",
+      "year": "2020",
+      "n_total": 3439,
+      "n_covered": 2408,
+      "coverage_share": 0.7002035475428904
+    },
+    {
+      "group": "shs",
+      "year": "2021",
+      "n_total": 1932,
+      "n_covered": 1460,
+      "coverage_share": 0.7556935817805382
+    },
+    {
+      "group": "shs",
+      "year": "2022",
+      "n_total": 2279,
+      "n_covered": 1613,
+      "coverage_share": 0.7077665642825801
+    },
+    {
+      "group": "shs",
+      "year": "2023",
+      "n_total": 3021,
+      "n_covered": 2392,
+      "coverage_share": 0.7917907977490897
+    },
+    {
+      "group": "shs",
+      "year": "2024",
+      "n_total": 5092,
+      "n_covered": 4098,
+      "coverage_share": 0.8047918303220738
+    },
+    {
+      "group": "si",
+      "year": "2020",
+      "n_total": 3439,
+      "n_covered": 3398,
+      "coverage_share": 0.9880779296307066
+    },
+    {
+      "group": "si",
+      "year": "2021",
+      "n_total": 1932,
+      "n_covered": 1880,
+      "coverage_share": 0.9730848861283644
+    },
+    {
+      "group": "si",
+      "year": "2022",
+      "n_total": 2279,
+      "n_covered": 2168,
+      "coverage_share": 0.95129442738043
+    },
+    {
+      "group": "si",
+      "year": "2023",
+      "n_total": 3021,
+      "n_covered": 2906,
+      "coverage_share": 0.9619331347236014
+    },
+    {
+      "group": "si",
+      "year": "2024",
+      "n_total": 5092,
+      "n_covered": 4959,
+      "coverage_share": 0.9738805970149254
+    },
+    {
+      "group": "spl",
+      "year": "2020",
+      "n_total": 3439,
+      "n_covered": 1186,
+      "coverage_share": 0.34486769409712126
+    },
+    {
+      "group": "spl",
+      "year": "2021",
+      "n_total": 1932,
+      "n_covered": 644,
+      "coverage_share": 0.3333333333333333
+    },
+    {
+      "group": "spl",
+      "year": "2022",
+      "n_total": 2279,
+      "n_covered": 678,
+      "coverage_share": 0.2974989030276437
+    },
+    {
+      "group": "spl",
+      "year": "2023",
+      "n_total": 3021,
+      "n_covered": 1201,
+      "coverage_share": 0.3975504799735187
+    },
+    {
+      "group": "spl",
+      "year": "2024",
+      "n_total": 5092,
+      "n_covered": 2440,
+      "coverage_share": 0.4791830322073841
+    }
+  ]
+}

@@ -87,3 +87,13 @@ results/iso_share_hold_length/charts/plotly.min.js
 results/iso_share_hold_length/artifacts/*.parquet
 results/reg_sho_201/charts/plotly.min.js
 results/reg_sho_201/artifacts/*.parquet
+
+# fundamental_exploration (E1): same rule as fundamentals_f1/reg_sho_201 above --
+# artifact parquets are regenerable from committed scripts + config, charts embed
+# plotly inline (no plotly.min.js sidecar to exclude).
+results/fundamental_exploration/artifacts/*.parquet
+# per-year checkpoint parts from t1_prep_tape_metrics.py's OOM-recovery batching --
+# same rule as fundamentals_f1's _t3_parts/_t4_parts above.
+results/fundamental_exploration/artifacts/_t1_gap_checkpoints/
+# fundamental_exploration E2: same rule, nested under e2/ per the brief's own path.
+results/fundamental_exploration/e2/artifacts/*.parquet

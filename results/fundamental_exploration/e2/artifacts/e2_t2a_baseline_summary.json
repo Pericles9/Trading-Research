@@ -1,0 +1,26 @@
+{
+  "task": "E2-T2a baseline dollar volume B_e (pre-floor)",
+  "config_hash": "981a74a2f2ed",
+  "basis": "dollar volume (volume x vwap per minute bar), not share volume",
+  "n_total": 15763,
+  "n_baseline_sessions_counts": {
+    "0": 21,
+    "1": 140,
+    "2": 107,
+    "3": 15495
+  },
+  "n_zero_baseline_sessions": 21,
+  "n_zero_baseline_sessions_note": "events with none of T-3..T-1 showing rth dollar volume -- B_e is undefined (NaN) for these, not zero. DE-2's window/duration build cannot run for them.",
+  "B_e_distribution_usd_per_10min": {
+    "n": 15742,
+    "min": 0.41025641025641024,
+    "p1": 122.295792,
+    "p5": 488.08467910470085,
+    "p10": 950.9694444017097,
+    "p25": 3756.5352186645305,
+    "median": 22781.151838034188,
+    "p75": 184687.424075,
+    "p90": 1356827.9916259814,
+    "max": 1479841183.2348335
+  }
+}

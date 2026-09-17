@@ -1,0 +1,84 @@
+{
+  "task": "E1-T2 coverage by year",
+  "config_hash": "042eac1aebb5",
+  "groups": [
+    "flg",
+    "shs",
+    "si",
+    "spl"
+  ],
+  "sec_sourced": [
+    "flg",
+    "shs"
+  ],
+  "vendor_sourced": [
+    "si",
+    "spl"
+  ],
+  "cliff_check": {
+    "flg": {
+      "cliff_years_coverage": {
+        "2022": 0.9710399297937692,
+        "2023": 0.9808010592519033
+      },
+      "other_years_mean_coverage": 0.9932894497602374,
+      "drop_vs_other_years": 0.017368955237401118,
+      "source": "SEC (no subscription gate)"
+    },
+    "shs": {
+      "cliff_years_coverage": {
+        "2022": 0.7077665642825801,
+        "2023": 0.7917907977490897
+      },
+      "other_years_mean_coverage": 0.7640928258789932,
+      "drop_vs_other_years": 0.014314144863158296,
+      "source": "SEC (no subscription gate)"
+    },
+    "si": {
+      "cliff_years_coverage": {
+        "2022": 0.95129442738043,
+        "2023": 0.9619331347236014
+      },
+      "other_years_mean_coverage": 0.9778819017671306,
+      "drop_vs_other_years": 0.02126812071511497,
+      "source": "vendor"
+    },
+    "spl": {
+      "cliff_years_coverage": {
+        "2022": 0.2974989030276437,
+        "2023": 0.3975504799735187
+      },
+      "other_years_mean_coverage": 0.4138159455185576,
+      "drop_vs_other_years": 0.06629125401797642,
+      "source": "vendor"
+    }
+  },
+  "sec_shows_cliff_defect": false,
+  "spl_quality_semantics": {
+    "defect": "spl_quality conflates 'confirmed zero splits in the 365d window' with 'split history could not be resolved' -- both are labeled 'unavailable'. Source: research/fundamentals_f1/t5_assemble.py:180-181.",
+    "spl_quality_vs_identity_quality_crosstab": {
+      "resolved_ambiguous": {
+        "observed": 151,
+        "unavailable": 162
+      },
+      "resolved_exact": {
+        "observed": 8581,
+        "unavailable": 11809
+      },
+      "unresolved": {
+        "observed": 0,
+        "unavailable": 248
+      }
+    },
+    "n_spl_unavailable_with_resolved_identity": 11971,
+    "n_spl_unavailable_with_resolved_identity_note": "of spl_quality=='unavailable' rows, this many have a resolved CIK -- for those, spl_n_splits_365d=0 is very likely a real confirmed zero, not a true data gap. Not asserted as certain: spl_flat's own source coverage for a resolved CIK is a separate question this crosstab cannot answer."
+  },
+  "n_by_year": {
+    "2020": 3439,
+    "2021": 1932,
+    "2022": 2279,
+    "2023": 3021,
+    "2024": 5092,
+    "2025": 5188
+  }
+}
