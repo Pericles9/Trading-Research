@@ -25,9 +25,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 from research.fundamentals_f1 import common as C  # noqa: E402
 
 MASSIVE_DATE = "2026-09-12"
-FIN_ROOT = f"data/raw/fundamentals/massive/{MASSIVE_DATE}/financials"
-SI_ROOT = f"data/raw/fundamentals/massive/{MASSIVE_DATE}/short_interest"
-SPLITS_ROOT = f"data/raw/fundamentals/massive/{MASSIVE_DATE}/splits"
+FIN_ROOT = f"{C.RAW_ROOT}/massive/{MASSIVE_DATE}/financials"
+SI_ROOT = f"{C.RAW_ROOT}/massive/{MASSIVE_DATE}/short_interest"
+SPLITS_ROOT = f"{C.RAW_ROOT}/massive/{MASSIVE_DATE}/splits"
 
 ACCN_RE = re.compile(r"(\d{10}-\d{2}-\d{6})")
 

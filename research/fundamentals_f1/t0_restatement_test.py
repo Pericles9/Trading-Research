@@ -45,7 +45,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 from research.fundamentals_f1 import common as C  # noqa: E402
 
 UA = "Mom_db Research fundamentals_f1 (cleeming29@gmail.com)"
-RAW_DIR = "data/raw/fundamentals/massive/2026-09-11/t0_restatement_test"
+RAW_DIR = f"{C.RAW_ROOT}/massive/2026-09-11/t0_restatement_test"
 SUMMARY_PATH = f"{C.ART}/t0_restatement_test_summary.json"
 
 # F1-T0a: identified via SEC EDGAR full-text search for 8-K Item 4.02 "non-reliance"

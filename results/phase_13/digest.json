@@ -1,0 +1,169 @@
+{
+  "phase": "13",
+  "config_hash": "b15ff5a2e0d0",
+  "status": "closed_with_known_bias",
+  "gate_mode": "sync-required",
+  "escalation": { "criterion": "row 10 (retroactive, T4): reported outcome window carries a look-ahead defect", "observed": "median excess window 19.7% of horizon at 5min, 6.6% at 15min, 3.3% at 30min, 1.6% at 60min", "tier": "HARD STOP" },
+  "closure": {
+    "date": "2026-09-14",
+    "trigger": "T4a (tick-level confirmation, Cooper-triggered, targeting T3b), dev-tier 50-event test",
+    "defect": "t1_build_p0.py window selection (minute_index <= t0_minute_index + h) always includes the full final minute bucket, whose clock-time end lands up to 60s past the intended t0 + h minutes mark",
+    "magnitude_median_excess_seconds": 59.14,
+    "magnitude_share_of_horizon": { "5min": 0.197, "15min": 0.066, "30min": 0.033, "60min": 0.016 },
+    "direction": "one-directional -- bar-derived MFE/MAE never smaller than tick-derived value",
+    "tick_vs_bar_disagreement_rate_50_event_test": { "5min": 0.36, "15min": 0.14, "30min": 0.14, "60min": 0.14 },
+    "affected": "T1 (P0 itself), T2 (arm zero), T3a/b/c (all three splits) -- every headline_metrics entry below except p0_minute_bar_coverage_* (coverage asks whether a bar exists, not the window's exact length)",
+    "not_affected": ["p0_minute_bar_coverage_population", "p0_minute_bar_coverage_2025", "p0_minute_bar_coverage_2020_through_2024"],
+    "cooper_decision": "close as read, uncorrected -- no fix, no rebuild authorized",
+    "rationale": "phase was already exploratory with no kill condition (Cooper's 2026-09-13 amendment); no decision or threshold hinged on these exact numbers being unbiased, only the general shape of the distributions",
+    "decision_record": "docs/Universe-Decisions.md D37",
+    "diagnosis_script": "research/phase_13/t4b_lookahead_diagnosis.py",
+    "diagnosis_artifact": "results/phase_13/artifacts/t4b_lookahead_diagnosis.json"
+  },
+  "headline_metrics": [
+    {
+      "name": "p0_minute_bar_coverage_population",
+      "value": 0.7524, "n": 20951,
+      "source": "research/phase_13/t1_build_p0.py",
+      "chart": "results/phase_13/charts/01_p0_coverage.html"
+    },
+    {
+      "name": "p0_minute_bar_coverage_2025",
+      "value": 0.0, "n": 5188,
+      "source": "research/phase_13/t1_build_p0.py",
+      "chart": "results/phase_13/charts/01_p0_coverage.html"
+    },
+    {
+      "name": "p0_minute_bar_coverage_2020_through_2024",
+      "value": 1.0, "n": 15763,
+      "source": "research/phase_13/t1_build_p0.py",
+      "chart": "results/phase_13/charts/01_p0_coverage.html"
+    },
+    {
+      "name": "arm_zero_median_mfe_cost_mult_decile0_60min",
+      "value": 2.658, "n": 1400,
+      "source": "research/phase_13/t2_arm_zero.py",
+      "chart": "results/phase_13/charts/02_arm_zero_price_decile.html"
+    },
+    {
+      "name": "arm_zero_median_mfe_cost_mult_decile9_60min",
+      "value": 2.028, "n": 1589,
+      "source": "research/phase_13/t2_arm_zero.py",
+      "chart": "results/phase_13/charts/02_arm_zero_price_decile.html"
+    },
+    {
+      "name": "t3a_median_mfe_cost_mult_15min_no_dilution_filing",
+      "value": 1.533, "n": 13656,
+      "source": "research/phase_13/t3_partitions.py",
+      "chart": "results/phase_13/charts/03_flg_dilution_split.html"
+    },
+    {
+      "name": "t3a_median_mfe_cost_mult_15min_dilution_filing",
+      "value": 2.000, "n": 1155,
+      "source": "research/phase_13/t3_partitions.py",
+      "chart": "results/phase_13/charts/03_flg_dilution_split.html"
+    },
+    {
+      "name": "t3a_median_mae_cost_mult_15min_no_dilution_filing",
+      "value": 1.952, "n": 13656,
+      "source": "research/phase_13/t3_partitions.py",
+      "chart": "results/phase_13/charts/03_flg_dilution_split.html"
+    },
+    {
+      "name": "t3a_median_mae_cost_mult_15min_dilution_filing",
+      "value": 2.201, "n": 1155,
+      "source": "research/phase_13/t3_partitions.py",
+      "chart": "results/phase_13/charts/03_flg_dilution_split.html"
+    },
+    {
+      "name": "t3b_median_mfe_cost_mult_15min_below_median_turnover",
+      "value": 0.913, "n": 5587,
+      "source": "research/phase_13/t3_partitions.py",
+      "chart": "results/phase_13/charts/04_shs_turnover_split.html"
+    },
+    {
+      "name": "t3b_median_mfe_cost_mult_15min_above_median_turnover",
+      "value": 2.673, "n": 5852,
+      "source": "research/phase_13/t3_partitions.py",
+      "chart": "results/phase_13/charts/04_shs_turnover_split.html"
+    },
+    {
+      "name": "t3c_median_mfe_cost_mult_15min_no_reverse_split",
+      "value": 1.604, "n": 3263,
+      "source": "research/phase_13/t3_partitions.py",
+      "chart": "results/phase_13/charts/05_spl_reverse_split.html"
+    },
+    {
+      "name": "t3c_median_mfe_cost_mult_15min_reverse_split",
+      "value": 1.696, "n": 2599,
+      "source": "research/phase_13/t3_partitions.py",
+      "chart": "results/phase_13/charts/05_spl_reverse_split.html"
+    }
+  ],
+  "decisions_log": [
+    {
+      "decision": "entry reference and horizon grid",
+      "options_considered": ["t0 (detection anchor)", "first RTH trade", "5/15/30/60 min horizons vs. other grids"],
+      "chose": "t0 anchor (t0_spine.parquet), horizons 5/15/30/60 min",
+      "why": "proposed as the default (same anchor this program's detection work already uses, Phase 11's own grid) and not challenged in Cooper's 2026-09-13 approval -- adopted as written, distinct from the two items Cooper did amend"
+    },
+    {
+      "decision": "cross-cut granularity",
+      "options_considered": ["price tercile (author's first draft)", "full price decile matching config.cross_cuts and T2"],
+      "chose": "full price decile",
+      "why": "config/phase_13.json's cross_cuts.partition_column was already frozen at T0 as detection_price_decile; the tercile substitution was an unrequested deviation caught by re-reading the config before building the Chart Contract, not a Cooper decision -- reverted, with config.cross_cuts.min_cell_n_log_threshold (200) used to flag thin cells instead of coarsening the cut"
+    },
+    {
+      "decision": "T3b (share turnover) split direction and threshold",
+      "options_considered": ["pre-registered direction (author's recommended default, rejected)", "undirected, split at population median"],
+      "chose": "undirected, split at population median",
+      "why": "Cooper's 2026-09-13 amendment ('no pre reg') explicitly rejected the recommended pre-registered default for T3b/T3c; population median chosen as a content-free split point, not tuned to any outcome"
+    },
+    {
+      "decision": "no kill-condition margin, all three splits",
+      "options_considered": ["median >= 1.5x round-trip cost (author's recommended default, rejected)", "no kill condition on any split"],
+      "chose": "no kill condition on any split, including T3a",
+      "why": "Cooper's 2026-09-13 amendment ('exploratory, no kill condition') explicitly rejected the recommended default. This is a departure from D25's standing caution against searching a result space without a pre-registered stopping rule; flagged explicitly in prompts/phase_13.md's amendment note rather than silently absorbed. Mitigation is in how this phase reports (every split's both tails shown as distributions, escalation rows 2/3 hard-stopping if a verdict is ever declared), not in re-imposing what Cooper declined."
+    },
+    {
+      "decision": "flg_/spl_ quality gating for T3a/T3c",
+      "options_considered": ["split on the raw boolean column as-is", "gate to quality-known rows only, exclude 'unavailable'"],
+      "chose": "gate to quality-known rows only",
+      "why": "direct crosstab confirmed flg_dilution_form_before_t0 and spl_reverse_split_365d both default to False when their quality column reads 'unavailable' (248/20,951 and 12,219/20,951 respectively) -- splitting on the raw boolean would fold 'we don't know' into the 'no' side. Caught before writing any split, not after."
+    },
+    {
+      "decision": "T3b construction (not specified by name anywhere upstream)",
+      "options_considered": ["raw share count, no split adjustment", "split-adjusted via spl_ history"],
+      "chose": "split-adjusted: shs_shares_outstanding corrected by spl_last_split_ratio when spl_last_split_ns falls strictly between shs_asof_ns and t0_ns",
+      "why": "the architect's proposal states the adjustment is 'not optional given how routine reverse splits are in this cohort'; 1,741/20,951 events needed it"
+    }
+  ],
+  "surprises": [
+    "LOG (escalation row 5): population minute-bar coverage 75.24% < 80% threshold.",
+    "This is a hard temporal cutoff, not a scattered gap: 2020-2024 sit at exactly 100% minute-bar coverage (15,763/15,763); 2025 sits at exactly 0% (0/5,188). event_minute_bars_v2 / event_quote_metrics_v1 simply have no 2025 rows yet -- confirmed by reading chart 01 directly, not assumed from the population aggregate.",
+    "prompts/phase_13.md itself was drafted, posted, and approved in-session but never written to disk -- T0's commit (e0ed9a3) landed config/phase_13.json only. Caught by tools/verify_cited_paths.py before T3's commit could compound the gap; reconstructed and committed separately (0a163f2) before any further task ran.",
+    "T3's first draft cross-cut by price TERCILE, an unrequested deviation from config.cross_cuts (which specifies the same price DECILE T2 uses). Caught by re-reading config/phase_13.json before building the Chart Contract, not by Cooper. Reverted; see decisions_log.",
+    "LOG (escalation row 7): 344/356/472 of ~560 year x decile x split-value cells (T3a/T3b/T3c respectively) fall below config.cross_cuts.min_cell_n_log_threshold (200) -- a direct consequence of the year x decile x split-value granularity, flagged per-cell in charts 03-05 rather than hidden by coarsening.",
+    "T3a's population-aggregate direction runs OPPOSITE the pre-registered hypothesis on MFE: events with a dilution filing before t0 show a HIGHER median MFE cost-multiple at every horizon (e.g. 15min: 2.00 vs 1.53 without), not lower. MAE is also higher for the filing group at every horizon (15min: 2.20 vs 1.95) -- both legs move together, consistent with 'a dilution filing marks a more volatile/eventful stock' rather than the specific asymmetric worsening the proposal predicted. Stated as a population-aggregate observation, not cross-cut by year/decile (see charts 03 for that) and explicitly not a verdict -- no kill condition exists to fail.",
+    "T3b (undirected) shows the largest population-aggregate separation of the three splits: median MFE cost-multiple at 15min is 0.91 (below-median turnover) vs 2.67 (above-median turnover), roughly 3x. T3c (undirected) shows almost none: 1.60 vs 1.70 at 15min. Both reported as distributions only."
+  ],
+  "artifacts": [
+    { "path": "results/phase_13/artifacts/p0_coverage_summary.json", "sha256": null, "size_bytes": null },
+    { "path": "results/phase_13/artifacts/t2_arm_zero_summary.json", "sha256": null, "size_bytes": null },
+    { "path": "results/phase_13/artifacts/t3_partition_summary.json", "sha256": null, "size_bytes": null }
+  ],
+  "artifacts_note": "sha256/size_bytes intentionally null -- these three JSON summaries are tracked in git directly (not gitignored parquet), so their content hash is the git blob hash at each commit already named below; p0_outcome.parquet itself is gitignored and regenerable from t1_build_p0.py + config_hash, per the standing regenerable-artifact rule.",
+  "charts": [
+    "results/phase_13/charts/01_p0_coverage.html",
+    "results/phase_13/charts/02_arm_zero_price_decile.html",
+    "results/phase_13/charts/03_flg_dilution_split.html",
+    "results/phase_13/charts/04_shs_turnover_split.html",
+    "results/phase_13/charts/05_spl_reverse_split.html",
+    "results/phase_13/charts/06_all_splits_summary.html"
+  ],
+  "commits": [
+    "e0ed9a3", "9d57f63", "a1259f9", "0a163f2", "6e86148",
+    "7363471", "e7a5ed8", "8895bbb", "392bec2", "14e1230", "8951383"
+  ],
+  "reproduce": "cd research/phase_13 && ../../.venv/Scripts/python.exe t1_build_p0.py && python t2_arm_zero.py && python t3_partitions.py && python verify_partition_test.py && python chart_01.py && python chart_02.py && python chart_03.py && python chart_04.py && python chart_05.py && python chart_06.py"
+}

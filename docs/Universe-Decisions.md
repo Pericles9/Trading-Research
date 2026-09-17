@@ -1546,6 +1546,40 @@ change, and that sentence is Cooper's to write. It is not produced by this build
 **Standing rule.** Same shape as every other "measurement is not permission" boundary in this
 programme (D4's write-boundary test, A13(a)) — F1 may build and report; it may not analyze.
 
+### D32 Amendment A1 — the written sentence, signed off
+
+**Date:** 2026-09-13 · **Gate:** post-F1-T6, the proposal "What the preliminary fundamental research
+should look like" · **Approved by Cooper:** "i sign off"
+
+D32's gate required exactly one written sentence naming the decision a result would change, before
+any fundamental column may be put against any outcome variable. That sentence, as proposed and
+signed off:
+
+> **If a partition of the universe on a pre-`t0` observable produces a sub-population whose
+> net-expectancy distribution clears the round-trip cost stack — where the full population's does
+> not — then D24 and D25's arithmetic reopens on that sub-population, and the universe definition
+> changes to that partition. If no partition does, the fundamental layer is documentation and the
+> line stays closed.**
+
+Two deliberate properties of this wording, carried over from the proposal that drafted it: it names
+**"a pre-`t0` observable"**, not specific columns, so no candidate split is smuggled into the
+question in advance; and it ties a positive result to **the universe definition itself changing**,
+not merely to "the arithmetic reopens" with no consequence — a result that reopens D24/D25 without
+changing what gets traded is the failure mode this amendment exists to foreclose.
+
+**What this unblocks.** A pre-registered partition test (not a regression, not a search across all
+`event_fundamentals` columns) comparing net-expectancy distributions across a small number of
+declared splits, run against a population-scale outcome variable, with the detection-price-decile
+partition run first as a null/competing-explanation control. Full design: the proposal document
+this amendment quotes from (not itself a committed artifact — the design becomes a phase prompt,
+per `docs/Agent_Prompt_Standard.md`, before execution).
+
+**What this does not do.** It does not authorize the `companyfacts`-based `fin_` element mapping
+(F1-T4f, still not built — nothing has changed that conditional). It does not reopen D32's own
+build/report boundary for `event_fundamentals` itself, which stays as constructed. It does not
+pre-approve any specific split, kill condition, or horizon — those are set in the phase prompt that
+executes against this sentence, before that phase's own T0.
+
 ## D33 — t0 for Build F1 is a tiered construction; no single anchor covers the universe
 
 **Date:** 2026-09-11 · **Gate:** Build F1 pre-flight, resolved with Cooper before F1-T1
@@ -1760,3 +1794,70 @@ point, not a reopening.
 
 **Numbering note.** Recorded as D36, confirmed free by reading this file — register highest was
 D35, next free D36. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D37.**
+
+---
+
+## D37 — Phase 13 closes as read, uncorrected; its headline numbers carry a known, quantified, one-directional look-ahead bias
+
+**Date:** 2026-09-14 · **Gate:** Cooper's explicit decision via a structured decision request,
+presented after Phase 13's T4 (tick-level confirmation) fired a hard stop. Cooper selected "Close
+Phase 13 as read, uncorrected" over two other options (fix and rebuild all of T1–T3; or fix and
+re-verify only T3b).
+
+**What Phase 13 is.** `phase/13`, executing D32 Amendment A1's gating sentence: a pre-registered,
+exploratory partition of the universe on three pre-`t0` fundamental observables
+(`flg_dilution_form_before_t0`, share turnover, `spl_reverse_split_365d`) against a newly built
+population-scale outcome variable (P0: per-event MFE/MAE in round-trip-cost-multiple units at
+5/15/30/60 min), with detection-price decile as a competing-explanation control arm.
+**Exploratory, no kill condition** (Cooper's own 2026-09-13 amendment) — no split was ever going
+to be declared to "clear" anything. T0–T3 and T5 (charts, Verification Block, digest, REPORT.md)
+ran and were reported as complete, gate mode sync-required, pending Cooper's review.
+`results/phase_13/REPORT.md`.
+
+**What T4 found.** Cooper triggered T4a, targeting T3b (share turnover) for tick-level
+confirmation. On the 50-event dev sample, tick-derived and bar-derived MFE cost-multiple
+disagreed **one-directionally** (bar-derived value never smaller) in 36% of events at the 5-min
+horizon, 14% at 15/30/60 min. Traced directly
+(`research/phase_13/t4b_lookahead_diagnosis.py`) to `t1_build_p0.py`'s window selection:
+`minute_index <= t0_minute_index + h` always includes the full final minute bucket, whose
+clock-time end lands up to 60 seconds past the intended `t0 + h minutes` mark. Population median
+excess is **59.14 seconds** — because per D33, 73% of events construct `t0_ns` as the start of a
+minute bucket, so the offset into that final minute is under 1 second for most of the population,
+not a random ~30s average. As a share of the labeled horizon: median excess **19.7% at 5 min,
+6.6% at 15 min, 3.3% at 30 min, 1.6% at 60 min.** This reaches every headline number already
+reported in T1 (P0 itself), T2 (the price-decile control), and T3a/b/c (all three splits) —
+**T1's coverage stats are the sole exception** (coverage asks whether a bar exists at all, not
+the window's exact length).
+
+**Per `CLAUDE.md`'s Escalation rule, this was a hard stop and was treated as one**: nothing
+already committed at T0–T5 was patched or rebuilt to fix it. The diagnosis script and its output
+are committed (`results/phase_13/artifacts/t4b_lookahead_diagnosis.json`); `t1_build_p0.py` was
+not touched; T4a's own full-population run (which would have needed the fix first, or it would
+just produce a second set of numbers needing the same correction) was never executed.
+
+**Cooper's decision, verbatim in effect: close as read, uncorrected.** No fix, no rebuild. The
+existing T0–T3/T5 report, charts, and digest stand exactly as committed — per this program's
+standing "banner, don't delete" convention, this decision and a closure banner at the top of
+`results/phase_13/REPORT.md` record the bias in place rather than rewriting or removing the
+original numbers. **Why this is a defensible close, not a shortcut:** Phase 13 carried no kill
+condition from the start — no decision or threshold in this programme was ever going to hinge on
+these exact numbers being unbiased, only on the general shape of the distributions each split
+produced. A bias that is worst (19.7%) at the shortest horizon and shrinks to 1.6% by 60 minutes
+is unlikely to reverse the largest population-aggregate separations already reported (T3b's
+~3x gap, for instance), though it is not re-verified at corrected precision and should not be
+treated as such.
+
+**What this does not do.** It does not certify Phase 13's reported numbers as unbiased — the
+opposite; every MFE/MAE figure in that report should be read as biased slightly toward larger
+values than the true tick-level number, worst at short horizons. It does not reopen D24/D25 (no
+split cleared anything, biased or not). It does not authorize any other phase's outcome-variable
+construction to skip a similar window-boundary check — if anything, this is now a named failure
+mode (`docs/Research-Library-Map.md`'s Phase 13 entry and this decision) any future phase building
+a horizon-windowed outcome variable from `event_minute_bars_v2` should check against directly,
+the same way `t1_build_p0.py`'s own README-level comment already flagged the analogous
+`FUNDAMENTALS_ROOT` bug class as "caught here before it could repeat."
+
+**Numbering note.** Recorded as D37, confirmed free by reading this file after merging
+`origin/master`'s current tip (which carried D34–D36 and the D32 Amendment A1 text/data-root fix
+`phase/13` had been cut before) into `phase/13` first — register highest was D36, next free D37.
+`CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D38.**

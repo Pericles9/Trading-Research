@@ -803,3 +803,21 @@ two candidate-exclusive indicator codes (3, 7, found in T2a's census); full-tier
 level (not minute-bar) band arithmetic to remove the coarsest source of route-1/route-3 grain
 mismatch. Per the Approval Gate, Stage B (time-to-halt, reopen-gap, the sizing arithmetic) does not
 run until Cooper clears rows 10/11 in writing.
+
+### CLOSED — Phase 13's fundamental partition test carries a known look-ahead bias; closed as read (2026-09-14)
+
+**Status: closed, not open.** `results/phase_13/REPORT.md` §10, `docs/Universe-Decisions.md` D37.
+Logged here for the historical record, same as candidate (b)'s ISO-share disposition above — not
+because anything further is pending.
+
+Phase 13 (D32 Amendment A1's fundamental partition test) ran T0–T3/T5 and reported complete,
+exploratory, no kill condition. Cooper then triggered T4 (tick-level confirmation) targeting T3b,
+which found a real, one-directional look-ahead bias in T1's outcome-variable window: the bar-level
+window always runs up to 60 seconds past the labeled horizon, inflating MFE/MAE by a median 19.7%
+of the horizon at 5 minutes, shrinking to 1.6% at 60 minutes. This reaches every headline number in
+T1/T2/T3 (T1's coverage stats excepted). **Cooper's decision: close as read, uncorrected** — no fix,
+no rebuild. Defensible because no decision or kill condition in this phase ever hinged on the exact
+numbers, only on the general shape of each split's distribution. The existing report, charts, and
+digest stand unchanged; the bias is recorded as a permanent, quantified caveat (closure banner at
+the top of `results/phase_13/REPORT.md`, `digest.json`'s new `closure` block) rather than corrected.
+No further task in `prompts/phase_13.md` runs against this phase.
