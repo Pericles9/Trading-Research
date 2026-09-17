@@ -27,6 +27,7 @@ from src.data.paths import resolve_data_root, resolve_duckdb_path
 CFG = "config/fundamental_exploration.json"
 ART = "results/fundamental_exploration/artifacts"
 CHARTS = "results/fundamental_exploration/charts"
+EVENT_FUNDAMENTALS_PATH = "data/fundamentals/event_fundamentals.parquet"
 
 # E2 nests under the same results/fundamental_exploration/ umbrella as E1 (per the brief's own
 # "results/fundamental_exploration/e2/" path) -- "charts/fundamental_exploration/e2/" read literally
@@ -81,6 +82,15 @@ def add_identity_fields(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def load_cfg() -> dict:
+    with open(CFG) as f:
+        return json.load(f)
+
+
+def cfg_hash() -> str:
+    """sha256[:12] of the committed config, newline-normalised so the hash is identical
+    on LF and CRLF checkouts. Matches research/phase_9/common.py's convention."""
+    b = pathlib.Path(CFG).read_bytes().replace(b"\r\n", b"\n")
 def load_cfg(path: str = CFG) -> dict:
     with open(path) as f:
         return json.load(f)
