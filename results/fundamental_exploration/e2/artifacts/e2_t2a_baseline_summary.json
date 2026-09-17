@@ -1,6 +1,6 @@
 {
   "task": "E2-T2a baseline dollar volume B_e (pre-floor)",
-  "config_hash": "8a18fbef1f6b",
+  "config_hash": "981a74a2f2ed",
   "basis": "dollar volume (volume x vwap per minute bar), not share volume",
   "n_total": 15763,
   "n_baseline_sessions_counts": {
@@ -20,7 +20,7 @@
     "p25": 3756.5352186645305,
     "median": 22781.151838034188,
     "p75": 184687.424075,
-    "p90": 1356827.9916259816,
-    "max": 1479841183.2348337
+    "p90": 1356827.9916259814,
+    "max": 1479841183.2348335
   }
 }

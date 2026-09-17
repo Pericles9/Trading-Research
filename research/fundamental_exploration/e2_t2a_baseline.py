@@ -61,6 +61,11 @@ def main() -> int:
     per_session = con.execute(sql).df()
     con.close()
 
+    # brief's own explicit ask (E2-T2): assert, not just structurally imply via the WHERE
+    # clause, that no event-day bar enters the baseline.
+    assert 0 not in set(per_session["session_offset"].unique()), \
+        "session_offset=0 (event day) rows leaked into the baseline query"
+
     # full (event_id x session_offset in {-3,-2,-1}) grid -- a combo absent from per_session
     # is exactly "no rth data that session", filled 0, same treatment as a present-but-zero row.
     grid = pd.MultiIndex.from_product(

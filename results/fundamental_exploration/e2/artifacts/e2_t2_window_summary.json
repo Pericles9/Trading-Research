@@ -1,0 +1,14 @@
+{
+  "task": "E2-T2 window build",
+  "config_hash": "981a74a2f2ed",
+  "n_events_processed": 15742,
+  "n_events_skipped_no_baseline": 21,
+  "n_censored": 0,
+  "censored_share": 0.0,
+  "duration_min_summary": {
+    "n": 15742,
+    "median": 0.0,
+    "p25": 0.0,
+    "p75": 32.9991345248
+  }
+}
