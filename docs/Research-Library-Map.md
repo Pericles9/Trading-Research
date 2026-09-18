@@ -2327,3 +2327,47 @@ default limit (80% of this machine's 32GB RAM). Fixed by isolating the window-fu
 cheap aggregates, batching it by event year with per-batch checkpointing, and an automatic
 split-and-retry fallback for a batch that still OOMs on its own connection. Recorded as a standing
 reference note for future bulk joins against `filtered_trades`/`filtered_quotes`.
+
+## Relative momentum R0 — qualification-layer scoping, not a phase — STOPPED AT T0b (2026-09-17)
+
+**Branch `explore/relative-momentum-r0`, cut from `explore/fundamental-e1`** (which is merged forward
+with `origin/master` at `09c6733` and carries the fundamental layer DR-4 reads).
+`prompts/relative_momentum_r0.md` — the v3 brief, filed by this run so that the config's `_meta.prompt`
+citation resolves; it carries a filing note listing the seven paths it cites that do not exist in this
+checkout, four of them marked `[unverified]` inline. `config/relative_momentum_r0.json`.
+`research/relative_momentum/` — `common.py` (config, identity key, the D1 population, and a read-only
+re-implementation of the participation gate's own `list_events` rule), `chart_common.py` (palette
+carried by value from `research/fundamental_exploration/chart_common.py`), `t0a_population.py`,
+`t0b_overlap_join.py`, `t0b2_exception_resolution.py`, `t0b3_exception_flags.py`, `chart_t0b.py`.
+`results/relative_momentum/r0/` — `REPORT.md` (copied to
+`results/reports/relative_momentum_r0_report.md` per the cross-phase convention), `artifacts/`,
+`charts/`.
+
+**Nothing under `scanner-epg-momentum/` was executed, imported or modified** — the brief makes that
+repository read-only, so its event-selection rule was re-implemented over `data/filtered` instead.
+Both projects resolve to the same physical archive: that repo's `DATA_ROOT` is `parents[4] / "data"`
+= `E:/Trading Research/data`.
+
+**T0b fired.** The gate's event set and D1 are materially disjoint in one direction. 97.27% of the
+reproducible headline profit-factor run (`phase_f/val_full`, PF = 1.9194, n = 1,027 events) sits
+inside D1 — but D1 is 15.4× larger, the gate has ever been **run** on 6.96% of it (1,097 / 15,763),
+and on **zero** events before 2023-11-17, so three of D1's five years carry no gate observation at
+all. The single rule that removes 10,046 of D1's 15,763 events from the gate's admissible universe is
+its `min_mom_pct = 50.0` floor; no D1 event is excluded for any other reason. All 39 gate events
+outside D1 resolve with no residue: 27 by instrument class (18 warrant, 5 fund product, 4 preferred)
+and 12 by `flag_trades_mom_outlier`, every one of those twelve above +700% momentum.
+
+T0a part 2 (the `move_at` prior-close coverage pass), T1, T1c, T2, T3, T4 and T5 did not run. §I.7's
+two open items — the liveness sweep and the ratcheting reading — were never reached, so neither was
+consumed. Part II (R1) was not authorised and is untouched.
+
+**Two brief deviations, each following E1's precedent on the identical slip:** light theme, not dark;
+and charts under `results/relative_momentum/r0/charts/` rather than a new top-level `charts/`
+directory (see the E1 entry above and `prompts/fundamental_exploration_e1.md` §7). Both recorded in
+`config/relative_momentum_r0.json` `chart_theme.deviation_from_brief`.
+
+A live `SELECT` against `momentum_events_canonical` was attempted at T0a and killed after >10 minutes
+of eight-thread CPU — the view joins `filtered_trades`/`filtered_quotes` unconditionally for its
+coverage flags. Same finding `research/fundamentals_f1/verify_event_fundamentals.py` recorded on
+2026-09-12, reproduced; D1 is built from `results/phase_5/artifacts/quotes_bitmaps_all.parquet`
+instead, as E1 and F1 already do.

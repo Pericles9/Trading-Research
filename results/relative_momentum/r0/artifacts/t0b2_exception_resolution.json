@@ -1,0 +1,276 @@
+{
+  "task": "R0-T0b (part 2) gate-side exception resolution",
+  "config_hash": "5fae280c7fed",
+  "n_gate_run_events": 1136,
+  "n_inside_D1": 1097,
+  "n_outside_D1": 39,
+  "resolution_counts": {
+    "on_raw_spine_but_not_in_scope": 39
+  },
+  "vendor_type_counts": {
+    "ADRC": 1,
+    "CS": 11,
+    "ETF": 1,
+    "FUND": 4,
+    "PFD": 4,
+    "WARRANT": 18
+  },
+  "classification_source": "results/phase_1b/artifacts/ticker_reference_snapshot.parquet",
+  "classification_columns": [
+    "ticker",
+    "name",
+    "market",
+    "locale",
+    "primary_exchange",
+    "type",
+    "active",
+    "currency_name",
+    "cik",
+    "composite_figi",
+    "share_class_figi",
+    "last_updated_utc",
+    "delisted_utc",
+    "snapshot_utc",
+    "lookup_method"
+  ],
+  "classification_note": "CLAUDE.md: classification source of record is the Phase 1b ticker_reference_snapshot; the API is never re-queried for classification.",
+  "raw_spine_rows": 23268,
+  "raw_spine_note": "momentum_events queried directly. file2 rows carry a structurally NULL date, so (ticker, date) cannot resolve them on the raw spine -- the in_scope materialization (which carries event_date_canonical) is the lookup used for those.",
+  "exceptions": [
+    {
+      "ticker": "AISPW",
+      "date": "2024-03-18",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "APM",
+      "date": "2024-03-06",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "CS"
+    },
+    {
+      "ticker": "ASNS",
+      "date": "2024-06-05",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "CS"
+    },
+    {
+      "ticker": "BFRGW",
+      "date": "2024-01-22",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "BGLC",
+      "date": "2024-02-13",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "CS"
+    },
+    {
+      "ticker": "BMR",
+      "date": "2024-02-12",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "CS"
+    },
+    {
+      "ticker": "CHNR",
+      "date": "2024-02-15",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "CS"
+    },
+    {
+      "ticker": "CIFRW",
+      "date": "2023-12-19",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "CONL",
+      "date": "2024-11-06",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "ETF"
+    },
+    {
+      "ticker": "CORZW",
+      "date": "2024-01-24",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "CORZZ",
+      "date": "2024-06-06",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "DJTWW",
+      "date": "2024-06-24",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "DJTWW",
+      "date": "2024-07-15",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "DTSS",
+      "date": "2024-02-14",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "CS"
+    },
+    {
+      "ticker": "DXYZ",
+      "date": "2024-03-28",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "FUND"
+    },
+    {
+      "ticker": "DXYZ",
+      "date": "2024-04-05",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "FUND"
+    },
+    {
+      "ticker": "DXYZ",
+      "date": "2024-04-15",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "FUND"
+    },
+    {
+      "ticker": "DXYZ",
+      "date": "2024-04-08",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "FUND"
+    },
+    {
+      "ticker": "ENGNW",
+      "date": "2024-02-14",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "HOLO",
+      "date": "2024-02-07",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "CS"
+    },
+    {
+      "ticker": "HUMAW",
+      "date": "2024-05-30",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "IXHL",
+      "date": "2023-11-30",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "ADRC"
+    },
+    {
+      "ticker": "MGIH",
+      "date": "2024-02-12",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "CS"
+    },
+    {
+      "ticker": "NUKK",
+      "date": "2023-12-26",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "CS"
+    },
+    {
+      "ticker": "RSVRW",
+      "date": "2024-06-28",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "SOUNW",
+      "date": "2024-03-13",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "SOUNW",
+      "date": "2024-02-15",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "SOUNW",
+      "date": "2024-02-16",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "SOUNW",
+      "date": "2024-02-20",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "SOUNW",
+      "date": "2024-02-21",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "STRC",
+      "date": "2024-02-26",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "PFD"
+    },
+    {
+      "ticker": "STRC",
+      "date": "2024-03-06",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "PFD"
+    },
+    {
+      "ticker": "STRC",
+      "date": "2024-02-27",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "PFD"
+    },
+    {
+      "ticker": "STRC",
+      "date": "2024-03-19",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "PFD"
+    },
+    {
+      "ticker": "TLSIW",
+      "date": "2024-05-24",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "VFSWW",
+      "date": "2023-11-30",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "VSSYW",
+      "date": "2024-06-07",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "WARRANT"
+    },
+    {
+      "ticker": "VVOS",
+      "date": "2023-11-29",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "CS"
+    },
+    {
+      "ticker": "ZJYL",
+      "date": "2023-12-18",
+      "resolution": "on_raw_spine_but_not_in_scope",
+      "vendor_type": "CS"
+    }
+  ],
+  "output_parquet": "results/relative_momentum/r0/artifacts/t0b2_gate_exceptions.parquet"
+}

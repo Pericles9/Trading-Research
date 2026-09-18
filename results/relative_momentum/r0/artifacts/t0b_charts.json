@@ -1,0 +1,12 @@
+{
+  "task": "R0-T0b charts",
+  "config_hash": "5fae280c7fed",
+  "charts": [
+    "results/relative_momentum/r0/charts/01_population_funnel_by_year.html",
+    "results/relative_momentum/r0/charts/02_gate_floor_against_d1_momentum.html"
+  ],
+  "source_artifacts": [
+    "results/relative_momentum/r0/artifacts/t0b_membership.parquet",
+    "results/relative_momentum/r0/artifacts/t0b_overlap_join.json"
+  ]
+}

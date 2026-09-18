@@ -1,0 +1,133 @@
+{
+  "_meta": {
+    "prompt": "prompts/relative_momentum_r0.md",
+    "prompt_version": "v3 (2026-09-17) -- Part I only. Part II (R1 design inputs) is recorded, not authorised.",
+    "branch": "explore/relative-momentum-r0",
+    "branched_from": "explore/fundamental-e1",
+    "branched_from_note": "E1 is merged-forward with origin/master (09c6733) and carries the fundamental layer this brief's DR-4 reads. E2's artifacts (results/fundamental_exploration/e2/artifacts/) are present but UNCOMMITTED on that branch -- DR-3's relative-volume baseline B_e depends on them. Recorded, not silently assumed.",
+    "type": "scoping measurement -- not a phase. Records no decision, tests no hypothesis, touches no outcome variable (DR-5).",
+    "decisions_consumed": [],
+    "decisions_consumed_note": "Descriptive only; no Universe-Decisions.md entry. Same convention as config/fundamental_exploration.json."
+  },
+  "universe": {
+    "population_label": "D1",
+    "membership_rule": "momentum_events_canonical WHERE in_scope = TRUE AND source_file = 'file1'",
+    "expected_row_count": 15763,
+    "materialization_path": "results/phase_5/artifacts/quotes_bitmaps_all.parquet",
+    "materialization_note": "20,951 rows = in_scope=TRUE, carries source_file. Reused verbatim from config/fundamental_exploration.json and config/fundamentals_f1.json -- a live SELECT against momentum_events_canonical is pathologically slow regardless of projected columns (the view joins filtered_trades/filtered_quotes for coverage flags unconditionally; research/fundamentals_f1/verify_event_fundamentals.py, 2026-09-12). Confirmed again in this run: a single GROUP BY against the live view was killed after >10 min of 8-thread CPU.",
+    "cohort_key": [
+      "ticker",
+      "event_date_canonical",
+      "momentum_pct"
+    ],
+    "identity_key": {
+      "rule": "event_id = f\"{ticker}_{event_date_canonical}_{momentum_pct:.2f}\"",
+      "source": "research/phase_10/common.py:215, reused verbatim (D30/reuse-before-build)"
+    }
+  },
+  "gate": {
+    "repo": "scanner-epg-momentum",
+    "repo_status": "READ-ONLY to this brief (section I.6). Nothing under scanner-epg-momentum/ is executed, imported or modified. Its event-selection rule is re-implemented locally, read-only, over data/filtered folder names.",
+    "participation_gate_code": [
+      "scanner-epg-momentum/backtest/epg_replay.py",
+      "scanner-epg-momentum/backtest/setup_filter.py"
+    ],
+    "event_lister_source": "scanner-epg-momentum/backtest/data/loaders/trades.py::list_events",
+    "event_lister_rule": {
+      "min_mom_pct": 50.0,
+      "require_date_in_folder_name": true,
+      "require_trades_parquet": true,
+      "filtered_dir": "data/filtered",
+      "note": "DATA_ROOT in scanner-epg-momentum/backtest/data/schemas/mom_db.py resolves to E:/Trading Research/data -- the two projects read the SAME physical archive. The populations differ by selection rule, not by data source."
+    },
+    "split_boundaries_source": "scanner-epg-momentum/backtest/config/holdout_boundary.json",
+    "run_result_roots": [
+      "scanner-epg-momentum/backtest/results"
+    ],
+    "per_event_summary_glob": "**/per_event_summary.json",
+    "per_trade_glob": "**/per_trade.parquet",
+    "declared_event_set_files": [
+      "scanner-epg-momentum/backtest/data/val_full.json",
+      "scanner-epg-momentum/backtest/data/val_r4_stratified.json"
+    ],
+    "fired_definition": "n_pass_edges >= 1 on a per_event_summary row (a participation-gate rising edge occurred at least once in that event session).",
+    "cited_headline_runs": {
+      "scanner_phase_F_val_full": {
+        "path": "scanner-epg-momentum/backtest/results/phase_f/val_full",
+        "profit_factor": 1.9194
+      },
+      "scanner_phase_F_test_full": {
+        "path": "scanner-epg-momentum/backtest/results/phase_f/test_full",
+        "profit_factor": 2.1849
+      },
+      "brief_cited_phase_H": {
+        "profit_factor": 1.5297,
+        "path_in_repo": null,
+        "note": "cited by the brief as scanner-epg-momentum Phase H; scanner-epg-momentum/backtest/CLAUDE.md states Phase H requires explicit approval before any implementation and lists no Phase H results directory. UNVERIFIED in this checkout."
+      },
+      "brief_cited_phase_U": {
+        "profit_factor": 1.0962,
+        "path_in_repo": null,
+        "note": "cited by the brief as hawkes-ofi-impact Phase U on a 100-event validation; scanner-epg-momentum/backtest/CLAUDE.md records PF=1.0962 for Phase U as DERIVED FROM THE PARENT PROJECT (D:/Trading Research/hawkes-ofi-impact). UNVERIFIED in this checkout."
+      }
+    }
+  },
+  "move_measure": {
+    "name": "move_at",
+    "rule": "(last qualifying trade price for event e at or before tau - tick-derived prior session close) / prior session close",
+    "prior_close_construction": "Phase 10c: prior XNYS session via exchange_calendars, closing print resolved by the two-rule condition-code fix on {8, 15}",
+    "d4_note": "Tick-derived per D4. momentum_pct appears only as a labelled diagnostic and enters no computed quantity (section I.2)."
+  },
+  "liveness_sweep": {
+    "status": "OPEN -- requires Cooper approval before the T1 run (brief DR-1 and section I.7).",
+    "clock_caps_min": [
+      15,
+      30,
+      60
+    ],
+    "no_cap": true,
+    "gate_window_close": true,
+    "note": "Five definitions reported side by side. Whether the gate's own window close is the primary rather than the fifth is Cooper's call."
+  },
+  "attention_window": {
+    "W_min": 10,
+    "W_note": "Matches E2's participation construction (results/fundamental_exploration/e2/artifacts/e2_t2a_baseline.parquet, flat 3-prior-session 10-minute dollar-volume baseline B_e), reused unchanged per DR-3."
+  },
+  "grid": {
+    "step_min": 5,
+    "session_start_et": "04:00",
+    "session_end_et": "20:00",
+    "calendar": "exchange_calendars XNYS (CLAUDE.md session-calendar rule; the federal holiday calendar is banned)"
+  },
+  "share_count": {
+    "tier": "tier-1 shares outstanding (shs_shares_outstanding / shs_shares_outstanding_corrected)",
+    "source": "results/fundamental_exploration/e2/artifacts/e2_d1_fundamentals.parquet",
+    "quality_columns": [
+      "shs_quality",
+      "shs_lag_ns"
+    ],
+    "quality_columns_note": "The brief's DR-4 names float_quality / float_lag_ns; the columns that exist are shs_quality / shs_lag_ns (Build F1 naming). Same quantity, repo name used.",
+    "required_arm": "every normalised measure computed both with and without the share-count denominator, each split by flg_dilution_form_before_t0",
+    "vendor_float_endpoint": "BANNED from every computed quantity (D27)"
+  },
+  "cost": {
+    "round_trip_bp": 70.98,
+    "round_trip_cents": 2.512,
+    "source": "Phase 11 (results/phase_11/REPORT.md) -- read from config, never re-derived"
+  },
+  "random_control": {
+    "seed": 42,
+    "n_permutations": 1
+  },
+  "deciles": {
+    "n": 10,
+    "method": "pandas.qcut(duplicates='drop')",
+    "labels": "0=lowest, 9=highest"
+  },
+  "min_cell_n_display_floor": 20,
+  "chart_theme": {
+    "source": "copied by value from research/fundamental_exploration/chart_common.py (which copied research/phase_13/chart_common.py)",
+    "deviation_from_brief": "TWO deviations, both following E1's precedent on the identical slips. (1) Theme: brief section I.5 says 'dark theme'. No dark-theme chart exists anywhere in this repo's history; the standard light theme is used (config/fundamental_exploration.json chart_theme.deviation_from_brief). (2) Location: charts are written to results/relative_momentum/r0/charts/, not the brief header's top-level charts/relative_momentum/r0/. E1's brief carried the same slip and it was corrected before any code ran, specifically so the repo does not gain a stray top-level charts/ directory -- see the E1 entry in docs/Research-Library-Map.md and prompts/fundamental_exploration_e1.md section 7.",
+    "output_dir": "results/relative_momentum/r0/charts"
+  }
+}

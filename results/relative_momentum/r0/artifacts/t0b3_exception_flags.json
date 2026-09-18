@@ -1,0 +1,156 @@
+{
+  "task": "R0-T0b (part 3) why the in-scope-class gate exceptions are not in_scope",
+  "config_hash": "5fae280c7fed",
+  "in_scope_formula": "class IN ('common','common_adr') AND NOT flag_bad_denominator AND NOT flag_trades_mom_outlier AND NOT flag_missing_event_day (src/data/canonical.py, stage t6/t7/t8)",
+  "flag_bad_denominator_thresholds": {
+    "prev_close_floor": 0.01,
+    "mom_sanity_cap": 10000,
+    "source": "config/phase_1b.json"
+  },
+  "n_exceptions_total": 39,
+  "n_excluded_by_instrument_class": 27,
+  "n_in_scope_class_but_not_in_scope": 12,
+  "reason_counts_all": {
+    "flag_trades_mom_outlier": 12,
+    "instrument_class_fund_product": 5,
+    "instrument_class_preferred": 4,
+    "instrument_class_warrant": 18
+  },
+  "reason_counts_in_scope_class": {
+    "flag_trades_mom_outlier": 12
+  },
+  "in_scope_class_rows": [
+    {
+      "ticker": "APM",
+      "date": "2024-03-06",
+      "instrument_class": "common",
+      "momentum_pct": 1106.12,
+      "prev_close": 1.45,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    },
+    {
+      "ticker": "ASNS",
+      "date": "2024-06-05",
+      "instrument_class": "common",
+      "momentum_pct": 878.72,
+      "prev_close": 4.7,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    },
+    {
+      "ticker": "BGLC",
+      "date": "2024-02-13",
+      "instrument_class": "common",
+      "momentum_pct": 724.82,
+      "prev_close": 4.11,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    },
+    {
+      "ticker": "BMR",
+      "date": "2024-02-12",
+      "instrument_class": "common",
+      "momentum_pct": 1555.92,
+      "prev_close": 2.11,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    },
+    {
+      "ticker": "CHNR",
+      "date": "2024-02-15",
+      "instrument_class": "common",
+      "momentum_pct": 758.22,
+      "prev_close": 8.25,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    },
+    {
+      "ticker": "DTSS",
+      "date": "2024-02-14",
+      "instrument_class": "common",
+      "momentum_pct": 1280.27,
+      "prev_close": 1.47,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    },
+    {
+      "ticker": "HOLO",
+      "date": "2024-02-07",
+      "instrument_class": "common",
+      "momentum_pct": 1134.44,
+      "prev_close": 1208.0,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    },
+    {
+      "ticker": "IXHL",
+      "date": "2023-11-30",
+      "instrument_class": "common_adr",
+      "momentum_pct": 1195.88,
+      "prev_close": 0.97,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    },
+    {
+      "ticker": "MGIH",
+      "date": "2024-02-12",
+      "instrument_class": "common",
+      "momentum_pct": 829.13,
+      "prev_close": 1.03,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    },
+    {
+      "ticker": "NUKK",
+      "date": "2023-12-26",
+      "instrument_class": "common",
+      "momentum_pct": 1609.37,
+      "prev_close": 2.0,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    },
+    {
+      "ticker": "VVOS",
+      "date": "2023-11-29",
+      "instrument_class": "common",
+      "momentum_pct": 1011.39,
+      "prev_close": 4.39,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    },
+    {
+      "ticker": "ZJYL",
+      "date": "2023-12-18",
+      "instrument_class": "common",
+      "momentum_pct": 1720.31,
+      "prev_close": 1.4,
+      "flag_bad_denominator": false,
+      "flag_trades_mom_outlier": true,
+      "flag_missing_event_day": false,
+      "not_in_scope_reason": "flag_trades_mom_outlier"
+    }
+  ]
+}
