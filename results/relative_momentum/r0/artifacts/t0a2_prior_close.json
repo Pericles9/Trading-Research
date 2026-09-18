@@ -1,0 +1,62 @@
+{
+  "task": "R0-T0a (part 2) tick-derived prior session close for D1",
+  "config_hash": "5fae280c7fed",
+  "construction": "last RTH minute bar's last_price at session_offset = -1, from event_minute_bars_v2 (Phase 6b, tick-derived). Verbatim the construction in research/phase_12/t2b_band_arithmetic.py and research/reg_sho_201/t1_trigger_check.py.",
+  "divergence_from_brief_I2": "brief I.2 specifies the Phase 10c Amendment 6 {8, 15} auction override on the closing print. event_minute_bars_v2 predates that amendment and segments on the timestamp rule alone. A6's own census bounds the affected population at 291 near-close prints against 25.2M; this takes the last RTH MINUTE BAR, not a specific print, so the residual is smaller still. The A6-exact alternative is a fresh 15,763-folder tick pass. Named residual, not a silent substitution.",
+  "d4": "both inputs tick-derived; no spine numeric column read.",
+  "n_d1": 15763,
+  "n_prior_close_available": 15721,
+  "n_prior_close_unavailable": 42,
+  "n_prior_close_nonpositive": 0,
+  "share_covered": 0.9973355325762863,
+  "by_year": [
+    {
+      "year": "2020",
+      "n_d1": 3439,
+      "n_prior_close_available": 3435,
+      "n_missing": 4
+    },
+    {
+      "year": "2021",
+      "n_d1": 1932,
+      "n_prior_close_available": 1927,
+      "n_missing": 5
+    },
+    {
+      "year": "2022",
+      "n_d1": 2279,
+      "n_prior_close_available": 2269,
+      "n_missing": 10
+    },
+    {
+      "year": "2023",
+      "n_d1": 3021,
+      "n_prior_close_available": 3013,
+      "n_missing": 8
+    },
+    {
+      "year": "2024",
+      "n_d1": 5092,
+      "n_prior_close_available": 5077,
+      "n_missing": 15
+    }
+  ],
+  "n_checks": 2,
+  "n_fail": 1,
+  "checks": [
+    {
+      "name": "row_count_preserved",
+      "pass": true,
+      "n": 15763,
+      "expected": 15763
+    },
+    {
+      "name": "move_at_recompute_covers_full_D1",
+      "pass": false,
+      "n_covered": 15721,
+      "n_not_covered": 42,
+      "note": "brief T0a: 'Assert the move_at recompute covers the full D1 set; report as a first-class number the events where the tick-derived prior close cannot be built. Carried, never dropped.' The uncovered events are written to the parquet with prior_close_available = FALSE, not filtered out."
+    }
+  ],
+  "output_parquet": "results/relative_momentum/r0/artifacts/t0a2_prior_close.parquet"
+}

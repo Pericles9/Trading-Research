@@ -2396,3 +2396,29 @@ bucketing variable, so the flip is what conditioning on a lookahead variable doe
 gate's *live* entry logic is causal, its *backtest population* is not. Charts 03/04 are ECDFs so the
 median is read as a crossing of the whole distribution. Sections 4 and 5 of that read are its own
 open decisions and are untouched.
+
+**Addendum 2, 2026-09-18 -- the causal re-run, which reverses Addendum 1's T0c.** On the erratum to
+the 2026-09-18 read, which mandates rerunning that check with `move_at`.
+`research/relative_momentum/t0a2_prior_close.py` finally builds T0a part 2, the tick-derived prior
+session close -- reused verbatim from `research/phase_12/t2b_band_arithmetic.py` and
+`research/reg_sho_201/t1_trigger_check.py` (last RTH minute bar's `last_price` at
+`session_offset = -1` from `event_minute_bars_v2`, which covers exactly D1's 15,763 events), not the
+15,763-folder tick pass originally anticipated. Coverage **15,721 / 15,763 (99.73%)**; 42 events
+carried as unavailable. One recorded divergence: that table predates Phase 10c Amendment 6's `{8, 15}`
+auction override, exposure bounded by A6's own census at 291 near-close prints against 25.2M.
+
+`research/relative_momentum/t0c2_move_at_reslice.py` + `chart_t0c2.py` re-run T0c on
+`move_at_entry = (entry_price - prior_close) / prior_close` at the named cell's own entry instant, so
+nothing after the decision enters the slicing variable. **The sign reverses.** T0c's gate-admissible
+slice read +66 bp gross / -57 bp net; its causal analogue reads **-1,054 bp gross / -966 bp net**, and
+no slice in the causal table has a positive median. The crosstab quantifies the lookahead exactly:
+of the 2,904 events the `momentum_pct >= 50` slice selected, **2,577 (88.7%) had not moved 50% at
+decision time**. The response curve (chart 05, no threshold set on it) is negative in all ten deciles
+and monotone the wrong way above the median -- net -129 bp at decile 5 falling to **-883 bp** at
+decile 9. The erratum's one exploratory lead does not survive: the entire positive result on the
+causal slice sits inside the 39 `flag_cross_session_extreme` events (net +863 bp), while the 84
+unflagged ones net **-1,659 bp** and are negative 87.5% of the time, with `move_at_entry` reaching
+2,043% -- A12's population, not a lead. Addendum 1's T0c table carries a supersession banner and is
+retained as the record of what the defective specification produced. Charts 05/06; 06 is built to be
+read directly against 03, and the pair is the finding. Path A / Path B and the citation fix remain
+Cooper's open decisions, untouched.

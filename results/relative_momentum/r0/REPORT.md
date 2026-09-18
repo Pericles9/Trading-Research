@@ -1,11 +1,15 @@
 # Relative momentum R0 — qualification-layer scoping — REPORT
 
 **Branch:** `explore/relative-momentum-r0` · **Config hash:** `5fae280c7fed`
-**Status: STOPPED AT T0b.** T0a (part 1) and T0b ran. T0a (part 2), T1, T1c, T2, T3, T4 and T5 did
-not run.
+**Status: STOPPED AT T0b.** T0a (parts 1 and 2) and T0b ran. T1, T1c, T2, T3, T4 and T5 did not run.
+(T0a part 2 was deferred at the stop and run later, in Addendum 2, because `move_at` needs it.)
 **Addendum, 2026-09-18:** sections T0b-4 and T0c were added after the stop, in answer to the
 2026-09-18 read of T0b. Neither restarts the brief: T0b-4 re-measures a number that read draws an
 inference from, and T0c is that read section 3 check, which runs entirely on Phase 11 committed output.
+**Addendum 2, 2026-09-18:** T0a part 2 and T0c2 were added on the erratum to that read, which mandates
+rerunning T0c with the causal measure move_at. **T0c2 reverses T0c direction and supersedes every T0c
+slice built on momentum_pct.** T0c rows are kept below as the record of what the defective
+specification produced.
 **Not a phase, not a finding.** No decision recorded, no hypothesis tested, no outcome variable
 touched (DR-5). Describes the pictures; Cooper decides what they mean.
 
@@ -100,11 +104,14 @@ to be that pair. It is a key on D1.
 distinct session dates and 2,576 distinct tickers, by year: 2020 · 3,439 — 2021 · 1,932 —
 2022 · 2,279 — 2023 · 3,021 — 2024 · 5,092. No 2025 event is in D1, consistent with §I.6.
 
-**T0a part 2 — the `move_at` prior-close coverage assert — did not run.** It is a 15,763-event pass
-over `data/filtered` to build the tick-derived prior session close, and its only consumer is
-`move_at`, which is used in T2. T0b is a stopping gate and T0b fired; the pass was not started.
-`research/relative_momentum/t0a2_prior_close.py` does not exist. This is an explicitly unfinished part
-of the brief, not an oversight.
+**T0a part 2 — the `move_at` prior-close coverage assert — was deferred at the stop and has since
+run.** Its only consumer is `move_at`, used in T2; T0b is a stopping gate and T0b fired, so the pass
+was not started at the time. The erratum of 2026-09-18 needs `move_at`, so it was built then, and it
+did not require the 15,763-folder tick pass originally anticipated — `event_minute_bars_v2` already
+carries the quantity. **Coverage: 15,721 of 15,763 (99.73%); 42 events cannot have a tick-derived
+prior close built, carried and never dropped.** Full result and the one recorded divergence from
+§I.2's literal wording: **§T0a part 2 in Addendum 2**,
+`research/relative_momentum/t0a2_prior_close.py`.
 
 ---
 
@@ -382,6 +389,11 @@ Phase 11's markout is a **fixed-horizon** trade: enter at the detection anchor +
 **52 seconds** in the val_full run. Re-slicing the population does not make them the same trade. This
 is a population diagnostic, not a reconciliation.
 
+> **SUPERSEDED by §T0c2 (Addendum 2).** Every slice in this table that uses `momentum_pct` is built
+> on a variable brief §I.2 bars from bucketing. The causal re-run reverses the sign: S5's +66 bp
+> becomes −1,054 bp, S3's +134 bp becomes −1,026 bp. This table is retained as the record of what the
+> defective specification produced; read §T0c2's table instead.
+
 ### The table — all figures in basis points
 
 | slice | n | markout p25 | **markout median** | markout p75 | share ≤ 0 | rt_cost median | **net median** | share net ≤ 0 |
@@ -460,3 +472,167 @@ palette, and it sits between S3 and S5 on both panels.
 §4 of the read (rescope to the gate-admissible domain, or re-derive the gate causally against all of
 D1) and §5 (the Project-docs citation fix, and the `prompts/relative_momentum_r0.md` stub drift) are
 both marked as Cooper's open decisions in that document. Neither is acted on here.
+
+---
+
+# ADDENDUM 2 — 2026-09-18 — the causal re-run
+
+Mandated by the erratum to the 2026-09-18 read: *"This entire check must be rerun with
+`move_at(e, τ)` … before any reading of 'does extreme momentum predict continuation' can be trusted."*
+That is the one bounded instruction in the erratum and it is what this addendum does. The erratum's
+Path A / Path B consequence is a recorded preference, not an instruction, and is not acted on.
+
+**The re-run reverses T0c's direction.** T0c's table is superseded by the table below on every slice
+that used `momentum_pct`. T0c's rows remain in this report as the record of what the defective
+specification produced.
+
+## T0a part 2 — the tick-derived prior session close, finally built
+
+`research/relative_momentum/t0a2_prior_close.py` · `artifacts/t0a2_prior_close.json`,
+`t0a2_prior_close.parquet`
+
+`move_at` needs a prior close, so the half of T0a the stop deferred is now run.
+
+**Reused, not re-derived.** The last RTH minute bar's `last_price` at `session_offset = -1` from
+`event_minute_bars_v2` — verbatim the construction `research/phase_12/t2b_band_arithmetic.py` uses for
+LULD band arithmetic and `research/reg_sho_201/t1_trigger_check.py` reuses for Rule 201, both of which
+name it D4-safe. That table is Phase 6b's extended-day tick aggregate; D5 Amendment A11 records that
+reusing it needs no citation. It covers exactly the 15,763 `(ticker, event_date_canonical)` pairs that
+are D1.
+
+**Coverage, as a first-class number per T0a:** **15,721 of 15,763 (99.73%)**. **42 events cannot have a
+tick-derived prior close built** — 2020 · 4, 2021 · 5, 2022 · 10, 2023 · 8, 2024 · 15. They are carried
+in the artifact with `prior_close_available = FALSE`, never dropped. None is non-positive. All 10,544
+rows of Phase 11's named cell resolve, so the re-run below has no censored rows.
+
+**One divergence from the brief's literal wording, recorded not taken silently.** §I.2 specifies the
+closing print be resolved by Phase 10c Amendment 6's `{8, 15}` auction override. `event_minute_bars_v2`
+is Phase 6b output and predates that amendment, so its `segment` is assigned on the timestamp rule
+alone. Amendment 6's own census bounds the affected population at **291 near-close prints against 25.2M**
+in the cohort, and this construction takes the last RTH *minute bar* rather than a specific print, so
+the residual is smaller still. The A6-exact alternative is a fresh 15,763-folder tick pass over
+`data/filtered`. Named residual; say so if the exact version is wanted.
+
+## T0c2 — the check re-run on `move_at`
+
+`research/relative_momentum/t0c2_move_at_reslice.py`, `chart_t0c2.py` ·
+`artifacts/t0c2_move_at_reslice.json`, `t0c2_named_cell_move_at.parquet` · charts 05, 06
+
+> `move_at_entry = (entry_price − prior_close) / prior_close`
+
+evaluated at τ = the named cell's own entry instant, the detection anchor plus 5 minutes of latency.
+`entry_price` is Phase 11's own column and is known at τ by construction, so **nothing after the
+decision enters the slicing variable**. Both terms are tick-derived (D4). Two assertions pass: the cell
+is n = 10,544, and `move_at_entry` is defined on all 10,544.
+
+**A12 applies to the slicing variable itself.** `move_at` is a cross-session ratio whose denominator
+spans (T−1, T0), so `flag_cross_session_extreme` is carried and every headline is reported with and
+without it, untrimmed first.
+
+### How much of T0c's flip population was hindsight
+
+|  | `move_at_entry` < 50% | `move_at_entry` ≥ 50% |
+|---|---|---|
+| `momentum_pct` < 50 | 7,630 | 10 |
+| **`momentum_pct` ≥ 50** | **2,577** | **327** |
+
+Of the 2,904 events T0c's momentum slice selected, **2,577 — 88.7% — had not moved 50% at decision
+time.** They got there later in the session. The causal population is 337 events, **3.2%** of the cell.
+That is the lookahead, counted.
+
+### The table, on the causal measure
+
+| slice | n | markout p25 | **markout median** | markout p75 | share ≤ 0 | rt_cost median | **net median** | share net ≤ 0 |
+|---|---|---|---|---|---|---|---|---|
+| S0 named cell, as published | 10,544 | −606 | **−164** | +208 | 63.1% | 71.0 | **−263** | 67.1% |
+| C2 move < 50%, before 2023-11-17 | 6,694 | −587 | **−166** | +196 | 63.6% | 59.5 | **−255** | 67.2% |
+| C3 move ≥ 50%, before 2023-11-17 | 214 | −2,093 | **−1,026** | +348 | 69.5% | 134.3 | **−1,230** | 71.3% |
+| C4 move < 50%, on/after 2023-11-17 | 3,513 | −583 | **−142** | +225 | 61.5% | 92.5 | **−259** | 66.6% |
+| **C5 move ≥ 50%, on/after — the causal analogue of S5** | **123** | −2,145 | **−1,054** | +499 | 69.1% | 110.7 | **−966** | 68.6% |
+| C7 the PF population (membership, not a move slice) | 473 | −634 | **+92** | +933 | 46.1% | 112.6 | **−17** | 50.4% |
+
+**The sign reverses.** T0c's S5 read **+66 bp** gross and −57 bp net. Its causal analogue C5 reads
+**−1,054 bp** gross and **−966 bp** net. The same reversal holds pre-boundary: S3 **+134** → C3
+**−1,026**. Nothing in the causal table has a positive median on either measure.
+
+C5 is n = 123 and C3 is n = 214. Both are above the config's display floor of 20 but they are small
+populations and are read as such — the causal "already moved ≥ 50%" cohort is only 3.2% of the cell.
+
+C7 is unchanged from T0c's S7 because it is a *membership* slice, not a move slice: it is the events
+the PF run traded. Its positive gross median therefore still carries the `min_mom = 50` lookahead in the
+gate's own backtest population — it is listed for continuity, not as a surviving result.
+
+### The response curve — chart 05, the primary object, no threshold set
+
+| decile of `move_at_entry` | range | n | markout median | rt_cost median | **net median** | share net ≤ 0 |
+|---|---|---|---|---|---|---|
+| 0 | −34.5% … +21.0% | 1,055 | −133 | 121.8 | **−315** | 69.1% |
+| 1 | 21.0 … 24.6% | 1,054 | −105 | 87.7 | **−217** | 64.6% |
+| 2 | 24.6 … 26.8% | 1,054 | −101 | 68.6 | **−213** | 66.7% |
+| 3 | 26.8 … 28.3% | 1,055 | −105 | 56.3 | **−166** | 63.5% |
+| 4 | 28.3 … 29.5% | 1,054 | −108 | 46.4 | **−169** | 63.6% |
+| 5 | 29.5 … 30.6% | 1,055 | −84 | 43.6 | **−129** | 65.7% |
+| 6 | 30.6 … 31.9% | 1,054 | −154 | 51.1 | **−219** | 67.1% |
+| 7 | 31.9 … 34.3% | 1,054 | −224 | 65.9 | **−289** | 67.9% |
+| 8 | 34.3 … 39.0% | 1,054 | −400 | 85.6 | **−518** | 71.4% |
+| 9 | 39.0 … 2,043% | 1,055 | −751 | 107.7 | **−883** | 71.2% |
+
+**Every decile is negative on both measures, and above decile 5 the curve is monotone in the wrong
+direction** — net median −129 bp at decile 5 falling to −883 bp at decile 9, a factor of 6.8. The more
+of the move that has already happened at decision time, the worse the forward markout. Round-trip cost
+moves the same way over the top half (43.6 → 107.7 bp), so gross and net degrade together.
+
+The mass of the universe sits in a narrow band: deciles 1–8 span +21% to +39%, which is the detection
+threshold's own neighbourhood. The causal variable barely separates the cohort except in the tails.
+
+### A12 — and what happens to the erratum's one lead
+
+The erratum carried one exploratory lead: the cross-session-flagged subset at S5 netting +311 bp
+against +22 bp clear, "the only solidly positive net cell." On the causal variable that split becomes
+far wider, and its character becomes legible.
+
+| slice | n | markout median | **net median** | share net ≤ 0 |
+|---|---|---|---|---|
+| S0 named cell — flag clear | 9,831 | −173 | −276 | 68.4% |
+| S0 named cell — **FLAGGED** | 713 | +11 | −28 | 51.5% |
+| **C5 — flag clear** | **84** | **−1,600** | **−1,659** | **87.5%** |
+| **C5 — FLAGGED** | **39** | **+1,094** | **+863** | **29.0%** |
+| C7 — flag clear | 373 | +61 | −78 | 52.4% |
+| C7 — **FLAGGED** | 100 | +239 | +213 | 43.3% |
+
+**The entire positive result on the causal gate-analogue slice is inside the flagged 39 events.** With
+them, C5 nets −966 bp; the 84 unflagged events net **−1,659 bp** and are negative 87.5% of the time.
+`move_at_entry` reaches **2,043%** at its maximum, which is not a price move.
+
+`flag_cross_session_extreme` is a magnitude flag, not a corporate-action classifier (D4 A12's own
+wording), so this does not establish that those 39 are corporate actions. What it does establish is that
+the lead points at the population A12 exists to isolate, and that it is 39 events. It is not carried
+forward here as a lead; on this evidence it is a candidate artifact, and separating the two requires a
+corporate-action source the archive does not have.
+
+### Charts
+
+- **`charts/05_response_curve_move_at_entry.html`.** Median forward markout and net markout against
+  equal-population deciles of `move_at_entry`, interquartile band drawn around each median, n on every
+  bucket, median round-trip cost on the same axis so the gross-to-net gap is visible rather than
+  asserted. No threshold anywhere on it.
+- **`charts/06_markout_ecdf_causal_slices.html`.** The chart-03 encoding on the causal variable, built
+  to be read directly against it. On chart 03 the gate-admissible median sits right of zero; on chart 06
+  it does not. **The pair is the finding.**
+
+### What this does and does not establish
+
+It establishes that T0c's flip was an artifact of the slicing variable, that a decision-time measure of
+the same quantity reverses the sign, and that the reversal is monotone across the top half of the causal
+range. Within Phase 11's fixed-horizon trade — anchor + 5 min latency, 30 min hold — **more move already
+achieved predicts a worse forward markout, gross and net.**
+
+It does not measure the gate's trade, which is a rising-edge entry with a window-close exit and a
+52-second median hold. Phase 11's horizon is 30 minutes. Nothing here reconciles PF = 1.9194, and
+nothing here is a test of the gate.
+
+## Still not addressed
+
+The erratum's Path A / Path B consequence, and §5 of the original read (the Project-docs citation fix
+and the `prompts/relative_momentum_r0.md` stub drift). Both are recorded preferences or open decisions
+in Cooper's own documents and neither is acted on here. T1–T5 of the brief and Part II remain not run.
