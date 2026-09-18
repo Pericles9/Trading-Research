@@ -1,0 +1,108 @@
+{
+  "_meta": {
+    "prompt": "prompts/relative_momentum_v1.md",
+    "type": "build -- fixes the two defects found in v0",
+    "branch": "explore/relative-momentum-v1",
+    "branched_from": "explore/relative-momentum-v0",
+    "carried_forward_from_v0_unchanged": [
+      "score = relative volume, 10-min trailing, causal, E2's 3-session baseline B_e",
+      "gate 2 = highest score among candidates live at that moment; liveness = the gate's own window close",
+      "trade = the gate's real trade: first-window rising-edge entry, window-close exit, realized hold",
+      "cost = Phase 11's stack, both units",
+      "diagnostic = Spearman(score, move_at), alongside, gating nothing"
+    ],
+    "decisions_consumed": []
+  },
+
+  "fix1_causal_gate1": {
+    "rule": "at each candidate moment, threshold = the 75th percentile of every candidate score observed STRICTLY BEFORE that moment, pooled across tickers, updated chronologically",
+    "percentile": 75,
+    "min_prior_observations": 250,
+    "warmup_behaviour": "below 250 prior observations every candidate passes gate 1 and is flagged gate1_warmup",
+    "min_prior_observations_note": "250 is a round a-priori choice, not fitted. The warmup share per policy is reported.",
+    "why": "v0's threshold was the 75th percentile over the whole backtest sample, which is not computable at decision time. Nothing in this rule depends on data from after the trade it gates."
+  },
+
+  "fix2_population_gap_gate_on": {
+    "method": "faithful post-hoc reconstruction of the runner's own gap-gate logic from the run's per-trade record plus the tick archive -- NOT a re-run",
+    "why_not_a_rerun": "scanner-epg-momentum is read-only per CLAUDE.md and its val_full run took 20,713 s. The gap gate is a deterministic function of the tick stream inside each PASS window, and every PASS window's bounds are on record in per_trade.parquet, so it can be reconstructed exactly.",
+    "runner_semantics_reproduced": {
+      "source": "scanner-epg-momentum/backtest/runner.py:822-895",
+      "on_rising_edge": "if intraday_pct >= threshold -> immediate entry; else -> queued wait",
+      "queued": "while the window stays PASS, re-check on every tick; first tick meeting the threshold enters (queued entry)",
+      "blocked": "window closes before the threshold is met",
+      "fill_convention": "the condition is tested on price[i]; the fill is price[i+1], the NEXT tick. Reproduced.",
+      "entry_ts_convention": "entry_ts is ts[i], the trigger tick, not the fill tick. Reproduced.",
+      "validated": "6/6 spot checks reproduce the existing run's entry_price exactly from px[i+1]"
+    },
+    "threshold": 0.30,
+    "threshold_measure_primary": "move_at = (price - tick-derived prior close) / prior close",
+    "threshold_measure_primary_why": "D4 (tick-derived only) and v0's first non-negotiable (move_at, never a non-causal or non-tick measure). v0-T4 measured the gate's own intraday_pct_at_entry against move_at at Spearman 0.314 -- they are not the same condition, and only one of the gate's three prev-close sources is tick-derived.",
+    "threshold_measure_secondary": "the gate's own intraday_pct_at_entry >= 0.30, reported as a variant",
+    "prior_close_source": "results/relative_momentum/r0/artifacts/t0a2_prior_close.parquet",
+    "first_window_rule": "the earliest PASS window that produces an entry under the reconstructed gap gate"
+  },
+
+  "fix3_d1_concurrency": {
+    "type": "cheap read, not a rebuild",
+    "population": "all of D1 (in_scope, source_file = 'file1'), n = 15,763",
+    "candidate_moment_proxy": {
+      "rule": "the first minute bar whose high >= prior_close * 1.30 -- the first moment the +30% crossing is observable",
+      "source": "event_minute_bars_v2 (Phase 6b tick aggregate; D5 A11 -- reuse needs no citation)",
+      "timestamp": "that bar's first_trade_ts",
+      "why_a_proxy": "the gate's own first rising edge does not exist for D1. R0-T0b established the gate has never been run on 93% of D1 and on no event before 2023-11-17. The +30% crossing is the program's own momentum definition, is causal, and is computable for all of D1.",
+      "d4": "minute bars are tick-derived; prior close is tick-derived. No spine numeric enters."
+    },
+    "liveness_sweep_minutes": [9, 15, 30, 60],
+    "liveness_sweep_note": "declared a priori, all reported side by side, never selected from. 9 minutes is the empirical median first-window duration measured in v0 (540 s) and is the closest available stand-in for the gate's own window-close definition, which does not exist for D1. 'no cap' (live to session end) is reported as a fifth.",
+    "grid_step_minutes": 5,
+    "session_start_et": "04:00",
+    "session_end_et": "20:00",
+    "facet": "year, mandatory"
+  },
+
+  "fix4_price_level": {
+    "rule": "net markout by detection-price decile, independent of the gate policy table",
+    "source": "results/fundamental_exploration/artifacts/detection_price.parquet",
+    "source_note": "E1's reconstruction of F1-T6's D4-compliant tick-derived detection price and decile for all 20,951 events. Reused, not re-derived.",
+    "why": "Phase 11 established net edge as a function of detection-price level. Reported separately so a price-driven effect is not misread as a gate effect."
+  },
+
+  "score": {
+    "name": "relative_volume",
+    "formula": "dollar volume of all prints in [tau - W, tau] divided by B_e",
+    "W_seconds": 600,
+    "tau": "the v1 entry trigger instant (ts[i]), not the fill instant",
+    "baseline_source": "results/fundamental_exploration/e2/artifacts/e2_t2a_baseline.parquet",
+    "baseline_status": "UNCOMMITTED on explore/fundamental-e1 and still uncommitted. The score is not reproducible from a clean checkout until it lands.",
+    "baseline_definition": "mean dollar volume per 10-minute RTH block over n_baseline_sessions prior sessions (total/B_e = n_sessions x 39, verified in v0-T0)"
+  },
+
+  "gate_2": {
+    "rule": "score is the highest among all candidates whose window is concurrently live at that moment",
+    "liveness": "[entry trigger ts, natural_exit_ts] of each candidate's own selected window",
+    "self_included": true
+  },
+
+  "evaluation": {
+    "policies": ["A", "B1", "B2", "B", "B-contested"],
+    "exit_primary": "window close (natural_exit_ts / natural_exit_price of the selected window)",
+    "cost": {
+      "choice": "Phase 11's stack. The gate has NO native fill or cost model -- config/strategy.json carries epg, hawkes, exit_d, luld and gap_gate blocks and no fee block, and pnl is a pure price ratio. Verified in v0-T3.",
+      "round_trip_bp": 70.98,
+      "round_trip_cents": 2.512,
+      "source": "results/phase_11/REPORT.md:72",
+      "both_units": "D19"
+    }
+  },
+
+  "constraints": {
+    "d4": "tick-derived only; no spine numeric column enters any computed quantity",
+    "d5": "long-only",
+    "coverage": "flag and carry, never drop"
+  },
+
+  "min_cell_n_display_floor": 20,
+  "random_seed": 42,
+  "chart_theme": {"output_dir": "results/relative_momentum/v1/charts", "theme": "light, per E1 precedent"}
+}

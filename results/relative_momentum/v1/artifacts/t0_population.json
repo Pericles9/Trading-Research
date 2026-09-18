@@ -1,0 +1,82 @@
+{
+  "task": "v1-T0 population with the gap gate ON (Fix 2)",
+  "config_hash": "ede4e9e8082b",
+  "method": "faithful post-hoc reconstruction of the runner's own gap-gate logic from the run's per-trade record plus the tick archive -- NOT a re-run",
+  "threshold": 0.3,
+  "threshold_measure": "move_at = (price - tick-derived prior close) / prior close",
+  "coverage_steps": [
+    {
+      "step": "events with at least one PASS window in the original run",
+      "n": 1027
+    },
+    {
+      "step": "gap gate ON: events with a window that produces an entry",
+      "n": 903,
+      "n_all_windows_blocked": 94,
+      "n_no_prior_close": 30
+    },
+    {
+      "step": "of which in D1",
+      "n": 903,
+      "n_outside_D1": 0
+    }
+  ],
+  "entry_kind": {
+    "immediate": 592,
+    "queued": 311
+  },
+  "entry_kind_note": "immediate = the window's rising edge already met +30%. queued = the gate waited inside the window and entered on the first qualifying tick, which is the runner's own documented behaviour, not a hard block.",
+  "queued_wait_sec": {
+    "p25": 23.6,
+    "p50": 120.4,
+    "p75": 371.8,
+    "p95": 1244.1
+  },
+  "n_windows_blocked_before_entry": {
+    "p50": 0.0,
+    "p75": 2.0,
+    "p95": 8.0,
+    "p100": 30.0
+  },
+  "move_at_entry_quantiles": {
+    "p0": 0.131,
+    "p5": 0.2876,
+    "p25": 0.3029,
+    "p50": 0.3596,
+    "p75": 0.547,
+    "p95": 1.3751,
+    "p100": 42.5768
+  },
+  "move_at_entry_min_check": {
+    "n_below_threshold": 122,
+    "note": "the fill is the NEXT tick after the trigger, so a fill can land marginally below the trigger level if the next print is lower. That is the runner's own convention, reproduced, not a leak."
+  },
+  "v0_comparison": {
+    "v0_population_n": 1027,
+    "v0_entry_intraday_pct_median": 0.1125,
+    "v1_move_at_entry_median": 0.3596,
+    "n_entry_ts_changed_vs_v0": 515,
+    "share_entry_ts_changed": 0.5703
+  },
+  "gate_own_measure_variant": {
+    "n_with_gate_intraday_ge_30": 208,
+    "note": "the gate's own intraday_pct_at_entry on the v0 first window, for comparison only. Spearman against move_at was 0.314 in v0-T4."
+  },
+  "natural_hold_sec": {
+    "count": 903.0,
+    "mean": 747.6,
+    "std": 757.6,
+    "min": 0.0,
+    "25%": 124.0,
+    "50%": 605.4,
+    "75%": 1106.6,
+    "max": 8395.4
+  },
+  "session_bucket_at_v0_edge": {
+    "pre_market": 602,
+    "regular_hours": 299,
+    "post_market": 2
+  },
+  "output_parquet": "results/relative_momentum/v1/artifacts/t0_candidates.parquet",
+  "elapsed_sec": 56.8
+}

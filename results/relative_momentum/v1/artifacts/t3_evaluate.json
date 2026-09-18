@@ -1,0 +1,282 @@
+{
+  "task": "v1-T3 policy evaluation on the corrected population with causal gate 1",
+  "config_hash": "ede4e9e8082b",
+  "population": {
+    "n": 903,
+    "gap_gate": "ON, reconstructed tick-exactly; threshold on move_at vs tick-derived prior close",
+    "move_at_entry_median": 0.3596,
+    "date_range": [
+      "2023-11-17",
+      "2024-07-22"
+    ],
+    "hold_sec_median": 605.4
+  },
+  "gate1_warmup": {
+    "n": 250,
+    "share": 0.2769,
+    "verdict": "MEANINGFUL -- the brief said revisit if warmup covers a meaningful share of the sample. At 27.7% it does, so every gate-1 policy is reported both with and without it and the post-warmup row is the one to read."
+  },
+  "cost": {
+    "flat_bp": 70.98,
+    "per_share_cents": 2.512,
+    "per_share_in_bp_quantiles": {
+      "p5": 16.1,
+      "p25": 51.7,
+      "p50": 117.4,
+      "p75": 263.6,
+      "p95": 1324.6
+    },
+    "source": "results/phase_11/REPORT.md:72",
+    "native_model": "none -- verified in v0-T3"
+  },
+  "fill_slippage_bp": {
+    "definition": "(next-tick fill / trigger price - 1), in bp. The gap gate tests price[i] and fills price[i+1]; this is what that convention costs, and it is ON TOP OF the spread cost above, not included in it.",
+    "quantiles": {
+      "p5": -213.6,
+      "p25": -26.3,
+      "p50": 0.0,
+      "p75": 0.5,
+      "p95": 87.6
+    },
+    "mean": -30.3,
+    "share_negative": 0.3355
+  },
+  "policy_table": [
+    {
+      "policy": "A \u00b7 every gap-gated first-window signal",
+      "n_trades": 903,
+      "share_gate1_warmup": 0.2769,
+      "gross_bp": {
+        "p1": -2769.3,
+        "p5": -1489.8,
+        "p10": -1086.7,
+        "p25": -569.1,
+        "p50": -1.3,
+        "p75": 501.2,
+        "p90": 1514.7,
+        "p95": 2624.1,
+        "p99": 5392.1
+      },
+      "gross_bp_median": -1.3,
+      "gross_bp_mean": 163.7,
+      "net_bp_median_flat": -72.2,
+      "net_bp_median_per_share": -232.6,
+      "win_rate_gross": 0.4518,
+      "win_rate_net_flat": 0.412,
+      "win_rate_net_per_share": 0.3588,
+      "hold_sec_median": 605.4,
+      "queued_share": 0.3444,
+      "note": "the baseline"
+    },
+    {
+      "policy": "A \u00b7 post-warmup only",
+      "n_trades": 653,
+      "share_gate1_warmup": 0.0,
+      "gross_bp": {
+        "p1": -2513.2,
+        "p5": -1473.7,
+        "p10": -1082.5,
+        "p25": -594.1,
+        "p50": -39.3,
+        "p75": 477.7,
+        "p90": 1403.8,
+        "p95": 2489.2,
+        "p99": 5626.2
+      },
+      "gross_bp_median": -39.3,
+      "gross_bp_mean": 158.5,
+      "net_bp_median_flat": -110.3,
+      "net_bp_median_per_share": -283.2,
+      "win_rate_gross": 0.4364,
+      "win_rate_net_flat": 0.3997,
+      "win_rate_net_per_share": 0.3507,
+      "hold_sec_median": 619.8,
+      "queued_share": 0.3492,
+      "note": "same rule; the subset where gate 1 was actually active, for like-for-like"
+    },
+    {
+      "policy": "B1 \u00b7 causal gate 1 only",
+      "n_trades": 433,
+      "share_gate1_warmup": 0.5774,
+      "gross_bp": {
+        "p1": -3216.2,
+        "p5": -1912.7,
+        "p10": -1302.4,
+        "p25": -630.6,
+        "p50": -1.4,
+        "p75": 510.5,
+        "p90": 1840.9,
+        "p95": 3177.0,
+        "p99": 7854.7
+      },
+      "gross_bp_median": -1.4,
+      "gross_bp_mean": 180.2,
+      "net_bp_median_flat": -72.4,
+      "net_bp_median_per_share": -231.1,
+      "win_rate_gross": 0.448,
+      "win_rate_net_flat": 0.4018,
+      "win_rate_net_per_share": 0.358,
+      "hold_sec_median": 621.3,
+      "queued_share": 0.2517,
+      "note": "includes warmup passes, which are free passes"
+    },
+    {
+      "policy": "B1 \u00b7 causal gate 1 only, POST-WARMUP",
+      "n_trades": 183,
+      "share_gate1_warmup": 0.0,
+      "gross_bp": {
+        "p1": -3221.8,
+        "p5": -2136.6,
+        "p10": -1452.0,
+        "p25": -842.4,
+        "p50": -188.7,
+        "p75": 478.7,
+        "p90": 1957.6,
+        "p95": 4030.4,
+        "p99": 9900.8
+      },
+      "gross_bp_median": -188.7,
+      "gross_bp_mean": 183.7,
+      "net_bp_median_flat": -259.7,
+      "net_bp_median_per_share": -379.9,
+      "win_rate_gross": 0.388,
+      "win_rate_net_flat": 0.3443,
+      "win_rate_net_per_share": 0.3279,
+      "hold_sec_median": 733.4,
+      "queued_share": 0.1421,
+      "note": "the honest read of the level gate"
+    },
+    {
+      "policy": "B1-v0 \u00b7 v0's in-sample gate 1, recomputed here",
+      "n_trades": 226,
+      "share_gate1_warmup": 0.2301,
+      "gross_bp": {
+        "p1": -3551.8,
+        "p5": -2239.1,
+        "p10": -1575.4,
+        "p25": -869.4,
+        "p50": -243.3,
+        "p75": 535.0,
+        "p90": 2201.3,
+        "p95": 4173.4,
+        "p99": 8996.2
+      },
+      "gross_bp_median": -243.3,
+      "gross_bp_mean": 164.2,
+      "net_bp_median_flat": -314.2,
+      "net_bp_median_per_share": -446.4,
+      "win_rate_gross": 0.3982,
+      "win_rate_net_flat": 0.3584,
+      "win_rate_net_per_share": 0.3451,
+      "hold_sec_median": 811.2,
+      "queued_share": 0.1239,
+      "note": "so the causal fix can be told apart from the population fix"
+    },
+    {
+      "policy": "B2 \u00b7 gate 2 only (cross-section)",
+      "n_trades": 855,
+      "share_gate1_warmup": 0.2772,
+      "gross_bp": {
+        "p1": -2824.6,
+        "p5": -1494.4,
+        "p10": -1101.8,
+        "p25": -552.7,
+        "p50": 0.0,
+        "p75": 501.2,
+        "p90": 1474.5,
+        "p95": 2762.7,
+        "p99": 5474.1
+      },
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 176.4,
+      "net_bp_median_flat": -71.0,
+      "net_bp_median_per_share": -228.2,
+      "win_rate_gross": 0.455,
+      "win_rate_net_flat": 0.4129,
+      "win_rate_net_per_share": 0.3591,
+      "hold_sec_median": 599.0,
+      "queued_share": 0.331,
+      "note": "808 of 855 passes are uncontested"
+    },
+    {
+      "policy": "B \u00b7 both gates",
+      "n_trades": 417,
+      "share_gate1_warmup": 0.5683,
+      "gross_bp": {
+        "p1": -3221.0,
+        "p5": -1890.4,
+        "p10": -1300.6,
+        "p25": -606.7,
+        "p50": -1.4,
+        "p75": 515.7,
+        "p90": 1890.3,
+        "p95": 3313.7,
+        "p99": 8131.2
+      },
+      "gross_bp_median": -1.4,
+      "gross_bp_mean": 191.2,
+      "net_bp_median_flat": -72.4,
+      "net_bp_median_per_share": -231.1,
+      "win_rate_gross": 0.446,
+      "win_rate_net_flat": 0.3981,
+      "win_rate_net_per_share": 0.3549,
+      "hold_sec_median": 618.9,
+      "queued_share": 0.2374,
+      "note": "includes warmup"
+    },
+    {
+      "policy": "B \u00b7 both gates, POST-WARMUP",
+      "n_trades": 180,
+      "share_gate1_warmup": 0.0,
+      "gross_bp": {
+        "p1": -3226.2,
+        "p5": -2146.2,
+        "p10": -1472.9,
+        "p25": -830.5,
+        "p50": -186.9,
+        "p75": 479.0,
+        "p90": 1962.6,
+        "p95": 4084.1,
+        "p99": 10018.9
+      },
+      "gross_bp_median": -186.9,
+      "gross_bp_mean": 197.6,
+      "net_bp_median_flat": -257.9,
+      "net_bp_median_per_share": -378.4,
+      "win_rate_gross": 0.3889,
+      "win_rate_net_flat": 0.3444,
+      "win_rate_net_per_share": 0.3278,
+      "hold_sec_median": 720.1,
+      "queued_share": 0.1389,
+      "note": "the honest read of Policy B"
+    },
+    {
+      "policy": "B-contested \u00b7 both gates, contested moments only",
+      "n_trades": 25,
+      "share_gate1_warmup": 0.28,
+      "gross_bp": {
+        "p1": -2169.3,
+        "p5": -1770.7,
+        "p10": -1338.8,
+        "p25": -633.8,
+        "p50": -133.0,
+        "p75": 477.7,
+        "p90": 3159.6,
+        "p95": 4517.2,
+        "p99": 11076.6
+      },
+      "gross_bp_median": -133.0,
+      "gross_bp_mean": 572.2,
+      "net_bp_median_flat": -204.0,
+      "net_bp_median_per_share": -188.7,
+      "win_rate_gross": 0.48,
+      "win_rate_net_flat": 0.44,
+      "win_rate_net_per_share": 0.44,
+      "hold_sec_median": 812.1,
+      "queued_share": 0.2,
+      "note": "the only trades where the cross-sectional gate decided anything"
+    }
+  ],
+  "d5": "long-only; no short or fade variant computed.",
+  "output_parquet": "results/relative_momentum/v1/artifacts/t3_evaluated.parquet"
+}

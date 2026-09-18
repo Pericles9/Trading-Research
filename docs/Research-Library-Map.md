@@ -2476,3 +2476,53 @@ The decile panel reproduces R0-T0c2's response curve on a **different trade defi
 rising-edge/window-close, 540 s median hold, vs Phase 11's fixed 30-minute horizon): more move already
 achieved at decision time predicts a worse forward outcome. `B_e` comes from E2 artifacts that remain
 **uncommitted**, so the score is not reproducible from a clean checkout until those land.
+
+## Relative momentum v1 -- causal threshold, corrected population (2026-09-18)
+
+**Branch `explore/relative-momentum-v1`, cut from `explore/relative-momentum-v0`.**
+`prompts/relative_momentum_v1.md`, `config/relative_momentum_v1.json`,
+`research/relative_momentum_v1/` (`common.py` with the gap-gate reconstruction and the expanding
+causal quantile, `chart_common.py`, `t0_population.py`, `t1_score.py`, `t2_gates.py`,
+`t3_evaluate.py`, `t4_diagnostic.py`, `t5_d1_concurrency.py`, `charts.py`),
+`results/relative_momentum/v1/` (`REPORT.md`, copied to
+`results/reports/relative_momentum_v1_report.md`; `artifacts/`; 5 charts).
+
+**Fix 2 -- gap gate ON, by faithful reconstruction, not a re-run.** scanner-epg-momentum stays
+read-only and its val_full run took 20,713 s; the gap gate is deterministic given the tick stream
+inside each PASS window, and every window's bounds are in `per_trade.parquet`. Reproduced from
+`runner.py:822-895` including the two details a naive filter would miss: the gate **queues** and
+re-checks every tick rather than hard-blocking (311 of 903 entries are queued -- a hard-block
+reading would have lost a third of the population), and it tests `price[i]` but fills `price[i+1]`.
+Validated 6/6 against the run's own recorded `entry_price`. Threshold on `move_at` vs the
+tick-derived prior close, not the gate's own `intraday_pct` (D4; v0-T4 put those two at rho 0.314).
+Population **903** events, `move_at` at entry median **+36.0%** against v0's +11.25%, and 57% of
+entry instants moved.
+
+**Fix 1 -- causal gate 1**: 75th percentile of strictly prior scores, pooled, min 250 observations.
+**The warmup is 27.7% of the sample** (ends 2024-02-08), which the brief asked to be told about, so
+every gate-1 policy is reported with and without it and the post-warmup rows are the read. The causal
+threshold drifts 151 -> 220 and is charted rather than quoted.
+
+**Result: v0's damage was not an artifact.** Post-warmup, A median **-39 bp** vs B median **-187 bp**,
+win rate 43.6% -> 38.9%. v0's in-sample threshold on this same population gives -243 bp, so the
+in-sample level was part of v0's effect but not its cause. Mean and median disagree in the same
+direction as v0 (B mean +198 vs A +159, tails wider both ways), so a profit-factor read would call B
+an improvement. Nothing clears cost: best net median anywhere -71 bp. Separately, the gate's own
+next-tick fill convention costs a mean **-30.3 bp** that it does not model.
+
+**Fix 4 comes back clean**: the price-level effect is real and large -- net per-share median runs
+**-1,139 bp at $0.28** to **+24.6 bp at $29.50**, only the top two deciles non-negative -- but every
+policy sits at detection-price **decile median 3.0**, identical to the baseline. The degradation is a
+gate effect, not a price re-sort. Collinearity falls rho 0.69 -> 0.43, which is mechanical (the gap
+gate compresses `move_at`'s range), not evidence of independence.
+
+**Fix 3 -- true D1 concurrency, 36 s.** The R0 brief's Part I T1, finally run, with the +30% crossing
+(first minute bar whose high reaches `prior_close x 1.30`, `event_minute_bars_v2`) as the candidate
+moment -- an **upper bound**, since EPG fires later than the raw crossing. Coverage 15,363/15,763
+(97.5%); 400 carried as unavailable. Events per session date median **10** (p90 22, max 235; by year
+9/6/7/11/18), so v0's "17.35/session" was a val-window mean and the median across D1 is 10. At
+candidate moments the share with a second live name is **27.9% at 9-min liveness** (the gate's own
+median window) against **10.5% measured on the gate population** -- so a full causal re-derivation
+buys about 2.7x the contest rate while leaving the median candidate uncontested. It reaches 51.4% at
+30 min and 67.9% at 60 min, and 2024 is roughly twice as dense as 2021. Thin, regime-dependent, not
+absent -- and not present at any liveness the current exit rule implies.

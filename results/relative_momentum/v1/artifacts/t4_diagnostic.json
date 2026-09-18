@@ -1,0 +1,413 @@
+{
+  "task": "v1-T4 diagnostic panel and Fix 4 (price level separated from gate effect)",
+  "config_hash": "ede4e9e8082b",
+  "collinearity_score_vs_move_at": {
+    "all_candidate_moments": {
+      "n": 903,
+      "rho": 0.4319,
+      "p": 2.526653527011246e-42
+    },
+    "post_warmup": {
+      "n": 653,
+      "rho": 0.4467,
+      "p": 2.379533544889783e-33
+    },
+    "flag_clear": {
+      "n": 677,
+      "rho": 0.4337,
+      "p": 2.0553529712273586e-32
+    },
+    "FLAGGED": {
+      "n": 226,
+      "rho": 0.4287,
+      "p": 1.6196654811423824e-11
+    },
+    "contested_only": {
+      "n": 95,
+      "rho": 0.4536,
+      "p": 3.9086397937514e-06
+    },
+    "v0_reference_rho": 0.6915,
+    "reading": "rho is the diagnostic, not the verdict. On the gap-gated population move_at is compressed by construction (every entry is at or near +30%), which mechanically reduces the correlation -- so a lower rho here is NOT evidence the score became more independent."
+  },
+  "fix4_net_markout_by_detection_price_decile": [
+    {
+      "detection_price_decile": 0,
+      "n": 160,
+      "detection_price_median": 0.283,
+      "gross_bp_median": -15.6,
+      "gross_bp_mean": 262.5,
+      "net_bp_median_flat": -86.5,
+      "net_bp_median_per_share": -1139.4,
+      "win_rate_gross": 0.3937
+    },
+    {
+      "detection_price_decile": 1,
+      "n": 122,
+      "detection_price_median": 0.878,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 188.6,
+      "net_bp_median_flat": -71.0,
+      "net_bp_median_per_share": -267.0,
+      "win_rate_gross": 0.4918
+    },
+    {
+      "detection_price_decile": 2,
+      "n": 87,
+      "detection_price_median": 1.365,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 157.1,
+      "net_bp_median_flat": -71.0,
+      "net_bp_median_per_share": -204.2,
+      "win_rate_gross": 0.4598
+    },
+    {
+      "detection_price_decile": 3,
+      "n": 113,
+      "detection_price_median": 1.85,
+      "gross_bp_median": -52.9,
+      "gross_bp_mean": 151.8,
+      "net_bp_median_flat": -123.9,
+      "net_bp_median_per_share": -185.8,
+      "win_rate_gross": 0.4425
+    },
+    {
+      "detection_price_decile": 4,
+      "n": 97,
+      "detection_price_median": 2.61,
+      "gross_bp_median": -52.5,
+      "gross_bp_mean": 190.6,
+      "net_bp_median_flat": -123.5,
+      "net_bp_median_per_share": -133.8,
+      "win_rate_gross": 0.4227
+    },
+    {
+      "detection_price_decile": 5,
+      "n": 81,
+      "detection_price_median": 3.43,
+      "gross_bp_median": -128.6,
+      "gross_bp_mean": 172.0,
+      "net_bp_median_flat": -199.6,
+      "net_bp_median_per_share": -209.4,
+      "win_rate_gross": 0.4444
+    },
+    {
+      "detection_price_decile": 6,
+      "n": 67,
+      "detection_price_median": 4.84,
+      "gross_bp_median": -47.4,
+      "gross_bp_mean": 120.7,
+      "net_bp_median_flat": -118.4,
+      "net_bp_median_per_share": -88.9,
+      "win_rate_gross": 0.4627
+    },
+    {
+      "detection_price_decile": 7,
+      "n": 78,
+      "detection_price_median": 7.005,
+      "gross_bp_median": -5.9,
+      "gross_bp_mean": 47.1,
+      "net_bp_median_flat": -76.9,
+      "net_bp_median_per_share": -40.7,
+      "win_rate_gross": 0.4615
+    },
+    {
+      "detection_price_decile": 8,
+      "n": 60,
+      "detection_price_median": 11.425,
+      "gross_bp_median": 32.7,
+      "gross_bp_mean": 41.5,
+      "net_bp_median_flat": -38.3,
+      "net_bp_median_per_share": 5.3,
+      "win_rate_gross": 0.5
+    },
+    {
+      "detection_price_decile": 9,
+      "n": 38,
+      "detection_price_median": 29.5,
+      "gross_bp_median": 32.7,
+      "gross_bp_mean": 141.1,
+      "net_bp_median_flat": -38.3,
+      "net_bp_median_per_share": 24.6,
+      "win_rate_gross": 0.5526
+    }
+  ],
+  "fix4_post_warmup": [
+    {
+      "detection_price_decile": 0,
+      "n": 126,
+      "detection_price_median": 0.265,
+      "gross_bp_median": -159.7,
+      "gross_bp_mean": 148.0,
+      "net_bp_median_flat": -230.7,
+      "net_bp_median_per_share": -1212.3,
+      "win_rate_gross": 0.3571
+    },
+    {
+      "detection_price_decile": 1,
+      "n": 82,
+      "detection_price_median": 0.874,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 207.1,
+      "net_bp_median_flat": -71.0,
+      "net_bp_median_per_share": -276.7,
+      "win_rate_gross": 0.4878
+    },
+    {
+      "detection_price_decile": 2,
+      "n": 61,
+      "detection_price_median": 1.37,
+      "gross_bp_median": -65.8,
+      "gross_bp_mean": 136.5,
+      "net_bp_median_flat": -136.8,
+      "net_bp_median_per_share": -231.1,
+      "win_rate_gross": 0.4262
+    },
+    {
+      "detection_price_decile": 3,
+      "n": 85,
+      "detection_price_median": 1.84,
+      "gross_bp_median": 29.2,
+      "gross_bp_mean": 311.6,
+      "net_bp_median_flat": -41.7,
+      "net_bp_median_per_share": -92.8,
+      "win_rate_gross": 0.5059
+    },
+    {
+      "detection_price_decile": 4,
+      "n": 75,
+      "detection_price_median": 2.6,
+      "gross_bp_median": -154.8,
+      "gross_bp_mean": 195.2,
+      "net_bp_median_flat": -225.8,
+      "net_bp_median_per_share": -232.6,
+      "win_rate_gross": 0.3867
+    },
+    {
+      "detection_price_decile": 5,
+      "n": 57,
+      "detection_price_median": 3.396,
+      "gross_bp_median": -128.6,
+      "gross_bp_mean": 116.4,
+      "net_bp_median_flat": -199.6,
+      "net_bp_median_per_share": -209.4,
+      "win_rate_gross": 0.4561
+    },
+    {
+      "detection_price_decile": 6,
+      "n": 50,
+      "detection_price_median": 4.885,
+      "gross_bp_median": -93.8,
+      "gross_bp_mean": 98.2,
+      "net_bp_median_flat": -164.8,
+      "net_bp_median_per_share": -148.0,
+      "win_rate_gross": 0.42
+    },
+    {
+      "detection_price_decile": 7,
+      "n": 53,
+      "detection_price_median": 7.049,
+      "gross_bp_median": -63.0,
+      "gross_bp_mean": -24.1,
+      "net_bp_median_flat": -134.0,
+      "net_bp_median_per_share": -101.4,
+      "win_rate_gross": 0.3962
+    },
+    {
+      "detection_price_decile": 8,
+      "n": 41,
+      "detection_price_median": 11.33,
+      "gross_bp_median": 69.9,
+      "gross_bp_mean": 60.5,
+      "net_bp_median_flat": -1.0,
+      "net_bp_median_per_share": 52.4,
+      "win_rate_gross": 0.5366
+    },
+    {
+      "detection_price_decile": 9,
+      "n": 23,
+      "detection_price_median": 28.47,
+      "gross_bp_median": 7.6,
+      "gross_bp_mean": 244.9,
+      "net_bp_median_flat": -63.4,
+      "net_bp_median_per_share": 3.8,
+      "win_rate_gross": 0.5217
+    }
+  ],
+  "fix4_policy_price_composition": {
+    "A all": {
+      "n": 903,
+      "detection_price_median": 1.955,
+      "detection_price_decile_median": 3.0,
+      "decile_share": {
+        "0": 0.1772,
+        "1": 0.1351,
+        "2": 0.0963,
+        "3": 0.1251,
+        "4": 0.1074,
+        "5": 0.0897,
+        "6": 0.0742,
+        "7": 0.0864,
+        "8": 0.0664,
+        "9": 0.0421
+      }
+    },
+    "A post-warmup": {
+      "n": 653,
+      "detection_price_median": 1.94,
+      "detection_price_decile_median": 3.0,
+      "decile_share": {
+        "0": 0.193,
+        "1": 0.1256,
+        "2": 0.0934,
+        "3": 0.1302,
+        "4": 0.1149,
+        "5": 0.0873,
+        "6": 0.0766,
+        "7": 0.0812,
+        "8": 0.0628,
+        "9": 0.0352
+      }
+    },
+    "B post-warmup": {
+      "n": 180,
+      "detection_price_median": 1.753,
+      "detection_price_decile_median": 3.0,
+      "decile_share": {
+        "0": 0.1333,
+        "1": 0.15,
+        "2": 0.1333,
+        "3": 0.2278,
+        "4": 0.1333,
+        "5": 0.0889,
+        "6": 0.0611,
+        "7": 0.0611,
+        "8": 0.0056,
+        "9": 0.0056
+      }
+    },
+    "B1 post-warmup": {
+      "n": 183,
+      "detection_price_median": 1.765,
+      "detection_price_decile_median": 3.0,
+      "decile_share": {
+        "0": 0.1366,
+        "1": 0.1475,
+        "2": 0.1311,
+        "3": 0.224,
+        "4": 0.1421,
+        "5": 0.0874,
+        "6": 0.0601,
+        "7": 0.0601,
+        "8": 0.0055,
+        "9": 0.0055
+      }
+    }
+  },
+  "fix4_reading": "if the gate's damage were purely a price-level effect, the policies would differ from the baseline mainly by sitting on a different part of the price axis. The composition block is what shows whether they do.",
+  "score_decile_panel": [
+    {
+      "score_decile": 0,
+      "n": 91,
+      "score_median": 0.638,
+      "move_at_median": 0.3049,
+      "detection_price_median": 3.19,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 23.8,
+      "net_bp_median_flat": -71.0
+    },
+    {
+      "score_decile": 1,
+      "n": 90,
+      "score_median": 2.586,
+      "move_at_median": 0.3242,
+      "detection_price_median": 3.385,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 92.2,
+      "net_bp_median_flat": -71.0
+    },
+    {
+      "score_decile": 2,
+      "n": 90,
+      "score_median": 6.06,
+      "move_at_median": 0.303,
+      "detection_price_median": 2.915,
+      "gross_bp_median": -69.4,
+      "gross_bp_mean": -17.5,
+      "net_bp_median_flat": -140.4
+    },
+    {
+      "score_decile": 3,
+      "n": 90,
+      "score_median": 12.941,
+      "move_at_median": 0.3108,
+      "detection_price_median": 2.103,
+      "gross_bp_median": 133.2,
+      "gross_bp_mean": 330.3,
+      "net_bp_median_flat": 62.2
+    },
+    {
+      "score_decile": 4,
+      "n": 91,
+      "score_median": 23.549,
+      "move_at_median": 0.3398,
+      "detection_price_median": 1.95,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 154.4,
+      "net_bp_median_flat": -71.0
+    },
+    {
+      "score_decile": 5,
+      "n": 90,
+      "score_median": 46.494,
+      "move_at_median": 0.3861,
+      "detection_price_median": 1.637,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 273.0,
+      "net_bp_median_flat": -71.0
+    },
+    {
+      "score_decile": 6,
+      "n": 90,
+      "score_median": 89.007,
+      "move_at_median": 0.3604,
+      "detection_price_median": 1.51,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 162.0,
+      "net_bp_median_flat": -71.0
+    },
+    {
+      "score_decile": 7,
+      "n": 90,
+      "score_median": 216.085,
+      "move_at_median": 0.4494,
+      "detection_price_median": 2.0,
+      "gross_bp_median": -207.3,
+      "gross_bp_mean": 265.6,
+      "net_bp_median_flat": -278.3
+    },
+    {
+      "score_decile": 8,
+      "n": 90,
+      "score_median": 626.742,
+      "move_at_median": 0.497,
+      "detection_price_median": 1.7,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 444.6,
+      "net_bp_median_flat": -71.0
+    },
+    {
+      "score_decile": 9,
+      "n": 91,
+      "score_median": 2305.906,
+      "move_at_median": 0.782,
+      "detection_price_median": 1.74,
+      "gross_bp_median": -390.1,
+      "gross_bp_mean": -86.7,
+      "net_bp_median_flat": -461.1
+    }
+  ],
+  "display_floor": 20,
+  "a12": "move_at is a cross-session ratio; the correlation is reported untrimmed first and split on flag_cross_session_extreme, flagged rows never dropped.",
+  "output_parquet": "results/relative_momentum/v1/artifacts/t4_diagnostic.parquet"
+}

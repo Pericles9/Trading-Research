@@ -1,0 +1,11 @@
+{
+  "task": "v1 charts",
+  "config_hash": "ede4e9e8082b",
+  "charts": [
+    "results/relative_momentum/v1/charts/01_markout_distribution.html",
+    "results/relative_momentum/v1/charts/02_score_decile_panel.html",
+    "results/relative_momentum/v1/charts/03_price_decile_panel.html",
+    "results/relative_momentum/v1/charts/04_d1_concurrency.html",
+    "results/relative_momentum/v1/charts/05_causal_gate1_threshold.html"
+  ]
+}

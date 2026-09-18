@@ -1,0 +1,57 @@
+{
+  "task": "v1-T2 causal gate 1 (Fix 1) and gate 2",
+  "config_hash": "ede4e9e8082b",
+  "gate_1_causal": {
+    "rule": "at each candidate moment, threshold = the 75th percentile of every candidate score observed STRICTLY BEFORE that moment, pooled across tickers, updated chronologically",
+    "percentile": 75,
+    "min_prior_observations": 250,
+    "n_candidates": 903,
+    "n_warmup": 250,
+    "share_warmup": 0.2769,
+    "warmup_ends_at": "2024-02-08",
+    "warmup_note": "warmup candidates pass gate 1 by default and are flagged. The share is reported per policy in T3 so the two regimes are never blended silently.",
+    "n_pass_total": 433,
+    "n_pass_post_warmup": 183,
+    "share_pass_post_warmup": 0.2802,
+    "threshold_quantiles_post_warmup": {
+      "p0": 136.64,
+      "p25": 165.78,
+      "p50": 194.79,
+      "p75": 204.32,
+      "p100": 227.73
+    },
+    "threshold_first": 150.66,
+    "threshold_last": 219.68,
+    "threshold_drift_note": "the causal threshold moves as observations accumulate. Its range is reported because a rule whose level drifts is a different rule from a fixed one."
+  },
+  "gate_1_v0_style_for_contrast": {
+    "in_sample_threshold": 216.09,
+    "n_pass": 226,
+    "note": "v0's non-causal threshold, recomputed on THIS population. Reported so the causal fix can be told apart from the population fix."
+  },
+  "gate_2": {
+    "n_pass": 855,
+    "n_pass_trivial_singleton": 808,
+    "n_pass_contested": 47
+  },
+  "concurrency": {
+    "distribution": {
+      "1": 808,
+      "2": 89,
+      "3": 6
+    },
+    "median": 1.0,
+    "share_alone": 0.8948,
+    "share_two_or_more": 0.1052,
+    "v0_share_alone_for_reference": 0.7948
+  },
+  "policies": {
+    "A_n": 903,
+    "B_n": 417,
+    "B_share_of_A": 0.4618,
+    "B_n_warmup": 237,
+    "B_n_post_warmup": 180,
+    "B_v0_style_n": 223
+  },
+  "output_parquet": "results/relative_momentum/v1/artifacts/t2_gated.parquet"
+}
