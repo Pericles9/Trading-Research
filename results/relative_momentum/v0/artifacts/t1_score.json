@@ -1,0 +1,81 @@
+{
+  "task": "v0-T1 attention score v0 (relative volume)",
+  "config_hash": "c90d8126dd12",
+  "formula": "dollar volume of all prints in [tau - W, tau] divided by B_e",
+  "W_seconds": 600,
+  "causality": "asserted in common.window_dollar_volume: no print with sip_timestamp > tau enters any returned quantity.",
+  "n_candidates": 1027,
+  "n_score_available": 999,
+  "n_score_unavailable": 28,
+  "n_zero_volume_windows": 0,
+  "zero_vs_unavailable_note": "a zero-print window is a measured zero (score = 0) and is NOT the same state as an unavailable score. Both are reported; neither is dropped.",
+  "score_quantiles": {
+    "p0": 0.0005742712349059428,
+    "p5": 0.06633804816453387,
+    "p25": 1.2755763463494008,
+    "p50": 13.414959856347208,
+    "p75": 138.38623431271822,
+    "p95": 2028.0658932290276,
+    "p100": 199491.8324851675
+  },
+  "score_by_n_baseline_sessions": {
+    "1": {
+      "n": 2,
+      "p25": 110.25278667521202,
+      "p50": 204.57481120851307,
+      "p75": 298.89683574181413
+    },
+    "2": {
+      "n": 7,
+      "p25": 0.11469347240606861,
+      "p50": 0.26443180321032383,
+      "p75": 0.5331669496778092
+    },
+    "3": {
+      "n": 990,
+      "p25": 1.339113180835378,
+      "p50": 13.61674731503505,
+      "p75": 138.5025434574304
+    }
+  },
+  "score_by_session_bucket": {
+    "post_market": {
+      "n": 3,
+      "p25": 5.768082570158163,
+      "p50": 8.586925725960072,
+      "p75": 274.9675719405815
+    },
+    "pre_market": {
+      "n": 644,
+      "p25": 0.5885370271965232,
+      "p50": 15.56387402392605,
+      "p75": 197.70475740534908
+    },
+    "regular_hours": {
+      "n": 352,
+      "p25": 2.802000338449131,
+      "p50": 11.274257368036022,
+      "p75": 82.04051168359531
+    }
+  },
+  "session_bucket_note": "B_e is RTH-scoped. A premarket or after-hours tau compares an extended-hours window against a regular-session baseline. Carried as a facet, not corrected.",
+  "window_prints_quantiles": {
+    "p5": 17.0,
+    "p25": 113.0,
+    "p50": 709.0,
+    "p75": 3097.0,
+    "p95": 8922.0
+  },
+  "move_at_quantiles": {
+    "p0": -0.7935874501169671,
+    "p5": -0.048380727693732105,
+    "p25": 0.07337278106508872,
+    "p50": 0.21386138613861388,
+    "p75": 0.4417682926829267,
+    "p95": 1.284823737849273,
+    "p100": 42.57682619647355
+  },
+  "n_move_at_available": 997,
+  "elapsed_sec": 65.8,
+  "output_parquet": "results/relative_momentum/v0/artifacts/t1_scored.parquet"
+}

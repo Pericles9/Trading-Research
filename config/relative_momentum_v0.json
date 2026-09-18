@@ -1,0 +1,95 @@
+{
+  "_meta": {
+    "prompt": "prompts/relative_momentum_v0.md",
+    "type": "build -- produces a real backtest, not a read",
+    "branch": "explore/relative-momentum-v0",
+    "branched_from": "explore/relative-momentum-r0",
+    "branched_from_note": "R0's t0a2_prior_close.parquet is a direct input (move_at needs it). R0's scoping findings are background, not gates on this work, per the brief.",
+    "carried_forward_non_negotiable": [
+      "move_at (causal) is the only move measure. momentum_pct enters no threshold, score or slice.",
+      "PF = 1.9194 is not ground truth and is not validated against. Built fresh."
+    ],
+    "decisions_consumed": [],
+    "decisions_consumed_note": "Descriptive only; no Universe-Decisions.md entry."
+  },
+
+  "facet1_entry_exit": {
+    "choice": "use the existing fired population as-is",
+    "choice_rationale": "The brief allows either. Re-running the gate causally against all of D1 is not a small lift -- it means executing or re-implementing epg_replay.py's Hawkes refit over ~15,763 events. The existing population is on disk with full per-trade records.",
+    "source": "scanner-epg-momentum/backtest/results/phase_f/val_full/per_trade.parquet",
+    "source_note": "The largest gate run in this checkout that carries a per-trade record. READ-ONLY; nothing under scanner-epg-momentum is executed, imported or modified.",
+    "first_window_rule": "entry_type == 'first', then the earliest entry_ts per (ticker, date). 'first' marks the first entry of EACH pass window, so an event has several; the brief's 'first window only' is the earliest of them.",
+    "exit_primary": "natural_exit_* -- the window-close exit, i.e. the exit the trade would have taken without EXIT_D/LULD early exits",
+    "exit_secondary": "exit_* -- the exit actually realized in that run. Reported alongside, never instead.",
+    "exit_note": "The brief specifies window-close exit. natural_exit_reason on the first window is epg_window_close for 860 of 1,027; the other 167 are LULD exits and are carried, not dropped.",
+    "pnl_is_gross": true,
+    "pnl_is_gross_check": "pnl_pct == (exit_price/entry_price - 1) * 100 to 2.8e-14. The gate applies no cost or slippage model: config/strategy.json carries epg, hawkes, exit_d, luld and gap_gate blocks and no fee block."
+  },
+
+  "facet2_qualification": {
+    "score_v0": {
+      "name": "relative_volume",
+      "formula": "dollar volume of all prints in [tau - W, tau] divided by B_e",
+      "W_seconds": 600,
+      "causal": "the window ends at tau and opens backward. No print after tau enters it, asserted in code.",
+      "tau": "the candidate's first rising-edge entry_ts",
+      "baseline": {
+        "name": "B_e",
+        "source": "results/fundamental_exploration/e2/artifacts/e2_t2a_baseline.parquet",
+        "source_status": "UNCOMMITTED on explore/fundamental-e1 and still uncommitted here. Recorded, not resolved.",
+        "definition_as_inferred": "total_baseline_dollar_volume / 117 on every row checked; 117 = 3 sessions x 39 ten-minute blocks per 6.5-hour RTH session. So B_e is mean dollar volume per 10-minute RTH block over 3 prior sessions.",
+        "reused_unchanged": true,
+        "facet_columns": ["n_baseline_sessions"]
+      }
+    },
+    "gate_1_level": {
+      "rule": "score >= the 75th percentile of the score's own distribution across all candidate moments",
+      "percentile": 75,
+      "note": "A round, defensible v0 default declared by the brief. Not fitted. The percentile is taken over the candidate moments in this population, so it is in-sample by construction -- stated, not hidden."
+    },
+    "gate_2_cross_section": {
+      "rule": "score is the highest among all candidates whose gate window is concurrently live at that same moment",
+      "liveness": "[entry_ts, natural_exit_ts] of each candidate's own first window -- the gate's own window-close definition",
+      "self_included": true,
+      "singleton_behaviour": "a candidate alone in its live set passes gate 2 trivially. Reported as its own class, never silently pooled."
+    }
+  },
+
+  "evaluation": {
+    "policies": {
+      "A": "EPG-only -- every first-window rising-edge signal",
+      "B": "EPG+Qual -- only signals passing both qualification gates"
+    },
+    "metrics": ["trade_count", "markout_distribution", "net_of_cost_median", "win_rate"],
+    "cost": {
+      "choice": "Phase 11's round trip",
+      "round_trip_bp": 70.98,
+      "round_trip_cents": 2.512,
+      "source": "results/phase_11/REPORT.md:72 -- median round-trip cost in the named cell",
+      "rationale": "The gate has no native fill or cost model to prefer over it (see facet1_entry_exit.pnl_is_gross_check), so there is no 'whichever fits better' choice to make. Both units are applied and both are reported (D19).",
+      "caveat": "Phase 11's figure is a median effective-spread round trip measured at the detection anchor on an RTH cell, not at these entry instants. It is a scalar stand-in, not a per-trade cost model."
+    }
+  },
+
+  "diagnostic": {
+    "name": "score vs move_at collinearity",
+    "move_at_formula": "(entry_price - prior_close) / prior_close at the candidate moment",
+    "prior_close_source": "results/relative_momentum/r0/artifacts/t0a2_prior_close.parquet",
+    "method": "spearman",
+    "a12": "move_at is a cross-session ratio; flag_cross_session_extreme is carried and headline splits are reported with and without it, untrimmed first."
+  },
+
+  "constraints": {
+    "d4": "tick-derived only. No spine numeric column enters any computed quantity.",
+    "d5": "long-only. No short or fade variant is specified, implemented or measured.",
+    "coverage": "flag and carry coverage gaps, never drop. State population coverage plainly rather than assume it equals D1."
+  },
+
+  "min_cell_n_display_floor": 20,
+  "random_seed": 42,
+  "chart_theme": {
+    "source": "research/relative_momentum/chart_common.py",
+    "output_dir": "results/relative_momentum/v0/charts",
+    "note": "Light theme and the results-tree chart location, matching E1's precedent and R0's."
+  }
+}

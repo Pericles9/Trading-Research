@@ -1,0 +1,86 @@
+{
+  "task": "v0-T0 population and coverage",
+  "config_hash": "c90d8126dd12",
+  "facet1_choice": "use the existing fired population as-is",
+  "facet1_source": "scanner-epg-momentum/backtest/results/phase_f/val_full/per_trade.parquet",
+  "facet1_note": "The brief allows either. Re-running the gate causally against all of D1 is not a small lift -- it means executing or re-implementing epg_replay.py's Hawkes refit over ~15,763 events. The existing population is on disk with full per-trade records.",
+  "coverage_steps": [
+    {
+      "step": "gate first-window trades (one per event)",
+      "n": 1027
+    },
+    {
+      "step": "of which in D1",
+      "n": 999,
+      "n_outside_D1": 28,
+      "note": "outside-D1 events are carried in the artifact, flagged, not dropped. R0-T0b resolved them: warrants, preferreds, fund products, and in-scope-class events flagged flag_trades_mom_outlier."
+    },
+    {
+      "step": "with a tick-derived prior close (move_at computable)",
+      "n": 997,
+      "n_missing": 30
+    },
+    {
+      "step": "with E2 baseline B_e (score computable)",
+      "n": 999,
+      "n_missing": 28
+    },
+    {
+      "step": "with a resolvable filtered/ event folder (tick window readable)",
+      "n": 1027,
+      "n_missing": 0
+    },
+    {
+      "step": "SCORABLE (in D1, baseline, folder)",
+      "n": 999
+    },
+    {
+      "step": "EVALUABLE (scorable + prior close, so move_at is defined too)",
+      "n": 997
+    }
+  ],
+  "coverage_against_D1": {
+    "n_D1": 15763,
+    "n_candidates_in_D1": 999,
+    "share_of_D1": 0.06337626086404873,
+    "statement": "This build runs on 997 of 15763 D1 events (6.32%). It is NOT a measurement over D1. The population is the val-split slice the gate was actually run on: dates 2023-11-17 to 2024-07-22."
+  },
+  "date_range": {
+    "min": "2023-11-17",
+    "max": "2024-07-22",
+    "n_session_dates": 168
+  },
+  "B_e_divisor_check": {
+    "unique_values": [
+      39.0,
+      78.0,
+      117.0
+    ],
+    "n_distinct": 3,
+    "reading": "117 = 3 sessions x 39 ten-minute blocks in a 6.5-hour RTH session, so B_e is mean dollar volume per 10-minute RTH block over 3 prior sessions."
+  },
+  "exit_mix_first_window": {
+    "natural_exit_reason": {
+      "epg_window_close": 860,
+      "luld_upper": 119,
+      "luld_lower": 48
+    },
+    "realized_exit_reason": {
+      "exit_d": 530,
+      "epg_window_close": 414,
+      "luld_upper": 83
+    },
+    "note": "the brief specifies window-close exit; natural_exit_* is that exit. The LULD rows are carried, not dropped."
+  },
+  "natural_hold_sec": {
+    "count": 1027.0,
+    "mean": 749.9639118861851,
+    "std": 679.8507662588448,
+    "min": 0.001820207,
+    "25%": 275.476803925,
+    "50%": 540.267317243,
+    "75%": 1056.0529708825,
+    "max": 4312.742229986
+  },
+  "output_parquet": "results/relative_momentum/v0/artifacts/t0_candidates.parquet"
+}

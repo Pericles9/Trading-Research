@@ -1,0 +1,185 @@
+{
+  "task": "v0-T4 diagnostic panel (gates nothing)",
+  "config_hash": "c90d8126dd12",
+  "collinearity_score_vs_move_at": {
+    "all_candidate_moments": {
+      "n": 997,
+      "rho": 0.6915,
+      "p": 1.045145138664497e-142
+    },
+    "flag_clear": {
+      "n": 758,
+      "rho": 0.6868,
+      "p": 7.547325826295479e-107
+    },
+    "FLAGGED": {
+      "n": 239,
+      "rho": 0.6968,
+      "p": 4.6467729668048126e-36
+    },
+    "by_session_bucket": {
+      "post_market": {
+        "n": 3,
+        "rho": 1.0,
+        "p": 0.0
+      },
+      "pre_market": {
+        "n": 642,
+        "rho": 0.7202,
+        "p": 1.0204209572767276e-103
+      },
+      "regular_hours": {
+        "n": 352,
+        "rho": 0.7316,
+        "p": 3.399791985167328e-60
+      }
+    },
+    "contested_moments_only": {
+      "n": 204,
+      "rho": 0.6625,
+      "p": 3.7702836379339445e-27
+    },
+    "reading": "rho is the diagnostic, not a verdict. It says how much the attention score restates the move rather than adding to it."
+  },
+  "score_decile_panel": [
+    {
+      "score_decile": 0,
+      "n": 100,
+      "score_median": 0.0661,
+      "move_at_p25": -0.0563,
+      "move_at_median": -0.005,
+      "move_at_p75": 0.0664,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": -1.6
+    },
+    {
+      "score_decile": 1,
+      "n": 100,
+      "score_median": 0.3694,
+      "move_at_p25": -0.0039,
+      "move_at_median": 0.0715,
+      "move_at_p75": 0.2018,
+      "gross_bp_median": 10.6,
+      "gross_bp_mean": 123.0
+    },
+    {
+      "score_decile": 2,
+      "n": 99,
+      "score_median": 1.2863,
+      "move_at_p25": 0.0328,
+      "move_at_median": 0.1121,
+      "move_at_p75": 0.2339,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 85.3
+    },
+    {
+      "score_decile": 3,
+      "n": 100,
+      "score_median": 3.2747,
+      "move_at_p25": 0.0455,
+      "move_at_median": 0.1094,
+      "move_at_p75": 0.2358,
+      "gross_bp_median": 80.7,
+      "gross_bp_mean": 171.0
+    },
+    {
+      "score_decile": 4,
+      "n": 100,
+      "score_median": 8.5922,
+      "move_at_p25": 0.0778,
+      "move_at_median": 0.158,
+      "move_at_p75": 0.3721,
+      "gross_bp_median": 85.4,
+      "gross_bp_mean": 108.0
+    },
+    {
+      "score_decile": 5,
+      "n": 99,
+      "score_median": 19.4439,
+      "move_at_p25": 0.1262,
+      "move_at_median": 0.2188,
+      "move_at_p75": 0.3986,
+      "gross_bp_median": 59.5,
+      "gross_bp_mean": 418.1
+    },
+    {
+      "score_decile": 6,
+      "n": 100,
+      "score_median": 57.3561,
+      "move_at_p25": 0.163,
+      "move_at_median": 0.274,
+      "move_at_p75": 0.4864,
+      "gross_bp_median": 6.1,
+      "gross_bp_mean": 257.5
+    },
+    {
+      "score_decile": 7,
+      "n": 99,
+      "score_median": 138.2831,
+      "move_at_p25": 0.2252,
+      "move_at_median": 0.3586,
+      "move_at_p75": 0.5317,
+      "gross_bp_median": 0.0,
+      "gross_bp_mean": 468.7
+    },
+    {
+      "score_decile": 8,
+      "n": 100,
+      "score_median": 482.552,
+      "move_at_p25": 0.3052,
+      "move_at_median": 0.4833,
+      "move_at_p75": 0.6819,
+      "gross_bp_median": -200.5,
+      "gross_bp_mean": 375.9
+    },
+    {
+      "score_decile": 9,
+      "n": 100,
+      "score_median": 2066.664,
+      "move_at_p25": 0.4907,
+      "move_at_median": 0.7588,
+      "move_at_p75": 1.1533,
+      "gross_bp_median": -388.0,
+      "gross_bp_mean": -60.4
+    }
+  ],
+  "gate_move_vs_tick_move": {
+    "spearman": {
+      "n": 997,
+      "rho": 0.3136,
+      "p": 3.434503635811697e-24
+    },
+    "difference_quantiles": {
+      "p1": -19.8095,
+      "p5": -1.2585,
+      "p25": 0.0169,
+      "p50": 0.2889,
+      "p75": 0.6299,
+      "p95": 1.1535,
+      "p99": 2.3295
+    },
+    "share_gate_ge_30pct": 0.2146,
+    "share_tick_move_ge_30pct": 0.3872,
+    "reading": "the gate's entry condition is gap >= 30% on ITS previous close. Where the two disagree, the gate's 30% is not the 30% a tick-derived measure would have applied. Only one of the gate's three prev-close sources is tick-derived."
+  },
+  "candidate_density_vs_D1": {
+    "date_range": {
+      "min": "2023-11-17",
+      "max": "2024-07-22"
+    },
+    "candidates": {
+      "n": 1027,
+      "n_session_dates": 168,
+      "per_date": 6.11
+    },
+    "D1_same_dates": {
+      "n": 2914,
+      "n_session_dates": 168,
+      "per_date": 17.35
+    },
+    "density_ratio": 2.84,
+    "reading": "if the gate ran on every D1 event over these same dates rather than on the mom >= 50 slice it was run on, per-date candidate density would rise by about this ratio. The concurrency distribution in T2 is therefore a LOWER BOUND on what a full-D1 deployment would see, and gate 2's near inertness here is a property of this population, not a measured property of the universe."
+  },
+  "a12": "move_at is a cross-session ratio; the correlation is reported untrimmed first and split on flag_cross_session_extreme, flagged rows never dropped.",
+  "output_parquet": "results/relative_momentum/v0/artifacts/t4_diagnostic.parquet"
+}

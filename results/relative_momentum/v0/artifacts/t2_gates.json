@@ -1,0 +1,60 @@
+{
+  "task": "v0-T2 qualification gates",
+  "config_hash": "c90d8126dd12",
+  "gate_1": {
+    "rule": "score >= the 75th percentile of the score's own distribution across all candidate moments",
+    "percentile": 75,
+    "threshold_score": 138.38623431271822,
+    "n_pass": 250,
+    "share_pass": 0.2502502502502503,
+    "in_sample_note": "the percentile is computed on this same population, so gate 1 passes exactly 25% of scorable candidates by construction. It is a declared v0 default, not a fitted threshold, but it is not an out-of-sample level either."
+  },
+  "gate_2": {
+    "rule": "score is the highest among all candidates whose gate window is concurrently live at that same moment",
+    "liveness": "[entry_ts, natural_exit_ts] of each candidate's own first window -- the gate's own window-close definition",
+    "n_pass": 892,
+    "n_pass_trivial_singleton": 794,
+    "n_pass_contested": 98,
+    "share_pass": 0.8928928928928929
+  },
+  "concurrency": {
+    "n_candidate_moments": 999,
+    "n_live_quantiles": {
+      "p0": 1.0,
+      "p25": 1.0,
+      "p50": 1.0,
+      "p75": 1.0,
+      "p90": 2.0,
+      "p95": 2.0,
+      "p100": 5.0
+    },
+    "distribution": {
+      "1": 794,
+      "2": 174,
+      "3": 29,
+      "4": 1,
+      "5": 1
+    },
+    "share_alone": 0.7947947947947948,
+    "share_two_or_more": 0.20520520520520522,
+    "reading": "gate 2 only has something to decide where n_live >= 2. Below that it is a formality and the candidate passes trivially."
+  },
+  "contested_moments": {
+    "n": 205,
+    "leader_margin_ratio_quantiles": {
+      "p25": 4.1196809633090306,
+      "p50": 28.247019684244723,
+      "p75": 402.9854066802122,
+      "p95": 18485.76836708048
+    },
+    "margin_note": "ratio of the live set's top score to its runner-up. A ratio near 1 means 'highest' was a coin flip at that moment."
+  },
+  "policies": {
+    "A_n": 1027,
+    "B_n": 244,
+    "B_share_of_A": 0.23758519961051608,
+    "B_n_from_trivial_singletons": 202,
+    "B_n_from_contested": 42
+  },
+  "output_parquet": "results/relative_momentum/v0/artifacts/t2_gated.parquet"
+}

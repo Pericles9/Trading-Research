@@ -2422,3 +2422,57 @@ unflagged ones net **-1,659 bp** and are negative 87.5% of the time, with `move_
 retained as the record of what the defective specification produced. Charts 05/06; 06 is built to be
 read directly against 03, and the pair is the finding. Path A / Path B and the citation fix remain
 Cooper's open decisions, untouched.
+
+## Relative momentum v0 -- build and evaluate, a real backtest (2026-09-18)
+
+**Branch `explore/relative-momentum-v0`, cut from `explore/relative-momentum-r0`** (R0's
+`t0a2_prior_close.parquet` is a direct input; `move_at` needs it).
+`prompts/relative_momentum_v0.md` and `config/relative_momentum_v0.json`.
+`research/relative_momentum_v0/` -- `common.py` (population, causal window-volume reader with the
+causality assertion in code), `chart_common.py`, `t0_population.py`, `t1_score.py`, `t2_gates.py`,
+`t3_evaluate.py`, `t4_diagnostic.py`, `charts.py`. `results/relative_momentum/v0/` -- `REPORT.md`
+(copied to `results/reports/relative_momentum_v0_report.md`), `artifacts/`, `charts/` (4).
+
+**Facet 1 reused as-is, not re-derived:** the existing fired population from
+`scanner-epg-momentum/backtest/results/phase_f/val_full/per_trade.parquet`, first window per event.
+Nothing in that repository executed, imported or modified. **Coverage stated plainly: 997 of 15,763
+D1 events, 6.32%**, val split 2023-11-17 to 2024-07-22, 168 session dates. Three population facts
+recorded because they change what the numbers mean -- the **gap gate was off** in that run
+(`gap_gate_enabled: false`, `blocked_by_gap: 0`, entry `intraday_pct` median +11.25%, p25 -23.42%, so
+these are not "+30% crossers at entry"); the first-window window-close exit is `epg_window_close` for
+860 of 1,027 with the rest LULD, carried; and the median hold is **540 s**, not the 52 s that is the
+median across all 6,004 trades in the run.
+
+**Facet 2 built fresh.** Attention score v0 = 10-minute trailing dollar volume / E2's `B_e`, causal
+(asserted in code, not assumed). Volume read from each event's own `filtered/` folder rather than
+`filtered_trades` -- a targeted 10-minute range query against that 4.9B-row table does not prune,
+measured at 9.5 s for one window; the folder pass did all 1,027 in 66 s. `B_e`'s definition checked
+rather than assumed: the `total/B_e` ratio takes exactly the values 39/78/117 = `n_baseline_sessions`
+x 39 ten-minute RTH blocks. Known scale mismatch carried as a facet: `B_e` is RTH-scoped and 644 of
+999 candidate moments are pre-market.
+
+**Result: the qualification layer selects worse trades.** Policy A (every first-window signal, n=999
+like-for-like) median gross markout **0 bp**, win rate 49.6%; Policy B (both gates, n=244) median
+**-218 bp**, win rate 40.6%. The level gate does it, not the cross-sectional one. Mechanism in the
+score decile panel: the top two deciles -- exactly where the 75th-percentile gate selects -- carry the
+worst medians (-200 and -388 bp). **Mean and median disagree in sign and both are reported**: B's mean
+(+214 bp) is indistinguishable from A's (+194) because qualification widens both tails, so a
+profit-factor read of the same trades would call B neutral. **No policy's median trade clears cost in
+either unit** -- best net median anywhere is -71 bp, and the per-share leg is brutal on this cohort
+(median entry price $1.94, so 2.512 cents is 129.5 bp).
+
+**Second finding, which bounds the first:** 79.5% of candidate moments had **no competitor live at
+all**, median live-set size 1, so gate 2 passed 892 of 999 and 794 passes were uncontested -- only 42
+of Policy B's 244 trades came from a contested moment. But candidate density here is 6.11/session
+against D1's **17.35/session over the same dates (2.84x)**, so this is a **lower bound** and gate 2's
+inertness is a property of this population, not a measured property of the universe.
+
+**Diagnostic:** Spearman(score, `move_at`) = **0.692**, flat across the A12 split (0.687 clear / 0.697
+flagged), so the collinearity is not a cross-session artifact -- the score substantially restates the
+move. Separately, the gate's own `intraday_pct_at_entry` correlates only **0.314** with the
+tick-derived `move_at`: only one of its three prev-close sources is tick-derived.
+
+The decile panel reproduces R0-T0c2's response curve on a **different trade definition** (gate
+rising-edge/window-close, 540 s median hold, vs Phase 11's fixed 30-minute horizon): more move already
+achieved at decision time predicts a worse forward outcome. `B_e` comes from E2 artifacts that remain
+**uncommitted**, so the score is not reproducible from a clean checkout until those land.
