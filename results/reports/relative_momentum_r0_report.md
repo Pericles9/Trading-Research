@@ -3,6 +3,9 @@
 **Branch:** `explore/relative-momentum-r0` · **Config hash:** `5fae280c7fed`
 **Status: STOPPED AT T0b.** T0a (part 1) and T0b ran. T0a (part 2), T1, T1c, T2, T3, T4 and T5 did
 not run.
+**Addendum, 2026-09-18:** sections T0b-4 and T0c were added after the stop, in answer to the
+2026-09-18 read of T0b. Neither restarts the brief: T0b-4 re-measures a number that read draws an
+inference from, and T0c is that read section 3 check, which runs entirely on Phase 11 committed output.
 **Not a phase, not a finding.** No decision recorded, no hypothesis tested, no outcome variable
 touched (DR-5). Describes the pictures; Cooper decides what they mean.
 
@@ -280,3 +283,180 @@ touched no 2025 or non-`file1` event. `momentum_pct` entered no computed quantit
 
 Per §I.8: this report seeds priors. Anything tested in R1 is either declared in writing before this
 report is read, or labelled exploratory.
+
+---
+
+# ADDENDUM — 2026-09-18
+
+Written in answer to the read of T0b dated 2026-09-18. Nothing here restarts the brief. §T0b-4
+re-measures a quantity that read draws an inference from; §T0c runs that read's §3 check, which needs
+no new data pass. T1–T5 and Part II remain not run, and §4 and §5 of that read are its own open
+decisions, untouched here.
+
+## T0b-4 — the fire rate, re-measured
+
+`research/relative_momentum/t0b4_fire_rate.py` · `artifacts/t0b4_fire_rate.json`,
+`t0b4_fire_rate_per_run.parquet`, `t0b4_skipped_events.parquet`
+
+The read's §2 infers from T0b's *run 6.96% / fired 6.90%* pair that the rising-edge logic almost never
+says no. **T0b's two numbers cannot carry that inference, and the correct instrument gives a stronger
+version of the same conclusion.**
+
+Why they cannot carry it: both are a **union across 101 result files** and many gate configurations.
+An event counts as fired if any one configuration ever fired on it once. That is the right measure for
+what T0b used it for — *has this D1 event ever been run on / ever fired* — and the wrong denominator
+for a fire rate.
+
+Two things had to be fixed to measure it.
+
+**The runner family.** The result tree holds two runners writing two different schemas and using two
+different entry mechanisms.
+
+| family | schema marker | entry mechanism | runs | summary rows |
+|---|---|---|---|---|
+| `rising_edge` | `n_pass_windows`, `mean_pass_window_sec` | EPG rising edge — `n_pass_edges` **is** the entry counter | 34 | 3,013 |
+| `entry_eligible` | `n_passtofail_transitions`, `n_entry_eligible_blocks`, `gate_at_scanner_hit` | first-pass, not a rising edge | 65 | 5,581 |
+
+The `entry_eligible` family writes `n_pass_edges = 0` on **every** row while recording nonzero
+`n_passtofail_transitions` and nonzero trades on those same rows. Reading those zeros as "the gate
+declined" is a category error — on this axis the family is **unavailable, not negative**, and it is
+excluded from every rate below rather than counted as a decline. (Before this split, a naive pooled
+read gave 63 of 101 runs with "zero fires" and a median per-run fire rate of 0.0. That number was an
+artifact of the schema, not a property of the gate.)
+
+**The skipped population.** `per_event_summary.json` has no row for an event the runner attempted and
+abandoned. Those are in `skipped_events.json`, and restoring them changes the denominator.
+
+### The fire rate
+
+| population | n | fired | rate |
+|---|---|---|---|
+| `rising_edge` family, all runs, summary rows | 3,013 | 3,008 | **99.83%** |
+| per-run rate: min / median / max | — | — | 0.988 / **1.000** / 1.000 |
+| runs in that family with zero fires | — | — | **0** |
+| `phase_f/val_full` (the PF = 1.9194 run), summary rows | 1,027 | 1,027 | **100%** |
+| `phase_f/val_full`, **attempted** (summary rows + skipped) | 1,228 | 1,027 | **83.63%** |
+
+**The read's §2 conclusion holds and is understated.** On the family where the rising edge is the
+entry mechanism, the gate fires on 99.83% of the events it sees, never below 98.8% in any single run.
+Whatever selectivity the gate contributes, it is not in the rising-edge test.
+
+### Where the selectivity actually sits, in the headline run
+
+201 of 1,228 attempted events (16.4%) never reached the gate:
+
+| skip reason | n |
+|---|---|
+| `setup_filter_fail` | **88** |
+| `missing_prev_close` | 81 |
+| `error` | 13 |
+| `insufficient_trades` | 12 |
+| `no_t_event` | 6 |
+| `insufficient_quotes` | 1 |
+
+**`setup_filter_fail` is the largest single reason, and no code in this checkout emits that string.**
+A grep over `scanner-epg-momentum/**/*.py` finds `missing_prev_close` and `no_t_event` in the runners
+but no `setup_filter_fail` anywhere. That is consistent with the repository's own record — its
+`backtest/CLAUDE.md` says the setup filter was "**Removed from initial entry gate.** Computed but does
+not block first entry" — but the consequence is worth stating plainly: **the population behind
+PF = 1.9194 was filtered by a rule that is no longer in the code, and 88 events were removed by it.**
+Not re-derivable from this checkout.
+
+## T0c — Phase 11 re-sliced on the gate-admissible domain
+
+`research/relative_momentum/t0c_phase11_reslice.py`, `chart_t0c.py` ·
+`artifacts/t0c_phase11_reslice.json`, `t0c_named_cell_sliced.parquet` · charts 03, 04
+
+The read's §3 check, run as specified: no new data pass. Phase 11's
+`results/phase_11/artifacts/t7_cost_vs_capture.parquet` is already per
+(ticker, event_date, latency, hold); this re-slices its named cell.
+
+**Two assertions, both pass.** The named cell (`det_segment = rth`, latency 5, hold 30) reproduces
+**n = 10,544**, matching `t7_cost_vs_capture.json` `named_cell.n`; and all 10,544 rows resolve into D1,
+0 outside.
+
+### What this cannot settle, stated before the numbers
+
+Phase 11's markout is a **fixed-horizon** trade: enter at the detection anchor + 5 min latency, hold
+30 min, exit. The gate's PF is a **different trade**: rising-edge entry, window-close exit, median hold
+**52 seconds** in the val_full run. Re-slicing the population does not make them the same trade. This
+is a population diagnostic, not a reconciliation.
+
+### The table — all figures in basis points
+
+| slice | n | markout p25 | **markout median** | markout p75 | share ≤ 0 | rt_cost median | **net median** | share net ≤ 0 |
+|---|---|---|---|---|---|---|---|---|
+| S0 named cell, as published | 10,544 | −606 | **−164** | +208 | 63.1% | 70.98 | **−263** | 67.1% |
+| S2 mom < 50, before 2023-11-17 | 5,065 | −612 | **−237** | +68 | 70.3% | 53.50 | **−322** | 74.9% |
+| S3 mom ≥ 50, before 2023-11-17 | 1,843 | −587 | **+134** | +881 | 45.8% | 82.75 | **+53** | 48.7% |
+| S4 mom < 50, on/after 2023-11-17 | 2,575 | −603 | **−204** | +105 | 67.7% | 84.82 | **−324** | 73.3% |
+| **S5 gate-admissible (both)** | 1,061 | −619 | **+66** | +799 | 47.4% | 106.30 | **−57** | 52.6% |
+| S6 gate lister admits, on/after | 1,061 | −619 | **+66** | +799 | 47.4% | 106.30 | **−57** | 52.6% |
+| S7 the `phase_f/val_full` PF population | 473 | −634 | **+92** | +933 | 46.1% | 112.57 | **−17** | 50.4% |
+
+S6 is identical to S5 because on D1 the gate lister's only rejection is `mom_pct < 50` (T0b). S7 is 473,
+not 999, because the named cell's RTH / defined-entry-and-exit conditions cover 473 of the PF run's 999
+D1 events.
+
+**Three readings, in order.**
+
+**The pre-cost median flips, and it is the momentum floor that flips it.** S0's −164 bp becomes +66 bp
+on the gate-admissible domain and +92 bp on the PF population itself. Decomposed, the two mechanisms do
+not contribute equally: the momentum floor alone (S3) gives **+134 bp**, while the date boundary alone
+(S4) gives **−204 bp** and does not flip. The recent-regime boundary works *against* the flip —
+S3 +134 → S5 +66.
+
+**Net of cost it does not flip, and cost rises on exactly that domain.** Median round-trip cost goes
+70.98 bp (S0) → 106.30 (S5) → 112.57 (S7), and the net median stays negative on both gate slices
+(−57 bp, −17 bp) with the share of non-positive net at 52.6% and 50.4% — a coin flip. S3 is the only
+slice in the table with a positive net median. **This is T3's concern arriving before T3 did:** the
+gate's domain does select more expensive names.
+
+**The slicing variable is not known at decision time.** `momentum_pct` is a prior-close-to-day's-high
+measure (D4; brief §I.2, which bars it as a bucketing variable for precisely this reason). Conditioning
+an outcome on it selects sessions that went up a lot, so a positive shift in a forward markout is what
+that conditioning does mechanically. **It cannot be read as "extreme-momentum names behave better."**
+
+The distinction that matters for what this implies about the gate: the gate's **live entry logic** is
+causal (scanner ≥ 30% intraday, `gap ≥ 30%`, EPG rising edge). Its **backtest population** is not — the
+`min_mom = 50.0` floor reads `momentum_pct` off the event folder name, a day's-high quantity. So this
+is backtest sample selection on a lookahead variable, not a lookahead in the trading rule. Recorded as
+an observation about the population, not as an evaluation of the gate.
+
+### A12 — cross-session flag split
+
+`flag_cross_session_extreme` carried per D4 Amendment A12; untrimmed is primary, flagged rows are their
+own row and are never dropped.
+
+| slice | n | markout median | net median |
+|---|---|---|---|
+| S0 flag clear | 9,831 | −173 | −276 |
+| S0 **flagged** | 713 | +11 | −28 |
+| S5 flag clear | 866 | +22 | −95 |
+| S5 **flagged** | 195 | **+311** | **+241** |
+| S7 flag clear | 373 | +61 | −78 |
+| S7 **flagged** | 100 | **+239** | **+213** |
+
+The flip concentrates in the flagged set. On S5 the flagged median is +311 bp against +22 bp clear, and
+the flagged subset is the only place in this addendum where a net median is solidly positive. A12 exists
+because a corporate action between two sessions changes the basis across the boundary; 195 of S5's 1,061
+rows carry that flag.
+
+### Charts
+
+- **`charts/03_markout_ecdf_by_slice.html`.** ECDF of pre-cost markout in bp, five slices, with the
+  x = 0 line and the y = 0.5 line drawn — a curve's median is where it crosses the dotted line, so the
+  flip is read off the whole distribution rather than from a summary. n and median in every legend
+  entry. No observation dropped or clipped; the ±3,000 bp window is for legibility and the curves run
+  flat past it.
+- **`charts/04_net_markout_ecdf_by_slice.html`.** The same for `markout − rt_cost`, using Phase 11's
+  own per-row `rt_cost` rather than a scalar.
+
+S7 is in the tables but not on the charts — a sixth series would exceed the validated five-colour
+palette, and it sits between S3 and S5 on both panels.
+
+## Not addressed here
+
+§4 of the read (rescope to the gate-admissible domain, or re-derive the gate causally against all of
+D1) and §5 (the Project-docs citation fix, and the `prompts/relative_momentum_r0.md` stub drift) are
+both marked as Cooper's open decisions in that document. Neither is acted on here.

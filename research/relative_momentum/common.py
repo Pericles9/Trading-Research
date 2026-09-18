@@ -23,7 +23,7 @@ import pandas as pd
 
 CFG = "config/relative_momentum_r0.json"
 ART = "results/relative_momentum/r0/artifacts"
-CHARTS = "charts/relative_momentum/r0"
+CHARTS = "results/relative_momentum/r0/charts"  # see chart_common.py for why
 
 REPO = pathlib.Path(__file__).resolve().parents[2]
 
@@ -127,6 +127,30 @@ def gate_listable_events(min_mom: float = 50.0, require_date: bool = True) -> pd
     return df
 
 
+def runner_family(cols: set) -> str:
+    """Which backtest runner wrote this per_event_summary.json.
+
+    The two runners write different schemas AND use different entry mechanisms, and the
+    distinction decides whether `n_pass_edges` means anything:
+
+      rising_edge -- the classic runner (`n_pass_windows`, `mean_pass_window_sec`).
+        Entry is the EPG rising edge, so n_pass_edges IS the entry counter.
+      entry_eligible -- the rapid runner (`n_passtofail_transitions`,
+        `n_entry_eligible_blocks`, `gate_at_scanner_hit`). Entry is first-pass, not a
+        rising edge. It still WRITES n_pass_edges and writes 0 on every row, while
+        recording nonzero pass->fail transitions and nonzero trades on the same rows.
+        Reading those zeros as "the gate declined" is a category error: on this axis the
+        run is UNMEASURABLE, not negative.
+
+    unavailable, zero and censored are three distinct states and are never collapsed.
+    """
+    if "n_pass_windows" in cols:
+        return "rising_edge"
+    if "n_entry_eligible_blocks" in cols or "n_passtofail_transitions" in cols:
+        return "entry_eligible"
+    return "unknown"
+
+
 def gate_run_events() -> pd.DataFrame:
     """Every (ticker, date) the participation gate was actually RUN on, from every
     per_event_summary.json under the backtest results tree, with the gate-fire
@@ -143,18 +167,23 @@ def gate_run_events() -> pd.DataFrame:
         except Exception as exc:  # corrupt/partial run output is reported, not skipped silently
             frames.append(pd.DataFrame([{"ticker": None, "date": None,
                                          "run_path": str(p.relative_to(REPO)),
+                                         "runner_family": "unknown",
                                          "load_error": str(exc)}]))
             continue
         if isinstance(d, dict):
             d = list(d.values())
         if not d:
             continue
+        if not isinstance(d[0], dict):
+            continue
         f = pd.DataFrame(d)
+        family = runner_family(set(f.columns))
         for c in keep:
             if c not in f.columns:
                 f[c] = pd.NA
         f = f[keep].copy()
         f["run_path"] = str(p.relative_to(REPO))
+        f["runner_family"] = family
         frames.append(f)
     out = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(columns=keep)
     out = out[out["ticker"].notna() & out["date"].notna()].copy()

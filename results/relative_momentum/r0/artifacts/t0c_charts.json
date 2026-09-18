@@ -1,0 +1,11 @@
+{
+  "task": "R0-T0c charts",
+  "config_hash": "5fae280c7fed",
+  "charts": [
+    "results/relative_momentum/r0/charts/03_markout_ecdf_by_slice.html",
+    "results/relative_momentum/r0/charts/04_net_markout_ecdf_by_slice.html"
+  ],
+  "source_artifacts": [
+    "results/relative_momentum/r0/artifacts/t0c_named_cell_sliced.parquet"
+  ]
+}

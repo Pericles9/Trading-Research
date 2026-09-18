@@ -2371,3 +2371,28 @@ of eight-thread CPU — the view joins `filtered_trades`/`filtered_quotes` uncon
 coverage flags. Same finding `research/fundamentals_f1/verify_event_fundamentals.py` recorded on
 2026-09-12, reproduced; D1 is built from `results/phase_5/artifacts/quotes_bitmaps_all.parquet`
 instead, as E1 and F1 already do.
+
+**Addendum 2026-09-18.** Two sections added after the stop, in answer to the 2026-09-18 read of T0b;
+neither restarts the brief. `research/relative_momentum/t0b4_fire_rate.py` re-measures the fire rate
+that read infers from: T0b's run/fired pair is a union across 101 result files, which cannot be a
+fire-rate denominator. Measured within a run, on the `rising_edge` runner family only (the rapid
+`entry_eligible` family writes `n_pass_edges = 0` on every row while recording nonzero pass-to-fail
+transitions and trades -- unavailable on that axis, not negative, and `common.runner_family` now makes
+the split), the gate fires on **99.83%** of what it sees, 0 runs of 34 with zero fires. The read's
+conclusion holds and is understated. The selectivity sits one layer earlier: 201 of 1,228 attempted
+events in the PF run never reached the gate, the largest single reason being `setup_filter_fail`
+(88) -- **a string no code in this checkout emits**, so the population behind PF = 1.9194 was filtered
+by a rule that is no longer in the source.
+
+`research/relative_momentum/t0c_phase11_reslice.py` + `chart_t0c.py` run that read's own section-3
+check on Phase 11's committed `t7_cost_vs_capture.parquet`, no new data pass. The named cell
+reproduces n = 10,544 exactly. The pre-cost median **does** flip -- -164 bp on the full cell to +66 bp
+on the gate-admissible domain and +92 bp on the PF population -- and decomposing the 2x2 shows the
+`mom >= 50` floor does all of it (+134 bp alone) while the 2023-11-17 date boundary alone gives
+-204 bp and works against the flip. Net of cost it does **not** flip: median round-trip cost rises
+70.98 -> 106.30 -> 112.57 bp across those same slices and the net median stays negative. The slicing
+variable is `momentum_pct`, a prior-close-to-day's-high quantity the brief's section I.2 bars as a
+bucketing variable, so the flip is what conditioning on a lookahead variable does mechanically -- the
+gate's *live* entry logic is causal, its *backtest population* is not. Charts 03/04 are ECDFs so the
+median is read as a crossing of the whole distribution. Sections 4 and 5 of that read are its own
+open decisions and are untouched.
