@@ -1,0 +1,96 @@
+{
+  "task": "v2-T3 settle v0's gate-1 mechanism",
+  "config_hash": "50046a0f582a",
+  "source": "results/relative_momentum/v0/artifacts/t4_diagnostic.parquet",
+  "new_data_pass": false,
+  "population": {
+    "n": 999,
+    "gate1_pass": 250,
+    "gate1_fail": 749,
+    "note": "v0's own candidates and its own in-sample 75th-percentile gate; quantities measured at v0's tau (un-gap-gated first window)."
+  },
+  "comparison": [
+    {
+      "quantity": "dollar_volume",
+      "description": "notional in the 10-min window, USD",
+      "pass_n": 250,
+      "fail_n": 749,
+      "pass_median": 1331635.6447,
+      "fail_median": 129542.7509,
+      "pass_over_fail_median_ratio": 10.2795,
+      "pass_p25": 625183.069,
+      "fail_p25": 27747.6663,
+      "mannwhitney_p": 8.683310906708392e-53
+    },
+    {
+      "quantity": "n_prints",
+      "description": "print count in the 10-min window",
+      "pass_n": 250,
+      "fail_n": 749,
+      "pass_median": 4195.5,
+      "fail_median": 281.0,
+      "pass_over_fail_median_ratio": 14.9306,
+      "pass_p25": 1909.75,
+      "fail_p25": 83.0,
+      "mannwhitney_p": 1.1927773961657997e-60
+    },
+    {
+      "quantity": "entry_price",
+      "description": "entry price, USD",
+      "pass_n": 250,
+      "fail_n": 749,
+      "pass_median": 1.9,
+      "fail_median": 1.91,
+      "pass_over_fail_median_ratio": 0.9948,
+      "pass_p25": 1.05,
+      "fail_p25": 0.6976,
+      "mannwhitney_p": 0.7287284736581989
+    },
+    {
+      "quantity": "move_at",
+      "description": "move already achieved at decision time",
+      "pass_n": 249,
+      "fail_n": 748,
+      "pass_median": 0.5192,
+      "fail_median": 0.1422,
+      "pass_over_fail_median_ratio": 3.6512,
+      "pass_p25": 0.3366,
+      "fail_p25": 0.0394,
+      "mannwhitney_p": 8.91876503906527e-63
+    },
+    {
+      "quantity": "score",
+      "description": "relative volume (the gate's own variable)",
+      "pass_n": 250,
+      "fail_n": 749,
+      "pass_median": 674.263,
+      "fail_median": 3.988,
+      "pass_over_fail_median_ratio": 169.073,
+      "pass_p25": 303.0834,
+      "fail_p25": 0.571,
+      "mannwhitney_p": 3.5094689826065644e-124
+    },
+    {
+      "quantity": "B_e",
+      "description": "the baseline the score divides by, USD per 10-min RTH block",
+      "pass_n": 250,
+      "fail_n": 749,
+      "pass_median": 1439.86,
+      "fail_median": 23904.5396,
+      "pass_over_fail_median_ratio": 0.0602,
+      "pass_p25": 613.6455,
+      "fail_p25": 6207.2616,
+      "mannwhitney_p": 6.693249994155788e-75
+    }
+  ],
+  "verdict": {
+    "passes_are_thinner_in_absolute_activity": false,
+    "passes_are_cheaper": true,
+    "passes_are_deeper_into_the_move": true,
+    "passes_have_a_smaller_baseline": true,
+    "explanation_b_illiquidity_filter": false,
+    "explanation_a_deep_into_the_move": true,
+    "note": "these are not exclusive -- both mechanisms can be present, and the baseline row is the one that separates them. relative volume = notional / B_e, so a pass can be bought either by a LARGE numerator (real attention) or a SMALL denominator (a thin baseline). If passes have a smaller B_e without more notional, the gate was selecting on the denominator."
+  },
+  "output_parquet": "results/relative_momentum/v2/artifacts/t3_v0_mechanism.parquet"
+}

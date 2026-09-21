@@ -2526,3 +2526,57 @@ median window) against **10.5% measured on the gate population** -- so a full ca
 buys about 2.7x the contest rate while leaving the median candidate uncontested. It reaches 51.4% at
 30 min and 67.9% at 60 min, and 2024 is roughly twice as dense as 2021. Thin, regime-dependent, not
 absent -- and not present at any liveness the current exit rule implies.
+
+## Relative momentum v2 -- absolute floor, then rank -- STOPPED AT THE CALIBRATION GATE (2026-09-21)
+
+**Branch `explore/relative-momentum-v2`, cut from `explore/relative-momentum-v1`.**
+`prompts/relative_momentum_v2.md` (the brief, with a filing note correcting its "v1 was never sent" --
+v1 was built and pushed 2026-09-18, `a97f06e`), `config/relative_momentum_v2.json` (carries the
+supplied pseudocode and Correction 1 verbatim), `research/relative_momentum_v2/` (`common.py` with the
+absolute floor, the build-time ASSERT and `snap_tau_to_tick`; `t1_measure.py`, `t1b_calibration.py`,
+`t3_v0_mechanism.py`), `results/relative_momentum/v2/` (`REPORT.md`, copied to
+`results/reports/relative_momentum_v2_report.md`; `artifacts/`). **T2 policies, T4 diagnostics and T5
+charts did not run.**
+
+**Architecture.** An absolute, unit-bearing floor runs BEFORE cross-sectional ranking, so ranking only
+ever operates on survivors and the system can return NO_TRADE -- an outcome v0/v1 structurally could
+not produce. The floor needs no warmup because it references no distribution. The pseudocode's
+build-time ASSERT ("no floor input divided by a baseline, a rolling mean, another candidate's value or
+a percentile") is implemented as a live test: `assert_floor_inputs_absolute` is called with the floor's
+projection and then again with a `score` column added, and the second call is required to raise.
+`price_too_low` is pulled OUT of the AND per Correction 1 -- it rejects 54% on its own and would mask
+every other condition.
+
+**A defect found and fixed on the way in:** `entry_ts` in v1's artifact is float64, and at 1.7e18 the
+float64 grid spacing is 256 ns, so every tau was rounded by up to ~128 ns. `snap_tau_to_tick` recovers
+the exact tick (max |snap| = 128 ns, exactly half the grid spacing) and asserts the snap is under
+10 us. It mattered for two candidates -- BENF 2024-07-05 and JL 2024-01-29 were rounded upward past
+their own trigger print by 115 ns and 58 ns, and since their previous print was 601 s and 4,639 s
+earlier their windows measured EMPTY. **v1's own score window carries the same two zero-volume
+windows.**
+
+**Gate 5b PASSED** -- all six floor rungs reject <= 3% of the 903 (`MIN_PRINTS` 2.55%,
+`MIN_NOTIONAL` 2.99%, `MIN_VENUES` 0.89%, `MIN_QUOTES` 1.44%, `MAX_SPREAD_BP` 0.78%,
+`MIN_DEPTH_USD` 0.11%), so they sit in the left tail rather than at p25 of an already-filtered
+population.
+
+**Gate 5c PASSED but barely, and against the architecture's premise.** The dead-tape-winner pathology
+is **4 of 47** contested rank-only winners. Low-activity candidates (print_count <= p10 = 133) score
+LOWER on the ratio, median 14.2 against 36.0, and their score-decile distribution skews down. They are
+also **regular_hours 67 / premarket 23** -- RTH dead tape, falsifying the run's own recorded prediction
+that premarket would bind.
+
+**Gate 6 FIRED.** `F+R contested` projects to **9** trades on the price-filter-on arm against a
+declared readable floor of 20; the price-off arm projects 47 and is readable. Only
+`MAX_PER_SHARE_COST_BP = 200` reaches 20 with price on. v2 stopped rather than spend the evaluation
+pass. Fail-reason histogram at the reference rung: `thin_notional` 27, `too_few_prints` 23,
+`dead_book` 13, `single_venue` 8, `spread_too_wide` 7, `no_depth` 1.
+
+**T3 settled v0's gate-1 mechanism and refuted the illiquidity-filter explanation.** v0's gate-1 passes
+carry **10.3x the notional** and **14.9x the print count** of its fails, and entry price is
+indistinguishable (ratio 0.995, p = 0.73) -- they were not thinner or cheaper. What separates them is a
+**16.6x smaller `B_e`** together with 10.3x more notional (the 169x score ratio decomposes into exactly
+those two), and `move_at` **3.65x deeper**. So v0's gate was a correctly-working detector of names that
+are normally quiet and are now genuinely loud; the damage is that such names are far deeper into the
+move at decision time. **An absolute floor does not address that** -- it addresses a failure mode gate
+5c shows is 4 events here. Reused v1-T5 for the brief's T2 (D1 concurrency) rather than recomputing.
