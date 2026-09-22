@@ -1,0 +1,109 @@
+{
+  "_meta": {
+    "prompt": "prompts/participation_exit_overlay.md",
+    "type": "measurement -- decides whether the entry/exit layer gets rebuilt. Builds no new trade logic.",
+    "branch": "explore/participation-exit-overlay",
+    "branched_from": "explore/relative-momentum-v2",
+    "decisions_consumed": [],
+    "records_no_rebuild_recommendation": "T5 describes the pictures; the rebuild call is Cooper's off these numbers."
+  },
+
+  "population": {
+    "source": "results/relative_momentum/v2/artifacts/t1_measured.parquet",
+    "n": 903,
+    "what": "v1-T0's gap-gated first-window entries (tick-exact gap-gate reconstruction, queued entries and next-tick fills, validated 6/6), with v2's snapped int64 tau_ns",
+    "tau": "tau_ns -- the gap-gated entry TRIGGER instant, snapped back to its exact tick in v2-T1 after v1 wrote it as float64",
+    "coverage_statement": "903 of 15,763 D1 events = 5.7%, val split 2023-11-17 to 2024-07-22. NOT a measurement over D1.",
+    "why_this_population_not_v0s": "v0's 1,027 ran with gap_gate_enabled = false and entry intraday_pct median +11.25% -- not the programme's +30% definition. The 903 are genuine crossers (move_at at entry median +36.0%)."
+  },
+
+  "e2_reuse": {
+    "status": "PARTIAL -- E2's baseline B_e is reused verbatim; E2's WINDOW artifact is NOT usable as an exit and is rebuilt. See rebuild_rationale.",
+    "baseline_reused": "results/fundamental_exploration/e2/artifacts/e2_t2a_baseline.parquet -- B_e and n_baseline_sessions, carried unchanged",
+    "baseline_definition": "mean DOLLAR volume per 10-minute RTH block over the available T-3/T-2/T-1 prior sessions, flat, no time-of-day matching. Verified in v0-T0: total_baseline_dollar_volume / B_e takes exactly the values 39/78/117 = n_baseline_sessions x 39 ten-minute RTH blocks.",
+    "rebuild_rationale": {
+      "artifact": "results/fundamental_exploration/e2/artifacts/e2_t2_window.parquet",
+      "why_not_reusable_as_an_exit": [
+        "443 of the 903 (49.1%) have its window_end_ts BEFORE the EPG entry tau -- an exit cannot precede its entry",
+        "40.75% of the 903 have duration_min == 0, i.e. participation 'ends' at t0 itself",
+        "window_end_ts - tau reaches 433,365 s = 5.0 days, so the window is not censored at the event-day extended session end, which the brief states is E2's own rule",
+        "the censored column is False on all 15,742 rows, which cannot be right if any censoring was applied",
+        "E2's brief, config and code were never committed -- only its artifacts -- so the declared C, the volume basis, and the censoring rule cannot be read from the repository"
+      ],
+      "what_was_done": "participation_onset AND participation_end are both built here from event_minute_bars_v2 under the rule the brief states, with censoring at the event-day extended session end applied as the brief describes it. E2's B_e is reused unchanged. The divergence from E2's artifact is reported, not hidden."
+    }
+  },
+
+  "participation_rule": {
+    "source_series": "event_minute_bars_v2, session_offset = 0 only (which is what enforces censoring at the event-day extended session end)",
+    "minute_dollar_volume": "volume * vwap -- exact for a minute bar by the definition of VWAP",
+    "empty_minutes": "a minute with no bar is a measured ZERO dollar volume, not a missing value. Zero and unavailable stay distinct: an event with no bars at all is unavailable and carried.",
+    "trailing_window_minutes": 10,
+    "trailing_statistic": "SUM of minute dollar volume over the trailing 10 minutes -- the quantity dimensionally comparable with B_e, which is itself a per-10-minute-block figure. The brief says 'trailing 10-minute average volume'; a per-minute average would be 10x smaller than B_e and the comparison would be meaningless.",
+    "multiple": 3.0,
+    "participation_end": "first minute after t0 where trailing-10-minute dollar volume <= 3 x B_e AND stays there for C consecutive minutes",
+    "participation_onset": "the mirror, new in this run: first minute after t0 where trailing-10-minute dollar volume >= 3 x B_e AND stays there for C consecutive minutes",
+    "why_onset_matters": "E2 assumes participation begins at t0 by fiat, so as written it cannot see late arrival -- which is the core of the hypothesis. The mirror rule costs nothing and is what makes the claim testable.",
+    "C_minutes": {
+      "reference": 10,
+      "ladder": [5, 10, 20],
+      "status": "DECLARED HERE, NOT CARRIED FROM E2. The brief says 'C carried at E2's declared value'; that value is unrecoverable because E2's brief and code were never committed. 10 is a round choice equal to the trailing-window length. The ladder is reported as sensitivity on the headline numbers.",
+      "note": "if E2's C is supplied it is a one-line change and a re-run"
+    },
+    "t0_source": "results/fundamental_exploration/e2/artifacts/e2_d1_fundamentals.parquet t0_ns -- Build F1's tiered t0 (D33). 900 of the 903 resolve via minute_a102, 3 via nanosecond_poll1.",
+    "censoring": {
+      "horizon": "20:00:00 America/New_York on the event day (session_offset = 0), the extended-session end",
+      "treatment": "an event whose participation never decays before the horizon is CENSORED. Reported as its own class with its share stated, never pooled, no mean taken across censored and uncensored (E2 DE-3).",
+      "exit_for_censored": "the last print at or before the censoring horizon. NOT silently treated as tradeable -- a session-end hold is a different risk from an intraday one under D5, and it is labelled as such."
+    },
+    "exit_b_anchor": {
+      "rule": "first participation decay at or after tau",
+      "why_not_the_t0_anchored_end": "participation_end is measured after t0 because that is the participation FACT the overlay reports. An exit cannot precede its entry, so the tradeable Exit B uses the first decay at or after tau. Both quantities are reported and the share where they differ is stated."
+    }
+  },
+
+  "exits": {
+    "A": {"name": "window close", "ts": "natural_exit_ts from v1-T0", "what": "as traded today"},
+    "B": {"name": "participation decay", "ts": "first decay at or after tau, else the censoring horizon",
+          "what": "what the rebuild would do"},
+    "price_basis": "BOTH exits priced tick-exactly from the event's own trades.parquet -- the last print at or before the exit timestamp. Using v1's tick price for A and a minute-bar price for B would compare two different bases.",
+    "round_trips": 1,
+    "round_trips_note": "extending a hold adds exposure, not a round trip. Each arm pays ONE round trip, so the cost comparison is the same single cost amortised over a longer move."
+  },
+
+  "cost": {
+    "round_trip_bp": 70.98,
+    "round_trip_cents": 2.512,
+    "source": "results/phase_11/REPORT.md:72",
+    "both_units": "D19"
+  },
+
+  "halt_exposure": {
+    "exact_labels": {
+      "source": "scanner-epg-momentum/backtest/results/phase_luld_v3c/halt_labels_v3c.json",
+      "coverage": "100 events labelled, 18 halt-bearing; 73 of the 100 intersect the 903, of which 14 are halt-bearing. So exact labels cover 8.1% of this population.",
+      "provenance_note": "produced by phase LULD-V3c's labeler after that phase's audit fixed two instrumentation bugs. The LULD exit LINE was abandoned 2026-06-20, but the halt LABELS are a measurement, not the abandoned exit."
+    },
+    "proxy": {
+      "rule": "maximum inter-trade gap inside the hold interval exceeding 60 seconds",
+      "threshold_seconds": 60,
+      "basis": "declared, and the same 60 s figure scanner-epg-momentum/backtest/runner.py uses for its own halt-gap clock pause (EPG-Rapid C3)",
+      "status": "A PROXY, labelled as such everywhere. A 60 s print gap in a name running thousands of prints per 10 minutes is almost certainly a halt, but the flag is a gap measurement and not a halt classifier."
+    }
+  },
+
+  "facets": ["n_baseline_sessions", "session_bucket", "detection_price_decile", "move_at_decile"],
+  "detection_price_source": "results/fundamental_exploration/artifacts/detection_price.parquet",
+  "min_cell_n_display_floor": 20,
+  "random_seed": 42,
+  "chart_theme": {"output_dir": "results/participation_exit_overlay/charts", "theme": "light, per E1 precedent"},
+
+  "constraints": {
+    "move_at": "never momentum_pct",
+    "d4": "tick- or bar-derived from D4-clean sources only; event_minute_bars_v2 is Phase 6b's tick aggregate (D5 A11, reuse needs no citation)",
+    "d5": "long-only",
+    "d19": "both units",
+    "e2_de2_de3": "baseline-thin flagged and carried; censored reported as its own class with no mean taken across it",
+    "coverage": "flag and carry, never drop"
+  }
+}

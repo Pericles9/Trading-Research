@@ -2580,3 +2580,54 @@ those two), and `move_at` **3.65x deeper**. So v0's gate was a correctly-working
 are normally quiet and are now genuinely loud; the damage is that such names are far deeper into the
 move at decision time. **An absolute floor does not address that** -- it addresses a failure mode gate
 5c shows is 4 events here. Reused v1-T5 for the brief's T2 (D1 concurrency) rather than recomputing.
+
+## Participation / exit overlay -- window close vs. participation decay (2026-09-21)
+
+**Branch `explore/participation-exit-overlay`, cut from `explore/relative-momentum-v2`.**
+`prompts/participation_exit_overlay.md`, `config/participation_exit_overlay.json`,
+`research/participation_exit_overlay/` (`common.py` with the participation rule, the causal
+confirmation-instant timestamping, and a mid-run tick spike guard; `t1_participation.py`,
+`t2_overlay.py`, `t3_counterfactual_exit.py`, `charts.py`), `results/participation_exit_overlay/`
+(`REPORT.md`, copied to `results/reports/participation_exit_overlay_report.md`; `artifacts/`; 6
+charts).
+
+**E2's baseline `B_e` reused verbatim; E2's window artifact rebuilt, not reused** -- checked before
+building on it: 49.1% of its `window_end_ts` sit BEFORE the EPG entry, 40.75% have `duration_min == 0`,
+the max span is 5.0 days (not censored at session end as the brief attributes to E2), and `censored`
+is `False` on all 15,742 rows. E2's brief and code were never committed, so its declared `C` could not
+be recovered; `C = 10` min is declared here with a {5, 10, 20} ladder.
+
+**Causal confirmation applied structurally, not as an afterthought.** The participation rule requires
+a crossing to hold for `C` minutes, so Exit B is timestamped at the END of that confirmation window,
+never its start -- using the start would use `C` minutes of information that had not happened yet.
+Before this was wired in, 70 of 903 candidate Exit-B holds computed as negative length; after, zero.
+
+**A tick-pricing defect found and fixed mid-run, not anticipated by the brief.** AMC 2024-05-14's
+naive last-print-at-or-before priced the exit at $11.48 against entry and v1's own recorded exit both
+$6.63 -- a single 4-share print (conditions [32, 37], 37 = odd lot per this repo's own condition-code
+reference) reverting immediately. A declared, task-local spike guard (not claimed as an established
+repo convention -- odd lots are 44% of all trades here, too large a share to exclude outright)
+replaced 10 Exit-A and 9 Exit-B prices; AMC now reads exactly $6.63 = $6.63. One residual mismatch
+(NTRP 2024-03-14) confirmed as a genuine fast move, not a spike, and left disclosed.
+
+**Headline: the mismatch is real -- EPG exits while participation is still live in 76.2% of events**
+(n=782 uncensored), median 2.2 hours early, worse in RTH (88.2% negative) than premarket (69.9%).
+Entry timing is fine (EPG enters ~5 min AFTER participation onset, only 35.4% negative).
+
+**But the counterfactual -- the test that decides the rebuild -- says closing it is worse.** Same
+entry, one round trip in each arm: Exit A (window close) gross median -0.9 bp vs Exit B
+(participation decay) **-264.6 bp**; win rate 44.5% -> 40.5%; median hold 565 s -> 3.1 h. Worse across
+the full distribution, not just the median. **The effect concentrates exactly where prior work already
+found the damage**: by `move_at` decile, B is competitive at the shallowest entries (decile 0:
++124.8 bp) and collapses at the deepest (decile 9: **-3,067 bp, 8.3% win rate**) -- the deeper-entry
+penalty from v2-T3 and R0-T0c2 is not just present under a participation exit, it is amplified by
+holding longer into a position already too deep at entry. Halt exposure rises sharply with the longer
+hold (gap-proxy share 3.5% -> 67.7%; exact labels, 8.1% coverage, 0% -> 6.85%).
+
+**The censored class (14.2%, participation never decays in-session) inverts the finding** -- held to
+the session-end horizon these run +1,702 bp median, 64.8% win rate -- but an 11.8-hour median hold is
+an overnight-class position under D5 and is reported as its own class, never pooled into the headline.
+
+**Settles, per the brief's own framing: mismatch real, Exit B worse.** EPG's early exit is doing real
+work stepping out before the flip; the qualification layer's problem is elsewhere. No rebuild
+recommendation is made -- that call is Cooper's off these numbers.

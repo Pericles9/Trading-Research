@@ -1,0 +1,12 @@
+{
+  "task": "T4 charts",
+  "config_hash": "b1db4f659320",
+  "charts": [
+    "results/participation_exit_overlay/charts/01_event_timeline_strip.html",
+    "results/participation_exit_overlay/charts/02_gap_distributions_ecdf.html",
+    "results/participation_exit_overlay/charts/03_exit_a_vs_b_ecdf.html",
+    "results/participation_exit_overlay/charts/04_markout_in_the_gap.html",
+    "results/participation_exit_overlay/charts/05_by_detection_price_decile.html",
+    "results/participation_exit_overlay/charts/06_by_move_at_decile.html"
+  ]
+}
