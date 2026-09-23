@@ -1,0 +1,242 @@
+{
+  "name": "attention_excursion_b1",
+  "brief": "prompts/attention_excursion_b1.md -- Part II (Brief 1) of the combined document dated 2026-09-23",
+  "type": "build -- not a phase. Builds instruments and controls; reads no attention-versus-outcome relationship anywhere, including on the dev sample. Ends at a HARD STOP (T7).",
+  "received_truncated": "The brief arrived truncated at 50,000 characters, mid escalation row 6 ('thin paths above 20% of th'). Rows 6+ are unknown; row 6 is carried below as a LOG-only reading of the visible text. Part III (E2 units fix) was never received and is out of scope for this run.",
+  "decisions_consumed": ["DA-1", "DA-2", "DA-3", "DA-4", "DA-5", "DA-6", "DA-7", "DA-8", "DA-9"],
+
+  "population": {
+    "d1_rule": "in_scope = TRUE AND source_file = 'file1'",
+    "d1_frame": "results/phase_5a/artifacts/sampling_frame.parquet",
+    "d1_n_expected": 15763,
+    "dev_sample": "config/dev_sample_v3.json",
+    "dev_n_expected": 50,
+    "sidecar": "results/phase_5a/artifacts/dev_v4_sidecar_events.parquet",
+    "sidecar_label": "dev_v4_sidecar",
+    "sidecar_n_expected": 6,
+    "sidecar_rule": "listed alongside the dev sample and carried as its own row everywhere; never pooled; not used in T6 controls (the 50 are the control population)",
+    "event_folder": "data/filtered/{ticker}_{event_date_canonical}_{momentum_pct} -- momentum_pct resolves the folder path only (D4)",
+    "repair_siblings": "trades_repair_1c.parquet is read alongside trades.parquet wherever present (CLAUDE.md repair-provenance rule); heal writes fill genuine absence only, so the union has no duplicate rows by construction"
+  },
+
+  "slices": {
+    "rule": "chronological by event_date_canonical (D38); dev and sidecar events -> dev_quarantine regardless of date",
+    "development": ["2020-01-01", "2022-12-31"],
+    "selection": ["2023-01-01", "2024-07-22"],
+    "final": ["2024-07-23", "2024-12-31"],
+    "expected_before_quarantine_approx": {"development": 7650, "selection": 5409, "final": 2704},
+    "first_seen_slice": "earliest of development < selection < final in which the ticker has any D1 event (dev_quarantine rows are assigned by their date for this purpose, so a quarantined event still marks its ticker as seen)",
+    "is_first_seen_ticker": "TRUE when the event's own slice equals its ticker's first_seen_slice; FALSE for dev_quarantine rows"
+  },
+
+  "t1_prior_close": {
+    "calendar": "exchange_calendars XNYS, pinned at the installed 4.13.2; prior session = cal.previous_session(event_date)",
+    "prior_session_rows": "prints whose sip_timestamp falls on the prior session's ET calendar date",
+    "auction_codes": [8, 15],
+    "rule_1_auction": "Amendment 6 override: a print carrying condition code 8 (Closing Prints) or 15 (Market Center Official Close) belongs to the session whose close it settles, regardless of timestamp. Prior close = the price of the LARGEST-SIZE {8,15} print on the prior session date; ties broken by code 8 first, then latest sip_timestamp.",
+    "rule_1_why_largest_size": "Surveyed before declaring (150 random D1 prior sessions): the code-8 closing cross prints once at the listing venue, and a code-15 official close at the same venue repeats its price and size; a second code-15 print from exchange 11 carries a different price in 116 of 139 sessions with a small size (e.g. CBRL 2020-03-23: 47,977 shares at the listing venue vs 120 at exchange 11). Largest size selects the listing venue's auction without hard-coding an exchange id.",
+    "rule_2_fallback": "no {8,15} print on the prior session date -> the last print by (sip_timestamp, sequence_number) with timestamp in [session_open, session_close] of the prior session (early closes from the calendar)",
+    "unavailable": "no print at all on the prior session date -> prior_close_available = FALSE, carried, never dropped. No reach back to T-2.",
+    "condition_filter": "none beyond the {8,15} rule -- same all-prints basis as the minute-bar build it replaces",
+    "comparison_build": "results/relative_momentum/r0/artifacts/t0a2_prior_close.parquet (last RTH minute bar last_price, session_offset -1)"
+  },
+
+  "t2_tau": {
+    "rule": "first print on the event day at or after 04:00 ET, in (sip_timestamp, sequence_number) order, with price >= 1.30 x prior_close_exact, excluding a print that fails the spike guard",
+    "crossing_multiple": 1.30,
+    "search_start": "04:00 ET on event_date_canonical (DST resolved by the tz database)",
+    "search_end": "20:00 ET on event_date_canonical",
+    "spike_guard": {
+      "deviation_threshold": 0.03,
+      "neighbour_agreement": 0.03,
+      "neighbours": "immediate predecessor and successor in the full sorted print sequence of the folder",
+      "rule": "spike iff |p_i - p_(i-1)|/p_(i-1) > 0.03 AND |p_i - p_(i+1)|/p_(i+1) > 0.03 AND |p_(i-1) - p_(i+1)|/max(p_(i-1), p_(i+1)) <= 0.03; a print with no successor is not a spike; a spike cannot set tau, the search continues",
+      "discrepancy_recorded": "The brief calls this 'the exit overlay's construction' but states neighbour agreement at 3%. The overlay's code (research/participation_exit_overlay/common.py) used spike_threshold/2 = 1.5%. The brief's stated 3% is used; tau under the overlay's 1.5% is computed alongside as a diagnostic and the difference counted."
+    },
+    "int64": "tau_ns is int64 end to end; never float64",
+    "segment": "research/phase_10c/common.py::assign_segment on the tau print's own condition codes, event-day open/close from the calendar",
+    "a12_flag": "results/phase_9/artifacts/t1_cross_session_flags.parquet, session_pair = 'tm1_t0'",
+    "proxy": "results/relative_momentum/v1/artifacts/t5_d1_candidate_moments.parquet (first trade of the minute whose high reached +30% over the minute-bar prior close)",
+    "proxy_band_s": [-1, 61],
+    "decomposition_diagnostic": "tau is also computed against the minute-bar prior close (tau_mb). tau_mb - tau_proxy isolates the print-vs-minute-stamp difference; tau_exact - tau_mb isolates the prior-close change. Diagnostic only.",
+    "facets": "shares and prints from 04:00 to tau inclusive (the speed facet of Part I I.6a)"
+  },
+
+  "t3_open_boundary": {
+    "source": "event_minute_bars_v2, session_offset = 0, D1 only",
+    "clock_minute": "derived from first_trade_ts, floor((first_trade_ts - 04:00 ET) / 60 s) -- not minute_index, whose post-segment indexing was found inconsistent earlier in this line",
+    "normaliser": "the event's own median n_trades over the event day's existing bars (minutes with >= 1 trade), 04:00-20:00",
+    "empty_minute": "a clock minute with no bar contributes normalised rate 0 (it is a measured zero, not missing)",
+    "window": ["03:55", "10:30"],
+    "pre_0400_note": "the table holds no bars before 04:00; 03:55-03:59 therefore carry n = 0 and are drawn as such",
+    "post_tau_exclusion": "a minute is included only if it ends at or before tau (minute_start + 60 s <= tau_ns); the tau minute itself is excluded",
+    "events_without_tau": "prior close available but never crossing -> every minute included (no crossing to exclude); prior close unavailable -> excluded (tau cannot be placed); both counted",
+    "proposal_rule": "for open O in {04:00, 09:30}: L(m) = median of the per-minute medians over clock minutes [m+10, m+20]; proposed boundary = first minute m >= O with p25(m) <= L(m) <= p75(m). Also reported: the first m from which the condition holds for 5 consecutive minutes. Cooper confirms or replaces at T7.",
+    "outcome_used": "none"
+  },
+
+  "t4_excursion": {
+    "population": "dev sample (50) + sidecar (6, own row)",
+    "path": "every print with sip_timestamp strictly > tau_ns and <= 20:00 ET on the event day (DA-1). Prints sharing tau's timestamp belong to the attention side (<= tau), never to the path.",
+    "bucket_ladder": [50, 100, 200],
+    "bucketing": "equal share volume; a print larger than a bucket's remaining capacity is split across buckets at its own price; bucket price = VWAP; bucket time = timestamp of the last print contributing to it",
+    "positions": "tau is position 0 (u = 0, price = tau_price); bucket i sits at u = i/N (its completed cumulative volume share)",
+    "returns": "r_1 = ln(P_1 / tau_price), r_i = ln(P_i / P_(i-1)) for i = 2..N -- N returns",
+    "sigma_b": "sqrt((pi/2) * mean_i |r_i| |r_(i-1)|) over the N-1 adjacent pairs (bipower variation, Barndorff-Nielsen & Shephard 2004)",
+    "sigma_path": "sigma_b * sqrt(N)",
+    "peak": "argmax over positions 0..N of the log price; first occurrence on ties",
+    "components": {
+      "u_peak": "i_peak / N",
+      "rise_s": "(ln P_peak - ln tau_price) / sigma_path  (>= 0; 0 when the peak is tau itself)",
+      "fall_s": "(ln P_peak - ln P_N) / sigma_path",
+      "dip_before_peak_s": "largest drawdown of the log path over positions 0..i_peak / sigma_path",
+      "terminal_s": "(ln P_N - ln tau_price) / sigma_path",
+      "sigma_b_bp": "sigma_b * 1e4",
+      "sigma_path_bp": "sigma_path * 1e4",
+      "rise_bp": "(P_peak - tau_price) / tau_price * 1e4",
+      "fall_bp": "(P_peak - P_N) / tau_price * 1e4  -- both money heights are relative to the entry-instant price, the basis the cost stack is quoted on",
+      "rise_cents": "(P_peak - tau_price) * 100",
+      "fall_cents": "(P_peak - P_N) * 100",
+      "t_peak_s": "bucket time of the peak - tau (0 when the peak is tau)",
+      "t_end_s": "last path print - tau"
+    },
+    "edge_classes": {
+      "rise_censored": "peak in the last bucket (i_peak = N)",
+      "no_rise": "peak at tau or in the first bucket (i_peak <= 1); peak_at_tau (i_peak = 0, rise_s = 0) carried separately -- the brief's T4 says 'first bucket', Part I I.2c says 'at tau'; both are carried",
+      "halt_in_path": "any inter-print gap > 60 s inside the path, plus LULD-V3c halt labels overlapping the path where they exist (research/participation_exit_overlay/common.py::load_halt_labels)",
+      "thin_path": "fewer than 250 prints after tau -- declared, not derived; still computed where possible"
+    },
+    "gap_seconds": 60,
+    "thin_path_min_prints": 250
+  },
+
+  "t5_attention": {
+    "population": "dev sample (50) + sidecar (6, own row); the cross-sectional axis reads every D1 event live on those dates",
+    "causality": "every attention quantity uses prints with sip_timestamp <= tau_ns only; an assertion raises if any print with sip_timestamp > tau reaches one (escalation row 3)",
+    "collapse": "research/scale_field/subsecond_origin.py::collapse_tol at 10 ms (D26 identity collapse); raw print counts carried alongside; share and dollar volume use all prints (unaffected by collapsing)",
+    "collapse_tol_ms": 10.0,
+    "session_start": "04:00 ET event day",
+    "a1_turnover": {
+      "numerator": "shares traded from 04:00 ET to tau inclusive (all prints)",
+      "denominator": "shs_shares_outstanding_corrected, from research/fundamental_exploration/common.py::add_corrected_shares_outstanding applied to data/fundamentals/event_fundamentals.parquet",
+      "assertion": "shs_asof_ns < tau_ns per event; a violation is a LOG row (escalation row 5) and the event's turnover is 'unavailable', not computed",
+      "also_logged": "shs_accepted_ns >= tau_ns is logged as a second, stricter check (the count is knowable at acceptance, not at the as-of date); it does not change availability, which follows the brief's asof rule",
+      "carried": ["shs_lag_ns", "shs_quality", "shs_share_count_suspect", "flg_dilution_form_before_t0", "shs_correction_applied", "shs_zero_artifact"],
+      "states": "unavailable (no count / asof violation / zero artifact), zero (no shares traded before tau), and a value are three distinct states"
+    },
+    "a2_acceleration": {
+      "H": "tau - 04:00 ET",
+      "rungs": "W_k = H / 2^k, k = 0, 1, 2, ...",
+      "accel_k": "ln(n_recent / n_older); n_recent = collapsed trades in [tau - W_k/2, tau], n_older = collapsed trades in [tau - W_k, tau - W_k/2)",
+      "counting_noise_stop": {"n_min": 17, "derivation": "SE of a log count ratio ~ sqrt(1/n1 + 1/n2); resolving ln 2 = 0.693 at two SE needs sqrt(2/n) <= 0.347, so n >= 16.7 -> 17. Carried, not tuned."},
+      "resolution_floor": {"coef": 2.2568, "source": "research/scale_field/scale_field.py::NEFF_S_MIN_COEF (D22: s >= 2.26/lambda)", "rule": "W_k/2 >= 2.2568 / lambda_k, lambda_k = (n_recent + n_older) / W_k"},
+      "floor_note_before_run": "With both halves >= 17 the floor needs n_recent + n_older >= 4.51, which the counting stop already guarantees; the D22 floor is therefore expected never to be the binding stop. Recorded before the run so it can be checked, not discovered.",
+      "descend_rule": "descend while both stops pass; the first rung where either fails is recorded with its reason and is not valid",
+      "k_max": 40,
+      "from_nothing": "n_older = 0 with n_recent > 0 -> class from_nothing on that rung; never a numeric +inf",
+      "kernel_check": {
+        "estimator": "research/scale_field/scale_field.py::field_exact with kernel='onesided' (D23), evaluated at t = tau on the collapsed prints in [04:00, tau]",
+        "accel": "ln(lambda_(W_k/2)(tau) / lambda_(W_k)(tau))",
+        "edge_rule": "undefined where the history tau - 04:00 is shorter than truncate x scale, truncate = 4 -- the scale field's own causal edge rule (field_onesided). With scales W_k and W_k/2 this defines the kernel version on rungs k >= 2 only.",
+        "comparison": "per-rung Spearman between count and kernel versions across events; disagreement reported, not resolved"
+      }
+    },
+    "a3_catalyst": {
+      "scope": "SEC filings only (DA-6)",
+      "why_not_event_fundamentals_alone": "event_fundamentals' flg_ columns are relative to Build F1's t0, not tau. Where tau precedes t0 a filing counted there can post-date tau (a lookahead); where tau follows t0 a filing in (t0, tau) is missed. The tau-relative quantities are therefore rebuilt from the same raw source F1 used.",
+      "source": "data/raw/fundamentals/sec/2026-09-12/submissions/{cik}.json (+ older-history files), F1's own raw archive; fields and accepted_ns parsing as research/fundamentals_f1/t3_filing_index.py; CIK from event_fundamentals (D30: CIK as of t0, never ticker)",
+      "filing_24h": "any filing with tau - 24 h <= accepted_ns < tau",
+      "hours_since_last_filing": "(tau - max accepted_ns < tau) / 3600 s",
+      "carried": ["last_form_before_tau", "flg_last_form (t0-relative, as held)", "flg_dilution_form_before_t0 (facet only)", "t0_minus_tau_s"],
+      "assertion": "no filing with accepted_ns >= tau_ns enters any A3 quantity"
+    },
+    "cross_sectional": {
+      "liveness_ladder_min": [15, 60, "rest_of_session"],
+      "live_set": "every D1 event on the same event_date_canonical with tau_i <= tau_j <= tau_i + L (j included); rest_of_session = tau_i <= tau_j",
+      "live_n": "live-set size; alone is live_n = 1",
+      "flow_share_k": "j's dollar volume / the live set's total dollar volume over (tau_j - W_k, tau_j], for each of j's valid A2 rungs; identical clock windows for every name",
+      "accel_rank_k": "rank of j on accel_k among live names, every name counted over j's windows; only names clearing the counting-noise stop on that window are ranked; rank 1 = highest; n ranked carried",
+      "per_live_name": "move_at at tau_j = last print <= tau_j / its own prior_close_exact - 1; seconds since its own tau",
+      "causality": "every live name's prints are cut at tau_j, asserted"
+    }
+  },
+
+  "t5b_competition": {
+    "scope": "dates of the 50 dev events only (Part II); the full-D1 run belongs to a later brief",
+    "windows_min": [5, 15, 60],
+    "liveness_ladder_min": [15, 60, "rest_of_session"],
+    "crossing_side": "for crossing j and each name i live at tau_j with tau_i < tau_j <= tau_i + L: log ratio ln(n_after / n_before) of i's collapsed trades in [tau_j, tau_j + W) vs [tau_j - W, tau_j)",
+    "control_side": "same name i: moments t in i's own live span [tau_i, min(tau_i + L, 20:00 - W)] with t - W >= 04:00 and no D1 crossing other than i's own within [t - W, t + W]; drawn uniformly on a 1-second grid",
+    "controls_per_pair": 5,
+    "seed": 20260923,
+    "zero_counts": "a window with zero trades on either side gives no log ratio; carried as a class with n",
+    "outcome_used": "none -- touches no outcome of j"
+  },
+
+  "t6_controls": {
+    "population": "the 50 dev events (sidecar excluded)",
+    "seed": 20260923,
+    "negative_excursion": {
+      "construction": "per event and rung, 200 seeded shuffles of the demeaned bucket log returns (r_1..r_N), re-integrated from tau_price, run through the identical instrument (sigma_b re-estimated)",
+      "n_shuffles": 200,
+      "pass": "pooled u_peak matches the arcsine distribution AND mean rise_s within [0.70, 0.90], on every rung",
+      "match_operationalised": "KS distance between pooled u_peak and the arcsine CDF F(u) = (2/pi) arcsin(sqrt(u)) <= 0.05 on every rung. The brief gives no number; this threshold is declared here before the run. For scale: uniform vs arcsine is KS = 0.105.",
+      "prediction_before_run": "EXPECTED TO FAIL BY CONSTRUCTION. Demeaned returns sum to zero, so the re-integrated path ends where it starts: it is a discrete bridge, not a free walk. A cyclically exchangeable bridge has a UNIFORM argmax (not arcsine), and a Brownian bridge's expected maximum is sqrt(pi/8) = 0.627 of the path spread, not sqrt(2/pi) = 0.798. The declared criteria describe a free walk; the declared construction produces a bridge. Recorded here so a failure can be checked against its derivation rather than explained after the fact.",
+      "diagnostic_arm": "free walk: the same demeaned returns with independent random signs (Rademacher) and shuffled order -- zero drift in expectation, not a bridge. Evaluated against the same criteria. DIAGNOSTIC ONLY: it cannot change the declared verdict."
+    },
+    "negative_acceleration": {
+      "construction": "per event, homogeneous Poisson tape: the event's own collapsed pre-tau trade count n placed uniformly on [04:00, tau]; the identical A2 ladder and stops",
+      "n_draws": 200,
+      "pass": "per rung, pooled over events and draws: |median accel_k| < 0.1 AND spread consistent with sqrt(2/n)",
+      "spread_operationalised": "SD of z_k = accel_k / sqrt(1/n_recent + 1/n_older) within [0.80, 1.25] per rung. Declared here before the run; the brief gives no number.",
+      "readable_rung": "a rung is evaluated only where >= 100 valid (event, draw) values exist; thinner rungs are reported and labelled not readable"
+    },
+    "positive_excursion": {
+      "construction": "the same 200 shuffled paths per event and rung, plus an injected piecewise-linear drift in the event's OWN sigma_path units on that rung: +2.0 rising linearly from u = 0 to u = 0.3, then -1.5 falling linearly to u = 1; run through the identical instrument (sigma_b re-estimated on the injected path)",
+      "pass": "per rung: pooled median recovered u_peak within 0.3 +/- 0.05; pooled median recovered rise_s within 2.0 +/- 15% and fall_s within 1.5 +/- 15%"
+    },
+    "positive_acceleration": {
+      "construction": "per event, inhomogeneous Poisson tape with the event's own n and span H: rate r before a step at t_s, 2r after, normalised so the expected total is n. The step is placed exactly at the midpoint of rung m (t_s = tau - W_m/2), for m in {0, 1, 2, 3}",
+      "n_draws": 200,
+      "placements_m": [0, 1, 2, 3],
+      "pass_literal": "accel ~ ln 2 (+/- 0.2) on the rung whose halves straddle the step (k = m), ~ 0 (+/- 0.2) on rungs that do not",
+      "specification_gap_before_run": "On rungs COARSER than the step (k < m) the step lies inside the recent half, and the exact expectation is ln(1 + 2^(k - m)): 0.405 at k = m-1, 0.223 at k = m-2, 0.118 at k = m-3. The literal '~ 0 on rungs that don't' cannot hold there for any correct instrument when m >= 1. Declared handling: the verdict is evaluated on rung k = m (ln 2 +/- 0.2) and rungs k > m (0 +/- 0.2) for every placement, and at m = 0 -- where no coarser rung exists and the literal criterion is complete -- on every rung. Rungs k < m are reported against ln(1 + 2^(k - m)) +/- 0.2, labelled, and flagged for Cooper; they do not enter the verdict. This is an interpretation of the pass text and is stated as one.",
+      "statistic": "pooled median over events and draws, per (m, k)"
+    },
+    "null_parameter_sweep": {
+      "construction": "component medians across the bucket ladder {50, 100, 200}; count vs kernel A2 per rung",
+      "rung_dependent_rule": "(max - min) of the three rung medians > 0.20 x |mean of the three| -> labelled rung-dependent; for components whose mean is within 0.05 of zero the absolute spread is reported instead of a ratio",
+      "pass": "all medians reported and labelled; labelling is the output, not a failure"
+    },
+    "blindness": {
+      "rescale_factors": [10.0, 0.1],
+      "pass": "sigma-unit and bp components identical to within 1e-9 (absolute) under rescaling, every event and rung",
+      "rounding": "prices below $1.00 rounded to the $0.01 grid (half-up at the third decimal), prices >= $1.00 untouched; tau held at its exact-data instant; per-event change reported, no pass band"
+    }
+  },
+
+  "escalation": {
+    "row_1": {"criterion": "tau_available below 90% of D1", "tier": "HARD STOP"},
+    "row_2": {"criterion": "any T6 control fails its declared pass criterion", "tier": "HARD STOP"},
+    "row_3": {"criterion": "any print after tau reaches an attention quantity (assertion fires)", "tier": "HARD STOP"},
+    "row_4": {"criterion": "tau_exact - tau_proxy outside [-1, 61] s for more than 2% of D1", "tier": "HARD STOP"},
+    "row_5": {"criterion": "shs_asof_ns >= tau_ns for any event", "tier": "LOG, per event"},
+    "row_6": {"criterion": "'thin paths above 20% of th[...]' -- truncated in transmission. Read here as: thin-path share of the dev sample above 20%", "tier": "UNKNOWN (text truncated) -- reported as LOG, and flagged in the report as a row whose tier was never received"}
+  },
+
+  "charts": {
+    "root": "charts/attention_excursion/b1/",
+    "per_task_subfolders": true,
+    "theme": "dark (brief II.1)",
+    "library": "Plotly, standalone HTML, one chart per file, n on every bucket, no smoothing, outliers shown"
+  },
+
+  "outputs": {
+    "results": "results/attention_excursion/b1/",
+    "artifacts": "results/attention_excursion/b1/artifacts/",
+    "report": "results/attention_excursion/b1/REPORT.md",
+    "report_copy": "results/reports/attention_excursion_b1_report.md"
+  },
+
+  "cost_reference": {"rt_bp": 70.98, "rt_cents": 2.512, "source": "results/phase_11/REPORT.md:72", "use": "reference lines only; no outcome is read in this brief"}
+}

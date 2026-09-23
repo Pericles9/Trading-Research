@@ -1861,3 +1861,26 @@ the same way `t1_build_p0.py`'s own README-level comment already flagged the ana
 `origin/master`'s current tip (which carried D34–D36 and the D32 Amendment A1 text/data-root fix
 `phase/13` had been cut before) into `phase/13` first — register highest was D36, next free D37.
 `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D38.**
+
+---
+
+## D38 — Measurement studies that fit no parameters may use chronological splits with repeat tickers
+
+> **D38 — Measurement studies that fit no parameters may use chronological splits with repeat tickers.**
+> *Date:* 2026-09-23 · *Gate:* attention/excursion design, Cooper-approved.
+> **Decision.** For a study that fits, tunes or selects no parameter on the data being split, the
+> standing ticker-blocked rule ("no ticker on both sides") is replaced by: chronological slices; repeat
+> tickers permitted across slices; every uncertainty estimate clustered by ticker; every read repeated on
+> first-seen tickers as a sensitivity.
+> **Why.** The ticker-blocked rule exists to stop a fitted model memorising a name. With nothing fitted
+> there is nothing to memorise; what remains is non-independence of repeat runs, which clustering
+> addresses. Enforcing the rule on this universe removed 83% of the proposed final slice (2,254 of 2,704)
+> and 67% of the selection slice (3,610 of 5,409) — these names run repeatedly.
+> **Scope.** Any study that fits, tunes, or selects anything — a threshold, a weight, a model — remains
+> under the ticker-blocked rule. A study that later begins fitting inherits the rule from that point.
+
+Appended verbatim from `prompts/attention_excursion_b1.md` (Part II, T0c) by Brief 1's T0c, on branch
+`explore/attention-excursion-b1`. **Numbering note.** Recorded as D38, confirmed free by reading this
+file and the same file on `origin/master`, `origin/explore/fundamental-e1`,
+`origin/explore/fundamental-e2` and `origin/claude/attention-and-the-excursion-v3` — register highest
+was D37 on every one. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D39.**

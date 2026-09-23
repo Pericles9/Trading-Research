@@ -207,8 +207,12 @@
     tick-level confirmation found a real, one-directional look-ahead bias in T1's window
     selection (median excess 19.7% of horizon at 5min, shrinking to 1.6% at 60min), affecting
     every headline number in T1/T2/T3; Cooper declined a rebuild, the bias stands as a
-    documented caveat on the existing report** (2026-09-14, results/phase_13/REPORT.md §10).
-  - **Next free number: D38.**
+    documented caveat on the existing report** (2026-09-14, results/phase_13/REPORT.md §10) ·
+    **D38 measurement studies that fit no parameters may use chronological splits with repeat
+    tickers -- ticker-clustered uncertainty and a first-seen-ticker sensitivity replace the
+    ticker-blocked rule; any study that fits, tunes or selects stays under it** (2026-09-23,
+    attention/excursion Brief 1 T0c).
+  - **Next free number: D39.**
 - Repo map: docs/Research-Library-Map.md. Data layout: docs/data/Schema.md (tracked copy of
   record; `data/Schema.md` is a local, untracked mirror — `.gitignore` excludes `/data/` wholly,
   so edit the tracked copy and mirror the change there). Corrected 2026-09-10 — `data/Schema.md`
