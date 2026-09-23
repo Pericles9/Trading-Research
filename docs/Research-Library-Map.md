@@ -2363,3 +2363,33 @@ RTH-based baseline (not a bug) via two independent manual traces (AAL premarket,
 bar enters the duration" check) that caught and fixed a real few-second boundary bug — the aggregate
 result was unchanged by that fix. Cooper reviewed the 0%-censored finding directly and confirmed
 proceeding with DE-2 as specified rather than revising the baseline design or threshold.
+
+## Attention and the excursion -- rebuilt design v3, filed as a reasoning document (2026-09-23)
+
+**Branch `claude/attention-and-the-excursion-v3`, cut from `master`.** `claude/attention_and_the_
+excursion.md` -- Cooper's design document (dated 2026-09-22, v3) reframing the attention line from an
+entry/exit mechanism to a measurement of attention against a tick-built excursion vector (volume-clock
+position, bipower-variation-scaled rise/fall/terminal heights), with turnover, a re-anchored
+scale-field acceleration reader, and filing/news catalysts as the three attention measures, read on
+absolute and cross-sectional axes side by side. **Not a phase, not a brief, not authorised** -- its own
+status line forbids any code or run against it, and this filing does not change that; six items in its
+own section 9 remain open (bucket ladder, open-adjacent boundary, liveness ladder, split boundaries,
+session-end definition, news-pull authorization).
+
+Filed with two corrections surfaced while checking it, neither acted on:
+
+1. **E2's brief and config exist**, committed 2026-09-17 on `origin/explore/fundamental-e2`
+   (`prompts/fundamental_exploration_e2.md`, `config/fundamental_exploration_e2.json`) -- a branch
+   never merged into the `explore/relative-momentum-*` / `explore/participation-exit-overlay` lineage.
+   This contradicts `results/participation_exit_overlay/REPORT.md` (commit `4e806d2`), which states
+   E2's brief and code were never committed. E2's real declared `C`, censoring rule and window
+   construction are therefore recoverable and may bear on that report's own rebuilt `C = 10 min` --
+   not revisited here.
+2. **Appendix A's numbers, checked against the cited artifact**
+   (`results/relative_momentum/v2/artifacts/t1b_enriched.parquet`): the variance decomposition
+   reproduces almost exactly (0.155/0.845 vs. cited 0.155/0.846). The contested-pair win-rate direction
+   and magnitude corroborate (37.25% vs. cited 37.6%) but the pair count does not (51 vs. cited 101) --
+   flagged as unreconciled, not confirmed or refuted.
+
+v1 and v2 of this document, and the companion `claude/relative_momentum_findings_log.md` it cites, do
+not exist in this checkout.
