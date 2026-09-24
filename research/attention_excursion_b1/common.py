@@ -32,7 +32,7 @@ REPO = pathlib.Path(__file__).resolve().parents[2]
 CFG = "config/attention_excursion_b1.json"
 OUT = "results/attention_excursion/b1"
 ART = f"{OUT}/artifacts"
-CHARTS = "charts/attention_excursion/b1"
+CHARTS = "results/attention_excursion/b1/charts"
 
 FILTERED = REPO / "data" / "filtered"
 ET = "America/New_York"

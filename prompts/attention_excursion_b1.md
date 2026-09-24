@@ -1,11 +1,8 @@
-> **Filing note (Claude Code, 2026-09-23).** Filed verbatim as received, on branch
-> `explore/attention-excursion-b1`. **The document arrived truncated** at the 50,000-character
-> message limit: it ends mid-row in Part II's escalation table (row 6, "thin paths above 20% of
-> th"), so **escalation rows 6 onward and all of Part III (the E2 units fix and its retraction
-> sweep) were never received** and are not reproduced here. Brief 1 (Part II) was run from this
-> text; nothing in Part III was acted on. Part I here supersedes the v3 design filed at
-> `claude/attention_and_the_excursion.md` (branch `claude/attention-and-the-excursion-v3`,
-> `e46f5ea`), which is not on this branch.
+> **Filing note (Claude Code, 2026-09-23).** The complete document, refiled from Cooper's repo copy
+> `prompts/Attention excursion.md` (left untracked as Cooper's own file). The first filing of this path
+> (`dec1d70`) held the paste truncated at 50,000 characters -- it ended mid escalation row 6 and had no
+> II.4, II.5 or Part III. Brief 1 ran to its T2 stop (`a3f6a9c`) on that truncated text; lines 1-739
+> are identical between the two. Amended by `prompts/attention_excursion_b1_amendment_1.md`.
 
 # Attention and the excursion — design, Brief 1, and the E2 fix
 
@@ -755,6 +752,99 @@ coverage, the `shs_asof` violation count, and the thin-path share.
 | 3 | any print after τ reaches an attention quantity (assertion fires) | HARD STOP |
 | 4 | `tau_exact − tau_proxy` outside [−1, 61] s for more than 2% of D1 | HARD STOP. The proxy and the exact rule disagree about what the crossing is |
 | 5 | `shs_asof_ns ≥ tau_ns` for any event | LOG, per event |
-| 6 | thin paths above 20% of th
+| 6 | thin paths above 20% of the dev sample | LOG |
+| 7 | T1 auction-print fallback used for more than 10% of D1 | LOG |
 
-[Received truncated here -- message exceeded the 50,000 character limit.]
+---
+
+## II.4 What Part II does not do
+
+- Does not put any attention measure against any excursion component, on any sample, in any chart. The
+  only excursion charts are unconditional (T4) and control charts (T6).
+- Does not read, chart or summarise any slice in T0b.
+- Does not pull news or touch the network.
+- Does not use the participation gate, relative volume, `momentum_pct` in any computation, the vendor
+  float, or financial statements.
+- Does not set any threshold beyond those declared in I.9, II.2 and II.3.
+
+## II.5 Verification block — executable, not prose
+
+- D1 row count = 15,763; dev = 50; sidecar = 6; slices partition D1 exactly.
+- `tau_ns` dtype int64; `tau_ns ≥ proxy minute start` for every event with both.
+- Attention causality assertion wired into every attention function and exercised by a test that feeds
+  a post-τ print and requires the raise.
+- Bucket volume conservation per event and rung.
+- Blindness invariance to 1e-9.
+- Every count in REPORT.md is read from an artifact by code at report-build time, not typed. This is the
+  standing prose-drifts-from-output defect.
+
+---
+
+# PART III — E2 participation window: units fix and retraction sweep
+
+**Type:** correction task. **Runnable now, independent of Parts I–II.** Own branch
+`fix/e2-window-units`, cut from `origin/explore/fundamental-e2`.
+
+## III.1 The defect
+
+`research/fundamental_exploration/e2_t2_window.py` (branch `explore/fundamental-e2`) ends the
+high-participation window at the first minute where
+
+```
+roll = dollar_volume.rolling(window=10).mean()      # average dollar volume PER MINUTE
+qualifies = roll <= 3.0 * B_e                        # B_e is dollar volume PER 10-MINUTE BLOCK
+```
+
+`e2_t2a_baseline.py` defines `B_e = total RTH dollar volume ÷ (n_sessions × 39)`, and 39 is the number
+of 10-minute intervals in a 390-minute session. So the comparison is per-minute against per-10-minutes.
+**The rule that ran was "activity has fallen below 30× the baseline rate", not the 3× Cooper confirmed on
+2026-09-15.** The window ends far too early. That fits E2's reported 52% zero-duration mass and its
+median duration of 0.
+
+The participation/exit overlay (`explore/participation-exit-overlay`, `4e806d2`) rebuilt the window with
+a trailing 10-minute **sum**, which has the correct units. Its C = 10 min matches E2's confirmed value
+(`config/fundamental_exploration_e2.json`, `de2_confirmation_window_c_minutes`). That report's statement
+that E2's brief and config "were never committed" is wrong: they are on `origin/explore/fundamental-e2`.
+Correct that sentence in the overlay report as part of this task.
+
+## III.2 Tasks
+
+1. **Confirm the defect in code.** One event, both constructions side by side: the per-minute average
+   against 3·B_e (as run) and the 10-minute sum against 3·B_e (as confirmed). Post the two window ends.
+2. **Rebuild `duration_min`** with the corrected units. Everything else stays as confirmed for E2: C = 10,
+   dollar volume, censoring at end of tick data, the 3-prior-session RTH baseline. Commit the new artifact
+   beside the old one; do not overwrite it.
+3. **Retraction sweep**, per the standing rule. List every committed file that cites E2's duration
+   results: E2's own REPORT T3–T7, any project or repo document quoting its zero-mass or median, and the
+   overlay report. Mark each **withdrawn / corrected / unaffected** in one table, in the same commit. E2's
+   momentum-magnitude results do not use the window and are expected to be unaffected. Confirm that in
+   the table rather than assuming it.
+4. **Re-render** only the E2 duration charts, from the corrected artifact. Describe the new distribution
+   and interpret nothing.
+
+## III.3 Constraints
+
+Descriptive only, like E2 itself. No duration result goes against any outcome. D32 A1 is unchanged. Named
+paths staged. Report counts read from artifacts by code.
+
+---
+
+## Appendix A — diagnostics behind I.1
+
+From `results/relative_momentum/v2/artifacts/t1b_enriched.parquet` (branch
+`explore/relative-momentum-v2`), n = 903, no outcome column read. With `s = log10(score)`,
+`n = log10(notional_usd)`, `b = log10(B_e)`, so `s ≈ n − b`: numerator share of var(s) =
+cov(s, n)/var(s) = 0.155; baseline share = −cov(s, b)/var(s) = 0.845. Contested pairs: live set =
+same-date candidates with entry ≤ τ ≤ their window close; the highest-score name paired against each
+other member; 101 pairs (all 95 moments with ≥ 2 live names; restricting to the 47 moments where the entering name was the ranked winner gives 51 pairs, 37.3% — same finding); winner had lower `notional_usd` in 37.6%. Timing from
+`results/participation_exit_overlay/artifacts/t2_overlay.parquet`: 62.8% of τ within 600 s of t0.
+
+## Appendix B — citations
+
+Ané & Geman (2000), *Journal of Finance* 55(5) — volume/transaction clock · Barndorff-Nielsen & Shephard
+(2004), *Journal of Financial Econometrics* 2(1) — bipower variation · Clark (1973), *Econometrica* 41(1)
+· Filimonov & Sornette (2015), *Quantitative Finance* 15(8) — spurious Hawkes criticality under a
+time-varying background · Ramsay & Silverman, *Functional Data Analysis* · Barber & Odean (2008), *Review
+of Financial Studies* 21(2) · Da, Engelberg & Gao (2011), *Journal of Finance* 66(5) · Karpoff (1987),
+*Journal of Financial and Quantitative Analysis* 22(1) · Hirshleifer, Lim & Teoh (2009), *Journal of
+Finance* 64(5).
