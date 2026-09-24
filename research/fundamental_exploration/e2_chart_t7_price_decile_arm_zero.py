@@ -17,7 +17,7 @@ from research.fundamental_exploration import common as C  # noqa: E402
 
 
 def main():
-    summary = CC.load_json("e2_t7_price_decile_arm_zero_summary", root=C.ART_E2)
+    summary = CC.load_json(C.ev("e2_t7_price_decile_arm_zero_summary"), root=C.ART_E2)
     mom = summary["momentum_pct_by_price_decile"]
     dur = summary["duration_min_by_price_decile"]
     deciles = sorted(int(d) for d in mom.keys())
@@ -31,7 +31,7 @@ def main():
 
     dur_stats = [dur[str(d)]["duration_min"] for d in deciles]
     fig.add_trace(CC.box_from_stats(labels, dur_stats, "duration_min", CC.BLUE), row=1, col=2)
-    fig.update_yaxes(title="duration_min (linear -- 52% exactly 0, E2-T3)", row=1, col=2)
+    fig.update_yaxes(title=f"duration_min (linear -- {C.zero_share_text()} exactly 0, E2-T3)", row=1, col=2)
 
     fig.update_layout(height=560, showlegend=False)
     cap = CC.caption(
@@ -42,7 +42,7 @@ def main():
     )
     CC.base_layout(fig, "E2-T7: price-decile arm zero, no fundamental variable", cap,
                     height=620, cap_y=-0.30, margin_b=210, width=1100)
-    CC.write(fig, "e2_t7", "01_arm_zero_by_price_decile", root=C.CHARTS_E2)
+    CC.write(fig, "e2_t7", C.ev("01_arm_zero_by_price_decile"), root=C.CHARTS_E2)
 
 
 if __name__ == "__main__":

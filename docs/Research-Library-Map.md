@@ -2356,10 +2356,26 @@ A real bug surfaced and was corrected mid-build: `B_e` needed to be dollar volum
 (`volume x vwap`), not share volume, for both the baseline and the moving average — caught from
 Cooper's own review of the first version's distribution, not from an internal check.
 
-**Headline, verified twice over:** duration_min is **0% censored across all 15,742 processed
-events**, median exactly 0 (52.2% of events). Verified as a genuine consequence of the flat,
+~~**Headline, verified twice over:** duration_min is **0% censored across all 15,742 processed
+events**, median exactly 0 (52.2% of events).~~ *(Withdrawn 2026-09-23, Part III on `fix/e2-window-units`: the zero mass, the median of 0 and the 0% censoring came from a units defect -- the window compared a per-minute average against a per-10-minute `B_e`, 30x the baseline instead of 3x -- not from the flat RTH baseline. Corrected figures, charts and the retraction sweep: `results/fundamental_exploration/e2/UNITS_FIX.md`. E2's momentum results are unaffected.)* Verified as a genuine consequence of the flat,
 RTH-based baseline (not a bug) via two independent manual traces (AAL premarket, UAL during the
 2020-03-20 COVID crash), and separately via a self-added assertion (E2-T2's own explicit "no pre-t0
 bar enters the duration" check) that caught and fixed a real few-second boundary bug — the aggregate
 result was unchanged by that fix. Cooper reviewed the 0%-censored finding directly and confirmed
 proceeding with DE-2 as specified rather than revising the baseline design or threshold.
+
+## Part III -- E2 participation window: units fix and retraction sweep (2026-09-23)
+
+**Branch `fix/e2-window-units`, cut from `origin/explore/fundamental-e2`.** Part III of
+`prompts/attention_excursion_b1.md` (on `explore/attention-excursion-b1`), authorised by that brief's
+Amendment 1 A1.7. `research/fundamental_exploration/e2_t2_window.py` gains an `agg` parameter
+(default `"mean"` reproduces the as-run artifact; `"sum"` is the confirmed units);
+`e2_t2_window_units_fix.py` confirms the defect on one event and rebuilds `duration_min`;
+`common.py` gains `E2_WINDOW_VARIANT` so the T3/T4/T6/T7 duration pipeline and its charts re-run on the
+corrected window beside, never over, the as-run outputs (`*_units_fixed` artifacts and charts), with
+chart captions reading the zero and censored shares from the active variant's summary;
+`e2_units_fix_report.py` generates `results/fundamental_exploration/e2/UNITS_FIX.md` (copied to
+`results/reports/fundamental_exploration_e2_units_fix_report.md`) and the withdrawal banner on E2's
+REPORT.md. The retraction sweep table is in UNITS_FIX.md section 6; the overlay-line corrections it
+lists are on `explore/attention-excursion-b1` (`7110516`).
+

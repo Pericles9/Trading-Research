@@ -22,8 +22,8 @@ from research.fundamental_exploration import common as C  # noqa: E402
 
 
 def main():
-    mom = pd.read_parquet(f"{C.ART_E2}/e2_t7_scatter_momentum.parquet")
-    dur = pd.read_parquet(f"{C.ART_E2}/e2_t7_scatter_duration.parquet")
+    mom = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t7_scatter_momentum.parquet"))
+    dur = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t7_scatter_duration.parquet"))
 
     years = sorted(mom["year"].dropna().unique())
     color_by_year = dict(zip(years, CC.CAT5))
@@ -54,7 +54,7 @@ def main():
     fig.update_xaxes(title="detection_price ($, log)", type="log", row=1, col=1)
     fig.update_xaxes(title="detection_price ($, log)", type="log", row=2, col=1)
     fig.update_yaxes(title="momentum_pct (%, log)", type="log", row=1, col=1)
-    fig.update_yaxes(title="duration_min (linear -- 52% exactly 0, E2-T3)", row=2, col=1)
+    fig.update_yaxes(title=f"duration_min (linear -- {C.zero_share_text()} exactly 0, E2-T3)", row=2, col=1)
 
     CC.legend_inside(fig, x=0.99, xanchor="right")
     n_mom, n_dur = len(mom), len(dur)
@@ -68,7 +68,7 @@ def main():
         fig, "E2-T7 (scatter): momentum_pct and duration_min vs detection_price, continuous", cap,
         height=820, width=1000, cap_y=-0.13, margin_b=170,
     )
-    CC.write(fig, "e2_t7", "02_arm_zero_scatter", root=C.CHARTS_E2)
+    CC.write(fig, "e2_t7", C.ev("02_arm_zero_scatter"), root=C.CHARTS_E2)
 
 
 if __name__ == "__main__":

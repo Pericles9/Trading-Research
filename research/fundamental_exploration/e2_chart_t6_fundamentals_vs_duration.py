@@ -33,7 +33,7 @@ def box_from_cell(x_labels, cells_by_x, color):
 
 
 def chart_year_price_grid(split_name: str, title: str):
-    data = CC.load_json("e2_t6_cells_year_price", root=C.ART_E2)["splits"][split_name]
+    data = CC.load_json(C.ev("e2_t6_cells_year_price"), root=C.ART_E2)["splits"][split_name]
     years = sorted({c["year"] for c in data})
     deciles = sorted({c["price_decile"] for c in data if c["price_decile"] is not None})
     split_values = ([f"S{d}" for d in range(10)] + ["no_shs_data"]) if split_name == "shs_decile" \
@@ -61,9 +61,8 @@ def chart_year_price_grid(split_name: str, title: str):
         sample=f"n={n_total:,} cell-memberships summed",
         filters=f"rows=event year ({years[0]}-{years[-1]}), columns=detection-price decile "
                 f"(D0=cheapest..D{deciles[-1]}=most expensive), x-axis within each panel={split_name}. "
-                f"LINEAR y-axis -- duration is 52% exactly 0 (E2-T3); a log axis can't render that.",
-        extra="censored_share is 0 in every cell (E2-T2/T3 population result) -- stated once here, not "
-              "per cell, since it never varies.",
+                f"LINEAR y-axis -- duration is {C.zero_share_text()} exactly 0 (E2-T3); a log axis can't render that.",
+        extra=C.censored_text() + " -- stated once here for the population, not per cell.",
     )
     CC.base_layout(fig, title, cap, height=110 * len(years) + 230, width=100 * len(deciles) + 160,
                     cap_y=-0.03 - 0.01 * len(years), margin_b=200 + 6 * len(years), margin_r=20)
@@ -71,7 +70,7 @@ def chart_year_price_grid(split_name: str, title: str):
 
 
 def chart_segment_facet():
-    data = CC.load_json("e2_t6_cells_segment", root=C.ART_E2)["splits"]
+    data = CC.load_json(C.ev("e2_t6_cells_segment"), root=C.ART_E2)["splits"]
     splits = list(data.keys())
     fig = make_subplots(rows=1, cols=len(splits), subplot_titles=splits, horizontal_spacing=0.04)
 
@@ -113,10 +112,10 @@ def main():
     }
     for i, (split_name, title) in enumerate(titles.items(), start=1):
         fig = chart_year_price_grid(split_name, title)
-        CC.write(fig, "e2_t6", f"{i:02d}_duration_by_{split_name}", root=C.CHARTS_E2)
+        CC.write(fig, "e2_t6", C.ev(f"{i:02d}_duration_by_{split_name}"), root=C.CHARTS_E2)
 
     fig = chart_segment_facet()
-    CC.write(fig, "e2_t6", "06_duration_by_split_x_segment", root=C.CHARTS_E2)
+    CC.write(fig, "e2_t6", C.ev("06_duration_by_split_x_segment"), root=C.CHARTS_E2)
 
 
 if __name__ == "__main__":

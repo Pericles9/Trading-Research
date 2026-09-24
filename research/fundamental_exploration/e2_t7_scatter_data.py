@@ -27,15 +27,15 @@ def main() -> int:
 
     momentum_df = frame[["event_id", "momentum_pct"]].merge(detp, on="event_id", how="left")
     momentum_df = C.add_identity_fields(momentum_df)
-    mom_path = f"{C.ART_E2}/e2_t7_scatter_momentum.parquet"
+    mom_path = C.ev(f"{C.ART_E2}/e2_t7_scatter_momentum.parquet")
     momentum_df[["event_id", "year", "momentum_pct", "detection_price"]].to_parquet(mom_path, index=False)
 
-    window = pd.read_parquet(f"{C.ART_E2}/e2_t2_window.parquet")[["event_id", "duration_min", "censored"]]
+    window = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t2_window.parquet"))[["event_id", "duration_min", "censored"]]
     duration_df = frame[["event_id"]].merge(window, on="event_id", how="inner").merge(
         detp, on="event_id", how="left"
     )
     duration_df = C.add_identity_fields(duration_df)
-    dur_path = f"{C.ART_E2}/e2_t7_scatter_duration.parquet"
+    dur_path = C.ev(f"{C.ART_E2}/e2_t7_scatter_duration.parquet")
     duration_df[["event_id", "year", "duration_min", "censored", "detection_price"]].to_parquet(dur_path, index=False)
 
     print(f"wrote {mom_path} rows={len(momentum_df):,}; wrote {dur_path} rows={len(duration_df):,}")

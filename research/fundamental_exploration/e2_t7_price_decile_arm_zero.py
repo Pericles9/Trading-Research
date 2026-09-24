@@ -37,7 +37,7 @@ def main() -> int:
 
     momentum_df = frame[["event_id", "momentum_pct"]].merge(detp, on="event_id", how="left")
 
-    window = pd.read_parquet(f"{C.ART_E2}/e2_t2_window.parquet")[["event_id", "duration_min", "censored"]]
+    window = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t2_window.parquet"))[["event_id", "duration_min", "censored"]]
     duration_df = frame[["event_id"]].merge(window, on="event_id", how="inner").merge(
         detp, on="event_id", how="left"
     )
@@ -52,7 +52,7 @@ def main() -> int:
                                        "censored_share": float(g["censored"].mean())}
 
     momentum_by_decile_out = pd.DataFrame(momentum_by_decile).T.reset_index().rename(columns={"index": "decile"})
-    momentum_by_decile_out.to_parquet(f"{C.ART_E2}/e2_t7_momentum_by_decile.parquet", index=False)
+    momentum_by_decile_out.to_parquet(C.ev(f"{C.ART_E2}/e2_t7_momentum_by_decile.parquet"), index=False)
 
     summary = {
         "task": "E2-T7 price-decile arm zero",
@@ -62,7 +62,7 @@ def main() -> int:
         "momentum_pct_by_price_decile": momentum_by_decile,
         "duration_min_by_price_decile": duration_by_decile,
     }
-    C.write_json(f"{C.ART_E2}/e2_t7_price_decile_arm_zero_summary.json", summary)
+    C.write_json(C.ev(f"{C.ART_E2}/e2_t7_price_decile_arm_zero_summary.json"), summary)
     print(json.dumps(summary, indent=2, default=str))
     return 0
 
