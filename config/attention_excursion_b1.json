@@ -433,5 +433,19 @@
       "A1.7 Part III authorised on fix/e2-window-units",
       "A1.8 earlier move_at builds carry the minute-bar basis difference; not re-run"
     ]
+  },
+  "implementation_clarifications": {
+    "committed": "before T3-T6 ran, after the amended T1/T2 pass; none changes a declared rule or threshold",
+    "t5b_crossing_set": "j ranges over EVERY D1 crossing on the 50 dev-event dates (the brief restricts the dates, not the crossings); i over names live at tau_j with tau_i < tau_j",
+    "t5_cross_section_windows": "flow_share_k uses dollar volume over (tau_j - W_k, tau_j]; accel ranking uses j's own half-windows [tau_j - W_k, tau_j - W_k/2) and [tau_j - W_k/2, tau_j] on every live name's collapsed prints cut at tau_j",
+    "t5_causality_test": "attention.causality_test runs first in t5_attention.py and must pass before anything is built; its result is an artifact (t5_causality_test.json)",
+    "t5_kernel_truncate": 4.0,
+    "t6_ks_with_atoms": "u_peak takes values i/N; the KS distance to the arcsine CDF is evaluated on both sides of every atom (sup over the right-continuous ECDF and its left limit)",
+    "t6_positive_acceleration_readable": "same readability rule as the negative control: a (m, k) cell is evaluated only with >= 100 valid values; thinner cells are reported, labelled not readable",
+    "t6_positive_acceleration_draws": "Poisson counts on each side of the step (rate r before, 2r after, r = n / (H + W_m/2)), times uniform within each side",
+    "t6_negative_acceleration_draws": "fixed count n (the event's own collapsed pre-tau count), times uniform on [04:00, tau]",
+    "t6_excursion_population": "the 50 dev events x 3 rungs with a vector available and sigma_path > 0; sigma_zero synthetic paths are counted and excluded from the pooled statistic",
+    "t6_blindness_scope": "the excursion vector (sigma-unit and bp components), recomputed from rescaled prints and tau_price; tau held at its exact-data instant",
+    "t3_profile_extent": "profile computed 03:55-11:00 so the 10-20 minute reference level is defined through 10:30; charted 03:55-10:30"
   }
 }
