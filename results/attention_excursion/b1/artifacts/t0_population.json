@@ -1,0 +1,97 @@
+{
+  "config_hash": "148f44d2165d",
+  "d1_n": 15763,
+  "dev_n": 50,
+  "sidecar_n": 6,
+  "slice_counts_before_quarantine": {
+    "development": 7650,
+    "selection": 5409,
+    "final": 2704
+  },
+  "expected_before_quarantine_approx": {
+    "development": 7650,
+    "selection": 5409,
+    "final": 2704
+  },
+  "slice_counts_after_quarantine": {
+    "development": 7620,
+    "selection": 5389,
+    "final": 2698,
+    "dev_quarantine": 56
+  },
+  "first_seen_events_per_slice": {
+    "development": 7620,
+    "selection": 1792,
+    "final": 448
+  },
+  "events_per_slice": {
+    "development": 7620,
+    "selection": 5389,
+    "final": 2698
+  },
+  "first_seen_share": {
+    "development": 1.0,
+    "selection": 0.3325,
+    "final": 0.166
+  },
+  "distinct_tickers_per_slice": {
+    "development": 1911,
+    "selection": 1418,
+    "final": 1049
+  },
+  "quarantine_by_date_slice": {
+    "development": {
+      "dev_v3": 25,
+      "dev_v4_sidecar": 5
+    },
+    "final": {
+      "dev_v3": 5,
+      "dev_v4_sidecar": 1
+    },
+    "selection": {
+      "dev_v3": 20,
+      "dev_v4_sidecar": 0
+    }
+  },
+  "sidecar_events": [
+    {
+      "ticker": "SLXN",
+      "event_date_canonical": "2024-08-19",
+      "event_id": "SLXN_2024-08-19_31.79"
+    },
+    {
+      "ticker": "APLD",
+      "event_date_canonical": "2022-03-28",
+      "event_id": "APLD_2022-03-28_45.24"
+    },
+    {
+      "ticker": "ACET",
+      "event_date_canonical": "2020-09-18",
+      "event_id": "ACET_2020-09-18_32.84"
+    },
+    {
+      "ticker": "RBC",
+      "event_date_canonical": "2022-09-26",
+      "event_id": "RBC_2022-09-26_44.21"
+    },
+    {
+      "ticker": "NUKK",
+      "event_date_canonical": "2022-04-18",
+      "event_id": "NUKK_2022-04-18_50.37"
+    },
+    {
+      "ticker": "PSIX",
+      "event_date_canonical": "2022-11-15",
+      "event_id": "PSIX_2022-11-15_74.86"
+    }
+  ],
+  "assertions_passed": [
+    "D1 = 15,763",
+    "all source_file = file1",
+    "(ticker, date) unique",
+    "every D1 event resolves to one folder",
+    "50 dev + 6 sidecar all inside D1, disjoint",
+    "slices partition D1 exactly",
+    "every dev/sidecar event in dev_quarantine, none elsewhere"
+  ]
+}

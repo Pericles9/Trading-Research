@@ -2631,3 +2631,31 @@ an overnight-class position under D5 and is reported as its own class, never poo
 **Settles, per the brief's own framing: mismatch real, Exit B worse.** EPG's early exit is doing real
 work stepping out before the flip; the qualification layer's problem is elsewhere. No rebuild
 recommendation is made -- that call is Cooper's off these numbers.
+
+## Attention and the excursion -- Brief 1 -- STOPPED AT T2, escalation row 4 (2026-09-23)
+
+**Branch `explore/attention-excursion-b1`, cut from `explore/participation-exit-overlay`.**
+`prompts/attention_excursion_b1.md` (the combined design + Brief 1 + E2-fix document, filed verbatim;
+it arrived truncated at 50,000 characters -- escalation rows 6+ and all of Part III never received),
+`config/attention_excursion_b1.json` (committed before any run; carries two T6 pass criteria recorded
+in advance as expected to fail by arithmetic), `research/attention_excursion_b1/` (`common.py`,
+`t0_population.py`, `t1_t2_prior_close_tau.py`, `t1_t2_summary.py`, `charts_t2.py`; `t3_open_boundary.py`
+and `instruments.py` written before the stop and **not executed on events**),
+`results/attention_excursion/b1/` (`REPORT.md`, copied to `results/reports/attention_excursion_b1_report.md`;
+`slices.parquet`; `artifacts/`), `charts/attention_excursion/b1/` (new top-level chart tree per the
+brief; `t1/`, `t2/`). D38 appended to `docs/Universe-Decisions.md`; CLAUDE.md pointer -> D39.
+
+**T0 matched the brief exactly** -- D1 15,763, slices 7,650 / 5,409 / 2,704 before quarantine; first-seen
+tickers are 33.3% of selection and 16.6% of final.
+
+**T1 (exact prior close, Amendment 6 {8,15} auction print) covers 15,722 of 15,763**; it differs from
+the minute-bar close the earlier `move_at` build used by median 25.5 bp (p95 345 bp), because the
+minute-bar build segments on the timestamp rule and never sees the closing cross. **A defect in the
+declared tie-break, recorded not fixed:** "largest size" picked exchange 11's own official close over
+the listing venue's code-8 cross on 2,599 events.
+
+**T2 (exact tau) is available on 15,632 (99.17%) -- row 1 clear. Row 4 FIRED: tau_exact - tau_proxy
+outside [-1, 61] s on 2,774 of 15,763 (17.6%) against 2%.** Decomposed in the same pass: with the prior
+close held at the proxy's own, the stamp difference alone is outside on 1.5%; where the exact and
+minute-bar closes agree, 1.4%; where they differ, 26.2%. 2,551 of the 2,774 are the prior-close change,
+188 the spike guard. Nothing after T2 ran; the stop's open questions are in the report's section 4.
