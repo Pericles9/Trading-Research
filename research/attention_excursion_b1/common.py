@@ -281,7 +281,7 @@ def _load_module(name: str, rel_path: str):
 _P10C = None
 
 
-def _extract(rel_path: str, names: set[str]) -> dict:
+def _extract(rel_path: str, names: set[str], seed: dict | None = None) -> dict:
     """Execute only the named top-level definitions of a repo file, verbatim from its own source.
     Used where importing the whole module would drag in an unrelated module-level import chain
     (phase_10c/common.py does `from common import ...` against phase_10's package, which collides
@@ -294,7 +294,7 @@ def _extract(rel_path: str, names: set[str]) -> dict:
             or (isinstance(n, ast.Assign) and any(getattr(t, "id", None) in names for t in n.targets))]
     missing = names - {getattr(n, "name", None) or n.targets[0].id for n in keep}
     assert not missing, f"{rel_path}: {missing} not found"
-    ns: dict = {}
+    ns: dict = {"np": np, **(seed or {})}
     exec(compile(ast.Module(body=keep, type_ignores=[]), rel_path, "exec"), ns)
     return ns
 
@@ -315,13 +315,17 @@ _SF = None
 
 
 def collapse_tol(ts_ns: np.ndarray, tol_ms: float) -> np.ndarray:
-    """research/scale_field/subsecond_origin.py::collapse_tol -- the D26 identity collapse."""
+    """research/scale_field/subsecond_origin.py::collapse_tol -- the D26 identity collapse -- executed
+    from that file's own source together with scale_field.py::collapse_same_timestamp, which it calls.
+    Importing subsecond_origin as a module drags in scale_field/adapter.py's `from common import ...`,
+    which collides with this package's own `common`."""
     global _SO
     if _SO is None:
-        sys.path.insert(0, str(REPO / "research" / "scale_field"))
-        import subsecond_origin as so  # noqa: E402
+        ns = _extract("research/scale_field/scale_field.py", {"collapse_same_timestamp"})
+        so = _extract("research/scale_field/subsecond_origin.py", {"collapse_tol"},
+                      {"collapse_same_timestamp": ns["collapse_same_timestamp"]})
         _SO = so
-    return _SO.collapse_tol(np.asarray(ts_ns, dtype=np.int64), tol_ms)
+    return _SO["collapse_tol"](np.asarray(ts_ns, dtype=np.int64), tol_ms)
 
 
 def scale_field():

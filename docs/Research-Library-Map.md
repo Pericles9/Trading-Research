@@ -2642,8 +2642,7 @@ in advance as expected to fail by arithmetic), `research/attention_excursion_b1/
 `t0_population.py`, `t1_t2_prior_close_tau.py`, `t1_t2_summary.py`, `charts_t2.py`; `t3_open_boundary.py`
 and `instruments.py` written before the stop and **not executed on events**),
 `results/attention_excursion/b1/` (`REPORT.md`, copied to `results/reports/attention_excursion_b1_report.md`;
-`slices.parquet`; `artifacts/`), `charts/attention_excursion/b1/` (new top-level chart tree per the
-brief; `t1/`, `t2/`). D38 appended to `docs/Universe-Decisions.md`; CLAUDE.md pointer -> D39.
+`slices.parquet`; `artifacts/`; `charts/`, moved there from a top-level `charts/` tree by Amendment 1). D38 appended to `docs/Universe-Decisions.md`; CLAUDE.md pointer -> D39.
 
 **T0 matched the brief exactly** -- D1 15,763, slices 7,650 / 5,409 / 2,704 before quarantine; first-seen
 tickers are 33.3% of selection and 16.6% of final.
@@ -2659,3 +2658,18 @@ outside [-1, 61] s on 2,774 of 15,763 (17.6%) against 2%.** Decomposed in the sa
 close held at the proxy's own, the stamp difference alone is outside on 1.5%; where the exact and
 minute-bar closes agree, 1.4%; where they differ, 26.2%. 2,551 of the 2,774 are the prior-close change,
 188 the spike guard. Nothing after T2 ran; the stop's open questions are in the report's section 4.
+
+**Amendment 1 (2026-09-23) and the amended run -- STOPPED AT T6, escalation row 2.**
+`prompts/attention_excursion_b1_amendment_1.md` (filed verbatim); the complete brief refiled over the
+truncated copy. T1 re-specified to the listing venue's closing cross (listing_cross > listing_official >
+last_rth_print > unavailable, venue from the Phase 1b snapshot, MIC -> exchange id derived by census:
+XNAS 12, XNYS 10, XASE 1 inferred); row 4 re-specified against the v1 proxy rebuilt from ticks on the same
+prior close. New code: `attention.py`, `t4_excursion.py`, `t5_attention.py`, `t5b_competition.py`,
+`t6_controls.py`, `t6_blindness_diagnosis.py`, `charts.py`, `build_report.py` (REPORT.md is generated
+from artifacts). Run 1's T1/T2 artifacts and charts kept under `artifacts/run1/` and `charts/run1/`.
+Revised rows 1 and 4 clear (98.45%; 1.51%, all spike-guard moves), so T3-T6 ran. T6 fails three declared
+controls: the negative excursion control (the bridge failure the config predicted before the run), the
+positive excursion control at N = 200 only, and blindness on one event whose top bucket prices are exactly
+tied. Also recorded, not tuned: the T3 boundary rule is satisfied at the open minute at both opens, and the
+top-anchored A2 ladder has zero valid rungs on 27 of 49 dev events. CLAUDE.md's ticker-blocked line
+carries the D38 exception.
