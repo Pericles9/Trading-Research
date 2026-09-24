@@ -1,0 +1,314 @@
+{
+  "config_hash": "2b1e9dacc512",
+  "t1": {
+    "rule": "A1.2 precedence listing_cross > listing_official > last_rth_print > unavailable",
+    "source_counts": {
+      "listing_cross": 14002,
+      "listing_official": 1473,
+      "last_rth_print": 247,
+      "unavailable": 41
+    },
+    "coverage": {
+      "available": 15722,
+      "of": 15763,
+      "share": 0.9973989722768508
+    },
+    "unavailable_reasons": {
+      "no_prior_session_prints": 34,
+      "no_rth_print": 7
+    },
+    "listing_unknown": 0,
+    "listing_by_mic": {
+      "XNAS": 13770,
+      "XNYS": 1982,
+      "XASE": 11
+    },
+    "source_by_mic": {
+      "XASE": {
+        "last_rth_print": 11,
+        "listing_cross": 0,
+        "listing_official": 0,
+        "unavailable": 0
+      },
+      "XNAS": {
+        "last_rth_print": 152,
+        "listing_cross": 12240,
+        "listing_official": 1347,
+        "unavailable": 31
+      },
+      "XNYS": {
+        "last_rth_print": 84,
+        "listing_cross": 1762,
+        "listing_official": 126,
+        "unavailable": 10
+      }
+    },
+    "listing_venue_mismatch": {
+      "n": 244,
+      "cross_venues_seen": {
+        "[10]": 106,
+        "[1]": 86,
+        "[12]": 48,
+        "[1, 11]": 3,
+        "[10, 12]": 1
+      },
+      "by_mic": {
+        "XNAS": 163,
+        "XNYS": 70,
+        "XASE": 11
+      },
+      "resolved_as": {
+        "listing_official": 163,
+        "last_rth_print": 81
+      }
+    },
+    "revised_minus_run1_bp": {
+      "n": 15722,
+      "min": -7616.321432288955,
+      "max": 12814.159292035398,
+      "mean": 8.53189151161283,
+      "p01": -350.87719298245645,
+      "p05": -105.42872371627173,
+      "p25": 0.0,
+      "p50": 0.0,
+      "p75": 0.0,
+      "p95": 148.85461760461746,
+      "p99": 500.0000000000008
+    },
+    "revised_equals_run1": 12285,
+    "revised_minus_minute_bar_bp": {
+      "n": 15721,
+      "min": -8489.425981873112,
+      "max": 30264.822134387352,
+      "mean": 4.2658385801859415,
+      "p01": -595.6044656588922,
+      "p05": -245.9016393442614,
+      "p25": -29.673590504451724,
+      "p50": 0.0,
+      "p75": 40.650406504065984,
+      "p95": 239.7926117952051,
+      "p99": 558.6468063620281
+    },
+    "abs_revised_minus_minute_bar_bp": {
+      "n": 15721,
+      "min": 0.0,
+      "max": 30264.822134387352,
+      "mean": 97.15668896090529,
+      "p01": 0.0,
+      "p05": 0.0,
+      "p25": 0.0,
+      "p50": 36.16636528029037,
+      "p75": 110.69182389937144,
+      "p95": 372.5782414307004,
+      "p99": 752.206359506812
+    },
+    "revised_equals_minute_bar": 4112,
+    "run1_other_venue_picks": {
+      "n": 2609,
+      "now_resolve_as": {
+        "listing_cross": 2599,
+        "listing_official": 6,
+        "last_rth_print": 4
+      },
+      "now_equal_run1_code8_price": 2599,
+      "revised_minus_run1_bp": {
+        "n": 2609,
+        "min": -7616.321432288955,
+        "max": 3333.333333333333,
+        "mean": 34.10238774094985,
+        "p01": -571.0972375981238,
+        "p05": -332.1585849106971,
+        "p25": -91.74311926605512,
+        "p50": 14.893617021277318,
+        "p75": 138.88888888888798,
+        "p95": 447.56271126134,
+        "p99": 858.5352336096794
+      }
+    },
+    "code38_events": 2164,
+    "errors": {}
+  },
+  "t2": {
+    "tau_available": {
+      "n": 15519,
+      "of": 15763,
+      "share": 0.9845207130622343
+    },
+    "tau_reasons": {
+      "ok": 15519,
+      "never_crosses": 203,
+      "prior_close_unavailable": 41
+    },
+    "tau_available_by_year": {
+      "2020": {
+        "sum": 3390,
+        "size": 3439
+      },
+      "2021": {
+        "sum": 1919,
+        "size": 1932
+      },
+      "2022": {
+        "sum": 2244,
+        "size": 2279
+      },
+      "2023": {
+        "sum": 2965,
+        "size": 3021
+      },
+      "2024": {
+        "sum": 5001,
+        "size": 5092
+      }
+    },
+    "segment": {
+      "rth": 10910,
+      "premarket": 4587,
+      "post": 22
+    },
+    "a12_flag": {
+      "flagged": 887,
+      "flag_missing": 0
+    },
+    "tau_close_sensitive": {
+      "true": 2524,
+      "false": 13085,
+      "null": 154,
+      "one_side_only": 373,
+      "tau_gap_close_s": {
+        "n": 15236,
+        "min": -36108.70955904,
+        "max": 43198.69165824,
+        "mean": -6.138589447124183,
+        "p01": -3741.0375503104005,
+        "p05": -133.213164672,
+        "p25": 0.0,
+        "p50": 0.0,
+        "p75": 0.001609472,
+        "p95": 146.003048832,
+        "p99": 3363.0256540287974
+      },
+      "tau_equal_under_both_closes": 7846
+    },
+    "spike_guard": {
+      "events_tau_moved": 586,
+      "move_s": {
+        "n": 586,
+        "min": 2.56e-07,
+        "max": 37621.77503232,
+        "mean": 1342.8641419961227,
+        "p01": 2.4256e-05,
+        "p05": 0.0006787200000000001,
+        "p25": 1.176597696,
+        "p50": 19.023915904,
+        "p75": 219.57708268800002,
+        "p95": 7764.137426112,
+        "p99": 24667.174002675183
+      },
+      "events_with_any_spike_skipped": 618,
+      "tau_differs_under_guard15": 146
+    },
+    "row4_d_exact_minus_proxy_prime_s": {
+      "n": 15519,
+      "min": 0.0,
+      "max": 37639.43165824,
+      "mean": 72.56773285100947,
+      "p01": 0.0,
+      "p05": 0.0,
+      "p25": 4.537938176,
+      "p50": 20.406354944,
+      "p75": 38.483288192,
+      "p95": 55.154549836799994,
+      "p99": 202.15617753087668
+    },
+    "as_run_d_exact_minus_proxy_v1_s": {
+      "n": 15242,
+      "min": -36108.24427904,
+      "max": 43198.69165824,
+      "mean": 58.0059469416234,
+      "p01": -3918.9653868492805,
+      "p05": -104.41696901119998,
+      "p25": 1.048879552,
+      "p50": 20.403672704,
+      "p75": 43.25402592,
+      "p95": 250.4038123391995,
+      "p99": 5327.450249935373
+    },
+    "tau_codes_top": {
+      "[]": 4828,
+      "[37]": 2858,
+      "[14, 41]": 1753,
+      "[12, 37]": 1213,
+      "[12]": 1193,
+      "[14, 12, 41]": 1088,
+      "[14, 37, 41]": 1052,
+      "[14, 12, 37, 41]": 861
+    },
+    "sec_from_0400": {
+      "n": 15519,
+      "min": 0.000776007,
+      "max": 54994.423215446,
+      "mean": 23372.05758203716,
+      "p01": 0.02088043372,
+      "p05": 14.217281034100022,
+      "p25": 16692.913915354,
+      "p50": 23413.168255997,
+      "p75": 32407.615482426,
+      "p95": 41742.3008488808,
+      "p99": 43067.005101830815
+    }
+  },
+  "escalation": {
+    "row_1": {
+      "criterion": "tau_available below 90% of D1",
+      "tier": "HARD STOP",
+      "observed_share": 0.9845207130622343,
+      "n": 15519,
+      "of": 15763,
+      "fires": false
+    },
+    "row_4": {
+      "criterion": "tau_exact - tau_proxy_prime outside [-1, 61] s for more than 2% of D1, tau_proxy_prime recomputed with the same prior close as tau_exact (A1.1)",
+      "tier": "HARD STOP",
+      "n_outside": 238,
+      "of_d1": 15763,
+      "observed_share_of_d1": 0.015098648734377974,
+      "n_comparable": 15519,
+      "outside_below": 0,
+      "outside_above": 238,
+      "cause": {
+        "spike_guard": 238
+      },
+      "fires": false
+    },
+    "row_4_as_run_sensitivity": {
+      "criterion": "tau_exact - tau_proxy (v1's stored proxy, its own minute-bar close)",
+      "tier": "reported sensitivity, not a gate",
+      "n_outside": 2985,
+      "of_d1": 15763,
+      "share_of_d1": 0.1893675061853708,
+      "n_comparable": 15242
+    },
+    "row_7": {
+      "criterion": "T1 fallback (last_rth_print + unavailable) used for more than 10% of D1",
+      "tier": "LOG",
+      "n": 288,
+      "of": 15763,
+      "observed_share": 0.01827063376260864,
+      "fires": false
+    }
+  },
+  "verification_II5": {
+    "tau_ns_int64": true,
+    "tau_ge_proxy_prime_minute_start": {
+      "violations": 0,
+      "checked": 15519,
+      "passes": true
+    },
+    "proxy_prime_construction_reproduces_v1": {
+      "within_1us": 15363,
+      "compared": 15363,
+      "max_abs_err_ns": 0.0
+    }
+  }
+}

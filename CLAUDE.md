@@ -42,7 +42,11 @@
 - Event-study before backtest.
 - Effective spread, not quoted. Always cross the spread. Halts = forced hold through the reopen.
 - Lag every feature by realistic pipeline latency at decision time.
-- Time-based splits only, never random. Ticker-blocked splits — no ticker on both sides.
+- Time-based splits only, never random. Ticker-blocked splits — no ticker on both sides — for any
+  study that fits, tunes or selects anything. **Exception (D38):** a measurement study that fits no
+  parameter on the data being split may use chronological slices with repeat tickers, provided every
+  uncertainty estimate is clustered by ticker and every read is repeated on first-seen tickers. A
+  study that later begins fitting inherits the ticker-blocked rule from that point.
 - Two-tier execution: ALL development runs on the dev sample (dev_events / filtered_trades_dev /
   filtered_quotes_dev; 50 events, seed pinned, built in Phase 0b, NEVER rebuilt or reseeded).
   Full-tier runs only after dev output is reviewed and the config is frozen and committed.
