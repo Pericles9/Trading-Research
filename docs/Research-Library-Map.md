@@ -2594,8 +2594,8 @@ charts).
 **E2's baseline `B_e` reused verbatim; E2's window artifact rebuilt, not reused** -- checked before
 building on it: 49.1% of its `window_end_ts` sit BEFORE the EPG entry, 40.75% have `duration_min == 0`,
 the max span is 5.0 days (not censored at session end as the brief attributes to E2), and `censored`
-is `False` on all 15,742 rows. E2's brief and code were never committed, so its declared `C` could not
-be recovered; `C = 10` min is declared here with a {5, 10, 20} ladder.
+is `False` on all 15,742 rows. ~~E2's brief and code were never committed, so its declared `C` could not
+be recovered;~~ `C = 10` min is declared here with a {5, 10, 20} ladder. *(Corrected 2026-09-23, Part III: E2's brief, config and code are committed on `origin/explore/fundamental-e2` and `master`; E2's confirmed `C` is also 10 min; the E2 window's zero-duration mass is a units defect corrected on `fix/e2-window-units`.)*
 
 **Causal confirmation applied structurally, not as an afterthought.** The participation rule requires
 a crossing to hold for `C` minutes, so Exit B is timestamped at the END of that confirmation window,

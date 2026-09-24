@@ -35,13 +35,15 @@ v0-T0 verified (`total_baseline_dollar_volume / B_e` = `n_baseline_sessions × 3
 | `window_end_ts − τ` maximum | **433,365 s = 5.0 days** — not censored at the session end the brief attributes to E2 |
 | `censored` column | **`False` on all 15,742 rows** |
 
-E2's brief, config and code were never committed — only its artifacts — so the declared `C`, the
-volume basis, and the censoring rule cannot be read from the repository. **`participation_onset` and
+~~E2's brief, config and code were never committed — only its artifacts — so the declared `C`, the
+volume basis, and the censoring rule cannot be read from the repository.~~
+**Corrected 2026-09-23 (Part III of `prompts/attention_excursion_b1.md`, authorised by Amendment 1 A1.7):** E2's brief, config and code are committed on `origin/explore/fundamental-e2` and on `master` via PR #13 (`prompts/fundamental_exploration_e2.md`, `config/fundamental_exploration_e2.json`, `research/fundamental_exploration/e2_t2_window.py`); they were absent from this branch's checkout, not uncommitted. The config records `C` = 10 min (`de2_confirmation_window_c_minutes`), dollar volume, and censoring at the event's end of tick data — not at the event-day session end, which is why the table's 5.0-day maximum is consistent with E2's confirmed rule rather than a failure of it. The 40.75% zero-duration share is the signature of a units defect in E2's window build: a per-minute average compared against a per-10-minute baseline, so the rule that ran was 30x `B_e`, not 3x. It is corrected on `fix/e2-window-units`, where every E2 duration result is swept. This report's own window uses a trailing 10-minute **sum** (the correct units) and `C` = 10, which matches E2's confirmed value; its results are unaffected.
+ **`participation_onset` and
 `participation_end` were rebuilt here** from `event_minute_bars_v2` under the rule the brief states,
 with censoring at the event-day extended session end applied structurally (the minute series is
 restricted to `session_offset = 0`, which is what enforces it). `C` is **declared here** at 10 minutes
 with a {5, 10, 20} sensitivity ladder — the brief's instruction to carry E2's value could not be
-honoured because that value is unrecoverable.
+honoured because that value is unrecoverable. *(Corrected 2026-09-23: the value is recoverable from E2's committed config and is also 10 minutes — see the correction above.)*
 
 ## An unanticipated data-quality defect, found and fixed mid-run
 
@@ -289,4 +291,4 @@ step: 10 onset-censored, 121 end-censored, 128 Exit-B-censored, 19 spike-guard r
 large price mismatch (NTRP 2024-03-14) left unresolved and disclosed.
 
 **Reproducibility gap, unchanged from v0/v1/v2:** `B_e` is from
-`results/fundamental_exploration/e2/artifacts/`, still uncommitted.
+`results/fundamental_exploration/e2/artifacts/`, still uncommitted. *(Clarified 2026-09-23: the parquet is gitignored by the repo's own rule for E2 artifacts and is regenerable from the committed `research/fundamental_exploration/e2_t2a_baseline.py`; `B_e` is not affected by the E2 window units defect.)*

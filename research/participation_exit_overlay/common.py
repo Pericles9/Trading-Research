@@ -9,7 +9,11 @@ exists. It exists and it is not usable as an exit: 443 of the 903 (49.1%) carry 
 BEFORE the EPG entry, 40.75% have duration_min == 0 (participation "ends" at t0 itself),
 window_end_ts - tau reaches 5.0 days, and the `censored` column is False on all 15,742 rows --
 which cannot be right if the event-day censoring the brief attributes to E2 was applied. E2's
-brief, config and code were never committed, so the declared C, the volume basis and the censoring
+brief, config and code were never committed [CORRECTED 2026-09-23, Part III of
+prompts/attention_excursion_b1.md: they are committed on origin/explore/fundamental-e2 and on master via
+PR #13; the config records C = 10 min, dollar volume, censoring at end of tick data. The zero-duration mass
+is E2's units defect -- a per-minute average against a per-10-minute B_e -- corrected on
+fix/e2-window-units. This module's trailing SUM is the correct unit], so the declared C, the volume basis and the censoring
 rule cannot be read from the repository either. B_e is reused verbatim; the window is rebuilt.
 
 Restricting the minute series to session_offset = 0 is what enforces censoring at the event-day

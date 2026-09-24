@@ -29,7 +29,7 @@ Posted first because two of the numbers the brief's §I.1 table rests on are amo
 | `claude/where_next_universe_criteria.md` | does not exist (Criteria 1, 2, 5 are cited from it) |
 | `claude/prompt_standard_amendment_v15.md` | does not exist (§B is cited as the defect class T0b catches) |
 | `claude/fundamental_data_float_scoping_note.md` | does not exist (§2, §4, §6 are cited by DR-4 and T5) |
-| `prompts/fundamental_exploration_e2.md` | does not exist — E2's artifacts exist, its brief was never committed |
+| `prompts/fundamental_exploration_e2.md` | does not exist in this checkout — ~~E2's artifacts exist, its brief was never committed~~ *(corrected 2026-09-23, Part III: committed on `origin/explore/fundamental-e2` and on `master` via PR #13)* |
 
 The v3 document was filed at `prompts/relative_momentum_r0.md` so that
 `config/relative_momentum_r0.json`'s `_meta.prompt` citation resolves to a real file; the four
