@@ -1,6 +1,6 @@
 {
   "name": "attention_excursion_b1",
-  "brief": "prompts/attention_excursion_b1.md -- Part II (Brief 1) of the combined document dated 2026-09-23 (complete text, refiled), as amended by prompts/attention_excursion_b1_amendment_1.md",
+  "brief": "prompts/attention_excursion.md (the combined document, filed at its project path per A2.11) -- Part II (Brief 1), as amended by prompts/attention_excursion_b1_amendment_1.md and prompts/attention_excursion_b1_amendment_2.md. prompts/attention_excursion_b1.md is kept as the as-run record.",
   "type": "build -- not a phase. Builds instruments and controls; reads no attention-versus-outcome relationship anywhere, including on the dev sample. Ends at a HARD STOP (T7).",
   "received_truncated": "Run 1 (dec1d70 -> stop a3f6a9c) ran from a paste truncated at 50,000 characters. The complete document is now filed; lines 1-739 are identical. Escalation rows 6-7, II.4, II.5 and Part III come from the complete text.",
   "decisions_consumed": [
@@ -286,7 +286,7 @@
       "tier": "HARD STOP"
     },
     "row_2": {
-      "criterion": "any T6 control fails its declared pass criterion",
+      "criterion": "any T6 control fails its declared pass criterion (Amendment 2 criteria: amendment_2.controls)",
       "tier": "HARD STOP"
     },
     "row_3": {
@@ -447,5 +447,106 @@
     "t6_excursion_population": "the 50 dev events x 3 rungs with a vector available and sigma_path > 0; sigma_zero synthetic paths are counted and excluded from the pooled statistic",
     "t6_blindness_scope": "the excursion vector (sigma-unit and bp components), recomputed from rescaled prints and tau_price; tau held at its exact-data instant",
     "t3_profile_extent": "profile computed 03:55-11:00 so the 10-20 minute reference level is defined through 10:30; charted 03:55-10:30"
+  },
+  "amendment_2": {
+    "file": "prompts/attention_excursion_b1_amendment_2.md",
+    "date": "2026-09-24",
+    "reruns": "T4, T5, T5b, T6, then T7 HARD STOP (A2.10). T1-T3 are not re-run. Run 2 (bipower) T4-T6 artifacts and charts are kept under artifacts/run2/ and charts/run2/.",
+    "noise_scale": {
+      "rule": "sigma_path = sqrt(sum r_i^2) over the N log bucket returns (r_1 from tau_price) -- realised variance (A2.1)",
+      "descriptors": "BV = (pi/2) (N/(N-1)) sum |r_i||r_(i-1)|; sigma_bv_path = sqrt(BV); jump_share = 1 - BV/RV. Carried, never a scale.",
+      "sigma_b_bp": "now sigma_path / sqrt(N) (the per-bucket RV scale), in bp",
+      "code": "instruments.components(scale='rv'); scale='bv' reproduces run 2"
+    },
+    "peak_tie_rule": {
+      "tie_tol_relative": 1e-09,
+      "rule": "peak = the earliest position whose price is within a relative 1e-9 of the maximum (log price >= max - ln(1 + 1e-9)) -- the first time the high is reached (A2.3)",
+      "carried": [
+        "peak_tied (more than one position within tolerance)",
+        "peak_tie_span_u (volume-clock span from the first to the last tied position)"
+      ]
+    },
+    "a2_per_rung_validity": {
+      "rule": "every rung k is computed and marked valid or invalid on its own (counting-noise stop and D22 floor per rung); no sequential stop (A2.4)",
+      "fine_end": "the ladder runs from k = 0 to the last rung whose half-window W_k/2 is at least the 10 ms collapse tolerance (below it two collapsed trades cannot share a half-window), capped at k_max = 40",
+      "carried": "valid-rung pattern per event (list of valid k), number of valid rungs; readings use valid rungs only",
+      "kernel_check": "computed on every valid rung where the scale field's edge rule defines it (history >= 4 x W_k)",
+      "code": "instruments.a2_count_ladder(sequential=False); sequential=True reproduces run 2"
+    },
+    "t5b_defined_cells": {
+      "rule": "cells with W >= L are structurally undefined -- not run, reported as such (A2.5)",
+      "defined": {
+        "15": [
+          5
+        ],
+        "60": [
+          5,
+          15
+        ],
+        "rest_of_session": [
+          5,
+          15,
+          60
+        ]
+      },
+      "undefined": {
+        "15": [
+          15,
+          60
+        ],
+        "60": [
+          60
+        ]
+      }
+    },
+    "halt_rule": {
+      "gap_seconds": 300,
+      "rule": "halt_in_path = any inter-print gap in the path (tau to the first path print included) whose overlap with regular hours [session_open, session_close] of the event day is >= 300 s, OR an LULD-V3c label overlapping the path (A2.6). The calendar close governs early-close days.",
+      "descriptor": "max_gap_outside_rth_s = the largest portion of any path gap lying outside regular hours -- a descriptor, not a halt",
+      "replaces": "run 2's any-gap > 60 s proxy (48 of 49 dev paths flagged)"
+    },
+    "t3_boundary": {
+      "0930_minutes_after_open": null,
+      "status": "[COOPER TO SET] -- not supplied at the time of the re-run. The open-adjacent class is carried as PENDING (NULL) on every row; sec_from_0930 is carried so the class is a one-line derivation once Cooper sets the minutes. No class at 04:00 (A2.7).",
+      "profile_record": "artifacts/t3_open_profile.parquet, t3_open_boundary.json (not re-run)"
+    },
+    "references": {
+      "rule": "simulated in the build at each rung's N with the same statistic and bucket construction, committed before the re-run (A2.2)",
+      "script": "research/attention_excursion_b1/t6a_references.py",
+      "artifact": "results/attention_excursion/b1/artifacts/t6_references.json",
+      "paths_per_N": 20000,
+      "seed": 20260924,
+      "injection": {
+        "peak_u": 0.3,
+        "rise": 2.0,
+        "fall": 1.5
+      }
+    },
+    "controls": {
+      "negative_bridge": {
+        "construction": "200 seeded shuffles of the demeaned bucket returns per event and rung (unchanged)",
+        "pass": "two-sample KS distance between the pooled u_peak and the simulated Gaussian-bridge u_peak distribution at that N <= 0.05, AND |mean rise_s - simulated mean| <= 0.05, every rung"
+      },
+      "negative_free_walk": {
+        "construction": "200 seeded draws with replacement from the demeaned bucket returns per event and rung (sum free)",
+        "pass": "same criteria against the simulated Gaussian free walk at that N"
+      },
+      "positive": {
+        "construction": "the bridge path plus the injected drift in the event's own (RV) sigma_path units",
+        "pass": "pooled median recovered rise_s and fall_s each within +/-10% of the simulated median for the same injection at that N, AND pooled median u_peak within +/-0.05 of the simulated median u_peak, every rung",
+        "reported": "recovered versus injected (0.3 / 2.0 / 1.5) bias per rung, as an instrument property, never corrected"
+      },
+      "negative_acceleration": "unchanged criteria (|median| < 0.1, SD(z) in [0.80, 1.25], readable rungs >= 100 values), on the per-rung ladder",
+      "positive_acceleration": "unchanged criteria and placements, on the per-rung ladder",
+      "null_parameter_sweep": "unchanged rule, components under the RV scale",
+      "blindness": "unchanged criteria, re-run with the tie rule; ANEB 2022-06-22 must pass",
+      "ks_two_sample": "sup over atoms i/N of |F_control - F_reference|, both evaluated as right-continuous ECDFs on the same atom grid"
+    },
+    "step_zero_reference_line": "T4's u_peak and rise_s charts draw the simulated discrete free-walk reference at each N, not the continuous 0.80 and arcsine (A2.2)",
+    "reading_bins": "absolute, log-spaced bins in each measure's own units, n in every bin; no percentile sets any edge or threshold (A2.9). Brief 1 reads nothing; recorded for the reads that follow.",
+    "charts": {
+      "plotly": "inlined in every chart (A2.8, D14). Every chart in the tree is regenerated inline, including T1-T3's.",
+      "per_event_views": "the per-event T4 strips and T5 A2 curves are each ONE chart with an event selector (one event shown at a time), not one file per event: inlined Plotly is ~3.6 MB per file and 106 per-event files would add ~380 MB. Each event still has its own strip."
+    }
   }
 }
