@@ -140,6 +140,9 @@ def main() -> int:
             if (k + 1) % 100 == 0:
                 print(f"  {k + 1:,}/{len(jobs):,} dates  {time.perf_counter() - t_start:,.0f}s", flush=True)
     pairs = pd.concat(prs, ignore_index=True)
+    for c in ("W_min", "octave"):                      # dates with no pair contribute column-less frames
+        assert pairs[c].notna().all()
+        pairs[c] = pairs[c].astype(int)
     for c in ("n_after", "n_before"):
         pairs[c] = pairs[c].where(pairs[c] >= 0).astype("Int64")
     bm = pd.DataFrame({k: np.concatenate(v) for k, v in parts.items()})

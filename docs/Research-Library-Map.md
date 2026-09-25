@@ -2700,3 +2700,20 @@ did not); the Amendment 2 run's T5/T5b/T6 artifacts and charts are kept under `a
 (`artifacts/t5_a3_before_after.json`, `..._events.parquet`, `t5_a3_before_windows.parquet`; chart
 `charts/t5/valid_rungs_before_after.html`; new `charts/t5b/matched_control_counts.html`). `README.md`
 added to `charts/run1/`, `run2/`, `run3/` (A3.6).
+
+**Brief 2 (2026-09-25) -- full-D1 build, competition check, step zero; HARD STOP at T6 (the brief's own stop).**
+Branch `explore/attention-excursion-b2`, cut from `explore/attention-excursion-b1` at `99431b8` (Brief 1
+accepted at its T7 stop). `prompts/attention_excursion_b2.md` (filed verbatim);
+`config/attention_excursion_b2.json` carries Brief 1's frozen config (`658071fbe27f`) unchanged plus
+`brief2_diff` (exactly the section 1 rulings R1-R5; R1 uses the exact window-count cutoff Cooper chose
+after the briefed rate rule was measured to drop valid rungs) and `brief2` (task parameters).
+`research/attention_excursion_b2/` imports Brief 1's `common`, `instruments` and `attention` unchanged
+(`b2common.py`: b2 paths, the R1 ladder extent, the R3 window rule and its assertion) and runs
+`config_diff.py` (escalation row 4), `t0_population.py` (facet table), `t1_excursion.py` (Brief 1's T4
+on all of D1; dev rows reproduce Brief 1 exactly), `t2_attention.py` (A1, A2 with R1 and
+`a2_ignition`, A3, absolute level measures, cross-section), `t3_competition.py` (population baseline
+cells, R2 + R3), `t4a_references.py` (Brief 1's free-walk reference regenerated draw for draw),
+`t4_step_zero.py` (the unconditional read and the 72-event gallery), `charts.py`, `build_report.py`
+(REPORT plus the generated column dictionary for the threshold suite). Outputs in
+`results/attention_excursion/b2/` (`artifacts/`, `charts/t1..t4/`, `REPORT.md`, copied to
+`results/reports/attention_excursion_b2_report.md`).
