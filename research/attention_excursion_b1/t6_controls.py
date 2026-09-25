@@ -8,7 +8,8 @@ own data. Nothing is re-implemented here.
 
   negative_excursion      bridge: 200 seeded shuffles of the demeaned bucket returns; free walk: 200 draws with
                           replacement (Amendment 2); both against simulated references (t6_references.json)
-  negative_acceleration   homogeneous Poisson tape with the event's own pre-tau count and span
+  negative_acceleration   homogeneous Poisson tape over the event's own segment history [segment start, tau]
+                          with its own collapsed count there (Amendment 3)
   positive_excursion      the shuffled path + an injected rise (2.0 to u = 0.3) and fall (1.5)
   positive_acceleration   rate doubling at the midpoint of rung m, m in {0,1,2,3}
   null_parameter_sweep    component medians across {50, 100, 200}; count vs kernel A2 per rung
@@ -143,13 +144,16 @@ def main() -> int:
     detail["positive_excursion"] = pe
 
     # ============================================================ acceleration controls
+    # Amendment 3: synthetic tapes span tau's segment history [segment start, tau] and carry the event's own
+    # collapsed count inside it; events whose tau is in a cross minute have no segment history (A3.2).
     na_rows, pa_rows = [], []
     n_draw = c6["negative_acceleration"]["n_draws"]
-    for r in att.itertuples():
+    att_a2 = att[att["a2_state"] == "value"]
+    for r in att_a2.itertuples():
         tau = int(r.tau_ns)
-        H = int(round(r.H_s * 1e9))
-        t0 = tau - H
-        n = int(r.n_collapsed_0400_tau)
+        t0 = int(r.a2_anchor_ns)
+        H = tau - t0
+        n = int(r.n_collapsed_seg_tau)
         for s in range(n_draw):
             ct = np.sort(rng.integers(t0, tau + 1, size=n)).astype(np.int64)
             for x in I.a2_count_ladder(ct, tau, t0, n_min, coef, kmax):
@@ -183,6 +187,9 @@ def main() -> int:
                        "readable": bool(rd), "pass": bool(p) if rd else None}
     verdict["negative_acceleration"] = ok_na
     detail["negative_acceleration"] = nae
+    detail["acceleration_population"] = {"events": int(len(att_a2)), "excluded_auction_minute": int((att["a2_state"] != "value").sum()),
+                                         "history": "[segment start, tau] (Amendment 3 A3.1)",
+                                         "segments": att_a2["tau_anchor_segment"].value_counts().to_dict()}
 
     pae, ok_pa = {}, True
     for (m, k), g in pa_df.groupby(["m", "k"]):

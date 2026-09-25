@@ -167,6 +167,32 @@ def rth_bounds_ns(date_str: str) -> tuple[int, int]:
     return int(cal.session_open(s).value), int(cal.session_close(s).value)
 
 
+# Amendment 3 (A3.1-A3.2): the clock segments. The two cross minutes are segments of their own.
+SEGMENTS = ("premarket", "auction_open", "regular", "auction_close", "after_hours")
+AUCTION = ("auction_open", "auction_close")
+
+
+def clock_segment(t_ns: int, open_ns: int, close_ns: int) -> str:
+    """Clock segment of an instant, from the XNYS calendar open/close of its date (early closes
+    included): premarket < open <= auction_open < open + 60 s <= regular < close <= auction_close
+    < close + 60 s <= after_hours."""
+    if t_ns < open_ns:
+        return "premarket"
+    if t_ns < open_ns + MIN_NS:
+        return "auction_open"
+    if t_ns < close_ns:
+        return "regular"
+    if t_ns < close_ns + MIN_NS:
+        return "auction_close"
+    return "after_hours"
+
+
+def segment_start_ns(seg: str, date_str: str, open_ns: int, close_ns: int) -> int | None:
+    """A3.1: 04:00, open + 60 s (09:31), close + 60 s (16:01); None for the cross minutes (A3.2)."""
+    return {"premarket": et_ns(date_str, "04:00:00"), "regular": open_ns + MIN_NS,
+            "after_hours": close_ns + MIN_NS}.get(seg)
+
+
 # ------------------------------------------------------------------ tick reading
 
 def read_trades(event_id: str, with_conditions: bool = True) -> dict | None:

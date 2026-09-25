@@ -156,11 +156,14 @@ def excursion_vector(tau_ns: int, tau_price: float, ts: np.ndarray, px: np.ndarr
 
 # ====================================================================== acceleration
 
-def a2_count_ladder(ct: np.ndarray, tau_ns: int, t0400_ns: int, n_min: int = 17,
+def a2_count_ladder(ct: np.ndarray, tau_ns: int, anchor_ns: int, n_min: int = 17,
                     floor_coef: float = 2.2568, k_max: int = 40, sequential: bool = False,
                     min_half_window_ns: int = 10_000_000) -> list[dict]:
     """Top-anchored halving ladder on collapsed trade times `ct` (sorted int64, all <= tau).
 
+    H = tau - anchor_ns. Amendment 3 (A3.1): the anchor is the start of tau's clock segment (04:00,
+    09:31 or 16:01), so rung 0 is the whole segment history and no rung reaches across a segment
+    boundary; runs 1-3 anchored at 04:00.
     Rung k: W_k = H / 2^k; n_recent in [tau - W_k/2, tau], n_older in [tau - W_k, tau - W_k/2).
     Each rung is marked valid (both halves >= n_min, and the D22 floor) or invalid with its reason.
 
@@ -170,7 +173,7 @@ def a2_count_ladder(ct: np.ndarray, tau_ns: int, t0400_ns: int, n_min: int = 17,
     sequential=True reproduces run 2: descend while valid, return the first failing rung and stop.
     from_nothing (n_older == 0, n_recent > 0) is a class, never +inf."""
     assert ct.size == 0 or int(ct[-1]) <= tau_ns, "print after tau reached A2"
-    H = tau_ns - t0400_ns
+    H = tau_ns - anchor_ns
     out = []
     if H <= 0:
         return out
@@ -206,15 +209,17 @@ def a2_count_ladder(ct: np.ndarray, tau_ns: int, t0400_ns: int, n_min: int = 17,
     return out
 
 
-def a2_kernel(ct: np.ndarray, tau_ns: int, t0400_ns: int, ks: list[int], field_exact,
+def a2_kernel(ct: np.ndarray, tau_ns: int, anchor_ns: int, ks: list[int], field_exact,
               truncate: float = 4.0) -> dict:
     """ln(lambda_{W_k/2}(tau) / lambda_{W_k}(tau)) under the scale field's one-sided kernel,
-    evaluated exactly (field_exact, no binning). Undefined where the history tau - 04:00 is shorter
-    than truncate x W_k -- the scale field's own causal edge rule."""
+    evaluated exactly (field_exact, no binning). Undefined where the history tau - anchor is shorter
+    than truncate x W_k -- the scale field's own causal edge rule. Only prints at or after the anchor
+    reach the kernel (Amendment 3: the segment history)."""
     assert ct.size == 0 or int(ct[-1]) <= tau_ns, "print after tau reached the kernel check"
-    H = tau_ns - t0400_ns
-    ts_s = (ct - t0400_ns).astype(np.float64) / 1e9
-    tg = np.array([(tau_ns - t0400_ns) / 1e9])
+    ct = ct[ct >= anchor_ns]
+    H = tau_ns - anchor_ns
+    ts_s = (ct - anchor_ns).astype(np.float64) / 1e9
+    tg = np.array([(tau_ns - anchor_ns) / 1e9])
     out = {}
     for k in ks:
         W_s = H / (2.0 ** k) / 1e9

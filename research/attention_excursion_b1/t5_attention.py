@@ -4,8 +4,9 @@ component is read here; attention is built, not related to anything.
 
 Absolute axis  A1 turnover (shares 04:00 -> tau / split-corrected shares outstanding; row 5 LOG on
                shs_asof_ns >= tau_ns), A2 acceleration (top-anchored count ladder + the one-sided
-               kernel check), A3 SEC filings strictly before tau (rebuilt from F1's raw archive
-               relative to tau, not t0).
+               kernel check, anchored at the start of tau's clock segment -- 04:00, 09:31 or 16:01 --
+               Amendment 3 A3.1; tau inside a cross minute -> A2 unavailable, A3.2), A3 SEC filings
+               strictly before tau (rebuilt from F1's raw archive relative to tau, not t0).
 Cross-section  for liveness L in {15 min, 60 min, rest of session}: live set = D1 events on the same
                date with tau_i <= tau_j <= tau_i + L. live_n; flow_share_k over each of j's valid A2
                windows; accel_rank_k among live names clearing the counting-noise stop; per live name
@@ -73,13 +74,14 @@ def main() -> int:
 
     ev_rows, rung_rows, xs_rows, live_rows, log5 = [], [], [], [], []
     for date, dd in dev.groupby("event_date_canonical"):
+        op, cl = C.rth_bounds_ns(date)
         names = t2[(t2["event_date_canonical"] == date) & t2["tau_available"]]
         days = {r.event_id: load_day(r.event_id, date, tol) for r in names.itertuples()}
         for r in dd.itertuples():
             base = {"event_id": r.event_id, "ticker": r.ticker, "event_date_canonical": date, "dev_group": r.dev_group,
                     "tau_session_segment": r.tau_session_segment, "tau_close_sensitive": r.tau_close_sensitive,
                     "flag_cross_session_extreme": r.flag_cross_session_extreme,
-                    "sec_from_0930": r.sec_from_0930, "open_adjacent_0930": None}
+                    "sec_from_0930": r.sec_from_0930}          # open_adjacent_0930 retired (A3.3)
             if not r.tau_available:
                 ev_rows.append({**base, "attention_available": False, "reason": f"tau_unavailable:{r.tau_reason}"})
                 continue
@@ -102,13 +104,21 @@ def main() -> int:
                 a1_state, turnover = "zero", 0.0
             else:
                 a1_state, turnover = "value", shares / float(shs)
-            # ---------------- A2
-            lad = I.a2_count_ladder(j["ct"], tau, t0400, n_min, coef, kmax)
-            valid = [x for x in lad if x["valid"]]
-            kern = I.a2_kernel(j["ct"], tau, t0400, [x["k"] for x in valid], sf.field_exact, trunc)
+            # ---------------- A2 (Amendment 3: anchored at the start of tau's clock segment)
+            seg = C.clock_segment(tau, op, cl)
+            seg_start = C.segment_start_ns(seg, date, op, cl)
+            auction = seg in C.AUCTION
+            if auction:                                   # A3.2: no segment history -- a label, never dropped
+                cs, lad, valid, kern = j["ct"][:0], [], [], {}
+            else:
+                cs = j["ct"][j["ct"] >= seg_start]
+                lad = I.a2_count_ladder(cs, tau, seg_start, n_min, coef, kmax)
+                A.assert_segment_windows(lad, tau, seg_start, op, cl)       # II.5 (A3.1): raises on a violation
+                valid = [x for x in lad if x["valid"]]
+                kern = I.a2_kernel(cs, tau, seg_start, [x["k"] for x in valid], sf.field_exact, trunc)
             for x in lad:
                 kk = kern.get(x["k"], {"defined": False, "accel_kernel": np.nan})
-                rung_rows.append({**base, **{k: v for k, v in x.items() if k not in ("win_lo_ns", "win_mid_ns")},
+                rung_rows.append({**base, "tau_anchor_segment": seg, **x,
                                   "kernel_defined": kk["defined"], "accel_kernel": kk["accel_kernel"]})
             # A2.4: every rung is judged on its own -- no stop. The pattern of valid rungs is carried.
             valid_ks = [x["k"] for x in lad if x["valid"]]
@@ -122,7 +132,12 @@ def main() -> int:
                 a3["n_filings_on_record"] = int(len(fl))
             else:
                 a3 = {"a3_available": False}
-            ev_rows.append({**base, "attention_available": True, "tau_ns": tau, "H_s": (tau - t0400) / 1e9,
+            a2v = None if auction else True               # A2 fields are NULL, not zero, when A2 is unavailable
+            ev_rows.append({**base, "attention_available": True, "tau_ns": tau,
+                            "tau_anchor_segment": seg, "tau_in_auction_minute": auction,
+                            "a2_state": "unavailable_auction_minute" if auction else "value",
+                            "a2_anchor_ns": seg_start, "H_s": (tau - seg_start) / 1e9 if a2v else np.nan,
+                            "H_0400_s": (tau - t0400) / 1e9, "n_collapsed_seg_tau": int(cs.size) if a2v else None,
                             "n_raw_prints_0400_tau": int(j["ts"].size), "n_collapsed_0400_tau": int(j["ct"].size),
                             "shares_0400_tau": shares, "shs_shares_outstanding_corrected": shs, "turnover": turnover,
                             "a1_state": a1_state, "shs_asof_violation": bool(asof_viol), "shs_accepted_after_tau": bool(acc_viol),
@@ -131,15 +146,15 @@ def main() -> int:
                             "flg_dilution_form_before_t0": r.flg_dilution_form_before_t0,
                             "flg_last_form_t0_relative": r.flg_last_form,
                             "t0_minus_tau_s": (int(r.t0_ns) - tau) / 1e9 if pd.notna(r.t0_ns) else np.nan,
-                            "a2_valid_rungs": len(valid), "a2_rungs_computed": len(lad),
-                            "a2_valid_pattern": ",".join(str(k) for k in valid_ks),
+                            "a2_valid_rungs": len(valid) if a2v else None, "a2_rungs_computed": len(lad) if a2v else None,
+                            "a2_valid_pattern": ",".join(str(k) for k in valid_ks) if a2v else None,
                             "a2_first_valid_k": valid_ks[0] if valid_ks else None,
                             "a2_last_valid_k": valid_ks[-1] if valid_ks else None,
-                            "a2_valid_contiguous": bool(valid_ks and valid_ks == list(range(valid_ks[0], valid_ks[-1] + 1))),
-                            "a2_invalid_counting_noise": int(inval.get("counting_noise", 0)),
-                            "a2_invalid_from_nothing": int(inval.get("from_nothing", 0)),
-                            "a2_invalid_resolution_floor": int(inval.get("resolution_floor", 0)),
-                            "a2_rung0_from_nothing": bool(lad and lad[0]["class"] == "from_nothing"), **a3})
+                            "a2_valid_contiguous": bool(valid_ks and valid_ks == list(range(valid_ks[0], valid_ks[-1] + 1))) if a2v else None,
+                            "a2_invalid_counting_noise": int(inval.get("counting_noise", 0)) if a2v else None,
+                            "a2_invalid_from_nothing": int(inval.get("from_nothing", 0)) if a2v else None,
+                            "a2_invalid_resolution_floor": int(inval.get("resolution_floor", 0)) if a2v else None,
+                            "a2_rung0_from_nothing": bool(lad and lad[0]["class"] == "from_nothing") if a2v else None, **a3})
             # ---------------- cross-section
             for lname, lsec in liv:
                 if lsec is None:
@@ -157,7 +172,8 @@ def main() -> int:
                                       "move_at_at_tau_j": A.last_price(c["ts"], c["px"], tau) / float(lr.prior_close_exact) - 1.0,
                                       "live_tau_close_sensitive": lr.tau_close_sensitive})
                 if not valid:
-                    xs_rows.append({"event_id": r.event_id, "liveness": str(lname), "live_n": len(live), "k": None})
+                    xs_rows.append({"event_id": r.event_id, "liveness": str(lname), "live_n": len(live), "k": None,
+                                    "reason": "a2_unavailable_auction_minute" if auction else "no_valid_rung"})
                 for x in valid:
                     lo = x["win_lo_ns"]
                     dv = {e: A.dollar_volume(c["ts"], c["px"], c["sz"], lo, tau) for e, c in cuts.items()}
@@ -170,12 +186,18 @@ def main() -> int:
                     ranked = sorted(acc.items(), key=lambda kv: -kv[1])
                     rank = next((i + 1 for i, (e, _) in enumerate(ranked) if e == r.event_id), None)
                     xs_rows.append({"event_id": r.event_id, "liveness": str(lname), "live_n": len(live), "k": x["k"],
-                                    "W_s": x["W_s"], "dollar_volume_j": dv[r.event_id], "dollar_volume_live": tot,
+                                    "reason": None, "W_s": x["W_s"], "win_lo_ns": lo, "win_mid_ns": x["win_mid_ns"], "dollar_volume_j": dv[r.event_id], "dollar_volume_live": tot,
                                     "flow_share": dv[r.event_id] / tot if tot > 0 else np.nan,
                                     "n_ranked": len(ranked), "accel_rank": rank,
                                     "accel_rank_pct": (rank - 1) / (len(ranked) - 1) if rank and len(ranked) > 1 else np.nan})
     ev = pd.DataFrame(ev_rows)
     ev["tau_ns"] = ev["tau_ns"].astype("Int64")          # int64 end to end (config t2_tau.int64)
+    ev["a2_anchor_ns"] = ev["a2_anchor_ns"].astype("Int64")
+    for c in ("a2_valid_rungs", "a2_rungs_computed", "n_collapsed_seg_tau", "a2_first_valid_k", "a2_last_valid_k",
+              "a2_invalid_counting_noise", "a2_invalid_from_nothing", "a2_invalid_resolution_floor"):
+        ev[c] = ev[c].astype("Int64")
+    for c in ("a2_valid_contiguous", "a2_rung0_from_nothing", "tau_in_auction_minute"):
+        ev[c] = ev[c].astype("boolean")
     assert str(ev["tau_ns"].dtype) == "Int64"
     rg = pd.DataFrame(rung_rows)
     xs = pd.DataFrame(xs_rows)
@@ -184,27 +206,37 @@ def main() -> int:
         df["config_hash"] = C.cfg_hash()
         df.to_parquet(C.art(f"{name}.parquet"), index=False)
 
-    dv3 = ev[(ev["dev_group"] == "dev_v3") & ev["attention_available"]]
+    dv3_all = ev[(ev["dev_group"] == "dev_v3") & ev["attention_available"]]
+    dv3 = dv3_all[dv3_all["a2_state"] == "value"]          # A2 statistics: events with a segment history
     rgv = rg[(rg["dev_group"] == "dev_v3") & rg["valid"]]
     sp = {int(k): {"n": int(g[["accel", "accel_kernel"]].dropna().shape[0]),
                    "spearman_count_vs_kernel": A.spearman(g["accel"], g["accel_kernel"])}
           for k, g in rgv.groupby("k")}
-    xsd = xs[xs["event_id"].isin(dv3["event_id"])]
+    xsd = xs[xs["event_id"].isin(dv3_all["event_id"])]
     summary = {
         "config_hash": C.cfg_hash(),
         "II5_causality_test": test,
-        "events": {"dev_v3_with_attention": int(len(dv3)), "sidecar_rows": int((ev["dev_group"] == "dev_v4_sidecar").sum())},
-        "a1": {"state": dv3["a1_state"].value_counts().to_dict(),
-               "turnover": {"median": float(dv3["turnover"].median()), "p25": float(dv3["turnover"].quantile(.25)),
-                            "p75": float(dv3["turnover"].quantile(.75)), "n": int(dv3["turnover"].notna().sum())},
-               "share_count_suspect": int(dv3["shs_share_count_suspect"].fillna(False).astype(bool).sum()),
-               "dilution_form_before_t0": int(dv3["flg_dilution_form_before_t0"].fillna(False).astype(bool).sum()),
-               "shs_accepted_after_tau": int(dv3["shs_accepted_after_tau"].sum())},
+        "events": {"dev_v3_with_attention": int(len(dv3_all)), "dev_v3_with_a2": int(len(dv3)),
+                   "sidecar_rows": int((ev["dev_group"] == "dev_v4_sidecar").sum())},
+        "segments": {"rule": "Amendment 3 A3.1-A3.2: A2 anchored at the start of tau's clock segment; cross minutes carry no A2",
+                     "dev_v3_by_segment": dv3_all["tau_anchor_segment"].value_counts().to_dict(),
+                     "dev_v3_auction_minute": int(dv3_all["tau_in_auction_minute"].sum()),
+                     "sidecar_auction_minute": int(ev.loc[ev["dev_group"] == "dev_v4_sidecar", "tau_in_auction_minute"].fillna(False).sum()),
+                     "II5_segment_assertion": "asserted on every rung of every event; a violation stops the run"},
+        "a1": {"state": dv3_all["a1_state"].value_counts().to_dict(),
+               "turnover": {"median": float(dv3_all["turnover"].median()), "p25": float(dv3_all["turnover"].quantile(.25)),
+                            "p75": float(dv3_all["turnover"].quantile(.75)), "n": int(dv3_all["turnover"].notna().sum())},
+               "share_count_suspect": int(dv3_all["shs_share_count_suspect"].fillna(False).astype(bool).sum()),
+               "dilution_form_before_t0": int(dv3_all["flg_dilution_form_before_t0"].fillna(False).astype(bool).sum()),
+               "shs_accepted_after_tau": int(dv3_all["shs_accepted_after_tau"].sum())},
         "row_5": {"criterion": "shs_asof_ns >= tau_ns for any event", "tier": "LOG, per event",
                   "n": len(log5), "events": log5},
         "a2": {"valid_rungs_distribution": dv3["a2_valid_rungs"].value_counts().sort_index().to_dict(),
                "valid_rungs_median": float(dv3["a2_valid_rungs"].median()),
-               "rule": "per-rung validity, no sequential stop (Amendment 2 A2.4)",
+               "rule": "per-rung validity, no sequential stop (Amendment 2 A2.4), anchored at the start of tau's clock segment (Amendment 3 A3.1)",
+               "by_segment": {sg: {"events": int(len(g)), "valid_rungs_median": float(g["a2_valid_rungs"].median()),
+                               "valid_rungs_total": int(g["a2_valid_rungs"].sum()), "zero_valid": int((g["a2_valid_rungs"] == 0).sum()),
+                               "H_s_median": float(g["H_s"].median())} for sg, g in dv3.groupby("tau_anchor_segment")},
                "valid_pattern_top": dv3["a2_valid_pattern"].value_counts().head(12).to_dict(),
                "first_valid_k_distribution": dv3["a2_first_valid_k"].value_counts(dropna=False).sort_index().to_dict(),
                "valid_contiguous_events": int(dv3["a2_valid_contiguous"].sum()),
@@ -216,12 +248,13 @@ def main() -> int:
                "zero_valid_rung_events": int((dv3["a2_valid_rungs"] == 0).sum()),
                "kernel_defined_valid_rungs": int(rgv["kernel_defined"].sum()), "valid_rungs_total": int(len(rgv)),
                "spearman_count_vs_kernel_by_rung": sp},
-        "a3": {"available": int(dv3["a3_available"].fillna(False).sum()),
-               "filing_24h": int(dv3["filing_24h"].fillna(False).astype(bool).sum()),
-               "hours_since_last_filing_median": float(dv3["hours_since_last_filing"].median()),
-               "t0_before_tau": int((dv3["t0_minus_tau_s"] < 0).sum()), "t0_after_tau": int((dv3["t0_minus_tau_s"] > 0).sum())},
+        "a3": {"available": int(dv3_all["a3_available"].fillna(False).sum()),
+               "filing_24h": int(dv3_all["filing_24h"].fillna(False).astype(bool).sum()),
+               "hours_since_last_filing_median": float(dv3_all["hours_since_last_filing"].median()),
+               "t0_before_tau": int((dv3_all["t0_minus_tau_s"] < 0).sum()), "t0_after_tau": int((dv3_all["t0_minus_tau_s"] > 0).sum())},
         "cross_sectional": {str(L): {"live_n_distribution": g.drop_duplicates("event_id")["live_n"].value_counts().sort_index().to_dict(),
-                                     "alone_events": int((g.drop_duplicates("event_id")["live_n"] == 1).sum())}
+                                     "alone_events": int((g.drop_duplicates("event_id")["live_n"] == 1).sum()),
+                                     "reason_no_window": g[g["k"].isna()]["reason"].value_counts().to_dict()}
                             for L, g in xsd.groupby("liveness")},
         "names_read": int(sum(1 for _ in lv["live_event_id"].unique())),
     }

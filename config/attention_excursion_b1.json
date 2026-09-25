@@ -1,6 +1,6 @@
 {
   "name": "attention_excursion_b1",
-  "brief": "prompts/attention_excursion.md (the combined document, filed at its project path per A2.11) -- Part II (Brief 1), as amended by prompts/attention_excursion_b1_amendment_1.md and prompts/attention_excursion_b1_amendment_2.md. prompts/attention_excursion_b1.md is kept as the as-run record.",
+  "brief": "prompts/attention_excursion.md -- Part II (Brief 1), as amended by prompts/attention_excursion_b1_amendment_1.md, ..._amendment_2.md and ..._amendment_3.md. prompts/attention_excursion_b1.md is kept as the as-run record.",
   "type": "build -- not a phase. Builds instruments and controls; reads no attention-versus-outcome relationship anywhere, including on the dev sample. Ends at a HARD STOP (T7).",
   "received_truncated": "Run 1 (dec1d70 -> stop a3f6a9c) ran from a paste truncated at 50,000 characters. The complete document is now filed; lines 1-739 are identical. Escalation rows 6-7, II.4, II.5 and Part III come from the complete text.",
   "decisions_consumed": [
@@ -507,7 +507,7 @@
     },
     "t3_boundary": {
       "0930_minutes_after_open": null,
-      "status": "[COOPER TO SET] -- not supplied at the time of the re-run. The open-adjacent class is carried as PENDING (NULL) on every row; sec_from_0930 is carried so the class is a one-line derivation once Cooper sets the minutes. No class at 04:00 (A2.7).",
+      "status": "RETIRED by Amendment 3 (A3.3): DA-4 replaced by segment anchoring; open_adjacent_0930 retired.",
       "profile_record": "artifacts/t3_open_profile.parquet, t3_open_boundary.json (not re-run)"
     },
     "references": {
@@ -547,6 +547,50 @@
     "charts": {
       "plotly": "inlined in every chart (A2.8, D14). Every chart in the tree is regenerated inline, including T1-T3's.",
       "per_event_views": "the per-event T4 strips and T5 A2 curves are each ONE chart with an event selector (one event shown at a time), not one file per event: inlined Plotly is ~3.6 MB per file and 106 per-event files would add ~380 MB. Each event still has its own strip."
+    }
+  },
+  "amendment_3": {
+    "file": "prompts/attention_excursion_b1_amendment_3.md",
+    "date": "2026-09-25",
+    "replaces": "DA-4 entirely; amendment_2.t3_boundary and the open_adjacent_0930 column are retired. sec_from_0930 stays as a descriptor.",
+    "reruns": "T5 (A2 with segment anchoring + the cross-sectional windows), T5b (A3.5 matching), T6 (its two acceleration controls use segment-anchored synthetic tapes; the excursion controls are deterministic under the committed seed and re-run unchanged). T4 does not re-run. Then T7 HARD STOP. The Amendment 2 run's T5, T5b and T6 artifacts and charts are kept under artifacts/run3/ and charts/run3/ as the 'before'.",
+    "segment_anchor": {
+      "rule": "H = tau - the start of the clock segment tau falls in (A3.1)",
+      "segments": {
+        "premarket": "04:00:00 <= tau < session_open -> start 04:00:00",
+        "auction_open": "session_open <= tau < session_open + 60 s -> no segment history (A3.2)",
+        "regular": "session_open + 60 s <= tau < session_close -> start session_open + 60 s (09:31:00)",
+        "auction_close": "session_close <= tau < session_close + 60 s -> no segment history (A3.2)",
+        "after_hours": "tau >= session_close + 60 s -> start session_close + 60 s (16:01:00)"
+      },
+      "calendar": "session_open / session_close from exchange_calendars XNYS for the event date (CLAUDE.md session-calendar rule): on early-close days the closing-cross minute is 13:00-13:01 and after hours start 13:01. The amendment's 16:00 / 16:01 are the full-day values of the same rule.",
+      "segment_basis": "clock time of tau (tau_anchor_segment). T2's tau_session_segment (Amendment 6 condition-code override) is carried alongside, unchanged.",
+      "kernel_check": "the one-sided kernel reads collapsed prints in [segment start, tau] only; its edge rule uses the segment-anchored H",
+      "unchanged": "A1 turnover still counts every share from 04:00 to tau; A3 unchanged; per-rung validity (A2.4) unchanged"
+    },
+    "II5_segment_assertion": "for every rung, both half-windows [tau - W_k, tau - W_k/2) and [tau - W_k/2, tau] lie inside [segment start, tau] and intersect neither [session_open, session_open + 60 s) nor [session_close, session_close + 60 s); a violation raises (attention.assert_segment_windows)",
+    "auction_minute_class": {
+      "rule": "tau in [session_open, session_open + 60 s) or [session_close, session_close + 60 s) -> tau_in_auction_minute = TRUE, A2 unavailable (a label, never dropped); A1, A3, the cross-section's live set and the excursion are computed as normal. flow_share and accel_rank need j's rung windows, so they are unavailable for these events.",
+      "count_scope": "reported for all of D1 (from t2_tau) and for the dev sample"
+    },
+    "t5b_matched_control": {
+      "rule": "for each (live name i, crossing j) pair and window W, control moments t are drawn from i's own live span with (a) the same octave of time since i's own crossing as tau_j: floor(log2(t - tau_i in seconds)) == floor(log2(tau_j - tau_i in seconds)); (b) the same clock segment as tau_j (premarket / regular / after hours; auction minutes are their own segments); (c) no other D1 crossing within +/- W; (d) t - W >= 04:00 and t + W <= 20:00. Drawn uniformly on a 1-second grid, controls_per_pair per pair, with the config seed (A3.5).",
+      "no_match": "a pair with no eligible moment is carried as status no_match, never filled from outside its bin",
+      "defined_cells": "unchanged from Amendment 2 A2.5 (W >= L undefined, not run)",
+      "reported": "matched controls per cell (pairs with >= 1 matched moment, pairs with no_match, matched moments drawn)"
+    },
+    "acceleration_controls": "negative and positive acceleration controls generate their synthetic tapes over [segment start, tau] with the event's own collapsed count inside it; auction-minute events have no segment history and are excluded from these two controls (counted). Pass criteria unchanged.",
+    "report_additions": [
+      "valid rungs per event, by segment, before (artifacts/run3/) and after the anchoring change",
+      "how many previously valid rungs straddled the open (window [tau - W_k, tau] intersecting [session_open, session_open + 60 s))",
+      "the from_nothing count, before and after",
+      "the auction-minute class count (D1 and dev)",
+      "matched-control counts per T5b cell"
+    ],
+    "rulings_a3_6": {
+      "per_event_selector_charts": "accepted",
+      "run1_run2_charts": "left as the historical record; a README.md in each folder: 'generated by a superseded instrument; requires an internet connection to render.' run3/ gets the same README with the internet clause dropped (its charts are inlined).",
+      "threshold_suite_session": "read-only; its column gaps go to Cooper (chat) for Brief 2's column list; builds nothing that reads outcomes until Brief 2's full-D1 build exists"
     }
   }
 }

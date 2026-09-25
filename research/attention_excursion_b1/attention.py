@@ -15,9 +15,29 @@ import os
 import numpy as np
 import pandas as pd
 
+import common as C
 import instruments as I
 
 POST_TAU_MSG = "post-tau print reached an attention quantity"
+SEGMENT_MSG = "A2 rung half-window leaves tau's clock segment"
+
+
+def assert_segment_windows(lad: list[dict], tau_ns: int, seg_start_ns: int, open_ns: int, close_ns: int) -> None:
+    """Amendment 3 II.5: every rung's half-windows [lo, mid) and [mid, tau] lie inside [segment start,
+    tau], meet neither cross minute [open, open + 60 s) / [close, close + 60 s), and do not span a
+    segment boundary. A violation raises."""
+    seg = C.clock_segment(tau_ns, open_ns, close_ns)
+    if seg in C.AUCTION:
+        raise AssertionError(f"{SEGMENT_MSG}: tau is in a cross minute ({seg}); A2 is unavailable there")
+    for x in lad:
+        lo, mid = int(x["win_lo_ns"]), int(x["win_mid_ns"])
+        if not (seg_start_ns <= lo <= mid <= tau_ns):
+            raise AssertionError(f"{SEGMENT_MSG}: rung {x['k']} [{lo}, {tau_ns}] starts before the segment start {seg_start_ns}")
+        for a, b in ((open_ns, open_ns + C.MIN_NS), (close_ns, close_ns + C.MIN_NS)):
+            if lo < b and tau_ns >= a:
+                raise AssertionError(f"{SEGMENT_MSG}: rung {x['k']} [{lo}, {tau_ns}] meets the cross minute [{a}, {b})")
+        if {C.clock_segment(lo, open_ns, close_ns), C.clock_segment(mid, open_ns, close_ns)} != {seg}:
+            raise AssertionError(f"{SEGMENT_MSG}: rung {x['k']} spans a segment boundary")
 
 
 def assert_causal(ts: np.ndarray, tau_ns: int) -> None:
@@ -120,7 +140,31 @@ def causality_test(field_exact) -> dict:
     a1_shares(ts_ok, np.ones(ts_ok.size), tau, t0400)
     I.a2_count_ladder(ts_ok, tau, t0400)
     out["clean_inputs_do_not_raise"] = "ok"
+    out.update(segment_test())
     out["passes"] = all(v in ("raised", "ok") for v in out.values())
+    return out
+
+
+def segment_test() -> dict:
+    """Amendment 3 II.5: a regular-hours tau with a 04:00-anchored ladder (runs 1-3) must raise; a tau
+    in the opening-cross minute must raise; the segment-anchored ladder (09:31) must not."""
+    d = "2024-03-15"
+    op, cl = C.rth_bounds_ns(d)
+    t0400 = C.et_ns(d, "04:00:00")
+    tau = C.et_ns(d, "11:00:00")
+    ts = np.linspace(t0400, tau, 5000).astype(np.int64)
+    out = {}
+    for name, (lad, t, start) in {
+            "segment_rth_tau_anchored_0400": (I.a2_count_ladder(ts, tau, t0400), tau, t0400),
+            "segment_tau_in_open_cross_minute": ([], op + 30 * C.NS, op + C.MIN_NS)}.items():
+        try:
+            assert_segment_windows(lad, t, start, op, cl)
+            out[name] = "DID NOT RAISE"
+        except AssertionError as e:
+            out[name] = "raised" if SEGMENT_MSG in str(e) else f"raised other: {e}"
+    start = C.segment_start_ns("regular", d, op, cl)
+    assert_segment_windows(I.a2_count_ladder(ts[ts >= start], tau, start), tau, start, op, cl)
+    out["segment_anchored_ladder_does_not_raise"] = "ok"
     return out
 
 
