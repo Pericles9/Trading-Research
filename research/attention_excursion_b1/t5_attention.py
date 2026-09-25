@@ -78,7 +78,8 @@ def main() -> int:
         for r in dd.itertuples():
             base = {"event_id": r.event_id, "ticker": r.ticker, "event_date_canonical": date, "dev_group": r.dev_group,
                     "tau_session_segment": r.tau_session_segment, "tau_close_sensitive": r.tau_close_sensitive,
-                    "flag_cross_session_extreme": r.flag_cross_session_extreme}
+                    "flag_cross_session_extreme": r.flag_cross_session_extreme,
+                    "sec_from_0930": r.sec_from_0930, "open_adjacent_0930": None}
             if not r.tau_available:
                 ev_rows.append({**base, "attention_available": False, "reason": f"tau_unavailable:{r.tau_reason}"})
                 continue
@@ -109,7 +110,9 @@ def main() -> int:
                 kk = kern.get(x["k"], {"defined": False, "accel_kernel": np.nan})
                 rung_rows.append({**base, **{k: v for k, v in x.items() if k not in ("win_lo_ns", "win_mid_ns")},
                                   "kernel_defined": kk["defined"], "accel_kernel": kk["accel_kernel"]})
-            stop = lad[-1]["class"] if lad and not lad[-1]["valid"] else ("k_max" if lad else "no_history")
+            # A2.4: every rung is judged on its own -- no stop. The pattern of valid rungs is carried.
+            valid_ks = [x["k"] for x in lad if x["valid"]]
+            inval = pd.Series([x["class"] for x in lad if not x["valid"]], dtype=object).value_counts().to_dict()
             # ---------------- A3
             if pd.notna(r.cik):
                 fl = A.load_cik_filings(RAW_SEC, str(r.cik))
@@ -128,8 +131,15 @@ def main() -> int:
                             "flg_dilution_form_before_t0": r.flg_dilution_form_before_t0,
                             "flg_last_form_t0_relative": r.flg_last_form,
                             "t0_minus_tau_s": (int(r.t0_ns) - tau) / 1e9 if pd.notna(r.t0_ns) else np.nan,
-                            "a2_valid_rungs": len(valid), "a2_stop_class": stop,
-                            "a2_from_nothing_at_stop": bool(lad and lad[-1]["class"] == "from_nothing"), **a3})
+                            "a2_valid_rungs": len(valid), "a2_rungs_computed": len(lad),
+                            "a2_valid_pattern": ",".join(str(k) for k in valid_ks),
+                            "a2_first_valid_k": valid_ks[0] if valid_ks else None,
+                            "a2_last_valid_k": valid_ks[-1] if valid_ks else None,
+                            "a2_valid_contiguous": bool(valid_ks and valid_ks == list(range(valid_ks[0], valid_ks[-1] + 1))),
+                            "a2_invalid_counting_noise": int(inval.get("counting_noise", 0)),
+                            "a2_invalid_from_nothing": int(inval.get("from_nothing", 0)),
+                            "a2_invalid_resolution_floor": int(inval.get("resolution_floor", 0)),
+                            "a2_rung0_from_nothing": bool(lad and lad[0]["class"] == "from_nothing"), **a3})
             # ---------------- cross-section
             for lname, lsec in liv:
                 if lsec is None:
@@ -165,6 +175,8 @@ def main() -> int:
                                     "n_ranked": len(ranked), "accel_rank": rank,
                                     "accel_rank_pct": (rank - 1) / (len(ranked) - 1) if rank and len(ranked) > 1 else np.nan})
     ev = pd.DataFrame(ev_rows)
+    ev["tau_ns"] = ev["tau_ns"].astype("Int64")          # int64 end to end (config t2_tau.int64)
+    assert str(ev["tau_ns"].dtype) == "Int64"
     rg = pd.DataFrame(rung_rows)
     xs = pd.DataFrame(xs_rows)
     lv = pd.DataFrame(live_rows)
@@ -192,9 +204,16 @@ def main() -> int:
                   "n": len(log5), "events": log5},
         "a2": {"valid_rungs_distribution": dv3["a2_valid_rungs"].value_counts().sort_index().to_dict(),
                "valid_rungs_median": float(dv3["a2_valid_rungs"].median()),
-               "stop_class": dv3["a2_stop_class"].value_counts().to_dict(),
+               "rule": "per-rung validity, no sequential stop (Amendment 2 A2.4)",
+               "valid_pattern_top": dv3["a2_valid_pattern"].value_counts().head(12).to_dict(),
+               "first_valid_k_distribution": dv3["a2_first_valid_k"].value_counts(dropna=False).sort_index().to_dict(),
+               "valid_contiguous_events": int(dv3["a2_valid_contiguous"].sum()),
+               "invalid_rung_classes": {"counting_noise": int(dv3["a2_invalid_counting_noise"].sum()),
+                                        "from_nothing": int(dv3["a2_invalid_from_nothing"].sum()),
+                                        "resolution_floor": int(dv3["a2_invalid_resolution_floor"].sum())},
                "resolution_floor_ever_binding": int((rg["class"] == "resolution_floor").sum()),
-               "from_nothing_events": int(dv3["a2_from_nothing_at_stop"].sum()),
+               "rung0_from_nothing_events": int(dv3["a2_rung0_from_nothing"].sum()),
+               "zero_valid_rung_events": int((dv3["a2_valid_rungs"] == 0).sum()),
                "kernel_defined_valid_rungs": int(rgv["kernel_defined"].sum()), "valid_rungs_total": int(len(rgv)),
                "spearman_count_vs_kernel_by_rung": sp},
         "a3": {"available": int(dv3["a3_available"].fillna(False).sum()),

@@ -6,8 +6,8 @@ Every control runs the SAME functions that built the real vectors (instruments.c
 instruments.excursion_vector, instruments.a2_count_ladder) on synthetic inputs built from each event's
 own data. Nothing is re-implemented here.
 
-  negative_excursion      200 seeded shuffles of the demeaned bucket returns per event and rung
-                          (+ the pre-registered free-walk diagnostic arm, which cannot change the verdict)
+  negative_excursion      bridge: 200 seeded shuffles of the demeaned bucket returns; free walk: 200 draws with
+                          replacement (Amendment 2); both against simulated references (t6_references.json)
   negative_acceleration   homogeneous Poisson tape with the event's own pre-tau count and span
   positive_excursion      the shuffled path + an injected rise (2.0 to u = 0.3) and fall (1.5)
   positive_acceleration   rate doubling at the midpoint of rung m, m in {0,1,2,3}
@@ -18,6 +18,7 @@ Usage: .venv/Scripts/python.exe research/attention_excursion_b1/t6_controls.py
 """
 from __future__ import annotations
 
+import json
 import math
 import os
 import sys
@@ -49,20 +50,17 @@ def ks_arcsine(u: np.ndarray) -> float:
     return float(max(np.max(np.abs(cum - F)), np.max(np.abs(left - F))))
 
 
-def drift_curve(u: np.ndarray, peak_u=0.3, rise=2.0, fall=1.5) -> np.ndarray:
-    return np.where(u <= peak_u, rise * u / peak_u, rise - fall * (u - peak_u) / (1.0 - peak_u))
-
-
 def main() -> int:
     cfg = C.load_cfg()
     c6 = cfg["t6_controls"]
     rng = np.random.default_rng(c6["seed"])
     n_sh = c6["negative_excursion"]["n_shuffles"]
-    ks_max = 0.05
-    rise_band = (0.70, 0.90)
+    a2x = cfg["amendment_2"]["controls"]
+    ks_max, rise_tol, pos_tol, u_tol = 0.05, 0.05, 0.10, 0.05
     readable = 100
     a2c = cfg["t5_attention"]["a2_acceleration"]
     n_min, coef, kmax = a2c["counting_noise_stop"]["n_min"], a2c["resolution_floor"]["coef"], a2c["k_max"]
+    refs = json.load(open(C.art("t6_references.json"), encoding="utf-8"))["by_N"]
 
     ex = pd.read_parquet(C.art("t4_excursion.parquet"))
     ex = ex[(ex["dev_group"] == "dev_v3") & (ex["vector_available"] == True)]  # noqa: E712
@@ -72,62 +70,75 @@ def main() -> int:
     ladder = cfg["t4_excursion"]["bucket_ladder"]
     verdict, detail = {}, {}
 
-    # ============================================================ excursion controls
-    neg, diag, pos = [], [], []
+    # ============================================================ excursion controls (Amendment 2 A2.2)
+    neg, fwk, pos = [], [], []
     for r in ex.itertuples():
         P = bk[(bk["event_id"] == r.event_id) & (bk["N"] == r.N)].sort_values("i")["vwap"].to_numpy()
         lp = np.log(np.r_[r.tau_price, P])
         ret = np.diff(lp)
         dm = ret - ret.mean()
-        sp_orig = r.sigma_path
         u = np.arange(r.N + 1) / r.N
-        inj = np.diff(drift_curve(u)) * sp_orig
-        for s in range(n_sh):
+        inj = np.diff(I.drift_curve(u)) * r.sigma_path          # the event's own (RV) sigma_path
+        for s_ in range(n_sh):
             sh = rng.permutation(dm)
             c = I.components(np.r_[lp[0], lp[0] + np.cumsum(sh)])
-            neg.append((r.N, r.event_id, c["u_peak"], c["rise_s"], c["sigma_zero"]))
-            fw = rng.permutation(dm) * rng.choice([-1.0, 1.0], size=dm.size)
+            neg.append((r.N, r.event_id, c["i_peak"], c["u_peak"], c["rise_s"], c["sigma_zero"]))
+            fw = rng.choice(dm, size=dm.size, replace=True)          # with replacement: the sum is free
             c = I.components(np.r_[lp[0], lp[0] + np.cumsum(fw)])
-            diag.append((r.N, r.event_id, c["u_peak"], c["rise_s"], c["sigma_zero"]))
+            fwk.append((r.N, r.event_id, c["i_peak"], c["u_peak"], c["rise_s"], c["sigma_zero"]))
             c = I.components(np.r_[lp[0], lp[0] + np.cumsum(sh + inj)])
-            pos.append((r.N, r.event_id, c["u_peak"], c["rise_s"], c["fall_s"], c["sigma_zero"]))
-    cols = ["N", "event_id", "u_peak", "rise_s", "sigma_zero"]
+            pos.append((r.N, r.event_id, c["i_peak"], c["u_peak"], c["rise_s"], c["fall_s"], c["sigma_zero"]))
+    cols = ["N", "event_id", "i_peak", "u_peak", "rise_s", "sigma_zero"]
     neg = pd.DataFrame(neg, columns=cols)
-    diag = pd.DataFrame(diag, columns=cols)
-    pos = pd.DataFrame(pos, columns=["N", "event_id", "u_peak", "rise_s", "fall_s", "sigma_zero"])
-    for df, nm in [(neg, "t6_negative_excursion"), (diag, "t6_negative_excursion_freewalk_diag"), (pos, "t6_positive_excursion")]:
+    fwk = pd.DataFrame(fwk, columns=cols)
+    pos = pd.DataFrame(pos, columns=["N", "event_id", "i_peak", "u_peak", "rise_s", "fall_s", "sigma_zero"])
+    for df, nm in [(neg, "t6_negative_excursion_bridge"), (fwk, "t6_negative_excursion_free_walk"), (pos, "t6_positive_excursion")]:
         df.to_parquet(C.art(f"{nm}.parquet"), index=False)
 
-    def neg_eval(df):
+    def ks_two_sample(i_peak: np.ndarray, ref_counts: list, N: int) -> float:
+        """sup over atoms i/N of |F_control - F_reference|, both right-continuous on the same grid."""
+        c = np.bincount(i_peak.astype(int), minlength=N + 1).astype(float)
+        f1 = np.cumsum(c) / c.sum()
+        rc = np.asarray(ref_counts, dtype=float)
+        f2 = np.cumsum(rc) / rc.sum()
+        return float(np.max(np.abs(f1 - f2)))
+
+    def neg_eval(df, ref_key):
         out, ok = {}, True
         for N in ladder:
             g = df[(df["N"] == N) & ~df["sigma_zero"]]
-            ks = ks_arcsine(g["u_peak"].to_numpy())
+            ref = refs[str(N)][ref_key]
+            ks = ks_two_sample(g["i_peak"].to_numpy(), ref["u_peak_counts"], N)
             mr = float(g["rise_s"].mean())
-            p = (ks <= ks_max) and (rise_band[0] <= mr <= rise_band[1])
+            p = (ks <= ks_max) and (abs(mr - ref["mean_rise_s"]) <= rise_tol)
             ok &= p
-            out[int(N)] = {"n": int(len(g)), "events": int(g["event_id"].nunique()), "ks_vs_arcsine": ks,
-                           "ks_vs_uniform": float(max(np.abs(np.sort(g["u_peak"]) - np.arange(1, len(g) + 1) / len(g)).max(), 0)),
-                           "mean_rise_s": mr, "median_rise_s": float(g["rise_s"].median()),
+            out[int(N)] = {"n": int(len(g)), "events": int(g["event_id"].nunique()),
+                           "ks_vs_simulated_reference": ks, "ks_vs_arcsine_continuous": ks_arcsine(g["u_peak"].to_numpy()),
+                           "mean_rise_s": mr, "reference_mean_rise_s": ref["mean_rise_s"], "delta_mean_rise_s": mr - ref["mean_rise_s"],
+                           "median_rise_s": float(g["rise_s"].median()),
                            "share_u_peak_le_0.1": float((g["u_peak"] <= 0.1).mean()),
                            "share_u_peak_ge_0.9": float((g["u_peak"] >= 0.9).mean()),
                            "pass": bool(p), "sigma_zero_dropped": int(df[(df["N"] == N)]["sigma_zero"].sum())}
         return ok, out
 
-    ok_n, detail["negative_excursion"] = neg_eval(neg)
-    _, detail["negative_excursion_freewalk_diagnostic"] = neg_eval(diag)
-    verdict["negative_excursion"] = ok_n
+    verdict["negative_excursion_bridge"], detail["negative_excursion_bridge"] = neg_eval(neg, "bridge")
+    verdict["negative_excursion_free_walk"], detail["negative_excursion_free_walk"] = neg_eval(fwk, "free_walk")
 
     pe, ok_p = {}, True
     for N in ladder:
         g = pos[(pos["N"] == N) & ~pos["sigma_zero"]]
+        ref = refs[str(N)]["positive"]
         mu, mr, mf = float(g["u_peak"].median()), float(g["rise_s"].median()), float(g["fall_s"].median())
-        p = abs(mu - 0.3) <= 0.05 and abs(mr - 2.0) <= 0.3 and abs(mf - 1.5) <= 0.225
+        p = (abs(mr - ref["median_rise_s"]) <= pos_tol * ref["median_rise_s"]
+             and abs(mf - ref["median_fall_s"]) <= pos_tol * ref["median_fall_s"]
+             and abs(mu - ref["median_u_peak"]) <= u_tol)
         ok_p &= p
         pe[int(N)] = {"n": int(len(g)), "median_u_peak": mu, "median_rise_s": mr, "median_fall_s": mf,
-                      "share_u_within_0.05": float((np.abs(g["u_peak"] - 0.3) <= 0.05).mean()),
-                      "share_rise_within_15pct": float((np.abs(g["rise_s"] - 2.0) <= 0.3).mean()),
-                      "share_fall_within_15pct": float((np.abs(g["fall_s"] - 1.5) <= 0.225).mean()), "pass": bool(p)}
+                      "reference_median_u_peak": ref["median_u_peak"], "reference_median_rise_s": ref["median_rise_s"],
+                      "reference_median_fall_s": ref["median_fall_s"],
+                      "rise_vs_reference_rel": mr / ref["median_rise_s"] - 1, "fall_vs_reference_rel": mf / ref["median_fall_s"] - 1,
+                      "bias_vs_injected": {"u_peak": mu - 0.3, "rise_s": mr - 2.0, "fall_s": mf - 1.5},
+                      "pass": bool(p)}
     verdict["positive_excursion"] = ok_p
     detail["positive_excursion"] = pe
 
@@ -260,7 +271,7 @@ def main() -> int:
                                                "II5_blindness_1e-9": bool(worst <= 1e-9)})
     print("VERDICT", verdict)
     print("ROW 2", row2)
-    for k in ["negative_excursion", "negative_excursion_freewalk_diagnostic", "positive_excursion"]:
+    for k in ["negative_excursion_bridge", "negative_excursion_free_walk", "positive_excursion"]:
         print(k, {N: {kk: (round(vv, 3) if isinstance(vv, float) else vv) for kk, vv in v.items()} for N, v in detail[k].items()})
     return 0
 

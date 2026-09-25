@@ -62,6 +62,8 @@ def main() -> int:
                 for i, ti in live.items():
                     span_end = t2000 if L is None else min(ti + L, t2000)
                     for W, wmin in zip(Ws, c5["windows_min"]):
+                        if L is not None and W >= L:
+                            continue            # A2.5: structurally undefined (W >= L) -- not run
                         if tj - W < t0400 or tj + W > t2000:
                             rows.append({"date": date, "j": j, "i": i, "liveness": str(lname), "W_min": wmin, "arm": "crossing",
                                          "status": "window_outside_session"})
@@ -104,7 +106,10 @@ def main() -> int:
                       "p25": float(v.quantile(.25)) if v.size else None, "p75": float(v.quantile(.75)) if v.size else None,
                       "n_pairs": int(ga[["j", "i"]].drop_duplicates().shape[0])}
         summ[f"L={L}|W={W}"] = s
+    undefined = {str(ln): [w for w in c5["windows_min"] if Ln is not None and w * 60 * NS >= Ln] for ln, Ln in livs}
     C.write_json(f"{C.ART}/t5b_summary.json", {"config_hash": C.cfg_hash(), "dates": len(dates), "cells": summ,
+                                               "structurally_undefined_cells": undefined,
+                                               "undefined_rule": "W >= L: every moment of the live span is within W of the crossing, so no control moment exists (A2.5); not run",
                                                "crossings_with_any_live_name": int(ok[ok["arm"] == "crossing"]["j"].nunique())})
     print(len(dates), "dates;", {k: {a: (v[a]["n_ok"], round(v[a]["median"], 3) if v[a]["median"] is not None else None)
                                      for a in v} for k, v in summ.items()})

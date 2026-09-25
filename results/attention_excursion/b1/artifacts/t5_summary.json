@@ -1,0 +1,208 @@
+{
+  "config_hash": "3c9874334a6d",
+  "II5_causality_test": {
+    "a1_shares": "raised",
+    "dollar_volume": "raised",
+    "window_counts": "raised",
+    "last_price": "raised",
+    "a3_filings": "raised",
+    "a2_count_ladder": "raised",
+    "a2_kernel": "raised",
+    "clean_inputs_do_not_raise": "ok",
+    "passes": true
+  },
+  "events": {
+    "dev_v3_with_attention": 49,
+    "sidecar_rows": 6
+  },
+  "a1": {
+    "state": {
+      "value": 37,
+      "unavailable_no_count": 12
+    },
+    "turnover": {
+      "median": 0.008488144205652576,
+      "p25": 0.001399185291647467,
+      "p75": 0.05228309577929485,
+      "n": 37
+    },
+    "share_count_suspect": 0,
+    "dilution_form_before_t0": 6,
+    "shs_accepted_after_tau": 0
+  },
+  "row_5": {
+    "criterion": "shs_asof_ns >= tau_ns for any event",
+    "tier": "LOG, per event",
+    "n": 0,
+    "events": []
+  },
+  "a2": {
+    "valid_rungs_distribution": {
+      "0.0": 8,
+      "1.0": 2,
+      "2.0": 5,
+      "3.0": 2,
+      "4.0": 3,
+      "5.0": 4,
+      "6.0": 4,
+      "7.0": 3,
+      "8.0": 5,
+      "9.0": 2,
+      "10.0": 4,
+      "11.0": 2,
+      "12.0": 4,
+      "14.0": 1
+    },
+    "valid_rungs_median": 6.0,
+    "rule": "per-rung validity, no sequential stop (Amendment 2 A2.4)",
+    "valid_pattern_top": {
+      "": 8,
+      "0,1,2,3,4,5,6,7,8,9,10,11": 4,
+      "0,1,2,3,4,5,6,7,8,9": 3,
+      "0,1": 2,
+      "0,1,2,3,4,5,6,7,8,9,10": 2,
+      "0,1,2,3,4,5,6,7,8": 2,
+      "5,6,7,8": 2,
+      "0,1,2,3,4,5": 2,
+      "0,1,2,3,4": 2,
+      "2,3,4": 1,
+      "1,2,3,4,5,6,7": 1,
+      "0,1,2,3,4,5,6,7,8,9,10,11,12,13": 1
+    },
+    "first_valid_k_distribution": {
+      "0.0": 22,
+      "1.0": 9,
+      "2.0": 5,
+      "3.0": 1,
+      "4.0": 2,
+      "5.0": 2,
+      "NaN": 8
+    },
+    "valid_contiguous_events": 35,
+    "invalid_rung_classes": {
+      "counting_noise": 451,
+      "from_nothing": 227,
+      "resolution_floor": 0
+    },
+    "resolution_floor_ever_binding": 0,
+    "rung0_from_nothing_events": 13,
+    "zero_valid_rung_events": 8,
+    "kernel_defined_valid_rungs": 225,
+    "valid_rungs_total": 277,
+    "spearman_count_vs_kernel_by_rung": {
+      "0": {
+        "n": 0,
+        "spearman_count_vs_kernel": NaN
+      },
+      "1": {
+        "n": 0,
+        "spearman_count_vs_kernel": NaN
+      },
+      "2": {
+        "n": 32,
+        "spearman_count_vs_kernel": 0.8907624633431085
+      },
+      "3": {
+        "n": 31,
+        "spearman_count_vs_kernel": 0.7516129032258065
+      },
+      "4": {
+        "n": 33,
+        "spearman_count_vs_kernel": 0.8064839572192514
+      },
+      "5": {
+        "n": 29,
+        "spearman_count_vs_kernel": 0.8625615763546796
+      },
+      "6": {
+        "n": 26,
+        "spearman_count_vs_kernel": 0.5917948717948718
+      },
+      "7": {
+        "n": 20,
+        "spearman_count_vs_kernel": 0.2045112781954887
+      },
+      "8": {
+        "n": 20,
+        "spearman_count_vs_kernel": 0.4917293233082706
+      },
+      "9": {
+        "n": 14,
+        "spearman_count_vs_kernel": 0.6879120879120879
+      },
+      "10": {
+        "n": 11,
+        "spearman_count_vs_kernel": 0.5181818181818182
+      },
+      "11": {
+        "n": 7,
+        "spearman_count_vs_kernel": 0.8214285714285715
+      },
+      "12": {
+        "n": 1,
+        "spearman_count_vs_kernel": NaN
+      },
+      "13": {
+        "n": 1,
+        "spearman_count_vs_kernel": NaN
+      }
+    }
+  },
+  "a3": {
+    "available": 49,
+    "filing_24h": 10,
+    "hours_since_last_filing_median": 145.3335240660622,
+    "t0_before_tau": 43,
+    "t0_after_tau": 3
+  },
+  "cross_sectional": {
+    "15": {
+      "live_n_distribution": {
+        "1": 32,
+        "2": 13,
+        "3": 1,
+        "4": 1,
+        "6": 1,
+        "7": 1
+      },
+      "alone_events": 32
+    },
+    "60": {
+      "live_n_distribution": {
+        "1": 21,
+        "2": 13,
+        "3": 7,
+        "4": 3,
+        "6": 2,
+        "7": 1,
+        "8": 1,
+        "14": 1
+      },
+      "alone_events": 21
+    },
+    "rest_of_session": {
+      "live_n_distribution": {
+        "1": 4,
+        "2": 7,
+        "4": 6,
+        "5": 2,
+        "6": 6,
+        "7": 4,
+        "8": 4,
+        "9": 2,
+        "10": 1,
+        "11": 2,
+        "12": 2,
+        "13": 2,
+        "14": 1,
+        "16": 2,
+        "17": 1,
+        "25": 1,
+        "27": 1,
+        "29": 1
+      },
+      "alone_events": 4
+    }
+  },
+  "names_read": 422
+}

@@ -1,0 +1,10 @@
+{
+  "config_hash": "3c9874334a6d",
+  "checks": 294,
+  "failed_checks": 0,
+  "failed_events": [],
+  "failures": [],
+  "max_abs_diff_among_passing_checks": 4.2928149923682213e-10,
+  "every_failure_has_a_tied_top": true,
+  "every_failure_moves_u_peak_only": true
+}

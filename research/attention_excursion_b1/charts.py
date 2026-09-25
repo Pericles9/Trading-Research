@@ -5,10 +5,11 @@ chart per file, n on every bucket or series, no smoothing, nothing clipped.
   t1/01_revised_close_vs_minute_bar.html      t1/02_revised_close_vs_run1.html
   t2/01_row4_tau_exact_minus_proxy_prime.html t2/02_spike_guard_moves.html   t2/03_tau_close_gap.html
   t3/01_open_profile_0400.html                t3/02_open_profile_0930.html
-  t4/strips/<event>.html (one per dev + sidecar event)   t4/u_peak_N{50,100,200}.html
-  t5/a2_curves/<event>.html                   t5/valid_rungs.html
+  t4/strips_by_event.html (one chart, event selector)     t4/u_peak_N{50,100,200}.html
+  t5/a2_curves_by_event.html (one chart, event selector)  t5/valid_rungs.html
   t5b/competition_W{5,15,60}.html
-  t6/negative_excursion.html  t6/negative_acceleration.html  t6/positive_excursion.html
+  t6/negative_excursion_bridge.html  t6/negative_excursion_free_walk.html  t6/negative_acceleration.html
+  t6/positive_excursion.html
   t6/positive_acceleration.html  t6/null_parameter_sweep.html  t6/blindness.html
 
 Usage: .venv/Scripts/python.exe research/attention_excursion_b1/charts.py
@@ -42,7 +43,7 @@ def lay(fig, title, xt, yt, h=560):
 
 
 def save(fig, task, name):
-    fig.write_html(C.chart_path(task, name), include_plotlyjs="cdn")
+    fig.write_html(C.chart_path(task, name), include_plotlyjs=True)   # inlined: D14 offline (A2.8)
 
 
 def ecdf(x):
@@ -154,28 +155,47 @@ def charts_t3():
 
 
 def charts_t4():
+    """A2.8: Plotly inlined. The per-event strips are ONE chart with an event selector (config
+    amendment_2.charts.per_event_views). The u_peak reference is the simulated discrete free walk (A2.2)."""
     ex = pd.read_parquet(C.art("t4_excursion.parquet"))
     bk = pd.read_parquet(C.art("t4_buckets.parquet"))
-    for eid, g in ex[ex["vector_available"] == True].groupby("event_id"):  # noqa: E712
-        fig = go.Figure()
+    refs = j("t6_references.json")["by_N"]
+    evs = [e for e, _ in ex[ex["vector_available"] == True].groupby("event_id")]  # noqa: E712
+    fig = go.Figure()
+    vis_by_event = []
+    for eid in evs:
+        g = ex[(ex["event_id"] == eid) & (ex["vector_available"] == True)]  # noqa: E712
+        start = len(fig.data)
         meta = g.iloc[0]
         for r in g.itertuples():
             b = bk[(bk["event_id"] == eid) & (bk["N"] == r.N)].sort_values("i")
             u = np.r_[0.0, b["u"].to_numpy()]
             lp = np.log(np.r_[r.tau_price, b["vwap"].to_numpy()] / r.tau_price) * 1e4
-            fig.add_trace(go.Scatter(x=u, y=lp, mode="lines", line=dict(color=RUNG_COL[r.N], width=1.5),
-                                     name=f"N={r.N}: u_peak {r.u_peak:.3f}, rise {r.rise_s:.2f} / fall {r.fall_s:.2f} sigma_path"))
-            fig.add_trace(go.Scatter(x=[r.u_peak], y=[lp[int(r.i_peak)]], mode="markers", marker=dict(color=RUNG_COL[r.N], size=10, symbol="triangle-up"),
-                                     name=f"peak N={r.N}", showlegend=False))
-            fig.add_trace(go.Scatter(x=[1.0], y=[lp[-1]], mode="markers", marker=dict(color=RUNG_COL[r.N], size=9, symbol="square"),
-                                     name=f"end N={r.N}", showlegend=False))
-        fig.add_trace(go.Scatter(x=[0], y=[0], mode="markers", marker=dict(color=FG, size=10, symbol="circle"), name="tau"))
-        flags = [k for k in ["rise_censored", "no_rise", "halt_in_path", "thin_path"] if bool(g[k].fillna(False).any())]
-        lay(fig, f"T4 -- {eid} ({meta['dev_group']}, {meta['tau_session_segment']}) -- bucketed path on the volume clock<br>"
+            fig.add_trace(go.Scatter(x=u, y=lp, mode="lines", line=dict(color=RUNG_COL[r.N], width=1.5), visible=False,
+                                     name=f"N={r.N}: u_peak {r.u_peak:.3f}, rise {r.rise_s:.2f} / fall {r.fall_s:.2f} sigma_path"
+                                          f"{' (peak tied)' if r.peak_tied else ''}"))
+            fig.add_trace(go.Scatter(x=[r.u_peak], y=[lp[int(r.i_peak)]], mode="markers", visible=False, showlegend=False,
+                                     marker=dict(color=RUNG_COL[r.N], size=10, symbol="triangle-up")))
+            fig.add_trace(go.Scatter(x=[1.0], y=[lp[-1]], mode="markers", visible=False, showlegend=False,
+                                     marker=dict(color=RUNG_COL[r.N], size=9, symbol="square")))
+        fig.add_trace(go.Scatter(x=[0], y=[0], mode="markers", marker=dict(color=FG, size=10), name="tau", visible=False))
+        flags = [k for k in ["rise_censored", "no_rise", "peak_tied", "halt_in_path", "thin_path"] if bool(g[k].fillna(False).any())]
+        title = (f"T4 -- {eid} ({meta['dev_group']}, {meta['tau_session_segment']}) -- bucketed path on the volume clock<br>"
                  f"<sup>{int(meta['n_path_prints_all']):,} prints after tau; flags: {', '.join(flags) or 'none'}; "
-                 f"tau_close_sensitive={meta['tau_close_sensitive']}; A12 flag={meta['flag_cross_session_extreme']}</sup>",
-            "u = share of the path's volume traded (volume clock)", "ln(bucket VWAP / tau price), bp", h=520)
-        save(fig, "t4/strips", f"{eid}.html")
+                 f"jump_share (N=100) {g[g['N'] == 100]['jump_share'].iloc[0]:.3f}; tau_close_sensitive={meta['tau_close_sensitive']}; "
+                 f"A12 flag={meta['flag_cross_session_extreme']}; triangle = peak, square = end</sup>")
+        vis_by_event.append((eid, start, len(fig.data), title))
+    buttons = []
+    for eid, a, b, title in vis_by_event:
+        vis = [a <= i < b for i in range(len(fig.data))]
+        buttons.append(dict(label=eid, method="update", args=[{"visible": vis}, {"title.text": title}]))
+    for i in range(vis_by_event[0][1], vis_by_event[0][2]):
+        fig.data[i].visible = True
+    lay(fig, vis_by_event[0][3], "u = share of the path's volume traded (volume clock)", "ln(bucket VWAP / tau price), bp", h=620)
+    fig.update_layout(updatemenus=[dict(buttons=buttons, direction="down", x=1.0, xanchor="right", y=1.12, yanchor="top",
+                                        bgcolor="#1d2229", font=dict(color=FG))])
+    save(fig, "t4", "strips_by_event.html")
+
     va = ex[(ex["vector_available"] == True) & (ex["dev_group"] == "dev_v3")]  # noqa: E712
     for N in (50, 100, 200):
         g = va[va["N"] == N]
@@ -184,47 +204,65 @@ def charts_t4():
         cnt, _ = np.histogram(g["u_peak"], bins=edges)
         fig.add_trace(go.Bar(x=(edges[:-1] + edges[1:]) / 2, y=cnt, width=0.045, marker_color=RUNG_COL[N],
                              name=f"dev sample u_peak -- n={len(g)}", text=cnt, textposition="outside"))
-        uu = np.linspace(0.0005, 0.9995, 400)
-        ref = len(g) * (2 / np.pi) * (np.arcsin(np.sqrt(np.minimum(uu + 0.025, 1))) - np.arcsin(np.sqrt(np.maximum(uu - 0.025, 0))))
-        fig.add_trace(go.Scatter(x=uu, y=ref, mode="lines", line=dict(color=FG, dash="dot"), name="arcsine reference (no drift), per 0.05 bin"))
+        rc = np.asarray(refs[str(N)]["free_walk"]["u_peak_counts"], dtype=float)
+        uu = np.arange(N + 1) / N
+        rbin, _ = np.histogram(uu, bins=edges, weights=rc)
+        fig.add_trace(go.Scatter(x=(edges[:-1] + edges[1:]) / 2, y=len(g) * rbin / rc.sum(), mode="lines+markers",
+                                 line=dict(color=FG, dash="dot"), name=f"simulated discrete free walk at N={N} (no drift), scaled to n"))
         lay(fig, f"T4 -- pooled u_peak, N = {N}, dev sample, unconditional (no attention split), n = {len(g)}<br>"
-                 "<sup>mass at both ends is what a no-drift path looks like; an interior hump is a rise-then-fall</sup>",
-            "u_peak", "events per 0.05 bin")
+                 "<sup>reference: the simulated no-drift discrete free walk at this N under the realised-variance scale (Amendment 2 A2.2)</sup>",
+            "u_peak (absolute 0.05 bins)", "events per bin")
         save(fig, "t4", f"u_peak_N{N}.html")
 
 
 def charts_t5():
     rg = pd.read_parquet(C.art("t5_a2_rungs.parquet"))
     at = pd.read_parquet(C.art("t5_attention.parquet"))
+    fig = go.Figure()
+    spans = []
     for eid, g in rg.groupby("event_id"):
+        a = len(fig.data)
         v = g[g["valid"]]
-        fig = go.Figure()
-        fig.add_hline(y=0, line=dict(color=GRID))
-        fig.add_trace(go.Scatter(x=v["k"], y=v["accel"], mode="lines+markers", line=dict(color=PAL[0]),
-                                 name=f"count version -- {len(v)} valid rungs", customdata=np.c_[v["n_recent"], v["n_older"], v["W_s"]],
-                                 hovertemplate="k=%{x}: accel %{y:.3f}<br>n_recent %{customdata[0]}, n_older %{customdata[1]}, W %{customdata[2]:.0f}s<extra></extra>"))
-        kv = v[v["kernel_defined"]]
+        fig.add_trace(go.Scatter(x=g["k"], y=np.where(g["valid"], g["accel"], np.nan), mode="lines+markers", line=dict(color=PAL[0]),
+                                 visible=False, name=f"count version -- {len(v)} valid of {len(g)} rungs",
+                                 customdata=np.c_[g["n_recent"], g["n_older"], g["W_s"], g["class"]],
+                                 hovertemplate="k=%{x}: accel %{y:.3f}<br>n_recent %{customdata[0]}, n_older %{customdata[1]}, "
+                                               "W %{customdata[2]:.1f}s, %{customdata[3]}<extra></extra>"))
+        kv = g[g["valid"] & g["kernel_defined"]]
         fig.add_trace(go.Scatter(x=kv["k"], y=kv["accel_kernel"], mode="lines+markers", line=dict(color=PAL[1], dash="dash"),
-                                 name=f"one-sided kernel check -- {len(kv)} rungs defined (k >= 2)"))
-        stop = g[~g["valid"]]
-        if len(stop):
-            s0 = stop.iloc[0]
-            fig.add_vline(x=s0["k"], line=dict(color=PAL[3], dash="dot"),
-                          annotation_text=f"stop at k={int(s0['k'])}: {s0['class']} (n_recent {int(s0['n_recent'])}, n_older {int(s0['n_older'])})")
-        lay(fig, f"T5 -- A2 rung curve, {eid}<br><sup>rung k: W_k = H / 2^k from 04:00; accel = ln(n_recent / n_older), collapsed at 10 ms</sup>",
-            "rung k (coarse -> fine)", "accel_k", h=460)
-        save(fig, "t5/a2_curves", f"{eid}.html")
+                                 visible=False, name=f"one-sided kernel check -- {len(kv)} rungs defined"))
+        inv = g[~g["valid"]]
+        fig.add_trace(go.Scatter(x=inv["k"], y=np.zeros(len(inv)), mode="markers", visible=False,
+                                 marker=dict(color=PAL[3], symbol="x", size=8), name=f"invalid rungs ({len(inv)}), drawn at 0",
+                                 customdata=inv["class"], hovertemplate="k=%{x}: %{customdata}<extra></extra>"))
+        spans.append((eid, a, len(fig.data)))
+    buttons = [dict(label=e, method="update", args=[{"visible": [a <= i < b for i in range(len(fig.data))]},
+                                                   {"title.text": f"T5 -- A2 rung curve, {e}<br><sup>every rung judged on its own (A2.4); "
+                                                                  "W_k = H / 2^k from 04:00; accel = ln(n_recent / n_older), collapsed at 10 ms</sup>"}])
+               for e, a, b in spans]
+    for i in range(spans[0][1], spans[0][2]):
+        fig.data[i].visible = True
+    fig.add_hline(y=0, line=dict(color=GRID))
+    lay(fig, f"T5 -- A2 rung curve, {spans[0][0]}<br><sup>every rung judged on its own (A2.4); W_k = H / 2^k from 04:00; "
+             "accel = ln(n_recent / n_older), collapsed at 10 ms</sup>", "rung k (coarse -> fine)", "accel_k", h=520)
+    fig.update_layout(updatemenus=[dict(buttons=buttons, direction="down", x=1.0, xanchor="right", y=1.14, yanchor="top",
+                                        bgcolor="#1d2229", font=dict(color=FG))])
+    save(fig, "t5", "a2_curves_by_event.html")
+
     d = at[(at["dev_group"] == "dev_v3") & (at["attention_available"] == True)]  # noqa: E712
     vc = d["a2_valid_rungs"].value_counts().sort_index()
     fig = go.Figure(go.Bar(x=vc.index, y=vc.values, text=vc.values, textposition="outside", marker_color=PAL[0],
                            name=f"dev events -- n={len(d)}"))
-    lay(fig, f"T5 -- valid A2 rungs per dev event, n = {len(d)}", "valid rungs", "events")
+    lay(fig, f"T5 -- valid A2 rungs per dev event, every rung judged on its own (A2.4), n = {len(d)}<br>"
+             f"<sup>events with zero valid rungs: {int((d['a2_valid_rungs'] == 0).sum())}; contiguous valid runs: "
+             f"{int(d['a2_valid_contiguous'].sum())}</sup>", "valid rungs", "events")
     save(fig, "t5", "valid_rungs.html")
 
 
 def charts_t5b():
     cp = pd.read_parquet(C.art("t5b_competition.parquet"))
     ok = cp[cp["status"] == "ok"]
+    und = j("t5b_summary.json")["structurally_undefined_cells"]
     for W in sorted(ok["W_min"].unique()):
         fig = go.Figure()
         fig.add_vline(x=0, line=dict(color=GRID))
@@ -236,32 +274,38 @@ def charts_t5b():
                 x, y = ecdf(v)
                 fig.add_trace(go.Scatter(x=x, y=y, mode="lines", line=dict(color=PAL[i], dash=dash, width=2),
                                          name=f"L={L}, {arm} -- n={v.size:,}, median {np.median(v):+.3f}"))
+        missing = [L for L, ws in und.items() if int(W) in ws]
         lay(fig, f"T5b -- live name i's trade rate after vs before a new crossing, W = {W} min (dev-event dates only)<br>"
-                 "<sup>solid: at another name's crossing; dotted: matched moments in i's own live span with no crossing within +/- W</sup>",
+                 f"<sup>solid: at another name's crossing; dotted: matched moments in i's own live span with no crossing within +/- W"
+                 f"{'; structurally undefined here (W >= L): L=' + ', '.join(missing) if missing else ''}</sup>",
             "ln(n in [t, t+W) / n in [t-W, t))", "cumulative share")
         save(fig, "t5b", f"competition_W{W}.html")
 
 
 def charts_t6():
     c6 = j("t6_controls.json")
+    refs = j("t6_references.json")["by_N"]
     d = c6["detail"]
-    neg = pd.read_parquet(C.art("t6_negative_excursion.parquet"))
-    dg = pd.read_parquet(C.art("t6_negative_excursion_freewalk_diag.parquet"))
-    fig = go.Figure()
-    uu = np.linspace(0, 1, 400)
-    fig.add_trace(go.Scatter(x=uu, y=(2 / np.pi) * np.arcsin(np.sqrt(uu)), line=dict(color=FG, width=3), name="arcsine CDF (declared reference)"))
-    fig.add_trace(go.Scatter(x=uu, y=uu, line=dict(color=GRID, dash="dot", width=2), name="uniform CDF (bridge argmax)"))
-    for N in (50, 100, 200):
-        for df, arm, dash in [(neg, "declared: demeaned shuffle", "solid"), (dg, "diagnostic: free walk", "dash")]:
+    v = c6["verdict"]
+    for key, fname, ref_key, label in [("negative_excursion_bridge", "negative_excursion_bridge.html", "bridge", "bridge (demeaned shuffles)"),
+                                       ("negative_excursion_free_walk", "negative_excursion_free_walk.html", "free_walk", "free walk (draws with replacement)")]:
+        df = pd.read_parquet(C.art(f"t6_{key}.parquet"))
+        fig = go.Figure()
+        for N in (50, 100, 200):
             g = df[(df["N"] == N) & ~df["sigma_zero"]]
-            x, y = ecdf(g["u_peak"])
-            dd = d["negative_excursion" if arm.startswith("declared") else "negative_excursion_freewalk_diagnostic"][str(N)]
-            fig.add_trace(go.Scatter(x=x, y=y, mode="lines", line=dict(color=RUNG_COL[N], dash=dash, width=1.5),
-                                     name=f"N={N} {arm} -- n={len(g):,}, KS {dd['ks_vs_arcsine']:.3f}, mean rise {dd['mean_rise_s']:.3f}"))
-    lay(fig, f"T6 negative control, excursion -- verdict {'PASS' if c6['verdict']['negative_excursion'] else 'FAIL'}<br>"
-             "<sup>pass band: KS to arcsine <= 0.05 AND mean rise_s in [0.70, 0.90] on every rung (config, committed before the run)</sup>",
-        "u_peak", "cumulative share", h=620)
-    save(fig, "t6", "negative_excursion.html")
+            c = np.bincount(g["i_peak"].astype(int), minlength=N + 1).astype(float)
+            rc = np.asarray(refs[str(N)][ref_key]["u_peak_counts"], dtype=float)
+            u = np.arange(N + 1) / N
+            dd = d[key][str(N)]
+            fig.add_trace(go.Scatter(x=u, y=np.cumsum(c) / c.sum(), mode="lines", line=dict(color=RUNG_COL[N], shape="hv"),
+                                     name=f"N={N} control -- n={len(g):,}; KS {dd['ks_vs_simulated_reference']:.3f}; mean rise "
+                                          f"{dd['mean_rise_s']:.3f} vs ref {dd['reference_mean_rise_s']:.3f}"))
+            fig.add_trace(go.Scatter(x=u, y=np.cumsum(rc) / rc.sum(), mode="lines", line=dict(color=RUNG_COL[N], dash="dot", shape="hv"),
+                                     name=f"N={N} simulated Gaussian {ref_key.replace('_', ' ')} (n={int(rc.sum()):,})"))
+        lay(fig, f"T6 negative control, excursion -- {label} -- verdict {'PASS' if v[key] else 'FAIL'}<br>"
+                 "<sup>pass: two-sample KS to the simulated reference <= 0.05 AND |mean rise_s - reference| <= 0.05, every rung "
+                 "(Amendment 2 A2.2, references committed before the run)</sup>", "u_peak", "cumulative share", h=620)
+        save(fig, "t6", fname)
 
     na = d["negative_acceleration"]
     ks = sorted(int(k) for k in na)
@@ -271,44 +315,50 @@ def charts_t6():
                              name="median accel_k", text=[f"n={na[str(k)]['n']:,}" for k in ks], hovertemplate="k=%{x}: %{y:.4f} (%{text})<extra></extra>"))
     fig.add_trace(go.Scatter(x=ks, y=[na[str(k)]["sd_z"] for k in ks], mode="lines+markers", line=dict(color=PAL[1]),
                              name="SD of z = accel / sqrt(1/n_r + 1/n_o) (band 0.80-1.25)", yaxis="y2"))
-    fig.update_layout(yaxis2=dict(overlaying="y", side="right", range=[0.5, 1.5], title="SD(z)", showgrid=False))
-    lay(fig, f"T6 negative control, acceleration (homogeneous Poisson) -- verdict {'PASS' if c6['verdict']['negative_acceleration'] else 'FAIL'}<br>"
-             f"<sup>per rung, pooled over events x draws; readable rungs need >= 100 values; n per rung on hover</sup>", "rung k", "median accel_k")
+    fig.update_layout(yaxis2=dict(overlaying="y", side="right", range=[0.3, 1.5], title="SD(z)", showgrid=False))
+    lay(fig, f"T6 negative control, acceleration (homogeneous Poisson, per-rung ladder) -- verdict {'PASS' if v['negative_acceleration'] else 'FAIL'}<br>"
+             "<sup>per rung, pooled over events x draws; readable rungs need >= 100 values; n per rung on hover</sup>", "rung k", "median accel_k")
     save(fig, "t6", "negative_acceleration.html")
 
     pe = d["positive_excursion"]
     fig = go.Figure()
-    for i, (key, tgt, band) in enumerate([("median_u_peak", 0.3, 0.05), ("median_rise_s", 2.0, 0.3), ("median_fall_s", 1.5, 0.225)]):
-        fig.add_trace(go.Bar(x=[f"N={N}" for N in (50, 100, 200)], y=[pe[str(N)][key] - tgt for N in (50, 100, 200)],
-                             name=f"{key} - injected {tgt} (band +/-{band})", marker_color=PAL[i],
-                             text=[f"{pe[str(N)][key]:.3f} (n={pe[str(N)]['n']:,})" for N in (50, 100, 200)], textposition="outside"))
-    lay(fig, f"T6 positive control, excursion (injected peak u=0.3, rise 2.0, fall 1.5) -- verdict {'PASS' if c6['verdict']['positive_excursion'] else 'FAIL'}<br>"
-             "<sup>bars are recovered minus injected; bands: u +/-0.05, rise +/-0.30, fall +/-0.225</sup>", "rung", "recovered - injected")
+    for i, (key, rkey) in enumerate([("median_u_peak", "reference_median_u_peak"), ("median_rise_s", "reference_median_rise_s"),
+                                     ("median_fall_s", "reference_median_fall_s")]):
+        fig.add_trace(go.Bar(x=[f"N={N}" for N in (50, 100, 200)],
+                             y=[(pe[str(N)][key] - pe[str(N)][rkey]) / (pe[str(N)][rkey] if key != "median_u_peak" else 1.0) for N in (50, 100, 200)],
+                             name=f"{key}: recovered vs simulated reference ({'absolute, band +/-0.05' if key == 'median_u_peak' else 'relative, band +/-10%'})",
+                             marker_color=PAL[i], text=[f"{pe[str(N)][key]:.3f} vs {pe[str(N)][rkey]:.3f} (n={pe[str(N)]['n']:,})" for N in (50, 100, 200)],
+                             textposition="outside"))
+    fig.add_hrect(y0=-0.10, y1=0.10, fillcolor=PAL[2], opacity=0.08, line_width=0)
+    fig.add_hrect(y0=-0.05, y1=0.05, fillcolor=PAL[2], opacity=0.10, line_width=0)
+    lay(fig, f"T6 positive control, excursion (injected peak u=0.3, rise 2.0, fall 1.5) -- verdict {'PASS' if v['positive_excursion'] else 'FAIL'}<br>"
+             "<sup>recovered medians against the simulated expectation for the same injection at each N (A2.2); bias versus the injected "
+             "values is in the report, as an instrument property</sup>", "rung", "recovered - reference")
     save(fig, "t6", "positive_excursion.html")
 
     pa = d["positive_acceleration"]
     fig = go.Figure()
     for i, m in enumerate(sorted({int(k.split(",")[0][2:]) for k in pa})):
-        cells = sorted([(int(k.split(",")[1][2:]), v) for k, v in pa.items() if int(k.split(",")[0][2:]) == m])
+        cells = sorted([(int(k.split(",")[1][2:]), vv) for k, vv in pa.items() if int(k.split(",")[0][2:]) == m])
         fig.add_trace(go.Scatter(x=[c[0] for c in cells], y=[c[1]["median_accel"] for c in cells], mode="lines+markers",
                                  line=dict(color=PAL[i]), name=f"step at midpoint of rung m={m}: recovered median",
                                  text=[f"n={c[1]['n']:,}, {c[1]['role']}" for c in cells], hovertemplate="k=%{x}: %{y:.3f} (%{text})<extra></extra>"))
         fig.add_trace(go.Scatter(x=[c[0] for c in cells], y=[c[1]["target"] for c in cells], mode="markers",
                                  marker=dict(color=PAL[i], symbol="x", size=9), name=f"m={m}: expected (ln2 at k=m, 0 after, ln(1+2^(k-m)) before)"))
-    lay(fig, f"T6 positive control, acceleration (rate doubles at a known time) -- verdict {'PASS' if c6['verdict']['positive_acceleration'] else 'FAIL'}<br>"
-             "<sup>band +/-0.2 around each expected value; rungs coarser than the step are reported, not in the verdict (config specification gap)</sup>",
+    lay(fig, f"T6 positive control, acceleration (rate doubles at a known time, per-rung ladder) -- verdict {'PASS' if v['positive_acceleration'] else 'FAIL'}<br>"
+             "<sup>band +/-0.2 around each expected value; rungs coarser than the step are reported, not in the verdict</sup>",
         "rung k", "median accel_k", h=620)
     save(fig, "t6", "positive_acceleration.html")
 
     sw = d["null_parameter_sweep"]["excursion"]
     fig = go.Figure()
     comps = list(sw)
-    for i, N in enumerate((50, 100, 200)):
+    for N in (50, 100, 200):
         base = [sw[c]["medians"]["100"] for c in comps]
         fig.add_trace(go.Bar(x=comps, y=[sw[c]["medians"][str(N)] / b if b else np.nan for c, b in zip(comps, base)],
                              name=f"N={N} median / N=100 median", marker_color=RUNG_COL[N]))
     fig.add_hrect(y0=0.8, y1=1.2, fillcolor=PAL[2], opacity=0.1, line_width=0)
-    lay(fig, "T6 null-parameter sweep -- component medians across the bucket ladder (dev sample, n=50 per rung)<br>"
+    lay(fig, "T6 null-parameter sweep -- component medians across the bucket ladder (dev sample, n=49 per rung)<br>"
              f"<sup>rung-dependent: {', '.join(c for c in comps if sw[c]['label'] == 'rung-dependent') or 'none'}</sup>",
         "component", "median relative to N=100")
     save(fig, "t6", "null_parameter_sweep.html")
@@ -316,12 +366,12 @@ def charts_t6():
     bl = pd.read_parquet(C.art("t6_blindness_rescale.parquet"))
     fig = go.Figure()
     for i, f in enumerate(sorted(bl["factor"].unique())):
-        v = bl[bl["factor"] == f]["max_abs_diff"].to_numpy()
-        fig.add_trace(go.Box(y=np.maximum(v, 1e-18), name=f"prices x{f} -- n={v.size}", marker_color=PAL[i], boxpoints="all"))
+        vv = bl[bl["factor"] == f]["max_abs_diff"].to_numpy()
+        fig.add_trace(go.Box(y=np.maximum(vv, 1e-18), name=f"prices x{f} -- n={vv.size}", marker_color=PAL[i], boxpoints="all"))
     fig.add_hline(y=1e-9, line=dict(color=PAL[3], dash="dash"), annotation_text="1e-9 pass line")
     fig.update_yaxes(type="log")
-    lay(fig, f"T6 blindness -- max |change| in sigma-unit and bp components under price rescaling -- verdict {'PASS' if c6['verdict']['blindness'] else 'FAIL'}<br>"
-             "<sup>zeros drawn at 1e-18 on the log axis</sup>", "", "max abs difference")
+    lay(fig, f"T6 blindness -- max abs change in sigma-unit and bp components under price rescaling, tie rule A2.3 -- verdict "
+             f"{'PASS' if v['blindness'] else 'FAIL'}<br><sup>zeros drawn at 1e-18 on the log axis</sup>", "", "max abs difference")
     save(fig, "t6", "blindness.html")
 
 

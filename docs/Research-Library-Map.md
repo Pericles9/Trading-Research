@@ -2673,3 +2673,17 @@ positive excursion control at N = 200 only, and blindness on one event whose top
 tied. Also recorded, not tuned: the T3 boundary rule is satisfied at the open minute at both opens, and the
 top-anchored A2 ladder has zero valid rungs on 27 of 49 dev events. CLAUDE.md's ticker-blocked line
 carries the D38 exception.
+
+**Amendment 2 (2026-09-24) and the re-run -- HARD STOP at T7 (the brief's own stop); every control passes.**
+`prompts/attention_excursion_b1_amendment_2.md` (filed verbatim) and the combined document filed at its
+project path `prompts/attention_excursion.md` (A2.11; `prompts/attention_excursion_b1.md` stays as the
+as-run record). The noise scale moves from bipower to realised variance (bipower kept as `jump_share`, a
+descriptor); control references are simulated at each N and committed before the run
+(`t6a_references.py`, `artifacts/t6_references.json`); the peak takes the earliest bucket within a relative
+1e-9 of the maximum; every A2 rung is judged on its own; W >= L competition cells are undefined; the halt
+flag is a >= 300 s gap inside regular hours. T4, T5, T5b and T6 re-ran (T1-T3 did not); run 2's bipower
+artifacts and charts are kept under `artifacts/run2/` and `charts/run2/`. All seven T6 controls pass
+(bridge and free-walk KS to the simulated references <= 0.012; positive recovery within 0.4% of the
+simulated expectation; blindness 4.3e-10). Zero-valid-rung A2 events 27 -> 8 of 49. Every chart is
+regenerated with Plotly inlined (D14); the per-event T4 strips and A2 curves are one chart each with an
+event selector. The 09:30 open-adjacent boundary (A2.7) was not set, so that class is carried as pending.
