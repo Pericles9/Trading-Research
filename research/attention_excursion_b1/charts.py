@@ -7,7 +7,8 @@ chart per file, n on every bucket or series, no smoothing, nothing clipped.
   t3/01_open_profile_0400.html                t3/02_open_profile_0930.html
   t4/strips_by_event.html (one chart, event selector)     t4/u_peak_N{50,100,200}.html
   t5/a2_curves_by_event.html (one chart, event selector)  t5/valid_rungs.html
-  t5b/competition_W{5,15,60}.html
+  t5/valid_rungs_before_after.html (Amendment 3: 04:00 anchor vs segment anchor, by segment)
+  t5b/competition_W{5,15,60}.html  t5b/matched_control_counts.html (Amendment 3 A3.5)
   t6/negative_excursion_bridge.html  t6/negative_excursion_free_walk.html  t6/negative_acceleration.html
   t6/positive_excursion.html
   t6/positive_acceleration.html  t6/null_parameter_sweep.html  t6/blindness.html
@@ -220,6 +221,7 @@ def charts_t5():
     at = pd.read_parquet(C.art("t5_attention.parquet"))
     fig = go.Figure()
     spans = []
+    segs = at.set_index("event_id")["tau_anchor_segment"].to_dict()
     for eid, g in rg.groupby("event_id"):
         a = len(fig.data)
         v = g[g["valid"]]
@@ -236,50 +238,96 @@ def charts_t5():
                                  marker=dict(color=PAL[3], symbol="x", size=8), name=f"invalid rungs ({len(inv)}), drawn at 0",
                                  customdata=inv["class"], hovertemplate="k=%{x}: %{customdata}<extra></extra>"))
         spans.append((eid, a, len(fig.data)))
-    buttons = [dict(label=e, method="update", args=[{"visible": [a <= i < b for i in range(len(fig.data))]},
-                                                   {"title.text": f"T5 -- A2 rung curve, {e}<br><sup>every rung judged on its own (A2.4); "
-                                                                  "W_k = H / 2^k from 04:00; accel = ln(n_recent / n_older), collapsed at 10 ms</sup>"}])
+    sub = lambda e: (f"T5 -- A2 rung curve, {e} (tau in {segs.get(e)})<br><sup>every rung judged on its own (A2.4); W_k = H / 2^k, "  # noqa: E731
+                     "H from the start of tau's clock segment (Amendment 3 A3.1); accel = ln(n_recent / n_older), collapsed at 10 ms</sup>")
+    buttons = [dict(label=e, method="update", args=[{"visible": [a <= i < b for i in range(len(fig.data))]}, {"title.text": sub(e)}])
                for e, a, b in spans]
     for i in range(spans[0][1], spans[0][2]):
         fig.data[i].visible = True
     fig.add_hline(y=0, line=dict(color=GRID))
-    lay(fig, f"T5 -- A2 rung curve, {spans[0][0]}<br><sup>every rung judged on its own (A2.4); W_k = H / 2^k from 04:00; "
-             "accel = ln(n_recent / n_older), collapsed at 10 ms</sup>", "rung k (coarse -> fine)", "accel_k", h=520)
+    lay(fig, sub(spans[0][0]), "rung k (coarse -> fine)", "accel_k", h=520)
     fig.update_layout(updatemenus=[dict(buttons=buttons, direction="down", x=1.0, xanchor="right", y=1.14, yanchor="top",
                                         bgcolor="#1d2229", font=dict(color=FG))])
     save(fig, "t5", "a2_curves_by_event.html")
 
-    d = at[(at["dev_group"] == "dev_v3") & (at["attention_available"] == True)]  # noqa: E712
-    vc = d["a2_valid_rungs"].value_counts().sort_index()
-    fig = go.Figure(go.Bar(x=vc.index, y=vc.values, text=vc.values, textposition="outside", marker_color=PAL[0],
-                           name=f"dev events -- n={len(d)}"))
-    lay(fig, f"T5 -- valid A2 rungs per dev event, every rung judged on its own (A2.4), n = {len(d)}<br>"
-             f"<sup>events with zero valid rungs: {int((d['a2_valid_rungs'] == 0).sum())}; contiguous valid runs: "
-             f"{int(d['a2_valid_contiguous'].sum())}</sup>", "valid rungs", "events")
+    d_all = at[(at["dev_group"] == "dev_v3") & (at["attention_available"] == True)]  # noqa: E712
+    d = d_all[d_all["a2_state"] == "value"]
+    fig = go.Figure()
+    for i, (sg, g) in enumerate(d.groupby("tau_anchor_segment")):
+        vc = g["a2_valid_rungs"].astype(int).value_counts().sort_index()
+        fig.add_trace(go.Bar(x=vc.index, y=vc.values, text=vc.values, textposition="outside", marker_color=PAL[i],
+                             name=f"tau in {sg} -- n={len(g)}"))
+    fig.update_layout(barmode="stack")
+    lay(fig, f"T5 -- valid A2 rungs per dev event, segment-anchored (Amendment 3), n = {len(d)} with A2<br>"
+             f"<sup>zero valid rungs: {int((d['a2_valid_rungs'] == 0).sum())}; contiguous valid runs: {int(d['a2_valid_contiguous'].sum())}; "
+             f"tau in a cross minute, A2 unavailable (A3.2): {int((d_all['a2_state'] != 'value').sum())}</sup>", "valid rungs", "events")
     save(fig, "t5", "valid_rungs.html")
+
+    ba = pd.read_parquet(C.art("t5_a3_before_after_events.parquet"))
+    fig = go.Figure()
+    order = [sg for sg in C.SEGMENTS if sg in set(ba["tau_anchor_segment"])]
+    for arm, col, lab in [("a2_valid_rungs_before", PAL[5], "before: anchored at 04:00 (run 3)"),
+                          ("a2_valid_rungs_after", PAL[0], "after: anchored at the segment start")]:
+        g = ba.dropna(subset=[arm])
+        cnt = {sg: int((g["tau_anchor_segment"] == sg).sum()) for sg in order}
+        fig.add_trace(go.Box(x=[f"{sg} (n={cnt[sg]})" for sg in g["tau_anchor_segment"]], y=g[arm].astype(float), name=lab,
+                             marker_color=col, boxpoints="all", jitter=0.4, pointpos=0,
+                             customdata=g["event_id"], hovertemplate="%{customdata}: %{y}<extra></extra>"))
+    fig.update_layout(boxmode="group")
+    fig.update_xaxes(categoryorder="array", categoryarray=[f"{sg} (n={int((ba['tau_anchor_segment'] == sg).sum())})" for sg in order])
+    lay(fig, f"T5 -- valid A2 rungs per dev event before and after the anchoring change, by clock segment of tau, n = {len(ba)}<br>"
+             "<sup>every event drawn; cross-minute taus have no 'after' (A2 unavailable, A3.2); premarket ladders are the same in "
+             "both runs by construction</sup>", "clock segment of tau", "valid rungs per event")
+    save(fig, "t5", "valid_rungs_before_after.html")
 
 
 def charts_t5b():
     cp = pd.read_parquet(C.art("t5b_competition.parquet"))
     ok = cp[cp["status"] == "ok"]
-    und = j("t5b_summary.json")["structurally_undefined_cells"]
+    sm = j("t5b_summary.json")
+    und = sm["structurally_undefined_cells"]
     for W in sorted(ok["W_min"].unique()):
         fig = go.Figure()
         fig.add_vline(x=0, line=dict(color=GRID))
         for i, L in enumerate(["15", "60", "rest_of_session"]):
-            for arm, dash in [("crossing", "solid"), ("control", "dot")]:
-                v = ok[(ok["W_min"] == W) & (ok["liveness"] == L) & (ok["arm"] == arm)]["log_ratio"].to_numpy()
+            c = cp[(cp["W_min"] == W) & (cp["liveness"] == L)]
+            matched = c[(c["arm"] == "control") & (c["status"] != "no_match")][["j", "i"]].drop_duplicates()
+            okc = ok[(ok["W_min"] == W) & (ok["liveness"] == L)]
+            arms = [("crossing, pairs with a matched control", okc[okc["arm"] == "crossing"].merge(matched, on=["j", "i"]), "solid"),
+                    ("matched control", okc[okc["arm"] == "control"], "dot")]
+            for lab, g, dash in arms:
+                v = g["log_ratio"].to_numpy()
                 if v.size == 0:
                     continue
                 x, y = ecdf(v)
                 fig.add_trace(go.Scatter(x=x, y=y, mode="lines", line=dict(color=PAL[i], dash=dash, width=2),
-                                         name=f"L={L}, {arm} -- n={v.size:,}, median {np.median(v):+.3f}"))
+                                         name=f"L={L}, {lab} -- n={v.size:,}, median {np.median(v):+.3f}"))
         missing = [L for L, ws in und.items() if int(W) in ws]
+        mt = "; ".join(f"L={L}: {v['matching']['pairs_with_matched_control']:,} of {v['matching']['pairs']:,} pairs matched"
+                       for L in ("15", "60", "rest_of_session") for k, v in sm["cells"].items() if k == f"L={L}|W={W}")
         lay(fig, f"T5b -- live name i's trade rate after vs before a new crossing, W = {W} min (dev-event dates only)<br>"
-                 f"<sup>solid: at another name's crossing; dotted: matched moments in i's own live span with no crossing within +/- W"
+                 f"<sup>solid: at another name's crossing (pairs with a matched control); dotted: moments in i's own live span in the "
+                 f"same octave since i's crossing and the same clock segment, no crossing within +/- W (A3.5). {mt}"
                  f"{'; structurally undefined here (W >= L): L=' + ', '.join(missing) if missing else ''}</sup>",
-            "ln(n in [t, t+W) / n in [t-W, t))", "cumulative share")
+            "ln(n in [t, t+W) / n in [t-W, t))", "cumulative share", h=620)
         save(fig, "t5b", f"competition_W{W}.html")
+
+    cells = list(sm["cells"].items())
+    labs = [k.replace("|", " · ") for k, _ in cells]
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x=labs, y=[v["matching"]["pairs_with_matched_control"] for _, v in cells], marker_color=PAL[2],
+                         name="pairs with >= 1 matched control", text=[f"{v['matching']['pairs_with_matched_control']:,}" for _, v in cells],
+                         textposition="outside"))
+    reasons = sorted({r for _, v in cells for r in v["matching"]["no_match_reason"]})
+    for i, r in enumerate(reasons):
+        y = [v["matching"]["no_match_reason"].get(r, 0) for _, v in cells]
+        fig.add_trace(go.Bar(x=labs, y=y, marker_color=[PAL[3], PAL[1], PAL[4]][i % 3], name=f"no_match: {r}",
+                             text=[f"{x:,}" for x in y], textposition="outside"))
+    fig.update_layout(barmode="group")
+    lay(fig, "T5b -- matched-control counts per cell (Amendment 3 A3.5), dev-event dates only<br>"
+             "<sup>a pair is (live name i, crossing j); no_match pairs are carried, never filled from outside the bin; "
+             "counts are pairs</sup>", "liveness · W (min)", "pairs")
+    save(fig, "t5b", "matched_control_counts.html")
 
 
 def charts_t6():
@@ -317,7 +365,8 @@ def charts_t6():
                              name="SD of z = accel / sqrt(1/n_r + 1/n_o) (band 0.80-1.25)", yaxis="y2"))
     fig.update_layout(yaxis2=dict(overlaying="y", side="right", range=[0.3, 1.5], title="SD(z)", showgrid=False))
     lay(fig, f"T6 negative control, acceleration (homogeneous Poisson, per-rung ladder) -- verdict {'PASS' if v['negative_acceleration'] else 'FAIL'}<br>"
-             "<sup>per rung, pooled over events x draws; readable rungs need >= 100 values; n per rung on hover</sup>", "rung k", "median accel_k")
+             "<sup>tapes over each event's segment history [segment start, tau] (Amendment 3); per rung, pooled over events x draws; "
+             "readable rungs need >= 100 values; n per rung on hover</sup>", "rung k", "median accel_k")
     save(fig, "t6", "negative_acceleration.html")
 
     pe = d["positive_excursion"]
@@ -346,7 +395,8 @@ def charts_t6():
         fig.add_trace(go.Scatter(x=[c[0] for c in cells], y=[c[1]["target"] for c in cells], mode="markers",
                                  marker=dict(color=PAL[i], symbol="x", size=9), name=f"m={m}: expected (ln2 at k=m, 0 after, ln(1+2^(k-m)) before)"))
     lay(fig, f"T6 positive control, acceleration (rate doubles at a known time, per-rung ladder) -- verdict {'PASS' if v['positive_acceleration'] else 'FAIL'}<br>"
-             "<sup>band +/-0.2 around each expected value; rungs coarser than the step are reported, not in the verdict</sup>",
+             "<sup>tapes over each event's segment history (Amendment 3); band +/-0.2 around each expected value; rungs coarser "
+             "than the step are reported, not in the verdict</sup>",
         "rung k", "median accel_k", h=620)
     save(fig, "t6", "positive_acceleration.html")
 

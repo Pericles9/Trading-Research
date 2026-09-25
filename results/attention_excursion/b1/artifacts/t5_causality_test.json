@@ -7,5 +7,8 @@
   "a2_count_ladder": "raised",
   "a2_kernel": "raised",
   "clean_inputs_do_not_raise": "ok",
+  "segment_rth_tau_anchored_0400": "raised",
+  "segment_tau_in_open_cross_minute": "raised",
+  "segment_anchored_ladder_does_not_raise": "ok",
   "passes": true
 }

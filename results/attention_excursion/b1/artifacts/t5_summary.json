@@ -1,5 +1,5 @@
 {
-  "config_hash": "3c9874334a6d",
+  "config_hash": "658071fbe27f",
   "II5_causality_test": {
     "a1_shares": "raised",
     "dollar_volume": "raised",
@@ -9,11 +9,25 @@
     "a2_count_ladder": "raised",
     "a2_kernel": "raised",
     "clean_inputs_do_not_raise": "ok",
+    "segment_rth_tau_anchored_0400": "raised",
+    "segment_tau_in_open_cross_minute": "raised",
+    "segment_anchored_ladder_does_not_raise": "ok",
     "passes": true
   },
   "events": {
     "dev_v3_with_attention": 49,
+    "dev_v3_with_a2": 49,
     "sidecar_rows": 6
+  },
+  "segments": {
+    "rule": "Amendment 3 A3.1-A3.2: A2 anchored at the start of tau's clock segment; cross minutes carry no A2",
+    "dev_v3_by_segment": {
+      "regular": 33,
+      "premarket": 16
+    },
+    "dev_v3_auction_minute": 0,
+    "sidecar_auction_minute": 1,
+    "II5_segment_assertion": "asserted on every rung of every event; a violation stops the run"
   },
   "a1": {
     "state": {
@@ -38,57 +52,68 @@
   },
   "a2": {
     "valid_rungs_distribution": {
-      "0.0": 8,
-      "1.0": 2,
-      "2.0": 5,
-      "3.0": 2,
-      "4.0": 3,
-      "5.0": 4,
-      "6.0": 4,
-      "7.0": 3,
-      "8.0": 5,
-      "9.0": 2,
-      "10.0": 4,
-      "11.0": 2,
-      "12.0": 4,
-      "14.0": 1
+      "0": 8,
+      "1": 1,
+      "2": 4,
+      "3": 5,
+      "4": 6,
+      "5": 1,
+      "6": 3,
+      "7": 6,
+      "8": 6,
+      "9": 4,
+      "10": 3,
+      "11": 2
     },
-    "valid_rungs_median": 6.0,
-    "rule": "per-rung validity, no sequential stop (Amendment 2 A2.4)",
+    "valid_rungs_median": 5.0,
+    "rule": "per-rung validity, no sequential stop (Amendment 2 A2.4), anchored at the start of tau's clock segment (Amendment 3 A3.1)",
+    "by_segment": {
+      "premarket": {
+        "events": 16,
+        "valid_rungs_median": 1.5,
+        "valid_rungs_total": 46,
+        "zero_valid": 7,
+        "H_s_median": 9900.99272576
+      },
+      "regular": {
+        "events": 33,
+        "valid_rungs_median": 7.0,
+        "valid_rungs_total": 203,
+        "zero_valid": 1,
+        "H_s_median": 7920.2801728
+      }
+    },
     "valid_pattern_top": {
       "": 8,
-      "0,1,2,3,4,5,6,7,8,9,10,11": 4,
+      "0,1,2,3,4,5,6,7": 5,
+      "0,1,2,3": 5,
+      "0,1": 4,
+      "0,1,2,3,4,5,6": 4,
+      "0,1,2,3,4,5,6,7,8": 3,
+      "0,1,2": 3,
       "0,1,2,3,4,5,6,7,8,9": 3,
-      "0,1": 2,
       "0,1,2,3,4,5,6,7,8,9,10": 2,
-      "0,1,2,3,4,5,6,7,8": 2,
-      "5,6,7,8": 2,
       "0,1,2,3,4,5": 2,
-      "0,1,2,3,4": 2,
-      "2,3,4": 1,
-      "1,2,3,4,5,6,7": 1,
-      "0,1,2,3,4,5,6,7,8,9,10,11,12,13": 1
+      "2,3,4": 2,
+      "1,2,3,4,5,6,7": 1
     },
     "first_valid_k_distribution": {
-      "0.0": 22,
-      "1.0": 9,
-      "2.0": 5,
-      "3.0": 1,
-      "4.0": 2,
-      "5.0": 2,
-      "NaN": 8
+      "0": 38,
+      "1": 1,
+      "2": 2,
+      "<NA>": 8
     },
-    "valid_contiguous_events": 35,
+    "valid_contiguous_events": 36,
     "invalid_rung_classes": {
-      "counting_noise": 451,
-      "from_nothing": 227,
+      "counting_noise": 407,
+      "from_nothing": 225,
       "resolution_floor": 0
     },
     "resolution_floor_ever_binding": 0,
-    "rung0_from_nothing_events": 13,
+    "rung0_from_nothing_events": 6,
     "zero_valid_rung_events": 8,
-    "kernel_defined_valid_rungs": 225,
-    "valid_rungs_total": 277,
+    "kernel_defined_valid_rungs": 174,
+    "valid_rungs_total": 249,
     "spearman_count_vs_kernel_by_rung": {
       "0": {
         "n": 0,
@@ -99,52 +124,40 @@
         "spearman_count_vs_kernel": NaN
       },
       "2": {
-        "n": 32,
-        "spearman_count_vs_kernel": 0.8907624633431085
+        "n": 35,
+        "spearman_count_vs_kernel": 0.7182072829131653
       },
       "3": {
-        "n": 31,
-        "spearman_count_vs_kernel": 0.7516129032258065
+        "n": 32,
+        "spearman_count_vs_kernel": 0.7276392961876832
       },
       "4": {
-        "n": 33,
-        "spearman_count_vs_kernel": 0.8064839572192514
+        "n": 28,
+        "spearman_count_vs_kernel": 0.7629994526546251
       },
       "5": {
-        "n": 29,
-        "spearman_count_vs_kernel": 0.8625615763546796
+        "n": 22,
+        "spearman_count_vs_kernel": 0.8701298701298703
       },
       "6": {
-        "n": 26,
-        "spearman_count_vs_kernel": 0.5917948717948718
+        "n": 20,
+        "spearman_count_vs_kernel": 0.6360902255639098
       },
       "7": {
-        "n": 20,
-        "spearman_count_vs_kernel": 0.2045112781954887
+        "n": 16,
+        "spearman_count_vs_kernel": 0.7411764705882353
       },
       "8": {
-        "n": 20,
-        "spearman_count_vs_kernel": 0.4917293233082706
+        "n": 10,
+        "spearman_count_vs_kernel": 0.5757575757575757
       },
       "9": {
-        "n": 14,
-        "spearman_count_vs_kernel": 0.6879120879120879
+        "n": 7,
+        "spearman_count_vs_kernel": 0.39285714285714296
       },
       "10": {
-        "n": 11,
-        "spearman_count_vs_kernel": 0.5181818181818182
-      },
-      "11": {
-        "n": 7,
-        "spearman_count_vs_kernel": 0.8214285714285715
-      },
-      "12": {
-        "n": 1,
-        "spearman_count_vs_kernel": NaN
-      },
-      "13": {
-        "n": 1,
-        "spearman_count_vs_kernel": NaN
+        "n": 4,
+        "spearman_count_vs_kernel": 1.0
       }
     }
   },
@@ -165,7 +178,10 @@
         "6": 1,
         "7": 1
       },
-      "alone_events": 32
+      "alone_events": 32,
+      "reason_no_window": {
+        "no_valid_rung": 8
+      }
     },
     "60": {
       "live_n_distribution": {
@@ -178,7 +194,10 @@
         "8": 1,
         "14": 1
       },
-      "alone_events": 21
+      "alone_events": 21,
+      "reason_no_window": {
+        "no_valid_rung": 8
+      }
     },
     "rest_of_session": {
       "live_n_distribution": {
@@ -201,7 +220,10 @@
         "27": 1,
         "29": 1
       },
-      "alone_events": 4
+      "alone_events": 4,
+      "reason_no_window": {
+        "no_valid_rung": 8
+      }
     }
   },
   "names_read": 422

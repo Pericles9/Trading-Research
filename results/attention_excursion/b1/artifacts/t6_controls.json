@@ -1,5 +1,5 @@
 {
-  "config_hash": "3c9874334a6d",
+  "config_hash": "658071fbe27f",
   "verdict": {
     "negative_excursion_bridge": true,
     "negative_excursion_free_walk": true,
@@ -159,90 +159,99 @@
     },
     "negative_acceleration": {
       "0": {
-        "n": 8463,
+        "n": 8434,
         "events": 43,
         "median_accel": 0.0,
-        "sd_z": 0.990704329636822,
+        "sd_z": 0.9913456529575897,
         "readable": true,
         "pass": true
       },
       "1": {
-        "n": 8024,
+        "n": 7978,
         "events": 41,
         "median_accel": 0.0,
-        "sd_z": 0.9914246366615216,
+        "sd_z": 0.9775930650958351,
         "readable": true,
         "pass": true
       },
       "2": {
-        "n": 7308,
-        "events": 40,
+        "n": 7211,
+        "events": 39,
         "median_accel": 0.0,
-        "sd_z": 0.9806970391534796,
+        "sd_z": 0.9720563520006067,
         "readable": true,
         "pass": true
       },
       "3": {
-        "n": 6038,
+        "n": 5877,
         "events": 35,
         "median_accel": 0.0,
-        "sd_z": 0.9928023037645882,
+        "sd_z": 0.9524829824086902,
         "readable": true,
         "pass": true
       },
       "4": {
-        "n": 4562,
-        "events": 30,
+        "n": 4417,
+        "events": 28,
         "median_accel": 0.0,
-        "sd_z": 0.9589017502469291,
+        "sd_z": 0.9483475549213078,
         "readable": true,
         "pass": true
       },
       "5": {
-        "n": 3295,
-        "events": 20,
+        "n": 3104,
+        "events": 19,
         "median_accel": 0.0,
-        "sd_z": 1.0067578865533031,
+        "sd_z": 0.967728170984094,
         "readable": true,
         "pass": true
       },
       "6": {
-        "n": 2294,
+        "n": 2105,
         "events": 15,
         "median_accel": 0.0,
-        "sd_z": 0.9726866865086213,
+        "sd_z": 0.9535208317150118,
         "readable": true,
         "pass": true
       },
       "7": {
-        "n": 1403,
-        "events": 10,
+        "n": 1229,
+        "events": 9,
         "median_accel": 0.0,
-        "sd_z": 0.8864037319896054,
+        "sd_z": 0.9028952950518861,
         "readable": true,
         "pass": true
       },
       "8": {
-        "n": 587,
-        "events": 5,
+        "n": 509,
+        "events": 4,
         "median_accel": 0.0,
-        "sd_z": 0.8224284568176363,
+        "sd_z": 0.8325311449538512,
         "readable": true,
         "pass": true
       },
       "9": {
-        "n": 16,
+        "n": 2,
         "events": 2,
-        "median_accel": 0.027033610635137897,
-        "sd_z": 0.48791452456961826,
+        "median_accel": -0.0733017370959377,
+        "sd_z": 0.8001542544648367,
         "readable": false,
         "pass": null
       }
     },
+    "acceleration_population": {
+      "events": 49,
+      "excluded_auction_minute": 0,
+      "history": "[segment start, tau] (Amendment 3 A3.1)",
+      "segments": {
+        "regular": 33,
+        "premarket": 16
+      }
+    },
     "positive_acceleration": {
       "m=0,k=0": {
-        "n": 8258,
-        "median_accel": 0.6931471805599453,
+        "n": 8269,
+        "median_accel": 0.6913131589546213,
         "target": 0.6931471805599453,
         "role": "straddle (verdict)",
         "readable": true,
@@ -250,7 +259,7 @@
         "pass_literal_text": true
       },
       "m=0,k=1": {
-        "n": 8162,
+        "n": 8173,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -259,7 +268,7 @@
         "pass_literal_text": true
       },
       "m=0,k=2": {
-        "n": 7704,
+        "n": 7604,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -268,7 +277,7 @@
         "pass_literal_text": true
       },
       "m=0,k=3": {
-        "n": 6532,
+        "n": 6374,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -277,7 +286,7 @@
         "pass_literal_text": true
       },
       "m=0,k=4": {
-        "n": 5343,
+        "n": 5108,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -286,7 +295,7 @@
         "pass_literal_text": true
       },
       "m=0,k=5": {
-        "n": 3655,
+        "n": 3535,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -295,7 +304,7 @@
         "pass_literal_text": true
       },
       "m=0,k=6": {
-        "n": 2782,
+        "n": 2541,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -304,7 +313,7 @@
         "pass_literal_text": true
       },
       "m=0,k=7": {
-        "n": 1810,
+        "n": 1639,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -313,7 +322,7 @@
         "pass_literal_text": true
       },
       "m=0,k=8": {
-        "n": 797,
+        "n": 673,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -322,17 +331,17 @@
         "pass_literal_text": true
       },
       "m=0,k=9": {
-        "n": 164,
+        "n": 72,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
-        "readable": true,
-        "pass_vs_target": true,
-        "pass_literal_text": true
+        "readable": false,
+        "pass_vs_target": null,
+        "pass_literal_text": null
       },
       "m=1,k=0": {
-        "n": 8392,
-        "median_accel": 0.4054651081081644,
+        "n": 8358,
+        "median_accel": 0.4036951836666956,
         "target": 0.4054651081081644,
         "role": "coarser, step inside recent half (reported vs analytic; not in verdict)",
         "readable": true,
@@ -340,8 +349,8 @@
         "pass_literal_text": false
       },
       "m=1,k=1": {
-        "n": 7961,
-        "median_accel": 0.6926592566663912,
+        "n": 7910,
+        "median_accel": 0.6926432751555207,
         "target": 0.6931471805599453,
         "role": "straddle (verdict)",
         "readable": true,
@@ -349,7 +358,7 @@
         "pass_literal_text": true
       },
       "m=1,k=2": {
-        "n": 7895,
+        "n": 7789,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -358,7 +367,7 @@
         "pass_literal_text": true
       },
       "m=1,k=3": {
-        "n": 6907,
+        "n": 6770,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -367,7 +376,7 @@
         "pass_literal_text": true
       },
       "m=1,k=4": {
-        "n": 5764,
+        "n": 5489,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -376,7 +385,7 @@
         "pass_literal_text": true
       },
       "m=1,k=5": {
-        "n": 3974,
+        "n": 3858,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -385,7 +394,7 @@
         "pass_literal_text": true
       },
       "m=1,k=6": {
-        "n": 3029,
+        "n": 2779,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -394,7 +403,7 @@
         "pass_literal_text": true
       },
       "m=1,k=7": {
-        "n": 2034,
+        "n": 1860,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -403,7 +412,7 @@
         "pass_literal_text": true
       },
       "m=1,k=8": {
-        "n": 1018,
+        "n": 888,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -412,7 +421,7 @@
         "pass_literal_text": true
       },
       "m=1,k=9": {
-        "n": 339,
+        "n": 242,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -420,18 +429,9 @@
         "pass_vs_target": true,
         "pass_literal_text": true
       },
-      "m=1,k=10": {
-        "n": 2,
-        "median_accel": 0.08160560529576799,
-        "target": 0.0,
-        "role": "after the step (verdict)",
-        "readable": false,
-        "pass_vs_target": null,
-        "pass_literal_text": null
-      },
       "m=2,k=0": {
-        "n": 8443,
-        "median_accel": 0.22245428390559305,
+        "n": 8424,
+        "median_accel": 0.22275106028608432,
         "target": 0.22314355131420976,
         "role": "coarser, step inside recent half (reported vs analytic; not in verdict)",
         "readable": true,
@@ -439,7 +439,7 @@
         "pass_literal_text": false
       },
       "m=2,k=1": {
-        "n": 8012,
+        "n": 7978,
         "median_accel": 0.4054651081081644,
         "target": 0.4054651081081644,
         "role": "coarser, step inside recent half (reported vs analytic; not in verdict)",
@@ -448,7 +448,7 @@
         "pass_literal_text": false
       },
       "m=2,k=2": {
-        "n": 7299,
+        "n": 7205,
         "median_accel": 0.6931471805599453,
         "target": 0.6931471805599453,
         "role": "straddle (verdict)",
@@ -457,7 +457,7 @@
         "pass_literal_text": true
       },
       "m=2,k=3": {
-        "n": 7115,
+        "n": 6969,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -466,7 +466,7 @@
         "pass_literal_text": true
       },
       "m=2,k=4": {
-        "n": 5914,
+        "n": 5696,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -475,7 +475,7 @@
         "pass_literal_text": true
       },
       "m=2,k=5": {
-        "n": 4200,
+        "n": 4098,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -484,7 +484,7 @@
         "pass_literal_text": true
       },
       "m=2,k=6": {
-        "n": 3198,
+        "n": 2948,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -493,7 +493,7 @@
         "pass_literal_text": true
       },
       "m=2,k=7": {
-        "n": 2155,
+        "n": 1982,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -502,8 +502,8 @@
         "pass_literal_text": true
       },
       "m=2,k=8": {
-        "n": 1204,
-        "median_accel": 0.0,
+        "n": 1030,
+        "median_accel": -0.009524097485347237,
         "target": 0.0,
         "role": "after the step (verdict)",
         "readable": true,
@@ -511,7 +511,7 @@
         "pass_literal_text": true
       },
       "m=2,k=9": {
-        "n": 466,
+        "n": 361,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -519,18 +519,9 @@
         "pass_vs_target": true,
         "pass_literal_text": true
       },
-      "m=2,k=10": {
-        "n": 3,
-        "median_accel": -0.11122563511022437,
-        "target": 0.0,
-        "role": "after the step (verdict)",
-        "readable": false,
-        "pass_vs_target": null,
-        "pass_literal_text": null
-      },
       "m=3,k=0": {
-        "n": 8446,
-        "median_accel": 0.11756516237847539,
+        "n": 8430,
+        "median_accel": 0.11625500297268504,
         "target": 0.11778303565638346,
         "role": "coarser, step inside recent half (reported vs analytic; not in verdict)",
         "readable": true,
@@ -538,8 +529,8 @@
         "pass_literal_text": true
       },
       "m=3,k=1": {
-        "n": 8026,
-        "median_accel": 0.22279893188189415,
+        "n": 7978,
+        "median_accel": 0.22314355131420976,
         "target": 0.22314355131420976,
         "role": "coarser, step inside recent half (reported vs analytic; not in verdict)",
         "readable": true,
@@ -547,8 +538,8 @@
         "pass_literal_text": false
       },
       "m=3,k=2": {
-        "n": 7385,
-        "median_accel": 0.4048464876120982,
+        "n": 7264,
+        "median_accel": 0.4021674757157152,
         "target": 0.4054651081081644,
         "role": "coarser, step inside recent half (reported vs analytic; not in verdict)",
         "readable": true,
@@ -556,8 +547,8 @@
         "pass_literal_text": false
       },
       "m=3,k=3": {
-        "n": 6160,
-        "median_accel": 0.6915398212202977,
+        "n": 5989,
+        "median_accel": 0.6873416490146248,
         "target": 0.6931471805599453,
         "role": "straddle (verdict)",
         "readable": true,
@@ -565,7 +556,7 @@
         "pass_literal_text": true
       },
       "m=3,k=4": {
-        "n": 5975,
+        "n": 5761,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -574,7 +565,7 @@
         "pass_literal_text": true
       },
       "m=3,k=5": {
-        "n": 4353,
+        "n": 4241,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -583,7 +574,7 @@
         "pass_literal_text": true
       },
       "m=3,k=6": {
-        "n": 3252,
+        "n": 3010,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -592,7 +583,7 @@
         "pass_literal_text": true
       },
       "m=3,k=7": {
-        "n": 2232,
+        "n": 2049,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -601,7 +592,7 @@
         "pass_literal_text": true
       },
       "m=3,k=8": {
-        "n": 1269,
+        "n": 1138,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -610,7 +601,7 @@
         "pass_literal_text": true
       },
       "m=3,k=9": {
-        "n": 518,
+        "n": 446,
         "median_accel": 0.0,
         "target": 0.0,
         "role": "after the step (verdict)",
@@ -619,8 +610,8 @@
         "pass_literal_text": true
       },
       "m=3,k=10": {
-        "n": 12,
-        "median_accel": 0.02564664719377524,
+        "n": 3,
+        "median_accel": 0.05715841383994862,
         "target": 0.0,
         "role": "after the step (verdict)",
         "readable": false,
@@ -765,102 +756,81 @@
       },
       "a2_count_vs_kernel": {
         "0": {
-          "n": 22,
-          "median_count": 2.9754974593471752,
+          "n": 38,
+          "median_count": 0.376441259095748,
           "median_kernel": null,
           "n_kernel_defined": 0,
           "spearman": NaN
         },
         "1": {
-          "n": 30,
-          "median_count": 1.4727749571397886,
+          "n": 37,
+          "median_count": 0.4781466595429692,
           "median_kernel": null,
           "n_kernel_defined": 0,
           "spearman": NaN
         },
         "2": {
-          "n": 32,
-          "median_count": 0.48505623630753214,
-          "median_kernel": 0.376718477716155,
-          "n_kernel_defined": 32,
-          "spearman": 0.8907624633431085
+          "n": 35,
+          "median_count": 0.6322764654729194,
+          "median_kernel": 0.20061799833335847,
+          "n_kernel_defined": 35,
+          "spearman": 0.7182072829131653
         },
         "3": {
-          "n": 31,
-          "median_count": 0.7184649885442351,
-          "median_kernel": 0.24973885259778328,
-          "n_kernel_defined": 31,
-          "spearman": 0.7516129032258065
+          "n": 32,
+          "median_count": 0.387396679190275,
+          "median_kernel": 0.2000779166247534,
+          "n_kernel_defined": 32,
+          "spearman": 0.7276392961876832
         },
         "4": {
-          "n": 33,
-          "median_count": 0.5845133395571499,
-          "median_kernel": 0.2174610060066029,
-          "n_kernel_defined": 33,
-          "spearman": 0.8064839572192514
+          "n": 28,
+          "median_count": 0.2913958210145116,
+          "median_kernel": 0.14404805108980895,
+          "n_kernel_defined": 28,
+          "spearman": 0.7629994526546251
         },
         "5": {
-          "n": 29,
-          "median_count": 0.5596157879354227,
-          "median_kernel": 0.2712915704385447,
-          "n_kernel_defined": 29,
-          "spearman": 0.8625615763546796
+          "n": 22,
+          "median_count": 0.41708303509895406,
+          "median_kernel": 0.10363553185351682,
+          "n_kernel_defined": 22,
+          "spearman": 0.8701298701298703
         },
         "6": {
-          "n": 26,
-          "median_count": 0.25734064237638543,
-          "median_kernel": 0.15627945866599374,
-          "n_kernel_defined": 26,
-          "spearman": 0.5917948717948718
+          "n": 20,
+          "median_count": 0.21890847137491712,
+          "median_kernel": 0.10138820742391752,
+          "n_kernel_defined": 20,
+          "spearman": 0.6360902255639098
         },
         "7": {
-          "n": 20,
-          "median_count": 0.2646296627274144,
-          "median_kernel": 0.11897109693801527,
-          "n_kernel_defined": 20,
-          "spearman": 0.2045112781954887
+          "n": 16,
+          "median_count": 0.32936920043720164,
+          "median_kernel": 0.11253201285743242,
+          "n_kernel_defined": 16,
+          "spearman": 0.7411764705882353
         },
         "8": {
-          "n": 20,
-          "median_count": 0.22125318989425669,
-          "median_kernel": 0.1093902420641332,
-          "n_kernel_defined": 20,
-          "spearman": 0.4917293233082706
+          "n": 10,
+          "median_count": 0.22656893081143276,
+          "median_kernel": 0.14750266240232762,
+          "n_kernel_defined": 10,
+          "spearman": 0.5757575757575757
         },
         "9": {
-          "n": 14,
-          "median_count": 0.15330963673576595,
-          "median_kernel": 0.11144754536810575,
-          "n_kernel_defined": 14,
-          "spearman": 0.6879120879120879
+          "n": 7,
+          "median_count": -0.01834913866819654,
+          "median_kernel": 0.11191531091304596,
+          "n_kernel_defined": 7,
+          "spearman": 0.39285714285714296
         },
         "10": {
-          "n": 11,
-          "median_count": -0.06805346324501564,
-          "median_kernel": 0.08338759046519995,
-          "n_kernel_defined": 11,
-          "spearman": 0.5181818181818182
-        },
-        "11": {
-          "n": 7,
-          "median_count": 0.04879016416943204,
-          "median_kernel": -0.028281284957482722,
-          "n_kernel_defined": 7,
-          "spearman": 0.8214285714285715
-        },
-        "12": {
-          "n": 1,
-          "median_count": 0.19782574332991987,
-          "median_kernel": 0.06478998362099375,
-          "n_kernel_defined": 1,
-          "spearman": NaN
-        },
-        "13": {
-          "n": 1,
-          "median_count": 0.05129329438755048,
-          "median_kernel": 0.08655228682071137,
-          "n_kernel_defined": 1,
-          "spearman": NaN
+          "n": 4,
+          "median_count": -0.11802347807505889,
+          "median_kernel": -0.017884291870561952,
+          "n_kernel_defined": 4,
+          "spearman": 1.0
         }
       }
     },

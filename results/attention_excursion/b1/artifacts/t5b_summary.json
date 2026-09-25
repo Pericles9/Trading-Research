@@ -1,19 +1,31 @@
 {
-  "config_hash": "3c9874334a6d",
+  "config_hash": "658071fbe27f",
   "dates": 49,
   "cells": {
     "L=15|W=5": {
-      "control": {
-        "n_ok": 2046,
-        "status": {
-          "ok": 2046,
-          "no_eligible_moment": 934,
-          "zero_count": 274
+      "matching": {
+        "pairs": 1422,
+        "pairs_with_matched_control": 49,
+        "pairs_no_match": 1349,
+        "no_match_reason": {
+          "structural_octave_bin_not_wider_than_W": 849,
+          "every_moment_within_W_of_a_crossing": 500
         },
-        "median": -0.12136085700426748,
-        "p25": -0.48079612176459574,
-        "p75": 0.3228879192502336,
-        "n_pairs": 1398
+        "matched_moments_drawn": 245,
+        "n_eligible_median": 52.0
+      },
+      "control": {
+        "n_ok": 230,
+        "status": {
+          "no_match": 1349,
+          "ok": 230,
+          "zero_count": 15
+        },
+        "median": -0.27390194743149365,
+        "p25": -0.5450128856610547,
+        "p75": 0.0,
+        "n_pairs": 1398,
+        "window_crosses_segment": 0
       },
       "crossing": {
         "n_ok": 1342,
@@ -25,21 +37,40 @@
         "median": -0.06235018946117249,
         "p25": -0.46858225573788526,
         "p75": 0.2587888023313186,
-        "n_pairs": 1422
+        "n_pairs": 1422,
+        "window_crosses_segment": 148
+      },
+      "crossing_matched_pairs": {
+        "n_ok": 45,
+        "median": -0.20981469737415331,
+        "p25": -0.5449813804169849,
+        "p75": 0.018692133012152546
       }
     },
     "L=60|W=5": {
-      "control": {
-        "n_ok": 10521,
-        "status": {
-          "ok": 10521,
-          "zero_count": 2129,
-          "no_eligible_moment": 1618
+      "matching": {
+        "pairs": 4172,
+        "pairs_with_matched_control": 1048,
+        "pairs_no_match": 3100,
+        "no_match_reason": {
+          "every_moment_within_W_of_a_crossing": 2251,
+          "structural_octave_bin_not_wider_than_W": 849
         },
-        "median": -0.07020425867324857,
-        "p25": -0.3886579897917832,
-        "p75": 0.2691286645560331,
-        "n_pairs": 4148
+        "matched_moments_drawn": 5240,
+        "n_eligible_median": 406.0
+      },
+      "control": {
+        "n_ok": 4970,
+        "status": {
+          "ok": 4970,
+          "no_match": 3100,
+          "zero_count": 270
+        },
+        "median": -0.06327425777706042,
+        "p25": -0.39844128466635315,
+        "p75": 0.2894798787938927,
+        "n_pairs": 4148,
+        "window_crosses_segment": 39
       },
       "crossing": {
         "n_ok": 3919,
@@ -51,21 +82,40 @@
         "median": -0.04211148535012685,
         "p25": -0.4013911743663707,
         "p75": 0.2637845127468683,
-        "n_pairs": 4172
+        "n_pairs": 4172,
+        "window_crosses_segment": 375
+      },
+      "crossing_matched_pairs": {
+        "n_ok": 1003,
+        "median": -0.11771363217924141,
+        "p25": -0.46361891951214385,
+        "p75": 0.19844473422000766
       }
     },
     "L=60|W=15": {
-      "control": {
-        "n_ok": 5652,
-        "status": {
-          "ok": 5652,
-          "no_eligible_moment": 2746,
-          "zero_count": 1238
+      "matching": {
+        "pairs": 4172,
+        "pairs_with_matched_control": 181,
+        "pairs_no_match": 3943,
+        "no_match_reason": {
+          "every_moment_within_W_of_a_crossing": 2393,
+          "structural_octave_bin_not_wider_than_W": 1550
         },
-        "median": -0.24291168408624722,
-        "p25": -0.5667224148975798,
-        "p75": 0.17146296024880403,
-        "n_pairs": 4124
+        "matched_moments_drawn": 905,
+        "n_eligible_median": 256.0
+      },
+      "control": {
+        "n_ok": 883,
+        "status": {
+          "no_match": 3943,
+          "ok": 883,
+          "zero_count": 22
+        },
+        "median": -0.15621893289131727,
+        "p25": -0.48499843856700425,
+        "p75": 0.2112385295083012,
+        "n_pairs": 4124,
+        "window_crosses_segment": 12
       },
       "crossing": {
         "n_ok": 4013,
@@ -77,20 +127,40 @@
         "median": -0.13353139262452263,
         "p25": -0.5232481437645479,
         "p75": 0.22047332275833081,
-        "n_pairs": 4172
+        "n_pairs": 4172,
+        "window_crosses_segment": 608
+      },
+      "crossing_matched_pairs": {
+        "n_ok": 177,
+        "median": -0.30892718106551703,
+        "p25": -0.6672037860679211,
+        "p75": 0.06669137449867214
       }
     },
     "L=rest_of_session|W=5": {
-      "control": {
-        "n_ok": 45927,
-        "status": {
-          "ok": 45927,
-          "zero_count": 32068
+      "matching": {
+        "pairs": 15623,
+        "pairs_with_matched_control": 10433,
+        "pairs_no_match": 5166,
+        "no_match_reason": {
+          "every_moment_within_W_of_a_crossing": 4317,
+          "structural_octave_bin_not_wider_than_W": 849
         },
-        "median": 0.0,
-        "p25": -0.3994930253437743,
-        "p75": 0.31267296503871034,
-        "n_pairs": 15599
+        "matched_moments_drawn": 52165,
+        "n_eligible_median": 2635.0
+      },
+      "control": {
+        "n_ok": 48968,
+        "status": {
+          "ok": 48968,
+          "no_match": 5166,
+          "zero_count": 3197
+        },
+        "median": -0.01739174271186922,
+        "p25": -0.3409448411416794,
+        "p75": 0.2992428948528569,
+        "n_pairs": 15599,
+        "window_crosses_segment": 529
       },
       "crossing": {
         "n_ok": 14794,
@@ -102,20 +172,40 @@
         "median": 0.0,
         "p25": -0.33432832401492196,
         "p75": 0.3184537311185346,
-        "n_pairs": 15623
+        "n_pairs": 15623,
+        "window_crosses_segment": 1858
+      },
+      "crossing_matched_pairs": {
+        "n_ok": 9878,
+        "median": -0.006387908041072138,
+        "p25": -0.34250280829459734,
+        "p75": 0.300540117585124
       }
     },
     "L=rest_of_session|W=15": {
-      "control": {
-        "n_ok": 49189,
-        "status": {
-          "ok": 49189,
-          "zero_count": 28686
+      "matching": {
+        "pairs": 15623,
+        "pairs_with_matched_control": 6225,
+        "pairs_no_match": 9350,
+        "no_match_reason": {
+          "every_moment_within_W_of_a_crossing": 7800,
+          "structural_octave_bin_not_wider_than_W": 1550
         },
-        "median": -0.07020425867324857,
-        "p25": -0.4795730802618862,
-        "p75": 0.28768207245178085,
-        "n_pairs": 15575
+        "matched_moments_drawn": 31125,
+        "n_eligible_median": 1652.0
+      },
+      "control": {
+        "n_ok": 30477,
+        "status": {
+          "ok": 30477,
+          "no_match": 9350,
+          "zero_count": 648
+        },
+        "median": -0.08796877294595716,
+        "p25": -0.41420874868272317,
+        "p75": 0.22838597784855974,
+        "n_pairs": 15575,
+        "window_crosses_segment": 1708
       },
       "crossing": {
         "n_ok": 15237,
@@ -127,20 +217,40 @@
         "median": -0.048790164169432056,
         "p25": -0.42608439531090014,
         "p75": 0.28007747306656167,
-        "n_pairs": 15623
+        "n_pairs": 15623,
+        "window_crosses_segment": 2984
+      },
+      "crossing_matched_pairs": {
+        "n_ok": 6104,
+        "median": -0.07696104113612832,
+        "p25": -0.41419878807691907,
+        "p75": 0.2365792773259369
       }
     },
     "L=rest_of_session|W=60": {
-      "control": {
-        "n_ok": 56290,
-        "status": {
-          "ok": 56290,
-          "zero_count": 21420
+      "matching": {
+        "pairs": 15623,
+        "pairs_with_matched_control": 693,
+        "pairs_no_match": 14849,
+        "no_match_reason": {
+          "every_moment_within_W_of_a_crossing": 10424,
+          "structural_octave_bin_not_wider_than_W": 4425
         },
-        "median": -0.5862711159555072,
-        "p25": -1.0459685551826876,
-        "p75": -0.08701137698962981,
-        "n_pairs": 15542
+        "matched_moments_drawn": 3465,
+        "n_eligible_median": 796.0
+      },
+      "control": {
+        "n_ok": 3285,
+        "status": {
+          "no_match": 14849,
+          "ok": 3285,
+          "zero_count": 180
+        },
+        "median": -0.3199830172401022,
+        "p25": -0.6617876832206858,
+        "p75": 0.1672969701438567,
+        "n_pairs": 15542,
+        "window_crosses_segment": 282
       },
       "crossing": {
         "n_ok": 15426,
@@ -152,10 +262,18 @@
         "median": -0.21332793983216544,
         "p25": -0.6980786212136347,
         "p75": 0.18605846482434293,
-        "n_pairs": 15623
+        "n_pairs": 15623,
+        "window_crosses_segment": 8191
+      },
+      "crossing_matched_pairs": {
+        "n_ok": 676,
+        "median": -0.3635545103176529,
+        "p25": -1.0457923673542466,
+        "p75": 0.1270288723908016
       }
     }
   },
+  "control_rule": "for each (live name i, crossing j) pair and window W, control moments t are drawn from i's own live span with (a) the same octave of time since i's own crossing as tau_j: floor(log2(t - tau_i in seconds)) == floor(log2(tau_j - tau_i in seconds)); (b) the same clock segment as tau_j (premarket / regular / after hours; auction minutes are their own segments); (c) no other D1 crossing within +/- W; (d) t - W >= 04:00 and t + W <= 20:00. Drawn uniformly on a 1-second grid, controls_per_pair per pair, with the config seed (A3.5).",
   "structurally_undefined_cells": {
     "15": [
       15,

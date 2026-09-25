@@ -11,7 +11,9 @@ i's own live span that fall in the same octave of time since i's own crossing as
 (floor(log2((t - tau_i) / 1 s)) == floor(log2((tau_j - tau_i) / 1 s))), in the same clock segment as
 tau_j (the cross minutes are segments of their own), with no D1 crossing other than i's own within
 +/- W and [t - W, t + W] inside 04:00-20:00. Drawn uniformly on a 1-second grid with the config seed.
-A pair with no such moment is `no_match` -- never filled from outside its bin.
+A pair with no such moment is `no_match` -- never filled from outside its bin. Because tau_j lies in its own
+octave bin, a bin no wider than W (2^octave s <= W) is entirely within W of tau_j: those pairs are
+`no_match` by construction and carry their own reason.
 
 `window_crosses_segment` (both arms) marks a window [t - W, t + W) whose ends lie in different clock
 segments -- a descriptor, not a filter.
@@ -92,6 +94,11 @@ def main() -> int:
                                      "log_ratio": lr, "status": "ok" if np.isfinite(lr) else "zero_count",
                                      "window_crosses_segment": bool(seg_code(tj - W) != seg_code(tj + W - 1))})
                         # A3.5 matched control: same octave since i's own crossing, same segment, no crossing within +/- W
+                        if 2.0 ** octave * NS <= W:
+                            # tau_j lies in its own octave bin, so a bin no wider than W is entirely within W of tau_j
+                            rows.append({**key, "W_min": wmin, "arm": "control", "status": "no_match",
+                                         "no_match_reason": "structural_octave_bin_not_wider_than_W", "n_eligible": 0})
+                            continue
                         lo_t, hi_t = max(b_lo, t0400 + W), min(b_hi, span_end, t2000 - W)
                         if hi_t <= lo_t:
                             rows.append({**key, "W_min": wmin, "arm": "control", "status": "no_match",
@@ -141,7 +148,7 @@ def main() -> int:
                       "median": float(v.median()) if v.size else None,
                       "p25": float(v.quantile(.25)) if v.size else None, "p75": float(v.quantile(.75)) if v.size else None,
                       "n_pairs": int(ga[["j", "i"]].drop_duplicates().shape[0]),
-                      "window_crosses_segment": int(ga["window_crosses_segment"].fillna(False).astype(bool).sum())}
+                      "window_crosses_segment": int((ga["window_crosses_segment"] == True).sum())}  # noqa: E712
         # the crossing arm restricted to pairs that have a matched control -- the like-for-like comparison
         cm = g[(g["arm"] == "crossing") & (g["status"] == "ok")].merge(matched, on=["j", "i"])
         s["crossing_matched_pairs"] = {"n_ok": int(len(cm)), "median": float(cm["log_ratio"].median()) if len(cm) else None,

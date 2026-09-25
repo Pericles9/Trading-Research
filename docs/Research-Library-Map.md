@@ -2687,3 +2687,16 @@ artifacts and charts are kept under `artifacts/run2/` and `charts/run2/`. All se
 simulated expectation; blindness 4.3e-10). Zero-valid-rung A2 events 27 -> 8 of 49. Every chart is
 regenerated with Plotly inlined (D14); the per-event T4 strips and A2 curves are one chart each with an
 event selector. The 09:30 open-adjacent boundary (A2.7) was not set, so that class is carried as pending.
+
+**Amendment 3 (2026-09-25) and the re-run -- HARD STOP at T7; every control passes.**
+`prompts/attention_excursion_b1_amendment_3.md` (filed verbatim). DA-4 and `open_adjacent_0930` are
+retired: the A2 ladder is anchored at the start of tau's clock segment (04:00, open + 60 s, close + 60 s,
+XNYS calendar; `common.clock_segment` / `segment_start_ns`), tau inside a cross minute carries no A2
+(`tau_in_auction_minute`; 148 + 37 of 15,519 on D1, 0 on dev), and `attention.assert_segment_windows`
+raises on any rung half-window that leaves the segment. T5b's control is matched on the octave since the
+live name's own crossing and on segment, with `no_match` carried by reason. T5, T5b and T6 re-ran (T4
+did not); the Amendment 2 run's T5/T5b/T6 artifacts and charts are kept under `artifacts/run3/` and
+`charts/run3/` as the 'before', measured against the re-run by `t5_a3_before_after.py`
+(`artifacts/t5_a3_before_after.json`, `..._events.parquet`, `t5_a3_before_windows.parquet`; chart
+`charts/t5/valid_rungs_before_after.html`; new `charts/t5b/matched_control_counts.html`). `README.md`
+added to `charts/run1/`, `run2/`, `run3/` (A3.6).
