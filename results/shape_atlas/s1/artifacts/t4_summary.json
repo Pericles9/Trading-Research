@@ -1,0 +1,353 @@
+{
+  "config_hash": "cf347fdaa606",
+  "events": 15519,
+  "runup_classes": {
+    "grind": 14037,
+    "gap": 1202,
+    "runup_unavailable:tau_in_auction_minute": 168,
+    "runup_unavailable:no_print_before_tau": 64,
+    "late_spike": 39,
+    "runup_unavailable:sigma_zero": 9
+  },
+  "runup_classes_by_segment": [
+    {
+      "tau_anchor_segment": "after_hours",
+      "runup_class": "grind",
+      "n": 16
+    },
+    {
+      "tau_anchor_segment": "after_hours",
+      "runup_class": "runup_unavailable:no_print_before_tau",
+      "n": 3
+    },
+    {
+      "tau_anchor_segment": "after_hours",
+      "runup_class": "gap",
+      "n": 2
+    },
+    {
+      "tau_anchor_segment": "auction_close",
+      "runup_class": "runup_unavailable:tau_in_auction_minute",
+      "n": 36
+    },
+    {
+      "tau_anchor_segment": "auction_close",
+      "runup_class": "gap",
+      "n": 1
+    },
+    {
+      "tau_anchor_segment": "auction_open",
+      "runup_class": "runup_unavailable:tau_in_auction_minute",
+      "n": 132
+    },
+    {
+      "tau_anchor_segment": "auction_open",
+      "runup_class": "gap",
+      "n": 16
+    },
+    {
+      "tau_anchor_segment": "premarket",
+      "runup_class": "grind",
+      "n": 3447
+    },
+    {
+      "tau_anchor_segment": "premarket",
+      "runup_class": "gap",
+      "n": 1104
+    },
+    {
+      "tau_anchor_segment": "premarket",
+      "runup_class": "runup_unavailable:no_print_before_tau",
+      "n": 19
+    },
+    {
+      "tau_anchor_segment": "premarket",
+      "runup_class": "late_spike",
+      "n": 11
+    },
+    {
+      "tau_anchor_segment": "premarket",
+      "runup_class": "runup_unavailable:sigma_zero",
+      "n": 6
+    },
+    {
+      "tau_anchor_segment": "regular",
+      "runup_class": "grind",
+      "n": 10574
+    },
+    {
+      "tau_anchor_segment": "regular",
+      "runup_class": "gap",
+      "n": 79
+    },
+    {
+      "tau_anchor_segment": "regular",
+      "runup_class": "runup_unavailable:no_print_before_tau",
+      "n": 42
+    },
+    {
+      "tau_anchor_segment": "regular",
+      "runup_class": "late_spike",
+      "n": 28
+    },
+    {
+      "tau_anchor_segment": "regular",
+      "runup_class": "runup_unavailable:sigma_zero",
+      "n": 3
+    }
+  ],
+  "transition_declared_to_theory_all": [
+    {
+      "runup_type": "gap",
+      "post_type": "burst",
+      "n": 71,
+      "row_n": 1202,
+      "row_share": 0.05906821963394343
+    },
+    {
+      "runup_type": "gap",
+      "post_type": "chop",
+      "n": 696,
+      "row_n": 1202,
+      "row_share": 0.5790349417637272
+    },
+    {
+      "runup_type": "gap",
+      "post_type": "exhausted",
+      "n": 227,
+      "row_n": 1202,
+      "row_share": 0.18885191347753744
+    },
+    {
+      "runup_type": "gap",
+      "post_type": "fade",
+      "n": 128,
+      "row_n": 1202,
+      "row_share": 0.1064891846921797
+    },
+    {
+      "runup_type": "gap",
+      "post_type": "runaway",
+      "n": 24,
+      "row_n": 1202,
+      "row_share": 0.019966722129783693
+    },
+    {
+      "runup_type": "gap",
+      "post_type": "slow_climb",
+      "n": 56,
+      "row_n": 1202,
+      "row_share": 0.04658901830282862
+    },
+    {
+      "runup_type": "grind",
+      "post_type": "burst",
+      "n": 509,
+      "row_n": 14037,
+      "row_share": 0.036261309396594714
+    },
+    {
+      "runup_type": "grind",
+      "post_type": "chop",
+      "n": 8492,
+      "row_n": 14037,
+      "row_share": 0.6049725724869986
+    },
+    {
+      "runup_type": "grind",
+      "post_type": "exhausted",
+      "n": 2410,
+      "row_n": 14037,
+      "row_share": 0.17168910735912232
+    },
+    {
+      "runup_type": "grind",
+      "post_type": "fade",
+      "n": 1726,
+      "row_n": 14037,
+      "row_share": 0.12296074659827598
+    },
+    {
+      "runup_type": "grind",
+      "post_type": "no_vector",
+      "n": 2,
+      "row_n": 14037,
+      "row_share": 0.0001424805870200185
+    },
+    {
+      "runup_type": "grind",
+      "post_type": "runaway",
+      "n": 347,
+      "row_n": 14037,
+      "row_share": 0.024720381847973212
+    },
+    {
+      "runup_type": "grind",
+      "post_type": "slow_climb",
+      "n": 551,
+      "row_n": 14037,
+      "row_share": 0.039253401724015105
+    },
+    {
+      "runup_type": "late_spike",
+      "post_type": "burst",
+      "n": 1,
+      "row_n": 39,
+      "row_share": 0.02564102564102564
+    },
+    {
+      "runup_type": "late_spike",
+      "post_type": "chop",
+      "n": 24,
+      "row_n": 39,
+      "row_share": 0.6153846153846154
+    },
+    {
+      "runup_type": "late_spike",
+      "post_type": "exhausted",
+      "n": 10,
+      "row_n": 39,
+      "row_share": 0.2564102564102564
+    },
+    {
+      "runup_type": "late_spike",
+      "post_type": "fade",
+      "n": 3,
+      "row_n": 39,
+      "row_share": 0.07692307692307693
+    },
+    {
+      "runup_type": "late_spike",
+      "post_type": "runaway",
+      "n": 1,
+      "row_n": 39,
+      "row_share": 0.02564102564102564
+    },
+    {
+      "runup_type": "runup_unavailable:no_print_before_tau",
+      "post_type": "burst",
+      "n": 2,
+      "row_n": 64,
+      "row_share": 0.03125
+    },
+    {
+      "runup_type": "runup_unavailable:no_print_before_tau",
+      "post_type": "chop",
+      "n": 24,
+      "row_n": 64,
+      "row_share": 0.375
+    },
+    {
+      "runup_type": "runup_unavailable:no_print_before_tau",
+      "post_type": "exhausted",
+      "n": 29,
+      "row_n": 64,
+      "row_share": 0.453125
+    },
+    {
+      "runup_type": "runup_unavailable:no_print_before_tau",
+      "post_type": "fade",
+      "n": 5,
+      "row_n": 64,
+      "row_share": 0.078125
+    },
+    {
+      "runup_type": "runup_unavailable:no_print_before_tau",
+      "post_type": "runaway",
+      "n": 1,
+      "row_n": 64,
+      "row_share": 0.015625
+    },
+    {
+      "runup_type": "runup_unavailable:no_print_before_tau",
+      "post_type": "sigma_zero_or_no_null",
+      "n": 1,
+      "row_n": 64,
+      "row_share": 0.015625
+    },
+    {
+      "runup_type": "runup_unavailable:no_print_before_tau",
+      "post_type": "slow_climb",
+      "n": 2,
+      "row_n": 64,
+      "row_share": 0.03125
+    },
+    {
+      "runup_type": "runup_unavailable:sigma_zero",
+      "post_type": "chop",
+      "n": 3,
+      "row_n": 9,
+      "row_share": 0.3333333333333333
+    },
+    {
+      "runup_type": "runup_unavailable:sigma_zero",
+      "post_type": "exhausted",
+      "n": 5,
+      "row_n": 9,
+      "row_share": 0.5555555555555556
+    },
+    {
+      "runup_type": "runup_unavailable:sigma_zero",
+      "post_type": "slow_climb",
+      "n": 1,
+      "row_n": 9,
+      "row_share": 0.1111111111111111
+    },
+    {
+      "runup_type": "runup_unavailable:tau_in_auction_minute",
+      "post_type": "burst",
+      "n": 7,
+      "row_n": 168,
+      "row_share": 0.041666666666666664
+    },
+    {
+      "runup_type": "runup_unavailable:tau_in_auction_minute",
+      "post_type": "chop",
+      "n": 60,
+      "row_n": 168,
+      "row_share": 0.35714285714285715
+    },
+    {
+      "runup_type": "runup_unavailable:tau_in_auction_minute",
+      "post_type": "exhausted",
+      "n": 73,
+      "row_n": 168,
+      "row_share": 0.43452380952380953
+    },
+    {
+      "runup_type": "runup_unavailable:tau_in_auction_minute",
+      "post_type": "fade",
+      "n": 16,
+      "row_n": 168,
+      "row_share": 0.09523809523809523
+    },
+    {
+      "runup_type": "runup_unavailable:tau_in_auction_minute",
+      "post_type": "no_vector",
+      "n": 2,
+      "row_n": 168,
+      "row_share": 0.011904761904761904
+    },
+    {
+      "runup_type": "runup_unavailable:tau_in_auction_minute",
+      "post_type": "runaway",
+      "n": 4,
+      "row_n": 168,
+      "row_share": 0.023809523809523808
+    },
+    {
+      "runup_type": "runup_unavailable:tau_in_auction_minute",
+      "post_type": "sigma_zero_or_no_null",
+      "n": 1,
+      "row_n": 168,
+      "row_share": 0.005952380952380952
+    },
+    {
+      "runup_type": "runup_unavailable:tau_in_auction_minute",
+      "post_type": "slow_climb",
+      "n": 5,
+      "row_n": 168,
+      "row_share": 0.02976190476190476
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "config_hash": "69d4088aec2c",
+  "events_with_tau": 15519,
+  "events_with_vector_by_N": {
+    "50": 15515,
+    "100": 15515,
+    "200": 15515
+  },
+  "reads_no_attention": "inputs: t1_excursion, t0_population, t4a_reference_free_walk only",
+  "headline_by_N": {
+    "50": {
+      "n": 15515,
+      "u_peak_median": 0.26,
+      "ref_u_peak_median": 0.5,
+      "u_peak_share_interior_0.1_0.9": 0.6315178859168546,
+      "ref_u_peak_share_interior_0.1_0.9": 0.5761499999999999,
+      "u_peak_share_le_0.05": 0.20302932645826618,
+      "u_peak_share_ge_0.95": 0.0602642603931679,
+      "rise_s_median": 0.6186267672956627,
+      "ref_rise_s_median": 0.5982270302949637,
+      "rise_s_mean": 0.7119499310806429,
+      "ref_rise_s_mean": 0.718628436942021,
+      "fall_s_median": 0.9258256162800965,
+      "ref_fall_s_median": 0.6009160992552705,
+      "share_rise_bp_gt_rt": 0.8490493071221399,
+      "share_rise_cents_gt_rt": 0.8195939413470835
+    },
+    "100": {
+      "n": 15515,
+      "u_peak_median": 0.26,
+      "ref_u_peak_median": 0.5,
+      "u_peak_share_interior_0.1_0.9": 0.6116661295520464,
+      "ref_u_peak_share_interior_0.1_0.9": 0.5891500000000001,
+      "u_peak_share_le_0.05": 0.20425394779245892,
+      "u_peak_share_ge_0.95": 0.06484047695778279,
+      "rise_s_median": 0.6227190092719901,
+      "ref_rise_s_median": 0.6200212881250082,
+      "rise_s_mean": 0.7246273227545981,
+      "ref_rise_s_mean": 0.7413148852033878,
+      "fall_s_median": 0.9196209794047255,
+      "ref_fall_s_median": 0.6233949107433348,
+      "share_rise_bp_gt_rt": 0.8690944247502417,
+      "share_rise_cents_gt_rt": 0.8433773767321947
+    },
+    "200": {
+      "n": 15515,
+      "u_peak_median": 0.25,
+      "ref_u_peak_median": 0.495,
+      "u_peak_share_interior_0.1_0.9": 0.5979374798582018,
+      "ref_u_peak_share_interior_0.1_0.9": 0.5910500000000001,
+      "u_peak_share_le_0.05": 0.2190783113116339,
+      "u_peak_share_ge_0.95": 0.06664518208185627,
+      "rise_s_median": 0.6176170594120991,
+      "ref_rise_s_median": 0.6318915706265815,
+      "rise_s_mean": 0.7249700339735479,
+      "ref_rise_s_mean": 0.7568802953255909,
+      "fall_s_median": 0.8982778388636842,
+      "ref_fall_s_median": 0.6392491187622144,
+      "share_rise_bp_gt_rt": 0.8851434096036094,
+      "share_rise_cents_gt_rt": 0.8603931679020302
+    }
+  },
+  "cost_clearing_by_price_tier": {
+    "N=50|$1-3": {
+      "n": 4963,
+      "share_rise_bp_gt_rt": 0.8581503123111022,
+      "share_rise_cents_gt_rt": 0.8162401773121096,
+      "share_both": 0.8162401773121096
+    },
+    "N=50|$3-10": {
+      "n": 4978,
+      "share_rise_bp_gt_rt": 0.8503415026114906,
+      "share_rise_cents_gt_rt": 0.8613901165126557,
+      "share_both": 0.8495379670550421
+    },
+    "N=50|<$1": {
+      "n": 2562,
+      "share_rise_bp_gt_rt": 0.8743169398907104,
+      "share_rise_cents_gt_rt": 0.695160031225605,
+      "share_both": 0.695160031225605
+    },
+    "N=50|>=$10": {
+      "n": 3012,
+      "share_rise_bp_gt_rt": 0.8104249667994687,
+      "share_rise_cents_gt_rt": 0.8618857901726428,
+      "share_both": 0.8104249667994687
+    },
+    "N=100|$1-3": {
+      "n": 4963,
+      "share_rise_bp_gt_rt": 0.8770904694741084,
+      "share_rise_cents_gt_rt": 0.8408220834172879,
+      "share_both": 0.8408220834172879
+    },
+    "N=100|$3-10": {
+      "n": 4978,
+      "share_rise_bp_gt_rt": 0.8698272398553636,
+      "share_rise_cents_gt_rt": 0.8816793893129771,
+      "share_both": 0.8690237042989152
+    },
+    "N=100|<$1": {
+      "n": 2562,
+      "share_rise_bp_gt_rt": 0.8934426229508197,
+      "share_rise_cents_gt_rt": 0.7150663544106167,
+      "share_both": 0.7150663544106167
+    },
+    "N=100|>=$10": {
+      "n": 3012,
+      "share_rise_bp_gt_rt": 0.8339973439575034,
+      "share_rise_cents_gt_rt": 0.8934262948207171,
+      "share_both": 0.8339973439575034
+    },
+    "N=200|$1-3": {
+      "n": 4963,
+      "share_rise_bp_gt_rt": 0.8924037880314326,
+      "share_rise_cents_gt_rt": 0.8557324199073141,
+      "share_both": 0.8557324199073141
+    },
+    "N=200|$3-10": {
+      "n": 4978,
+      "share_rise_bp_gt_rt": 0.8869023704298915,
+      "share_rise_cents_gt_rt": 0.8997589393330655,
+      "share_both": 0.8862997187625552
+    },
+    "N=200|<$1": {
+      "n": 2562,
+      "share_rise_bp_gt_rt": 0.9047619047619048,
+      "share_rise_cents_gt_rt": 0.7271662763466042,
+      "share_both": 0.7271662763466042
+    },
+    "N=200|>=$10": {
+      "n": 3012,
+      "share_rise_bp_gt_rt": 0.853585657370518,
+      "share_rise_cents_gt_rt": 0.9163346613545816,
+      "share_both": 0.853585657370518
+    }
+  },
+  "cost_reference": {
+    "rt_bp": 70.98,
+    "rt_cents": 2.512,
+    "source": "results/phase_11/REPORT.md:72",
+    "use": "reference lines only; no outcome is read in this brief"
+  },
+  "gallery": {
+    "n": 72,
+    "strata": 25,
+    "allocation": {
+      "2020|after_hours": 1,
+      "2020|auction_close": 1,
+      "2020|auction_open": 1,
+      "2020|premarket": 3,
+      "2020|regular": 9,
+      "2021|after_hours": 1,
+      "2021|auction_close": 1,
+      "2021|auction_open": 1,
+      "2021|premarket": 3,
+      "2021|regular": 5,
+      "2022|after_hours": 1,
+      "2022|auction_close": 1,
+      "2022|auction_open": 1,
+      "2022|premarket": 3,
+      "2022|regular": 6,
+      "2023|after_hours": 1,
+      "2023|auction_close": 1,
+      "2023|auction_open": 1,
+      "2023|premarket": 4,
+      "2023|regular": 7,
+      "2024|after_hours": 1,
+      "2024|auction_close": 1,
+      "2024|auction_open": 1,
+      "2024|premarket": 6,
+      "2024|regular": 11
+    },
+    "seed": 20260925,
+    "rebuild_matches_t1": true
+  }
+}

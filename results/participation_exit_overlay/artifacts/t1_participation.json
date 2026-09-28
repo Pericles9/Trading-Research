@@ -1,0 +1,85 @@
+{
+  "task": "T1 participation onset and end",
+  "config_hash": "b1db4f659320",
+  "e2_reuse": "PARTIAL -- E2's baseline B_e is reused verbatim; E2's WINDOW artifact is NOT usable as an exit and is rebuilt. See rebuild_rationale.",
+  "e2_rebuild_rationale": [
+    "443 of the 903 (49.1%) have its window_end_ts BEFORE the EPG entry tau -- an exit cannot precede its entry",
+    "40.75% of the 903 have duration_min == 0, i.e. participation 'ends' at t0 itself",
+    "window_end_ts - tau reaches 433,365 s = 5.0 days, so the window is not censored at the event-day extended session end, which the brief states is E2's own rule",
+    "the censored column is False on all 15,742 rows, which cannot be right if any censoring was applied",
+    "E2's brief, config and code were never committed -- only its artifacts -- so the declared C, the volume basis, and the censoring rule cannot be read from the repository"
+  ],
+  "rule": {
+    "trailing_minutes": 10,
+    "multiple": 3.0,
+    "C_reference": 10,
+    "C_ladder": [
+      5,
+      10,
+      20
+    ],
+    "C_status": "DECLARED HERE, NOT CARRIED FROM E2. The brief says 'C carried at E2's declared value'; that value is unrecoverable because E2's brief and code were never committed. 10 is a round choice equal to the trailing-window length. The ladder is reported as sensitivity on the headline numbers."
+  },
+  "n": 903,
+  "n_bars_available": 903,
+  "n_bars_unavailable": 0,
+  "censoring": {
+    "horizon": "20:00:00 America/New_York on the event day (session_offset = 0), the extended-session end",
+    "n_onset_censored": 10,
+    "n_end_censored": 121,
+    "n_exit_b_censored": 128,
+    "share_exit_b_censored": 0.1417,
+    "note": "censored events are their own class; no mean is taken across censored and uncensored (E2 DE-3)."
+  },
+  "onset": {
+    "n_found": 893,
+    "t0_to_onset_sec": {
+      "p5": 40.4,
+      "p25": 56.7,
+      "p50": 59.5,
+      "p75": 60.0,
+      "p95": 11016.0
+    },
+    "share_onset_at_or_before_tau": 0.639
+  },
+  "end": {
+    "n_found": 782,
+    "share_end_before_tau": 0.165,
+    "note": "this is why Exit B anchors on the first decay AT OR AFTER tau rather than on the t0-anchored end -- an exit cannot precede its entry."
+  },
+  "causality": {
+    "fact_vs_confirmed": "participation_*_ns is the minute the crossing happened (the fact, used by the T2 overlay). participation_*_confirmed_ns is the end of minute (mark + C - 1), the earliest instant the C-minute run is knowable. Exit B uses the CONFIRMED instant; timestamping it at the start of the crossing minute would use C minutes of information that had not happened yet.",
+    "confirmation_lag_sec": 600,
+    "n_exit_b_clamped_to_tau": 0,
+    "clamp_note": "events whose confirmed decay still lands before tau exit at tau, i.e. a zero-length hold; counted, never negative."
+  },
+  "exit_b": {
+    "n_found": 775,
+    "exitb_minus_windowclose_sec": {
+      "p5": 103.1,
+      "p25": 3618.7,
+      "p50": 15095.6,
+      "p75": 33005.1,
+      "p95": 45800.5
+    },
+    "share_exit_b_after_window_close": 0.9535
+  },
+  "baseline_thin_de2": {
+    "n_thin": 7,
+    "by_n_baseline_sessions": {
+      "1": 1,
+      "2": 6,
+      "3": 896
+    }
+  },
+  "divergence_from_e2_artifact": {
+    "n_e2_end_before_tau": 444,
+    "share_e2_end_before_tau": 0.4917,
+    "e2_duration_min_median": 20.01,
+    "e2_share_duration_zero": 0.4075,
+    "e2_censored_any": false,
+    "rebuilt_end_censored_share": 0.134
+  },
+  "output_parquet": "results/participation_exit_overlay/artifacts/t1_participation.parquet",
+  "elapsed_sec": 25.7
+}

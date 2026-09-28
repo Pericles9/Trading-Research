@@ -1,0 +1,49 @@
+{
+  "task": "R0-T0a (part 1) D1 population",
+  "config_hash": "5fae280c7fed",
+  "n_checks": 4,
+  "n_fail": 0,
+  "checks": [
+    {
+      "name": "in_scope_universe_row_count",
+      "pass": true,
+      "n": 20951,
+      "expected": 20951,
+      "note": "results/phase_5/artifacts/quotes_bitmaps_all.parquet is D15's materialization of momentum_events_canonical WHERE in_scope = TRUE."
+    },
+    {
+      "name": "d1_row_count",
+      "pass": true,
+      "n": 15763,
+      "expected": 15763,
+      "rule": "momentum_events_canonical WHERE in_scope = TRUE AND source_file = 'file1'"
+    },
+    {
+      "name": "d1_event_id_unique",
+      "pass": true,
+      "n_rows": 15763,
+      "n_unique": 15763
+    },
+    {
+      "name": "d1_ticker_date_unique",
+      "pass": true,
+      "n_dup_ticker_date": 0,
+      "note": "Whether (ticker, date) alone is a key matters for T0b: the gate's own event identity is the folder name (ticker, date, mom_pct) and its result files carry only (ticker, date)."
+    }
+  ],
+  "in_scope_by_source_file": {
+    "file1": 15763,
+    "file2": 5188
+  },
+  "d1_by_year": {
+    "2020": 3439,
+    "2021": 1932,
+    "2022": 2279,
+    "2023": 3021,
+    "2024": 5092
+  },
+  "d1_date_min": "2020-01-03",
+  "d1_date_max": "2024-12-31",
+  "d1_n_distinct_tickers": 2576,
+  "d1_n_distinct_session_dates": 1257
+}

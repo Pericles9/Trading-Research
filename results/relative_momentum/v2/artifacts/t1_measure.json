@@ -1,0 +1,344 @@
+{
+  "task": "v2-T1 floor quantities measured on all 903 candidates",
+  "config_hash": "50046a0f582a",
+  "window_seconds": 600,
+  "population_source": "results/relative_momentum/v1/artifacts/t0_candidates.parquet",
+  "population_reused_not_rebuilt": "v1-T0's tick-exact reconstruction of the runner's gap gate, including queued entries and the next-tick fill convention, validated 6/6 against the run's own recorded entry_price",
+  "n_candidates": 903,
+  "n_measured": 903,
+  "n_unmeasured": 0,
+  "unmeasured_reasons": {},
+  "coverage": {
+    "n_trades_read": 903,
+    "n_quotes_read": 903,
+    "n_depth_available": 901,
+    "n_depth_unavailable": 2,
+    "depth_guard_note": "an event with no D17-surviving quote in the window is NOT rejected on no_depth; the pseudocode's DEPTH_AVAILABLE guard applies and depth_available = FALSE is carried."
+  },
+  "d17": {
+    "n_quote_rows_raw_total": 1622451,
+    "n_quote_rows_excluded_total": 22397,
+    "excluded_share": 0.013804,
+    "rule": {
+      "exclude": [
+        "crossed (bid > ask)",
+        "bid or ask null or <= 0",
+        "one side missing",
+        "bid_size or ask_size null or zero"
+      ],
+      "carry": "locked (bid == ask) -- a real transient state with a genuine zero spread; dropping it biases measured spread upward",
+      "source": "docs/Universe-Decisions.md D17",
+      "no_event_excluded": "no event is excluded on quote-quality grounds; coverage is carried as a covariate"
+    }
+  },
+  "build_time_assert": "passes -- adding a 'score' column to the projection raises",
+  "tau_precision_recovery": {
+    "why": "v1-T0 wrote entry_ts as float64; at 1.7e18 the float64 grid spacing is 256 ns, so every stored tau was rounded by up to ~128 ns. tau is a tick timestamp by construction, so it is snapped back to its nearest real tick.",
+    "n_snapped": 903,
+    "n_snap_nonzero": 866,
+    "snap_ns_abs_max": 128,
+    "snap_ns_quantiles": {
+      "p0": -128.0,
+      "p25": -64.0,
+      "p50": -3.0,
+      "p75": 55.5,
+      "p100": 127.0
+    },
+    "impact": "two candidates (BENF 2024-07-05, JL 2024-01-29) were rounded UPWARD past their own trigger print by 115 ns and 58 ns; their previous print was 601 s and 4,639 s earlier, so the window measured EMPTY and the floor would have rejected them for a floating-point reason. v1's own score window carries the same two zero-volume windows."
+  },
+  "distributions_all_903": {
+    "print_count": {
+      "p0": 1.0,
+      "p1": 27.02,
+      "p5": 91.1,
+      "p10": 133.4,
+      "p25": 418.0,
+      "p50": 1599.0,
+      "p75": 4608.0,
+      "p90": 8424.2,
+      "p95": 10870.8,
+      "p100": 77763.0
+    },
+    "notional_usd": {
+      "p0": 762.88,
+      "p1": 11839.1824,
+      "p5": 37307.5137,
+      "p10": 69696.898,
+      "p25": 194224.8032,
+      "p50": 618817.5244,
+      "p75": 1778571.5714,
+      "p90": 4746562.6327,
+      "p95": 7897087.5431,
+      "p100": 348826787.975
+    },
+    "venue_count": {
+      "p0": 1.0,
+      "p1": 2.02,
+      "p5": 3.0,
+      "p10": 3.0,
+      "p25": 6.0,
+      "p50": 10.0,
+      "p75": 13.0,
+      "p90": 15.0,
+      "p95": 15.0,
+      "p100": 16.0
+    },
+    "quote_count": {
+      "p0": 0.0,
+      "p1": 24.0,
+      "p5": 56.1,
+      "p10": 91.0,
+      "p25": 251.0,
+      "p50": 858.0,
+      "p75": 2353.0,
+      "p90": 4245.0,
+      "p95": 5967.1,
+      "p100": 33255.0
+    },
+    "spread_bp": {
+      "p0": 0.0,
+      "p1": 0.0,
+      "p5": 30.349,
+      "p10": 44.9438,
+      "p25": 76.4155,
+      "p50": 121.2121,
+      "p75": 192.3077,
+      "p90": 326.9367,
+      "p95": 473.1973,
+      "p100": 7027.027
+    },
+    "spread_cents": {
+      "p0": 0.0,
+      "p1": 0.0,
+      "p5": 0.08,
+      "p10": 0.25,
+      "p25": 1.0,
+      "p50": 2.0,
+      "p75": 6.5,
+      "p90": 16.0,
+      "p95": 30.0,
+      "p100": 6500.0
+    },
+    "depth_usd": {
+      "p0": 84.35,
+      "p1": 325.945,
+      "p5": 661.08,
+      "p10": 896.74,
+      "p25": 1491.72,
+      "p50": 2530.07,
+      "p75": 3946.0,
+      "p90": 6710.0,
+      "p95": 10833.0,
+      "p100": 50370.0
+    },
+    "last_price": {
+      "p0": 0.03,
+      "p1": 0.0766,
+      "p5": 0.1896,
+      "p10": 0.3557,
+      "p25": 0.9579,
+      "p50": 2.15,
+      "p75": 4.865,
+      "p90": 10.67,
+      "p95": 15.64,
+      "p100": 227.0
+    },
+    "share_volume": {
+      "p0": 498.0,
+      "p1": 3747.94,
+      "p5": 13935.5,
+      "p10": 27033.4,
+      "p25": 92369.0,
+      "p50": 334286.0,
+      "p75": 941435.0,
+      "p90": 2381203.6,
+      "p95": 4167878.7,
+      "p100": 33546435.0
+    }
+  },
+  "distributions_by_session_segment": {
+    "post_market": {
+      "n": 2,
+      "print_count": {
+        "p5": 29.1,
+        "p25": 69.5,
+        "p50": 120.0,
+        "p75": 170.5,
+        "p95": 210.9
+      },
+      "notional_usd": {
+        "p5": 94208.289,
+        "p25": 152215.485,
+        "p50": 224724.48,
+        "p75": 297233.475,
+        "p95": 355240.671
+      },
+      "venue_count": {
+        "p5": 2.15,
+        "p25": 2.75,
+        "p50": 3.5,
+        "p75": 4.25,
+        "p95": 4.85
+      },
+      "quote_count": {
+        "p5": 6.25,
+        "p25": 31.25,
+        "p50": 62.5,
+        "p75": 93.75,
+        "p95": 118.75
+      },
+      "spread_bp": {
+        "p5": 1428.5714,
+        "p25": 1428.5714,
+        "p50": 1428.5714,
+        "p75": 1428.5714,
+        "p95": 1428.5714
+      },
+      "spread_cents": {
+        "p5": 349.0,
+        "p25": 349.0,
+        "p50": 349.0,
+        "p75": 349.0,
+        "p95": 349.0
+      },
+      "depth_usd": {
+        "p5": 5618.0,
+        "p25": 5618.0,
+        "p50": 5618.0,
+        "p75": 5618.0,
+        "p95": 5618.0
+      },
+      "last_price": {
+        "p5": 4.5845,
+        "p25": 8.8825,
+        "p50": 14.255,
+        "p75": 19.6275,
+        "p95": 23.9255
+      }
+    },
+    "pre_market": {
+      "n": 602,
+      "print_count": {
+        "p5": 172.05,
+        "p25": 911.0,
+        "p50": 2688.5,
+        "p75": 5849.75,
+        "p95": 12169.1
+      },
+      "notional_usd": {
+        "p5": 68422.0365,
+        "p25": 317078.7225,
+        "p50": 845428.4763,
+        "p75": 2216128.4709,
+        "p95": 8511901.3298
+      },
+      "venue_count": {
+        "p5": 3.0,
+        "p25": 3.0,
+        "p50": 9.0,
+        "p75": 12.0,
+        "p95": 15.0
+      },
+      "quote_count": {
+        "p5": 87.3,
+        "p25": 448.0,
+        "p50": 1363.5,
+        "p75": 2818.0,
+        "p95": 6570.2
+      },
+      "spread_bp": {
+        "p5": 34.7826,
+        "p25": 69.6293,
+        "p50": 105.0425,
+        "p75": 165.2893,
+        "p95": 363.6364
+      },
+      "spread_cents": {
+        "p5": 0.08,
+        "p25": 1.0,
+        "p50": 2.0,
+        "p75": 6.0,
+        "p95": 29.0
+      },
+      "depth_usd": {
+        "p5": 788.0,
+        "p25": 1670.0,
+        "p50": 2688.0,
+        "p75": 4282.0,
+        "p95": 10969.5
+      },
+      "last_price": {
+        "p5": 0.1624,
+        "p25": 0.9024,
+        "p50": 2.1551,
+        "p75": 4.74,
+        "p95": 16.0885
+      }
+    },
+    "regular_hours": {
+      "n": 299,
+      "print_count": {
+        "p5": 38.9,
+        "p25": 170.5,
+        "p50": 480.0,
+        "p75": 1431.0,
+        "p95": 5855.9
+      },
+      "notional_usd": {
+        "p5": 24430.0824,
+        "p25": 89532.4071,
+        "p50": 254515.0467,
+        "p75": 850873.0751,
+        "p95": 6605756.4574
+      },
+      "venue_count": {
+        "p5": 5.0,
+        "p25": 9.0,
+        "p50": 12.0,
+        "p75": 14.0,
+        "p95": 16.0
+      },
+      "quote_count": {
+        "p5": 39.0,
+        "p25": 116.5,
+        "p50": 307.0,
+        "p75": 954.0,
+        "p95": 3585.1
+      },
+      "spread_bp": {
+        "p5": 9.5843,
+        "p25": 98.5317,
+        "p50": 168.0672,
+        "p75": 274.7673,
+        "p95": 575.1544
+      },
+      "spread_cents": {
+        "p5": 0.084,
+        "p25": 1.0,
+        "p50": 3.0,
+        "p75": 7.0,
+        "p95": 37.1
+      },
+      "depth_usd": {
+        "p5": 499.6215,
+        "p25": 1183.1425,
+        "p50": 2123.5,
+        "p75": 3428.0,
+        "p95": 10537.7
+      },
+      "last_price": {
+        "p5": 0.3889,
+        "p25": 1.0433,
+        "p50": 2.11,
+        "p75": 4.9325,
+        "p95": 13.306
+      }
+    }
+  },
+  "entry_kind_counts": {
+    "immediate": 592,
+    "queued": 311
+  },
+  "output_parquet": "results/relative_momentum/v2/artifacts/t1_measured.parquet",
+  "elapsed_sec": 62.8
+}

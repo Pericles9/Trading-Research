@@ -42,7 +42,11 @@
 - Event-study before backtest.
 - Effective spread, not quoted. Always cross the spread. Halts = forced hold through the reopen.
 - Lag every feature by realistic pipeline latency at decision time.
-- Time-based splits only, never random. Ticker-blocked splits — no ticker on both sides.
+- Time-based splits only, never random. Ticker-blocked splits — no ticker on both sides — for any
+  study that fits, tunes or selects anything. **Exception (D38):** a measurement study that fits no
+  parameter on the data being split may use chronological slices with repeat tickers, provided every
+  uncertainty estimate is clustered by ticker and every read is repeated on first-seen tickers. A
+  study that later begins fitting inherits the ticker-blocked rule from that point.
 - Two-tier execution: ALL development runs on the dev sample (dev_events / filtered_trades_dev /
   filtered_quotes_dev; 50 events, seed pinned, built in Phase 0b, NEVER rebuilt or reseeded).
   Full-tier runs only after dev output is reviewed and the config is frozen and committed.
@@ -58,7 +62,10 @@
   `write_allowlist` discipline that already bounds which paths a phase may write.
 - **Git discipline: work on a phase branch, commit at each real checkpoint, push to `origin`
   intermittently rather than hoarding local commits.** Never commit or push directly to `master`;
-  merge phase branches to `master` via pull request, never a local `git merge` + push. Never
+  merge phase branches to `master` via pull request by default. **Exception (Cooper, 2026-09-28):**
+  when Cooper asks for it in the session, branches may be merged into `master` locally and pushed —
+  as `--no-ff` merge commits only (no direct commits to `master`), each naming the branches it brings
+  in and any conflict it resolved; a change that must reach `master` goes on a branch first. Never
   force-push a shared branch (`master`, or any `phase/*` already pushed to `origin`) without explicit
   instruction, and never skip hooks or signing (`--no-verify`, `--no-gpg-sign`) without explicit
   instruction. Commit messages describe the *why*, tied to the phase's Output Files table — see the
@@ -207,8 +214,15 @@
     tick-level confirmation found a real, one-directional look-ahead bias in T1's window
     selection (median excess 19.7% of horizon at 5min, shrinking to 1.6% at 60min), affecting
     every headline number in T1/T2/T3; Cooper declined a rebuild, the bias stands as a
-    documented caveat on the existing report** (2026-09-14, results/phase_13/REPORT.md §10).
-  - **Next free number: D38.**
+    documented caveat on the existing report** (2026-09-14, results/phase_13/REPORT.md §10) ·
+    **D38 measurement studies that fit no parameters may use chronological splits with repeat
+    tickers -- ticker-clustered uncertainty and a first-seen-ticker sensitivity replace the
+    ticker-blocked rule; any study that fits, tunes or selects stays under it** (2026-09-23,
+    attention/excursion Brief 1 T0c) · **D39 shape atlas S1 is an exploratory, hindsight-by-design
+    exception to D32 -- it may describe F1-layer columns (shares outstanding, reverse split, short
+    interest, turnover, filing/dilution flags) per post-tau path type; not a D32 A1 partition test,
+    reopens nothing; its across-time split is also run ticker-blocked** (2026-09-27, shape atlas S1).
+  - **Next free number: D40.**
 - Repo map: docs/Research-Library-Map.md. Data layout: docs/data/Schema.md (tracked copy of
   record; `data/Schema.md` is a local, untracked mirror — `.gitignore` excludes `/data/` wholly,
   so edit the tracked copy and mirror the change there). Corrected 2026-09-10 — `data/Schema.md`

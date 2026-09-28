@@ -1,0 +1,416 @@
+{
+  "task": "R0-T0b (part 4) fire rate per run, rising-edge runner only, skipped events restored",
+  "config_hash": "5fae280c7fed",
+  "why": "T0b's run/fired pair is a union across 101 result files and many gate configurations, and a union cannot measure a fire rate. Measured within a run, on the runner family where n_pass_edges is the entry counter.",
+  "union_as_reported_in_T0b": {
+    "n_distinct_events_ever_run": 1136,
+    "n_distinct_events_ever_fired": 1120,
+    "reading": "correct for 'has this event ever been run / ever fired', which is what T0b's D1-coverage columns need. NOT a fire rate."
+  },
+  "runner_families": {
+    "entry_eligible": {
+      "n_runs": 67,
+      "n_summary_rows": 5749,
+      "n_fired": 342
+    },
+    "rising_edge": {
+      "n_runs": 34,
+      "n_summary_rows": 3013,
+      "n_fired": 3008
+    }
+  },
+  "entry_eligible_family_note": "n_pass_edges is 0 on every row of this family while n_passtofail_transitions and n_trades_in_event are nonzero on those same rows -- the rapid runner enters on first-pass, not on a rising edge. UNMEASURABLE on this axis, not negative. Excluded from every fire rate below and never counted as a decline.",
+  "rising_edge_family": {
+    "n_runs": 34,
+    "n_summary_rows": 3013,
+    "n_fired": 3008,
+    "pooled_fire_rate_of_summary_rows": 0.9983405243942914,
+    "n_runs_with_zero_fires": 0,
+    "fire_rate_quantiles_of_summary_rows": {
+      "0.0": 0.9880952380952381,
+      "0.25": 1.0,
+      "0.5": 1.0,
+      "0.75": 1.0,
+      "1.0": 1.0
+    }
+  },
+  "headline_run": {
+    "run_dir": "scanner-epg-momentum/backtest/results/phase_f/val_full",
+    "profit_factor": 1.9194,
+    "runner_family": "rising_edge",
+    "n_summary_rows": 1027,
+    "n_fired": 1027,
+    "n_skipped": 201,
+    "n_attempted": 1228,
+    "fire_rate_of_summary_rows": 1.0,
+    "fire_rate_of_attempted": 0.8363192182410424,
+    "skipped_reasons": {
+      "error": 13,
+      "insufficient_quotes": 1,
+      "insufficient_trades": 12,
+      "missing_prev_close": 81,
+      "no_t_event": 6,
+      "setup_filter_fail": 88
+    },
+    "reading": "the fire rate of the run the reproducible PF is computed on, once the events the runner abandoned before the gate are put back in the denominator."
+  },
+  "skipped_events": {
+    "n_rows_all_runs": 619,
+    "n_distinct_events": 213,
+    "n_distinct_events_in_D1": 138,
+    "reasons_all_runs": {
+      "error": 35,
+      "insufficient_quotes": 1,
+      "insufficient_trades": 36,
+      "missing_prev_close": 260,
+      "no_t_event": 30,
+      "setup_filter_fail": 257
+    }
+  },
+  "rising_edge_runs": [
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_f/val_full",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 1027,
+      "n_fired": 1027,
+      "n_skipped": 201,
+      "n_attempted": 1228,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.8363192182410424
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_f/test_full",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 88,
+      "n_fired": 88,
+      "n_skipped": 12,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.88
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/backtest",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 84,
+      "n_fired": 83,
+      "n_skipped": 16,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 0.9880952380952381,
+      "fire_rate_of_attempted": 0.83
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_r0/_old/classic",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 84,
+      "n_fired": 83,
+      "n_skipped": 16,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 0.9880952380952381,
+      "fire_rate_of_attempted": 0.83
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_r0/_old/parity",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 84,
+      "n_fired": 83,
+      "n_skipped": 0,
+      "n_attempted": 84,
+      "fire_rate_of_summary_rows": 0.9880952380952381,
+      "fire_rate_of_attempted": 0.9880952380952381
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_r0_mdr150/parity",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 84,
+      "n_fired": 83,
+      "n_skipped": 0,
+      "n_attempted": 84,
+      "fire_rate_of_summary_rows": 0.9880952380952381,
+      "fire_rate_of_attempted": 0.9880952380952381
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_wji_v2/t3i_100ev",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 84,
+      "n_fired": 83,
+      "n_skipped": 16,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 0.9880952380952381,
+      "fire_rate_of_attempted": 0.83
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_b/100_val_seed42",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_b/phase_a",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_c/combined_ac",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_c/cvd_filter",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_c/no_filter_baseline",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_c/watermark_0.02",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_c/watermark_0.03",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_c/watermark_0.05",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_c/watermark_0.07",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_c_fix/cvd_filter_fixed",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_d/sweep_0_02",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_d/sweep_0_03",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_d/sweep_0_05",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_d/sweep_0_07",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_e/sweep_N1",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_e/sweep_N2",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_e/sweep_N3",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_f/val_sample",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 81,
+      "n_fired": 81,
+      "n_skipped": 19,
+      "n_attempted": 100,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.81
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_wji_v2/compat_check",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 5,
+      "n_fired": 5,
+      "n_skipped": 16,
+      "n_attempted": 21,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 0.23809523809523808
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_wji_v2/t3i_smoke",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 5,
+      "n_fired": 5,
+      "n_skipped": 0,
+      "n_attempted": 5,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 1.0
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_e/smoke_test",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 3,
+      "n_fired": 3,
+      "n_skipped": 0,
+      "n_attempted": 3,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 1.0
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_d/smoke_test",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 2,
+      "n_fired": 2,
+      "n_skipped": 0,
+      "n_attempted": 2,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 1.0
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_b/smoke_test",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 1,
+      "n_fired": 1,
+      "n_skipped": 0,
+      "n_attempted": 1,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 1.0
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_b/smoke_test2",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 1,
+      "n_fired": 1,
+      "n_skipped": 0,
+      "n_attempted": 1,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 1.0
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_b/smoke_test3",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 1,
+      "n_fired": 1,
+      "n_skipped": 0,
+      "n_attempted": 1,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 1.0
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/phase_c/smoke_nogap",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 1,
+      "n_fired": 1,
+      "n_skipped": 0,
+      "n_attempted": 1,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 1.0
+    },
+    {
+      "run_dir": "scanner-epg-momentum/backtest/results/smoke_test",
+      "runner_family": "rising_edge",
+      "n_summary_rows": 1,
+      "n_fired": 1,
+      "n_skipped": 0,
+      "n_attempted": 1,
+      "fire_rate_of_summary_rows": 1.0,
+      "fire_rate_of_attempted": 1.0
+    }
+  ],
+  "outputs": [
+    "results/relative_momentum/r0/artifacts/t0b4_fire_rate_per_run.parquet",
+    "results/relative_momentum/r0/artifacts/t0b4_skipped_events.parquet"
+  ]
+}

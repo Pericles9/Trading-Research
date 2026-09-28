@@ -2363,3 +2363,407 @@ RTH-based baseline (not a bug) via two independent manual traces (AAL premarket,
 bar enters the duration" check) that caught and fixed a real few-second boundary bug — the aggregate
 result was unchanged by that fix. Cooper reviewed the 0%-censored finding directly and confirmed
 proceeding with DE-2 as specified rather than revising the baseline design or threshold.
+
+## Relative momentum R0 — qualification-layer scoping, not a phase — STOPPED AT T0b (2026-09-17)
+
+**Branch `explore/relative-momentum-r0`, cut from `explore/fundamental-e1`** (which is merged forward
+with `origin/master` at `09c6733` and carries the fundamental layer DR-4 reads).
+`prompts/relative_momentum_r0.md` — the v3 brief, filed by this run so that the config's `_meta.prompt`
+citation resolves; it carries a filing note listing the seven paths it cites that do not exist in this
+checkout, four of them marked `[unverified]` inline. `config/relative_momentum_r0.json`.
+`research/relative_momentum/` — `common.py` (config, identity key, the D1 population, and a read-only
+re-implementation of the participation gate's own `list_events` rule), `chart_common.py` (palette
+carried by value from `research/fundamental_exploration/chart_common.py`), `t0a_population.py`,
+`t0b_overlap_join.py`, `t0b2_exception_resolution.py`, `t0b3_exception_flags.py`, `chart_t0b.py`.
+`results/relative_momentum/r0/` — `REPORT.md` (copied to
+`results/reports/relative_momentum_r0_report.md` per the cross-phase convention), `artifacts/`,
+`charts/`.
+
+**Nothing under `scanner-epg-momentum/` was executed, imported or modified** — the brief makes that
+repository read-only, so its event-selection rule was re-implemented over `data/filtered` instead.
+Both projects resolve to the same physical archive: that repo's `DATA_ROOT` is `parents[4] / "data"`
+= `E:/Trading Research/data`.
+
+**T0b fired.** The gate's event set and D1 are materially disjoint in one direction. 97.27% of the
+reproducible headline profit-factor run (`phase_f/val_full`, PF = 1.9194, n = 1,027 events) sits
+inside D1 — but D1 is 15.4× larger, the gate has ever been **run** on 6.96% of it (1,097 / 15,763),
+and on **zero** events before 2023-11-17, so three of D1's five years carry no gate observation at
+all. The single rule that removes 10,046 of D1's 15,763 events from the gate's admissible universe is
+its `min_mom_pct = 50.0` floor; no D1 event is excluded for any other reason. All 39 gate events
+outside D1 resolve with no residue: 27 by instrument class (18 warrant, 5 fund product, 4 preferred)
+and 12 by `flag_trades_mom_outlier`, every one of those twelve above +700% momentum.
+
+T0a part 2 (the `move_at` prior-close coverage pass), T1, T1c, T2, T3, T4 and T5 did not run. §I.7's
+two open items — the liveness sweep and the ratcheting reading — were never reached, so neither was
+consumed. Part II (R1) was not authorised and is untouched.
+
+**Two brief deviations, each following E1's precedent on the identical slip:** light theme, not dark;
+and charts under `results/relative_momentum/r0/charts/` rather than a new top-level `charts/`
+directory (see the E1 entry above and `prompts/fundamental_exploration_e1.md` §7). Both recorded in
+`config/relative_momentum_r0.json` `chart_theme.deviation_from_brief`.
+
+A live `SELECT` against `momentum_events_canonical` was attempted at T0a and killed after >10 minutes
+of eight-thread CPU — the view joins `filtered_trades`/`filtered_quotes` unconditionally for its
+coverage flags. Same finding `research/fundamentals_f1/verify_event_fundamentals.py` recorded on
+2026-09-12, reproduced; D1 is built from `results/phase_5/artifacts/quotes_bitmaps_all.parquet`
+instead, as E1 and F1 already do.
+
+**Addendum 2026-09-18.** Two sections added after the stop, in answer to the 2026-09-18 read of T0b;
+neither restarts the brief. `research/relative_momentum/t0b4_fire_rate.py` re-measures the fire rate
+that read infers from: T0b's run/fired pair is a union across 101 result files, which cannot be a
+fire-rate denominator. Measured within a run, on the `rising_edge` runner family only (the rapid
+`entry_eligible` family writes `n_pass_edges = 0` on every row while recording nonzero pass-to-fail
+transitions and trades -- unavailable on that axis, not negative, and `common.runner_family` now makes
+the split), the gate fires on **99.83%** of what it sees, 0 runs of 34 with zero fires. The read's
+conclusion holds and is understated. The selectivity sits one layer earlier: 201 of 1,228 attempted
+events in the PF run never reached the gate, the largest single reason being `setup_filter_fail`
+(88) -- **a string no code in this checkout emits**, so the population behind PF = 1.9194 was filtered
+by a rule that is no longer in the source.
+
+`research/relative_momentum/t0c_phase11_reslice.py` + `chart_t0c.py` run that read's own section-3
+check on Phase 11's committed `t7_cost_vs_capture.parquet`, no new data pass. The named cell
+reproduces n = 10,544 exactly. The pre-cost median **does** flip -- -164 bp on the full cell to +66 bp
+on the gate-admissible domain and +92 bp on the PF population -- and decomposing the 2x2 shows the
+`mom >= 50` floor does all of it (+134 bp alone) while the 2023-11-17 date boundary alone gives
+-204 bp and works against the flip. Net of cost it does **not** flip: median round-trip cost rises
+70.98 -> 106.30 -> 112.57 bp across those same slices and the net median stays negative. The slicing
+variable is `momentum_pct`, a prior-close-to-day's-high quantity the brief's section I.2 bars as a
+bucketing variable, so the flip is what conditioning on a lookahead variable does mechanically -- the
+gate's *live* entry logic is causal, its *backtest population* is not. Charts 03/04 are ECDFs so the
+median is read as a crossing of the whole distribution. Sections 4 and 5 of that read are its own
+open decisions and are untouched.
+
+**Addendum 2, 2026-09-18 -- the causal re-run, which reverses Addendum 1's T0c.** On the erratum to
+the 2026-09-18 read, which mandates rerunning that check with `move_at`.
+`research/relative_momentum/t0a2_prior_close.py` finally builds T0a part 2, the tick-derived prior
+session close -- reused verbatim from `research/phase_12/t2b_band_arithmetic.py` and
+`research/reg_sho_201/t1_trigger_check.py` (last RTH minute bar's `last_price` at
+`session_offset = -1` from `event_minute_bars_v2`, which covers exactly D1's 15,763 events), not the
+15,763-folder tick pass originally anticipated. Coverage **15,721 / 15,763 (99.73%)**; 42 events
+carried as unavailable. One recorded divergence: that table predates Phase 10c Amendment 6's `{8, 15}`
+auction override, exposure bounded by A6's own census at 291 near-close prints against 25.2M.
+
+`research/relative_momentum/t0c2_move_at_reslice.py` + `chart_t0c2.py` re-run T0c on
+`move_at_entry = (entry_price - prior_close) / prior_close` at the named cell's own entry instant, so
+nothing after the decision enters the slicing variable. **The sign reverses.** T0c's gate-admissible
+slice read +66 bp gross / -57 bp net; its causal analogue reads **-1,054 bp gross / -966 bp net**, and
+no slice in the causal table has a positive median. The crosstab quantifies the lookahead exactly:
+of the 2,904 events the `momentum_pct >= 50` slice selected, **2,577 (88.7%) had not moved 50% at
+decision time**. The response curve (chart 05, no threshold set on it) is negative in all ten deciles
+and monotone the wrong way above the median -- net -129 bp at decile 5 falling to **-883 bp** at
+decile 9. The erratum's one exploratory lead does not survive: the entire positive result on the
+causal slice sits inside the 39 `flag_cross_session_extreme` events (net +863 bp), while the 84
+unflagged ones net **-1,659 bp** and are negative 87.5% of the time, with `move_at_entry` reaching
+2,043% -- A12's population, not a lead. Addendum 1's T0c table carries a supersession banner and is
+retained as the record of what the defective specification produced. Charts 05/06; 06 is built to be
+read directly against 03, and the pair is the finding. Path A / Path B and the citation fix remain
+Cooper's open decisions, untouched.
+
+## Relative momentum v0 -- build and evaluate, a real backtest (2026-09-18)
+
+**Branch `explore/relative-momentum-v0`, cut from `explore/relative-momentum-r0`** (R0's
+`t0a2_prior_close.parquet` is a direct input; `move_at` needs it).
+`prompts/relative_momentum_v0.md` and `config/relative_momentum_v0.json`.
+`research/relative_momentum_v0/` -- `common.py` (population, causal window-volume reader with the
+causality assertion in code), `chart_common.py`, `t0_population.py`, `t1_score.py`, `t2_gates.py`,
+`t3_evaluate.py`, `t4_diagnostic.py`, `charts.py`. `results/relative_momentum/v0/` -- `REPORT.md`
+(copied to `results/reports/relative_momentum_v0_report.md`), `artifacts/`, `charts/` (4).
+
+**Facet 1 reused as-is, not re-derived:** the existing fired population from
+`scanner-epg-momentum/backtest/results/phase_f/val_full/per_trade.parquet`, first window per event.
+Nothing in that repository executed, imported or modified. **Coverage stated plainly: 997 of 15,763
+D1 events, 6.32%**, val split 2023-11-17 to 2024-07-22, 168 session dates. Three population facts
+recorded because they change what the numbers mean -- the **gap gate was off** in that run
+(`gap_gate_enabled: false`, `blocked_by_gap: 0`, entry `intraday_pct` median +11.25%, p25 -23.42%, so
+these are not "+30% crossers at entry"); the first-window window-close exit is `epg_window_close` for
+860 of 1,027 with the rest LULD, carried; and the median hold is **540 s**, not the 52 s that is the
+median across all 6,004 trades in the run.
+
+**Facet 2 built fresh.** Attention score v0 = 10-minute trailing dollar volume / E2's `B_e`, causal
+(asserted in code, not assumed). Volume read from each event's own `filtered/` folder rather than
+`filtered_trades` -- a targeted 10-minute range query against that 4.9B-row table does not prune,
+measured at 9.5 s for one window; the folder pass did all 1,027 in 66 s. `B_e`'s definition checked
+rather than assumed: the `total/B_e` ratio takes exactly the values 39/78/117 = `n_baseline_sessions`
+x 39 ten-minute RTH blocks. Known scale mismatch carried as a facet: `B_e` is RTH-scoped and 644 of
+999 candidate moments are pre-market.
+
+**Result: the qualification layer selects worse trades.** Policy A (every first-window signal, n=999
+like-for-like) median gross markout **0 bp**, win rate 49.6%; Policy B (both gates, n=244) median
+**-218 bp**, win rate 40.6%. The level gate does it, not the cross-sectional one. Mechanism in the
+score decile panel: the top two deciles -- exactly where the 75th-percentile gate selects -- carry the
+worst medians (-200 and -388 bp). **Mean and median disagree in sign and both are reported**: B's mean
+(+214 bp) is indistinguishable from A's (+194) because qualification widens both tails, so a
+profit-factor read of the same trades would call B neutral. **No policy's median trade clears cost in
+either unit** -- best net median anywhere is -71 bp, and the per-share leg is brutal on this cohort
+(median entry price $1.94, so 2.512 cents is 129.5 bp).
+
+**Second finding, which bounds the first:** 79.5% of candidate moments had **no competitor live at
+all**, median live-set size 1, so gate 2 passed 892 of 999 and 794 passes were uncontested -- only 42
+of Policy B's 244 trades came from a contested moment. But candidate density here is 6.11/session
+against D1's **17.35/session over the same dates (2.84x)**, so this is a **lower bound** and gate 2's
+inertness is a property of this population, not a measured property of the universe.
+
+**Diagnostic:** Spearman(score, `move_at`) = **0.692**, flat across the A12 split (0.687 clear / 0.697
+flagged), so the collinearity is not a cross-session artifact -- the score substantially restates the
+move. Separately, the gate's own `intraday_pct_at_entry` correlates only **0.314** with the
+tick-derived `move_at`: only one of its three prev-close sources is tick-derived.
+
+The decile panel reproduces R0-T0c2's response curve on a **different trade definition** (gate
+rising-edge/window-close, 540 s median hold, vs Phase 11's fixed 30-minute horizon): more move already
+achieved at decision time predicts a worse forward outcome. `B_e` comes from E2 artifacts that remain
+**uncommitted**, so the score is not reproducible from a clean checkout until those land.
+
+## Relative momentum v1 -- causal threshold, corrected population (2026-09-18)
+
+**Branch `explore/relative-momentum-v1`, cut from `explore/relative-momentum-v0`.**
+`prompts/relative_momentum_v1.md`, `config/relative_momentum_v1.json`,
+`research/relative_momentum_v1/` (`common.py` with the gap-gate reconstruction and the expanding
+causal quantile, `chart_common.py`, `t0_population.py`, `t1_score.py`, `t2_gates.py`,
+`t3_evaluate.py`, `t4_diagnostic.py`, `t5_d1_concurrency.py`, `charts.py`),
+`results/relative_momentum/v1/` (`REPORT.md`, copied to
+`results/reports/relative_momentum_v1_report.md`; `artifacts/`; 5 charts).
+
+**Fix 2 -- gap gate ON, by faithful reconstruction, not a re-run.** scanner-epg-momentum stays
+read-only and its val_full run took 20,713 s; the gap gate is deterministic given the tick stream
+inside each PASS window, and every window's bounds are in `per_trade.parquet`. Reproduced from
+`runner.py:822-895` including the two details a naive filter would miss: the gate **queues** and
+re-checks every tick rather than hard-blocking (311 of 903 entries are queued -- a hard-block
+reading would have lost a third of the population), and it tests `price[i]` but fills `price[i+1]`.
+Validated 6/6 against the run's own recorded `entry_price`. Threshold on `move_at` vs the
+tick-derived prior close, not the gate's own `intraday_pct` (D4; v0-T4 put those two at rho 0.314).
+Population **903** events, `move_at` at entry median **+36.0%** against v0's +11.25%, and 57% of
+entry instants moved.
+
+**Fix 1 -- causal gate 1**: 75th percentile of strictly prior scores, pooled, min 250 observations.
+**The warmup is 27.7% of the sample** (ends 2024-02-08), which the brief asked to be told about, so
+every gate-1 policy is reported with and without it and the post-warmup rows are the read. The causal
+threshold drifts 151 -> 220 and is charted rather than quoted.
+
+**Result: v0's damage was not an artifact.** Post-warmup, A median **-39 bp** vs B median **-187 bp**,
+win rate 43.6% -> 38.9%. v0's in-sample threshold on this same population gives -243 bp, so the
+in-sample level was part of v0's effect but not its cause. Mean and median disagree in the same
+direction as v0 (B mean +198 vs A +159, tails wider both ways), so a profit-factor read would call B
+an improvement. Nothing clears cost: best net median anywhere -71 bp. Separately, the gate's own
+next-tick fill convention costs a mean **-30.3 bp** that it does not model.
+
+**Fix 4 comes back clean**: the price-level effect is real and large -- net per-share median runs
+**-1,139 bp at $0.28** to **+24.6 bp at $29.50**, only the top two deciles non-negative -- but every
+policy sits at detection-price **decile median 3.0**, identical to the baseline. The degradation is a
+gate effect, not a price re-sort. Collinearity falls rho 0.69 -> 0.43, which is mechanical (the gap
+gate compresses `move_at`'s range), not evidence of independence.
+
+**Fix 3 -- true D1 concurrency, 36 s.** The R0 brief's Part I T1, finally run, with the +30% crossing
+(first minute bar whose high reaches `prior_close x 1.30`, `event_minute_bars_v2`) as the candidate
+moment -- an **upper bound**, since EPG fires later than the raw crossing. Coverage 15,363/15,763
+(97.5%); 400 carried as unavailable. Events per session date median **10** (p90 22, max 235; by year
+9/6/7/11/18), so v0's "17.35/session" was a val-window mean and the median across D1 is 10. At
+candidate moments the share with a second live name is **27.9% at 9-min liveness** (the gate's own
+median window) against **10.5% measured on the gate population** -- so a full causal re-derivation
+buys about 2.7x the contest rate while leaving the median candidate uncontested. It reaches 51.4% at
+30 min and 67.9% at 60 min, and 2024 is roughly twice as dense as 2021. Thin, regime-dependent, not
+absent -- and not present at any liveness the current exit rule implies.
+
+## Relative momentum v2 -- absolute floor, then rank -- STOPPED AT THE CALIBRATION GATE (2026-09-21)
+
+**Branch `explore/relative-momentum-v2`, cut from `explore/relative-momentum-v1`.**
+`prompts/relative_momentum_v2.md` (the brief, with a filing note correcting its "v1 was never sent" --
+v1 was built and pushed 2026-09-18, `a97f06e`), `config/relative_momentum_v2.json` (carries the
+supplied pseudocode and Correction 1 verbatim), `research/relative_momentum_v2/` (`common.py` with the
+absolute floor, the build-time ASSERT and `snap_tau_to_tick`; `t1_measure.py`, `t1b_calibration.py`,
+`t3_v0_mechanism.py`), `results/relative_momentum/v2/` (`REPORT.md`, copied to
+`results/reports/relative_momentum_v2_report.md`; `artifacts/`). **T2 policies, T4 diagnostics and T5
+charts did not run.**
+
+**Architecture.** An absolute, unit-bearing floor runs BEFORE cross-sectional ranking, so ranking only
+ever operates on survivors and the system can return NO_TRADE -- an outcome v0/v1 structurally could
+not produce. The floor needs no warmup because it references no distribution. The pseudocode's
+build-time ASSERT ("no floor input divided by a baseline, a rolling mean, another candidate's value or
+a percentile") is implemented as a live test: `assert_floor_inputs_absolute` is called with the floor's
+projection and then again with a `score` column added, and the second call is required to raise.
+`price_too_low` is pulled OUT of the AND per Correction 1 -- it rejects 54% on its own and would mask
+every other condition.
+
+**A defect found and fixed on the way in:** `entry_ts` in v1's artifact is float64, and at 1.7e18 the
+float64 grid spacing is 256 ns, so every tau was rounded by up to ~128 ns. `snap_tau_to_tick` recovers
+the exact tick (max |snap| = 128 ns, exactly half the grid spacing) and asserts the snap is under
+10 us. It mattered for two candidates -- BENF 2024-07-05 and JL 2024-01-29 were rounded upward past
+their own trigger print by 115 ns and 58 ns, and since their previous print was 601 s and 4,639 s
+earlier their windows measured EMPTY. **v1's own score window carries the same two zero-volume
+windows.**
+
+**Gate 5b PASSED** -- all six floor rungs reject <= 3% of the 903 (`MIN_PRINTS` 2.55%,
+`MIN_NOTIONAL` 2.99%, `MIN_VENUES` 0.89%, `MIN_QUOTES` 1.44%, `MAX_SPREAD_BP` 0.78%,
+`MIN_DEPTH_USD` 0.11%), so they sit in the left tail rather than at p25 of an already-filtered
+population.
+
+**Gate 5c PASSED but barely, and against the architecture's premise.** The dead-tape-winner pathology
+is **4 of 47** contested rank-only winners. Low-activity candidates (print_count <= p10 = 133) score
+LOWER on the ratio, median 14.2 against 36.0, and their score-decile distribution skews down. They are
+also **regular_hours 67 / premarket 23** -- RTH dead tape, falsifying the run's own recorded prediction
+that premarket would bind.
+
+**Gate 6 FIRED.** `F+R contested` projects to **9** trades on the price-filter-on arm against a
+declared readable floor of 20; the price-off arm projects 47 and is readable. Only
+`MAX_PER_SHARE_COST_BP = 200` reaches 20 with price on. v2 stopped rather than spend the evaluation
+pass. Fail-reason histogram at the reference rung: `thin_notional` 27, `too_few_prints` 23,
+`dead_book` 13, `single_venue` 8, `spread_too_wide` 7, `no_depth` 1.
+
+**T3 settled v0's gate-1 mechanism and refuted the illiquidity-filter explanation.** v0's gate-1 passes
+carry **10.3x the notional** and **14.9x the print count** of its fails, and entry price is
+indistinguishable (ratio 0.995, p = 0.73) -- they were not thinner or cheaper. What separates them is a
+**16.6x smaller `B_e`** together with 10.3x more notional (the 169x score ratio decomposes into exactly
+those two), and `move_at` **3.65x deeper**. So v0's gate was a correctly-working detector of names that
+are normally quiet and are now genuinely loud; the damage is that such names are far deeper into the
+move at decision time. **An absolute floor does not address that** -- it addresses a failure mode gate
+5c shows is 4 events here. Reused v1-T5 for the brief's T2 (D1 concurrency) rather than recomputing.
+
+## Participation / exit overlay -- window close vs. participation decay (2026-09-21)
+
+**Branch `explore/participation-exit-overlay`, cut from `explore/relative-momentum-v2`.**
+`prompts/participation_exit_overlay.md`, `config/participation_exit_overlay.json`,
+`research/participation_exit_overlay/` (`common.py` with the participation rule, the causal
+confirmation-instant timestamping, and a mid-run tick spike guard; `t1_participation.py`,
+`t2_overlay.py`, `t3_counterfactual_exit.py`, `charts.py`), `results/participation_exit_overlay/`
+(`REPORT.md`, copied to `results/reports/participation_exit_overlay_report.md`; `artifacts/`; 6
+charts).
+
+**E2's baseline `B_e` reused verbatim; E2's window artifact rebuilt, not reused** -- checked before
+building on it: 49.1% of its `window_end_ts` sit BEFORE the EPG entry, 40.75% have `duration_min == 0`,
+the max span is 5.0 days (not censored at session end as the brief attributes to E2), and `censored`
+is `False` on all 15,742 rows. ~~E2's brief and code were never committed, so its declared `C` could not
+be recovered;~~ `C = 10` min is declared here with a {5, 10, 20} ladder. *(Corrected 2026-09-23, Part III: E2's brief, config and code are committed on `origin/explore/fundamental-e2` and `master`; E2's confirmed `C` is also 10 min; the E2 window's zero-duration mass is a units defect corrected on `fix/e2-window-units`.)*
+
+**Causal confirmation applied structurally, not as an afterthought.** The participation rule requires
+a crossing to hold for `C` minutes, so Exit B is timestamped at the END of that confirmation window,
+never its start -- using the start would use `C` minutes of information that had not happened yet.
+Before this was wired in, 70 of 903 candidate Exit-B holds computed as negative length; after, zero.
+
+**A tick-pricing defect found and fixed mid-run, not anticipated by the brief.** AMC 2024-05-14's
+naive last-print-at-or-before priced the exit at $11.48 against entry and v1's own recorded exit both
+$6.63 -- a single 4-share print (conditions [32, 37], 37 = odd lot per this repo's own condition-code
+reference) reverting immediately. A declared, task-local spike guard (not claimed as an established
+repo convention -- odd lots are 44% of all trades here, too large a share to exclude outright)
+replaced 10 Exit-A and 9 Exit-B prices; AMC now reads exactly $6.63 = $6.63. One residual mismatch
+(NTRP 2024-03-14) confirmed as a genuine fast move, not a spike, and left disclosed.
+
+**Headline: the mismatch is real -- EPG exits while participation is still live in 76.2% of events**
+(n=782 uncensored), median 2.2 hours early, worse in RTH (88.2% negative) than premarket (69.9%).
+Entry timing is fine (EPG enters ~5 min AFTER participation onset, only 35.4% negative).
+
+**But the counterfactual -- the test that decides the rebuild -- says closing it is worse.** Same
+entry, one round trip in each arm: Exit A (window close) gross median -0.9 bp vs Exit B
+(participation decay) **-264.6 bp**; win rate 44.5% -> 40.5%; median hold 565 s -> 3.1 h. Worse across
+the full distribution, not just the median. **The effect concentrates exactly where prior work already
+found the damage**: by `move_at` decile, B is competitive at the shallowest entries (decile 0:
++124.8 bp) and collapses at the deepest (decile 9: **-3,067 bp, 8.3% win rate**) -- the deeper-entry
+penalty from v2-T3 and R0-T0c2 is not just present under a participation exit, it is amplified by
+holding longer into a position already too deep at entry. Halt exposure rises sharply with the longer
+hold (gap-proxy share 3.5% -> 67.7%; exact labels, 8.1% coverage, 0% -> 6.85%).
+
+**The censored class (14.2%, participation never decays in-session) inverts the finding** -- held to
+the session-end horizon these run +1,702 bp median, 64.8% win rate -- but an 11.8-hour median hold is
+an overnight-class position under D5 and is reported as its own class, never pooled into the headline.
+
+**Settles, per the brief's own framing: mismatch real, Exit B worse.** EPG's early exit is doing real
+work stepping out before the flip; the qualification layer's problem is elsewhere. No rebuild
+recommendation is made -- that call is Cooper's off these numbers.
+
+## Attention and the excursion -- Brief 1 -- STOPPED AT T2, escalation row 4 (2026-09-23)
+
+**Branch `explore/attention-excursion-b1`, cut from `explore/participation-exit-overlay`.**
+`prompts/attention_excursion_b1.md` (the combined design + Brief 1 + E2-fix document, filed verbatim;
+it arrived truncated at 50,000 characters -- escalation rows 6+ and all of Part III never received),
+`config/attention_excursion_b1.json` (committed before any run; carries two T6 pass criteria recorded
+in advance as expected to fail by arithmetic), `research/attention_excursion_b1/` (`common.py`,
+`t0_population.py`, `t1_t2_prior_close_tau.py`, `t1_t2_summary.py`, `charts_t2.py`; `t3_open_boundary.py`
+and `instruments.py` written before the stop and **not executed on events**),
+`results/attention_excursion/b1/` (`REPORT.md`, copied to `results/reports/attention_excursion_b1_report.md`;
+`slices.parquet`; `artifacts/`; `charts/`, moved there from a top-level `charts/` tree by Amendment 1). D38 appended to `docs/Universe-Decisions.md`; CLAUDE.md pointer -> D39.
+
+**T0 matched the brief exactly** -- D1 15,763, slices 7,650 / 5,409 / 2,704 before quarantine; first-seen
+tickers are 33.3% of selection and 16.6% of final.
+
+**T1 (exact prior close, Amendment 6 {8,15} auction print) covers 15,722 of 15,763**; it differs from
+the minute-bar close the earlier `move_at` build used by median 25.5 bp (p95 345 bp), because the
+minute-bar build segments on the timestamp rule and never sees the closing cross. **A defect in the
+declared tie-break, recorded not fixed:** "largest size" picked exchange 11's own official close over
+the listing venue's code-8 cross on 2,599 events.
+
+**T2 (exact tau) is available on 15,632 (99.17%) -- row 1 clear. Row 4 FIRED: tau_exact - tau_proxy
+outside [-1, 61] s on 2,774 of 15,763 (17.6%) against 2%.** Decomposed in the same pass: with the prior
+close held at the proxy's own, the stamp difference alone is outside on 1.5%; where the exact and
+minute-bar closes agree, 1.4%; where they differ, 26.2%. 2,551 of the 2,774 are the prior-close change,
+188 the spike guard. Nothing after T2 ran; the stop's open questions are in the report's section 4.
+
+**Amendment 1 (2026-09-23) and the amended run -- STOPPED AT T6, escalation row 2.**
+`prompts/attention_excursion_b1_amendment_1.md` (filed verbatim); the complete brief refiled over the
+truncated copy. T1 re-specified to the listing venue's closing cross (listing_cross > listing_official >
+last_rth_print > unavailable, venue from the Phase 1b snapshot, MIC -> exchange id derived by census:
+XNAS 12, XNYS 10, XASE 1 inferred); row 4 re-specified against the v1 proxy rebuilt from ticks on the same
+prior close. New code: `attention.py`, `t4_excursion.py`, `t5_attention.py`, `t5b_competition.py`,
+`t6_controls.py`, `t6_blindness_diagnosis.py`, `charts.py`, `build_report.py` (REPORT.md is generated
+from artifacts). Run 1's T1/T2 artifacts and charts kept under `artifacts/run1/` and `charts/run1/`.
+Revised rows 1 and 4 clear (98.45%; 1.51%, all spike-guard moves), so T3-T6 ran. T6 fails three declared
+controls: the negative excursion control (the bridge failure the config predicted before the run), the
+positive excursion control at N = 200 only, and blindness on one event whose top bucket prices are exactly
+tied. Also recorded, not tuned: the T3 boundary rule is satisfied at the open minute at both opens, and the
+top-anchored A2 ladder has zero valid rungs on 27 of 49 dev events. CLAUDE.md's ticker-blocked line
+carries the D38 exception.
+
+**Amendment 2 (2026-09-24) and the re-run -- HARD STOP at T7 (the brief's own stop); every control passes.**
+`prompts/attention_excursion_b1_amendment_2.md` (filed verbatim) and the combined document filed at its
+project path `prompts/attention_excursion.md` (A2.11; `prompts/attention_excursion_b1.md` stays as the
+as-run record). The noise scale moves from bipower to realised variance (bipower kept as `jump_share`, a
+descriptor); control references are simulated at each N and committed before the run
+(`t6a_references.py`, `artifacts/t6_references.json`); the peak takes the earliest bucket within a relative
+1e-9 of the maximum; every A2 rung is judged on its own; W >= L competition cells are undefined; the halt
+flag is a >= 300 s gap inside regular hours. T4, T5, T5b and T6 re-ran (T1-T3 did not); run 2's bipower
+artifacts and charts are kept under `artifacts/run2/` and `charts/run2/`. All seven T6 controls pass
+(bridge and free-walk KS to the simulated references <= 0.012; positive recovery within 0.4% of the
+simulated expectation; blindness 4.3e-10). Zero-valid-rung A2 events 27 -> 8 of 49. Every chart is
+regenerated with Plotly inlined (D14); the per-event T4 strips and A2 curves are one chart each with an
+event selector. The 09:30 open-adjacent boundary (A2.7) was not set, so that class is carried as pending.
+
+**Amendment 3 (2026-09-25) and the re-run -- HARD STOP at T7; every control passes.**
+`prompts/attention_excursion_b1_amendment_3.md` (filed verbatim). DA-4 and `open_adjacent_0930` are
+retired: the A2 ladder is anchored at the start of tau's clock segment (04:00, open + 60 s, close + 60 s,
+XNYS calendar; `common.clock_segment` / `segment_start_ns`), tau inside a cross minute carries no A2
+(`tau_in_auction_minute`; 148 + 37 of 15,519 on D1, 0 on dev), and `attention.assert_segment_windows`
+raises on any rung half-window that leaves the segment. T5b's control is matched on the octave since the
+live name's own crossing and on segment, with `no_match` carried by reason. T5, T5b and T6 re-ran (T4
+did not); the Amendment 2 run's T5/T5b/T6 artifacts and charts are kept under `artifacts/run3/` and
+`charts/run3/` as the 'before', measured against the re-run by `t5_a3_before_after.py`
+(`artifacts/t5_a3_before_after.json`, `..._events.parquet`, `t5_a3_before_windows.parquet`; chart
+`charts/t5/valid_rungs_before_after.html`; new `charts/t5b/matched_control_counts.html`). `README.md`
+added to `charts/run1/`, `run2/`, `run3/` (A3.6).
+
+**Brief 2 (2026-09-25) -- full-D1 build, competition check, step zero; HARD STOP at T6 (the brief's own stop).**
+Branch `explore/attention-excursion-b2`, cut from `explore/attention-excursion-b1` at `99431b8` (Brief 1
+accepted at its T7 stop). `prompts/attention_excursion_b2.md` (filed verbatim);
+`config/attention_excursion_b2.json` carries Brief 1's frozen config (`658071fbe27f`) unchanged plus
+`brief2_diff` (exactly the section 1 rulings R1-R5; R1 uses the exact window-count cutoff Cooper chose
+after the briefed rate rule was measured to drop valid rungs) and `brief2` (task parameters).
+`research/attention_excursion_b2/` imports Brief 1's `common`, `instruments` and `attention` unchanged
+(`b2common.py`: b2 paths, the R1 ladder extent, the R3 window rule and its assertion) and runs
+`config_diff.py` (escalation row 4), `t0_population.py` (facet table), `t1_excursion.py` (Brief 1's T4
+on all of D1; dev rows reproduce Brief 1 exactly), `t2_attention.py` (A1, A2 with R1 and
+`a2_ignition`, A3, absolute level measures, cross-section), `t3_competition.py` (population baseline
+cells, R2 + R3), `t4a_references.py` (Brief 1's free-walk reference regenerated draw for draw),
+`t4_step_zero.py` (the unconditional read and the 72-event gallery), `charts.py`, `build_report.py`
+(REPORT plus the generated column dictionary for the threshold suite). Outputs in
+`results/attention_excursion/b2/` (`artifacts/`, `charts/t1..t4/`, `REPORT.md`, copied to
+`results/reports/attention_excursion_b2_report.md`).
+
+**Shape atlas S1 (2026-09-27) -- what kinds of path do momentum events make? Exploratory, hindsight used
+by design; stops (section 8) for Cooper to read the atlas.** Branch `explore/shape-atlas-s1`, cut from
+`explore/attention-excursion-b2` at `259e811`. `prompts/shape_atlas_s1.md` (filed verbatim);
+`config/shape_atlas_s1.json` (reproducibility only); decision **D39** (exploratory exception to D32 for
+S1's F1-layer descriptors; the across-time check also runs ticker-blocked) appended to
+`docs/Universe-Decisions.md` with the CLAUDE.md index. `research/shape_atlas_s1/`: `s1common.py` (one
+path pipeline for real and null paths, reusing Brief 1's `bucketize` through b2's `b2common`),
+`t1_paths.py` (post-tau at N = 50/100/200, run-up, whole day; each event's own 200-draw null),
+`t2_theory.py` (the declared theory types vs noise), `t3_clusters.py` (FPCA, GMM and k-means on real and
+null, across-time and bootstrap stability, per view), `t4_runup.py` (run-up classes and transitions),
+`t5_atlas.py` (atlas data, descriptors, type share by date), `charts.py` (six charts; `atlas.html` is a
+page on the inlined plotly.js), `build_report.py`. Outputs in `results/shape_atlas/s1/` (`artifacts/`,
+`charts/`, `REPORT.md`, copied to `results/reports/shape_atlas_s1_report.md`).

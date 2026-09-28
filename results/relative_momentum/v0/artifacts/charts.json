@@ -1,0 +1,10 @@
+{
+  "task": "v0 charts",
+  "config_hash": "c90d8126dd12",
+  "charts": [
+    "results/relative_momentum/v0/charts/01_markout_distribution_A_vs_B.html",
+    "results/relative_momentum/v0/charts/02_score_decile_panel.html",
+    "results/relative_momentum/v0/charts/03_concurrency_distribution.html",
+    "results/relative_momentum/v0/charts/04_score_vs_move_at.html"
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "config_hash": "69d4088aec2c",
+  "seconds": 1664.4,
+  "dates": 1257,
+  "events": {
+    "d1": 15763,
+    "with_attention": 15519,
+    "with_a2": 15334,
+    "a2_unavailable_auction_minute": 185
+  },
+  "a1": {
+    "state": {
+      "value": 11508,
+      "unavailable_no_count": 3684,
+      "zero": 295,
+      "unavailable_zero_artifact": 32
+    },
+    "turnover": {
+      "median": 0.01440329976117298,
+      "n": 11803
+    },
+    "shs_accepted_after_tau": 1
+  },
+  "row_5": {
+    "criterion": "shs_asof_ns >= tau for any event",
+    "tier": "LOG, per event",
+    "n": 0,
+    "events": []
+  },
+  "a2": {
+    "valid_rungs_distribution": {
+      "0": 3214,
+      "1": 808,
+      "2": 885,
+      "3": 1004,
+      "4": 1150,
+      "5": 1290,
+      "6": 1302,
+      "7": 1317,
+      "8": 1262,
+      "9": 1070,
+      "10": 800,
+      "11": 603,
+      "12": 364,
+      "13": 183,
+      "14": 70,
+      "15": 12
+    },
+    "valid_rungs_median": 5.0,
+    "zero_valid_rung_events": 3214,
+    "rungs_generated_total": 112144,
+    "valid_rungs_total": 75937,
+    "cutoff_by": {
+      "exact_count": 15191,
+      "floor_or_k_max": 143
+    },
+    "invalid_rung_classes": {
+      "counting_noise": 30189,
+      "from_nothing": 6018
+    },
+    "resolution_floor_binding": 0,
+    "a2_ignition_events": 2132,
+    "by_segment": {
+      "after_hours": {
+        "events": 21,
+        "valid_rungs_median": 0.0,
+        "zero_valid": 12,
+        "ignition": 6,
+        "H_s_median": 300.486409216
+      },
+      "premarket": {
+        "events": 4587,
+        "valid_rungs_median": 0.0,
+        "zero_valid": 2503,
+        "ignition": 1848,
+        "H_s_median": 10800.1312768
+      },
+      "regular": {
+        "events": 10726,
+        "valid_rungs_median": 6.0,
+        "zero_valid": 699,
+        "ignition": 278,
+        "H_s_median": 8381.559549824
+      }
+    },
+    "kernel_defined_valid_rungs": 54657
+  },
+  "levels": {
+    "trades_per_min": {
+      "n": 75937,
+      "median": 39.30919306395983,
+      "p05": 1.8192362365357693,
+      "p95": 706.3917929232751
+    },
+    "dollars_per_min": {
+      "n": 75937,
+      "median": 86560.00820759327,
+      "p05": 1624.1670361601803,
+      "p95": 5983754.301014308
+    },
+    "shares_per_min": {
+      "n": 75937,
+      "median": 26728.064282290146,
+      "p05": 617.2876441647608,
+      "p95": 751854.22889424
+    }
+  },
+  "a3": {
+    "available": 15347,
+    "filing_24h": 3821
+  },
+  "cross_sectional": {
+    "15": {
+      "events": 15519,
+      "live_n_median": 1.0,
+      "alone_events": 10056,
+      "rows_with_window": 75937,
+      "reason_no_window": {
+        "no_valid_rung": 3214,
+        "a2_unavailable_auction_minute": 185
+      }
+    },
+    "60": {
+      "events": 15519,
+      "live_n_median": 2.0,
+      "alone_events": 5103,
+      "rows_with_window": 75937,
+      "reason_no_window": {
+        "no_valid_rung": 3214,
+        "a2_unavailable_auction_minute": 185
+      }
+    },
+    "rest_of_session": {
+      "events": 15519,
+      "live_n_median": 7.0,
+      "alone_events": 1257,
+      "rows_with_window": 75937,
+      "reason_no_window": {
+        "no_valid_rung": 3214,
+        "a2_unavailable_auction_minute": 185
+      }
+    }
+  },
+  "live_name_rows": 275209,
+  "dev_reproduces_brief1_a3_valid_rungs": {
+    "value": true,
+    "rows": 250
+  },
+  "dev_reproduces_brief1_a3_cross_section": {
+    "value": true,
+    "rows": 750,
+    "flow_share_max_abs_diff": 1.4882539645100223e-13,
+    "note": "the cross-section sums dollars from a running sum (b2 xs_dollar); tolerance 1e-9"
+  },
+  "II5": {
+    "causality": "attention.assert_causal on every quantity (Brief 1, unchanged); none raised",
+    "a2_segment": "attention.assert_segment_windows on every ladder; none raised",
+    "r1_cutoff": "b2common.a2_ladder_r1 asserts the cutoff rung is below 2 x n_min and nothing at or past it is valid"
+  }
+}

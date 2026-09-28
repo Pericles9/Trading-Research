@@ -1,0 +1,11 @@
+{
+  "a1_shares": "raised",
+  "dollar_volume": "raised",
+  "window_counts": "raised",
+  "last_price": "raised",
+  "a3_filings": "raised",
+  "a2_count_ladder": "raised",
+  "a2_kernel": "raised",
+  "clean_inputs_do_not_raise": "ok",
+  "passes": true
+}

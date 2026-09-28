@@ -1,0 +1,309 @@
+{
+  "task": "T2 timing overlay",
+  "config_hash": "b1db4f659320",
+  "n": 903,
+  "uses_fact_timestamps": "the overlay asks when participation MOVED. T3's exit uses the confirmed instant, which is C minutes later.",
+  "four_marks_sec_from_t0": {
+    "onset": {
+      "n": 893,
+      "p5": 40.4,
+      "p25": 56.7,
+      "p50": 59.5,
+      "p75": 60.0,
+      "p95": 11016.0
+    },
+    "tau": {
+      "n": 903,
+      "p5": 8.9,
+      "p25": 52.2,
+      "p50": 410.6,
+      "p75": 1617.0,
+      "p95": 14700.5
+    },
+    "window_close": {
+      "n": 903,
+      "p5": 62.6,
+      "p25": 703.3,
+      "p50": 1377.6,
+      "p75": 2678.4,
+      "p95": 14965.7
+    },
+    "end": {
+      "n": 782,
+      "p5": 59.3,
+      "p25": 1680.0,
+      "p50": 9268.8,
+      "p75": 26324.0,
+      "p95": 46598.6
+    }
+  },
+  "HEADLINE_window_close_minus_participation_end_sec": {
+    "n": 782,
+    "p5": -41104.0,
+    "p25": -24738.2,
+    "p50": -7802.0,
+    "p75": -203.2,
+    "p95": 10733.1,
+    "n_censored_end": 121,
+    "share_censored_end": 0.134,
+    "share_negative": 0.7621,
+    "reading": "negative means EPG closed the position while participation was still live. Censored events have no participation_end inside the session and are excluded from this statistic BY CONSTRUCTION, not by choice -- their count is stated beside it and they are, if anything, the strongest cases of participation outliving the window."
+  },
+  "tau_minus_participation_onset_sec": {
+    "n": 893,
+    "p5": -3726.0,
+    "p25": -26.6,
+    "p50": 295.8,
+    "p75": 837.5,
+    "p95": 13776.9,
+    "share_negative": 0.3539,
+    "reading": "negative means EPG entered before participation arrived."
+  },
+  "participation_already_live_at_t0": {
+    "share": 0.7099,
+    "trailing_over_threshold_at_t0_median": 3.417,
+    "reading": "the onset distribution is pinned near t0+1 minute because participation is ALREADY above 3 x B_e at t0 for most events -- not a rule artifact. t0 is the detection anchor, so the burst is already underway there."
+  },
+  "facets": {
+    "headline_by_n_baseline_sessions": [
+      {
+        "n_baseline_sessions": "1",
+        "n": 1,
+        "n_censored": 0,
+        "share_censored": 0.0,
+        "n_defined": 1,
+        "below_display_floor": true
+      },
+      {
+        "n_baseline_sessions": "2",
+        "n": 6,
+        "n_censored": 0,
+        "share_censored": 0.0,
+        "n_defined": 6,
+        "below_display_floor": true
+      },
+      {
+        "n_baseline_sessions": "3",
+        "n": 775,
+        "n_censored": 121,
+        "share_censored": 0.135,
+        "n_defined": 775,
+        "p5": -41211.2,
+        "p25": -25021.7,
+        "p50": -8095.0,
+        "p75": -220.8,
+        "p95": 10784.9,
+        "share_negative": 0.7639
+      }
+    ],
+    "headline_by_session_segment": [
+      {
+        "session_bucket": "post_market",
+        "n": 2,
+        "n_censored": 1,
+        "share_censored": 0.5,
+        "n_defined": 1,
+        "below_display_floor": true
+      },
+      {
+        "session_bucket": "pre_market",
+        "n": 509,
+        "n_censored": 93,
+        "share_censored": 0.1545,
+        "n_defined": 509,
+        "p5": -44174.1,
+        "p25": -30617.1,
+        "p50": -6918.5,
+        "p75": 451.2,
+        "p95": 12952.0,
+        "share_negative": 0.6994
+      },
+      {
+        "session_bucket": "regular_hours",
+        "n": 272,
+        "n_censored": 27,
+        "share_censored": 0.0903,
+        "n_defined": 272,
+        "p5": -26124.8,
+        "p25": -16439.2,
+        "p50": -8370.2,
+        "p75": -2909.8,
+        "p95": 5144.0,
+        "share_negative": 0.8824
+      }
+    ],
+    "headline_by_detection_price_decile": [
+      {
+        "detection_price_decile": "0",
+        "n": 139,
+        "n_censored": 21,
+        "share_censored": 0.1313,
+        "n_defined": 139,
+        "p5": -42001.9,
+        "p25": -25992.1,
+        "p50": -8164.7,
+        "p75": -430.0,
+        "p95": 10746.8,
+        "share_negative": 0.7914
+      },
+      {
+        "detection_price_decile": "1",
+        "n": 105,
+        "n_censored": 17,
+        "share_censored": 0.1393,
+        "n_defined": 105,
+        "p5": -37558.7,
+        "p25": -25331.9,
+        "p50": -7174.2,
+        "p75": -257.9,
+        "p95": 14041.3,
+        "share_negative": 0.7524
+      },
+      {
+        "detection_price_decile": "2",
+        "n": 73,
+        "n_censored": 14,
+        "share_censored": 0.1609,
+        "n_defined": 73,
+        "p5": -44861.5,
+        "p25": -29635.6,
+        "p50": -15955.5,
+        "p75": -2928.5,
+        "p95": 9347.9,
+        "share_negative": 0.8082
+      },
+      {
+        "detection_price_decile": "3",
+        "n": 83,
+        "n_censored": 30,
+        "share_censored": 0.2655,
+        "n_defined": 83,
+        "p5": -39881.0,
+        "p25": -31117.9,
+        "p50": -13872.8,
+        "p75": -2728.1,
+        "p95": 2493.9,
+        "share_negative": 0.8795
+      },
+      {
+        "detection_price_decile": "4",
+        "n": 79,
+        "n_censored": 18,
+        "share_censored": 0.1856,
+        "n_defined": 79,
+        "p5": -45486.7,
+        "p25": -28288.3,
+        "p50": -9306.2,
+        "p75": -681.9,
+        "p95": 5788.0,
+        "share_negative": 0.7595
+      },
+      {
+        "detection_price_decile": "5",
+        "n": 71,
+        "n_censored": 10,
+        "share_censored": 0.1235,
+        "n_defined": 71,
+        "p5": -40516.8,
+        "p25": -22862.9,
+        "p50": -5085.9,
+        "p75": 1652.6,
+        "p95": 13126.6,
+        "share_negative": 0.6901
+      },
+      {
+        "detection_price_decile": "6",
+        "n": 62,
+        "n_censored": 5,
+        "share_censored": 0.0746,
+        "n_defined": 62,
+        "p5": -41647.0,
+        "p25": -25787.8,
+        "p50": -14079.4,
+        "p75": 201.0,
+        "p95": 11432.6,
+        "share_negative": 0.7419
+      },
+      {
+        "detection_price_decile": "7",
+        "n": 75,
+        "n_censored": 3,
+        "share_censored": 0.0385,
+        "n_defined": 75,
+        "p5": -33494.6,
+        "p25": -22329.1,
+        "p50": -5663.6,
+        "p75": -350.6,
+        "p95": 3302.9,
+        "share_negative": 0.7867
+      },
+      {
+        "detection_price_decile": "8",
+        "n": 58,
+        "n_censored": 2,
+        "share_censored": 0.0333,
+        "n_defined": 58,
+        "p5": -28333.0,
+        "p25": -12904.9,
+        "p50": -2110.5,
+        "p75": 972.5,
+        "p95": 12905.7,
+        "share_negative": 0.6552
+      },
+      {
+        "detection_price_decile": "9",
+        "n": 37,
+        "n_censored": 1,
+        "share_censored": 0.0263,
+        "n_defined": 37,
+        "p5": -29538.0,
+        "p25": -7881.4,
+        "p50": -2149.3,
+        "p75": 1617.8,
+        "p95": 10429.5,
+        "share_negative": 0.6216
+      }
+    ],
+    "entry_gap_by_session_segment": [
+      {
+        "session_bucket": "post_market",
+        "n": 2,
+        "n_censored": 0,
+        "share_censored": 0.0,
+        "n_defined": 2,
+        "below_display_floor": true
+      },
+      {
+        "session_bucket": "pre_market",
+        "n": 594,
+        "n_censored": 8,
+        "share_censored": 0.0133,
+        "n_defined": 594,
+        "p5": -7947.1,
+        "p25": -27.2,
+        "p50": 306.2,
+        "p75": 655.8,
+        "p95": 14603.7,
+        "share_negative": 0.3367
+      },
+      {
+        "session_bucket": "regular_hours",
+        "n": 297,
+        "n_censored": 2,
+        "share_censored": 0.0067,
+        "n_defined": 297,
+        "p5": -124.9,
+        "p25": -26.4,
+        "p50": 258.0,
+        "p75": 1323.2,
+        "p95": 9395.0,
+        "share_negative": 0.3906
+      }
+    ]
+  },
+  "de2_baseline_thin": {
+    "n_thin": 7,
+    "note": "flagged and carried; facetted above by n_baseline_sessions"
+  },
+  "output_parquet": "results/participation_exit_overlay/artifacts/t2_overlay.parquet"
+}

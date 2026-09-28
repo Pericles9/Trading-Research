@@ -1,0 +1,76 @@
+{
+  "task": "v1-T1 attention score at the gap-gated entry instant",
+  "config_hash": "ede4e9e8082b",
+  "formula": "dollar volume in [tau - 600s, tau] / B_e, tau = the gap-gated entry trigger",
+  "unchanged_from_v0": "one measure, relative volume, 10-min window, E2's 3-session B_e",
+  "n_entries": 903,
+  "n_score_available": 903,
+  "n_score_unavailable": 0,
+  "n_zero_volume_windows": 0,
+  "score_quantiles": {
+    "p0": 0.0897,
+    "p5": 0.6383,
+    "p25": 6.0595,
+    "p50": 30.9152,
+    "p75": 216.085,
+    "p95": 2305.029,
+    "p100": 199491.8325
+  },
+  "score_by_n_baseline_sessions": {
+    "1": {
+      "n": 1,
+      "p25": 15.9308,
+      "p50": 15.9308,
+      "p75": 15.9308
+    },
+    "2": {
+      "n": 6,
+      "p25": 2.9913,
+      "p50": 4.5379,
+      "p75": 6.1708
+    },
+    "3": {
+      "n": 896,
+      "p25": 6.1988,
+      "p50": 31.9288,
+      "p75": 226.5129
+    }
+  },
+  "score_by_entry_kind": {
+    "immediate": {
+      "n": 592,
+      "p25": 11.3331,
+      "p50": 63.8046,
+      "p75": 444.8649
+    },
+    "queued": {
+      "n": 311,
+      "p25": 3.0878,
+      "p50": 11.2767,
+      "p75": 49.414
+    }
+  },
+  "score_by_session_bucket": {
+    "post_market": {
+      "n": 2,
+      "p25": 141.7772,
+      "p50": 274.9676,
+      "p75": 408.1579
+    },
+    "pre_market": {
+      "n": 602,
+      "p25": 4.4283,
+      "p50": 30.8246,
+      "p75": 276.3057
+    },
+    "regular_hours": {
+      "n": 299,
+      "p25": 10.5255,
+      "p50": 33.0855,
+      "p75": 127.75
+    }
+  },
+  "session_bucket_note": "B_e is RTH-scoped; a pre-market tau compares an extended-hours window against a regular-session baseline. Carried as a facet.",
+  "v0_score_median_for_reference": 13.41,
+  "output_parquet": "results/relative_momentum/v1/artifacts/t1_scored.parquet"
+}

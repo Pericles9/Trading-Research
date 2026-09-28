@@ -1,0 +1,160 @@
+{
+  "_meta": {
+    "prompt": "prompts/relative_momentum_v2.md",
+    "type": "build -- absolute floor, then cross-sectional rank",
+    "branch": "explore/relative-momentum-v2",
+    "branched_from": "explore/relative-momentum-v1",
+    "plan": "plan revision 2, incorporating Correction 1 (2026-09-21) in full",
+    "record_correction": "The v2 brief states v1 'was never sent'. v1 was built, committed and pushed on 2026-09-18 (a97f06e, explore/relative-momentum-v1). Correction 1 accepted this both ways; v1's population and concurrency artifacts are reused.",
+    "decisions_consumed": []
+  },
+
+  "architecture": {
+    "order": "ABSOLUTE FLOOR first, then CROSS-SECTIONAL RANK on survivors only",
+    "no_trade": "if no candidate live at tau passes the floor, the system returns NO_TRADE. The v0/v1 design could not produce this outcome -- ranking always names a winner.",
+    "no_warmup": "the floor references no historical distribution, so there is no burn-in and no first-N-observations-behave-differently regime. It works on day one, live.",
+    "source": "pseudocode supplied 2026-09-21, implemented verbatim except for the price change below"
+  },
+
+  "window_seconds": 600,
+
+  "floor_conditions": {
+    "note": "six conditions, all AND'd. price_too_low is NOT among them -- see price_filter.",
+    "too_few_prints": {"quantity": "print count in window", "threshold_const": "MIN_PRINTS",
+                       "class": "declared, laddered"},
+    "thin_notional": {"quantity": "sum(price * size) in window, USD",
+                      "threshold_const": "MIN_NOTIONAL_USD",
+                      "derivation": "INTENDED_SIZE_USD / PARTICIPATION_CAP",
+                      "class": "derived from laddered S"},
+    "single_venue": {"quantity": "distinct executing venues in window",
+                     "threshold_const": "MIN_VENUES", "class": "structural, fixed"},
+    "dead_book": {"quantity": "NBBO update count in window", "threshold_const": "MIN_QUOTES",
+                  "class": "declared, laddered"},
+    "spread_too_wide": {"quantity": "median spread / mid * 10000, bp",
+                        "threshold_const": "MAX_SPREAD_BP", "class": "declared, laddered",
+                        "direction": "reject if ABOVE"},
+    "no_depth": {"quantity": "median (bid_size * bid + ask_size * ask), USD -- BOTH sides summed",
+                 "threshold_const": "MIN_DEPTH_USD", "class": "declared, laddered",
+                 "revision": "Correction 1 section 4: decoupled from clip size. Tying it to a multiple of intended size assumed a capacity relationship that does not hold here -- SEC's small-cap study puts depth at 0.2-1.1% of mid-cap. In these names you fill across repeated refreshes, not off one displayed quote, so capacity is carried by thin_notional over the window and no_depth only confirms a two-sided book exists at all.",
+                 "guard": "DEPTH_AVAILABLE -- an event with no usable quote in the window is not rejected on this condition; depth_available = FALSE is carried"}
+  },
+
+  "price_filter": {
+    "name": "price_too_low",
+    "quantity": "last print price in window, USD",
+    "threshold_const": "MIN_PRICE_USD",
+    "derivation": "PER_SHARE_COST_USD * 10000 / MAX_PER_SHARE_COST_BP",
+    "status": "PULLED OUT OF THE FLOOR AND (Correction 1 section 4)",
+    "why": "it rejects more than everything else combined and it is a COST decision, not an attention decision. Left inside the floor it masks every other condition's contribution and makes the fail-reason histogram unreadable.",
+    "reporting": "every policy is run BOTH WITH AND WITHOUT it"
+  },
+
+  "constants": {
+    "PARTICIPATION_CAP": 0.05,
+    "PER_SHARE_COST_USD": 0.02512,
+    "PER_SHARE_COST_SOURCE": "Phase 11, results/phase_11/REPORT.md:72",
+    "MIN_VENUES": 2
+  },
+
+  "ladders": {
+    "_construction": "round, log-spaced, positioned against the LEFT TAIL of the measured distribution (Correction 1 section 3). Swept ONE AT A TIME around the declared reference rung -- 13 distinct configurations, not 729. Read across; no rung is privileged. If a result exists only at one rung, the rung is the finding.",
+    "_why_left_tail": "the 903 candidates are all moments where the participation gate already fired, so the sample has already passed an implicit activity filter. Positioning rungs at p25 of THAT distribution is a second selection gate -- the exact mechanism that damaged v0 and v1. The floor's job is catching dead tape, not trimming the healthy distribution.",
+    "MIN_PRINTS": {"rungs": [25, 50, 100], "reference": 50},
+    "MIN_QUOTES": {"rungs": [12, 25, 50], "reference": 25},
+    "MIN_DEPTH_USD": {"rungs": [50, 100, 200], "reference": 100},
+    "INTENDED_SIZE_USD": {"rungs": [500, 1250, 2500], "reference": 1250,
+                          "implies_MIN_NOTIONAL_USD": [10000, 25000, 50000]},
+    "MAX_SPREAD_BP": {"rungs": [500, 1000, 2000], "reference": 1000,
+                      "note": "NOT specified in Correction 1 section 3's table -- inferred from its principle and flagged for sign-off. A CEILING reaches degenerate cases from the RIGHT, so the left-tail logic inverts: sampled p95 was 476 bp, so these rungs reject roughly the worst 5% / 1% / ~0% rather than the ~25% a 200 bp ceiling would have taken."},
+    "MAX_PER_SHARE_COST_BP": {"rungs": [50, 100, 200], "reference": 100,
+                              "implies_MIN_PRICE_USD": [5.024, 2.512, 1.256]}
+  },
+
+  "build_time_assert": {
+    "rule": "no input to ABSOLUTE_FLOOR is divided by a prior-session baseline, a rolling mean of its own series, another candidate's value, or a percentile of any distribution",
+    "implementation": "research/relative_momentum_v2/common.py::assert_floor_inputs_absolute -- the floor is handed a whitelist of raw measured columns and raises if B_e, score, or any percentile/rank/ratio-derived column reaches it. Relative volume is structurally available to the ranker only."
+  },
+
+  "spread_units": {
+    "report": "both bp and cents (D19)",
+    "collinearity_note": "spread in bp is price-normalised over a $0.12-$16.43 population. Above $1.00 the minimum increment is a penny (Rule 612), so a $2.28 name cannot quote tighter than ~44 bp, while a $0.12 name quotes on the $0.0001 sub-penny grid and can show 8 bp. The bp distribution is mechanically driven by price at the low end, so MAX_SPREAD_BP and MIN_PRICE are partly the same gate. Stated in the report."
+  },
+
+  "quote_exclusions_d17": {
+    "exclude": ["crossed (bid > ask)", "bid or ask null or <= 0", "one side missing",
+                "bid_size or ask_size null or zero"],
+    "carry": "locked (bid == ask) -- a real transient state with a genuine zero spread; dropping it biases measured spread upward",
+    "source": "docs/Universe-Decisions.md D17",
+    "no_event_excluded": "no event is excluded on quote-quality grounds; coverage is carried as a covariate"
+  },
+
+  "population": {
+    "source": "results/relative_momentum/v1/artifacts/t0_candidates.parquet",
+    "n": 903,
+    "reused_not_rebuilt": "v1-T0's tick-exact reconstruction of the runner's gap gate, including queued entries and the next-tick fill convention, validated 6/6 against the run's own recorded entry_price",
+    "gap_gate": "ON",
+    "coverage_statement": "903 of 15,763 D1 events = 5.7%, val split 2023-11-17 to 2024-07-22. NOT a measurement over D1.",
+    "trade": "gate's own: first-window rising-edge entry (gap-gated), window-close exit, realized hold"
+  },
+
+  "d1_concurrency_t2": {
+    "reused_not_rebuilt": true,
+    "source": ["results/relative_momentum/v1/artifacts/t5_d1_concurrency.json",
+               "results/relative_momentum/v1/artifacts/t5_d1_grid.parquet"],
+    "headline": "27.9% of candidate moments carry a second live name at 9-min liveness (the gate's own median window), against 10.5% measured on the gate population; coverage 15,363/15,763 = 97.5%; the +30%-crossing proxy fires EARLIER than an EPG rising edge so every figure is an upper bound"
+  },
+
+  "ranker": {
+    "name": "relative_volume",
+    "formula": "dollar volume in [tau - 600s, tau] / B_e",
+    "baseline_source": "results/fundamental_exploration/e2/artifacts/e2_t2a_baseline.parquet",
+    "baseline_status": "UNCOMMITTED on explore/fundamental-e1. The FLOOR does not depend on it; only the ranker does.",
+    "liveness": "[entry trigger ts, natural_exit_ts] of each candidate's own selected window",
+    "applied_to": "floor survivors only"
+  },
+
+  "policies": {
+    "A": "baseline -- every first-window signal, no qualification",
+    "F": "floor only, no ranking",
+    "R": "rank only, no floor -- CONTROL, deliberately reproduces the broken v0 case",
+    "F+R": "floor, then rank survivors -- the proposal",
+    "F+R contested": "F+R where ranking actually chose among >= 2 survivors"
+  },
+
+  "calibration_gate_t1b": {
+    "status": "HARD STOP, not a formality (Correction 1 sections 5 and 6)",
+    "gate_5b": "if a reference rung lands above p10 on the full 903, it is still a selection gate -- report and STOP",
+    "gate_5c": "split all seven quantities by session segment and confirm the degenerate dead-tape cases are present in the left tail. If absent from the 903, the floor cannot be calibrated against its own purpose and v2 STOPS -- the exercise would be blind.",
+    "gate_6": "project survivor and contested counts at all 13 configurations BEFORE T2 runs. STOP if the F+R contested cell is too small to read. v0's was 42 of 244.",
+    "contested_floor_n": 20,
+    "contested_floor_n_note": "the config's own display floor. A declared round number, not fitted."
+  },
+
+  "cost": {
+    "round_trip_bp": 70.98,
+    "round_trip_cents": 2.512,
+    "source": "results/phase_11/REPORT.md:72",
+    "native_model": "none -- the gate has no fill or cost model; verified in v0-T3 (pnl is a pure price ratio, config/strategy.json has no fee block)",
+    "both_units": "D19"
+  },
+
+  "detection_price_source": "results/fundamental_exploration/artifacts/detection_price.parquet",
+  "min_cell_n_display_floor": 20,
+  "random_seed": 42,
+  "chart_theme": {"output_dir": "results/relative_momentum/v2/charts", "theme": "light, per E1 precedent"},
+
+  "constraints": {
+    "move_at": "never momentum_pct, in any threshold, score or slice",
+    "d4": "tick-derived only; no spine numeric column enters any computed quantity",
+    "d5": "long-only",
+    "coverage": "flag and carry, never drop"
+  },
+
+  "predictions_recorded_before_the_run": {
+    "note": "Correction 1 section 7, replacing the first draft's. Recorded so they can be checked rather than rationalised afterwards.",
+    "1": "the floor rejects a SMALL MINORITY, not a large share",
+    "2": "single_venue rejects almost nobody (sampled p5 was 3 venues)",
+    "3": "the binding condition is whichever of thin_notional / too_few_prints catches the premarket dead-tape cases",
+    "4": "if the floor still rejects a large share after this correction, the rungs are still too high and the histogram names which one"
+  }
+}

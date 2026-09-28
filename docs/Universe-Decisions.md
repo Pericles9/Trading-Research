@@ -1861,3 +1861,50 @@ the same way `t1_build_p0.py`'s own README-level comment already flagged the ana
 `origin/master`'s current tip (which carried D34–D36 and the D32 Amendment A1 text/data-root fix
 `phase/13` had been cut before) into `phase/13` first — register highest was D36, next free D37.
 `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D38.**
+
+---
+
+## D38 — Measurement studies that fit no parameters may use chronological splits with repeat tickers
+
+> **D38 — Measurement studies that fit no parameters may use chronological splits with repeat tickers.**
+> *Date:* 2026-09-23 · *Gate:* attention/excursion design, Cooper-approved.
+> **Decision.** For a study that fits, tunes or selects no parameter on the data being split, the
+> standing ticker-blocked rule ("no ticker on both sides") is replaced by: chronological slices; repeat
+> tickers permitted across slices; every uncertainty estimate clustered by ticker; every read repeated on
+> first-seen tickers as a sensitivity.
+> **Why.** The ticker-blocked rule exists to stop a fitted model memorising a name. With nothing fitted
+> there is nothing to memorise; what remains is non-independence of repeat runs, which clustering
+> addresses. Enforcing the rule on this universe removed 83% of the proposed final slice (2,254 of 2,704)
+> and 67% of the selection slice (3,610 of 5,409) — these names run repeatedly.
+> **Scope.** Any study that fits, tunes, or selects anything — a threshold, a weight, a model — remains
+> under the ticker-blocked rule. A study that later begins fitting inherits the rule from that point.
+
+Appended verbatim from `prompts/attention_excursion_b1.md` (Part II, T0c) by Brief 1's T0c, on branch
+`explore/attention-excursion-b1`. **Numbering note.** Recorded as D38, confirmed free by reading this
+file and the same file on `origin/master`, `origin/explore/fundamental-e1`,
+`origin/explore/fundamental-e2` and `origin/claude/attention-and-the-excursion-v3` — register highest
+was D37 on every one. `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D39.**
+
+## D39 — Shape atlas S1 is an exploratory, hindsight-by-design exception to D32
+
+**Date:** 2026-09-27 · **Gate:** shape atlas S1 (`prompts/shape_atlas_s1.md`) §6, flagged before the build ·
+**Approved by Cooper:** "Include; log a D39 exception", 2026-09-27.
+
+**Decision.** S1 may describe F1-layer columns per post-τ path type, which is an outcome: shares
+outstanding, reverse split in the past 365 days, short interest, turnover (its denominator is F1's
+split-corrected share count), and the F1 filing and dilution flags. Each is shown as a full distribution
+per type, with n.
+
+**Scope.** S1 only. S1 is exploratory with hindsight used by design (Cooper, 2026-09-27); nothing in it
+is a tested result. It is not the partition test D32 Amendment A1 authorises, it does not satisfy A1's
+gating sentence, and nothing it shows reopens D24 or D25 or changes the universe definition. Any later
+use of a fundamental column against an outcome as evidence still goes through D32 A1.
+
+**Recorded alongside (same approval, no separate number).** S1's §4c across-time stability check fits
+clusters on 2020–22 and assigns 2023–24 with tickers on both sides, as the brief is written; it is also
+run ticker-blocked (every ticker seen in the fit period removed from the assigned period), and both are
+reported side by side. The standing ticker-blocked rule is otherwise unchanged.
+
+**Numbering note.** Recorded as D39, confirmed free by reading this file and the same file on every
+`origin/*` branch (highest D38 on `explore/attention-excursion-b1` and `-b2`, D37 elsewhere).
+`CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D40.**

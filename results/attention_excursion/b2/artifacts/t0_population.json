@@ -1,0 +1,87 @@
+{
+  "config_hash": "69d4088aec2c",
+  "d1_n": 15763,
+  "tau_available": 15519,
+  "tau_unavailable_reasons": {
+    "never_crosses": 203,
+    "prior_close_unavailable": 41
+  },
+  "slices": {
+    "development": 7620,
+    "selection": 5389,
+    "final": 2698,
+    "dev_quarantine": 56
+  },
+  "slices_with_tau": {
+    "development": 7525,
+    "selection": 5293,
+    "final": 2648,
+    "dev_quarantine": 53
+  },
+  "dev_quarantine": {
+    "dev_v3": 50,
+    "dev_v4_sidecar": 6
+  },
+  "years_with_tau": {
+    "2020": 3390,
+    "2021": 1919,
+    "2022": 2244,
+    "2023": 2965,
+    "2024": 5001
+  },
+  "tau_anchor_segment": {
+    "regular": 10726,
+    "premarket": 4587,
+    "auction_open": 148,
+    "auction_close": 37,
+    "after_hours": 21
+  },
+  "tau_in_auction_minute": 185,
+  "early_close_events_with_tau": 107,
+  "price_tier_with_tau": {
+    "$3-10": 4979,
+    "$1-3": 4963,
+    ">=$10": 3014,
+    "<$1": 2563
+  },
+  "tau_close_sensitive": {
+    "False": 13085,
+    "True": 2434
+  },
+  "flag_cross_session_extreme": {
+    "False": 14632,
+    "True": 887
+  },
+  "dates_with_tau": 1257,
+  "II5_causality_and_a2_segment_test": {
+    "a1_shares": "raised",
+    "dollar_volume": "raised",
+    "window_counts": "raised",
+    "last_price": "raised",
+    "a3_filings": "raised",
+    "a2_count_ladder": "raised",
+    "a2_kernel": "raised",
+    "clean_inputs_do_not_raise": "ok",
+    "segment_rth_tau_anchored_0400": "raised",
+    "segment_tau_in_open_cross_minute": "raised",
+    "segment_anchored_ladder_does_not_raise": "ok",
+    "passes": true
+  },
+  "II5_competition_window_test": {
+    "straddles_open": "raised",
+    "holds_close_cross_minute": "raised",
+    "straddles_0400": "raised",
+    "inside_regular_does_not_raise": "ok",
+    "passes": true
+  },
+  "assertions_passed": [
+    "D1 = 15,763, event_id resolved and unique",
+    "t2_tau covers D1 exactly; tau_ns int64",
+    "tau available = 15,519",
+    "slices partition D1",
+    "dev_quarantine = 50 dev + 6 sidecar, none elsewhere",
+    "causality test raises on every attention function",
+    "A2 segment test raises",
+    "competition-window test raises on a straddling window"
+  ]
+}

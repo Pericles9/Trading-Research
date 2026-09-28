@@ -1,0 +1,46 @@
+{
+  "config_hash": "69d4088aec2c",
+  "construction": "research/attention_excursion_b1/t6a_references.py, draw for draw",
+  "paths_per_N": 20000,
+  "seed": 20260924,
+  "reproduces_brief1_t6_references": {
+    "50": {
+      "paths": 20000,
+      "fields_compared": 24,
+      "identical": true
+    },
+    "100": {
+      "paths": 20000,
+      "fields_compared": 24,
+      "identical": true
+    },
+    "200": {
+      "paths": 20000,
+      "fields_compared": 24,
+      "identical": true
+    }
+  },
+  "free_walk_medians": {
+    "50": {
+      "u_peak": 0.5,
+      "rise_s": 0.5982270302949637,
+      "fall_s": 0.6009160992552705,
+      "dip_before_peak_s": 0.3858710286331249,
+      "terminal_s": 0.0021602974258829303
+    },
+    "100": {
+      "u_peak": 0.5,
+      "rise_s": 0.6200212881250082,
+      "fall_s": 0.6233949107433348,
+      "dip_before_peak_s": 0.42571240507389296,
+      "terminal_s": -0.016404983423245315
+    },
+    "200": {
+      "u_peak": 0.495,
+      "rise_s": 0.6318915706265815,
+      "fall_s": 0.6392491187622144,
+      "dip_before_peak_s": 0.4617864050371814,
+      "terminal_s": -0.005526965890180658
+    }
+  }
+}

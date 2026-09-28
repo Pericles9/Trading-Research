@@ -1,0 +1,44 @@
+{
+  "brief1_config": {
+    "commit": "99431b8",
+    "path": "config/attention_excursion_b1.json",
+    "hash": "658071fbe27f"
+  },
+  "brief2_config": {
+    "path": "config/attention_excursion_b2.json",
+    "hash": "69d4088aec2c"
+  },
+  "brief1_keys_checked": 24,
+  "diff_paths": [
+    "ADDED brief2",
+    "ADDED brief2_diff"
+  ],
+  "outside_section_1": [],
+  "section_1_items": {
+    "R1": "the ladder extent of Amendment 2 A2.4 / Amendment 3 (every rung to the 10 ms floor); per-rung validity is unchanged",
+    "R2": "t5b_competition.control_side and amendment_3.t5b_matched_control (same-name matching retired)",
+    "R3": "Brief 2 R3 (Cooper, 2026-09-25): the segment rule applies to the competition windows",
+    "R4": "Brief 2 R4 (Cooper, 2026-09-24): facet bins in absolute units; no percentile sets any bin edge",
+    "R5": "Brief 2 R5 (Cooper, 2026-09-25)"
+  },
+  "section_1_items_exactly_R1_R5": true,
+  "brief2_task_parameters": [
+    "branch",
+    "brief",
+    "escalation",
+    "outputs",
+    "population",
+    "t1_excursion",
+    "t2_attention",
+    "t3_competition",
+    "t4_step_zero",
+    "verification"
+  ],
+  "brief2_task_parameters_note": "Brief 2's own task parameters (sections 3, 4 and 7 of prompts/attention_excursion_b2.md): where this brief runs and what it builds. None of them changes a Brief 1 instrument; config_diff.py lists them separately from the section 1 diff.",
+  "row_4": {
+    "criterion": "the config diff contains anything outside section 1",
+    "tier": "HARD STOP",
+    "fires": false,
+    "observed": "no Brief 1 key changed, added or removed; the only additions are brief2_diff (exactly R1-R5) and brief2 (task parameters)"
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "config_hash": "69d4088aec2c",
+  "seconds": 1079.6,
+  "events_with_tau": 15519,
+  "events_d1": 15763,
+  "vector_available_by_N": {
+    "50": 15515,
+    "100": 15515,
+    "200": 15515
+  },
+  "vector_available_share_by_N": {
+    "50": 0.9997422514337264,
+    "100": 0.9997422514337264,
+    "200": 0.9997422514337264
+  },
+  "unavailable_reasons_with_tau": {
+    "path_too_short": 12
+  },
+  "edge_classes_by_N": {
+    "50": {
+      "rise_censored": 475,
+      "no_rise": 2318,
+      "peak_at_tau": 1612,
+      "peak_tied": 448,
+      "halt_in_path": 4386,
+      "halt_gap_rth": 4386,
+      "halt_label_in_path": 10,
+      "thin_path": 559,
+      "sigma_zero": 2,
+      "n": 15515
+    },
+    "100": {
+      "rise_censored": 363,
+      "no_rise": 1774,
+      "peak_at_tau": 1289,
+      "peak_tied": 762,
+      "halt_in_path": 4386,
+      "halt_gap_rth": 4386,
+      "halt_label_in_path": 10,
+      "thin_path": 559,
+      "sigma_zero": 2,
+      "n": 15515
+    },
+    "200": {
+      "rise_censored": 286,
+      "no_rise": 1375,
+      "peak_at_tau": 1067,
+      "peak_tied": 1219,
+      "halt_in_path": 4386,
+      "halt_gap_rth": 4386,
+      "halt_label_in_path": 10,
+      "thin_path": 559,
+      "sigma_zero": 2,
+      "n": 15515
+    }
+  },
+  "path_prints": {
+    "median": 16209.0,
+    "p05": 341.0,
+    "min": 0.0,
+    "max": 4855604.0
+  },
+  "halt_label_available_events": 93,
+  "dev_reproduces_brief1_t4": {
+    "value": true,
+    "rows_compared": 168,
+    "columns_compared": 60,
+    "mismatched_columns": {}
+  },
+  "II5_bucket_volume_conservation": {
+    "asserted_in": "instruments.bucketize (Brief 1, unchanged)",
+    "event_rungs": 46545,
+    "max_bucket_vol_rel_err": 4.072997267024164e-14
+  },
+  "row_1": {
+    "criterion": "excursion vector available on fewer than 95% of events with tau",
+    "tier": "HARD STOP",
+    "observed_min_share": 0.9997422514337264,
+    "by_N": {
+      "50": 0.9997422514337264,
+      "100": 0.9997422514337264,
+      "200": 0.9997422514337264
+    },
+    "fires": false
+  },
+  "row_6": {
+    "criterion": "thin paths above 10% of D1",
+    "tier": "LOG",
+    "thin_events": 563,
+    "of_events_with_tau": 15519,
+    "observed_share": 0.036278110703009216,
+    "fires": false
+  },
+  "row_7": {
+    "criterion": "halt-flagged paths above 40% of D1",
+    "tier": "LOG",
+    "halt_events": 4386,
+    "of_events_with_tau": 15519,
+    "observed_share": 0.2826213029190025,
+    "fires": false
+  }
+}

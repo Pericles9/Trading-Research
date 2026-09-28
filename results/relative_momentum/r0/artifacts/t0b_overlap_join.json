@@ -1,0 +1,297 @@
+{
+  "task": "R0-T0b overlap join (STOPPING GATE)",
+  "config_hash": "5fae280c7fed",
+  "gate_populations": {
+    "G_list": {
+      "n": 9342,
+      "rule": "data/filtered folder, parseable name, date present, mom_pct >= 50.0, trades.parquet present",
+      "n_folders_scanned": 24723
+    },
+    "G_run": {
+      "n": 1136,
+      "n_per_event_summary_rows": 8762,
+      "n_result_files": 101
+    },
+    "G_fired": {
+      "n": 1120,
+      "rule": "n_pass_edges >= 1 on a per_event_summary row (a participation-gate rising edge occurred at least once in that event session)."
+    },
+    "G_pf_valfull": {
+      "n": 1027,
+      "n_fired": 1027,
+      "path": "scanner-epg-momentum/backtest/results/phase_f/val_full",
+      "profit_factor": 1.9194
+    }
+  },
+  "D1": {
+    "n": 15763,
+    "rule": "momentum_events_canonical WHERE in_scope = TRUE AND source_file = 'file1'"
+  },
+  "set_relationships": [
+    {
+      "name": "G_list_vs_D1",
+      "n_G_list": 9342,
+      "n_D1": 15763,
+      "n_intersection": 5717,
+      "n_only_in_G_list": 3625,
+      "n_only_in_D1": 10046,
+      "n_symmetric_difference": 13671,
+      "share_of_G_list_covered": 0.6119674587882681,
+      "share_of_D1_covered": 0.36268476812789446,
+      "sample_only_in_G_list": [
+        "AACG|2021-02-04",
+        "AAP|2025-05-22",
+        "ABAT|2025-10-13",
+        "ABLV|2025-02-11",
+        "ABLV|2025-03-07"
+      ],
+      "sample_only_in_D1": [
+        "AACG|2020-02-18",
+        "AACG|2020-03-20",
+        "AACG|2020-06-16",
+        "AACG|2020-08-03",
+        "AACG|2020-10-12"
+      ]
+    },
+    {
+      "name": "G_list_vs_D1_on_event_id",
+      "n_G_list_id": 9342,
+      "n_D1_id": 15763,
+      "n_intersection": 5717,
+      "n_only_in_G_list_id": 3625,
+      "n_only_in_D1_id": 10046,
+      "n_symmetric_difference": 13671,
+      "share_of_G_list_id_covered": 0.6119674587882681,
+      "share_of_D1_id_covered": 0.36268476812789446,
+      "sample_only_in_G_list_id": [
+        "AACG_2021-02-04_1352.21",
+        "AAP_2025-05-22_59.82",
+        "ABAT_2025-10-13_50.81",
+        "ABLV_2025-02-11_70.44",
+        "ABLV_2025-03-07_138.55"
+      ],
+      "sample_only_in_D1_id": [
+        "AACG_2020-02-18_40.86",
+        "AACG_2020-03-20_49.66",
+        "AACG_2020-06-16_39.53",
+        "AACG_2020-08-03_32.08",
+        "AACG_2020-10-12_32.41"
+      ]
+    },
+    {
+      "name": "G_list_vs_in_scope_all_source_files",
+      "n_G_list": 9342,
+      "n_in_scope_all": 20951,
+      "n_intersection": 7905,
+      "n_only_in_G_list": 1437,
+      "n_only_in_in_scope_all": 13046,
+      "n_symmetric_difference": 14483,
+      "share_of_G_list_covered": 0.8461785484906872,
+      "share_of_in_scope_all_covered": 0.3773089589995704,
+      "sample_only_in_G_list": [
+        "AACG|2021-02-04",
+        "ABVEW|2025-10-08",
+        "ABVEW|2025-10-16",
+        "ACHR.WS|2023-06-29",
+        "ACHR.WS|2023-07-31"
+      ],
+      "sample_only_in_in_scope_all": [
+        "AACG|2020-02-18",
+        "AACG|2020-03-20",
+        "AACG|2020-06-16",
+        "AACG|2020-08-03",
+        "AACG|2020-10-12"
+      ]
+    },
+    {
+      "name": "G_run_vs_D1",
+      "n_G_run": 1136,
+      "n_D1": 15763,
+      "n_intersection": 1097,
+      "n_only_in_G_run": 39,
+      "n_only_in_D1": 14666,
+      "n_symmetric_difference": 14705,
+      "share_of_G_run_covered": 0.965669014084507,
+      "share_of_D1_covered": 0.06959335151938083,
+      "sample_only_in_G_run": [
+        "AISPW|2024-03-18",
+        "APM|2024-03-06",
+        "ASNS|2024-06-05",
+        "BFRGW|2024-01-22",
+        "BGLC|2024-02-13"
+      ],
+      "sample_only_in_D1": [
+        "AACG|2020-02-18",
+        "AACG|2020-03-20",
+        "AACG|2020-06-11",
+        "AACG|2020-06-16",
+        "AACG|2020-08-03"
+      ]
+    },
+    {
+      "name": "G_fired_vs_D1",
+      "n_G_fired": 1120,
+      "n_D1": 15763,
+      "n_intersection": 1087,
+      "n_only_in_G_fired": 33,
+      "n_only_in_D1": 14676,
+      "n_symmetric_difference": 14709,
+      "share_of_G_fired_covered": 0.9705357142857143,
+      "share_of_D1_covered": 0.0689589545137347,
+      "sample_only_in_G_fired": [
+        "AISPW|2024-03-18",
+        "APM|2024-03-06",
+        "ASNS|2024-06-05",
+        "BFRGW|2024-01-22",
+        "BGLC|2024-02-13"
+      ],
+      "sample_only_in_D1": [
+        "AACG|2020-02-18",
+        "AACG|2020-03-20",
+        "AACG|2020-06-11",
+        "AACG|2020-06-16",
+        "AACG|2020-08-03"
+      ]
+    },
+    {
+      "name": "G_pf_valfull_vs_D1",
+      "n_G_pf": 1027,
+      "n_D1": 15763,
+      "n_intersection": 999,
+      "n_only_in_G_pf": 28,
+      "n_only_in_D1": 14764,
+      "n_symmetric_difference": 14792,
+      "share_of_G_pf_covered": 0.9727361246348588,
+      "share_of_D1_covered": 0.06337626086404873,
+      "sample_only_in_G_pf": [
+        "AISPW|2024-03-18",
+        "APM|2024-03-06",
+        "ASNS|2024-06-05",
+        "BGLC|2024-02-13",
+        "BMR|2024-02-12"
+      ],
+      "sample_only_in_D1": [
+        "AACG|2020-02-18",
+        "AACG|2020-03-20",
+        "AACG|2020-06-11",
+        "AACG|2020-06-16",
+        "AACG|2020-08-03"
+      ]
+    },
+    {
+      "name": "G_pf_valfull_fired_vs_D1",
+      "n_G_pf_fired": 1027,
+      "n_D1": 15763,
+      "n_intersection": 999,
+      "n_only_in_G_pf_fired": 28,
+      "n_only_in_D1": 14764,
+      "n_symmetric_difference": 14792,
+      "share_of_G_pf_fired_covered": 0.9727361246348588,
+      "share_of_D1_covered": 0.06337626086404873,
+      "sample_only_in_G_pf_fired": [
+        "AISPW|2024-03-18",
+        "APM|2024-03-06",
+        "ASNS|2024-06-05",
+        "BGLC|2024-02-13",
+        "BMR|2024-02-12"
+      ],
+      "sample_only_in_D1": [
+        "AACG|2020-02-18",
+        "AACG|2020-03-20",
+        "AACG|2020-06-11",
+        "AACG|2020-06-16",
+        "AACG|2020-08-03"
+      ]
+    },
+    {
+      "name": "G_run_vs_G_list",
+      "n_G_run": 1136,
+      "n_G_list": 9342,
+      "n_intersection": 1136,
+      "n_only_in_G_run": 0,
+      "n_only_in_G_list": 8206,
+      "n_symmetric_difference": 8206,
+      "share_of_G_run_covered": 1.0,
+      "share_of_G_list_covered": 0.12160137015628344,
+      "sample_only_in_G_run": [],
+      "sample_only_in_G_list": [
+        "AACG|2020-06-11",
+        "AACG|2021-02-04",
+        "AACG|2021-07-15",
+        "AACG|2022-01-04",
+        "AAL|2020-06-04"
+      ]
+    }
+  ],
+  "gate_lister_rejections_vs_D1": [
+    {
+      "reject_reason": "mom_pct_below_50",
+      "in_d1": true,
+      "n": 10046
+    },
+    {
+      "reject_reason": "mom_pct_below_50",
+      "in_d1": false,
+      "n": 5221
+    },
+    {
+      "reject_reason": "no_date_in_folder_name",
+      "in_d1": false,
+      "n": 114
+    }
+  ],
+  "D1_events_the_gate_lister_excludes_by_reason": {
+    "mom_pct_below_50": 10046
+  },
+  "by_year": [
+    {
+      "year": "2020",
+      "n_d1": 3439,
+      "n_gate_admitted": 1100,
+      "n_gate_run": 0,
+      "n_gate_fired": 0
+    },
+    {
+      "year": "2021",
+      "n_d1": 1932,
+      "n_gate_admitted": 698,
+      "n_gate_run": 0,
+      "n_gate_fired": 0
+    },
+    {
+      "year": "2022",
+      "n_d1": 2279,
+      "n_gate_admitted": 793,
+      "n_gate_run": 0,
+      "n_gate_fired": 0
+    },
+    {
+      "year": "2023",
+      "n_d1": 3021,
+      "n_gate_admitted": 1108,
+      "n_gate_run": 159,
+      "n_gate_fired": 158
+    },
+    {
+      "year": "2024",
+      "n_d1": 5092,
+      "n_gate_admitted": 2018,
+      "n_gate_run": 938,
+      "n_gate_fired": 929
+    }
+  ],
+  "criterion": {
+    "statement": "Are the participation gate's event set and D1 the same population?",
+    "share_of_D1_the_gate_lister_would_even_admit": 0.36268476812789446,
+    "share_of_D1_the_gate_was_ever_run_on": 0.06959335151938083,
+    "share_of_D1_the_gate_ever_fired_on": 0.0689589545137347,
+    "share_of_the_headline_PF_run_that_is_inside_D1": 0.9727361246348588,
+    "materially_disjoint": true,
+    "materially_disjoint_rule": "share_of_D1_the_gate_was_ever_run_on < 0.50 -- a stated round threshold declared in this script, not fitted. The brief sets no numeric bar ('materially disjoint'); the decision is Cooper's and the number below is what it is read on."
+  },
+  "outputs": [
+    "results/relative_momentum/r0/artifacts/t0b_gate_listable.parquet",
+    "results/relative_momentum/r0/artifacts/t0b_gate_runs.parquet",
+    "results/relative_momentum/r0/artifacts/t0b_membership.parquet"
+  ]
+}

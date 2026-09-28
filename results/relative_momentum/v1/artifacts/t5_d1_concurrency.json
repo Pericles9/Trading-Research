@@ -1,0 +1,520 @@
+{
+  "task": "v1-T5 (Fix 3) true D1 concurrency -- a cheap read, not a rebuild",
+  "config_hash": "ede4e9e8082b",
+  "candidate_moment_proxy": {
+    "rule": "the first minute bar whose high >= prior_close * 1.30 -- the first moment the +30% crossing is observable",
+    "source": "event_minute_bars_v2 (Phase 6b tick aggregate; D5 A11 -- reuse needs no citation)",
+    "timestamp": "that bar's first_trade_ts",
+    "why_a_proxy": "the gate's own first rising edge does not exist for D1. R0-T0b established the gate has never been run on 93% of D1 and on no event before 2023-11-17. The +30% crossing is the program's own momentum definition, is causal, and is computable for all of D1.",
+    "d4": "minute bars are tick-derived; prior close is tick-derived. No spine numeric enters."
+  },
+  "proxy_is_an_upper_bound": "EPG fires on trade-arrival intensity, so it fires later than the raw +30% crossing. With a fixed liveness window this proxy therefore OVERSTATES how early candidates appear and overstates concurrency. The numbers below are a ceiling on what a full-D1 gate re-derivation could find.",
+  "coverage": {
+    "n_d1": 15763,
+    "n_with_crossing": 15363,
+    "share": 0.9746,
+    "n_without_crossing": 400,
+    "no_crossing_note": "an event with no minute bar reaching +30% of the tick-derived prior close on the event day. Carried with tau_available = FALSE, never dropped. momentum_pct is a vendor RTH-scoped day's-high measure on an adjusted basis (D4), so it does not have to agree with a tick recompute."
+  },
+  "events_per_session_date": {
+    "d1_per_date_median": 10.0,
+    "with_tau_per_date_median": 10.0,
+    "with_tau_per_date_quantiles": {
+      "p25": 6.0,
+      "p50": 10.0,
+      "p75": 16.0,
+      "p90": 22.0,
+      "p95": 26.0,
+      "p100": 235.0
+    },
+    "n_session_dates": 1257,
+    "by_year": [
+      {
+        "year": "2020",
+        "n_dates": 252,
+        "n_events": 3378,
+        "per_date_median": 9.0
+      },
+      {
+        "year": "2021",
+        "n_dates": 252,
+        "n_events": 1907,
+        "per_date_median": 6.0
+      },
+      {
+        "year": "2022",
+        "n_dates": 251,
+        "n_events": 2185,
+        "per_date_median": 7.0
+      },
+      {
+        "year": "2023",
+        "n_dates": 250,
+        "n_events": 2938,
+        "per_date_median": 11.0
+      },
+      {
+        "year": "2024",
+        "n_dates": 252,
+        "n_events": 4955,
+        "per_date_median": 18.0
+      }
+    ],
+    "reading": "reported as a distribution, not a mean. 15,763 events over five years averages to a number almost no day resembles."
+  },
+  "crossing_clock_time_by_hour_et": {
+    "04": 1755,
+    "05": 234,
+    "06": 312,
+    "07": 827,
+    "08": 998,
+    "09": 2386,
+    "10": 2158,
+    "11": 1570,
+    "12": 1298,
+    "13": 1115,
+    "14": 1188,
+    "15": 1443,
+    "16": 66,
+    "17": 4,
+    "18": 5,
+    "19": 4
+  },
+  "concurrency_at_candidate_moments": {
+    "9": {
+      "n_candidate_moments": 15363,
+      "median": 1.0,
+      "share_alone": 0.7206,
+      "share_two_or_more": 0.2794,
+      "quantiles": {
+        "p25": 1.0,
+        "p50": 1.0,
+        "p75": 2.0,
+        "p90": 3.0,
+        "p95": 4.0,
+        "p100": 23.0
+      },
+      "distribution": {
+        "1": 11071,
+        "2": 2724,
+        "3": 701,
+        "4": 300,
+        "5": 154,
+        "6": 92,
+        "7": 60,
+        "8": 43,
+        "9": 53,
+        "10": 43,
+        "11": 39,
+        "12": 25
+      }
+    },
+    "15": {
+      "n_candidate_moments": 15363,
+      "median": 1.0,
+      "share_alone": 0.6366,
+      "share_two_or_more": 0.3634,
+      "quantiles": {
+        "p25": 1.0,
+        "p50": 1.0,
+        "p75": 2.0,
+        "p90": 3.0,
+        "p95": 5.0,
+        "p100": 29.0
+      },
+      "distribution": {
+        "1": 9780,
+        "2": 3362,
+        "3": 1023,
+        "4": 387,
+        "5": 201,
+        "6": 118,
+        "7": 82,
+        "8": 76,
+        "9": 50,
+        "10": 45,
+        "11": 32,
+        "12": 38
+      }
+    },
+    "30": {
+      "n_candidate_moments": 15363,
+      "median": 2.0,
+      "share_alone": 0.4859,
+      "share_two_or_more": 0.5141,
+      "quantiles": {
+        "p25": 1.0,
+        "p50": 2.0,
+        "p75": 2.0,
+        "p90": 4.0,
+        "p95": 7.0,
+        "p100": 45.0
+      },
+      "distribution": {
+        "1": 7465,
+        "2": 4152,
+        "3": 1734,
+        "4": 713,
+        "5": 324,
+        "6": 173,
+        "7": 112,
+        "8": 96,
+        "9": 69,
+        "10": 60,
+        "11": 61,
+        "12": 41
+      }
+    },
+    "60": {
+      "n_candidate_moments": 15363,
+      "median": 2.0,
+      "share_alone": 0.3207,
+      "share_two_or_more": 0.6793,
+      "quantiles": {
+        "p25": 1.0,
+        "p50": 2.0,
+        "p75": 3.0,
+        "p90": 6.0,
+        "p95": 10.0,
+        "p100": 59.0
+      },
+      "distribution": {
+        "1": 4927,
+        "2": 4148,
+        "3": 2478,
+        "4": 1400,
+        "5": 737,
+        "6": 383,
+        "7": 210,
+        "8": 167,
+        "9": 95,
+        "10": 89,
+        "11": 64,
+        "12": 51
+      }
+    },
+    "no_cap": {
+      "n_candidate_moments": 15363,
+      "median": 7.0,
+      "share_alone": 0.0714,
+      "share_two_or_more": 0.9286,
+      "quantiles": {
+        "p25": 4.0,
+        "p50": 7.0,
+        "p75": 13.0,
+        "p90": 23.0,
+        "p95": 35.0,
+        "p100": 235.0
+      },
+      "distribution": {
+        "1": 1097,
+        "2": 1318,
+        "3": 1251,
+        "4": 1184,
+        "5": 1101,
+        "6": 987,
+        "7": 917,
+        "8": 813,
+        "9": 723,
+        "10": 637,
+        "11": 564,
+        "12": 498
+      }
+    }
+  },
+  "concurrency_on_5min_grid": {
+    "15": {
+      "n_grid_points": 242601,
+      "share_grid_points_with_any_candidate": 0.1532,
+      "median_over_all_grid_points": 0.0,
+      "median_where_at_least_one_live": 1.0,
+      "share_two_or_more_where_any_live": 0.191,
+      "p90_where_any_live": 2.0,
+      "max": 29
+    },
+    "30": {
+      "n_grid_points": 242601,
+      "share_grid_points_with_any_candidate": 0.2607,
+      "median_over_all_grid_points": 0.0,
+      "median_where_at_least_one_live": 1.0,
+      "share_two_or_more_where_any_live": 0.2902,
+      "p90_where_any_live": 2.0,
+      "max": 41
+    },
+    "60": {
+      "n_grid_points": 242601,
+      "share_grid_points_with_any_candidate": 0.4136,
+      "median_over_all_grid_points": 0.0,
+      "median_where_at_least_one_live": 1.0,
+      "share_two_or_more_where_any_live": 0.4323,
+      "p90_where_any_live": 3.0,
+      "max": 55
+    },
+    "9": {
+      "n_grid_points": 242601,
+      "share_grid_points_with_any_candidate": 0.0987,
+      "median_over_all_grid_points": 0.0,
+      "median_where_at_least_one_live": 1.0,
+      "share_two_or_more_where_any_live": 0.1338,
+      "p90_where_any_live": 2.0,
+      "max": 23
+    },
+    "no_cap": {
+      "n_grid_points": 242601,
+      "share_grid_points_with_any_candidate": 0.9202,
+      "median_over_all_grid_points": 5.0,
+      "median_where_at_least_one_live": 6.0,
+      "share_two_or_more_where_any_live": 0.8777,
+      "p90_where_any_live": 17.0,
+      "max": 235
+    }
+  },
+  "concurrency_on_5min_grid_by_year": {
+    "15": {
+      "2020": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.1451,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.2144,
+        "p90_where_any_live": 2.0,
+        "max": 29
+      },
+      "2021": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.1062,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.1259,
+        "p90_where_any_live": 2.0,
+        "max": 8
+      },
+      "2022": {
+        "n_grid_points": 48443,
+        "share_grid_points_with_any_candidate": 0.1205,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.1287,
+        "p90_where_any_live": 2.0,
+        "max": 11
+      },
+      "2023": {
+        "n_grid_points": 48250,
+        "share_grid_points_with_any_candidate": 0.1577,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.1663,
+        "p90_where_any_live": 2.0,
+        "max": 9
+      },
+      "2024": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.2366,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.2539,
+        "p90_where_any_live": 2.0,
+        "max": 15
+      }
+    },
+    "30": {
+      "2020": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.2445,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.2976,
+        "p90_where_any_live": 3.0,
+        "max": 41
+      },
+      "2021": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.1891,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.194,
+        "p90_where_any_live": 2.0,
+        "max": 12
+      },
+      "2022": {
+        "n_grid_points": 48443,
+        "share_grid_points_with_any_candidate": 0.2122,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.2112,
+        "p90_where_any_live": 2.0,
+        "max": 12
+      },
+      "2023": {
+        "n_grid_points": 48250,
+        "share_grid_points_with_any_candidate": 0.272,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.271,
+        "p90_where_any_live": 2.0,
+        "max": 10
+      },
+      "2024": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.3854,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.3896,
+        "p90_where_any_live": 3.0,
+        "max": 15
+      }
+    },
+    "60": {
+      "2020": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.3915,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.4116,
+        "p90_where_any_live": 3.0,
+        "max": 55
+      },
+      "2021": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.3194,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.306,
+        "p90_where_any_live": 3.0,
+        "max": 16
+      },
+      "2022": {
+        "n_grid_points": 48443,
+        "share_grid_points_with_any_candidate": 0.3517,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.3442,
+        "p90_where_any_live": 3.0,
+        "max": 18
+      },
+      "2023": {
+        "n_grid_points": 48250,
+        "share_grid_points_with_any_candidate": 0.4368,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.4205,
+        "p90_where_any_live": 3.0,
+        "max": 12
+      },
+      "2024": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.5686,
+        "median_over_all_grid_points": 1.0,
+        "median_where_at_least_one_live": 2.0,
+        "share_two_or_more_where_any_live": 0.5807,
+        "p90_where_any_live": 4.0,
+        "max": 16
+      }
+    },
+    "9": {
+      "2020": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.0943,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.1685,
+        "p90_where_any_live": 2.0,
+        "max": 23
+      },
+      "2021": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.0667,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.0857,
+        "p90_where_any_live": 1.0,
+        "max": 7
+      },
+      "2022": {
+        "n_grid_points": 48443,
+        "share_grid_points_with_any_candidate": 0.0762,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.0862,
+        "p90_where_any_live": 1.0,
+        "max": 9
+      },
+      "2023": {
+        "n_grid_points": 48250,
+        "share_grid_points_with_any_candidate": 0.1002,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.1073,
+        "p90_where_any_live": 2.0,
+        "max": 9
+      },
+      "2024": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.1561,
+        "median_over_all_grid_points": 0.0,
+        "median_where_at_least_one_live": 1.0,
+        "share_two_or_more_where_any_live": 0.1735,
+        "p90_where_any_live": 2.0,
+        "max": 11
+      }
+    },
+    "no_cap": {
+      "2020": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.8979,
+        "median_over_all_grid_points": 5.0,
+        "median_where_at_least_one_live": 5.0,
+        "share_two_or_more_where_any_live": 0.8742,
+        "p90_where_any_live": 16.0,
+        "max": 235
+      },
+      "2021": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.8924,
+        "median_over_all_grid_points": 3.0,
+        "median_where_at_least_one_live": 4.0,
+        "share_two_or_more_where_any_live": 0.8211,
+        "p90_where_any_live": 10.0,
+        "max": 39
+      },
+      "2022": {
+        "n_grid_points": 48443,
+        "share_grid_points_with_any_candidate": 0.8851,
+        "median_over_all_grid_points": 4.0,
+        "median_where_at_least_one_live": 5.0,
+        "share_two_or_more_where_any_live": 0.8474,
+        "p90_where_any_live": 11.0,
+        "max": 58
+      },
+      "2023": {
+        "n_grid_points": 48250,
+        "share_grid_points_with_any_candidate": 0.9406,
+        "median_over_all_grid_points": 6.0,
+        "median_where_at_least_one_live": 6.0,
+        "share_two_or_more_where_any_live": 0.8832,
+        "p90_where_any_live": 15.0,
+        "max": 36
+      },
+      "2024": {
+        "n_grid_points": 48636,
+        "share_grid_points_with_any_candidate": 0.9849,
+        "median_over_all_grid_points": 11.0,
+        "median_where_at_least_one_live": 11.0,
+        "share_two_or_more_where_any_live": 0.9539,
+        "p90_where_any_live": 23.0,
+        "max": 66
+      }
+    }
+  },
+  "v1_gate_population_reference": {
+    "share_alone": 0.8948,
+    "median_live": 1.0,
+    "n": 903,
+    "note": "v1-T2's measured concurrency on the gap-gated gate population, for contrast."
+  },
+  "outputs": [
+    "results/relative_momentum/v1/artifacts/t5_d1_candidate_moments.parquet",
+    "results/relative_momentum/v1/artifacts/t5_d1_grid.parquet"
+  ],
+  "elapsed_sec": 35.5
+}
