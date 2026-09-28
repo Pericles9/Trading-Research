@@ -92,7 +92,7 @@ def main() -> int:
     w(f"| `tau_ns` int64 | {a['tau_ns_int64']} |")
     w(f"| null paths go through the identical code path (identity index, no demeaning, output identical) | {a['null_identity_test']} |")
     w(f"| null draws are row-stable (the first r of 200 = a request for r) | {a['null_draws_row_stable']} |")
-    w(f"| post-τ components equal b2's ({pc['rule']}) | {pc['passes']} (max {pc['max_diff']:.1e}) |")
+    w(f"| post-τ components equal b2's ({pc['rule'].replace('|', '')}) | {pc['passes']} (max {pc['max_diff']:.1e}) |")
     w("")
     # ------------------------------------------------ 3. theory types
     sh = pd.read_parquet(S.art("t2_theory_shares.parquet"))

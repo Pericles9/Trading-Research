@@ -122,8 +122,10 @@ def stability():
             i += 1
         fig.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode="lines", line=dict(color=GRID, dash="dash"), showlegend=False), row=1, col=2)
         for j, (method, g) in enumerate(co.groupby("method")):
-            fig.add_trace(go.Box(x=g["k"].astype(str), y=g["co_assignment_rate"], name=f"{method} co-assignment (n={g['event_id'].nunique():,})",
-                                 marker_color=PAL[j], boxpoints=False, offsetgroup=method), row=2, col=2)
+            q = g.groupby("k")["co_assignment_rate"].quantile([0.0, 0.25, 0.5, 0.75, 1.0]).unstack()      # whiskers at min and max
+            fig.add_trace(go.Box(x=[str(k) for k in q.index], q1=q[0.25], median=q[0.5], q3=q[0.75], lowerfence=q[0.0], upperfence=q[1.0],
+                                 name=f"{method} co-assignment (n={g['event_id'].nunique():,} events per k; whiskers min-max)",
+                                 marker_color=PAL[j], offsetgroup=method), row=2, col=2)
         fig.add_hline(y=0.9, line=dict(color=PAL[3], dash="dash"), row=1, col=1)
         views.append((v, list(range(a, len(fig.data))),
                       f"S1 stability -- {v} view: fit on 2020-22 vs 2023-24, both directions, tickers repeating and ticker-blocked; "

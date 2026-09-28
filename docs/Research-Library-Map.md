@@ -2717,3 +2717,17 @@ cells, R2 + R3), `t4a_references.py` (Brief 1's free-walk reference regenerated 
 (REPORT plus the generated column dictionary for the threshold suite). Outputs in
 `results/attention_excursion/b2/` (`artifacts/`, `charts/t1..t4/`, `REPORT.md`, copied to
 `results/reports/attention_excursion_b2_report.md`).
+
+**Shape atlas S1 (2026-09-27) -- what kinds of path do momentum events make? Exploratory, hindsight used
+by design; stops (section 8) for Cooper to read the atlas.** Branch `explore/shape-atlas-s1`, cut from
+`explore/attention-excursion-b2` at `259e811`. `prompts/shape_atlas_s1.md` (filed verbatim);
+`config/shape_atlas_s1.json` (reproducibility only); decision **D39** (exploratory exception to D32 for
+S1's F1-layer descriptors; the across-time check also runs ticker-blocked) appended to
+`docs/Universe-Decisions.md` with the CLAUDE.md index. `research/shape_atlas_s1/`: `s1common.py` (one
+path pipeline for real and null paths, reusing Brief 1's `bucketize` through b2's `b2common`),
+`t1_paths.py` (post-tau at N = 50/100/200, run-up, whole day; each event's own 200-draw null),
+`t2_theory.py` (the declared theory types vs noise), `t3_clusters.py` (FPCA, GMM and k-means on real and
+null, across-time and bootstrap stability, per view), `t4_runup.py` (run-up classes and transitions),
+`t5_atlas.py` (atlas data, descriptors, type share by date), `charts.py` (six charts; `atlas.html` is a
+page on the inlined plotly.js), `build_report.py`. Outputs in `results/shape_atlas/s1/` (`artifacts/`,
+`charts/`, `REPORT.md`, copied to `results/reports/shape_atlas_s1_report.md`).

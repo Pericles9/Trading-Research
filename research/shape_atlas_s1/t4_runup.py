@@ -87,7 +87,7 @@ def main() -> int:
     drows = []
     for c, g in ev.groupby("runup_class"):
         for dsc in DESC + ["a2_ignition"]:
-            v = pd.to_numeric(g[dsc], errors="coerce").dropna()
+            v = pd.to_numeric(g[dsc], errors="coerce").astype(float).dropna()
             drows.append({"runup_class": c, "descriptor": dsc, "n": int(v.size),
                           **{f"q{int(q * 1000):04d}": (float(np.quantile(v, q)) if v.size else None) for q in qs}})
     ds = pd.DataFrame(drows)
