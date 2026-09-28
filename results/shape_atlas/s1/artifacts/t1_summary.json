@@ -1,0 +1,71 @@
+{
+  "config_hash": "cf347fdaa606",
+  "seconds": 903.8,
+  "events": 15519,
+  "coverage": {
+    "post": {
+      "50": 15515,
+      "100": 15515,
+      "200": 15515
+    },
+    "post_null_ok": {
+      "50": 15513,
+      "100": 15513,
+      "200": 15513
+    },
+    "runup": 14409,
+    "runup_reasons": {
+      "no_print_before_tau": 909,
+      "tau_in_auction_minute": 185,
+      "sigma_zero": 16
+    },
+    "runup_thin": 4361,
+    "whole_day": 15519,
+    "whole_reasons": {},
+    "paths_written": {
+      "post": 15515,
+      "runup": 14409,
+      "whole_day": 15519
+    }
+  },
+  "assertions": {
+    "bucket_volume_conservation": "instruments.bucketize asserts on every view and rung; none raised",
+    "max_bucket_vol_rel_err": {
+      "post100": 1.941480361108397e-14,
+      "runup": 1.9444774064763542e-14,
+      "whole_day": 1.94445935081258e-14
+    },
+    "resampled_paths_have_G_points": "asserted in s1common.resample (G = 100) on every path",
+    "tau_ns_int64": true,
+    "null_identity_test": true,
+    "null_draws_row_stable": true,
+    "post_components_equal_b2": {
+      "max_diff": 8.084138050838645e-12,
+      "rule": "|b2 - s1| / max(1, |b2|) <= 1e-9",
+      "by_component": {
+        "N=50:u_peak": 0.0,
+        "N=50:rise_s": 6.353387850852888e-16,
+        "N=50:fall_s": 1.4506152516393342e-15,
+        "N=50:dip_before_peak_s": 3.885780586188048e-16,
+        "N=50:terminal_s": 1.2212453270876722e-15,
+        "N=50:rise_bp": 2.3179098159595897e-12,
+        "N=50:fall_bp": 2.9659361619890617e-12,
+        "N=100:u_peak": 0.0,
+        "N=100:rise_s": 9.747639733357377e-16,
+        "N=100:fall_s": 1.5006618074401324e-15,
+        "N=100:dip_before_peak_s": 7.771561172376096e-16,
+        "N=100:terminal_s": 1.5681900222830336e-15,
+        "N=100:rise_bp": 2.949444414519074e-12,
+        "N=100:fall_bp": 8.084138050838645e-12,
+        "N=200:u_peak": 0.0,
+        "N=200:rise_s": 1.0461428236692374e-15,
+        "N=200:fall_s": 2.1094237467877974e-15,
+        "N=200:dip_before_peak_s": 1.0526881626076092e-15,
+        "N=200:terminal_s": 1.9984014443252818e-15,
+        "N=200:rise_bp": 2.833178136540937e-12,
+        "N=200:fall_bp": 5.462852392668083e-12
+      },
+      "passes": true
+    }
+  }
+}
