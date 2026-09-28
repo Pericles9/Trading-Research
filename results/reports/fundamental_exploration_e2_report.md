@@ -1,3 +1,7 @@
+<!-- PART-III-UNITS-FIX-BANNER -->
+> **Withdrawn in part — 2026-09-23 (Part III, `fix/e2-window-units`).** Every `duration_min` result in this report (T2's 52.2%-zero, median-0, 0%-censored headline, and the duration panels of T3, T4, T6 and T7) came from a units defect: the window compared a per-minute average with a per-10-minute `B_e`, i.e. 30× the baseline, not 3×. With the confirmed units, median duration is 66.9 min, 16.0% exactly 0, 4 censored (n = 15,742). See `results/fundamental_exploration/e2/UNITS_FIX.md`. The momentum results are unaffected. The text below is left as the record.
+<!-- /PART-III-UNITS-FIX-BANNER -->
+
 # Fundamental exploration E2 — momentum magnitude and high-participation duration — REPORT
 
 **Branch:** `explore/fundamental-e2` (cut from `explore/fundamental-e1`) · **Config hash:** `981a74a2f2ed`

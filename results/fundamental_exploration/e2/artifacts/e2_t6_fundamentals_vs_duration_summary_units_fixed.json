@@ -1,0 +1,26 @@
+{
+  "task": "E2-T6 fundamentals against window duration",
+  "config_hash": "981a74a2f2ed",
+  "n_total": 15742,
+  "splits": [
+    "shs_decile",
+    "flg_dilution_form_before_t0",
+    "spl_reverse_split_365d",
+    "flg_lag_bucket",
+    "si_quality"
+  ],
+  "n_cells_total_year_price": 1142,
+  "n_cells_suppressed_year_price": 412,
+  "min_cell_n_display_floor": 20,
+  "overall_censored_share": 0.00025409731927328164,
+  "overall_censored_share_note": "0 for the population as a whole (E2-T2/T3) -- every cell's own censored_share is trivially 0 too, reported explicitly rather than omitted because it's uniform.",
+  "overall_duration": {
+    "n": 15742,
+    "mean": 221.0789701527518,
+    "p10": 0.0,
+    "p25": 16.0346176736,
+    "median": 66.88103835093332,
+    "p75": 214.198104432,
+    "p90": 506.9459760674133
+  }
+}

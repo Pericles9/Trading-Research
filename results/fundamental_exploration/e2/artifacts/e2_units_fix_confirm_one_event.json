@@ -1,0 +1,26 @@
+{
+  "event_id": "CBRL_2020-03-24_31.13",
+  "B_e_usd_per_10min": 2136890.2781837606,
+  "threshold_3B_e": 6410670.834551282,
+  "t0_ns": 1585057022580017152,
+  "t0_et": "2020-03-24 09:37:02.580017152-04:00",
+  "constructions": {
+    "as_run_per_minute_mean_vs_3B_e": {
+      "duration_min": 0.0,
+      "censored": false,
+      "window_end_global_minute": 337,
+      "window_end_ts": 1585057022580017152,
+      "reason": null,
+      "window_end_et": "2020-03-24 09:37:02.580017152-04:00"
+    },
+    "as_confirmed_10min_sum_vs_3B_e": {
+      "duration_min": 13.960607662933333,
+      "censored": false,
+      "window_end_global_minute": 351,
+      "window_end_ts": 1585057860216476928,
+      "reason": null,
+      "window_end_et": "2020-03-24 09:51:00.216476928-04:00"
+    }
+  },
+  "reproduces_as_run_artifact": true
+}

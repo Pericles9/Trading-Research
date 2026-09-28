@@ -40,7 +40,7 @@ def main() -> int:
     frame = pd.read_parquet(cfg_e2["universe"]["materialization_path"])
     frame["event_id"] = frame.apply(C.event_id, axis=1)
 
-    window = pd.read_parquet(f"{C.ART_E2}/e2_t2_window.parquet")
+    window = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t2_window.parquet"))
     df = frame[["event_id", "momentum_pct"]].merge(window, on="event_id", how="left")
 
     n_total_d1 = len(frame)
@@ -90,8 +90,8 @@ def main() -> int:
                                 "empirical survival function, not a Kaplan-Meier estimator (the two "
                                 "coincide when there is no censoring).",
     }
-    C.write_json(f"{C.ART_E2}/e2_t3_describe_responses_summary.json", summary)
-    C.write_json(f"{C.ART_E2}/e2_t3_survival_curve.json", {"survival": survival})
+    C.write_json(C.ev(f"{C.ART_E2}/e2_t3_describe_responses_summary.json"), summary)
+    C.write_json(C.ev(f"{C.ART_E2}/e2_t3_survival_curve.json"), {"survival": survival})
     print(json.dumps({k: v for k, v in summary.items() if k != "survival_curve_note"}, indent=2, default=str))
     return 0
 

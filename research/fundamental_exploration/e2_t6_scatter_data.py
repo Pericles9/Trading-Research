@@ -29,7 +29,7 @@ def main() -> int:
     out["split_dilution"] = SPLITS["flg_dilution_form_before_t0"](df)
     out["split_reverse_split"] = SPLITS["spl_reverse_split_365d"](df)
     out["split_si_quality"] = SPLITS["si_quality"](df)
-    path = f"{C.ART_E2}/e2_t6_scatter_events.parquet"
+    path = C.ev(f"{C.ART_E2}/e2_t6_scatter_events.parquet")
     out.to_parquet(path, index=False)
     print(f"wrote {path} rows={len(out):,}")
     return 0

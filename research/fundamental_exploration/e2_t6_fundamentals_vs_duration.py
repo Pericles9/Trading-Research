@@ -51,8 +51,8 @@ def build_frame() -> pd.DataFrame:
     ef = C.add_corrected_shares_outstanding(ef)
     ef = ef.merge(C.load_detection_price(), on="event_id", how="left")
 
-    window = pd.read_parquet(f"{C.ART_E2}/e2_t2_window.parquet")[["event_id", "duration_min", "censored"]]
-    tod = pd.read_parquet(f"{C.ART_E2}/e2_t4_time_of_day.parquet")[["event_id", "t0_segment"]]
+    window = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t2_window.parquet"))[["event_id", "duration_min", "censored"]]
+    tod = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t4_time_of_day.parquet"))[["event_id", "t0_segment"]]
 
     df = frame[["event_id"]].merge(ef, on="event_id", how="inner")
     df = df.merge(window, on="event_id", how="inner").merge(tod, on="event_id", how="inner")
@@ -93,8 +93,8 @@ def main() -> int:
             seg_cells.append({"t0_segment": seg, "split_value": sval, **cell_dict(g)})
         segment_splits[split_name] = seg_cells
 
-    C.write_json(f"{C.ART_E2}/e2_t6_cells_year_price.json", {"splits": year_price_splits})
-    C.write_json(f"{C.ART_E2}/e2_t6_cells_segment.json", {"splits": segment_splits})
+    C.write_json(C.ev(f"{C.ART_E2}/e2_t6_cells_year_price.json"), {"splits": year_price_splits})
+    C.write_json(C.ev(f"{C.ART_E2}/e2_t6_cells_segment.json"), {"splits": segment_splits})
 
     n_cells_total = sum(len(v) for v in year_price_splits.values())
     n_cells_suppressed = sum(1 for cells in year_price_splits.values() for c in cells if c["n"] < MIN_CELL_N)
@@ -113,7 +113,7 @@ def main() -> int:
                                         "than omitted because it's uniform.",
         "overall_duration": stats(df["duration_min"]),
     }
-    C.write_json(f"{C.ART_E2}/e2_t6_fundamentals_vs_duration_summary.json", summary)
+    C.write_json(C.ev(f"{C.ART_E2}/e2_t6_fundamentals_vs_duration_summary.json"), summary)
     print(json.dumps(summary, indent=2, default=str))
     return 0
 

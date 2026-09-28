@@ -30,8 +30,8 @@ def chart_01_momentum_and_duration():
     cfg_e2 = C.load_cfg(C.CFG_E2)
     frame = pd.read_parquet(cfg_e2["universe"]["materialization_path"])
     frame["event_id"] = frame.apply(C.event_id, axis=1)
-    window = pd.read_parquet(f"{C.ART_E2}/e2_t2_window.parquet")
-    summary = CC.load_json("e2_t3_describe_responses_summary", root=C.ART_E2)
+    window = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t2_window.parquet"))
+    summary = CC.load_json(C.ev("e2_t3_describe_responses_summary"), root=C.ART_E2)
 
     fig = make_subplots(rows=1, cols=2, subplot_titles=("momentum_pct", "duration_min: zero vs. positive"))
     fig.add_trace(go.Histogram(x=np.log10(frame["momentum_pct"]), nbinsx=60, marker_color=CC.VIOLET,
@@ -66,13 +66,13 @@ def chart_01_momentum_and_duration():
               "time to print a higher high. Reported separately here, never combined into one score.",
     )
     CC.base_layout(fig, "E2-T3: momentum_pct and duration_min, on their own", cap, height=620, cap_y=-0.30, margin_b=210)
-    CC.write(fig, "e2_t3", "01_momentum_and_duration", root=C.CHARTS_E2)
+    CC.write(fig, "e2_t3", C.ev("01_momentum_and_duration"), root=C.CHARTS_E2)
 
 
 def chart_02_survival_and_baseline_facet():
-    surv = CC.load_json("e2_t3_survival_curve", root=C.ART_E2)["survival"]
-    summary = CC.load_json("e2_t3_describe_responses_summary", root=C.ART_E2)
-    window = pd.read_parquet(f"{C.ART_E2}/e2_t2_window.parquet")
+    surv = CC.load_json(C.ev("e2_t3_survival_curve"), root=C.ART_E2)["survival"]
+    summary = CC.load_json(C.ev("e2_t3_describe_responses_summary"), root=C.ART_E2)
+    window = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t2_window.parquet"))
 
     fig = make_subplots(rows=1, cols=2, subplot_titles=("survival curve (share with duration > x)",
                                                           "duration by n_baseline_sessions"))
@@ -93,15 +93,15 @@ def chart_02_survival_and_baseline_facet():
 
     cap = CC.caption(
         sample=f"D1, n={summary['n_with_window']:,}",
-        filters="censored_share=0 here, so this survival curve is the plain empirical function, not a "
-                "Kaplan-Meier estimator (the two coincide when there is no censoring)",
-        extra=(f"duration=0 (52.2% of events) is excluded from the log-scale box plot at right (a box "
+        filters=(C.censored_text() + "; the survival curve is the plain empirical function over uncensored "
+                 "events, not a Kaplan-Meier estimator"),
+        extra=(f"duration=0 ({C.zero_share_text(1)} of events) is excluded from the log-scale box plot at right (a box "
                f"plot cannot show a mass point at 0 on a log axis) -- see chart 01 for the zero-vs-positive "
                f"split. n_baseline_sessions=1/2 groups are small (140/107 events) relative to 3 (15,495)."),
     )
     CC.base_layout(fig, "E2-T3: survival curve and duration by baseline-session count", cap,
                     height=620, cap_y=-0.32, margin_b=210)
-    CC.write(fig, "e2_t3", "02_survival_and_baseline_facet", root=C.CHARTS_E2)
+    CC.write(fig, "e2_t3", C.ev("02_survival_and_baseline_facet"), root=C.CHARTS_E2)
 
 
 if __name__ == "__main__":

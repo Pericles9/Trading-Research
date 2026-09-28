@@ -20,10 +20,10 @@ from research.fundamental_exploration import common as C  # noqa: E402
 
 
 def main():
-    tod = pd.read_parquet(f"{C.ART_E2}/e2_t4_time_of_day.parquet")
-    window = pd.read_parquet(f"{C.ART_E2}/e2_t2_window.parquet")[["event_id", "duration_min"]]
+    tod = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t4_time_of_day.parquet"))
+    window = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t2_window.parquet"))[["event_id", "duration_min"]]
     df = tod.merge(window, on="event_id", how="left")
-    summary = CC.load_json("e2_t4_time_of_day_summary", root=C.ART_E2)
+    summary = CC.load_json(C.ev("e2_t4_time_of_day_summary"), root=C.ART_E2)
 
     fig = make_subplots(rows=1, cols=2, subplot_titles=("by t0 session segment", "by t0 half-hour bucket"),
                          column_widths=[0.25, 0.75])
@@ -67,7 +67,7 @@ def main():
     )
     CC.base_layout(fig, "E2-T4: the time-of-day confound, no fundamental variable", cap,
                     height=640, cap_y=-0.34, margin_b=240, width=1300)
-    CC.write(fig, "e2_t4", "01_duration_by_time_of_day", root=C.CHARTS_E2)
+    CC.write(fig, "e2_t4", C.ev("01_duration_by_time_of_day"), root=C.CHARTS_E2)
 
 
 if __name__ == "__main__":

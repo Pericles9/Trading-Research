@@ -49,7 +49,7 @@ def main() -> int:
     frame["event_id"] = frame.apply(C.event_id, axis=1)
     ef = C.load_event_fundamentals()[["event_id", "t0_ns"]]
 
-    window = pd.read_parquet(f"{C.ART_E2}/e2_t2_window.parquet")
+    window = pd.read_parquet(C.ev(f"{C.ART_E2}/e2_t2_window.parquet"))
     df = frame[["event_id", "event_date_canonical"]].merge(ef, on="event_id", how="left")
     df = df.merge(window, on="event_id", how="inner")  # only events with a built window
 
@@ -59,7 +59,7 @@ def main() -> int:
     df["t0_half_hour_order"] = df["t0_mi"] // 30
 
     df[["event_id", "t0_mi", "t0_segment", "t0_half_hour", "t0_half_hour_order"]].to_parquet(
-        f"{C.ART_E2}/e2_t4_time_of_day.parquet", index=False
+        C.ev(f"{C.ART_E2}/e2_t4_time_of_day.parquet"), index=False
     )
 
     def stats(s: pd.Series) -> dict:
@@ -86,7 +86,7 @@ def main() -> int:
         "duration_by_segment": by_segment,
         "duration_by_half_hour": by_half_hour,
     }
-    C.write_json(f"{C.ART_E2}/e2_t4_time_of_day_summary.json", summary)
+    C.write_json(C.ev(f"{C.ART_E2}/e2_t4_time_of_day_summary.json"), summary)
     print(json.dumps(summary, indent=2, default=str))
     return 0
 

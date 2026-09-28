@@ -65,7 +65,7 @@ def t0_minute_index(t0_ns: int, event_date_canonical: str) -> int:
     return minutes
 
 
-def build_event_series(bars: pd.DataFrame, t0_mi: int, b_e: float, t0_ns: int) -> dict:
+def build_event_series(bars: pd.DataFrame, t0_mi: int, b_e: float, t0_ns: int, agg: str = "mean") -> dict:
     """bars: this event's rows (session_offset in 0..3), columns session_offset,
     minute_index, dollar_volume. Returns duration_min, censored, window_end_global_minute.
 
@@ -95,7 +95,13 @@ def build_event_series(bars: pd.DataFrame, t0_mi: int, b_e: float, t0_ns: int) -
     full["first_trade_ts"] = full["first_trade_ts"].ffill().bfill()
     full["last_trade_ts"] = full["last_trade_ts"].ffill().bfill()
 
-    roll = full["dollar_volume"].rolling(window=CONFIRM_MINUTES, min_periods=1).mean()
+    # UNITS (Part III, prompts/attention_excursion_b1.md; 2026-09-23). B_e is dollar volume per 10-minute
+    # block (e2_t2a_baseline.py divides by n_sessions x 39). agg="mean" -- the default, and what produced
+    # the committed E2 results -- is a per-MINUTE average, so the comparison below ran at 30x B_e's rate,
+    # not the 3x Cooper confirmed. agg="sum" is the trailing 10-minute SUM, the confirmed units; it is what
+    # e2_t2_window_units_fix.py uses. The default is left as run so the as-run artifact stays reproducible.
+    rolled = full["dollar_volume"].rolling(window=CONFIRM_MINUTES, min_periods=1)
+    roll = rolled.sum() if agg == "sum" else rolled.mean()
     qualifies = (roll <= THRESHOLD_MULTIPLE * b_e).to_numpy()
 
     # gaps-and-islands: find runs of consecutive True, length >= CONFIRM_MINUTES, whose

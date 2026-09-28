@@ -35,6 +35,41 @@ CHARTS = "results/fundamental_exploration/charts"
 CFG_E2 = "config/fundamental_exploration_e2.json"
 ART_E2 = "results/fundamental_exploration/e2/artifacts"
 CHARTS_E2 = "results/fundamental_exploration/e2/charts"
+
+# Part III (prompts/attention_excursion_b1.md; 2026-09-23) -- which participation-window artifact the E2
+# duration pipeline reads. "" is the as-run window (the committed E2 results); "_units_fixed" is the
+# corrected-units rebuild (e2_t2_window_units_fix.py). Every artifact, JSON and chart the duration
+# pipeline writes carries the same suffix, so the as-run outputs are never overwritten.
+import os as _os  # noqa: E402
+E2_WINDOW_VARIANT = _os.environ.get("E2_WINDOW_VARIANT", "")
+
+
+def ev(name: str) -> str:
+    """Insert the window-variant suffix before a name's extension (or at its end if it has none)."""
+    if not E2_WINDOW_VARIANT:
+        return name
+    stem, dot, ext = name.rpartition(".")
+    if dot and "/" not in ext:
+        return f"{stem}{E2_WINDOW_VARIANT}.{ext}"
+    return f"{name}{E2_WINDOW_VARIANT}"
+
+
+def e2_t3_summary() -> dict:
+    """The T3 summary for the active window variant -- the source of every zero-share and censored
+    figure a duration chart states, so no as-run number is hard-coded into a re-rendered chart."""
+    with open(ev(f"{ART_E2}/e2_t3_describe_responses_summary.json")) as f:
+        return json.load(f)
+
+
+def zero_share_text(d: int = 0) -> str:
+    s = e2_t3_summary()
+    return f"{100 * s['n_zero_duration'] / s['n_with_window']:.{d}f}%"
+
+
+def censored_text() -> str:
+    s = e2_t3_summary()
+    return (f"censored_share = {s['censored_share']:.2%} ({s['n_censored']:,} of {s['n_with_window']:,}); "
+            "censored events have no duration and are excluded from duration statistics")
 # Routed through resolve_data_root(), NOT a cwd-relative literal -- same bug class Build F1 found
 # and fixed in its own common.py (2026-09-13, commit 369daab): a cwd-relative "data/..." literal
 # silently resolves to the WRONG location if this code ever runs from a worktree other than the
