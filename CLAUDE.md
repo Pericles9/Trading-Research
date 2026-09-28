@@ -62,7 +62,10 @@
   `write_allowlist` discipline that already bounds which paths a phase may write.
 - **Git discipline: work on a phase branch, commit at each real checkpoint, push to `origin`
   intermittently rather than hoarding local commits.** Never commit or push directly to `master`;
-  merge phase branches to `master` via pull request, never a local `git merge` + push. Never
+  merge phase branches to `master` via pull request by default. **Exception (Cooper, 2026-09-28):**
+  when Cooper asks for it in the session, branches may be merged into `master` locally and pushed —
+  as `--no-ff` merge commits only (no direct commits to `master`), each naming the branches it brings
+  in and any conflict it resolved; a change that must reach `master` goes on a branch first. Never
   force-push a shared branch (`master`, or any `phase/*` already pushed to `origin`) without explicit
   instruction, and never skip hooks or signing (`--no-verify`, `--no-gpg-sign`) without explicit
   instruction. Commit messages describe the *why*, tied to the phase's Output Files table — see the
