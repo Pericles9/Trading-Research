@@ -215,8 +215,11 @@
     **D38 measurement studies that fit no parameters may use chronological splits with repeat
     tickers -- ticker-clustered uncertainty and a first-seen-ticker sensitivity replace the
     ticker-blocked rule; any study that fits, tunes or selects stays under it** (2026-09-23,
-    attention/excursion Brief 1 T0c).
-  - **Next free number: D39.**
+    attention/excursion Brief 1 T0c) · **D39 shape atlas S1 is an exploratory, hindsight-by-design
+    exception to D32 -- it may describe F1-layer columns (shares outstanding, reverse split, short
+    interest, turnover, filing/dilution flags) per post-tau path type; not a D32 A1 partition test,
+    reopens nothing; its across-time split is also run ticker-blocked** (2026-09-27, shape atlas S1).
+  - **Next free number: D40.**
 - Repo map: docs/Research-Library-Map.md. Data layout: docs/data/Schema.md (tracked copy of
   record; `data/Schema.md` is a local, untracked mirror — `.gitignore` excludes `/data/` wholly,
   so edit the tracked copy and mirror the change there). Corrected 2026-09-10 — `data/Schema.md`

@@ -1,0 +1,124 @@
+{
+  "name": "shape_atlas_s1",
+  "brief": "prompts/shape_atlas_s1.md",
+  "type": "exploratory build; not a phase, not a test",
+  "header_line": "exploratory, hindsight used by design; nothing here is a tested result.",
+  "purpose_of_config": "reproducibility only (brief header)",
+  "branch": "explore/shape-atlas-s1, cut from explore/attention-excursion-b2 at 259e811",
+  "decisions": {
+    "D39": "S1 may describe F1-layer columns per post-tau type (docs/Universe-Decisions.md D39, Cooper 2026-09-27)",
+    "ticker_blocked_variant": "section 4c's across-time check also runs ticker-blocked (Cooper 2026-09-27, recorded under D39)",
+    "D38_slices": "ignored in S1 (brief header)"
+  },
+  "sources": {
+    "b2_config_hash": "69d4088aec2c",
+    "population": "results/attention_excursion/b2/artifacts/t0_population.parquet",
+    "excursion": "results/attention_excursion/b2/artifacts/t1_excursion.parquet",
+    "attention": "results/attention_excursion/b2/artifacts/t2_attention.parquet",
+    "a2_rungs": "results/attention_excursion/b2/artifacts/t2_a2_rungs.parquet",
+    "cross_section": "results/attention_excursion/b2/artifacts/t2_cross_sectional.parquet",
+    "competition": "results/attention_excursion/b2/artifacts/t3_pairs.parquet",
+    "fundamentals": "data/fundamentals/event_fundamentals.parquet via research/attention_excursion_b1/common.py::load_fundamentals_corrected"
+  },
+  "views": {
+    "instrument": "equal-volume buckets, bucket VWAP, heights over sigma_path = sqrt(sum r^2) of the view's own bucket log returns (research/attention_excursion_b1/instruments.py::bucketize); tick-derived (D4)",
+    "post": {"span": "prints strictly after tau up to the last print <= 20:00 ET; element 0 = tau price (b2's vector)", "N": [50, 100, 200],
+             "reuse_check": "components rebuilt here must equal b2's t1_excursion.parquet (max abs difference <= 1e-9)"},
+    "runup": {"span": "prints in [segment start, tau] (segment start 04:00 / open + 60 s / close + 60 s, Amendment 3); element 0 = the first print in the span, buckets over the rest up to and including the tau print", "N": 100,
+              "unavailable": "tau in a cross minute (no segment start); no print before the tau print in the span; sigma_path zero",
+              "thin": "fewer than 250 prints in the span (flag, carried)"},
+    "whole_day": {"span": "first event-day print at or after 04:00 ET to the last print <= 20:00 ET; element 0 = the first print; tau marked as u_tau = share of the view's bucketed volume traded by the tau print", "N": 100},
+    "prior_close_axis": "run-up and whole day also carried as log(bucket VWAP / prior close) on the same volume clock (prior close = Brief 1 T1 prior_close_exact)",
+    "gap_share": "log(first event-day print at or after 04:00 / prior close) / log(1.30)",
+    "spike_guard": "tau is b2's spike-guarded tau (3% / 3%); the paths are bucket VWAPs of every print, exactly as b2's post-tau vector",
+    "resample": {"G": 100, "grid": "u_g = (g + 1) / G, g = 0..G-1, linear interpolation of the (N + 1)-point path on its own volume clock (u = i / N)",
+                 "height": "(log p(u) - log p(0)) / sigma_path of the view"}
+  },
+  "null": {
+    "draws": 200,
+    "construction": "per event, view and rung: draws with replacement of the event's own demeaned bucket log returns (N per draw), re-integrated from element 0 and passed through the identical component and resampling code",
+    "seed": 20260927,
+    "rng_stream": "numpy default_rng([seed, event_index, view_code, N]); event_index = position in the event list sorted by event_id; view_code post 0, runup 1, whole_day 2; draws are taken row by row, so the first r draws of any request are the same draws",
+    "percentile": "rise_pct = 100 x (count(null < real) + 0.5 x count(null == real)) / 200; fall_pct likewise",
+    "null_draw_percentile": "a null draw's percentile is taken against the event's other 199 draws, same mid-rank rule",
+    "identity_test": "a real path sent through the null pipeline with the identity index and no demeaning must give output identical to the real pipeline"
+  },
+  "theory_types": {
+    "rung": 100, "also_rungs": [50, 200],
+    "order": ["runaway", "burst", "slow_climb", "exhausted", "fade", "chop"],
+    "rules": {
+      "runaway": "rise_pct >= 90 and u_peak >= 0.9",
+      "burst": "rise_pct >= 90 and u_peak < 0.5",
+      "slow_climb": "rise_pct >= 90 and 0.5 <= u_peak < 0.9",
+      "exhausted": "u_peak < 0.05 and rise_pct < 50",
+      "fade": "fall_pct >= 90 (and none of the above)",
+      "chop": "everything else"
+    },
+    "facets": ["all", "year", "tau_anchor_segment", "price_tier", "rung"],
+    "price_tier_edges_usd": [1.0, 3.0, 10.0], "price_tier_labels": ["<$1", "$1-3", "$3-10", ">=$10"],
+    "null_share": "each event's 200 draws typed by the same rules; an event's null share of a type = the share of its draws in that type; the null share of the population = the mean over events"
+  },
+  "clustering": {
+    "views": ["post", "whole_day", "runup"], "post_rung": 100,
+    "input": "the G = 100 resampled sigma-normalised path per event; events with no path (unavailable, sigma zero) are their own class and not clustered",
+    "fpca": "principal components of the resampled paths (uniform grid: functional PCA = PCA of the discretised curves); spectrum = explained-variance share per component, first 20",
+    "gmm": {"space": "first d FPC scores, d = the fewest components reaching 90% of the REAL view's variance; the null uses its own FPCA with the same d",
+            "covariance": "full", "n_init": 3, "seed": 20260927, "bic_gain": "BIC(k) - BIC(1), so real and null compare the gain from mixture structure"},
+    "kmeans": {"space": "the resampled paths", "n_init": 10, "seed": 20260927},
+    "k": [2, 3, 4, 5, 6, 7, 8],
+    "silhouette": {"space": "the resampled paths (Euclidean), for both methods", "sample_size": 5000, "seed": 20260927},
+    "null_replicates": {"n": 5, "draws": "null draws 0..4 of every event (each replicate is one draw per event, the same events as the real fit)"},
+    "labels": "cluster ids ordered by size, largest = 0",
+    "ari": "adjusted Rand index between the GMM and k-means labels at each k (real and null)",
+    "no_k_chosen": "assignments carried for every k"
+  },
+  "stability": {
+    "periods": {"A": [2020, 2022], "B": [2023, 2024]},
+    "across_time": "fit on A, assign B to the fitted model (k-means: nearest centre; GMM: A's FPCA projection then predict); fit on B separately; match A's and B's clusters by the Hungarian method on the correlation of member-mean paths; report matched correlations and type shares; then the reverse direction",
+    "ticker_blocked": "the same, with every ticker seen in the fit period removed from the assigned period",
+    "bootstrap": {"n": 50, "unit": "ticker, drawn with replacement", "seed": 20260927, "kmeans_n_init": 3, "gmm_n_init": 1,
+                  "co_assignment": "for each refit, every event is assigned; an event's co-assignment rate = the mean over refits of the share of its full-fit cluster-mates given the same refit label"},
+    "structure_label": {"_note": "the brief names the three conditions; these operational cuts are S1's own, declared before the run",
+                        "beats_null": "the real statistic exceeds every null replicate at that k: silhouette for k-means; silhouette and BIC gain for GMM",
+                        "reproduces": "the cluster's matched centroid correlation >= 0.9 in both time directions (tickers repeating)",
+                        "labels": ["structure", "not distinguishable from noise", "not stable"]}
+  },
+  "runup": {
+    "descriptors": {
+      "gap_share": "views.gap_share",
+      "u_launch": "volume-clock position of the lowest point of the run-up path (element 0 included)",
+      "height_s": "(log tau price - log run-up low) / run-up sigma_path",
+      "max_drawdown_s": "largest (running max - path) inside the run-up, / sigma_path",
+      "pushes": "drawdowns of at least 1 sigma_b (= sigma_path / sqrt(N)) from the running max that are recovered (a new high above that running max) before tau",
+      "duration": "minutes from the first print in the span to tau; shares in the span",
+      "a2_ignition": "b2 t2_attention"
+    },
+    "declared_classes": {"order": ["gap", "late_spike", "grind"], "gap": "gap_share >= 0.8", "late_spike": "u_launch >= 0.8", "grind": "neither"},
+    "transitions": "run-up type -> post-tau type, counts and row shares, overall and by segment: declared classes -> theory types; declared classes -> post clusters (each method, k); run-up clusters (each method, k) -> theory types"
+  },
+  "atlas": {
+    "rung": 100,
+    "gallery": {"closest": 12, "random": 12, "seed": 20260927, "closest_metric": "Euclidean distance to the type's mean resampled path"},
+    "band": "pointwise IQR of members' resampled paths",
+    "null_centroid": "mean of the members' null draw-0 resampled paths",
+    "money": ["rise_bp", "rise_cents", "fall_bp", "t_peak_s (minutes)", "excess_rise_bp = rise_bp - the event's own null median rise in bp at the same rung"],
+    "descriptors": {
+      "attention": ["turnover", "accel_k at k = 0..12 (valid rungs)", "trades_per_min and dollars_per_min at rung 0 and at the finest valid rung", "a2_ignition", "flow_share at L = rest of session, finest valid rung", "live_n at 15 / 60 min / rest", "competition excess as the crosser j: median over its live names, L = rest of session, W = 15 min, read cells"],
+      "catalyst": ["filing_24h", "last_form_before_tau", "flg_dilution_form_before_t0"],
+      "fundamentals": ["shs_shares_outstanding_corrected", "spl_reverse_split_365d", "si_shares_short", "short interest / shares outstanding"],
+      "tape": ["jump_share", "halt_in_path", "tau_close_sensitive", "flag_cross_session_extreme", "time of day (hours after 04:00)", "tau_anchor_segment", "year", "price_tier"],
+      "runup": ["gap_share", "u_launch", "height_s", "max_drawdown_s", "pushes", "duration minutes", "duration shares", "run-up declared class"]
+    },
+    "distribution_display": "continuous: 41 quantiles (every 2.5%, min and max included) with n; categorical: share per level with n"
+  },
+  "type_by_date": {"statistic": "chi-square of the date x type contingency table", "permutations": 200, "seed": 20260927,
+                   "null": "type labels permuted across events (dates and per-date counts fixed)"},
+  "joint_peak_rise": {"u_peak_edges": "0 to 1 in 0.05", "rise_s_edges": [0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0, 4.0, "inf"],
+                      "null": "every event's 200 null draws, pooled with each event weighted equally"},
+  "assertions": ["bucket volume conservation in every view (instruments.bucketize)", "every resampled path has exactly G points",
+                 "tau_ns int64", "null identity test", "post-tau components equal b2's"],
+  "charts": {"root": "results/shape_atlas/s1/charts/", "files": ["atlas.html", "null_comparison.html", "stability.html", "theory_types.html",
+             "transitions.html", "joint_peak_rise.html"], "theme": "dark", "plotly": "inlined (D14)"},
+  "outputs": {"results": "results/shape_atlas/s1/", "report": "results/shape_atlas/s1/REPORT.md",
+              "report_copy": "results/reports/shape_atlas_s1_report.md", "code": "research/shape_atlas_s1/"}
+}
