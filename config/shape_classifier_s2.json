@@ -1,0 +1,444 @@
+{
+  "name": "shape_classifier_s2",
+  "brief": "prompts/shape_classifier_s2.md",
+  "type": "exploratory modelling build on the tick archive; not a phase",
+  "branch": "explore/shape-classifier-s2, cut from master at dd208be (master contains the brief's base b526ab6 through the Cooper-requested merge a9ed1eb, plus the CLAUDE.md git-rule change 9b82db3 and the E2 units fix; cut from master so the current CLAUDE.md governs)",
+  "sources": {
+    "s1_config_hash": "shape_atlas_s1 as committed at b526ab6",
+    "s1_events": "results/shape_atlas/s1/artifacts/s1_events.parquet",
+    "s1_theory_types": "results/shape_atlas/s1/artifacts/s1_theory_types.parquet",
+    "b2_population": "results/attention_excursion/b2/artifacts/t0_population.parquet",
+    "b2_excursion": "results/attention_excursion/b2/artifacts/t1_excursion.parquet",
+    "b2_attention": "results/attention_excursion/b2/artifacts/t2_attention.parquet",
+    "b2_a2_rungs": "results/attention_excursion/b2/artifacts/t2_a2_rungs.parquet",
+    "b2_cross_section": "results/attention_excursion/b2/artifacts/t2_cross_sectional.parquet",
+    "b2_live_names": "results/attention_excursion/b2/artifacts/t2_live_names.parquet",
+    "b1_tau": "results/attention_excursion/b1/artifacts/t2_tau.parquet",
+    "a12_flags": "results/phase_9/artifacts/t1_cross_session_flags.parquet",
+    "fundamentals": "data/fundamentals/event_fundamentals.parquet",
+    "sec_submissions": "data/raw/fundamentals/sec/2026-09-12/submissions",
+    "sec_companyfacts": "data/raw/fundamentals/sec/2026-09-12/companyfacts",
+    "short_interest_raw": "data/raw/fundamentals/massive/2026-09-12/short_interest",
+    "ticks": "data/filtered/<event_id>/trades.parquet (+ trades_repair_1c.parquet) via research/attention_excursion_b1/common.py::read_trades"
+  },
+  "population": {
+    "events": "S1's 15,519 events with tau (b2 tau_available)",
+    "label": "S1 theory type at N = 100 (s1_theory_types.parquet, type_state = typed); unlabelled events carried in counts, never fitted or scored",
+    "secondary_labels": "S1 theory types at N = 50 and N = 200: scored against the N = 100 models' probabilities, never fitted",
+    "types": [
+      "runaway",
+      "burst",
+      "slow_climb",
+      "exhausted",
+      "fade",
+      "chop"
+    ],
+    "excluded_from_every_fold": "dev_group in {dev_v3, dev_v4_sidecar} (S1 s1_events.dev_group; 49 dev_v3 and 4 sidecar events carry tau in this population)"
+  },
+  "cooper_rulings_2026_09_28": {
+    "_note": "Asked after measuring the brief's premises on disk before any build (AskUserQuestion, this session). Each ruling names the measurement it answered.",
+    "R1_tau_close_sensitive": {
+      "measured": "tau_close_sensitive (b1 A1.3: |tau(revised close) - tau(minute-bar close)| > 60 s) is not settled at tau for 3,585 of 15,519 events: the minute-bar-close crossing comes after tau for 3,302 and never happens for 283. It is settled by tau + 60 s for every event.",
+      "ruling": "causal 3-level input: at each decision time d the flag as far as it is settled by d -- TRUE / FALSE / not_settled",
+      "rule": "on exact print times: the minute-bar crossing print (recomputed in T2 with b1's first_crossing: 1.30 x the minute-bar close of results/relative_momentum/r0/artifacts/t0a2_prior_close.parquet, spike guard 3% / 3%) at or before d -> TRUE if |tau_exact - tau_mb_exact| > 60 s else FALSE; not at or before d -> TRUE if d - tau_d > 60 s else not_settled. Checked against b1's stored tau_ns_mb (within its 128 ns rounding)"
+    },
+    "R2_short_interest": {
+      "measured": "F1's si_asof_ns is the SETTLEMENT date (midnight UTC), not publication; settlement -> event date median 7 calendar days, 5% on the event date itself. No publication date on disk. Under an 8-session publication assumption only 2,104 of 15,107 events would use the settlement F1 used.",
+      "ruling": "latest settlement whose assumed publication, 10 XNYS sessions after settlement (conservative; FINRA's actual lag not verifiable offline [verify]), is a session strictly before the event date",
+      "measured_effect": "14,803 events keep a value (F1: 15,107); median settlement 24 days before the event",
+      "latest_timestamp": "20:00 ET of the assumed publication session",
+      "f1_untouched": "rebuilt here from the raw vendor files; data/fundamentals/event_fundamentals.parquet is not modified"
+    },
+    "R3_fundamentals_anchor": {
+      "measured": "F1 anchors at t0 (D28/D33); t0 > tau for 1,477 events. One event (LNSR_2024-11-07_31.57) carries a shares count accepted after tau; six events' F1 filing windows reach past tau (dilution flag FALSE for all six either way).",
+      "ruling": "re-anchor at tau with D28's rule: accepted_ns < tau (and, for shares, asof < tau as in F1's T5), from F1's own raw SEC archive",
+      "shares_outstanding": "dei:EntityCommonStockSharesOutstanding observations from companyfacts (research/fundamentals_f1/t4_shares_outstanding.py's extraction), accession -> acceptanceDateTime from the submissions archive; the observation with the latest accepted_ns among accepted_ns < tau and asof_ns < tau",
+      "dilution_flag": "research/fundamentals_f1/t3_filing_index.py's rule with tau as the anchor: any dilution form accepted in [tau - 72 h, tau), or the last form accepted before tau is a dilution form; form set = config/fundamentals_f1.json dilution_form_set (8-K counts when its items include 3.02)",
+      "turnover": "shares traded 04:00 -> tau (b2 shares_0400_tau) / the tau-anchored shares count, corrected by research/fundamental_exploration/common.py::add_corrected_shares_outstanding's rule (split strictly before tau after the count's as-of date)"
+    },
+    "R4_positive_control": {
+      "measured": "on S1's tables with the S2 folds (primary sets, HGB): + terminal_log gives runaway 0.94-0.95, burst 0.79-0.81, slow climb 0.89-0.92, exhausted 0.76-0.80, fade 0.85-0.88, chop 0.75-0.80 -- row 3 would fire because terminal return does not set the type. + the rule inputs gives 1.000 (HGB) and >= 0.993 (logistic) for every type and fold.",
+      "ruling": "two positive-control runs on M2 and M3 at every decision time; row 3 gates on the rule-inputs leak (post100_rise_pct, post100_fall_pct, post100_u_peak); the briefed terminal_log run is reported beside it, ungated"
+    },
+    "R5_negative_control": {
+      "measured": "one shuffle per fold (HGB, 10 shuffles): runaway ranged 0.32-0.69 and fell outside 0.45-0.55 in 60% of fold cells (burst/slow climb/fade 17-20%, exhausted 10%, chop 0%); pooling folds biases runaway to 0.458 because base rates differ by fold",
+      "ruling": "10 independent shuffles per fold; row 2 reads the mean per-fold AUC over the 3 folds x 10 shuffles for each type x model x decision time against 0.45-0.55; hyperparameters fixed at the real run's choices; single-shuffle per-fold values reported beside it"
+    }
+  },
+  "declared_interpretations": {
+    "_note": "Choices the brief leaves open, declared before the run.",
+    "not_reached": "a checkpoint's decision exists only for events that reach it; reach status is known only at 20:00 (when the whole path, hence the label, is known), so it can never be an input. Each checkpoint's models are fitted and scored on events that reached it; not_reached and undefined events stay in every table with counts per fold x type x checkpoint",
+    "undefined_volume_checkpoint": "tau in an auction minute has no segment start (Amendment 3), so the reference volume and the four volume checkpoints are 'undefined' for those events",
+    "wall_clock_past_2000": "tau + x beyond 20:00 ET is not_reached",
+    "m0_per_checkpoint": "M0 at checkpoint c = type shares among the training events that reached c",
+    "latency": "brief's entry (next print strictly after the decision time) is primary and is the zero-latency upper bound (Phase 8 / D7 convention); CLAUDE.md / D5 require realistic latency, so entries at the first print at or after d + 1 s and d + 5 s (Phase 10e's tick latency grid) are reported beside it",
+    "class_weights": "none and balanced are separate model variants for M2, M3 and M4, each tuned on its own; both reported. M4 balanced = neighbour votes weighted by 1 / training class share, renormalised",
+    "tuning_split": "inside each fold's training window: sub-train = training years before the last one; validation = the last training year's events whose ticker is not in the sub-train years (mirrors the primary read). Refit on the whole training window with the chosen setting",
+    "hgb_early_stopping": "off (sklearn turns it on by itself above 10,000 rows, which would override the declared iteration grid)",
+    "hgb_categoricals": "native (categorical_features), one column per input",
+    "m2_encoding": "numeric: training median fill + missing-indicator column for every input missing anywhere in training; booleans as 0/1 with the same; categoricals one-hot with a 'missing' level; StandardScaler; lbfgs multinomial, max_iter 3000",
+    "smoothing": "M1 cell shares and M4 neighbour shares smoothed with one pseudo-event at M0's shares: (n_type + 1 * p0_type) / (n + 1), so log loss is finite",
+    "m1_cells": "turnover band = training-fold quartiles of log10 turnover plus 'missing'; ignition True / False / missing; tau_anchor_segment (5 levels)",
+    "tau_rounding": "d = tau_d = max(stored tau_ns, the crossing print's own timestamp). Every stored tau_ns in b1 / b2 / S1 is a multiple of 256 ns (float64-rounded upstream, error <= 128 ns either way; T0 measured it before the build); the crossing print = the earliest print at tau_price within 128 ns of the stored value. Inputs b2 / S1 built on the stored tau are then <= tau_d, the crossing print is <= tau_d, and entries (next print after d) are never the crossing print. Wall-clock and volume checkpoints count from tau_d",
+    "group_b_offsets": "post_trades_per_min = (collapsed prints + 0.5) / elapsed minutes; post_dollars_per_min = (dollars + 1) / elapsed minutes (finite logs when nothing traded); elapsed floored at 1 s",
+    "group_b_transforms": "log1p on max_gap_s and since_last_print_s; asinh on z_ret, z_high, z_dd, rv_ratio (monotone, so M3 is unaffected; keeps M2's standardisation finite)",
+    "sigma_pre_not_an_input": "sigma_pre is the noise scale only; it is not itself a model input"
+  },
+  "decision_times": {
+    "order": [
+      "tau",
+      "w1",
+      "w2",
+      "w5",
+      "w10",
+      "w20",
+      "v025",
+      "v05",
+      "v1",
+      "v2"
+    ],
+    "tau": "d = tau_d = max(stored tau_ns, the crossing print's own timestamp). Every stored tau_ns in b1 / b2 / S1 is a multiple of 256 ns (float64-rounded upstream, error <= 128 ns either way; T0 measured it before the build); the crossing print = the earliest print at tau_price within 128 ns of the stored value. Inputs b2 / S1 built on the stored tau are then <= tau_d, the crossing print is <= tau_d, and entries (next print after d) are never the crossing print. Wall-clock and volume checkpoints count from tau_d",
+    "wall_clock_minutes": {
+      "w1": 1,
+      "w2": 2,
+      "w5": 5,
+      "w10": 10,
+      "w20": 20
+    },
+    "volume_multiples": {
+      "v025": 0.25,
+      "v05": 0.5,
+      "v1": 1.0,
+      "v2": 2.0
+    },
+    "volume_rule": "d = the timestamp of the first print strictly after tau at which cumulative shares since tau (prints with ts > tau) reach multiple x ref_shares; ref_shares = shares of prints in [segment start, tau] (segment start 04:00 / open + 60 s / close + 60 s, Amendment 3), the same span as S1's run-up",
+    "states": [
+      "reached",
+      "not_reached",
+      "undefined"
+    ]
+  },
+  "inputs": {
+    "group_a": {
+      "timing": [
+        "tod_h = hours after 04:00 ET",
+        "segment = tau_anchor_segment (categorical)",
+        "auction_minute",
+        "tau_is_first_print = tau_ns equals the first print at or after 04:00"
+      ],
+      "runup": [
+        "gap_share",
+        "runup_u_launch",
+        "runup_height_s",
+        "runup_max_drawdown_s",
+        "runup_pushes",
+        "log10 runup_minutes",
+        "log10 runup_shares"
+      ],
+      "attention": [
+        "log10 turnover (R3 denominator)",
+        "accel_k0..accel_k4 (b2 count accel, null where the rung is not valid) + accel_valid_k0..k4",
+        "log10 pre_trades_per_min and log10 pre_dollars_per_min (D26-collapsed prints at 10 ms; dollars = sum price x size; window = [segment start, tau], or [04:00, tau] for an auction-minute tau; duration floored at 1 s)",
+        "a2_ignition",
+        "live_n_15, live_n_60, live_n_rest (b2)",
+        "flow_share_15_k0, flow_share_60_k0, flow_share_rest_k0 (b2, rung 0 = the whole pre-tau segment window; null where rung 0 is not valid)"
+      ],
+      "catalyst_fundamentals": [
+        "filing_24h (b2, accepted < tau)",
+        "last_form (b2 last_form_before_tau, grouped)",
+        "dilution_tau (R3)",
+        "reverse_split_365d (F1 spl_reverse_split_365d; spl_last_split_ns < tau asserted)",
+        "short_interest_share = R2 short interest / R3 corrected shares count",
+        "log10 shares_outstanding_as_filed (R3)"
+      ],
+      "tape": [
+        "price_tier (S1)",
+        "tcs_state (R1, per decision time)"
+      ],
+      "last_form_groups": {
+        "8-K": [
+          "8-K",
+          "8-K/A"
+        ],
+        "6-K": [
+          "6-K",
+          "6-K/A"
+        ],
+        "form4": [
+          "4",
+          "4/A",
+          "3",
+          "5"
+        ],
+        "prospectus_424B": [
+          "424B1",
+          "424B2",
+          "424B3",
+          "424B4",
+          "424B5",
+          "424B7",
+          "424B8"
+        ],
+        "registration": [
+          "S-1",
+          "S-1/A",
+          "S-3",
+          "S-3/A",
+          "F-1",
+          "F-1/A",
+          "F-3",
+          "F-3/A",
+          "S-8",
+          "EFFECT"
+        ],
+        "periodic": [
+          "10-Q",
+          "10-K",
+          "10-Q/A",
+          "10-K/A",
+          "20-F",
+          "40-F"
+        ],
+        "ownership_13": [
+          "SC 13G",
+          "SC 13G/A",
+          "SC 13D",
+          "SC 13D/A"
+        ],
+        "_rest": "other",
+        "_none": "none"
+      }
+    },
+    "group_b": {
+      "window": "prints with tau < ts <= d only; the tau print's price is the path's start",
+      "spike_rule": "a print confirmed as a spike by d (Brief 1 guard: > 3% from both neighbours, neighbours within 3%; its successor at or before d) is dropped; the last print at or before d cannot be confirmed and is kept",
+      "features": [
+        "elapsed_min",
+        "ret_log = log(last price / tau price)",
+        "high_log = max(0, max log price - log tau price)",
+        "dd_log = high_log - ret_log",
+        "u_high = (time of the high - tau) / (d - tau), 0 when the high is the tau price",
+        "log10 post_trades_per_min, log10 post_dollars_per_min (D26 collapse, 10 ms)",
+        "lr_trade_rate = ln(post / pre trades per min)",
+        "lr_dollar_rate = ln(post / pre dollars per min)",
+        "accel_post = ln((n2 + 0.5) / (n1 + 0.5)), collapsed prints in the second vs first half of (tau, d]",
+        "rv_post = sqrt(sum of squared log changes of the last price on a 5 s grid from tau to d)",
+        "max_gap_s (between tau, the prints, and d)",
+        "since_last_print_s",
+        "gap_halt_proxy = a gap >= 300 s inside regular hours",
+        "vol_progress = log10(shares since tau / ref_shares), null where ref is undefined",
+        "z_ret, z_high, z_dd = the move / (sigma_pre x sqrt(elapsed_min)); rv_ratio = rv_post / (sigma_pre x sqrt(elapsed_min))"
+      ],
+      "noise_scale": "sigma_pre = S1 runup_sigma_path / sqrt(S1 runup_minutes) (log units per sqrt minute, from the run-up; null where the run-up is unavailable). sigma_path of the post-tau view is never used",
+      "halt_labels": "not used: an external file in scanner-epg-momentum; the tick gap proxy is causal by construction"
+    },
+    "group_c": {
+      "path": "x(t) = log(last print price at or before tau + t / tau price), t = elapsed seconds; raw prints; NaN past 20:00",
+      "master_grid_s": {
+        "step_1s_to": 1200,
+        "step_10s_to": 7200,
+        "step_60s_to": 57600
+      },
+      "query_grid": "t_g = E (g + 1) / 20, g = 0..19, E = d - tau (in seconds); x(t_g) read as the master-grid value at the largest grid time <= t_g (causal)",
+      "typical_path": "per type, the pointwise median of the training events' x on the master grid (events with a value at that grid time)",
+      "distance": "RMS over the 20 query points of (x_event - x_typical), log units; six numbers per event and checkpoint (dist_<type>)",
+      "stages": "per fold: 'tune' (typical paths from the sub-train years, for validation rows) and 'final' (from all training years, for the refit and the test rows)",
+      "cache": "results/shape_classifier/s2/cache/ (master-grid paths, ~160 MB; rebuilt by T2, git-ignored in place, not committed)"
+    },
+    "excluded": {
+      "flag_cross_session_extreme": "A12 flag; T0 documents that it is built from the event day's own last trade (after tau) -- excluded",
+      "competition_excess": "uses other names' activity after tau",
+      "post_tau_vector_components": "every S1 or b2 post-tau vector component (u_peak, rise_s, fall_s, terminal, sigma_path, jump_share, halt_in_path, ...)",
+      "momentum_pct": "D4 (and set from the day's RTH high)",
+      "f1_t0_anchored_fields": "flg_dilution_form_before_t0, shs_* as anchored at t0, si_* as settlement-dated: replaced by the R2/R3 tau-anchored versions",
+      "tau_close_sensitive_raw": "replaced by the R1 causal state"
+    }
+  },
+  "folds": {
+    "1": {
+      "train": [
+        2020,
+        2021
+      ],
+      "test": 2022
+    },
+    "2": {
+      "train": [
+        2020,
+        2022
+      ],
+      "test": 2023
+    },
+    "3": {
+      "train": [
+        2020,
+        2023
+      ],
+      "test": 2024
+    },
+    "primary": "test events whose ticker never appears in that fold's training years",
+    "secondary": "all test events"
+  },
+  "models": {
+    "M0": {
+      "what": "training type shares",
+      "times": "all"
+    },
+    "M1": {
+      "what": "cell rule",
+      "times": [
+        "tau"
+      ]
+    },
+    "M2": {
+      "what": "multinomial logistic regression",
+      "times": "all",
+      "grid": {
+        "C": [
+          0.1,
+          1,
+          10
+        ]
+      }
+    },
+    "M3": {
+      "what": "HistGradientBoostingClassifier",
+      "times": "all",
+      "grid": {
+        "learning_rate": [
+          0.03,
+          0.1
+        ],
+        "max_leaf_nodes": [
+          15,
+          31
+        ],
+        "max_iter": [
+          200,
+          500
+        ]
+      },
+      "fixed": {
+        "early_stopping": false,
+        "random_state": 20260928
+      }
+    },
+    "M4": {
+      "what": "atlas analogs, k nearest training events by the Group C path distance (RMS over the query grid, test event's own E)",
+      "times": "after tau",
+      "grid": {
+        "k": [
+          25,
+          50,
+          100
+        ]
+      },
+      "candidates": "training events with a path value at every query point"
+    },
+    "class_weight": [
+      "none",
+      "balanced"
+    ],
+    "selection": "validation multiclass log loss inside the training window; never a test fold; grid not extended after results are seen"
+  },
+  "scores": {
+    "auc": "one type vs rest; 95% interval from 500 ticker bootstrap resamples of the test set (seed 20260928)",
+    "lift_top10": "share of the type among test events whose score is at or above the 90th percentile of that type's score (ties included) / the type's share in the test set",
+    "calibration_edges": [
+      0.0,
+      0.02,
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.5,
+      0.7,
+      1.0
+    ],
+    "log_loss": "multiclass log loss of the model and of M0 on the same test set; skill = 1 - LL / LL_M0",
+    "confusion": "argmax type vs true type, counts",
+    "reads": [
+      "primary",
+      "secondary"
+    ],
+    "secondary_labels": "AUC of the N = 100 models' probabilities against the N = 50 and N = 200 labels"
+  },
+  "controls": {
+    "negative": {
+      "shuffles": 10,
+      "seed": 20260928,
+      "scope": "M1, M2, M3, M4 (both class weights) at every decision time; the training labels (and so the Group C typical paths and M1/M4 shares) permuted within each fold's training window; hyperparameters fixed at the real run's choices",
+      "gate": "row 2: mean per-fold primary AUC over 3 folds x 10 shuffles, per type x model x decision time, inside [0.45, 0.55]"
+    },
+    "positive": {
+      "gated": "rule inputs: post100_rise_pct, post100_fall_pct, post100_u_peak (S1 s1_events) added to M2 and M3 inputs at every decision time, real run's hyperparameters",
+      "reported": "terminal_log (b2 t1_excursion N = 100) added the same way, ungated",
+      "gate": "row 3: every type's per-fold primary AUC >= 0.95 in the rule-inputs run (M2 and M3, class weight none and balanced)"
+    },
+    "baseline": "M1 vs M0 at tau, reported"
+  },
+  "money": {
+    "horizons": {
+      "h10": 600,
+      "h30": 1800,
+      "h60": 3600,
+      "to_2000": "20:00 ET"
+    },
+    "entry": "first print with ts > d (primary, zero latency = upper bound); sensitivities: first print with ts >= d + 1 s and >= d + 5 s",
+    "exit": "last print with ts <= d + h (<= 20:00 for to_2000); d + h past 20:00 = horizon not reached (carried, counted); no print after d before 20:00 = no entry (carried, counted)",
+    "cost": {
+      "rt_bp": 70.98,
+      "rt_cents": 2.512
+    },
+    "units": [
+      "net bp = (exit / entry - 1) x 1e4 - 70.98",
+      "net cents = (exit - entry) x 100 - 2.512 per share"
+    ],
+    "long_only": true,
+    "top_decile": "per fold, per model variant, per type and decision time: primary test events with the type's score at or above its 90th percentile; pooled over the three folds",
+    "against": "all primary test events that reached that decision time"
+  },
+  "importance": {
+    "model": "M3 (class weight none, real run's setting) per fold x decision time",
+    "method": "permute one input column in the primary test set (5 repeats, seed 20260928), predict once, drop in each type's one-vs-rest AUC",
+    "share": "an input's share of a type's importance = its mean AUC drop / the sum of the positive mean drops over all inputs",
+    "row4": "share > 0.5 for any type -> LOG row + manual timing re-check of that input"
+  },
+  "escalation": {
+    "1": "any input uses data after its decision time (T0) -> HARD STOP",
+    "2": "negative control (R5 read) outside 0.45-0.55 for any type -> HARD STOP",
+    "3": "positive control (R4 gated run) below 0.95 for any type -> HARD STOP",
+    "4": "one input > half of a type's permutation importance -> LOG + manual timing check",
+    "5": "any fold's primary test set < 20 events of a type (per decision time, reached events) -> LOG; shown, not read in that fold",
+    "6": "sklearn / HistGradientBoostingClassifier unavailable offline -> HARD STOP (checked 2026-09-28: sklearn 1.8.0, HGB importable)"
+  },
+  "charts": {
+    "root": "results/shape_classifier/s2/charts/",
+    "theme": "dark",
+    "plotly": "inlined (D14)",
+    "files": {
+      "t4": [
+        "auc_by_time.html",
+        "lift_by_time.html",
+        "calibration.html",
+        "confusion.html"
+      ],
+      "t5": [
+        "controls.html"
+      ],
+      "t6": [
+        "forward_returns.html"
+      ],
+      "t7": [
+        "importance.html"
+      ]
+    }
+  },
+  "outputs": {
+    "results": "results/shape_classifier/s2/",
+    "report": "results/shape_classifier/s2/REPORT.md",
+    "report_copy": "results/reports/shape_classifier_s2_report.md",
+    "code": "research/shape_classifier_s2/"
+  },
+  "seed": 20260928
+}
