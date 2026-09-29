@@ -49,6 +49,10 @@ def auc_cells(auc: pd.DataFrame, t: str, mdl: str, cw: str, read: str = "primary
             out.append("–")
             continue
         rd = int(g["read_ok"].sum())
+        g = g[g["read_ok"]]                          # row 5: a fold with < 20 events of the type is shown on the chart, not read here
+        if g.empty:
+            out.append("not read")
+            continue
         out.append(f"{g['auc'].mean():.3f} ({g['auc'].min():.2f}–{g['auc'].max():.2f})" + ("" if rd == 3 else f" [{rd}/3 read]"))
     return out
 
@@ -86,7 +90,8 @@ def main() -> int:
       f"**Branch:** `explore/shape-classifier-s2` · **Code:** `research/shape_classifier_s2/` · **Built at:** `{head}` · 2026-09-28\n")
     w("Exploratory modelling build, not a phase. The test is ticker-blocked and time-ordered (folds test 2022, 2023, 2024); "
       "everything else is exploratory. This report describes the artifacts and charts; it does not interpret them.\n")
-    w(f"**Status: {'HARD STOP' if stop else 'stop at T8 for Cooper'}.**\n")
+    fired = [n for n, r in (("1", r1), ("2", r2), ("3", r3)) if r["fires"]]
+    w(f"**Status: {'HARD STOP -- escalation row ' + ', '.join(fired) + ' fired; state committed, nothing fixed or tuned. This report is the record of that state (T0-T7 ran; T8 generated as the record).' if stop else 'stop at T8 for Cooper'}**\n")
 
     # ------------------------------------------------------------------ escalation
     w("## Escalation table\n")
@@ -111,7 +116,7 @@ def main() -> int:
     w(f"- Per session pair: {c['per_pair']}; threshold |log r| ≥ {f(c['threshold']['log'], 4)} (ratio outside {f(c['threshold']['ratio'][0], 4)}–{f(c['threshold']['ratio'][1], 2)}).")
     w(f"- Close: {c['close']}.")
     w(f"- Pair carried by b1, b2 and S1: {c['pair_used_by_b1_b2_s1']}.")
-    w(f"- **It uses the event day's close.** {c['consequence']}.")
+    w(f"- **It uses the event day's close.** {c['consequence'][0].upper() + c['consequence'][1:]}.")
     w(f"- Checked on disk ({k['events']:,} S2 events; {k['with_tm1_t0_pair']:,} carry the tm1_t0 pair): the T0 close equals the event day's last print at or before 20:00 "
       f"for {k['t0_close_equals_event_day_last_print_at_or_before_2000']:,} ({k['t0_close_differs']:,} differ); that last print is after τ for "
       f"{k['event_day_last_print_after_tau']:,}. Flagged: {k['flagged']:,}.")
@@ -141,6 +146,13 @@ def main() -> int:
       f"`first_crossing`: {mb['within_128ns_of_b1']:,} of {mb['both']:,} within 128 ns of b1's stored value (max {mb['max_abs_ns']} ns; exact-only {mb['exact_only']}, b1-only {mb['b1_only']}); "
       f"the fully settled flag equals b1's for {t2['tcs_final_vs_b1']['equal_to_b1_flag']:,} of {t2['tcs_final_vs_b1']['events']:,}. State at each decision time: "
       + "; ".join(f"{TL[tk]} {', '.join(f'{a} {b:,}' for a, b in sorted(v.items()))}" for tk, v in t2["tcs_state_counts"].items() if v) + ".")
+    if (S.REPO / S.ART / "t2b_mb_diagnosis.json").exists():
+        dg = S.read_json("t2b_mb_diagnosis.json")
+        w(f"- **Defect found in T2's minute-bar crossing, not fixed (found at the HARD STOP).** For {dg['events_beyond_128ns']} of {dg['events_compared']:,} events T2's crossing "
+          f"is more than 128 ns from b1's stored value — all earlier (by {f(-dg['t2_minus_b1_s_quantiles']['1.0'], 7)} s to {f(-dg['t2_minus_b1_s_quantiles']['0.0'], 0)} s, "
+          f"median {f(-dg['t2_minus_b1_s_quantiles']['0.5'], 3)} s). Cause ({dg['slice_call_takes_first_print_of_slice']} of {dg['events_beyond_128ns']}): {dg['cause']}; "
+          f"b1's full-array call reproduces b1 within 128 ns for {dg['full_call_reproduces_b1_within_128ns']} of {dg['events_beyond_128ns']}. Scope: {dg['scope']}. "
+          f"{dg['not_fixed']}. Evidence: `artifacts/t2b_mb_diagnosis.parquet` (`research/shape_classifier_s2/t2b_mb_diagnosis.py`).")
     si = t1["short_interest_tau"]
     w(f"- **Short interest (Cooper R2).** F1's `si_asof_ns` is the settlement date, not publication. Rebuilt from the raw vendor files: latest settlement whose assumed publication "
       f"({si['sessions_lag']} XNYS sessions later) is before the event date — {si['available']:,} events (F1 settlement-dated: {si['f1_settlement_dated_available']:,}; same value as F1: "
@@ -168,7 +180,26 @@ def main() -> int:
     w("")
     pg = pos.groupby(["leak", "model", "cw", "type"])["auc"].agg(["min", "mean"]).reset_index()
     w(f"**Positive (Cooper R4).** Rule inputs (post100_rise_pct, post100_fall_pct, post100_u_peak) added to M2 and M3 at every decision time, real run's settings: "
-      f"{r3['below']} of {r3['cells']:,} per-fold cells below 0.95; minimum {f(r3['min_auc'], 4)}. terminal_log (the brief's construction), reported ungated, per type below.\n")
+      f"{r3['below']} of {r3['cells']:,} per-fold cells below 0.95; minimum {f(r3['min_auc'], 4)}.\n")
+    if r3["fires"]:
+        js = {(j["fold"], j["time"]): j["chosen"] for j in S.read_json("t4_summary.json")["jobs"]}
+        w("**Row 3 fires.** The cells below 0.95, with the setting each used (the real run's choice, R4):\n")
+        w(md_table(["fold", "decision time", "model", "class weight", "type", "AUC", "n", "n_type", "setting"],
+                   [[c["fold"], TL[c["time"]], c["model"], c["cw"], S.TYPE_LABEL[c["type"]], f(c["auc"], 4), i(c["n"]), i(c["n_type"]),
+                     f"`{js[(c['fold'], c['time'])][c['model'] + '|' + c['cw']]}`"] for c in r3["below_cells"]]))
+        w("")
+    w("Rule-inputs run, minimum per-fold primary AUC by model, class weight and type:\n")
+    rl = pg[pg["leak"] == "rules"]
+    w(md_table(["model", "class weight"] + [S.TYPE_LABEL[t] for t in S.TYPES],
+               [[m, cw] + [f(g0[g0["type"] == t]["min"].iloc[0], 4) for t in S.TYPES] for (m, cw), g0 in rl.groupby(["model", "cw"])]))
+    w("")
+    if r2["fires"]:
+        w("**Row 2 fires.** The negative-control cells outside 0.45–0.55:\n")
+        w(md_table(["model", "class weight", "decision time", "type", "mean AUC", "draws", "single-shuffle range"],
+                   [[c["model"], c["cw"], TL[c["time"]], S.TYPE_LABEL[c["type"]], f(c["mean_auc"]), c["draws"], f"{f(c['min_auc'])}–{f(c['max_auc'])}"]
+                    for c in r2["outside_cells"]]))
+        w("")
+    w("terminal_log (the brief's construction), reported ungated, per type:\n")
     rows = []
     for (mdl, cw), g0 in pg[pg["leak"] == "terminal_log"].groupby(["model", "cw"]):
         rows.append([mdl, cw] + [f"{f(g0[g0['type'] == t]['mean'].iloc[0])} (min {f(g0[g0['type'] == t]['min'].iloc[0])})" for t in S.TYPES])
@@ -206,7 +237,8 @@ def main() -> int:
 
     # ------------------------------------------------------------------ per type
     w("## 4. Results per type — `charts/t4/auc_by_time.html`, `lift_by_time.html`, `calibration.html`, `confusion.html`, `charts/t6/forward_returns.html`, `charts/t7/importance.html`\n")
-    w("AUC cells: mean of the three folds' primary-read AUCs, with the fold range in brackets; `[k/3 read]` marks cells where row 5 leaves only k folds readable. "
+    w("AUC cells: mean of the readable folds' primary-read AUCs, with their range in brackets; `[k/3 read]` marks cells where row 5 leaves only k of the three folds "
+      "readable (the others are on the chart, hollow). Lift uses the same readable folds. "
       "Per-fold values with 95% ticker-bootstrap intervals are in `artifacts/t4_auc.parquet` and on the chart.\n")
     for t in S.TYPES:
         w(f"### 4.{S.TYPES.index(t) + 1} {S.TYPE_LABEL[t]}\n")
@@ -216,9 +248,9 @@ def main() -> int:
         w("")
         lr = []
         for m, cw in (("M2", "none"), ("M3", "none"), ("M4", "none")):
-            x = lift[(lift["type"] == t) & (lift["model"] == m) & (lift["cw"] == cw) & (lift["read"] == "primary")].groupby("time")["lift"].mean().reindex(S.TIMES)
+            x = lift[(lift["type"] == t) & (lift["model"] == m) & (lift["cw"] == cw) & (lift["read"] == "primary") & lift["read_ok"]].groupby("time")["lift"].mean().reindex(S.TIMES)
             lr.append([f"{m} ({cw})"] + [f(v, 2) for v in x])
-        w("Top-10% lift (mean of three folds, primary):\n")
+        w("Top-10% lift (mean of the readable folds, primary):\n")
         w(md_table(["model"] + [TL[tk] for tk in S.TIMES], lr))
         w("")
         mo = []

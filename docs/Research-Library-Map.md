@@ -2782,3 +2782,21 @@ null, across-time and bootstrap stability, per view), `t4_runup.py` (run-up clas
 `t5_atlas.py` (atlas data, descriptors, type share by date), `charts.py` (six charts; `atlas.html` is a
 page on the inlined plotly.js), `build_report.py`. Outputs in `results/shape_atlas/s1/` (`artifacts/`,
 `charts/`, `REPORT.md`, copied to `results/reports/shape_atlas_s1_report.md`).
+
+**Shape classifier S2 (2026-09-28) -- can S1's six theory types be predicted at the crossing and as the
+path unfolds? Exploratory modelling build; the test is ticker-blocked and time-ordered (rolling origin,
+folds test 2022 / 2023 / 2024). HARD STOP at T5 (escalation row 3: the gated positive control, 7 of 720 cells below 0.95, all M2-balanced chop); state committed with the T8 report as its record.** Branch `explore/shape-classifier-s2`, cut from
+`master` at `dd208be` (which contains S1's `b526ab6`). `prompts/shape_classifier_s2.md` (filed verbatim);
+`config/shape_classifier_s2.json` (Cooper's rulings R1-R5 of 2026-09-28, each with the measurement it
+answered, and the declared interpretations, committed before the run). `research/shape_classifier_s2/`:
+`s2common.py` (paths, population and labels, folds, the causal spike rule, the R1 state, the master grid,
+weighted AUC and the ticker bootstrap), `t1_group_a.py` (Group A at tau: b2 / S1 artifacts, a pre-tau tick
+pass sliced to ts <= tau_d, shares and dilution re-anchored at tau from F1's raw SEC archive, short interest
+by assumed publication date), `t2_checkpoints.py` (the ten decision times, Group B from prints up to each
+one, the R1 state, forward returns, the master-grid paths and Group C per fold), `t0_audit.py` (the A12
+construction and consumer inventory, the per-input latest-timestamp audit), `t3_folds.py`, `t4_models.py`
+(M0-M4, tuning inside the training window), `t4_scores.py`, `t5_controls.py` (negative: 10 shuffles per fold;
+positive: rule inputs gated, terminal_log reported), `t6_money.py`, `t7_importance.py`, `t2b_mb_diagnosis.py` (measures a T2 minute-bar-crossing defect found at the stop; fixes nothing), `charts.py` (seven
+selector pages on the inlined plotly.js), `build_report.py`. Outputs in `results/shape_classifier/s2/`
+(`artifacts/`, `charts/t4..t7/`, `REPORT.md`, copied to `results/reports/shape_classifier_s2_report.md`);
+`cache/` is rebuilt by T2 and git-ignored in place.

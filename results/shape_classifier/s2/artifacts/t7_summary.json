@@ -1,0 +1,432 @@
+{
+  "config_hash": "f0206c2d8137",
+  "seconds": 192.0,
+  "repeats": 5,
+  "row4_log": {
+    "n_cells": 0,
+    "inputs": [],
+    "cells": []
+  },
+  "top_input_by_type_time": [
+    {
+      "type": "exhausted",
+      "time": "w20",
+      "fold": 2,
+      "input": "u_high",
+      "share": 0.4925260673484949
+    },
+    {
+      "type": "slow_climb",
+      "time": "v1",
+      "fold": 1,
+      "input": "ret_log",
+      "share": 0.45052933787905863
+    },
+    {
+      "type": "exhausted",
+      "time": "tau",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.43830355652028774
+    },
+    {
+      "type": "exhausted",
+      "time": "v1",
+      "fold": 1,
+      "input": "u_high",
+      "share": 0.3889284981785169
+    },
+    {
+      "type": "burst",
+      "time": "v1",
+      "fold": 1,
+      "input": "tod_h",
+      "share": 0.3729549082202732
+    },
+    {
+      "type": "exhausted",
+      "time": "v2",
+      "fold": 2,
+      "input": "u_high",
+      "share": 0.3721453454615835
+    },
+    {
+      "type": "exhausted",
+      "time": "v025",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.3665686162152514
+    },
+    {
+      "type": "exhausted",
+      "time": "w1",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.3485937211693054
+    },
+    {
+      "type": "exhausted",
+      "time": "w5",
+      "fold": 2,
+      "input": "u_high",
+      "share": 0.3460167130919235
+    },
+    {
+      "type": "exhausted",
+      "time": "w10",
+      "fold": 2,
+      "input": "u_high",
+      "share": 0.3416464499433955
+    },
+    {
+      "type": "chop",
+      "time": "v025",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.32676513376068483
+    },
+    {
+      "type": "slow_climb",
+      "time": "v05",
+      "fold": 2,
+      "input": "ret_log",
+      "share": 0.32529208135006393
+    },
+    {
+      "type": "slow_climb",
+      "time": "w20",
+      "fold": 1,
+      "input": "asinh_z_ret",
+      "share": 0.32266850429874483
+    },
+    {
+      "type": "exhausted",
+      "time": "v05",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.31468132298258217
+    },
+    {
+      "type": "chop",
+      "time": "tau",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.3091246426181618
+    },
+    {
+      "type": "fade",
+      "time": "tau",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.3073970485717426
+    },
+    {
+      "type": "chop",
+      "time": "w2",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.30330913567668805
+    },
+    {
+      "type": "slow_climb",
+      "time": "w10",
+      "fold": 1,
+      "input": "ret_log",
+      "share": 0.2976997508546264
+    },
+    {
+      "type": "chop",
+      "time": "v05",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.28550621135522064
+    },
+    {
+      "type": "chop",
+      "time": "w10",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.278584988770738
+    },
+    {
+      "type": "fade",
+      "time": "w5",
+      "fold": 2,
+      "input": "high_log",
+      "share": 0.27733107219087183
+    },
+    {
+      "type": "exhausted",
+      "time": "w2",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.27295276690888975
+    },
+    {
+      "type": "chop",
+      "time": "w1",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.26170808685508534
+    },
+    {
+      "type": "slow_climb",
+      "time": "v2",
+      "fold": 2,
+      "input": "asinh_z_ret",
+      "share": 0.25911379657603234
+    },
+    {
+      "type": "burst",
+      "time": "w20",
+      "fold": 3,
+      "input": "asinh_z_ret",
+      "share": 0.258275824296199
+    },
+    {
+      "type": "chop",
+      "time": "w5",
+      "fold": 1,
+      "input": "u_high",
+      "share": 0.2567801104568242
+    },
+    {
+      "type": "slow_climb",
+      "time": "tau",
+      "fold": 1,
+      "input": "runup_max_drawdown_s",
+      "share": 0.2540067153587879
+    },
+    {
+      "type": "fade",
+      "time": "w20",
+      "fold": 3,
+      "input": "u_high",
+      "share": 0.2518740395790903
+    },
+    {
+      "type": "burst",
+      "time": "w1",
+      "fold": 1,
+      "input": "accel_k0",
+      "share": 0.24678887641850739
+    },
+    {
+      "type": "fade",
+      "time": "w10",
+      "fold": 3,
+      "input": "high_log",
+      "share": 0.24441787764254944
+    },
+    {
+      "type": "fade",
+      "time": "v2",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.24150463968093366
+    },
+    {
+      "type": "burst",
+      "time": "w10",
+      "fold": 1,
+      "input": "tod_h",
+      "share": 0.23895801996444505
+    },
+    {
+      "type": "chop",
+      "time": "v1",
+      "fold": 1,
+      "input": "u_high",
+      "share": 0.23726222663825935
+    },
+    {
+      "type": "chop",
+      "time": "w20",
+      "fold": 1,
+      "input": "u_high",
+      "share": 0.23633464490151734
+    },
+    {
+      "type": "burst",
+      "time": "w5",
+      "fold": 3,
+      "input": "ret_log",
+      "share": 0.23492364902286456
+    },
+    {
+      "type": "runaway",
+      "time": "v05",
+      "fold": 2,
+      "input": "dd_log",
+      "share": 0.23062558356676086
+    },
+    {
+      "type": "fade",
+      "time": "v025",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.22871236152862287
+    },
+    {
+      "type": "fade",
+      "time": "v05",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.21725755995828747
+    },
+    {
+      "type": "chop",
+      "time": "v2",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.21616534236276091
+    },
+    {
+      "type": "burst",
+      "time": "tau",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.21461526052589147
+    },
+    {
+      "type": "slow_climb",
+      "time": "w5",
+      "fold": 3,
+      "input": "ret_log",
+      "share": 0.21116416180601985
+    },
+    {
+      "type": "runaway",
+      "time": "w20",
+      "fold": 2,
+      "input": "asinh_z_ret",
+      "share": 0.2040042149631182
+    },
+    {
+      "type": "runaway",
+      "time": "tau",
+      "fold": 3,
+      "input": "log10_runup_shares",
+      "share": 0.2039532794249778
+    },
+    {
+      "type": "runaway",
+      "time": "w2",
+      "fold": 3,
+      "input": "dist_slow_climb",
+      "share": 0.19953155382711749
+    },
+    {
+      "type": "fade",
+      "time": "w2",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.19446912483340947
+    },
+    {
+      "type": "slow_climb",
+      "time": "v025",
+      "fold": 3,
+      "input": "asinh_z_ret",
+      "share": 0.19050210913049365
+    },
+    {
+      "type": "fade",
+      "time": "v1",
+      "fold": 1,
+      "input": "tod_h",
+      "share": 0.18761864963285724
+    },
+    {
+      "type": "burst",
+      "time": "v05",
+      "fold": 3,
+      "input": "dist_burst",
+      "share": 0.18682048804058846
+    },
+    {
+      "type": "burst",
+      "time": "w2",
+      "fold": 1,
+      "input": "tod_h",
+      "share": 0.1798106200020062
+    },
+    {
+      "type": "fade",
+      "time": "w1",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.17190315390467698
+    },
+    {
+      "type": "runaway",
+      "time": "w1",
+      "fold": 1,
+      "input": "log10_runup_shares",
+      "share": 0.16996493293116516
+    },
+    {
+      "type": "slow_climb",
+      "time": "w2",
+      "fold": 2,
+      "input": "ret_log",
+      "share": 0.16432350718064972
+    },
+    {
+      "type": "runaway",
+      "time": "v2",
+      "fold": 3,
+      "input": "ret_log",
+      "share": 0.1630389901492366
+    },
+    {
+      "type": "runaway",
+      "time": "v025",
+      "fold": 2,
+      "input": "dist_slow_climb",
+      "share": 0.1620046620046618
+    },
+    {
+      "type": "runaway",
+      "time": "w10",
+      "fold": 1,
+      "input": "filing_24h",
+      "share": 0.16127431285893204
+    },
+    {
+      "type": "burst",
+      "time": "v2",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.1601573984034013
+    },
+    {
+      "type": "slow_climb",
+      "time": "w1",
+      "fold": 3,
+      "input": "accel_k4",
+      "share": 0.15758476867227894
+    },
+    {
+      "type": "runaway",
+      "time": "w5",
+      "fold": 2,
+      "input": "dd_log",
+      "share": 0.155327818249167
+    },
+    {
+      "type": "runaway",
+      "time": "v1",
+      "fold": 3,
+      "input": "ret_log",
+      "share": 0.1425726034438446
+    },
+    {
+      "type": "burst",
+      "time": "v025",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.12246979044511293
+    }
+  ]
+}

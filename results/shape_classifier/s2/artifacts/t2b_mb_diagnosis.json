@@ -1,0 +1,16 @@
+{
+  "config_hash": "f0206c2d8137",
+  "events_compared": 15236,
+  "events_beyond_128ns": 66,
+  "t2_earlier_than_b1": 66,
+  "slice_call_takes_first_print_of_slice": 66,
+  "full_call_reproduces_b1_within_128ns": 66,
+  "t2_minus_b1_s_quantiles": {
+    "0.0": -7282.306884162,
+    "0.5": -0.2603499595,
+    "1.0": -1.3e-07
+  },
+  "cause": "T2 called first_crossing on the 04:00-20:00 slice; the slice's first print has no predecessor so is never a spike, while b1's full-array call judges it against its pre-04:00 predecessor and skips it",
+  "scope": "Cooper R1 tcs_state input only; the crossing T2 used is a real print, used only once it has happened (no timing violation)",
+  "not_fixed": "found at the row 3 HARD STOP; the fix (call first_crossing on the full arrays) waits for instruction"
+}
