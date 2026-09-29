@@ -74,7 +74,7 @@ def pre_tau(rec: dict) -> dict:
     ct = C1.collapse_tol(ts[m], TOL_MS)
     dur_min = max(tau - lo, S.NS) / S.MIN_NS
     out = {"event_id": rec["event_id"], "tau_exact_ns": t_ex, "tau_d_ns": tau, "n_prints_after_crossing_to_stored": n_between,
-           "segment_check": seg, "first_print_ns": int(ts[0]),
+           "segment_check": seg, "first_print_check_ns": int(ts[0]),
            "pre_window": "segment" if s0 is not None else "0400_auction_minute", "pre_lo_ns": int(lo),
            "pre_n_collapsed": int(ct.size), "pre_dollars": float((px[m] * sz[m]).sum()), "pre_shares": float(sz[m].sum()),
            "pre_minutes": (tau - lo) / S.MIN_NS, "ts__pre": int(ts[m][-1]) if m.any() else int(lo)}
@@ -187,14 +187,19 @@ def main() -> int:
     pop = S.load_population()
     recs = pop[["event_id", "event_date_canonical", "tau_ns", "tau_price"]].to_dict("records")
 
-    # ---------------- pre-tau tick pass
-    pre = []
-    with ProcessPoolExecutor(max_workers=S.B2.cpu_workers()) as ex:
-        for n, r in enumerate(ex.map(pre_tau, recs, chunksize=25)):
-            pre.append(r)
-            if (n + 1) % 3000 == 0:
-                print(f"  pre-tau {n + 1:,}/{len(recs):,}  {time.perf_counter() - t_start:,.0f}s", flush=True)
-    pre = pd.DataFrame(pre)
+    # ---------------- pre-tau tick pass (cached in the git-ignored cache; delete it to rebuild)
+    pc = S.cache("t1_pre_tau.parquet")
+    if pc.exists():
+        pre = pd.read_parquet(pc)
+    else:
+        pre = []
+        with ProcessPoolExecutor(max_workers=S.B2.cpu_workers()) as ex:
+            for n, r in enumerate(ex.map(pre_tau, recs, chunksize=25)):
+                pre.append(r)
+                if (n + 1) % 3000 == 0:
+                    print(f"  pre-tau {n + 1:,}/{len(recs):,}  {time.perf_counter() - t_start:,.0f}s", flush=True)
+        pre = pd.DataFrame(pre)
+        pre.to_parquet(pc, index=False)
     print(f"pre-tau pass {time.perf_counter() - t_start:,.0f}s")
 
     s1 = pd.read_parquet(S.src("s1_events"), columns=["event_id", "tau_anchor_segment", "gap_share", "runup_available", "runup_u_launch",
@@ -215,6 +220,7 @@ def main() -> int:
     assert len(d) == len(pop)
     assert (d["segment_check"] == d["tau_anchor_segment"]).all(), "tick-pass segment differs from S1's"
     assert (d["tau_ns_b1"] == d["tau_ns"]).all(), "b1 tau differs from S1 tau"
+    assert (d["first_print_check_ns"] == d["first_print_ns"]).all(), "tick-pass first print differs from S1's"
 
     # ---------------- rungs 0-4
     r = rg[rg["k"].between(0, 4)]
@@ -241,18 +247,23 @@ def main() -> int:
     assert lvx["live_exact"].notna().all(), "a live name outside the population"
     latest_live = lvx.groupby("event_id")["live_exact"].max()
     # live sets: other names' crossings (their exact prints) and windows ending at the stored tau (<= tau_d)
-    d["ts__cross_section"] = np.fmax(d["event_id"].map(latest_live).astype(float), d["tau_ns"].astype(float))
+    d["ts__cross_section"] = np.maximum(d["event_id"].map(latest_live).astype("int64"), d["tau_ns"].astype("int64"))
 
     # ---------------- fundamentals re-anchored at tau (R3)
     dil_forms = set(json.load(open(S.REPO / "config/fundamentals_f1.json"))["dilution_form_set"]["minimum_forms"]) - {"8-K (Item 3.02)"}
     by_cik = {}
     for e in d.dropna(subset=["cik"]).itertuples():
         by_cik.setdefault(e.cik, []).append({"event_id": e.event_id, "tau_ns": int(e.tau_d_ns)})
-    fres = []
-    with ProcessPoolExecutor(max_workers=S.B2.cpu_workers()) as ex:
-        for part in ex.map(fundamentals_for_cik, [(c, v, dil_forms) for c, v in by_cik.items()], chunksize=8):
-            fres.extend(part)
-    fr = pd.DataFrame(fres)
+    fc = S.cache("t1_fundamentals_tau.parquet")
+    if fc.exists():
+        fr = pd.read_parquet(fc)
+    else:
+        fres = []
+        with ProcessPoolExecutor(max_workers=S.B2.cpu_workers()) as ex:
+            for part in ex.map(fundamentals_for_cik, [(c, v, dil_forms) for c, v in by_cik.items()], chunksize=8):
+                fres.extend(part)
+        fr = pd.DataFrame(fres)
+        fr.to_parquet(fc, index=False)
     d = d.merge(fr, on="event_id", how="left")
     print(f"fundamentals re-anchored {time.perf_counter() - t_start:,.0f}s")
     # E1's correction rule with the tau-anchored count (research/fundamental_exploration/common.py)
@@ -322,16 +333,16 @@ def main() -> int:
     A["ts__first_print"] = d["first_print_ns"]
     A["ts__timing"] = d["tau_d_ns"]
     A["ts__runup"] = d["tau_ns"]                   # S1 run-up: prints in [segment start, stored tau]
-    A["ts__turnover"] = np.fmax(d["tau_ns"].astype(float), d["shs_tau_accepted_ns"].astype(float))
+    acc = S.as_int64(d["shs_tau_accepted_ns"])
+    A["ts__turnover"] = acc.where(acc.notna() & (acc > d["tau_ns"].astype("Int64")), d["tau_ns"].astype("Int64"))
     A["config_hash"] = S.cfg_hash()
 
     # ---------------- T0 assertion on Group A: every latest timestamp <= tau, per event
     tau = d["tau_d_ns"].astype("int64").to_numpy()
     viol = {}
     for c in [c for c in A.columns if c.startswith("ts__")]:
-        v = pd.to_numeric(A[c], errors="coerce").to_numpy(dtype=float)
-        bad = np.isfinite(v) & (v > tau)
-        viol[c] = int(bad.sum())
+        A[c] = S.as_int64(A[c])
+        viol[c] = int((A[c] > pd.array(tau, dtype="Int64")).fillna(False).sum())
     A.to_parquet(S.art("t1_group_a.parquet"), index=False)
     assert all(v == 0 for v in viol.values()), f"HARD STOP row 1 (Group A): {viol}"
 
@@ -345,7 +356,7 @@ def main() -> int:
                          "max_abs_ns": int((d["tau_exact_ns"] - d["tau_ns"]).abs().max()),
                          "events_with_prints_after_crossing_up_to_stored": int((d["n_prints_after_crossing_to_stored"] > 0).sum()),
                          "prints_after_crossing_up_to_stored": int(d["n_prints_after_crossing_to_stored"].sum()),
-                         "live_names_crossing_after_tau_d": int((d["event_id"].map(latest_live).astype(float) > d["tau_d_ns"].astype(float)).sum())},
+                         "live_names_crossing_after_tau_d": int((d["event_id"].map(latest_live).astype("int64") > d["tau_d_ns"].astype("int64")).sum())},
         "pre_window": d["pre_window"].value_counts().to_dict(),
         "ref_shares_defined": int(d["ref_shares"].notna().sum()),
         "tau_is_first_print": int(A["tau_is_first_print"].sum()),

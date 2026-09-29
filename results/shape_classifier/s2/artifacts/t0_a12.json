@@ -1,0 +1,263 @@
+{
+  "construction": {
+    "code": "research/phase_9/t1_ca_detector.py:main, research/phase_9/common.py::session_closes / closes_wide",
+    "per_pair": "r = log(p_later_close / p_earlier_close); flag = |r| >= ca_flag_log_threshold",
+    "threshold": {
+      "log": 0.5877866649021191,
+      "ratio": [
+        0.5555555555555556,
+        1.8
+      ]
+    },
+    "close": "ARG_MAX(last_price, minute_index) over event_minute_bars_v2 rows of that session offset: the last trade of the extended day (any segment)",
+    "pair_used_by_b1_b2_s1": "tm1_t0 -- (close of T-1, close of T0); research/attention_excursion_b1/t1_t2_summary.py joins session_pair == 'tm1_t0'",
+    "consequence": "the T0 close is the event day's last trade, so the flag reads the whole event day, after tau"
+  },
+  "checked_on_disk": {
+    "events": 15519,
+    "with_tm1_t0_pair": 15519,
+    "t0_close_equals_event_day_last_print_at_or_before_2000": 15512,
+    "t0_close_differs": 7,
+    "event_day_last_print_after_tau": 15517,
+    "flagged": 887,
+    "flag_rate_by_type": {
+      "runaway": {
+        "rate": 0.5411140583554377,
+        "flagged": 204,
+        "n": 377
+      },
+      "burst": {
+        "rate": 0.2423728813559322,
+        "flagged": 143,
+        "n": 590
+      },
+      "slow_climb": {
+        "rate": 0.4016260162601626,
+        "flagged": 247,
+        "n": 615
+      },
+      "exhausted": {
+        "rate": 0.010530137981118372,
+        "flagged": 29,
+        "n": 2754
+      },
+      "fade": {
+        "rate": 0.014909478168264111,
+        "flagged": 28,
+        "n": 1878
+      },
+      "chop": {
+        "rate": 0.02537907301860415,
+        "flagged": 236,
+        "n": 9299
+      }
+    }
+  },
+  "consumers_code": [
+    {
+      "file": "research/attention_excursion_b1/build_report.py",
+      "use": "facet",
+      "how": "report sentence (flagged count)"
+    },
+    {
+      "file": "research/attention_excursion_b1/charts.py",
+      "use": "facet",
+      "how": "chart annotation"
+    },
+    {
+      "file": "research/attention_excursion_b1/t1_t2_summary.py",
+      "use": "facet",
+      "how": "tm1_t0 flag joined to t2_tau; flagged count reported"
+    },
+    {
+      "file": "research/attention_excursion_b1/t4_excursion.py",
+      "use": "facet",
+      "how": "flag carried on the excursion rows"
+    },
+    {
+      "file": "research/attention_excursion_b1/t5_attention.py",
+      "use": "facet",
+      "how": "flag carried on the attention rows"
+    },
+    {
+      "file": "research/attention_excursion_b2/build_report.py",
+      "use": "facet",
+      "how": "facet listing in the report"
+    },
+    {
+      "file": "research/attention_excursion_b2/t0_population.py",
+      "use": "facet",
+      "how": "flag carried; counts reported"
+    },
+    {
+      "file": "research/attention_excursion_b2/t1_excursion.py",
+      "use": "facet",
+      "how": "flag carried"
+    },
+    {
+      "file": "research/attention_excursion_b2/t2_attention.py",
+      "use": "facet",
+      "how": "flag carried"
+    },
+    {
+      "file": "research/attention_excursion_b2/t4_step_zero.py",
+      "use": "facet",
+      "how": "one facet of the step-zero panels"
+    },
+    {
+      "file": "research/phase_10/v2_r13_detection.py",
+      "use": "facet",
+      "how": "joined tm1_t0 flag; counts of flagged events reported"
+    },
+    {
+      "file": "research/phase_10e/t1_candidate_entries.py",
+      "use": "facet",
+      "how": "tm1_t0 flag carried on every candidate entry; count reported"
+    },
+    {
+      "file": "research/phase_10e/t2_excursion.py",
+      "use": "facet",
+      "how": "flag carried"
+    },
+    {
+      "file": "research/phase_10e/t5_costed_markouts.py",
+      "use": "facet",
+      "how": "every statistic with and without the tm1_t0-flagged set (A12)"
+    },
+    {
+      "file": "research/phase_10e/t6_adverse_tail.py",
+      "use": "facet",
+      "how": "with and without the tm1_t0-flagged set (A12)"
+    },
+    {
+      "file": "research/phase_11/t4b_ordering_audit.py",
+      "use": "facet",
+      "how": "file-ordering audit lists the flag artifact"
+    },
+    {
+      "file": "research/phase_11/t7_cost_vs_capture.py",
+      "use": "facet",
+      "how": "flag joined as one of three carried flags"
+    },
+    {
+      "file": "research/phase_9/chart_01.py",
+      "use": "facet",
+      "how": "chart annotation"
+    },
+    {
+      "file": "research/phase_9/chart_02.py",
+      "use": "facet",
+      "how": "chart split flagged / unflagged"
+    },
+    {
+      "file": "research/phase_9/t1_ca_detector.py",
+      "use": "builder",
+      "how": "builds the flag for pairs tm1_t0, t0_t1, t0_t2, t0_t3"
+    },
+    {
+      "file": "research/phase_9/t2_sensitivity.py",
+      "use": "facet",
+      "how": "markouts reported flagged-only / unflagged / flagged-excluded per pair"
+    },
+    {
+      "file": "research/phase_9/t3_retracement.py",
+      "use": "facet",
+      "how": "retracement reported with the flag (either side) excluded and only"
+    },
+    {
+      "file": "research/phase_9/t5_clustered.py",
+      "use": "facet",
+      "how": "clustered interval with the t0_t1-flagged set removed, beside the full set"
+    },
+    {
+      "file": "research/relative_momentum/t0c2_move_at_reslice.py",
+      "use": "facet",
+      "how": "every headline with and without the flagged set (A12)"
+    },
+    {
+      "file": "research/relative_momentum/t0c_phase11_reslice.py",
+      "use": "facet",
+      "how": "every slice with and without the flagged set (A12)"
+    },
+    {
+      "file": "research/relative_momentum_v0/t4_diagnostic.py",
+      "use": "facet",
+      "how": "split on the flag, flagged rows never dropped"
+    },
+    {
+      "file": "research/relative_momentum_v1/t4_diagnostic.py",
+      "use": "facet",
+      "how": "split on the flag, flagged rows never dropped"
+    },
+    {
+      "file": "research/scale_field/event_panels.py",
+      "use": "facet",
+      "how": "flag listed on event panels (any pair)"
+    },
+    {
+      "file": "research/scope_universe_scan/basis_test.py",
+      "use": "facet",
+      "how": "carried per A12 (docstring)"
+    },
+    {
+      "file": "research/scope_universe_scan/basis_test_stage2.py",
+      "use": "facet",
+      "how": "basis test reported with and without the tm1_t0-flagged set"
+    },
+    {
+      "file": "research/shape_atlas_s1/build_report.py",
+      "use": "facet",
+      "how": "descriptor listing in the report"
+    },
+    {
+      "file": "research/shape_atlas_s1/t1_paths.py",
+      "use": "facet",
+      "how": "flag carried on s1_events"
+    },
+    {
+      "file": "research/shape_atlas_s1/t5_atlas.py",
+      "use": "facet",
+      "how": "tape descriptor shown per type (hindsight allowed in S1)"
+    }
+  ],
+  "consumers_as_input": [],
+  "consumers_listed_not_found": [],
+  "consumers_non_code_records": [
+    "CLAUDE.md",
+    "config/attention_excursion_b2.json",
+    "config/phase_10.json",
+    "config/phase_10_v2.json",
+    "config/phase_10e.json",
+    "config/phase_11.json",
+    "config/phase_9.json",
+    "config/relative_momentum_v0.json",
+    "config/scale_field_panels.json",
+    "config/shape_atlas_s1.json",
+    "config/shape_classifier_s2.json",
+    "docs/Open-Items-Register.md",
+    "docs/Research-Library-Map.md",
+    "docs/Universe-Decisions.md",
+    "prompts/attention_excursion.md",
+    "prompts/attention_excursion_b1.md",
+    "prompts/phase_11.md",
+    "prompts/phase_9.md",
+    "prompts/shape_classifier_s2.md",
+    "results/attention_excursion/b1/REPORT.md",
+    "results/attention_excursion/b2/REPORT.md",
+    "results/phase_10/REPORT_v2_v3_superseded.md",
+    "results/phase_10e/REPORT.md",
+    "results/phase_9/REPORT.md",
+    "results/relative_momentum/r0/REPORT.md",
+    "results/relative_momentum/v0/REPORT.md",
+    "results/relative_momentum/v1/REPORT.md",
+    "results/reports/attention_excursion_b1_report.md",
+    "results/reports/attention_excursion_b2_report.md",
+    "results/reports/phase_10_v2_report.md",
+    "results/reports/phase_10e_report.md",
+    "results/reports/phase_9_report.md",
+    "results/reports/relative_momentum_r0_report.md",
+    "results/reports/relative_momentum_v0_report.md",
+    "results/reports/relative_momentum_v1_report.md"
+  ],
+  "outside_repo": "the rough pre-S2 run (Claude, on S1's per-event tables, brief 'What came before') used the flag as a model input; it is not in the repository"
+}

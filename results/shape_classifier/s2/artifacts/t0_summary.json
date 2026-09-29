@@ -1,0 +1,48 @@
+{
+  "config_hash": "f0206c2d8137",
+  "row1": {
+    "rule": "any input uses data after its decision time",
+    "violations": 0,
+    "fires": false
+  },
+  "a12": {
+    "flagged": 887,
+    "t0_close_is_last_print": 15512,
+    "last_print_after_tau": 15517,
+    "consumers_as_input": [],
+    "code_consumers": 33
+  },
+  "tau_rounding": {
+    "finding": "every stored tau_ns in b1 t2_tau, b2 and S1 is a multiple of 256 ns: float64-rounded upstream (error <= 128 ns either way)",
+    "handling": "decision time at tau = tau_d = max(stored tau, the crossing print's own timestamp); b2 / S1 inputs built on the stored tau are then <= tau_d, the crossing print is <= tau_d, and entries are after it",
+    "stored_multiple_of_256": 15519,
+    "exact_equals_stored": 1436,
+    "crossing_after_stored": 7146,
+    "crossing_before_stored": 6937,
+    "max_abs_ns": 128,
+    "events_with_prints_after_crossing_up_to_stored": 38,
+    "prints_after_crossing_up_to_stored": 38,
+    "live_names_crossing_after_tau_d": 0
+  },
+  "short_interest_dating": "F1 si_asof_ns is the settlement date, not publication (Cooper R2)",
+  "decision_time_properties": {
+    "tau_spike_guard": {
+      "note": "tau is the first print >= 1.30 x prior close that is not a spike; the spike test reads the print after it, so tau is confirmed at its successor",
+      "definition": "seconds from the tau print to its successor in the sorted print sequence (the spike guard reads that successor)",
+      "n": 15517,
+      "zero_share": 0.007088085572524003,
+      "quantiles_s": {
+        "0.5": 0.002091881,
+        "0.9": 5.119267002599999,
+        "0.99": 201.58179555252008,
+        "1.0": 10860.631262061
+      }
+    },
+    "live_set": "live_n / flow_share count other D1 names that crossed at or before tau; D1 membership is the vendor's day-level selection (momentum_pct, RTH high), so the live set is conditional on that selection boundary like the whole population (D4, A13)",
+    "label": "the label (S1 theory type) is hindsight by definition and is only ever an output"
+  },
+  "claude_md_indices": {
+    "exit_code": 0,
+    "stdout_tail": "22   live hardcodes found 22   (excluded: 3 executables whose only D: mention is a provenance comment, 35 docs/JSON that quote a path)\n    excused, DOCSTRING only: research/phase_1c/fetch_pair.py lines [8]  <-- and it can WRITE\n    excused, DOCSTRING only: src/data/prepare_database_split.py lines [15, 16]\n    excused, DOCSTRING only: tools/verify_cited_paths.py lines [15]\n    excused, read-only tools/ gate (no write call): tools/verify_claude_md_indices.py\n\n[2] decision pointer                  OK\n    CLAUDE.md next free: D40   register highest: D39   implies next free: D40\n\nALL INDICES CLEAN\n"
+  }
+}

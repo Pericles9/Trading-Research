@@ -110,7 +110,8 @@ def main() -> int:
         "primary_auc_by_time": {f"{r.model}|{r.cw}|{r.type}|{r.time}": {"mean": r.auc_mean, "min": r.auc_min, "max": r.auc_max,
                                                                        "n_type_3folds": int(r.n_type), "folds_read": int(r.folds_read)}
                                 for r in tab.itertuples()},
-        "logloss_skill_primary": out["logloss"][out["logloss"]["read"] == "primary"].groupby(["model", "cw", "time"])["skill"].mean().unstack().to_dict("index"),
+        "logloss_skill_primary": {f"{m}|{c}|{t}": v for (m, c, t), v in
+                                  out["logloss"][out["logloss"]["read"] == "primary"].groupby(["model", "cw", "time"])["skill"].mean().items()},
     })
     for mdl in ("M3", "M2"):
         t = tab[(tab["model"] == mdl) & (tab["cw"] == "none")].pivot(index="type", columns="time", values="auc_mean").reindex(S.TYPES)[S.TIMES]

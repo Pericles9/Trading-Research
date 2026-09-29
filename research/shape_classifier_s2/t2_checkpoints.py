@@ -17,7 +17,7 @@ Then Group C: per fold and stage (tune: typical paths from the sub-train years; 
 each type's typical path = pointwise median of its training events' master paths; each event's distance to each
 typical path at each checkpoint after tau = RMS over the 20 query points t_g = E (g + 1) / 20.
 
-Writes artifacts/t2_checkpoints.parquet (event x decision time), t2_group_c.parquet, t2_typical_paths.parquet,
+Writes artifacts/t2_checkpoints.parquet (event x decision time), t2_forward.parquet (forward returns), t2_group_c.parquet, t2_typical_paths.parquet,
 t2_event_meta.parquet (tau confirmation lag, the day's last print), t2_summary.json; cache/master_paths.npy + cache/master_paths_events.parquet (rebuildable, not committed).
 
 Usage: .venv/Scripts/python.exe research/shape_classifier_s2/t2_checkpoints.py
@@ -228,7 +228,38 @@ def stage_masks(pop: pd.DataFrame) -> dict:
     return out
 
 
+def write_split(ck: pd.DataFrame) -> None:
+    """Two files (git size): t2_checkpoints.parquet = states, decision times, Group B, the R1 state and the latest
+    timestamps; t2_forward.parquet = the forward-return columns, with one entry price per latency (the same entry
+    serves every horizon). zstd-compressed; values unchanged."""
+    fcols = [c for c in ck.columns if c.startswith(("fr_", "entry_"))]
+    fw = ck[["event_id", "time"] + fcols].copy()
+    for ln in LAT:
+        px = [f"fr_{ln}_{h}_entry_px" for h in HOR if f"fr_{ln}_{h}_entry_px" in fw]
+        if px:
+            fw[f"entry_{ln}_px"] = fw[px].bfill(axis=1).iloc[:, 0]
+            fw = fw.drop(columns=px)
+    fw["config_hash"] = ck["config_hash"].iloc[0]
+    ck.drop(columns=fcols).to_parquet(S.art("t2_checkpoints.parquet"), index=False, compression="zstd", compression_level=19)
+    fw.to_parquet(S.art("t2_forward.parquet"), index=False, compression="zstd", compression_level=19)
+
+
 def main() -> int:
+    if "--split-existing" in sys.argv:                       # one-off: split a combined t2_checkpoints.parquet in place
+        ck = pd.read_parquet(S.art("t2_checkpoints.parquet"))
+        write_split(ck)
+        back = pd.read_parquet(S.art("t2_checkpoints.parquet")).merge(pd.read_parquet(S.art("t2_forward.parquet")).drop(columns="config_hash"),
+                                                                     on=["event_id", "time"])
+        for c in [c for c in ck.columns if c in back.columns]:
+            assert ck[c].equals(back[c]) or (ck[c].isna().equals(back[c].isna()) and (ck[c].dropna() == back[c].dropna()).all()), c
+        for ln in LAT:
+            for h in HOR:
+                c = f"fr_{ln}_{h}_entry_px"
+                if c in ck:
+                    m = ck[c].notna()
+                    assert (ck.loc[m, c].to_numpy() == back.loc[m, f"entry_{ln}_px"].to_numpy()).all(), c
+        print("split ok", len(ck))
+        return 0
     t_start = time.perf_counter()
     pop = S.load_population()
     A = pd.read_parquet(S.art("t1_group_a.parquet"), columns=["event_id", "c__ref_shares", "c__pre_trades_per_min", "c__pre_dollars_per_min",
@@ -251,10 +282,7 @@ def main() -> int:
             meta.append(m)
             if (n + 1) % 2000 == 0:
                 print(f"  {n + 1:,}/{len(recs):,}  {time.perf_counter() - t_start:,.0f}s", flush=True)
-    ck = pd.DataFrame(rows)
-    ck["d_ns"] = ck["d_ns"].astype("Int64")
-    ck["ts__B"] = ck["ts__B"].astype("Int64")
-    ck["ts__tcs"] = ck["ts__tcs"].astype("Int64")
+    ck = S.ns_frame(rows, ["d_ns", "ts__B", "ts__tcs", "entry_lat0_ns", "entry_lat1s_ns", "entry_lat5s_ns"])
     # ---------------- T0 assertion on Group B and the tcs state: latest timestamp <= d, per event and time
     r = ck[ck["state"] == "reached"]
     vB = int((r["ts__B"].dropna() > r.loc[r["ts__B"].notna(), "d_ns"]).sum())
@@ -262,7 +290,7 @@ def main() -> int:
     tau_map = d.set_index("event_id")["tau_d_ns"]
     assert (r.loc[r["time"] == "tau", "d_ns"].to_numpy() == r.loc[r["time"] == "tau", "event_id"].map(tau_map).to_numpy()).all()
     ck["config_hash"] = S.cfg_hash()
-    ck.to_parquet(S.art("t2_checkpoints.parquet"), index=False)
+    write_split(ck)
     assert vB == 0 and vT == 0, f"HARD STOP row 1 (Group B / tcs): B {vB}, tcs {vT}"
 
     P = np.vstack([paths[e] for e in pop["event_id"]])
@@ -275,18 +303,18 @@ def main() -> int:
     gc.to_parquet(S.art("t2_group_c.parquet"), index=False)
     typ.to_parquet(S.art("t2_typical_paths.parquet"), index=False)
 
-    meta = pd.DataFrame(meta)
+    meta = S.ns_frame(meta, ["tau_mb_exact_ns", "last_print_ns"])
     meta.to_parquet(S.art("t2_event_meta.parquet"), index=False)
     mm = meta.merge(d[["event_id", "tau_ns_mb"]], on="event_id")
     both = mm["tau_mb_exact_ns"].notna() & mm["tau_ns_mb"].notna()
-    dmb = (mm.loc[both, "tau_mb_exact_ns"].astype("int64") - mm.loc[both, "tau_ns_mb"].astype("int64")).abs()
+    dmb = (mm.loc[both, "tau_mb_exact_ns"].astype("int64") - S.as_int64(mm.loc[both, "tau_ns_mb"]).astype("int64")).abs()
     mb_check = {"both": int(both.sum()), "within_128ns_of_b1": int((dmb <= S.TAU_ROUND_NS).sum()), "max_abs_ns": int(dmb.max()) if len(dmb) else None,
                 "exact_only": int((mm["tau_mb_exact_ns"].notna() & mm["tau_ns_mb"].isna()).sum()),
                 "b1_only": int((mm["tau_mb_exact_ns"].isna() & mm["tau_ns_mb"].notna()).sum())}
     fin = mm.merge(d[["event_id", "tau_exact_ns"]], on="event_id").merge(
         pd.read_parquet(S.art("t1_group_a.parquet"), columns=["event_id", "c__tau_close_sensitive"]), on="event_id")
-    gap = (fin["tau_exact_ns"].astype("float64") - fin["tau_mb_exact_ns"].astype("float64")).abs()
-    settled = np.where(fin["tau_mb_exact_ns"].isna(), True, gap > 60 * S.NS)
+    gap = (fin["tau_exact_ns"].astype("Int64") - fin["tau_mb_exact_ns"]).abs()
+    settled = np.where(fin["tau_mb_exact_ns"].isna(), True, (gap > 60 * S.NS).fillna(False).to_numpy(dtype=bool))
     tcs_check = {"events": int(len(fin)), "equal_to_b1_flag": int((settled == fin["c__tau_close_sensitive"].astype(bool)).sum())}
     cnt = ck.groupby(["time", "state"]).size().unstack(fill_value=0).reindex(S.TIMES)
     lag = meta["tau_confirm_lag_s"]

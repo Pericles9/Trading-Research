@@ -1,0 +1,311 @@
+{
+  "config_hash": "f0206c2d8137",
+  "excluded": {
+    "dev_v3": 49,
+    "dev_v4_sidecar": 4,
+    "unlabelled_non_dev": 6
+  },
+  "folds": {
+    "1": {
+      "train": {
+        "events": 5289,
+        "tickers": 1501,
+        "types": {
+          "runaway": 157,
+          "burst": 232,
+          "slow_climb": 202,
+          "exhausted": 1047,
+          "fade": 696,
+          "chop": 2955
+        }
+      },
+      "sub": {
+        "events": 3376,
+        "tickers": 1166,
+        "types": {
+          "runaway": 85,
+          "burst": 165,
+          "slow_climb": 121,
+          "exhausted": 739,
+          "fade": 396,
+          "chop": 1870
+        }
+      },
+      "val": {
+        "events": 688,
+        "tickers": 335,
+        "types": {
+          "runaway": 25,
+          "burst": 24,
+          "slow_climb": 26,
+          "exhausted": 116,
+          "fade": 115,
+          "chop": 382
+        }
+      },
+      "test": {
+        "events": 2232,
+        "tickers": 884,
+        "types": {
+          "runaway": 53,
+          "burst": 79,
+          "slow_climb": 98,
+          "exhausted": 409,
+          "fade": 298,
+          "chop": 1295
+        }
+      },
+      "primary": {
+        "events": 997,
+        "tickers": 396,
+        "types": {
+          "runaway": 30,
+          "burst": 39,
+          "slow_climb": 40,
+          "exhausted": 204,
+          "fade": 136,
+          "chop": 548
+        }
+      }
+    },
+    "2": {
+      "train": {
+        "events": 7521,
+        "tickers": 1897,
+        "types": {
+          "runaway": 210,
+          "burst": 311,
+          "slow_climb": 300,
+          "exhausted": 1456,
+          "fade": 994,
+          "chop": 4250
+        }
+      },
+      "sub": {
+        "events": 5289,
+        "tickers": 1501,
+        "types": {
+          "runaway": 157,
+          "burst": 232,
+          "slow_climb": 202,
+          "exhausted": 1047,
+          "fade": 696,
+          "chop": 2955
+        }
+      },
+      "val": {
+        "events": 997,
+        "tickers": 396,
+        "types": {
+          "runaway": 30,
+          "burst": 39,
+          "slow_climb": 40,
+          "exhausted": 204,
+          "fade": 136,
+          "chop": 548
+        }
+      },
+      "test": {
+        "events": 2952,
+        "tickers": 1055,
+        "types": {
+          "runaway": 61,
+          "burst": 105,
+          "slow_climb": 111,
+          "exhausted": 522,
+          "fade": 338,
+          "chop": 1815
+        }
+      },
+      "primary": {
+        "events": 804,
+        "tickers": 289,
+        "types": {
+          "runaway": 22,
+          "burst": 32,
+          "slow_climb": 36,
+          "exhausted": 126,
+          "fade": 97,
+          "chop": 491
+        }
+      }
+    },
+    "3": {
+      "train": {
+        "events": 10473,
+        "tickers": 2186,
+        "types": {
+          "runaway": 271,
+          "burst": 416,
+          "slow_climb": 411,
+          "exhausted": 1978,
+          "fade": 1332,
+          "chop": 6065
+        }
+      },
+      "sub": {
+        "events": 7521,
+        "tickers": 1897,
+        "types": {
+          "runaway": 210,
+          "burst": 311,
+          "slow_climb": 300,
+          "exhausted": 1456,
+          "fade": 994,
+          "chop": 4250
+        }
+      },
+      "val": {
+        "events": 804,
+        "tickers": 289,
+        "types": {
+          "runaway": 22,
+          "burst": 32,
+          "slow_climb": 36,
+          "exhausted": 126,
+          "fade": 97,
+          "chop": 491
+        }
+      },
+      "test": {
+        "events": 4987,
+        "tickers": 1397,
+        "types": {
+          "runaway": 104,
+          "burst": 172,
+          "slow_climb": 202,
+          "exhausted": 767,
+          "fade": 540,
+          "chop": 3202
+        }
+      },
+      "primary": {
+        "events": 1241,
+        "tickers": 367,
+        "types": {
+          "runaway": 15,
+          "burst": 42,
+          "slow_climb": 52,
+          "exhausted": 203,
+          "fade": 153,
+          "chop": 776
+        }
+      }
+    }
+  },
+  "row5_log": {
+    "n_cells": 14,
+    "cells": [
+      {
+        "fold": 2,
+        "time": "v025",
+        "type": "runaway",
+        "n": 19
+      },
+      {
+        "fold": 2,
+        "time": "v05",
+        "type": "runaway",
+        "n": 19
+      },
+      {
+        "fold": 2,
+        "time": "v1",
+        "type": "runaway",
+        "n": 17
+      },
+      {
+        "fold": 2,
+        "time": "v2",
+        "type": "runaway",
+        "n": 16
+      },
+      {
+        "fold": 3,
+        "time": "tau",
+        "type": "runaway",
+        "n": 15
+      },
+      {
+        "fold": 3,
+        "time": "v025",
+        "type": "runaway",
+        "n": 15
+      },
+      {
+        "fold": 3,
+        "time": "v05",
+        "type": "runaway",
+        "n": 13
+      },
+      {
+        "fold": 3,
+        "time": "v1",
+        "type": "runaway",
+        "n": 13
+      },
+      {
+        "fold": 3,
+        "time": "v2",
+        "type": "runaway",
+        "n": 11
+      },
+      {
+        "fold": 3,
+        "time": "w1",
+        "type": "runaway",
+        "n": 15
+      },
+      {
+        "fold": 3,
+        "time": "w10",
+        "type": "runaway",
+        "n": 15
+      },
+      {
+        "fold": 3,
+        "time": "w2",
+        "type": "runaway",
+        "n": 15
+      },
+      {
+        "fold": 3,
+        "time": "w20",
+        "type": "runaway",
+        "n": 15
+      },
+      {
+        "fold": 3,
+        "time": "w5",
+        "type": "runaway",
+        "n": 15
+      }
+    ]
+  },
+  "primary_at_tau": {
+    "1": {
+      "runaway": 30.0,
+      "burst": 39.0,
+      "slow_climb": 40.0,
+      "exhausted": 204.0,
+      "fade": 136.0,
+      "chop": 548.0
+    },
+    "2": {
+      "runaway": 22.0,
+      "burst": 32.0,
+      "slow_climb": 36.0,
+      "exhausted": 126.0,
+      "fade": 97.0,
+      "chop": 491.0
+    },
+    "3": {
+      "runaway": 15.0,
+      "burst": 42.0,
+      "slow_climb": 52.0,
+      "exhausted": 203.0,
+      "fade": 153.0,
+      "chop": 776.0
+    }
+  }
+}

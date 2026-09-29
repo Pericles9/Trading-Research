@@ -98,6 +98,9 @@ def load_data() -> dict:
     pe = pd.read_parquet(S.cache("master_paths_events.parquet"))["event_id"]
     assert (pe.to_numpy() == pop["event_id"].to_numpy()).all()
     base = pop[["event_id", "ticker", "year", "type100", "excluded_dev"]].merge(A, on="event_id", how="left").merge(leak, on="event_id", how="left")
+    for c in A_BOOL:                                   # booleans with nulls can come back from parquet as object
+        base[c] = base[c].map({True: 1.0, False: 0.0}).astype(float)
+    ck["gap_halt_proxy"] = ck["gap_halt_proxy"].map({True: 1.0, False: 0.0}).astype(float)
     _DATA.update({"pop": pop, "base": base, "ck": ck, "gc": gc, "P": P, "pos": pd.Series(np.arange(len(pop)), index=pop["event_id"]),
                   "masks": {f: S.fold_masks(pop, f) for f in S.FOLDS}})
     return _DATA

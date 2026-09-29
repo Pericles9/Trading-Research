@@ -78,7 +78,7 @@ def a12_part(pop: pd.DataFrame) -> dict:
         fl[["ticker", "event_date_canonical", "price_later", "price_earlier", "flag_cross_session_extreme"]], on=["ticker", "event_date_canonical"], how="left")
     have = x["price_later"].notna()
     same = have & np.isclose(x["price_later"], x["last_print_px"], rtol=0, atol=1e-9)
-    after = x["last_print_ns"] > x["tau_ns"]
+    after = x["last_print_ns"].astype("int64") > x["tau_ns"].astype("int64")
     flag = x["flag_cross_session_extreme"].fillna(False).astype(bool)
     by_type = x[have].groupby("type100")["flag_cross_session_extreme"].agg(["mean", "sum", "size"]).reindex(S.TYPES)
     grep = subprocess.run(["git", "grep", "-l", "flag_cross_session_extreme", "--", "*.py"], cwd=S.REPO, capture_output=True, text=True).stdout.split()
@@ -127,25 +127,27 @@ def input_part(pop: pd.DataFrame) -> tuple[pd.DataFrame, int]:
               "ts__filings": "filing_24h, last_form (accepted < tau)", "ts__dilution": "dilution_tau (R3)", "ts__shares": "shares outstanding (R3)",
               "ts__reverse_split": "reverse split in 365 days (last split timestamp)", "ts__short_interest": "short interest share (R2: assumed publication 20:00 ET)"}
     for c, what in groups.items():
-        v = pd.to_numeric(A[c], errors="coerce").to_numpy(dtype=float)
-        ok = np.isfinite(v)
-        lag = (v[ok] - tau[ok]) / S.NS
+        v = S.as_int64(A[c])
+        ok = v.notna().to_numpy()
+        diff = v[ok].astype("int64").to_numpy() - tau[ok]                      # exact integer nanoseconds
+        lag = diff / S.NS
         rows.append({"group": "A", "input": c.replace("ts__", ""), "what": what, "decision_time": "tau", "n": int(ok.sum()),
-                     "n_after_decision": int((v[ok] > tau[ok]).sum()), "max_latest_minus_decision_s": float(lag.max()) if lag.size else None,
+                     "n_after_decision": int((diff > 0).sum()), "max_latest_minus_decision_s": float(lag.max()) if lag.size else None,
                      "median_latest_minus_decision_s": float(np.median(lag)) if lag.size else None})
     ck = pd.read_parquet(S.art("t2_checkpoints.parquet"), columns=["event_id", "time", "state", "d_ns", "ts__B", "ts__tcs", "elapsed_min"])
     r = ck[ck["state"] == "reached"]
     for t in S.TIMES:
         g = r[r["time"] == t]
-        d = g["d_ns"].astype("int64").to_numpy()
+        d = S.as_int64(g["d_ns"]).astype("int64").to_numpy()
         for c, what in (("ts__tcs", "tcs_state (R1)"), ("ts__B", "Group B (prints tau < ts <= d)")):
-            v = g[c].astype("float64").to_numpy()
-            ok = np.isfinite(v)
+            v = S.as_int64(g[c])
+            ok = v.notna().to_numpy()
             if not ok.any():
                 continue
-            lag = (v[ok] - d[ok]) / S.NS
+            diff = v[ok].astype("int64").to_numpy() - d[ok]                      # exact integer nanoseconds
+            lag = diff / S.NS
             rows.append({"group": "B" if c == "ts__B" else "tape", "input": c.replace("ts__", ""), "what": what, "decision_time": t, "n": int(ok.sum()),
-                         "n_after_decision": int((v[ok] > d[ok]).sum()), "max_latest_minus_decision_s": float(lag.max()),
+                         "n_after_decision": int((diff > 0).sum()), "max_latest_minus_decision_s": float(lag.max()),
                          "median_latest_minus_decision_s": float(np.median(lag))})
         if t != "tau":
             grid = S.master_grid_s()

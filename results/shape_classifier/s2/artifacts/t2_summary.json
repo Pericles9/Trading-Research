@@ -1,0 +1,155 @@
+{
+  "config_hash": "f0206c2d8137",
+  "seconds": 805.5,
+  "events": 15519,
+  "states": {
+    "tau": {
+      "not_reached": 0,
+      "reached": 15519,
+      "undefined": 0
+    },
+    "w1": {
+      "not_reached": 0,
+      "reached": 15519,
+      "undefined": 0
+    },
+    "w2": {
+      "not_reached": 0,
+      "reached": 15519,
+      "undefined": 0
+    },
+    "w5": {
+      "not_reached": 0,
+      "reached": 15519,
+      "undefined": 0
+    },
+    "w10": {
+      "not_reached": 0,
+      "reached": 15519,
+      "undefined": 0
+    },
+    "w20": {
+      "not_reached": 0,
+      "reached": 15519,
+      "undefined": 0
+    },
+    "v025": {
+      "not_reached": 443,
+      "reached": 14891,
+      "undefined": 185
+    },
+    "v05": {
+      "not_reached": 1246,
+      "reached": 14088,
+      "undefined": 185
+    },
+    "v1": {
+      "not_reached": 2600,
+      "reached": 12734,
+      "undefined": 185
+    },
+    "v2": {
+      "not_reached": 4503,
+      "reached": 10831,
+      "undefined": 185
+    }
+  },
+  "latest_timestamp_violations": {
+    "group_b": 0,
+    "tcs_state": 0
+  },
+  "tcs_state_counts": {
+    "tau": {
+      "false": 10798,
+      "not_settled": 3591,
+      "true": 1130
+    },
+    "w1": {
+      "false": 13079,
+      "not_settled": 1310,
+      "true": 1130
+    },
+    "w2": {
+      "false": 13079,
+      "true": 2440
+    },
+    "w5": {
+      "false": 13079,
+      "true": 2440
+    },
+    "w10": {
+      "false": 13079,
+      "true": 2440
+    },
+    "w20": {
+      "false": 13079,
+      "true": 2440
+    },
+    "v025": {
+      "false": 12476,
+      "true": 2103,
+      "not_settled": 312
+    },
+    "v05": {
+      "false": 11941,
+      "true": 1991,
+      "not_settled": 156
+    },
+    "v1": {
+      "false": 10935,
+      "true": 1722,
+      "not_settled": 77
+    },
+    "v2": {
+      "false": 9467,
+      "true": 1325,
+      "not_settled": 39
+    }
+  },
+  "tau_confirmation": {
+    "definition": "seconds from the tau print to its successor in the sorted print sequence (the spike guard reads that successor)",
+    "n": 15517,
+    "zero_share": 0.007088085572524003,
+    "quantiles_s": {
+      "0.5": 0.002091881,
+      "0.9": 5.119267002599999,
+      "0.99": 201.58179555252008,
+      "1.0": 10860.631262061
+    }
+  },
+  "minute_bar_crossing_vs_b1": {
+    "both": 15236,
+    "within_128ns_of_b1": 15170,
+    "max_abs_ns": 7282306884162,
+    "exact_only": 0,
+    "b1_only": 0
+  },
+  "tcs_final_vs_b1": {
+    "events": 15519,
+    "equal_to_b1_flag": 15513
+  },
+  "master_grid_points": 2641,
+  "group_c_rows": 477492,
+  "elapsed_min_at_volume_checkpoints": {
+    "v025": {
+      "0.1": 0.07328353773333333,
+      "0.5": 2.7657690469666667,
+      "0.9": 36.93377213866667
+    },
+    "v05": {
+      "0.1": 0.14149557109333336,
+      "0.5": 5.360050640466667,
+      "0.9": 68.90445527629836
+    },
+    "v1": {
+      "0.1": 0.25089705051833344,
+      "0.5": 8.731903326891667,
+      "0.9": 118.2266920753717
+    },
+    "v2": {
+      "0.1": 0.3823137415333333,
+      "0.5": 12.844984642166667,
+      "0.9": 160.66840072933334
+    }
+  }
+}

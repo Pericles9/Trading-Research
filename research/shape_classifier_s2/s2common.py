@@ -120,6 +120,26 @@ def fold_masks(ev: pd.DataFrame, fold: int) -> dict:
     return {"train": train.to_numpy(), "test": test.to_numpy(), "primary": primary.to_numpy(), "sub": sub.to_numpy(), "val": val.to_numpy()}
 
 
+def ns_frame(rows: list[dict], ns_cols: list[str]) -> pd.DataFrame:
+    """DataFrame from row dicts with the nanosecond columns built as exact Int64 (a column mixing ints and None
+    is otherwise inferred as float64, which rounds epoch nanoseconds to 256 ns -- the upstream tau defect)."""
+    df = pd.DataFrame([{k: v for k, v in r.items() if k not in ns_cols} for r in rows])
+    for c in ns_cols:
+        df[c] = pd.array([None if r.get(c) is None or (isinstance(r.get(c), float) and np.isnan(r.get(c))) else int(r.get(c)) for r in rows],
+                         dtype="Int64")
+    return df
+
+
+def as_int64(s: pd.Series) -> pd.Series:
+    """A timestamp column as Int64; float input must hold exact integers (asserted)."""
+    if str(s.dtype) in ("Int64", "int64"):
+        return s.astype("Int64")
+    v = pd.to_numeric(s, errors="coerce")
+    ok = v.notna()
+    assert (v[ok] == np.round(v[ok])).all(), "non-integer timestamp"
+    return v.astype("Int64")
+
+
 def y_codes(labels) -> np.ndarray:
     m = {t: i for i, t in enumerate(TYPES)}
     return np.array([m.get(x, -1) if isinstance(x, str) else -1 for x in labels], dtype=int)

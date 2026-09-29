@@ -44,7 +44,8 @@ def stats(v: np.ndarray, state: np.ndarray) -> dict:
 def main() -> int:
     pred = pd.read_parquet(S.art("t4_predictions.parquet"))
     pred = pred[pred["primary"]]
-    ck = pd.read_parquet(S.art("t2_checkpoints.parquet"))
+    st = pd.read_parquet(S.art("t2_checkpoints.parquet"), columns=["event_id", "time", "state"])
+    ck = pd.read_parquet(S.art("t2_forward.parquet")).merge(st, on=["event_id", "time"])
     ck = ck[ck["state"] == "reached"]
     cols = ["event_id", "time"] + [c for c in ck.columns if c.startswith("fr_")]
     ck = ck[cols]
