@@ -440,5 +440,36 @@
     "report_copy": "results/reports/shape_classifier_s2_report.md",
     "code": "research/shape_classifier_s2/"
   },
-  "seed": 20260928
+  "seed": 20260928,
+  "amendment_1": {
+    "brief": "prompts/shape_classifier_s2_amendment_1.md (Cooper, 2026-09-29), after the row 3 HARD STOP at 92c99cc; R1-R5 stand",
+    "A1_1_row3": "revised: M3 (class weight none and balanced) must reach AUC >= 0.95 in every per-fold primary cell of the rule-inputs positive control, every type and decision time, for each label; M2 reported beside it, ungated. Cleared on the committed run (M3 1.000 in all 360 cells).",
+    "A1_2_crossing": "T2 calls b1's common.first_crossing on the full print arrays with lo / hi = the 04:00 / 20:00 indices (as b1 did), so the 04:00 print is judged against its predecessor; affects the R1 tcs_state input only",
+    "A1_3_labels": {
+      "primary_after_tau": "remaining-path type at each checkpoint after tau: S1's rules unchanged (config/shape_atlas_s1.json theory_types) applied to the path from the checkpoint's entry to 20:00",
+      "path": "entry = the first print with ts > d (the zero-latency entry of T2); element 0 = the entry print's price; N = 100 equal-volume buckets (instruments.bucketize) over the prints with ts > the entry's timestamp up to the last print <= 20:00 -- S1's post-tau construction with the entry print in tau's place",
+      "components_and_null": "s1common.real_pipeline / null_pipeline unchanged: sigma_path from the path's own bucket log returns; 200 draws with replacement of its own demeaned bucket returns; rise_pct / fall_pct = mid-rank percentiles against the draws with sigma > 0; rng = numpy default_rng([20260927 (S1's null seed), S1 event_index, 10 + the checkpoint's position in the decision-time order, 100])",
+      "unavailable": "no entry print before 20:00 (no_entry); fewer than 2 prints after the entry (path_too_short); untyped when the path's sigma_path is zero or no null draw has sigma > 0 -- carried and counted, never fitted or scored at that checkpoint",
+      "at_tau": "the two labels are the same by construction (brief A1.3): the remaining-label results at tau are the whole-label results at tau, copied (identical label vector and pipeline)",
+      "secondary": "the whole-path type (S1, N = 100), as run, re-run with the A1.2 fix; N = 50 / 200 rung labels stay with the whole label only",
+      "group_c_and_m4": "for the remaining label, the typical paths (tune and final stages) and the M4 votes use the training events' remaining-path type at that checkpoint; the path so far and its grid are unchanged",
+      "m0": "shares of the label among the labelled training events that reached the checkpoint",
+      "positive_control": "rules = the remaining path's rise_pct, fall_pct, u_peak at the checkpoint (gated, M3); terminal_log = the remaining path's terminal log return (reported, ungated); at tau the whole path's"
+    },
+    "A1_4_money_intervals": {
+      "sets": "per label, model variant, type and decision time: top decile (score >= its 90th percentile within each fold's primary test set, ties included) and bottom decile (score <= its 10th percentile), pooled over the three folds; against all labelled primary test events that reached the decision time",
+      "statistics": "median net forward return of the top decile, the bottom decile and all; differences top - all and bottom - all",
+      "intervals": "95% percentile intervals from 500 ticker bootstrap resamples of the pooled primary test set (its tickers are disjoint across folds); a resample weights each row by its ticker's draw count; weighted medians; the same resample serves the subset and all, so the difference is paired",
+      "grid": "every horizon (+10, +30, +60 min, to 20:00), entry (next print, >= d + 1 s, >= d + 5 s) and unit (net bp, net cents)",
+      "seed": 20260929
+    },
+    "A1_5_scope": "re-run T2 (A1.2), T3 (remaining-path labels: t3a_remaining_labels.py; folds and counts for both labels), T0 (the audit of the re-built inputs), T4-T8 for both labels; models, grid, folds, controls and escalation rows unchanged except row 3 (A1.1). Stop after the report.",
+    "A1_5_report_additions": [
+      "AUC by time for both labels side by side",
+      "how often a checkpoint's remaining-path type differs from the whole-path type, per type",
+      "the A1.4 intervals"
+    ],
+    "charts": "every page gains a label selector; charts/t6/money_intervals.html is added (the A1.4 differences with intervals, all entries and units); forward_returns.html keeps the next-print entry only (the latency sensitivity is on money_intervals.html) and adds the bottom decile, to keep the page under ~25 MB",
+    "A1_6_a12": "recorded: the tm1_t0 A12 flag reads the event day's own last trade (T0), so the 32 earlier with/without splits were partly splits on the event day's outcome; a retraction-sweep note and a split-record corporate-action flag are listed for Cooper as a separate item, not part of this re-run"
+  }
 }

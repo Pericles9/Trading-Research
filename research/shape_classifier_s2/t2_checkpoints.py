@@ -135,16 +135,18 @@ def one(rec: dict):
     date, tau, p_tau = rec["event_date_canonical"], int(rec["tau_d_ns"]), float(rec["tau_price"])     # tau = tau_d
     t0400, t2000 = C1.et_ns(date, "04:00:00"), C1.et_ns(date, "20:00:00")
     a, b = int(np.searchsorted(tr["ts"], t0400, "left")), int(np.searchsorted(tr["ts"], t2000, "right"))
+    # the minute-bar-close crossing print, exactly as b1 computed it (first_crossing, 1.30 x the minute-bar close,
+    # spike guard 3% / 3%) on the FULL arrays with lo / hi = the 04:00 / 20:00 indices, so the 04:00 print is judged
+    # against its predecessor (Amendment 1 A1.2) -- a future event for most decision times; only its having
+    # happened by d is ever used
+    mb = rec["mb_close"]
+    i_mb = C1.first_crossing(tr["px"], a, b, CFG_B1["crossing_multiple"] * mb, CFG_B1["spike_guard"]["deviation_threshold"],
+                             CFG_B1["spike_guard"]["neighbour_agreement"])[0] if pd.notna(mb) and mb > 0 else None
+    tau_mb_x = int(tr["ts"][i_mb]) if i_mb is not None else None
     ts, px, sz = tr["ts"][a:b].copy(), tr["px"][a:b].copy(), tr["sz"][a:b].copy()
     del tr
     op, cl = C1.rth_bounds_ns(date)
     spk_all = S.spike_flags(px)
-    # the minute-bar-close crossing print, exactly as b1 computed it (first_crossing, 1.30 x the minute-bar close,
-    # spike guard 3% / 3%) -- a future event for most decision times; only its having happened by d is ever used
-    mb = rec["mb_close"]
-    i_mb = C1.first_crossing(px, 0, px.size, CFG_B1["crossing_multiple"] * mb, CFG_B1["spike_guard"]["deviation_threshold"],
-                             CFG_B1["spike_guard"]["neighbour_agreement"])[0] if pd.notna(mb) and mb > 0 else None
-    tau_mb_x = int(ts[i_mb]) if i_mb is not None else None
     # the tau print and its successor (the spike guard's read)
     at = np.flatnonzero((ts == int(rec["tau_exact_ns"])) & (px == p_tau))
     i_tau = int(at[0])

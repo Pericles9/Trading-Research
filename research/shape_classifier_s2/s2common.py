@@ -140,6 +140,29 @@ def as_int64(s: pd.Series) -> pd.Series:
     return v.astype("Int64")
 
 
+LABELS = ["remaining", "whole"]          # Amendment 1 A1.3: primary = the remaining-path type, secondary = the whole-path type
+LABEL_NAME = {"remaining": "remaining-path type (primary, A1.3)", "whole": "whole-path type (secondary, as run)"}
+_REM = None
+
+
+def remaining_table() -> pd.DataFrame:
+    """T3a's per-(event, decision time) remaining-path labels and their leak inputs."""
+    global _REM
+    if _REM is None:
+        _REM = pd.read_parquet(art("t3a_remaining_labels.parquet"),
+                               columns=["event_id", "time", "rem_state", "rem_type", "rem_rise_pct", "rem_fall_pct", "rem_u_peak", "rem_terminal_log"])
+    return _REM
+
+
+def labels_at(pop: pd.DataFrame, label: str, time_key: str) -> np.ndarray:
+    """Each population event's label at a decision time (object array, None where there is none)."""
+    if label == "whole":
+        return pop["type100"].to_numpy()
+    r = remaining_table()
+    m = r[r["time"] == time_key].set_index("event_id")["rem_type"]
+    return pop["event_id"].map(m).to_numpy()
+
+
 def y_codes(labels) -> np.ndarray:
     m = {t: i for i, t in enumerate(TYPES)}
     return np.array([m.get(x, -1) if isinstance(x, str) else -1 for x in labels], dtype=int)

@@ -31,13 +31,18 @@ EDGES = np.array(S.load_cfg()["scores"]["calibration_edges"])
 
 def score(pred: pd.DataFrame, prefix: str = "t4", boot: bool = True) -> dict:
     pop = S.load_population()
-    lab = {N: pop.set_index("event_id")[f"type{N}"] for N in (50, 100, 200)}
+    whole = {N: pop.set_index("event_id")[f"type{N}"] for N in (50, 100, 200)}
+    rem = S.remaining_table()
     tick = pop.set_index("event_id")["ticker"]
     r5 = pd.read_parquet(S.art("t3_row5.parquet"))
-    r5k = set(zip(r5["fold"], r5["time"], r5["type"]))
+    r5k = set(zip(r5["label"], r5["fold"], r5["time"], r5["type"]))
     PC = [f"p_{t}" for t in S.TYPES]
     auc, lift, cal, ll, conf = [], [], [], [], []
-    for (fold, tkey), g in pred.groupby(["fold", "time"], sort=False):
+    for (label, fold, tkey), g in pred.groupby(["label", "fold", "time"], sort=False):
+        if label == "whole":
+            lab = whole
+        else:                                   # the remaining-path type at this decision time (N = 100 only)
+            lab = {100: rem[rem["time"] == tkey].set_index("event_id")["rem_type"]}
         m0 = g[(g["model"] == "M0")]
         for read in ("primary", "secondary"):
             rows0 = m0 if read == "secondary" else m0[m0["primary"]]
@@ -51,7 +56,7 @@ def score(pred: pd.DataFrame, prefix: str = "t4", boot: bool = True) -> dict:
                 gm = gm if read == "secondary" else gm[gm["primary"]]
                 gm = gm.set_index("event_id").loc[ids]
                 Pm = gm[PC].to_numpy(dtype=float)
-                key = {"fold": fold, "time": tkey, "model": mdl, "cw": cw, "read": read}
+                key = {"label": label, "fold": fold, "time": tkey, "model": mdl, "cw": cw, "read": read}
                 L = S.log_loss(y100, Pm)
                 ll.append({**key, "n": len(ids), "log_loss": L, "log_loss_m0": ll0, "skill": 1.0 - L / ll0})
                 am = Pm.argmax(axis=1)
@@ -62,8 +67,8 @@ def score(pred: pd.DataFrame, prefix: str = "t4", boot: bool = True) -> dict:
                         conf.append({**key, "true": ti, "pred": tj, "n": int(cm[i, j])})
                 for i, t in enumerate(S.TYPES):
                     s = Pm[:, i]
-                    readable = not (read == "primary" and (fold, tkey, t) in r5k)
-                    for N in (100, 50, 200):
+                    readable = not (read == "primary" and (label, fold, tkey, t) in r5k)
+                    for N in [n for n in (100, 50, 200) if n in lab]:
                         y = S.y_codes(lab[N].loc[ids].to_numpy()) == i
                         ok = S.y_codes(lab[N].loc[ids].to_numpy()) >= 0
                         if N == 100 and boot:
@@ -90,33 +95,28 @@ def score(pred: pd.DataFrame, prefix: str = "t4", boot: bool = True) -> dict:
     return out
 
 
-def auc_table(auc: pd.DataFrame, read: str = "primary") -> pd.DataFrame:
-    a = auc[(auc["read"] == read) & (auc["label_N"] == 100)]
-    t = a.pivot_table(index=["model", "cw", "type"], columns=["time", "fold"], values="auc")
-    return t
-
-
 def main() -> int:
     name = sys.argv[1] if len(sys.argv) > 1 else "t4_predictions.parquet"
     prefix = sys.argv[2] if len(sys.argv) > 2 else "t4"
     pred = pd.read_parquet(S.art(name))
     out = score(pred, prefix)
     a = out["auc"]
-    p = a[(a["read"] == "primary") & (a["label_N"] == 100)]
-    tab = p.groupby(["model", "cw", "type", "time"]).agg(auc_mean=("auc", "mean"), auc_min=("auc", "min"), auc_max=("auc", "max"),
-                                                          n_type=("n_type", "sum"), folds_read=("read_ok", "sum")).reset_index()
+    p = a[(a["read"] == "primary") & (a["label_N"] == 100) & a["read_ok"]]          # row 5: unread folds left out of the means
+    tab = p.groupby(["label", "model", "cw", "type", "time"]).agg(auc_mean=("auc", "mean"), auc_min=("auc", "min"), auc_max=("auc", "max"),
+                                                                   n_type=("n_type", "sum"), folds_read=("read_ok", "sum")).reset_index()
     S.write_json(f"{prefix}_scores_summary.json", {
         "config_hash": S.cfg_hash(), "bootstrap": {"B": B, "unit": "ticker", "seed": f"{S.SEED} + fold"},
-        "primary_auc_by_time": {f"{r.model}|{r.cw}|{r.type}|{r.time}": {"mean": r.auc_mean, "min": r.auc_min, "max": r.auc_max,
+        "primary_auc_by_time": {f"{r.label}|{r.model}|{r.cw}|{r.type}|{r.time}": {"mean": r.auc_mean, "min": r.auc_min, "max": r.auc_max,
                                                                        "n_type_3folds": int(r.n_type), "folds_read": int(r.folds_read)}
                                 for r in tab.itertuples()},
-        "logloss_skill_primary": {f"{m}|{c}|{t}": v for (m, c, t), v in
-                                  out["logloss"][out["logloss"]["read"] == "primary"].groupby(["model", "cw", "time"])["skill"].mean().items()},
+        "logloss_skill_primary": {f"{lb}|{m}|{c}|{t}": v for (lb, m, c, t), v in
+                                  out["logloss"][out["logloss"]["read"] == "primary"].groupby(["label", "model", "cw", "time"])["skill"].mean().items()},
     })
-    for mdl in ("M3", "M2"):
-        t = tab[(tab["model"] == mdl) & (tab["cw"] == "none")].pivot(index="type", columns="time", values="auc_mean").reindex(S.TYPES)[S.TIMES]
-        print(mdl, "none, primary AUC (mean of 3 folds)")
-        print(t.round(3).to_string())
+    for lb in S.LABELS:
+        for mdl in ("M3", "M2"):
+            t = tab[(tab["label"] == lb) & (tab["model"] == mdl) & (tab["cw"] == "none")].pivot(index="type", columns="time", values="auc_mean").reindex(S.TYPES)[S.TIMES]
+            print(lb, mdl, "none, primary AUC (mean of the readable folds)")
+            print(t.round(3).to_string())
     return 0
 
 

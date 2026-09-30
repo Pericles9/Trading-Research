@@ -18,8 +18,11 @@ training window (Group C 'final') and predicts the test year. The test year is n
 The same `run_job` serves T5: permuted training labels (typical paths rebuilt from them by the caller), fixed
 settings, extra (leak) inputs.
 
-Writes artifacts/t4_predictions.parquet (test events x fold x time x model: six probabilities),
-t4_tuning.parquet, t4_summary.json.
+Amendment 1: every job runs for both labels -- the remaining-path type at the decision time (primary, A1.3) and the
+whole-path type (secondary); at tau the remaining label is the whole label, so its results are copied.
+
+Writes artifacts/t4_predictions.parquet (label x test events x fold x time x model: six probabilities),
+t4_tuning.parquet, t4_group_c_remaining.parquet, t4_summary.json.
 
 Usage: .venv/Scripts/python.exe research/shape_classifier_s2/t4_models.py
 """
@@ -62,6 +65,7 @@ M2_GRID = [{"C": c} for c in (0.1, 1.0, 10.0)]
 M3_GRID = [{"learning_rate": lr, "max_leaf_nodes": ml, "max_iter": it} for lr, ml, it in itertools.product((0.03, 0.1), (15, 31), (200, 500))]
 M4_GRID = [{"k": k} for k in (25, 50, 100)]
 CWS = ("none", "balanced")
+LEAK_COLS = ["leak_rise_pct", "leak_fall_pct", "leak_u_peak", "leak_terminal_log"]
 
 
 def inputs_for(time_key: str, extra: tuple = ()) -> tuple[list, list, list]:
@@ -91,9 +95,16 @@ def load_data() -> dict:
     for c in ("z_ret", "z_high", "z_dd", "rv_ratio"):
         ck[f"asinh_{c}"] = np.arcsinh(ck[c])
     gc = pd.read_parquet(S.art("t2_group_c.parquet"))
+    gcr = pd.read_parquet(S.art("t4_group_c_remaining.parquet")) if S.art("t4_group_c_remaining.parquet").exists() else None
     s1 = pd.read_parquet(S.src("s1_events"), columns=["event_id", "post100_rise_pct", "post100_fall_pct", "post100_u_peak"])
     ex = pd.read_parquet(S.src("b2_excursion"), columns=["event_id", "N", "terminal_log"])
     leak = s1.merge(ex[ex["N"] == 100][["event_id", "terminal_log"]], on="event_id", how="left")
+    # the positive control's leak inputs, per label (A1.3): whole = S1's post-tau rule inputs and b2's terminal_log;
+    # remaining = T3a's remaining-path rule inputs at the decision time
+    leak = leak.rename(columns={"post100_rise_pct": "wleak_rise_pct", "post100_fall_pct": "wleak_fall_pct", "post100_u_peak": "wleak_u_peak",
+                                "terminal_log": "wleak_terminal_log"})
+    rem = S.remaining_table().rename(columns={"rem_rise_pct": "leak_rise_pct", "rem_fall_pct": "leak_fall_pct", "rem_u_peak": "leak_u_peak",
+                                              "rem_terminal_log": "leak_terminal_log"})[["event_id", "time"] + LEAK_COLS]
     P = np.load(S.cache("master_paths.npy"), mmap_mode="r")
     pe = pd.read_parquet(S.cache("master_paths_events.parquet"))["event_id"]
     assert (pe.to_numpy() == pop["event_id"].to_numpy()).all()
@@ -101,18 +112,24 @@ def load_data() -> dict:
     for c in A_BOOL:                                   # booleans with nulls can come back from parquet as object
         base[c] = base[c].map({True: 1.0, False: 0.0}).astype(float)
     ck["gap_halt_proxy"] = ck["gap_halt_proxy"].map({True: 1.0, False: 0.0}).astype(float)
-    _DATA.update({"pop": pop, "base": base, "ck": ck, "gc": gc, "P": P, "pos": pd.Series(np.arange(len(pop)), index=pop["event_id"]),
+    _DATA.update({"pop": pop, "base": base, "ck": ck, "gc": gc, "gc_remaining": gcr, "rem_leak": rem, "P": P, "pos": pd.Series(np.arange(len(pop)), index=pop["event_id"]),
                   "masks": {f: S.fold_masks(pop, f) for f in S.FOLDS}})
     return _DATA
 
 
-def frame(time_key: str, fold: int, stage: str, gc: pd.DataFrame | None = None) -> pd.DataFrame:
-    """One row per event that reached `time_key`, with every input (Group C from the fold's `stage`)."""
+def frame(time_key: str, fold: int, stage: str, gc: pd.DataFrame | None = None, label: str = "whole") -> pd.DataFrame:
+    """One row per event that reached `time_key`, with every input (Group C from the fold's `stage`, built from
+    `label`'s typical paths) and the label's leak columns (used only by T5's positive control)."""
     D = load_data()
     ck = D["ck"][D["ck"]["time"] == time_key]
     f = D["base"].merge(ck, on="event_id", how="inner")
+    if label == "whole":
+        for c in LEAK_COLS:
+            f[c] = f["w" + c]
+    else:
+        f = f.merge(D["rem_leak"][D["rem_leak"]["time"] == time_key].drop(columns="time"), on="event_id", how="left")
     if time_key != "tau":
-        g = D["gc"] if gc is None else gc
+        g = gc if gc is not None else (D["gc"] if label == "whole" else D["gc_remaining"])
         g = g[(g["time"] == time_key) & (g["fold"] == fold) & (g["stage"] == stage)][["event_id"] + C_NUM]
         f = f.merge(g, on="event_id", how="left")
     f["row"] = f["event_id"].map(D["pos"]).to_numpy()
@@ -274,23 +291,27 @@ def m4_predict(P, fit_rows, y_fit, q_rows, q_E_s, ks, cw) -> dict:
 
 # ------------------------------------------------------------------ one fold x decision time
 
-def run_job(fold: int, time_key: str, *, labels: np.ndarray | None = None, gc: pd.DataFrame | None = None, fixed: dict | None = None,
-            extra: tuple = (), models: tuple = ("M0", "M1", "M2", "M3", "M4"), seed: int = S.SEED) -> dict:
-    """Fit and predict one fold x decision time. `labels` (aligned to the population) replaces type100 for
-    fitting (T5 negative control); `gc` replaces the Group C table (typical paths from those labels); `fixed`
+def run_job(fold: int, time_key: str, *, label: str = "whole", labels: np.ndarray | None = None, gc: pd.DataFrame | None = None,
+            fixed: dict | None = None, extra: tuple = (), models: tuple = ("M0", "M1", "M2", "M3", "M4"), seed: int = S.SEED) -> dict:
+    """Fit and predict one label x fold x decision time. The label is the whole-path type or the remaining-path type
+    at `time_key` (Amendment 1); rows without it are neither fitted nor scored. `labels` (aligned to the population)
+    replaces it (T5 negative control); `gc` replaces the Group C table (typical paths from those labels); `fixed`
     {(model, cw): setting} skips tuning; `extra` adds input columns (T5 positive control)."""
     D = load_data()
     M = D["masks"][fold]
     num, boo, cat = inputs_for(time_key, extra)
-    lab = D["pop"]["type100"].to_numpy() if labels is None else labels
+    lab = S.labels_at(D["pop"], label, time_key) if labels is None else labels
     ycode = S.y_codes(lab)
-    fin = frame(time_key, fold, "final", gc)
-    tr, te = fin[M["train"][fin["row"]]], fin[M["test"][fin["row"]]]
+
+    def has(df):
+        return df[ycode[df["row"].to_numpy()] >= 0]
+    fin = frame(time_key, fold, "final", gc, label)
+    tr, te = has(fin[M["train"][fin["row"]]]), has(fin[M["test"][fin["row"]]])
     y_tr = ycode[tr["row"]]
     preds, tuning = {}, []
     if fixed is None:
-        tun = frame(time_key, fold, "tune", gc)
-        sub, val = tun[M["sub"][tun["row"]]], tun[M["val"][tun["row"]]]
+        tun = frame(time_key, fold, "tune", gc, label)
+        sub, val = has(tun[M["sub"][tun["row"]]]), has(tun[M["val"][tun["row"]]])
         y_sub, y_val = ycode[sub["row"]], ycode[val["row"]]
     chosen = {}
 
@@ -301,7 +322,7 @@ def run_job(fold: int, time_key: str, *, labels: np.ndarray | None = None, gc: p
         best = None
         for st in grid:
             ll = score_fn(st)
-            tuning.append({"fold": fold, "time": time_key, "model": name, "cw": cw, "setting": str(st), "val_log_loss": ll,
+            tuning.append({"label": label, "fold": fold, "time": time_key, "model": name, "cw": cw, "setting": str(st), "val_log_loss": ll,
                            "n_sub": int(len(sub)), "n_val": int(len(val))})
             if best is None or ll < best[0]:
                 best = (ll, st)
@@ -339,38 +360,63 @@ def run_job(fold: int, time_key: str, *, labels: np.ndarray | None = None, gc: p
     for (name, cw), p in preds.items():
         df = pd.DataFrame(p.astype(np.float32), columns=[f"p_{t}" for t in S.TYPES])
         df.insert(0, "event_id", te["event_id"].to_numpy())
-        df.insert(1, "fold", fold)
-        df.insert(2, "time", time_key)
-        df.insert(3, "model", name)
-        df.insert(4, "cw", cw)
-        df.insert(5, "primary", prim)
+        df.insert(1, "label", label)
+        df.insert(2, "fold", fold)
+        df.insert(3, "time", time_key)
+        df.insert(4, "model", name)
+        df.insert(5, "cw", cw)
+        df.insert(6, "primary", prim)
         rows.append(df)
     return {"pred": pd.concat(rows, ignore_index=True), "tuning": pd.DataFrame(tuning), "chosen": {f"{k[0]}|{k[1]}": v for k, v in chosen.items()},
             "n": {"train": int(len(tr)), "test": int(len(te)), "primary": int(prim.sum())}}
 
 
 def _job(args):
-    fold, time_key = args
+    label, fold, time_key = args
     t0 = time.perf_counter()
-    r = run_job(fold, time_key)
+    r = run_job(fold, time_key, label=label)
     r["seconds"] = round(time.perf_counter() - t0, 1)
-    r["fold"], r["time"] = fold, time_key
+    r["label"], r["fold"], r["time"] = label, fold, time_key
     return r
+
+
+def group_c_remaining() -> pd.DataFrame:
+    """Group C for the remaining label (A1.3): per decision time after tau, the typical paths of each fold's
+    training events grouped by their remaining-path type at that time (tune and final stages), and every event's
+    six distances -- T2's group_c, unchanged, given that time's labels."""
+    import t2_checkpoints as T2
+    D = load_data()
+    pop, out = D["pop"], []
+    masks = T2.stage_masks(pop)
+    for t in S.TIMES[1:]:
+        g, _ = T2.group_c(pop, D["P"], D["ck"][D["ck"]["time"] == t], pd.Series(S.labels_at(pop, "remaining", t)), masks)
+        out.append(g)
+    gc = pd.concat(out, ignore_index=True)
+    gc["config_hash"] = S.cfg_hash()
+    return gc
 
 
 def main() -> int:
     t_start = time.perf_counter()
-    jobs = [(f, t) for t in S.TIMES for f in S.FOLDS]
+    gcr = group_c_remaining()
+    gcr.to_parquet(S.art("t4_group_c_remaining.parquet"), index=False, compression="zstd")
+    print(f"remaining-label Group C {time.perf_counter() - t_start:,.0f}s", flush=True)
+    _DATA.clear()
+    jobs = [("whole", f, t) for t in S.TIMES for f in S.FOLDS] + [("remaining", f, t) for t in S.TIMES[1:] for f in S.FOLDS]
     preds, tun, chosen = [], [], []
     with ProcessPoolExecutor(max_workers=4) as ex:
         for r in ex.map(_job, jobs):
             preds.append(r["pred"])
             tun.append(r["tuning"])
-            chosen.append({"fold": r["fold"], "time": r["time"], "seconds": r["seconds"], **r["n"], "chosen": r["chosen"]})
-            print(f"  fold {r['fold']} {r['time']:>5}  n={r['n']}  {r['seconds']}s  total {time.perf_counter() - t_start:,.0f}s", flush=True)
+            chosen.append({"label": r["label"], "fold": r["fold"], "time": r["time"], "seconds": r["seconds"], **r["n"], "chosen": r["chosen"]})
+            print(f"  {r['label']:>9} fold {r['fold']} {r['time']:>5}  n={r['n']}  {r['seconds']}s  total {time.perf_counter() - t_start:,.0f}s", flush=True)
+    # tau: the remaining label is the whole label by construction (A1.3); its results are the whole-label results
+    for lst in (preds, tun):
+        lst.extend([x[(x["label"] == "whole") & (x["time"] == "tau")].assign(label="remaining") for x in list(lst) if len(x)])
+    chosen += [{**c, "label": "remaining", "copied_from": "whole"} for c in list(chosen) if c["label"] == "whole" and c["time"] == "tau"]
     pr = pd.concat(preds, ignore_index=True)
     pr["config_hash"] = S.cfg_hash()
-    pr.to_parquet(S.art("t4_predictions.parquet"), index=False)
+    pr.to_parquet(S.art("t4_predictions.parquet"), index=False, compression="zstd")
     tu = pd.concat(tun, ignore_index=True)
     tu["chosen"] = tu["chosen"].fillna(False).astype(bool) if "chosen" in tu else False
     tu.to_parquet(S.art("t4_tuning.parquet"), index=False)
