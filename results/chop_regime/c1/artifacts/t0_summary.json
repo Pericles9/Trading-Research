@@ -1,0 +1,137 @@
+{
+  "config_hash": "69463d37b6ff",
+  "seconds": 84.5,
+  "tau_source": "results/shape_classifier/s2/artifacts/t1_group_a.parquet c__tau_d_ns (S2 tau_d = max(stored tau, crossing print)); int64 on read; equals S2 t2_checkpoints d_ns at 'tau' for every event",
+  "population": {
+    "slices_development": 7620,
+    "development_with_tau": 7525,
+    "b2_development_tau_available": 7525,
+    "development_without_tau": {
+      "never_crosses": 78,
+      "prior_close_unavailable": 17
+    },
+    "slices_quarantine": 56,
+    "quarantine_with_tau": 53,
+    "b2_quarantine_tau_available": 53,
+    "quarantine_without_tau": [
+      {
+        "event_id": "RBC_2022-09-26_44.21",
+        "tau_reason": "prior_close_unavailable"
+      },
+      {
+        "event_id": "LVRO_2023-03-20_31.54",
+        "tau_reason": "never_crosses"
+      },
+      {
+        "event_id": "NUKK_2022-04-18_50.37",
+        "tau_reason": "never_crosses"
+      }
+    ],
+    "quarantine_by_group": {
+      "dev_v3": 49,
+      "dev_v4_sidecar": 4
+    },
+    "development_by_year": {
+      "2020": 3379,
+      "2021": 1913,
+      "2022": 2233
+    },
+    "development_by_tau_segment": {
+      "regular": 5353,
+      "premarket": 2069,
+      "auction_open": 77,
+      "auction_close": 19,
+      "after_hours": 7
+    },
+    "development_quotes_ingested_false": 31,
+    "development_quotes_event_day_false": 35,
+    "development_v_pre_undefined": 96,
+    "development_shares_outstanding_missing": 1598,
+    "tau_after_stored": 3467
+  },
+  "tests": {
+    "causality": {
+      "quote_state/quote": "raised",
+      "tw_spread/quote": "raised",
+      "rate_ladder/print": "raised",
+      "rate_measures/print": "raised",
+      "bucket_path/print": "raised",
+      "bucket_path/quote": "raised",
+      "clean_inputs_do_not_raise": "ok",
+      "passes": true
+    },
+    "segment": {
+      "regular_window_reaching_into_open_auction": "raised",
+      "regular_window_reaching_premarket": "raised",
+      "after_hours_window_holding_close_auction": "raised",
+      "premarket_window_before_0400": "raised",
+      "t_in_auction_minute": "raised",
+      "rate_measures_window_in_auction": "raised",
+      "bucket_path_window_in_auction": "raised",
+      "inside_regular_does_not_raise": "ok",
+      "passes": true
+    },
+    "bucket_equality": {
+      "windows": 200,
+      "max_rel_vwap_diff": 4.118927421359331e-14,
+      "max_t_end_diff_ns": 0,
+      "passes": true
+    }
+  },
+  "quote_size_census": {
+    "2020": {
+      "events": 100,
+      "events_with_quotes": 100,
+      "sizes": 9749612,
+      "share_multiple_of_100": 1.0,
+      "size_median_of_event_medians": 300.0,
+      "at_touch_trades": 2924871,
+      "median_trade_over_displayed": 0.16666666666666666,
+      "share_trade_le_displayed": 0.9203004166679488,
+      "unit": "shares",
+      "depth_multiplier": 1.0
+    },
+    "2021": {
+      "events": 100,
+      "events_with_quotes": 100,
+      "sizes": 14757270,
+      "share_multiple_of_100": 1.0,
+      "size_median_of_event_medians": 300.0,
+      "at_touch_trades": 5187917,
+      "median_trade_over_displayed": 0.1625,
+      "share_trade_le_displayed": 0.9073531824044216,
+      "unit": "shares",
+      "depth_multiplier": 1.0
+    },
+    "2022": {
+      "events": 100,
+      "events_with_quotes": 98,
+      "sizes": 11460556,
+      "share_multiple_of_100": 1.0,
+      "size_median_of_event_medians": 300.0,
+      "at_touch_trades": 3343458,
+      "median_trade_over_displayed": 0.120625,
+      "share_trade_le_displayed": 0.9214687308768347,
+      "unit": "shares",
+      "depth_multiplier": 1.0
+    }
+  },
+  "row4_years": [],
+  "timing": {
+    "events_timed": 53,
+    "seconds_total": 25.76092219928978,
+    "seconds_median": 0.4000969000044279,
+    "seconds_max": 1.8236271999776363,
+    "fit": {
+      "a_s": 0.2797215571091441,
+      "b_s_per_print": 2.7033637971273574e-06
+    },
+    "dev_events": 7525,
+    "dev_prints_total": 760693215.0,
+    "serial_hours": 1.1559264487215908,
+    "workers": 10,
+    "extrapolated_wall_hours": 0.11559264487215908,
+    "ceiling_hours": 6,
+    "row10_fires": false
+  }
+}
