@@ -1908,3 +1908,40 @@ reported side by side. The standing ticker-blocked rule is otherwise unchanged.
 **Numbering note.** Recorded as D39, confirmed free by reading this file and the same file on every
 `origin/*` branch (highest D38 on `explore/attention-excursion-b1` and `-b2`, D37 elsewhere).
 `CLAUDE.md`'s pointer list is updated in the same commit. **Next free number: D40.**
+
+## D40 — 2025 is sealed for the book as a whole
+
+> **D40 — 2025 is sealed for the book as a whole.**
+> *Date:* 2026-09-30 · *Gate:* chop regime C1, Cooper-approved.
+> **Decision.** The 2025 events (file2, outside D1, about 5,200) are read once, for the book of long-only
+> strategies as a whole, after every component (regime filters, entries, exits, sizing) is frozen and
+> committed. No component is tested on 2025 on its own. Components are checked on 2023–24, with tickers
+> absent from 2020–22 as the primary read and all events beside it, clustered by ticker.
+> **Why.** Every D1 year has been read (S2's rolling folds tested 2022, 2023 and 2024). 2025 is the only
+> untouched data. Spending it on one component leaves the book with no clean test.
+> **Scope.** Anything that fits, tunes or selects, including a threshold set by eye.
+
+Appended verbatim from `prompts/chop_regime_c1.md` §2 by C1's T0, on branch `explore/chop-regime-c1`.
+**Numbering note.** Recorded as D40, confirmed free by reading this file and the same file on every
+`origin/*` branch (highest D39 on `origin/master`, `origin/explore/shape-atlas-s1` and
+`origin/explore/shape-classifier-s2`; lower elsewhere).
+
+## D41 — Chop regime C1's suite is an exploratory, by-eye exception to D32
+
+**Date:** 2026-09-30 · **Gate:** chop regime C1 (`prompts/chop_regime_c1.md`), flagged at T0 before the
+config was committed · **Approved by Cooper:** "Log D41 exception (Recommended)", 2026-09-30.
+
+**Decision.** C1's tuning suite may put F1-layer columns beside outcome panels: `turnover_t` and
+`turnover_rate` (their denominator is F1's split-corrected share count, re-anchored at τ by S2) as a
+by-eye filter condition and in the G2 gallery finder, and the dilution flag as a facet on the outcome
+panels. Every such view shows full distributions with n.
+
+**Scope.** C1's suite only. It is exploratory and set by eye; it is not the pre-registered partition test
+D32 Amendment A1 authorises, it does not satisfy A1's gating sentence, and nothing it shows reopens D24 or
+D25 or changes the universe definition. A committed filter that holds a turnover condition, when C2 checks
+it on 2023–24, inherits this question: that check is not an A1 test either unless a brief makes it one.
+Any other use of a fundamental column against an outcome as evidence still goes through D32 A1.
+
+**Numbering note.** Recorded as D41, appended in the same commit as D40 (register highest D39 on every
+`origin/*` branch before this commit). `CLAUDE.md`'s pointer list is updated in the same commit.
+**Next free number: D42.**

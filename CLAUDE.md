@@ -221,8 +221,14 @@
     attention/excursion Brief 1 T0c) · **D39 shape atlas S1 is an exploratory, hindsight-by-design
     exception to D32 -- it may describe F1-layer columns (shares outstanding, reverse split, short
     interest, turnover, filing/dilution flags) per post-tau path type; not a D32 A1 partition test,
-    reopens nothing; its across-time split is also run ticker-blocked** (2026-09-27, shape atlas S1).
-  - **Next free number: D40.**
+    reopens nothing; its across-time split is also run ticker-blocked** (2026-09-27, shape atlas S1) ·
+    **D40 2025 is sealed for the book as a whole -- read once, after every component (regime filters,
+    entries, exits, sizing) is frozen; components are checked on 2023-24, first-seen tickers primary**
+    (2026-09-30, chop regime C1) · **D41 chop regime C1's suite is an exploratory, by-eye exception to
+    D32 -- turnover (F1 denominator) as a condition and G2 finder input, the dilution flag as a facet,
+    beside outcome panels; not a D32 A1 partition test, reopens nothing; C2's check inherits the
+    question** (2026-09-30, chop regime C1).
+  - **Next free number: D42.**
 - Repo map: docs/Research-Library-Map.md. Data layout: docs/data/Schema.md (tracked copy of
   record; `data/Schema.md` is a local, untracked mirror — `.gitignore` excludes `/data/` wholly,
   so edit the tracked copy and mirror the change there). Corrected 2026-09-10 — `data/Schema.md`

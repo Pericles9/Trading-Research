@@ -1,0 +1,205 @@
+{
+  "name": "chop_regime_c1",
+  "brief": "prompts/chop_regime_c1.md",
+  "type": "build, instrument check, interactive suite; not a phase; fits nothing (Cooper sets the filter by eye after the stop)",
+  "date": "2026-09-30",
+  "branch": "explore/chop-regime-c1, cut from explore/shape-classifier-s2 at e71b68a",
+  "precedent_note": "The brief names prompts/attention_threshold_suite.md as the precedent. That file does not exist in this checkout (it is referenced as future work in prompts/attention_excursion_b1_amendment_2.md and prompts/attention_excursion_b2.md; no commit on any local or origin branch has held it). The brief restates the shape and the prohibitions it borrows, so the build follows the brief's own text.",
+
+  "sources": {
+    "slices": "results/attention_excursion/b1/slices.parquet",
+    "b2_population": "results/attention_excursion/b2/artifacts/t0_population.parquet",
+    "s1_events": "results/shape_atlas/s1/artifacts/s1_events.parquet",
+    "s2_group_a": "results/shape_classifier/s2/artifacts/t1_group_a.parquet",
+    "s2_event_meta": "results/shape_classifier/s2/artifacts/t2_event_meta.parquet",
+    "s2_checkpoints": "results/shape_classifier/s2/artifacts/t2_checkpoints.parquet",
+    "s2_remaining_labels": "results/shape_classifier/s2/artifacts/t3a_remaining_labels.parquet",
+    "fundamentals": "data/fundamentals/event_fundamentals.parquet",
+    "quotes_coverage_d15": "results/phase_4/artifacts/_actual_quotes_sessions_cache.parquet",
+    "halt_labels": "research/participation_exit_overlay/common.py::load_halt_labels (via research/attention_excursion_b1/common.py::load_halt_labels)",
+    "ticks": "data/filtered/<event_id>/trades.parquet (+ trades_repair_1c.parquet) via research/attention_excursion_b1/common.py::read_trades",
+    "quotes": "data/filtered/<event_id>/quotes.parquet (+ quotes_repair_1c.parquet), columns sip_timestamp, sequence_number, bid_price, ask_price, bid_size, ask_size",
+    "s2_config_hash_at_base": "shape_classifier_s2 as committed at e71b68a"
+  },
+
+  "cooper_rulings_2026_09_30": {
+    "R1_d32_exception": {
+      "question": "C1's suite puts F1-layer columns (turnover_t and turnover_rate, whose denominator is F1's share count, and the dilution flag) beside outcome panels: as a by-eye filter condition, in the G2 finder, and as a facet. D32 A1 allows that only as a pre-registered partition test; S1 needed D39 for less.",
+      "answer": "Log D41 exception (same shape as D39)",
+      "effect": "D41 appended to docs/Universe-Decisions.md in T0's commit beside D40; CLAUDE.md next free = D42. turnover_rate stays a relative condition, G2 keeps its turnover_t clause, the dilution flag stays a facet."
+    }
+  },
+
+  "decisions_appended_in_t0": ["D40 (verbatim from brief section 2)", "D41 (Cooper R1 above)"],
+
+  "population": {
+    "slice": "development",
+    "slice_dates": ["2020-01-01", "2022-12-31"],
+    "quarantine": "slices.parquet slice == 'dev_quarantine' (50 dev_v3 + 6 dev_v4_sidecar): built for the section 6 controls, never embedded, never in the development-slice build",
+    "tau_required": "S1/S2 population (tau available; b2 t0_population.tau_available)",
+    "tau_source": "results/shape_classifier/s2/artifacts/t1_group_a.parquet column c__tau_d_ns: S2's decision time at tau = max(stored tau, the crossing print's own timestamp) -- the tau S2 used for its entries (T2: tau = tau_d; entry = first print after it). int64 asserted on read.",
+    "v_pre_source": "S2 t1_group_a c__ref_shares (shares traded from tau's segment start to tau_d; undefined when tau is in an auction minute)"
+  },
+
+  "moments": {
+    "wall_minutes_every_1": 60,
+    "late_step_minutes": 5,
+    "end": "strictly before 20:00 ET on the event date",
+    "weights": {"tau_and_first_60_min": 1, "after_60_min": 5},
+    "weight_interval_convention": "each moment represents the minutes ending at it: tau and tau+j (j <= 60) one minute each, tau+60+5i the five minutes (tau+60+5(i-1), tau+60+5i]. Asserted: sum of weights = (last moment - tau) / 1 min + 1.",
+    "segments": "research/attention_excursion_b1/common.py clock_segment (XNYS open/close, early closes included): premarket [04:00, open), auction_open [open, open+60s), regular [open+60s, close), auction_close [close, close+60s), after_hours [close+60s, 20:00)",
+    "segment_start": "04:00, open+60s, close+60s (common.segment_start_ns)",
+    "auction_moments": "carried and labelled; every measure unavailable; not given slider values; not in the suite's filter table (their moment-minutes are counted in the header)",
+    "halt_state": "label: t inside a labelled halt interval whose start <= t; gap_proxy: t in regular hours and >= 300 s since the last print (b2/S2 HALT_GAP), with no label; none otherwise",
+    "no_print_since_last_moment": "no print in (previous moment, t]; FALSE at tau by definition",
+    "quotes_available": "event-level quotes_ingested per D15 (Phase 11's join: (ticker, event_date_canonical, round(momentum_pct, 2)) present in the Phase 4 sessions cache; momentum_pct is a join key only, D4). Per moment, quote_at_t additionally says whether a D17-valid quote prevails at t.",
+    "tcs_state": "S2 R1 causal tau_close_sensitive at each moment: s2common.tcs_state(tau_exact, tau_d, tau_mb_exact, t), tau_mb_exact from S2 t2_event_meta",
+    "price_tier": "S1 s1_events price_tier at tau (< $1, $1-3, $3-10, >= $10)",
+    "dilution": "S2 t1_group_a c__dilution_tau (filings accepted before tau)"
+  },
+
+  "measures": {
+    "collapse": {"rule": "D26, research/scale_field/subsecond_origin.py::collapse_tol via common.collapse_tol", "tol_ms": 10.0, "applied_per": "clock segment, over the segment's prints from its start; causal (a print's fate depends only on earlier prints)"},
+    "rate_ladder": {
+      "rule": "b2 R1, research/attention_excursion_b2/b2common.py::a2_ladder_r1 with t in place of tau and t's segment start as the anchor",
+      "n_min_per_half_window": 17, "d22_floor_coef": 2.2568, "k_max": 40, "min_half_window_ms": 10,
+      "valid": "a2_count_ladder's valid (both halves >= 17 collapsed trades and the D22 floor)"
+    },
+    "scale_free_ladder": {
+      "W_k": "H_t / 2^k, H_t = t - start of t's segment, window [t - W_k, t]",
+      "count_stop_collapsed_trades": 64,
+      "generation": "k = 0, 1, ... down to and including the first k whose window holds fewer than 64 collapsed trades (exact count, b2 R1 as ruled by Cooper); windows are nested so no finer rung can pass; also stops at a 10 ms half-window or k_max",
+      "k_max": 40,
+      "buckets": 32
+    },
+    "declared_interpretations": {
+      "two_finest_rungs": "finest_rung (section 4a) = the smallest window valid under the 64-trade scale-free stop; it feeds er, vr, the own noise in cost_noise_h. finest_rate_rung = the smallest window valid under the rate ladder (17 per half-window); it feeds trade_rate, dollar_flow, turnover_rate, n_eff, top3_share, move_per_trade, spread_tw and the act_ratio numerator in the suite conditions and in G1 and G2. Per-rung values of every measure are kept in the artifacts.",
+      "relative_measures_ladder": "n_eff_k, top3_share_k, move_per_trade_k are computed on the rate ladder's valid rungs (the relative rows sit with the rate measures in T3)",
+      "bucket_path": "element 0 = the window's opening price on the same basis (VWAP basis: the first print in the window; midpoint basis: the D16 midpoint prevailing at that first print), elements 1..32 = bucket prices (VWAP, or the D16 midpoint at the bucket's last contributing print). 32 log returns. Brief 1's split-at-edges bucket rule, implemented on prefix sums; equality with instruments.bucketize is tested in T0 and value conservation is asserted in every window.",
+      "window_bounds": "[t - W_k, t], both ends inclusive (Brief 1's a2_count_ladder convention); zero-size prints carry no volume and are counted, not bucketed",
+      "move_per_trade": "abs(ln(last print in the window / first print in the window)) x 1e4 / collapsed trades in the window",
+      "n_eff_orders": "prints grouped by their collapsed-order id (the D26 collapse over the segment); an order that began before the window counts once with its in-window volume",
+      "er": "abs(sum r) / sum abs(r) over the 32 returns; unavailable ('flat') when sum abs(r) = 0",
+      "er_0": "sqrt(2 / (pi n)) x s / mean|r - rbar|, n = 32, s = sqrt(mean((r - rbar)^2)) (ddof 0: the resampling null draws from the empirical distribution); unavailable when mean|r - rbar| = 0",
+      "variance_ratio": "Lo and MacKinlay (1988): overlapping q-sums, sigma_a^2 with n - 1, sigma_c^2 with m = q (n - q + 1)(1 - q / n); robust z* = sqrt(n) (VR - 1) / sqrt(theta), theta = sum_{j=1}^{q-1} [2 (q - j) / q]^2 delta_j, delta_j = n sum (d_t^2 d_{t-j}^2) / (sum d_t^2)^2",
+      "own_noise": "from the finest valid scale-free rung's 32 bucket log returns on the primary basis: wall h -> sqrt(sum r^2 / W_minutes x h); volume m -> sqrt(sum r^2 / window shares x m V_pre); cost_noise_h = spread_bp_t / (1e4 sigma_h)",
+      "every_valid_rung": "the scale-free 'at every valid rung' option and G2's 'every valid rung 1-4' range over valid rungs k >= 1 (rung 0 is context, section 4a) and require at least one valid rung",
+      "context_rung0": "section 4d reads rung 0 = [segment start, t] bucketed to 32 and requires the same 64-trade stop. leg = the pair i < j on the 33-point path maximising lp_j - lp_i; leg_s = (lp_j - lp_i) / sqrt(sum of r^2 over returns i+1..j); leg high = the earliest point within ln(1 + 1e-9) of the maximum after the low (tie rule A2.3). Price at t: midpoint basis = the D16 midpoint prevailing at t; VWAP basis = the last print at or before t. giveback unavailable when the leg is zero. since_high_min from the leg high's bucket time (its last contributing print; element 0 = the window's first print).",
+      "quote_at_t": "D16: the last D17-valid quote (sorted by sip_timestamp, sequence_number) with sip_timestamp <= t, restricted to t's Phase 11 segment (premarket [04:00, open), rth [open, close), post [close, 20:00)) exactly as Phase 11's ASOF join; a quote at the same sip_timestamp as t prevails",
+      "quote_age": "t minus the last change of best bid price or best ask price among D17-valid quotes in the same Phase 11 segment (Phase 11's BBO change marker, sizes ignored)",
+      "spread_tw": "time-weighted over [a, t] with Phase 11's rule: every quote row's duration runs to the next row (or the segment end); excluded rows' time is dropped from the average",
+      "turnover": "turnover_t = shares traded 04:00 -> t / S2 c__shs_tau_corrected; shs_tau_asof_ns < t and shs_tau_accepted_ns < t asserted per moment. F1's shs_quality is carried beside it (it describes F1's t0 value; S2 re-anchored the count at tau)",
+      "depth_multiplier": "shares per displayed size unit, per year, from the T0 census (1 if sizes are shares, 100 if round lots)"
+    },
+    "quote_size_census": {
+      "sample_events_per_year": 100,
+      "seed": 20260930,
+      "years": [2020, 2021, 2022],
+      "rule_shares": "share of D17-valid nonzero sizes that are multiples of 100 >= 0.95 AND median over at-touch trades of (trade size / displayed size on the touched side) <= 1",
+      "rule_lots": "share of multiples of 100 <= 0.05 AND that median ratio >= 10",
+      "otherwise": "unit not established for that year -> escalation row 4 (LOG); depth not built for that year",
+      "at_touch": "trade price equal to the D16 contemporaneous ask (buyer at the touch) or bid (seller at the touch), regular hours"
+    },
+    "horizons": {
+      "wall_minutes": [5, 15, 60],
+      "volume_multiples_of_v_pre": [0.25, 0.5, 1.0],
+      "names": ["w5", "w15", "w60", "v025", "v05", "v1"]
+    }
+  },
+
+  "hindsight": {
+    "entry": "the first non-spike print with sip_timestamp > t (S2's zero-latency convention)",
+    "spike_guard": "Brief 1's rule (3% from both neighbours which agree within 3%), vectorised as s2common.spike_flags over the event day's 04:00-20:00 prints; spike prints are skipped for entry, exit, MFE and MAE",
+    "window": "(t, end], end = t + h (wall) or the print at which shares traded after t first reach m x V_pre (volume)",
+    "censoring": "the forward window is cut at 20:00 and at the end of t's segment (premarket -> XNYS open, regular -> XNYS close, after hours -> 20:00) and flagged h_censored; a volume target not reached by then is cut and flagged the same way",
+    "no_print_in_h": "no non-spike print in (t, end]",
+    "v_pre_undefined": "volume horizons are undefined where V_pre is undefined (tau in an auction minute)",
+    "columns": "fwd_ret_h (last non-spike print <= end vs entry), fwd_mfe_h (highest), fwd_mae_h (lowest); bp and cents, gross; net = gross - the round trip at t (spread_bp_t, spread_c_t), unavailable without a quote at t",
+    "chop_c_default": 1.0,
+    "rem_type": "S2 t3a_remaining_labels rem_type at time keys tau, w1, w2, w5, w10, w20 mapped to moments j = 0, 1, 2, 5, 10, 20; S2's d_ns for each asserted equal to the C1 moment"
+  },
+
+  "galleries": {
+    "label": "gallery finder, not a filter",
+    "G1_low_volume_pop": {"at": "finest_rate_rung", "n_eff_max": 5, "top3_share_min": 0.6},
+    "G2_higher_float_noise": {"turnover_t_max": 0.01, "dollar_flow_min_usd_per_min": 20000, "dollar_flow_at": "finest_rate_rung", "er_rel_abs_dev_max": 0.25, "vz2_abs_max": 1.64, "scale_free_rungs": [1, 2, 3, 4], "scale_free_rule": "both clauses hold at every valid rung k in 1..4; at least one valid"},
+    "G3_pause_between_legs": {"leg_s_min": 2.0, "giveback_min": 0.1, "giveback_max": 0.6, "hindsight": "max non-spike print in (t, t + 60 min], cut at 20:00, exceeds the leg high by >= (ask - bid at t) in dollars AND ln(max / leg high) >= sigma_w60 (the own noise over 60 min)"},
+    "pool_per_finder": 150,
+    "random_pool": 450,
+    "pool_seed": 20260930,
+    "pool_from": "embedded events only, non-auction moments",
+    "near_the_line": "drawn live from all build-time pools (G1, G2, G3, random): the k pooled moments nearest the most recently moved threshold on each side, k default 12",
+    "strip": {"from": "max(start of t's segment, t - 60 min)", "to": "t + 60 min (cut at 20:00)", "max_prints": 2000, "downsample": "keep the window's highest and lowest print and the prints nearest t, then an even stride", "quotes": "D17-valid bid and ask as step lines, at most 1000 change points", "volume_bars": 200}
+  },
+
+  "controls": {
+    "population": "the 56 quarantined events (dev_v3 50 + dev_v4 sidecar 6), every non-auction moment, every valid scale-free rung",
+    "seed": 20260930,
+    "negative_references": {"resamples_per_window": 200, "er_ratio_band": [0.90, 1.10], "er_ratio_statistic": "median over windows of (mean over resamples of er) / er_0, per rung", "vz_abs_median_max": 0.15, "vz_sd_band": [0.80, 1.25], "vz_statistic": "pooled over windows and resamples, per rung"},
+    "negative_whole_pipeline": {"shuffles_per_window": 20, "vwap": "the window's print-to-print log returns shuffled, re-integrated from the first print's price with every print's time and size kept, then bucketed exactly as real data", "midpoint": "the window's quote-update-level log midpoint changes (D17-valid quotes, the midpoint prevailing at the first print as the start) shuffled, re-integrated with the quote times kept, then sampled at the first print and each bucket's last print", "bands": "the negative_references bands, per basis, per rung; er statistic = median over windows of the mean over shuffles of er_rel"},
+    "positive_trend": {"resamples_per_window": 50, "drift_noise_units": [1, 2, 4], "construction": "demeaned resampled returns + d x s x sqrt(n) / n per step (d own-noise units across the window)", "pass": "median er_rel increases with d and exceeds 2.0 at d = 4"},
+    "positive_autocorrelation": {"resamples_per_window": 50, "phi": [0.5, -0.5], "construction": "x_1 = e_1, x_t = phi x_(t-1) + e_t over the demeaned resampled returns", "pass": "median vz2 >= +1.64 at phi = +0.5 and <= -1.64 at phi = -0.5"},
+    "edge_of_detectability": {"phi": [0.25, -0.25], "drift": 1, "report_only": true},
+    "gated_bases": "the positive controls and the reference control are gated on every basis that the whole-pipeline control keeps; a basis dropped by the ruling table is reported, not gated",
+    "null_parameter_sweep": {"buckets": [16, 32, 64], "statistics": ["er_rel", "vz2", "cost_noise_h"], "label_threshold_rel": 0.20, "reference": 32, "note": "a label, not a gate; relative change of a median near zero is reported with its absolute value beside it"},
+    "blindness": {"factors": [10.0, 0.1], "tolerance": 1e-9, "invariant": "scale-free and bp measures (er, er_rel, vr, vz, leg_s, giveback, spread_bp, spread_tw_bp, cost_noise_h, move_per_trade, n_eff, top3_share, trade_rate, turnover_rate, act_ratio)", "rounding": "trade and quote prices below $1 rounded to the $0.01 grid; change reported per event"},
+    "price_basis_agreement": "Spearman of vz2 and er_rel, midpoint vs VWAP, per rung and segment, real data (the 56 events in T5; the development slice in T6)",
+    "causality_test": "every measure function fed a print and a quote 1 ns after t must raise",
+    "segment_test": "a window crossing a segment boundary, and one containing an auction minute, must raise",
+    "primary_basis_ruling": {"mid_pass_vwap_pass": "midpoint primary; VWAP carried as the check", "mid_pass_vwap_fail": "midpoint; VWAP dropped from the suite", "mid_fail_vwap_pass": "VWAP; midpoint dropped", "both_fail": "HARD STOP row 3", "no_quote_fallback": "windows lacking a D16 midpoint at any of the 33 points use VWAP, flagged price_basis = vwap_fallback"}
+  },
+
+  "suite": {
+    "path": "results/chop_regime/c1/suite/chop_suite.html",
+    "size_budget_bytes": 100000000,
+    "encoding": "typed arrays, byte-plane shuffled, gzip, base64; decoded in the browser with the built-in DecompressionStream (no library)",
+    "sample": {"strata": "year x tau's segment", "seed": 20260930, "rule": "the largest fraction f on a 0.01 grid such that ceil(f x n_stratum) events of every stratum (a seeded permutation, whole events only) fit the budget"},
+    "header": "Development slice only (2020–22). Thresholds in absolute units, per segment. Hindsight columns are for judgement, never conditions. Commit before any 2023–24 read. 2025 is sealed. The galleries are the evidence; the curves summarise them.",
+    "conditions": {
+      "presence_cost": [["trade_rate", "<"], ["dollar_flow", "<"], ["spread_bp_t", ">"], ["spread_c_t", ">"], ["quote_age_s", ">"], ["depth_ask_usd", "<"], ["cost_noise_h", ">"]],
+      "relative": [["turnover_rate", "<"], ["n_eff", "<"], ["top3_share", ">"], ["move_per_trade", ">"]],
+      "scale_free": [["er_rel", "<"], ["vz2", "<"], ["vz4", "<"]],
+      "scale_free_rungs_offered": [0, 1, 2, 3, 4, 5, 6, "every"],
+      "default_state": "off; on switch-on the slider starts at the embedded min (for >) or max (for <) of that segment's values, which filters nothing",
+      "unavailable_default": {"presence_cost": "filtered", "relative": "passes", "scale_free": "passes"},
+      "combination": ["any", "at_least_m"],
+      "override": [["leg_s", ">="], ["giveback", "<="], ["act_ratio", ">="]],
+      "override_scope": "rescues only from relative and scale-free conditions, never from presence and cost"
+    },
+    "viewing": {"horizon_default": "w15", "c_default": 1.0, "unit_default": "bp", "gross_net_default": "gross", "facets": ["year", "segment", "price_tier", "tcs_state", "dilution", "quotes_available"]},
+    "noise_band": {"filters": 100, "cells": "segment x floor(log2(minutes since tau)) (tau itself its own cell)", "band": [0.05, 0.95]},
+    "ticker_bootstrap": {"B": 200, "interval": [0.025, 0.975]},
+    "readability_line": 20,
+    "outcome_weights": "every count, share, ECDF and median is weighted by moment-minutes",
+    "units_in_browser": "net = gross - the round trip at t; cents outcomes = bp x entry price / 100 (both embedded measurements); nothing else is computed from embedded values except the filter itself and the chop label"
+  },
+
+  "escalation": {
+    "1": "any causality assertion fires -> HARD STOP",
+    "2": "any segment assertion fires -> HARD STOP",
+    "3": "any section 6 control misses its pass band -> HARD STOP",
+    "4": "quote-size units cannot be established for a year -> LOG; depth not built for that year",
+    "5": "embedded sample below 50% of development-slice events -> LOG; header states the fraction",
+    "6": "moments with no valid scale-free rung above 40% of moment-minutes in any segment -> LOG",
+    "7": "events with quotes unavailable -> LOG with count; own facet value",
+    "8": "A12 or any hindsight column reaches the suite's condition inputs -> HARD STOP (build assertion)",
+    "9": "any embedded row outside the development slice -> HARD STOP (build assertion)",
+    "10": "extrapolated runtime above 6 hours -> HARD STOP; post; do not shrink grid, ladder or population silently"
+  },
+  "runtime_ceiling_hours": 6,
+
+  "excluded": {
+    "flag_cross_session_extreme": "A12: excluded entirely, including as a facet (S2 T0; Amendment 1 A1.6)",
+    "momentum_pct": "D4: join key only (the D15 coverage join), never a measure or facet",
+    "spine_numerics": "D4: never read"
+  },
+
+  "outputs": {
+    "root": "results/chop_regime/c1",
+    "artifacts": "results/chop_regime/c1/artifacts",
+    "charts": "results/chop_regime/c1/charts/<task>/",
+    "suite": "results/chop_regime/c1/suite/chop_suite.html",
+    "report": "results/chop_regime/c1/REPORT.md (copy: results/reports/chop_regime_c1_report.md)"
+  },
+  "seed": 20260930
+}
