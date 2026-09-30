@@ -1,6 +1,6 @@
 {
-  "config_hash": "f0206c2d8137",
-  "seconds": 805.5,
+  "config_hash": "8f42e9c7eb74",
+  "seconds": 856.7,
   "events": 15519,
   "states": {
     "tau": {
@@ -60,49 +60,49 @@
   },
   "tcs_state_counts": {
     "tau": {
-      "false": 10798,
+      "false": 10804,
       "not_settled": 3591,
-      "true": 1130
+      "true": 1124
     },
     "w1": {
-      "false": 13079,
+      "false": 13085,
       "not_settled": 1310,
-      "true": 1130
+      "true": 1124
     },
     "w2": {
-      "false": 13079,
-      "true": 2440
+      "false": 13085,
+      "true": 2434
     },
     "w5": {
-      "false": 13079,
-      "true": 2440
+      "false": 13085,
+      "true": 2434
     },
     "w10": {
-      "false": 13079,
-      "true": 2440
+      "false": 13085,
+      "true": 2434
     },
     "w20": {
-      "false": 13079,
-      "true": 2440
+      "false": 13085,
+      "true": 2434
     },
     "v025": {
-      "false": 12476,
-      "true": 2103,
+      "false": 12482,
+      "true": 2097,
       "not_settled": 312
     },
     "v05": {
-      "false": 11941,
-      "true": 1991,
+      "false": 11947,
+      "true": 1985,
       "not_settled": 156
     },
     "v1": {
-      "false": 10935,
-      "true": 1722,
+      "false": 10941,
+      "true": 1716,
       "not_settled": 77
     },
     "v2": {
-      "false": 9467,
-      "true": 1325,
+      "false": 9473,
+      "true": 1319,
       "not_settled": 39
     }
   },
@@ -119,14 +119,14 @@
   },
   "minute_bar_crossing_vs_b1": {
     "both": 15236,
-    "within_128ns_of_b1": 15170,
-    "max_abs_ns": 7282306884162,
+    "within_128ns_of_b1": 15236,
+    "max_abs_ns": 128,
     "exact_only": 0,
     "b1_only": 0
   },
   "tcs_final_vs_b1": {
     "events": 15519,
-    "equal_to_b1_flag": 15513
+    "equal_to_b1_flag": 15519
   },
   "master_grid_points": 2641,
   "group_c_rows": 477492,

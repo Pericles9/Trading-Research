@@ -242,6 +242,7 @@
     "prompts/phase_11.md",
     "prompts/phase_9.md",
     "prompts/shape_classifier_s2.md",
+    "prompts/shape_classifier_s2_amendment_1.md",
     "results/attention_excursion/b1/REPORT.md",
     "results/attention_excursion/b2/REPORT.md",
     "results/phase_10/REPORT_v2_v3_superseded.md",
@@ -257,7 +258,9 @@
     "results/reports/phase_9_report.md",
     "results/reports/relative_momentum_r0_report.md",
     "results/reports/relative_momentum_v0_report.md",
-    "results/reports/relative_momentum_v1_report.md"
+    "results/reports/relative_momentum_v1_report.md",
+    "results/reports/shape_classifier_s2_report.md",
+    "results/shape_classifier/s2/REPORT.md"
   ],
   "outside_repo": "the rough pre-S2 run (Claude, on S1's per-event tables, brief 'What came before') used the flag as a model input; it is not in the repository"
 }

@@ -92,10 +92,13 @@ def main() -> int:
     ck = ck.merge(fw, on=["event_id", "time"], how="left")
     after = [t for t in S.TIMES if t != "tau"]
     ck = ck[ck["time"].isin(after)]
-    ck["d_py"] = [int(v) if (pd.notna(v) and s == "reached") else None for v, s in zip(ck["d_ns"], ck["state"])]
-    ck["e_py"] = [int(v) if pd.notna(v) else None for v in ck["entry_lat0_ns"]]
-    g = ck.groupby("event_id")
-    dmap = {e: (list(x["time"]), list(x["d_py"]), list(x["e_py"])) for e, x in g}
+    # Python ints straight from the Int64 columns (a DataFrame column of ints and None would turn float64 and round
+    # the nanoseconds -- the upstream tau defect)
+    dmap = {}
+    for e, x in ck.groupby("event_id"):
+        d = [int(v) if (pd.notna(v) and s == "reached") else None for v, s in zip(x["d_ns"].astype(object), x["state"])]
+        en = [int(v) if pd.notna(v) else None for v in x["entry_lat0_ns"].astype(object)]
+        dmap[e] = (list(x["time"]), d, en)
     base = pop[["event_id", "event_date_canonical"]].merge(s1[["event_id", "event_index"]], on="event_id")
     recs = [{"event_id": r.event_id, "event_date_canonical": r.event_date_canonical, "event_index": int(r.event_index),
              "times": dmap[r.event_id][0], "d_ns": dmap[r.event_id][1], "entry_ns": dmap[r.event_id][2]} for r in base.itertuples()]

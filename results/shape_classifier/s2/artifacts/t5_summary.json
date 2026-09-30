@@ -1,128 +1,234 @@
 {
-  "config_hash": "f0206c2d8137",
-  "seconds": 2014.2,
+  "config_hash": "8f42e9c7eb74",
+  "seconds": 3346.3,
   "row2_negative": {
-    "rule": "mean per-fold primary AUC over 3 folds x 10 shuffles in [0.45, 0.55], per type x model x decision time",
-    "cells": 354,
+    "rule": "mean per-fold primary AUC over 3 folds x 10 shuffles in [0.45, 0.55], per label x type x model x decision time",
+    "cells": 708,
     "outside": 0,
     "fires": false,
     "outside_cells": [],
     "mean_auc_range": [
-      0.46876818669907544,
-      0.5281385812126811
+      0.4652653953521147,
+      0.5304878205702473
     ],
-    "single_shuffle_cells_outside_band": 2866,
-    "single_shuffle_cells": 10620
+    "single_shuffle_cells_outside_band": 5192,
+    "single_shuffle_cells": 21240
   },
   "row3_positive": {
-    "rule": "rules leak: every type's per-fold primary AUC >= 0.95 (M2, M3, both class weights, every decision time)",
+    "rule": "A1.1: rules leak, M3 (both class weights): every per-fold primary AUC >= 0.95, every type and decision time, each label; M2 reported, ungated",
     "cells": 720,
-    "below": 7,
-    "fires": true,
-    "below_cells": [
-      {
-        "leak": "rules",
-        "fold": 1,
-        "time": "w10",
-        "model": "M2",
-        "cw": "balanced",
-        "type": "chop",
-        "n": 997,
-        "n_type": 548,
-        "auc": 0.9493196560076732,
-        "config_hash": "f0206c2d8137"
-      },
-      {
-        "leak": "rules",
-        "fold": 1,
-        "time": "w20",
-        "model": "M2",
-        "cw": "balanced",
-        "type": "chop",
-        "n": 997,
-        "n_type": 548,
-        "auc": 0.948901045307496,
-        "config_hash": "f0206c2d8137"
-      },
-      {
-        "leak": "rules",
-        "fold": 1,
-        "time": "v05",
-        "model": "M2",
-        "cw": "balanced",
-        "type": "chop",
-        "n": 911,
-        "n_type": 508,
-        "auc": 0.9478370879818683,
-        "config_hash": "f0206c2d8137"
-      },
-      {
-        "leak": "rules",
-        "fold": 1,
-        "time": "v1",
-        "model": "M2",
-        "cw": "balanced",
-        "type": "chop",
-        "n": 819,
-        "n_type": 459,
-        "auc": 0.9410675381263617,
-        "config_hash": "f0206c2d8137"
-      },
-      {
-        "leak": "rules",
-        "fold": 2,
-        "time": "v1",
-        "model": "M2",
-        "cw": "balanced",
-        "type": "chop",
-        "n": 637,
-        "n_type": 386,
-        "auc": 0.9452036413929773,
-        "config_hash": "f0206c2d8137"
-      },
-      {
-        "leak": "rules",
-        "fold": 1,
-        "time": "v2",
-        "model": "M2",
-        "cw": "balanced",
-        "type": "chop",
-        "n": 703,
-        "n_type": 409,
-        "auc": 0.9390832127472015,
-        "config_hash": "f0206c2d8137"
-      },
-      {
-        "leak": "rules",
-        "fold": 2,
-        "time": "v2",
-        "model": "M2",
-        "cw": "balanced",
-        "type": "chop",
-        "n": 547,
-        "n_type": 326,
-        "auc": 0.9384837464952946,
-        "config_hash": "f0206c2d8137"
-      }
-    ],
-    "min_auc": 0.9384837464952946
+    "below": 0,
+    "fires": false,
+    "below_cells": [],
+    "min_auc": 0.998026034997866
   },
-  "positive_terminal_log": {
-    "by_type_mean": {
-      "runaway": 0.9539670244128721,
-      "burst": 0.8175325635573428,
-      "slow_climb": 0.90132223543917,
-      "exhausted": 0.8575562469621726,
-      "fade": 0.8961525782495996,
-      "chop": 0.8091813366046788
+  "per_label": {
+    "remaining": {
+      "row2": {
+        "cells": 354,
+        "outside": 0,
+        "mean_auc_range": [
+          0.47168401861216963,
+          0.5304878205702473
+        ],
+        "single_shuffle_cells_outside_band": 2324,
+        "single_shuffle_cells": 10620
+      },
+      "row3_m3": {
+        "cells": 360,
+        "below": 0,
+        "min_auc": 0.998026034997866
+      },
+      "m2_ungated": {
+        "cells": 360,
+        "below": 4,
+        "min_auc": 0.9265874318733994,
+        "below_cells": [
+          {
+            "leak": "rules",
+            "label": "remaining",
+            "fold": 2,
+            "time": "w10",
+            "model": "M2",
+            "cw": "balanced",
+            "type": "chop",
+            "n": 802,
+            "n_type": 478,
+            "auc": 0.948512319851232,
+            "config_hash": "8f42e9c7eb74"
+          },
+          {
+            "leak": "rules",
+            "label": "remaining",
+            "fold": 1,
+            "time": "v05",
+            "model": "M2",
+            "cw": "balanced",
+            "type": "chop",
+            "n": 910,
+            "n_type": 516,
+            "auc": 0.9420670522960689,
+            "config_hash": "8f42e9c7eb74"
+          },
+          {
+            "leak": "rules",
+            "label": "remaining",
+            "fold": 1,
+            "time": "v2",
+            "model": "M2",
+            "cw": "balanced",
+            "type": "chop",
+            "n": 702,
+            "n_type": 388,
+            "auc": 0.9265874318733994,
+            "config_hash": "8f42e9c7eb74"
+          },
+          {
+            "leak": "rules",
+            "label": "remaining",
+            "fold": 1,
+            "time": "v2",
+            "model": "M2",
+            "cw": "none",
+            "type": "chop",
+            "n": 702,
+            "n_type": 388,
+            "auc": 0.9453099349924486,
+            "config_hash": "8f42e9c7eb74"
+          }
+        ]
+      },
+      "terminal_log_by_type_mean": {
+        "runaway": 0.9464826659025031,
+        "burst": 0.7923393827664145,
+        "slow_climb": 0.8867454299317383,
+        "exhausted": 0.7936009855446762,
+        "fade": 0.8693445806661202,
+        "chop": 0.7962268207369864
+      }
     },
-    "by_type_min": {
-      "runaway": 0.8607737291947818,
-      "burst": 0.7129155248421304,
-      "slow_climb": 0.8554325810185185,
-      "exhausted": 0.7489862275301041,
-      "fade": 0.8534194165471066,
-      "chop": 0.7638252553792654
+    "whole": {
+      "row2": {
+        "cells": 354,
+        "outside": 0,
+        "mean_auc_range": [
+          0.4652653953521147,
+          0.527992019245808
+        ],
+        "single_shuffle_cells_outside_band": 2868,
+        "single_shuffle_cells": 10620
+      },
+      "row3_m3": {
+        "cells": 360,
+        "below": 0,
+        "min_auc": 1.0
+      },
+      "m2_ungated": {
+        "cells": 360,
+        "below": 7,
+        "min_auc": 0.9384421064320018,
+        "below_cells": [
+          {
+            "leak": "rules",
+            "label": "whole",
+            "fold": 1,
+            "time": "w10",
+            "model": "M2",
+            "cw": "balanced",
+            "type": "chop",
+            "n": 997,
+            "n_type": 548,
+            "auc": 0.9494090680018857,
+            "config_hash": "8f42e9c7eb74"
+          },
+          {
+            "leak": "rules",
+            "label": "whole",
+            "fold": 1,
+            "time": "w20",
+            "model": "M2",
+            "cw": "balanced",
+            "type": "chop",
+            "n": 997,
+            "n_type": 548,
+            "auc": 0.9487791198608424,
+            "config_hash": "8f42e9c7eb74"
+          },
+          {
+            "leak": "rules",
+            "label": "whole",
+            "fold": 1,
+            "time": "v05",
+            "model": "M2",
+            "cw": "balanced",
+            "type": "chop",
+            "n": 911,
+            "n_type": 508,
+            "auc": 0.9477247416033293,
+            "config_hash": "8f42e9c7eb74"
+          },
+          {
+            "leak": "rules",
+            "label": "whole",
+            "fold": 1,
+            "time": "v1",
+            "model": "M2",
+            "cw": "balanced",
+            "type": "chop",
+            "n": 819,
+            "n_type": 459,
+            "auc": 0.9412975066569838,
+            "config_hash": "8f42e9c7eb74"
+          },
+          {
+            "leak": "rules",
+            "label": "whole",
+            "fold": 2,
+            "time": "v1",
+            "model": "M2",
+            "cw": "balanced",
+            "type": "chop",
+            "n": 637,
+            "n_type": 386,
+            "auc": 0.9452655698449725,
+            "config_hash": "8f42e9c7eb74"
+          },
+          {
+            "leak": "rules",
+            "label": "whole",
+            "fold": 1,
+            "time": "v2",
+            "model": "M2",
+            "cw": "balanced",
+            "type": "chop",
+            "n": 703,
+            "n_type": 409,
+            "auc": 0.9391081616020491,
+            "config_hash": "8f42e9c7eb74"
+          },
+          {
+            "leak": "rules",
+            "label": "whole",
+            "fold": 2,
+            "time": "v2",
+            "model": "M2",
+            "cw": "balanced",
+            "type": "chop",
+            "n": 547,
+            "n_type": 326,
+            "auc": 0.9384421064320018,
+            "config_hash": "8f42e9c7eb74"
+          }
+        ]
+      },
+      "terminal_log_by_type_mean": {
+        "runaway": 0.9537888485738937,
+        "burst": 0.8183921043302099,
+        "slow_climb": 0.901593374295098,
+        "exhausted": 0.8575261105984667,
+        "fade": 0.8960229630464209,
+        "chop": 0.809100254948655
+      }
     }
   },
   "baseline_tau": {

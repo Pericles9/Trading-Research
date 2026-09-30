@@ -1,5 +1,5 @@
 {
-  "config_hash": "f0206c2d8137",
+  "config_hash": "8f42e9c7eb74",
   "row1": {
     "rule": "any input uses data after its decision time",
     "violations": 0,

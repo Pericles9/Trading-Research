@@ -1,432 +1,998 @@
 {
-  "config_hash": "f0206c2d8137",
-  "seconds": 192.0,
+  "config_hash": "8f42e9c7eb74",
+  "seconds": 341.9,
   "repeats": 5,
   "row4_log": {
-    "n_cells": 0,
-    "inputs": [],
-    "cells": []
+    "n_cells": 2,
+    "inputs": [
+      "ret_log",
+      "tod_h"
+    ],
+    "cells": [
+      {
+        "label": "remaining",
+        "fold": 2,
+        "time": "w20",
+        "type": "chop",
+        "input": "ret_log",
+        "share": 0.5093776484026569,
+        "mean_drop": 0.01802288061014965,
+        "base_auc": 0.5477266060428279,
+        "n_type": 487
+      },
+      {
+        "label": "remaining",
+        "fold": 3,
+        "time": "v1",
+        "type": "exhausted",
+        "input": "tod_h",
+        "share": 0.5497102643914309,
+        "mean_drop": 0.06397119356293535,
+        "base_auc": 0.6111417342563229,
+        "n_type": 163
+      }
+    ]
   },
   "top_input_by_type_time": [
     {
+      "label": "remaining",
       "type": "exhausted",
+      "time": "v1",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.5497102643914309
+    },
+    {
+      "label": "remaining",
+      "type": "chop",
       "time": "w20",
       "fold": 2,
-      "input": "u_high",
-      "share": 0.4925260673484949
-    },
-    {
-      "type": "slow_climb",
-      "time": "v1",
-      "fold": 1,
       "input": "ret_log",
-      "share": 0.45052933787905863
+      "share": 0.5093776484026569
     },
     {
+      "label": "whole",
+      "type": "exhausted",
+      "time": "w20",
+      "fold": 1,
+      "input": "u_high",
+      "share": 0.49676388073334965
+    },
+    {
+      "label": "remaining",
       "type": "exhausted",
       "time": "tau",
       "fold": 2,
       "input": "tod_h",
-      "share": 0.43830355652028774
+      "share": 0.486678154825028
     },
     {
+      "label": "whole",
       "type": "exhausted",
-      "time": "v1",
-      "fold": 1,
-      "input": "u_high",
-      "share": 0.3889284981785169
-    },
-    {
-      "type": "burst",
-      "time": "v1",
-      "fold": 1,
-      "input": "tod_h",
-      "share": 0.3729549082202732
-    },
-    {
-      "type": "exhausted",
-      "time": "v2",
+      "time": "tau",
       "fold": 2,
-      "input": "u_high",
-      "share": 0.3721453454615835
-    },
-    {
-      "type": "exhausted",
-      "time": "v025",
-      "fold": 3,
       "input": "tod_h",
-      "share": 0.3665686162152514
+      "share": 0.486678154825028
     },
     {
+      "label": "whole",
+      "type": "slow_climb",
+      "time": "v1",
+      "fold": 3,
+      "input": "ret_log",
+      "share": 0.4398267070505715
+    },
+    {
+      "label": "remaining",
+      "type": "exhausted",
+      "time": "w20",
+      "fold": 3,
+      "input": "ret_log",
+      "share": 0.401909252976018
+    },
+    {
+      "label": "whole",
+      "type": "exhausted",
+      "time": "v1",
+      "fold": 1,
+      "input": "u_high",
+      "share": 0.3940343425300725
+    },
+    {
+      "label": "remaining",
       "type": "exhausted",
       "time": "w1",
       "fold": 3,
       "input": "tod_h",
-      "share": 0.3485937211693054
+      "share": 0.38683835186188575
     },
     {
+      "label": "remaining",
+      "type": "fade",
+      "time": "tau",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.3832925194189274
+    },
+    {
+      "label": "whole",
+      "type": "fade",
+      "time": "tau",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.3832925194189274
+    },
+    {
+      "label": "remaining",
       "type": "exhausted",
-      "time": "w5",
-      "fold": 2,
-      "input": "u_high",
-      "share": 0.3460167130919235
-    },
-    {
-      "type": "exhausted",
-      "time": "w10",
-      "fold": 2,
-      "input": "u_high",
-      "share": 0.3416464499433955
-    },
-    {
-      "type": "chop",
       "time": "v025",
       "fold": 3,
       "input": "tod_h",
-      "share": 0.32676513376068483
+      "share": 0.3804519011345697
     },
     {
-      "type": "slow_climb",
-      "time": "v05",
-      "fold": 2,
-      "input": "ret_log",
-      "share": 0.32529208135006393
-    },
-    {
-      "type": "slow_climb",
-      "time": "w20",
-      "fold": 1,
-      "input": "asinh_z_ret",
-      "share": 0.32266850429874483
-    },
-    {
-      "type": "exhausted",
-      "time": "v05",
-      "fold": 2,
-      "input": "tod_h",
-      "share": 0.31468132298258217
-    },
-    {
-      "type": "chop",
-      "time": "tau",
-      "fold": 3,
-      "input": "tod_h",
-      "share": 0.3091246426181618
-    },
-    {
-      "type": "fade",
-      "time": "tau",
-      "fold": 3,
-      "input": "tod_h",
-      "share": 0.3073970485717426
-    },
-    {
-      "type": "chop",
-      "time": "w2",
-      "fold": 3,
-      "input": "tod_h",
-      "share": 0.30330913567668805
-    },
-    {
-      "type": "slow_climb",
-      "time": "w10",
-      "fold": 1,
-      "input": "ret_log",
-      "share": 0.2976997508546264
-    },
-    {
-      "type": "chop",
-      "time": "v05",
-      "fold": 3,
-      "input": "tod_h",
-      "share": 0.28550621135522064
-    },
-    {
-      "type": "chop",
-      "time": "w10",
-      "fold": 3,
-      "input": "tod_h",
-      "share": 0.278584988770738
-    },
-    {
-      "type": "fade",
-      "time": "w5",
-      "fold": 2,
-      "input": "high_log",
-      "share": 0.27733107219087183
-    },
-    {
+      "label": "remaining",
       "type": "exhausted",
       "time": "w2",
       "fold": 3,
       "input": "tod_h",
-      "share": 0.27295276690888975
+      "share": 0.36653392151114605
     },
     {
-      "type": "chop",
+      "label": "whole",
+      "type": "exhausted",
       "time": "w1",
       "fold": 3,
       "input": "tod_h",
-      "share": 0.26170808685508534
+      "share": 0.365611039977239
     },
     {
-      "type": "slow_climb",
+      "label": "whole",
+      "type": "exhausted",
+      "time": "v025",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.36521518344547177
+    },
+    {
+      "label": "whole",
+      "type": "exhausted",
       "time": "v2",
       "fold": 2,
-      "input": "asinh_z_ret",
-      "share": 0.25911379657603234
+      "input": "u_high",
+      "share": 0.3594684711189552
     },
     {
+      "label": "remaining",
+      "type": "exhausted",
+      "time": "w5",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.358068777878063
+    },
+    {
+      "label": "whole",
+      "type": "burst",
+      "time": "v1",
+      "fold": 1,
+      "input": "tod_h",
+      "share": 0.35478227979764215
+    },
+    {
+      "label": "whole",
+      "type": "exhausted",
+      "time": "w5",
+      "fold": 2,
+      "input": "u_high",
+      "share": 0.3524675235803302
+    },
+    {
+      "label": "remaining",
+      "type": "fade",
+      "time": "w2",
+      "fold": 3,
+      "input": "log10_post_trades_per_min",
+      "share": 0.34351622975346546
+    },
+    {
+      "label": "whole",
+      "type": "exhausted",
+      "time": "w10",
+      "fold": 2,
+      "input": "u_high",
+      "share": 0.33609431483873903
+    },
+    {
+      "label": "remaining",
+      "type": "exhausted",
+      "time": "v05",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.33378669028339936
+    },
+    {
+      "label": "remaining",
+      "type": "burst",
+      "time": "v025",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.32744811458637785
+    },
+    {
+      "label": "whole",
+      "type": "slow_climb",
+      "time": "v05",
+      "fold": 2,
+      "input": "ret_log",
+      "share": 0.3194932752943809
+    },
+    {
+      "label": "whole",
+      "type": "chop",
+      "time": "w2",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.3156434850663408
+    },
+    {
+      "label": "whole",
+      "type": "chop",
+      "time": "tau",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.30957514898059174
+    },
+    {
+      "label": "remaining",
+      "type": "chop",
+      "time": "tau",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.30957514898059174
+    },
+    {
+      "label": "whole",
+      "type": "slow_climb",
+      "time": "w10",
+      "fold": 1,
+      "input": "ret_log",
+      "share": 0.3079747003405736
+    },
+    {
+      "label": "whole",
       "type": "burst",
       "time": "w20",
       "fold": 3,
       "input": "asinh_z_ret",
-      "share": 0.258275824296199
+      "share": 0.3072656953126886
     },
     {
+      "label": "remaining",
+      "type": "exhausted",
+      "time": "w10",
+      "fold": 1,
+      "input": "ret_log",
+      "share": 0.3053156189074403
+    },
+    {
+      "label": "remaining",
+      "type": "burst",
+      "time": "w10",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.30390846055781934
+    },
+    {
+      "label": "whole",
+      "type": "exhausted",
+      "time": "v05",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.2955095156259926
+    },
+    {
+      "label": "whole",
       "type": "chop",
-      "time": "w5",
-      "fold": 1,
-      "input": "u_high",
-      "share": 0.2567801104568242
-    },
-    {
-      "type": "slow_climb",
-      "time": "tau",
-      "fold": 1,
-      "input": "runup_max_drawdown_s",
-      "share": 0.2540067153587879
-    },
-    {
-      "type": "fade",
-      "time": "w20",
+      "time": "v05",
       "fold": 3,
-      "input": "u_high",
-      "share": 0.2518740395790903
+      "input": "tod_h",
+      "share": 0.2913218301705686
     },
     {
+      "label": "whole",
+      "type": "slow_climb",
+      "time": "w20",
+      "fold": 1,
+      "input": "asinh_z_ret",
+      "share": 0.28774707647728254
+    },
+    {
+      "label": "whole",
+      "type": "chop",
+      "time": "v025",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.28570606016985667
+    },
+    {
+      "label": "whole",
       "type": "burst",
       "time": "w1",
       "fold": 1,
       "input": "accel_k0",
-      "share": 0.24678887641850739
+      "share": 0.28531866049629945
     },
     {
+      "label": "remaining",
+      "type": "runaway",
+      "time": "w10",
+      "fold": 1,
+      "input": "accel_post",
+      "share": 0.2777039217548193
+    },
+    {
+      "label": "whole",
+      "type": "exhausted",
+      "time": "w2",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.27385433485969657
+    },
+    {
+      "label": "remaining",
+      "type": "burst",
+      "time": "v2",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.27217040233885575
+    },
+    {
+      "label": "whole",
+      "type": "fade",
+      "time": "v2",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.26717080925285064
+    },
+    {
+      "label": "remaining",
+      "type": "runaway",
+      "time": "v05",
+      "fold": 3,
+      "input": "log10_runup_shares",
+      "share": 0.2654629273914705
+    },
+    {
+      "label": "whole",
+      "type": "burst",
+      "time": "w10",
+      "fold": 3,
+      "input": "asinh_z_ret",
+      "share": 0.260404581601872
+    },
+    {
+      "label": "remaining",
+      "type": "runaway",
+      "time": "v2",
+      "fold": 2,
+      "input": "asinh_z_high",
+      "share": 0.25861057571440593
+    },
+    {
+      "label": "remaining",
+      "type": "slow_climb",
+      "time": "v025",
+      "fold": 1,
+      "input": "runup_max_drawdown_s",
+      "share": 0.2585986553314432
+    },
+    {
+      "label": "whole",
+      "type": "fade",
+      "time": "w5",
+      "fold": 2,
+      "input": "high_log",
+      "share": 0.2574401992642131
+    },
+    {
+      "label": "whole",
+      "type": "chop",
+      "time": "w10",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.2542340836042176
+    },
+    {
+      "label": "whole",
+      "type": "burst",
+      "time": "w5",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.25325926043838803
+    },
+    {
+      "label": "whole",
+      "type": "runaway",
+      "time": "tau",
+      "fold": 3,
+      "input": "log10_runup_shares",
+      "share": 0.2524644030668125
+    },
+    {
+      "label": "remaining",
+      "type": "runaway",
+      "time": "tau",
+      "fold": 3,
+      "input": "log10_runup_shares",
+      "share": 0.2524644030668125
+    },
+    {
+      "label": "whole",
+      "type": "slow_climb",
+      "time": "v2",
+      "fold": 2,
+      "input": "asinh_z_ret",
+      "share": 0.2495666453790702
+    },
+    {
+      "label": "remaining",
+      "type": "chop",
+      "time": "w10",
+      "fold": 3,
+      "input": "ret_log",
+      "share": 0.24861207784614342
+    },
+    {
+      "label": "remaining",
+      "type": "chop",
+      "time": "w1",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.24787310609555643
+    },
+    {
+      "label": "whole",
+      "type": "chop",
+      "time": "w20",
+      "fold": 1,
+      "input": "u_high",
+      "share": 0.24670947599957496
+    },
+    {
+      "label": "remaining",
+      "type": "chop",
+      "time": "w2",
+      "fold": 1,
+      "input": "ret_log",
+      "share": 0.24662702218811566
+    },
+    {
+      "label": "whole",
+      "type": "fade",
+      "time": "v025",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.24628782338033597
+    },
+    {
+      "label": "whole",
+      "type": "fade",
+      "time": "w20",
+      "fold": 3,
+      "input": "u_high",
+      "share": 0.24626609173853345
+    },
+    {
+      "label": "whole",
+      "type": "chop",
+      "time": "w1",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.24590928580533755
+    },
+    {
+      "label": "remaining",
+      "type": "burst",
+      "time": "w5",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.24581522613874146
+    },
+    {
+      "label": "whole",
+      "type": "chop",
+      "time": "v1",
+      "fold": 1,
+      "input": "u_high",
+      "share": 0.24544457735247366
+    },
+    {
+      "label": "remaining",
+      "type": "exhausted",
+      "time": "v2",
+      "fold": 1,
+      "input": "ret_log",
+      "share": 0.2448414661870322
+    },
+    {
+      "label": "whole",
+      "type": "runaway",
+      "time": "w2",
+      "fold": 3,
+      "input": "dist_slow_climb",
+      "share": 0.24396416459988815
+    },
+    {
+      "label": "whole",
       "type": "fade",
       "time": "w10",
       "fold": 3,
       "input": "high_log",
-      "share": 0.24441787764254944
+      "share": 0.24312661299911034
     },
     {
+      "label": "remaining",
       "type": "fade",
-      "time": "v2",
-      "fold": 3,
-      "input": "tod_h",
-      "share": 0.24150463968093366
-    },
-    {
-      "type": "burst",
-      "time": "w10",
-      "fold": 1,
-      "input": "tod_h",
-      "share": 0.23895801996444505
-    },
-    {
-      "type": "chop",
       "time": "v1",
-      "fold": 1,
-      "input": "u_high",
-      "share": 0.23726222663825935
-    },
-    {
-      "type": "chop",
-      "time": "w20",
-      "fold": 1,
-      "input": "u_high",
-      "share": 0.23633464490151734
-    },
-    {
-      "type": "burst",
-      "time": "w5",
       "fold": 3,
-      "input": "ret_log",
-      "share": 0.23492364902286456
+      "input": "elapsed_min",
+      "share": 0.24289472256874778
     },
     {
+      "label": "remaining",
+      "type": "chop",
+      "time": "w5",
+      "fold": 1,
+      "input": "ret_log",
+      "share": 0.23774138352480767
+    },
+    {
+      "label": "whole",
+      "type": "chop",
+      "time": "w5",
+      "fold": 1,
+      "input": "u_high",
+      "share": 0.2361726786681114
+    },
+    {
+      "label": "whole",
+      "type": "burst",
+      "time": "tau",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.2272727272727268
+    },
+    {
+      "label": "remaining",
+      "type": "burst",
+      "time": "tau",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.2272727272727268
+    },
+    {
+      "label": "remaining",
+      "type": "burst",
+      "time": "v05",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.22259012842333162
+    },
+    {
+      "label": "remaining",
+      "type": "fade",
+      "time": "w1",
+      "fold": 1,
+      "input": "vol_progress",
+      "share": 0.22220155925899315
+    },
+    {
+      "label": "whole",
       "type": "runaway",
       "time": "v05",
       "fold": 2,
       "input": "dd_log",
-      "share": 0.23062558356676086
+      "share": 0.21964382083108447
     },
     {
-      "type": "fade",
-      "time": "v025",
-      "fold": 3,
-      "input": "tod_h",
-      "share": 0.22871236152862287
-    },
-    {
-      "type": "fade",
-      "time": "v05",
-      "fold": 3,
-      "input": "tod_h",
-      "share": 0.21725755995828747
-    },
-    {
-      "type": "chop",
-      "time": "v2",
-      "fold": 3,
-      "input": "tod_h",
-      "share": 0.21616534236276091
-    },
-    {
-      "type": "burst",
-      "time": "tau",
-      "fold": 2,
-      "input": "tod_h",
-      "share": 0.21461526052589147
-    },
-    {
+      "label": "whole",
       "type": "slow_climb",
       "time": "w5",
       "fold": 3,
       "input": "ret_log",
-      "share": 0.21116416180601985
+      "share": 0.21943697092985182
     },
     {
-      "type": "runaway",
-      "time": "w20",
-      "fold": 2,
-      "input": "asinh_z_ret",
-      "share": 0.2040042149631182
-    },
-    {
-      "type": "runaway",
-      "time": "tau",
-      "fold": 3,
-      "input": "log10_runup_shares",
-      "share": 0.2039532794249778
-    },
-    {
-      "type": "runaway",
-      "time": "w2",
-      "fold": 3,
-      "input": "dist_slow_climb",
-      "share": 0.19953155382711749
-    },
-    {
-      "type": "fade",
-      "time": "w2",
-      "fold": 2,
-      "input": "tod_h",
-      "share": 0.19446912483340947
-    },
-    {
+      "label": "whole",
       "type": "slow_climb",
-      "time": "v025",
-      "fold": 3,
-      "input": "asinh_z_ret",
-      "share": 0.19050210913049365
-    },
-    {
-      "type": "fade",
-      "time": "v1",
+      "time": "tau",
       "fold": 1,
-      "input": "tod_h",
-      "share": 0.18761864963285724
+      "input": "runup_max_drawdown_s",
+      "share": 0.21849470381759944
     },
     {
-      "type": "burst",
+      "label": "remaining",
+      "type": "slow_climb",
+      "time": "tau",
+      "fold": 1,
+      "input": "runup_max_drawdown_s",
+      "share": 0.21849470381759944
+    },
+    {
+      "label": "remaining",
+      "type": "slow_climb",
+      "time": "v1",
+      "fold": 2,
+      "input": "log10_post_dollars_per_min",
+      "share": 0.21665143901324888
+    },
+    {
+      "label": "remaining",
+      "type": "slow_climb",
       "time": "v05",
       "fold": 3,
-      "input": "dist_burst",
-      "share": 0.18682048804058846
+      "input": "short_interest_share",
+      "share": 0.21150268336314784
     },
     {
-      "type": "burst",
-      "time": "w2",
-      "fold": 1,
+      "label": "remaining",
+      "type": "fade",
+      "time": "w20",
+      "fold": 3,
+      "input": "log10_post_trades_per_min",
+      "share": 0.21034900116042593
+    },
+    {
+      "label": "whole",
+      "type": "chop",
+      "time": "v2",
+      "fold": 3,
       "input": "tod_h",
-      "share": 0.1798106200020062
+      "share": 0.20978455070940466
     },
     {
+      "label": "remaining",
+      "type": "burst",
+      "time": "v1",
+      "fold": 3,
+      "input": "dist_runaway",
+      "share": 0.20953729933899892
+    },
+    {
+      "label": "whole",
       "type": "fade",
       "time": "w1",
       "fold": 3,
       "input": "tod_h",
-      "share": 0.17190315390467698
+      "share": 0.20494431730441584
     },
     {
-      "type": "runaway",
-      "time": "w1",
-      "fold": 1,
-      "input": "log10_runup_shares",
-      "share": 0.16996493293116516
-    },
-    {
-      "type": "slow_climb",
-      "time": "w2",
-      "fold": 2,
-      "input": "ret_log",
-      "share": 0.16432350718064972
-    },
-    {
-      "type": "runaway",
-      "time": "v2",
-      "fold": 3,
-      "input": "ret_log",
-      "share": 0.1630389901492366
-    },
-    {
-      "type": "runaway",
-      "time": "v025",
-      "fold": 2,
-      "input": "dist_slow_climb",
-      "share": 0.1620046620046618
-    },
-    {
+      "label": "whole",
       "type": "runaway",
       "time": "w10",
       "fold": 1,
       "input": "filing_24h",
-      "share": 0.16127431285893204
+      "share": 0.19974566545702543
     },
     {
+      "label": "whole",
+      "type": "runaway",
+      "time": "w20",
+      "fold": 2,
+      "input": "asinh_z_ret",
+      "share": 0.19884862851337512
+    },
+    {
+      "label": "whole",
+      "type": "fade",
+      "time": "v1",
+      "fold": 1,
+      "input": "tod_h",
+      "share": 0.19843897280272302
+    },
+    {
+      "label": "remaining",
+      "type": "slow_climb",
+      "time": "w1",
+      "fold": 1,
+      "input": "short_interest_share",
+      "share": 0.19770285823901787
+    },
+    {
+      "label": "remaining",
       "type": "burst",
-      "time": "v2",
+      "time": "w20",
+      "fold": 1,
+      "input": "tod_h",
+      "share": 0.1961545727419672
+    },
+    {
+      "label": "remaining",
+      "type": "runaway",
+      "time": "w2",
+      "fold": 3,
+      "input": "runup_max_drawdown_s",
+      "share": 0.1957866823806723
+    },
+    {
+      "label": "whole",
+      "type": "runaway",
+      "time": "w5",
+      "fold": 2,
+      "input": "asinh_z_ret",
+      "share": 0.19485064366954014
+    },
+    {
+      "label": "remaining",
+      "type": "chop",
+      "time": "v025",
       "fold": 3,
       "input": "tod_h",
-      "share": 0.1601573984034013
+      "share": 0.19196509439163403
     },
     {
+      "label": "remaining",
+      "type": "runaway",
+      "time": "w20",
+      "fold": 1,
+      "input": "lr_dollar_rate",
+      "share": 0.19089514658640386
+    },
+    {
+      "label": "whole",
+      "type": "fade",
+      "time": "v05",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.1904235501238519
+    },
+    {
+      "label": "remaining",
+      "type": "burst",
+      "time": "w1",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.18786649618623547
+    },
+    {
+      "label": "remaining",
+      "type": "burst",
+      "time": "w2",
+      "fold": 1,
+      "input": "log10_post_dollars_per_min",
+      "share": 0.18471557636165709
+    },
+    {
+      "label": "whole",
+      "type": "fade",
+      "time": "w2",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.18364596350503307
+    },
+    {
+      "label": "remaining",
+      "type": "runaway",
+      "time": "w5",
+      "fold": 1,
+      "input": "filing_24h",
+      "share": 0.18336614372983104
+    },
+    {
+      "label": "whole",
       "type": "slow_climb",
       "time": "w1",
       "fold": 3,
       "input": "accel_k4",
-      "share": 0.15758476867227894
+      "share": 0.1787229483608309
     },
     {
-      "type": "runaway",
-      "time": "w5",
+      "label": "remaining",
+      "type": "chop",
+      "time": "v1",
       "fold": 2,
-      "input": "dd_log",
-      "share": 0.155327818249167
+      "input": "asinh_z_dd",
+      "share": 0.17830503658449748
     },
     {
+      "label": "remaining",
+      "type": "slow_climb",
+      "time": "w5",
+      "fold": 1,
+      "input": "short_interest_share",
+      "share": 0.17625176182444052
+    },
+    {
+      "label": "whole",
+      "type": "burst",
+      "time": "v2",
+      "fold": 2,
+      "input": "short_interest_share",
+      "share": 0.1728336794411916
+    },
+    {
+      "label": "whole",
+      "type": "runaway",
+      "time": "v025",
+      "fold": 2,
+      "input": "dist_slow_climb",
+      "share": 0.16897365567391726
+    },
+    {
+      "label": "whole",
+      "type": "slow_climb",
+      "time": "v025",
+      "fold": 3,
+      "input": "asinh_z_ret",
+      "share": 0.1682649554161573
+    },
+    {
+      "label": "whole",
+      "type": "burst",
+      "time": "v05",
+      "fold": 3,
+      "input": "dist_burst",
+      "share": 0.1680092429153674
+    },
+    {
+      "label": "whole",
       "type": "runaway",
       "time": "v1",
       "fold": 3,
       "input": "ret_log",
-      "share": 0.1425726034438446
+      "share": 0.16776524274306057
     },
     {
+      "label": "remaining",
+      "type": "slow_climb",
+      "time": "w20",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.16633046573716948
+    },
+    {
+      "label": "remaining",
+      "type": "runaway",
+      "time": "v1",
+      "fold": 3,
+      "input": "flow_share_rest_k0",
+      "share": 0.16509948214772427
+    },
+    {
+      "label": "whole",
+      "type": "runaway",
+      "time": "v2",
+      "fold": 3,
+      "input": "ret_log",
+      "share": 0.16322591964442298
+    },
+    {
+      "label": "remaining",
+      "type": "slow_climb",
+      "time": "w10",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.16138482023968118
+    },
+    {
+      "label": "remaining",
+      "type": "runaway",
+      "time": "v025",
+      "fold": 1,
+      "input": "filing_24h",
+      "share": 0.16091794800757303
+    },
+    {
+      "label": "remaining",
+      "type": "slow_climb",
+      "time": "v2",
+      "fold": 2,
+      "input": "accel_k0",
+      "share": 0.16058068118369587
+    },
+    {
+      "label": "whole",
+      "type": "slow_climb",
+      "time": "w2",
+      "fold": 2,
+      "input": "ret_log",
+      "share": 0.15515633097253478
+    },
+    {
+      "label": "remaining",
+      "type": "fade",
+      "time": "v05",
+      "fold": 3,
+      "input": "asinh_z_dd",
+      "share": 0.15372141600703712
+    },
+    {
+      "label": "whole",
+      "type": "runaway",
+      "time": "w1",
+      "fold": 3,
+      "input": "log10_turnover",
+      "share": 0.14835447038836894
+    },
+    {
+      "label": "remaining",
+      "type": "fade",
+      "time": "w5",
+      "fold": 2,
+      "input": "asinh_z_high",
+      "share": 0.1477357933243964
+    },
+    {
+      "label": "remaining",
+      "type": "slow_climb",
+      "time": "w2",
+      "fold": 3,
+      "input": "short_interest_share",
+      "share": 0.14704932155933592
+    },
+    {
+      "label": "remaining",
+      "type": "runaway",
+      "time": "w1",
+      "fold": 2,
+      "input": "tod_h",
+      "share": 0.14557512953367815
+    },
+    {
+      "label": "remaining",
+      "type": "fade",
+      "time": "v2",
+      "fold": 1,
+      "input": "elapsed_min",
+      "share": 0.14537221747253215
+    },
+    {
+      "label": "remaining",
+      "type": "chop",
+      "time": "v05",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.14214417626798004
+    },
+    {
+      "label": "whole",
       "type": "burst",
       "time": "v025",
       "fold": 3,
       "input": "tod_h",
-      "share": 0.12246979044511293
+      "share": 0.137906886266373
+    },
+    {
+      "label": "whole",
+      "type": "burst",
+      "time": "w2",
+      "fold": 1,
+      "input": "tod_h",
+      "share": 0.13781748417947953
+    },
+    {
+      "label": "remaining",
+      "type": "fade",
+      "time": "w10",
+      "fold": 1,
+      "input": "log10_post_dollars_per_min",
+      "share": 0.13548007540011217
+    },
+    {
+      "label": "remaining",
+      "type": "chop",
+      "time": "v2",
+      "fold": 3,
+      "input": "tod_h",
+      "share": 0.13175442201012225
+    },
+    {
+      "label": "remaining",
+      "type": "fade",
+      "time": "v025",
+      "fold": 1,
+      "input": "gap_share",
+      "share": 0.12328082423695307
     }
   ]
 }

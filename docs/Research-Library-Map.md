@@ -2785,7 +2785,7 @@ page on the inlined plotly.js), `build_report.py`. Outputs in `results/shape_atl
 
 **Shape classifier S2 (2026-09-28) -- can S1's six theory types be predicted at the crossing and as the
 path unfolds? Exploratory modelling build; the test is ticker-blocked and time-ordered (rolling origin,
-folds test 2022 / 2023 / 2024). HARD STOP at T5 (escalation row 3: the gated positive control, 7 of 720 cells below 0.95, all M2-balanced chop); state committed with the T8 report as its record.** Branch `explore/shape-classifier-s2`, cut from
+folds test 2022 / 2023 / 2024). HARD STOP at T5 (escalation row 3: the gated positive control, 7 of 720 cells below 0.95, all M2-balanced chop); state committed with the T8 report as its record. Amendment 1 (2026-09-29, `prompts/shape_classifier_s2_amendment_1.md`): row 3 gates M3 only (A1.1); the T2 minute-bar crossing fixed (A1.2); the primary label after tau is the remaining-path type, the whole-path type secondary (A1.3); ticker-bootstrap intervals on the decile money figures (A1.4); T2-T8 re-run for both labels, and the report replaced.** Branch `explore/shape-classifier-s2`, cut from
 `master` at `dd208be` (which contains S1's `b526ab6`). `prompts/shape_classifier_s2.md` (filed verbatim);
 `config/shape_classifier_s2.json` (Cooper's rulings R1-R5 of 2026-09-28, each with the measurement it
 answered, and the declared interpretations, committed before the run). `research/shape_classifier_s2/`:
@@ -2793,10 +2793,11 @@ answered, and the declared interpretations, committed before the run). `research
 weighted AUC and the ticker bootstrap), `t1_group_a.py` (Group A at tau: b2 / S1 artifacts, a pre-tau tick
 pass sliced to ts <= tau_d, shares and dilution re-anchored at tau from F1's raw SEC archive, short interest
 by assumed publication date), `t2_checkpoints.py` (the ten decision times, Group B from prints up to each
-one, the R1 state, forward returns, the master-grid paths and Group C per fold), `t0_audit.py` (the A12
+one, the R1 state, forward returns, the master-grid paths and Group C per fold), `t3a_remaining_labels.py`
+(Amendment 1: S1's rules and 200-draw null on the path from each checkpoint's entry to 20:00), `t0_audit.py` (the A12
 construction and consumer inventory, the per-input latest-timestamp audit), `t3_folds.py`, `t4_models.py`
 (M0-M4, tuning inside the training window), `t4_scores.py`, `t5_controls.py` (negative: 10 shuffles per fold;
-positive: rule inputs gated, terminal_log reported), `t6_money.py`, `t7_importance.py`, `t2b_mb_diagnosis.py` (measures a T2 minute-bar-crossing defect found at the stop; fixes nothing), `charts.py` (seven
-selector pages on the inlined plotly.js), `build_report.py`. Outputs in `results/shape_classifier/s2/`
+positive: rule inputs gated, terminal_log reported), `t6_money.py` (with the A1.4 ticker-bootstrap intervals), `t7_importance.py`, `t2b_mb_diagnosis.py` (measures a T2 minute-bar-crossing defect found at the stop; fixes nothing, and is not re-run after A1.2), `charts.py` (eight
+selector pages on the inlined plotly.js, each with a label selector), `build_report.py`. Outputs in `results/shape_classifier/s2/`
 (`artifacts/`, `charts/t4..t7/`, `REPORT.md`, copied to `results/reports/shape_classifier_s2_report.md`);
 `cache/` is rebuilt by T2 and git-ignored in place.
