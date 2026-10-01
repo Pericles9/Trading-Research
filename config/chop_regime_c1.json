@@ -301,5 +301,21 @@
     },
     "panel_B_references": "er: the cell's null 5-95% band and median beside the real er distribution (per rung, for t's segment and the tier in view); cost_noise_h = 1; the flat Phase 11 stack (70.98 bp, 2.512 cents) on the spread panels",
     "artifact_storage": "T6's per-moment and per-rung tables (and their parts) are regenerable from committed config + code and are expected to exceed GitHub's per-file limit (sizes recorded in the manifest); they are git-ignored under results/chop_regime/c1/artifacts/t6_*.parquet and results/chop_regime/c1/cache/ (the Agent_Prompt_Standard v1.3 SS12 precedent in .gitignore), with a tracked t6_manifest.json (rows, columns, sha256 per file)"
+  },
+
+  "amendment_2": {
+    "brief": "prompts/chop_regime_c1_amendment_2.md",
+    "date": "2026-10-01",
+    "after": "T9 stop at bcf6fbf",
+    "A2_1_ruling": "the positive trend control is read per rung, pooled over segments and tiers (24 of 24 rung-bases with >= 20 windows pass; VWAP passes all 101 gated cells); er is reinstated as a condition: er < x at a chosen rung (0-6) or at every valid rung k >= 1, per segment. t5_summary.json keeps the per-cell reading as run.",
+    "A2_1_ceiling_label": {
+      "null_p95_at_least": 0.95,
+      "text": "noise fills the scale here",
+      "where": "panel B's er panel and the er condition row, per cell (t's segment x rung x price tier x basis) of t6b_null_bands",
+      "rule": "a label, not a rule; nothing is excluded"
+    },
+    "A2_2_bucket_line": "er is read only against its own 32-bucket null band; its level depends on the bucket count by construction.",
+    "A2_3_panel_A": "per-segment counts first, the pooled total last in smaller type",
+    "A2_4_unchanged": "the 0.44 embedded sample (3,319 of 7,525 events) and every other result at bcf6fbf; only T8 is rebuilt, from the T6 / T6b / T7 outputs on disk; no measure is recomputed"
   }
 }
