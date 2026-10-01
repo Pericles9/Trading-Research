@@ -317,5 +317,72 @@
     "A2_2_bucket_line": "er is read only against its own 32-bucket null band; its level depends on the bucket count by construction.",
     "A2_3_panel_A": "per-segment counts first, the pooled total last in smaller type",
     "A2_4_unchanged": "the 0.44 embedded sample (3,319 of 7,525 events) and every other result at bcf6fbf; only T8 is rebuilt, from the T6 / T6b / T7 outputs on disk; no measure is recomputed"
+  },
+
+  "amendment_3": {
+    "brief": "prompts/chop_regime_c1_amendment_3.md",
+    "date": "2026-10-01",
+    "after": "stop at 89120e1",
+    "suite_unchanged": "chop_suite.html is not rebuilt (config cdbc5343fba6, data 237f7165c992)",
+    "W1_sample": {
+      "seed": 20261001,
+      "strata": "year x tau's segment",
+      "eligible": "every development-slice event with tau; the quarantine excluded",
+      "order": "within each stratum a seeded permutation; events enter in increasing (rank - 0.5) / stratum size (proportional allocation; ties by event_id)",
+      "target_events": 600,
+      "min_events": 300,
+      "rule": "the longest prefix of that order, at most 600, whose page fits the budget"
+    },
+    "W1_candles": {
+      "prints": "c1common.Tape: every print 04:00-20:00 (inclusive of 20:00:00.000) from read_trades, no condition-code filter -- the prints every C1 measure and the b1 / b2 / S1 / S2 tick builds read",
+      "minute": "floor((sip_timestamp - 04:00 ET) / 60 s); open / close = first / last print of the minute in (sip_timestamp, sequence_number) order; high / low = max / min; volume = shares",
+      "range": "first event-day print's minute to the last print's minute; a minute with no print has no candle (NaN) and volume 0",
+      "spike_guard": "not applied (the measures read the same unguarded prints)"
+    },
+    "W1_marks": {
+      "halts": "labels (participation_exit_overlay load_halt_labels) plus every consecutive-print gap >= 300 s with both prints in [XNYS open, close)",
+      "segments": "XNYS open and close of the event date (early closes included); auction minutes [open, open + 60 s) and [close, close + 60 s)",
+      "crossing_level": "S1 prior_close_exact x 1.30 (config/attention_excursion_b1.json t2_tau.crossing_multiple)",
+      "type": "S1 theory type at N = 100 (s1_theory_types, typed only)"
+    },
+    "W2_grid": {
+      "rule": "measures.build_event with the config's moments.wall_minutes_every_1 set to 960 for the wall events: moments at tau + j min for every j until 20:00, weight 1; the measure code and its assertions unchanged",
+      "moment_uid": "event_index x 2048 + j",
+      "flags": "g1, g2 (the t6b bands), g3 (hindsight) per minute from t7_galleries.flags; viewing labels only",
+      "embedded": "condition, override and er columns, segment, flags; no hindsight value"
+    },
+    "W3_page": {
+      "path": "results/chop_regime/c1/suite/chart_wall.html",
+      "size_budget_bytes": 60000000,
+      "shading_opacity": 0.25,
+      "filter_code": "the suite's filter functions (val, hval, recompute, noFilterValue, rangeOf, ...) are extracted from t8_suite.PAGE by name, so both instruments run the same code",
+      "config_format": "the suite's export JSON; the wall loads and exports it",
+      "round_trip": "node: 25 seeded configs set in the suite's code and exported -> loaded into the wall; 25 set in the wall and exported -> loaded into the suite's code (the wall's loader injected into the test context; the suite page has no Load button and is not rebuilt); filter state compared minute for minute on every shared (event, t)",
+      "x_ranges": [
+        "tau - 30 min to 20:00",
+        "full day",
+        "tau +- 2 h"
+      ],
+      "page_sizes": [
+        6,
+        12,
+        24
+      ],
+      "columns": [
+        1,
+        2,
+        3
+      ],
+      "default_page": 12,
+      "default_columns": 2
+    },
+    "W4_timing": "slider redraw for a full page of 12 measured in headless Chrome (real Plotly) through the DevTools protocol; row W-e LOG above 1 s",
+    "escalation": {
+      "W-a": "causality or segment assertion fires in W2 -> HARD STOP",
+      "W-b": "a non-development row, A12, or a hindsight or type column reaches the condition set -> HARD STOP",
+      "W-c": "the config round trip with the suite disagrees on any minute -> HARD STOP",
+      "W-d": "fewer than 300 events fit -> LOG",
+      "W-e": "slider redraw over 1 s for a page of 12 -> LOG"
+    }
   }
 }
