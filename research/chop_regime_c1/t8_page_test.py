@@ -24,7 +24,7 @@ def main() -> int:
     out = (p.stdout + p.stderr).strip().splitlines()
     lines = [x for x in out if not x.startswith("(node:")]
     C.write_json("t8_page_test.json", {"exit": p.returncode, "output": lines,
-                                       "summary": " ".join(x for x in lines if x.startswith(("init", "states", "noise band", "filtered with", "plot calls", "tab ")))})
+                                       "summary": " ".join(x for x in lines if x.startswith(("init", "states", "er condition", "noise band", "filtered with", "plot calls", "tab ")))})
     print("\n".join(lines))
     return p.returncode
 

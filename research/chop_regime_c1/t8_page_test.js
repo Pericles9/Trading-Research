@@ -40,6 +40,8 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   $('comb').value = 'm'; $('comb').fire('change'); $('combm').value = 2; $('combm').fire('change'); await wait(300);
   for (const [id, v] of [['vh','v05'],['vu','c'],['vn','n'],['vc','1.5'],['f_year','2021'],['f_seg','0'],['f_tier','1'],['f_tcs','1'],['f_dil','1'],['f_quotes','0'],['f_quotes','all'],['f_dil','all'],['f_tcs','all'],['f_tier','all'],['f_seg','all'],['f_year','all']]){ $(id).value = v; $(id).fire('change'); }
   if ($('h_cost_noise').listeners.change){ $('h_cost_noise').value = 'v1'; $('h_cost_noise').fire('change'); }
+  if ($('r_er').listeners.change){ for (const r of ['2', 'every', '6']){ $('r_er').value = r; $('r_er').fire('change'); } console.log('er condition wired: true | ceiling label:', $('ceil_er').textContent.slice(0, 160)); }
+  else console.log('er condition wired: false');
   await wait(300);
   // the buttons' numbers are an outcome reading at an arbitrary setting: record only that each computation completed
   const done = async (btn, word) => { $(btn).fire('click'); await wait(50); for (let q = 0; q < 1200 && /computing/.test($('cNote').textContent); q++) await wait(100);

@@ -2809,9 +2809,11 @@ the whole-pipeline control; commit `1be4f65` and its report are the record). Ame
 print / quote-update returns, simulated per cell and drawn as a band; the variance ratio is dropped; the midpoint is
 primary with a flagged VWAP fallback; row 3 splits into 3a (HARD STOP) and 3b (LOG). The re-run went T5 -> T9 with no
 HARD STOP; row 3b removed er from the suite's conditions (midpoint positive control missed in 2 of 100 cells); rows 5,
-6 and 7 LOG. Stopped at T9 with the suite in Cooper's hands.** Branch `explore/chop-regime-c1`, cut from
-`explore/shape-classifier-s2` at `e71b68a`. `prompts/chop_regime_c1.md` and `prompts/chop_regime_c1_amendment_1.md`
-(filed verbatim); `config/chop_regime_c1.json` (Cooper's ruling R1, the D41 exception to D32; declared
+6 and 7 LOG. Amendment 2 (2026-10-01, `prompts/chop_regime_c1_amendment_2.md`): the positive control is read per rung (24 of 24
+pass; the two misses sat at er's ceiling), er is reinstated, cells whose null 95th value is >= 0.95 are labelled "noise fills
+the scale here", panel A leads with per-segment counts; only T8 was rebuilt. Stopped with the suite in Cooper's hands.** Branch `explore/chop-regime-c1`, cut from
+`explore/shape-classifier-s2` at `e71b68a`. `prompts/chop_regime_c1.md`, `prompts/chop_regime_c1_amendment_1.md` and
+`prompts/chop_regime_c1_amendment_2.md` (filed verbatim); `config/chop_regime_c1.json` (Cooper's ruling R1, the D41 exception to D32; declared
 interpretations; the `amendment_1` block; committed before each run). D40 (2025 sealed for the book) and D41 appended
 to `docs/Universe-Decisions.md` in the T0 freeze. `research/chop_regime_c1/`: `c1common.py` (paths, population with
 S2's tau_d and V_pre, the D15 coverage join, the per-event tape with per-segment D26 collapse and prefix sums, the

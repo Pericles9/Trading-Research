@@ -1,17 +1,18 @@
 {
   "exit": 0,
   "output": [
-    "init 8714 ms; rows 533227 plots 19",
-    "states after all conditions on at mid-slider {\"0\":241250,\"1\":287434,\"2\":4543}",
+    "init 8773 ms; rows 533227 plots 19",
+    "states after all conditions on at mid-slider {\"0\":241054,\"1\":287573,\"2\":4600}",
+    "er condition wired: true | ceiling label: no cell in regular at this rung choice has a null 95th value \u00e2\u2030\u00a5 0.95",
     "noise band computed: true | ticker bootstrap computed: true",
     "tab G1 strips 150",
     "tab G2 strips 150",
     "tab G3 strips 150",
     "tab near the line strips 24",
-    "tab random kept strips 152",
-    "tab random filtered strips 148",
+    "tab random kept strips 150",
+    "tab random filtered strips 150",
     "filtered with every condition off: 0",
-    "plot calls 552 non-finite plotted values 0 []"
+    "plot calls 567 non-finite plotted values 0 []"
   ],
-  "summary": "init 8714 ms; rows 533227 plots 19 states after all conditions on at mid-slider {\"0\":241250,\"1\":287434,\"2\":4543} noise band computed: true | ticker bootstrap computed: true tab G1 strips 150 tab G2 strips 150 tab G3 strips 150 tab near the line strips 24 tab random kept strips 152 tab random filtered strips 148 filtered with every condition off: 0 plot calls 552 non-finite plotted values 0 []"
+  "summary": "init 8773 ms; rows 533227 plots 19 states after all conditions on at mid-slider {\"0\":241054,\"1\":287573,\"2\":4600} er condition wired: true | ceiling label: no cell in regular at this rung choice has a null 95th value \u00e2\u2030\u00a5 0.95 noise band computed: true | ticker bootstrap computed: true tab G1 strips 150 tab G2 strips 150 tab G3 strips 150 tab near the line strips 24 tab random kept strips 150 tab random filtered strips 150 filtered with every condition off: 0 plot calls 567 non-finite plotted values 0 []"
 }

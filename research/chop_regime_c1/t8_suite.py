@@ -118,7 +118,17 @@ def main() -> int:
     sarr = {k: SD.encode(np.concatenate(v) if v else np.zeros(0, np.float32), "f4") for k, v in cat.items()}
 
     bands = pd.read_parquet(C.art("t6b_null_bands.parquet"))
-    removed = t5["escalation"]["row3b_removed"]
+    removed = dict(t5["escalation"]["row3b_removed"])
+    a2 = CFG.get("amendment_2")
+    er_note = None
+    if a2 and "er" in removed:                                    # Amendment 2 A2.1: the positive control is read per rung
+        rr = pd.DataFrame(t5["per_rung"])
+        g = rr[rr["windows"] >= CFG["amendment_1"]["A1_3_null"]["min_windows_label"]]
+        npass = int((g["median_er_d4"] > g["null_p95"]).sum())
+        assert npass == len(g), f"Amendment 2 reinstates er on the per-rung reading, which passes only {npass} of {len(g)}"
+        er_note = (f"er reinstated as a condition (Amendment 2): the positive control read per rung passes {npass} of {len(g)} rung-bases; "
+                   f"the per-cell reading's misses ({removed['er'].split(' in cells ')[-1]}) sat at er's ceiling")
+        del removed["er"]
     er_removed = "er" in removed
     sweep = t5["sweep"]
     data_hash = hashlib.sha256(json.dumps({k: v["b"][:64] + str(v["n"]) for k, v in tab.items()}, sort_keys=True).encode()).hexdigest()[:12]
@@ -127,7 +137,8 @@ def main() -> int:
         "header": CFG["suite"]["header"], "config_hash": C.cfg_hash(), "data_hash": data_hash, "sample_fraction": s7["fraction"],
         "events_embedded": s7["events_embedded"], "events_dev": s7["events"], "moments_embedded": int(nrows), "auction_moment_minutes": auction_mm,
         "row5": s7["row5_fires"], "row6": t6["row6_fires"], "row6_share": t6["row6_no_scale_free_rung_share"],
-        "row7_events": int((~C.dev_slice(pop)["quotes_ingested"]).sum()), "removed": removed, "er_removed": er_removed,
+        "row7_events": int((~C.dev_slice(pop)["quotes_ingested"]).sum()), "removed": removed, "er_removed": er_removed, "er_note": er_note,
+        "ceiling": (a2 or {}).get("A2_1_ceiling_label", {"null_p95_at_least": 2.0, "text": ""}), "er_bucket_line": (a2 or {}).get("A2_2_bucket_line", ""),
         "bucket_dependent": {k: v["bucket_dependent"] for k, v in sweep.items()},
         "segs": list(C.SEGS), "horizons": C.HORIZONS, "wall": C.WALL, "vol": C.VOL, "types": ST.TYPES, "tiers": ST.TIERS, "tau_segs": ST.TAU_SEGS,
         "stack": STACK, "c_default": CFG["suite"]["viewing"]["c_default"], "h_default": CFG["suite"]["viewing"]["horizon_default"],
@@ -149,7 +160,8 @@ def main() -> int:
     size = out.stat().st_size
     assert size <= CFG["suite"]["size_budget_bytes"], f"suite {size:,} bytes exceeds the budget"
     C.write_json("t8_summary.json", {"config_hash": C.cfg_hash(), "seconds": round(time.perf_counter() - t0, 1), "bytes": size, "rows": int(nrows),
-                                     "events": len(evt["event_id"]), "strips": len(smeta), "data_hash": data_hash, "er_removed": er_removed,
+                                     "events": len(evt["event_id"]), "strips": len(smeta), "data_hash": data_hash, "er_removed": er_removed, "er_note": er_note,
+                                     "ceiling_cells": int((bands["null_p95"] >= (a2 or {}).get("A2_1_ceiling_label", {}).get("null_p95_at_least", 2.0)).sum()),
                                      "cost_noise_scaling_rows_checked": scale_n, "arrays": {k: len(v["b"]) for k, v in tab.items()},
                                      "strip_bytes": SD.size_of(sarr), "assertions": ["development slice only", "no A12", "no hindsight condition", "no percentile or rank",
                                                                                       "row count = embedded sample", "decode length", "size budget"]})
@@ -176,7 +188,7 @@ select,button{background:#1d2229;color:var(--fg);border:1px solid var(--grid);bo
 .segtabs button{flex:1} .lab{min-width:110px} .unit{color:var(--mut);font-size:11px} .dis{color:var(--mut);font-style:italic}
 table{border-collapse:collapse;font-size:12px} td,th{border-bottom:1px solid var(--grid);padding:2px 7px;text-align:right} th:first-child,td:first-child{text-align:left}
 .lt20{color:var(--warn);font-weight:600} .big{font-size:22px;font-weight:700} .pill{display:inline-block;border-radius:9px;padding:0 7px;font-size:11px;font-weight:600}
-.k{background:#1f3a66;color:#cfe0ff} .f{background:#663a1f;color:#ffe0cf} .r{background:#1f5a33;color:#cfffdc}
+.small{font-size:11px;color:var(--mut)} .ceil{color:#ffd479} .k{background:#1f3a66;color:#cfe0ff} .f{background:#663a1f;color:#ffe0cf} .r{background:#1f5a33;color:#cfffdc}
 .gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:8px} .strip{background:#14181d;border:1px solid var(--grid);border-radius:6px;padding:4px;cursor:pointer}
 .strip.pinned{border-color:#ffd479} .cap{font-size:11px;color:var(--mut);padding:2px 4px} .tabs button{margin:0 4px 4px 0}
 </style></head><body>
@@ -249,7 +261,8 @@ function buildControls(){
         ${c.key==='cost_noise' ? `<select id="h_${c.key}">${H.map(x=>`<option ${x===ST.cond.cost_noise.h?'selected':''}>${x}</option>`).join('')}</select>` : ''}
         ${c.key==='er' ? `<select id="r_er">${['every',0,1,2,3,4,5,6].map(x=>`<option value="${x}" ${String(x)===String(ST.cond.er.rung)?'selected':''}>${x==='every'?'every valid rung':'rung '+x}</option>`).join('')}</select>` : ''}</div>
         <div class="row ctlz"><input type="range" min="0" max="1000" id="sl_${c.key}"><input type="number" step="any" id="nb_${c.key}"></div>
-        <div class="row ctlz unit">${c.unit}${M.bucket_dependent[c.key==='cost_noise' ? 'cost_noise_' + ST.cond.cost_noise.h : (c.key==='er' ? 'er_mid' : c.key)] ? ' · <span class="lt20">bucket-dependent</span>' : ''}</div>
+        <div class="row ctlz unit">${c.unit}${M.bucket_dependent[c.key==='cost_noise' ? 'cost_noise_' + ST.cond.cost_noise.h : (c.key==='er' ? 'er_mid' : c.key)] ? ' · <span class="lt20">bucket-dependent</span>' + (c.key === 'er' && M.er_bucket_line ? ' — ' + M.er_bucket_line : '') : ''}</div>
+        ${c.key === 'er' ? '<div class="row ctlz unit ceil" id="ceil_er"></div>' : ''}
         <div class="row ctlz unit">unavailable: <select id="un_${c.key}"><option value="filtered">counts as filtered</option><option value="passes">passes</option></select> <span id="uc_${c.key}"></span></div></div>`;
     });
     h += `</div>`;
@@ -294,6 +307,10 @@ function buildControls(){
   $('bNoise').addEventListener('click', noiseBand); $('bBoot').addEventListener('click', bootstrap);
   syncControls();
 }
+function ceilingCells(s, rung){
+  return D.bands.filter(r => r.segment === SEGN[s] && r.null_p95 !== null && r.null_p95 >= M.ceiling.null_p95_at_least && (rung === 'every' ? r.k >= 1 : r.k === +rung))
+    .sort((a, b) => a.k - b.k || M.tiers.indexOf(a.tier) - M.tiers.indexOf(b.tier));
+}
 function syncControls(){
   const s = ST.editSeg;
   const sync = (c, isO) => {
@@ -302,6 +319,8 @@ function syncControls(){
     const r = rangeOf(c, s); const th = st.th[s] === null ? noFilterValue(c, s) : st.th[s];
     $('sl_' + c.key).value = valToSlider(c, th, r); $('nb_' + c.key).value = Number.isFinite(th) ? +th.toPrecision(6) : '';
     if (!isO){ $('un_' + c.key).value = st.unav; const w = unavCount(c, s); $('uc_' + c.key).textContent = `(${fmt(w,0)} moment-minutes unavailable in ${SEGN[s]})`; }
+    if (c.key === 'er' && $('ceil_er')){ const cl = ceilingCells(s, ST.cond.er.rung);
+      $('ceil_er').textContent = cl.length ? `${M.ceiling.text} (null 95th ≥ ${M.ceiling.null_p95_at_least}; a label, not a rule): ` + cl.map(r => `${r.tier} rung ${r.k}${r.basis === 'vwap' ? ' (VWAP)' : ''}`).join(', ') : `no cell in ${SEGN[s]} at this rung choice has a null 95th value ≥ ${M.ceiling.null_p95_at_least}`; }
   };
   D.conds.forEach(c => sync(c, false)); D.overrides.forEach(o => sync(o, true));
 }
@@ -342,23 +361,28 @@ function schedule(){ clearTimeout(timer); timer = setTimeout(() => { recompute()
 function drawAll(){ drawA(); drawB(); drawOutcomes(); drawE(); drawF(); drawG(); }
 // ---------------------------------------------------------------- A
 function drawA(){
-  const kept = [0,0,0], filt = [0,0,0], ky = {}, fy = {}, kt = [0,0,0,0], ft = [0,0,0,0]; const evk = new Set(), evs = new Set();
+  // Amendment 2 A2.3: per-segment counts first, the pooled total last in smaller type
+  const kept = [0,0,0], filt = [0,0,0], ky = {}, fy = {}, kt = [0,0,0,0], ft = [0,0,0,0]; const evk = [new Set(), new Set(), new Set()], evs = [new Set(), new Set(), new Set()];
   const g = {G1:[[0,0],[0,0],[0,0]], G2:[[0,0],[0,0],[0,0]], G3:[[0,0],[0,0],[0,0]]};
   for (let i = 0; i < N; i++){ if (!FAC[i]) continue; const s = A.seg[i], w = WT[i], e = A.ev[i], y = EVT.year[e], t = EVT.tier[e], k = STATE[i] !== 1;
-    evs.add(e); if (k){ kept[s] += w; ky[y] = (ky[y]||0) + w; kt[t] += w; evk.add(e); } else { filt[s] += w; fy[y] = (fy[y]||0) + w; ft[t] += w; }
+    evs[s].add(e); if (k){ kept[s] += w; ky[y] = (ky[y]||0) + w; kt[t] += w; evk[s].add(e); } else { filt[s] += w; fy[y] = (fy[y]||0) + w; ft[t] += w; }
     const fl = A.flags[i]; for (const [gname, b] of [['G1',5],['G2',6],['G3',7]]) if (bit(fl, b)){ g[gname][s][1]++; if (gname === 'G3' ? !k : k) g[gname][s][0]++; } }
   const c = x => `<span class="${x < M.readability ? 'lt20' : ''}">${fmt(x,0)}${x < M.readability ? ' (&lt;20)' : ''}</span>`;
   const tot = a => a.reduce((p, q) => p + q, 0);
-  let h = `<div class="row" style="gap:24px"><div><div class="sub">Pauses filtered (G3, moments)</div><div class="big">${c(tot(g.G3.map(x=>x[0])))} of ${c(tot(g.G3.map(x=>x[1])))}</div><div class="sub">${SEGN.map((s,i)=>`${s}: ${c(g.G3[i][0])} of ${c(g.G3[i][1])}`).join(' · ')}</div></div>
-    <div><div class="sub">Low-volume pops kept (G1)</div><div class="big">${c(tot(g.G1.map(x=>x[0])))} of ${c(tot(g.G1.map(x=>x[1])))}</div></div>
-    <div><div class="sub">Higher-float noise kept (G2)</div><div class="big">${c(tot(g.G2.map(x=>x[0])))} of ${c(tot(g.G2.map(x=>x[1])))}</div></div>
-    <div><div class="sub">Events with ≥ 1 kept moment</div><div class="big">${c(evk.size)} of ${c(evs.size)}</div></div></div>`;
-  h += `<table><tr><th>moment-minutes</th>${SEGN.map(s=>`<th>${s}</th>`).join('')}<th>all</th></tr><tr><td>kept</td>${kept.map(c).map(x=>`<td>${x}</td>`).join('')}<td>${c(tot(kept))}</td></tr>
-    <tr><td>filtered</td>${filt.map(c).map(x=>`<td>${x}</td>`).join('')}<td>${c(tot(filt))}</td></tr></table>`;
+  const uni = sets => { const u = new Set(); sets.forEach(x => x.forEach(e => u.add(e))); return u.size; };
+  const row = (lab, per, all, big) => `<tr><td>${lab}</td>${per.map(x => `<td class="${big ? 'big' : ''}">${x}</td>`).join('')}<td class="small">${all}</td></tr>`;
+  let h = `<table><tr><th></th>${SEGN.map(s=>`<th>${s}</th>`).join('')}<th class="small">all segments (pooled; after hours dominates)</th></tr>`;
+  h += row('Pauses filtered (G3, moments)', g.G3.map(x => `${c(x[0])} of ${c(x[1])}`), `${c(tot(g.G3.map(x=>x[0])))} of ${c(tot(g.G3.map(x=>x[1])))}`, true);
+  h += row('Low-volume pops kept (G1, moments)', g.G1.map(x => `${c(x[0])} of ${c(x[1])}`), `${c(tot(g.G1.map(x=>x[0])))} of ${c(tot(g.G1.map(x=>x[1])))}`, false);
+  h += row('Higher-float noise kept (G2, moments)', g.G2.map(x => `${c(x[0])} of ${c(x[1])}`), `${c(tot(g.G2.map(x=>x[0])))} of ${c(tot(g.G2.map(x=>x[1])))}`, false);
+  h += row('Events with ≥ 1 kept moment', evk.map((x, s) => `${c(x.size)} of ${c(evs[s].size)}`), `${c(uni(evk))} of ${c(uni(evs))}`, false);
+  h += row('Moment-minutes kept', kept.map(c), c(tot(kept)), false);
+  h += row('Moment-minutes filtered', filt.map(c), c(tot(filt)), false);
+  h += `</table>`;
   const ys = Object.keys({...ky, ...fy}).sort();
-  h += `<div class="row" style="gap:24px;align-items:flex-start"><table><tr><th>year</th><th>kept</th><th>filtered</th></tr>${ys.map(y=>`<tr><td>${y}</td><td>${c(ky[y]||0)}</td><td>${c(fy[y]||0)}</td></tr>`).join('')}</table>
-    <table><tr><th>price tier at τ</th><th>kept</th><th>filtered</th></tr>${M.tiers.map((t,i)=>`<tr><td>${t}</td><td>${c(kt[i])}</td><td>${c(ft[i])}</td></tr>`).join('')}</table></div>`;
-  $('pA').innerHTML = `<h2>A — pinned counts (facet applied; red = under ${M.readability})</h2>` + h;
+  h += `<div class="row" style="gap:24px;align-items:flex-start;margin-top:8px"><table><tr><th>year (moment-minutes)</th><th>kept</th><th>filtered</th></tr>${ys.map(y=>`<tr><td>${y}</td><td>${c(ky[y]||0)}</td><td>${c(fy[y]||0)}</td></tr>`).join('')}</table>
+    <table><tr><th>price tier at τ (moment-minutes)</th><th>kept</th><th>filtered</th></tr>${M.tiers.map((t,i)=>`<tr><td>${t}</td><td>${c(kt[i])}</td><td>${c(ft[i])}</td></tr>`).join('')}</table></div>`;
+  $('pA').innerHTML = `<h2>A — pinned counts (facet applied; per segment first, pooled last; red = under ${M.readability})</h2>` + h;
 }
 // ---------------------------------------------------------------- B
 function hist(get, seg, logx){
@@ -393,7 +417,7 @@ function drawB(){
 }
 function drawER(div){
   const tierSel = ST.view.fac.tier === 'all' ? null : +ST.view.fac.tier; const tr = []; const lay = {...L0, height:300, grid:{rows:1, columns:3, pattern:'independent'}, boxmode:'group',
-    title:{text:`er per rung: real (boxes, embedded moments, n per box in hover) vs the A1.3 simulated null 5–95% band and median (midpoint cells${tierSel === null ? ', each tier' : ', tier ' + M.tiers[tierSel]})${M.er_removed ? ' — NOT a condition (row 3b)' : ''}`, font:{size:12}}};
+    title:{text:`er per rung: real (boxes, rungs 0–6, embedded moments, n in hover) vs the A1.3 simulated null 5–95% band and median at every rung (midpoint cells${tierSel === null ? ', each tier' : ', tier ' + M.tiers[tierSel]}); ✕ = ${M.ceiling.text} (null 95th ≥ ${M.ceiling.null_p95_at_least})${M.er_removed ? ' — NOT a condition (row 3b)' : ''}`, font:{size:12}}};
   for (let s = 0; s < NS; s++){
     const xa = s === 0 ? 'x' : 'x' + (s + 1), ya = s === 0 ? 'y' : 'y' + (s + 1);
     const q1 = [], md = [], q3 = [], lf = [], uf = [], xs = [], nm = [];
@@ -402,13 +426,16 @@ function drawER(div){
       xs.push(k); q1.push(q(0.25)); md.push(q(0.5)); q3.push(q(0.75)); lf.push(v[0]); uf.push(v[v.length - 1]); nm.push(`rung ${k}: n ${v.length} moments (unweighted), whiskers = min / max`); }
     tr.push({type:'box', x:xs, q1, median:md, q3, lowerfence:lf, upperfence:uf, xaxis:xa, yaxis:ya, marker:{color:SEGC[s]}, name:SEGN[s] + ' real er', text:nm, hoverinfo:'text+y', showlegend:false});
     for (let t = 0; t < 4; t++){ if (tierSel !== null && t !== tierSel) continue;
-      const b = D.bands.filter(r => r.segment === SEGN[s] && r.tier === M.tiers[t] && r.basis === 'mid' && r.k <= 6).sort((p, q) => p.k - q.k);
+      const b = D.bands.filter(r => r.segment === SEGN[s] && r.tier === M.tiers[t] && r.basis === 'mid').sort((p, q) => p.k - q.k);
+      const cz = b.filter(r => r.null_p95 !== null && r.null_p95 >= M.ceiling.null_p95_at_least);
+      if (cz.length) tr.push({x:cz.map(r=>r.k), y:cz.map(r=>r.null_p95), xaxis:xa, yaxis:ya, mode:'markers', marker:{symbol:'x', size:9, color:'#ffd479'}, showlegend:false,
+        text:cz.map(r=>`${M.tiers[t]} rung ${r.k}: ${M.ceiling.text} (null 95th ${fmt(r.null_p95)}, sampled windows ${r.windows_sampled})`), hoverinfo:'text'});
       tr.push({x:b.map(r=>r.k), y:b.map(r=>r.null_p95), xaxis:xa, yaxis:ya, mode:'lines', line:{width:0}, showlegend:false, hoverinfo:'skip'});
       tr.push({x:b.map(r=>r.k), y:b.map(r=>r.null_p05), xaxis:xa, yaxis:ya, mode:'lines', line:{width:0}, fill:'tonexty', fillcolor:'rgba(150,150,150,0.18)', showlegend:false, hoverinfo:'skip'});
       tr.push({x:b.map(r=>r.k), y:b.map(r=>r.null_median), xaxis:xa, yaxis:ya, mode:'lines+markers', line:{color:'#ffffff', dash:'dot', width:1}, marker:{size:4},
         text:b.map(r=>`${M.tiers[t]} null median ${fmt(r.null_median)} [${fmt(r.null_p05)}, ${fmt(r.null_p95)}], sampled windows ${r.windows_sampled}${r.label_few_windows ? ' (FEW < 20)' : ''}`), hoverinfo:'text', showlegend:false}); }
     lay[s === 0 ? 'xaxis' : 'xaxis' + (s + 1)] = {...AX, title:{text:SEGN[s] + ' · rung k', font:{size:10}}, dtick:1};
-    lay[s === 0 ? 'yaxis' : 'yaxis' + (s + 1)] = {...AX, range:[0, 1], title:{text: s === 0 ? 'er' : '', font:{size:10}}};
+    lay[s === 0 ? 'yaxis' : 'yaxis' + (s + 1)] = {...AX, range:[0, 1.03], title:{text: s === 0 ? 'er' : '', font:{size:10}}};
   }
   div.style.height = '300px'; Plotly.react(div, tr, lay, {displaylogo:false, responsive:true});
 }
@@ -592,7 +619,7 @@ function exportConfig(){
       segs[SEGN[s]].conditions[c.label] = {direction:c.dir, threshold: st.th[s] === null ? noFilterValue(c, s) : st.th[s], unit:c.unit, unavailable:st.unav, horizon: c.key === 'cost_noise' ? st.h : undefined, rung: c.key === 'er' ? st.rung : undefined}; }
     for (const o of D.overrides){ const so = ST.ovr[o.key]; if (so.on[s]) segs[SEGN[s]].override[o.label] = {threshold:so.th[s], unit:o.unit}; } }
   const cfg = {created:new Date().toISOString(), suite_config_hash:M.config_hash, data_hash:M.data_hash, sample_fraction:M.sample_fraction, events_embedded:M.events_embedded,
-    combination: ST.comb.mode === 'any' ? 'any' : {at_least:ST.comb.m}, segments:segs, er_removed_row3b:M.er_removed,
+    combination: ST.comb.mode === 'any' ? 'any' : {at_least:ST.comb.m}, segments:segs, er_removed_row3b:M.er_removed, er_note:M.er_note,
     viewing:{horizon:ST.view.h, chop_multiple_c:ST.view.c, unit:ST.view.unit, net:ST.view.net, facets:ST.view.fac}};
   const blob = new Blob([JSON.stringify(cfg, null, 2)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'chop_filter_config.json'; a.click();
 }
@@ -600,7 +627,7 @@ function exportConfig(){
 async function init(){
   $('hdrtext').textContent = M.header;
   $('hdrmeta').textContent = `Embedded: ${M.events_embedded.toLocaleString()} of ${M.events_dev.toLocaleString()} development-slice events (sample fraction ${M.sample_fraction}, seeded, stratified by year × τ's segment, whole events) · ${M.moments_embedded.toLocaleString()} non-auction moments · auction-minute moments (not entry moments): ${M.auction_moment_minutes.toLocaleString()} moment-minutes · config ${M.config_hash} · data ${M.data_hash}`;
-  const w = []; if (M.er_removed) w.push(`Row 3b: er removed from the conditions — ${M.removed.er}`);
+  const w = []; if (M.er_removed) w.push(`Row 3b: er removed from the conditions — ${M.removed.er}`); if (M.er_note) w.push(M.er_note);
   Object.entries(M.removed).filter(([k]) => k !== 'er').forEach(([k, v]) => w.push(`Row 3b: ${k} removed — ${v}`));
   if (M.row5) w.push(`Row 5 (LOG): embedded sample below 50% of development-slice events`);
   Object.entries(M.row6).forEach(([s, f]) => { if (f) w.push(`Row 6 (LOG): ${s} — ${(100 * M.row6_share[s]).toFixed(1)}% of moment-minutes have no valid scale-free rung`); });

@@ -1,12 +1,14 @@
 {
-  "config_hash": "801c3bce59ed",
-  "seconds": 18.5,
-  "bytes": 78694227,
+  "config_hash": "cdbc5343fba6",
+  "seconds": 20.3,
+  "bytes": 78696651,
   "rows": 533227,
   "events": 3319,
   "strips": 749,
   "data_hash": "237f7165c992",
-  "er_removed": true,
+  "er_removed": false,
+  "er_note": "er reinstated as a condition (Amendment 2): the positive control read per rung passes 24 of 24 rung-bases; the per-cell reading's misses (after_hours|2|>=$10|mid, regular|10|$1-3|mid) sat at er's ceiling",
+  "ceiling_cells": 23,
   "cost_noise_scaling_rows_checked": {
     "cost_noise_w15": 432513,
     "cost_noise_w60": 432513,
