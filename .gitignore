@@ -97,3 +97,10 @@ results/fundamental_exploration/artifacts/*.parquet
 results/fundamental_exploration/artifacts/_t1_gap_checkpoints/
 # fundamental_exploration E2: same rule, nested under e2/ per the brief's own path.
 results/fundamental_exploration/e2/artifacts/*.parquet
+
+# chop regime C1: T6's per-moment and per-rung tables are regenerable from committed config + code
+# (research/chop_regime_c1/t6_build.py) and exceed GitHub's per-file limit; t6_manifest.json (rows, columns, sha256)
+# and the small T6 summaries ARE tracked. results/chop_regime/c1/cache/ carries its own .gitignore.
+results/chop_regime/c1/artifacts/t6_moments_*.parquet
+results/chop_regime/c1/artifacts/t6_sf_rungs_*.parquet
+results/chop_regime/c1/artifacts/t6_rate_rungs_*.parquet

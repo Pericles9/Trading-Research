@@ -1,0 +1,692 @@
+{
+  "config_hash": "801c3bce59ed",
+  "build_seconds": 1787.9,
+  "seconds": 2308.9,
+  "events": 7525,
+  "moments": 1211425,
+  "moment_minutes": 4221025,
+  "prints": 760693215,
+  "quotes": 1690306300,
+  "spike_prints": 355632,
+  "per_segment": {
+    "after_hours": {
+      "moments": 381373,
+      "moment_minutes": 1799321,
+      "events": 7525,
+      "no_scale_free_rung_share": 0.4611800784851619,
+      "no_rate_rung_share": 0.4400854544575426,
+      "no_quote_at_t_share": 0.007160478869529117,
+      "vwap_fallback_share": 0.002931105678197498
+    },
+    "auction_close": {
+      "moments": 2633,
+      "moment_minutes": 9973,
+      "events": 2633
+    },
+    "auction_open": {
+      "moments": 1185,
+      "moment_minutes": 4017,
+      "events": 1185
+    },
+    "premarket": {
+      "moments": 167205,
+      "moment_minutes": 376053,
+      "events": 2069,
+      "no_scale_free_rung_share": 0.06177586669964074,
+      "no_rate_rung_share": 0.055372513980742076,
+      "no_quote_at_t_share": 0.007512238966315918,
+      "vwap_fallback_share": 0.025799554849981254
+    },
+    "regular": {
+      "moments": 659029,
+      "moment_minutes": 2031661,
+      "events": 7499,
+      "no_scale_free_rung_share": 0.011090925110045426,
+      "no_rate_rung_share": 0.010622835207251604,
+      "no_quote_at_t_share": 0.004477617082771191,
+      "vwap_fallback_share": 0.005174091543815627
+    }
+  },
+  "row6_no_scale_free_rung_share": {
+    "after_hours": 0.4611800784851619,
+    "premarket": 0.06177586669964074,
+    "regular": 0.011090925110045426
+  },
+  "row6_fires": {
+    "after_hours": true,
+    "premarket": false,
+    "regular": false
+  },
+  "rung_availability": [
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 0,
+      "valid_moment_minutes": 969510,
+      "share": 0.5388199215148382
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 1,
+      "valid_moment_minutes": 619391,
+      "share": 0.34423596456663375
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 2,
+      "valid_moment_minutes": 389880,
+      "share": 0.21668173716640887
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 3,
+      "valid_moment_minutes": 242238,
+      "share": 0.13462745113295516
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 4,
+      "valid_moment_minutes": 142874,
+      "share": 0.07940439754774162
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 5,
+      "valid_moment_minutes": 79089,
+      "share": 0.04395491410370912
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 6,
+      "valid_moment_minutes": 40539,
+      "share": 0.02253016554578088
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 7,
+      "valid_moment_minutes": 18357,
+      "share": 0.010202181823032133
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 8,
+      "valid_moment_minutes": 7215,
+      "share": 0.004009845936328204
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 9,
+      "valid_moment_minutes": 2244,
+      "share": 0.0012471371145004143
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 10,
+      "valid_moment_minutes": 603,
+      "share": 0.00033512641713179584
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 0,
+      "valid_moment_minutes": 352822,
+      "share": 0.9382241333003593
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 1,
+      "valid_moment_minutes": 340879,
+      "share": 0.9064653120703731
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 2,
+      "valid_moment_minutes": 320614,
+      "share": 0.8525766314854555
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 3,
+      "valid_moment_minutes": 289334,
+      "share": 0.7693968669309911
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 4,
+      "valid_moment_minutes": 250637,
+      "share": 0.6664938186904505
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 5,
+      "valid_moment_minutes": 206871,
+      "share": 0.5501112875046869
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 6,
+      "valid_moment_minutes": 159730,
+      "share": 0.4247539575538554
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 7,
+      "valid_moment_minutes": 115535,
+      "share": 0.3072306297250654
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 8,
+      "valid_moment_minutes": 75193,
+      "share": 0.19995319808643994
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 9,
+      "valid_moment_minutes": 41998,
+      "share": 0.11168106623268528
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 10,
+      "valid_moment_minutes": 19350,
+      "share": 0.05145551291972142
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 11,
+      "valid_moment_minutes": 6633,
+      "share": 0.017638471172946365
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 12,
+      "valid_moment_minutes": 1778,
+      "share": 0.004728056949419364
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 13,
+      "valid_moment_minutes": 330,
+      "share": 0.000877535879251063
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "premarket",
+      "k": 14,
+      "valid_moment_minutes": 34,
+      "share": 9.041278755920043e-05
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 0,
+      "valid_moment_minutes": 2009128,
+      "share": 0.9889090748899546
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 1,
+      "valid_moment_minutes": 1958779,
+      "share": 0.9641268892792646
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 2,
+      "valid_moment_minutes": 1878373,
+      "share": 0.9245504048165516
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 3,
+      "valid_moment_minutes": 1742185,
+      "share": 0.8575175681375977
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 4,
+      "valid_moment_minutes": 1550697,
+      "share": 0.763265623546448
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 5,
+      "valid_moment_minutes": 1304846,
+      "share": 0.6422557700325005
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 6,
+      "valid_moment_minutes": 1012531,
+      "share": 0.4983759593751123
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 7,
+      "valid_moment_minutes": 714576,
+      "share": 0.35172009503553986
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 8,
+      "valid_moment_minutes": 455073,
+      "share": 0.22399061654478775
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 9,
+      "valid_moment_minutes": 255369,
+      "share": 0.1256946902066831
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 10,
+      "valid_moment_minutes": 120088,
+      "share": 0.05910828627413727
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 11,
+      "valid_moment_minutes": 46107,
+      "share": 0.0226942388518557
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 12,
+      "valid_moment_minutes": 14478,
+      "share": 0.0071261888671387595
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 13,
+      "valid_moment_minutes": 3338,
+      "share": 0.0016429906367253198
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 14,
+      "valid_moment_minutes": 249,
+      "share": 0.00012255981681983362
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 0,
+      "valid_moment_minutes": 1006666,
+      "share": 0.5594699333804252
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 1,
+      "valid_moment_minutes": 721026,
+      "share": 0.40072116092681626
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 2,
+      "valid_moment_minutes": 488347,
+      "share": 0.2714062693649438
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 3,
+      "valid_moment_minutes": 318908,
+      "share": 0.1772379692117193
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 4,
+      "valid_moment_minutes": 197861,
+      "share": 0.10996425873982463
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 5,
+      "valid_moment_minutes": 116447,
+      "share": 0.06471719054020933
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 6,
+      "valid_moment_minutes": 63064,
+      "share": 0.03504877673300095
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 7,
+      "valid_moment_minutes": 31425,
+      "share": 0.01746492148982866
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 8,
+      "valid_moment_minutes": 14015,
+      "share": 0.007789049313602187
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 9,
+      "valid_moment_minutes": 5344,
+      "share": 0.002970009242375318
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 10,
+      "valid_moment_minutes": 1629,
+      "share": 0.000905341514938135
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 11,
+      "valid_moment_minutes": 450,
+      "share": 0.00025009434114313124
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 0,
+      "valid_moment_minutes": 283683,
+      "share": 0.7543697297987252
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 1,
+      "valid_moment_minutes": 303991,
+      "share": 0.8083727559679088
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 2,
+      "valid_moment_minutes": 311431,
+      "share": 0.8281572012455691
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 3,
+      "valid_moment_minutes": 294754,
+      "share": 0.7838097289477813
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 4,
+      "valid_moment_minutes": 264836,
+      "share": 0.7042517942949531
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 5,
+      "valid_moment_minutes": 226321,
+      "share": 0.6018327203878177
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 6,
+      "valid_moment_minutes": 182907,
+      "share": 0.4863862274732551
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 7,
+      "valid_moment_minutes": 137640,
+      "share": 0.3660122376367161
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 8,
+      "valid_moment_minutes": 96168,
+      "share": 0.25572991041156434
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 9,
+      "valid_moment_minutes": 59715,
+      "share": 0.158794106149931
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 10,
+      "valid_moment_minutes": 31406,
+      "share": 0.08351482370836026
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 11,
+      "valid_moment_minutes": 13595,
+      "share": 0.0361518190255097
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 12,
+      "valid_moment_minutes": 4502,
+      "share": 0.011971716752691776
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 13,
+      "valid_moment_minutes": 1175,
+      "share": 0.003124559570060603
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 14,
+      "valid_moment_minutes": 243,
+      "share": 0.0006461855110848737
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 0,
+      "valid_moment_minutes": 1999342,
+      "share": 0.9840923264265052
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 1,
+      "valid_moment_minutes": 1961773,
+      "share": 0.9656005603297007
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 2,
+      "valid_moment_minutes": 1902422,
+      "share": 0.9363875174057089
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 3,
+      "valid_moment_minutes": 1799362,
+      "share": 0.8856605506528894
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 4,
+      "valid_moment_minutes": 1644852,
+      "share": 0.8096094771716345
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 5,
+      "valid_moment_minutes": 1433321,
+      "share": 0.7054922056386376
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 6,
+      "valid_moment_minutes": 1172337,
+      "share": 0.5770337669522622
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 7,
+      "valid_moment_minutes": 881813,
+      "share": 0.4340355010013974
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 8,
+      "valid_moment_minutes": 604802,
+      "share": 0.297688443101482
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 9,
+      "valid_moment_minutes": 371921,
+      "share": 0.1830625286403588
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 10,
+      "valid_moment_minutes": 200354,
+      "share": 0.09861586160289537
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 11,
+      "valid_moment_minutes": 90830,
+      "share": 0.04470726169375698
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 12,
+      "valid_moment_minutes": 34344,
+      "share": 0.016904394975342834
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 13,
+      "valid_moment_minutes": 10726,
+      "share": 0.005279424077146729
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 14,
+      "valid_moment_minutes": 2471,
+      "share": 0.0012162462143044533
+    },
+    {
+      "ladder": "rate",
+      "segment": "regular",
+      "k": 15,
+      "valid_moment_minutes": 149,
+      "share": 7.333900685202895e-05
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 11,
+      "valid_moment_minutes": 130,
+      "share": 7.22494763302379e-05
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "after_hours",
+      "k": 12,
+      "valid_moment_minutes": 5,
+      "share": 2.778826012701458e-06
+    },
+    {
+      "ladder": "scale_free",
+      "segment": "regular",
+      "k": 15,
+      "valid_moment_minutes": 5,
+      "share": 2.4610404983902336e-06
+    },
+    {
+      "ladder": "rate",
+      "segment": "after_hours",
+      "k": 12,
+      "valid_moment_minutes": 105,
+      "share": 5.8355346266730613e-05
+    },
+    {
+      "ladder": "rate",
+      "segment": "premarket",
+      "k": 15,
+      "valid_moment_minutes": 28,
+      "share": 7.445758975463565e-05
+    }
+  ],
+  "weights_reconcile": true,
+  "rem_type_moments": "joined at j = 0, 1, 2, 5, 10, 20 with S2's checkpoint time asserted equal",
+  "worker_seconds": {
+    "median": 1.7393942999769934,
+    "max": 68.03459110000404,
+    "sum": 17822.1846491007
+  }
+}
