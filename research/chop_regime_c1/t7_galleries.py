@@ -57,12 +57,15 @@ def load_sf(cols) -> pd.DataFrame:
     return pd.concat([pd.read_parquet(C.art(f"t6_sf_rungs_{y}.parquet"), columns=cols) for y in years], ignore_index=True)
 
 
-def flags(m: pd.DataFrame, bands: pd.DataFrame) -> pd.DataFrame:
+def flags(m: pd.DataFrame, bands: pd.DataFrame, sf: pd.DataFrame | None = None) -> pd.DataFrame:
+    """g1, g2, g3 per moment of `m`; `sf` = the scale-free rungs of those moments (default: the T6 build's; the chart
+    wall passes its own 1-minute build's)."""
     g = GA
     f = pd.DataFrame({"moment_uid": m["moment_uid"]})
     f["g1"] = (m["n_eff"] <= g["G1_low_volume_pop"]["n_eff_max"]) & (m["top3_share"] >= g["G1_low_volume_pop"]["top3_share_min"])
     # g2: every valid scale-free rung k in 1..4 inside its cell's null band
-    sf = load_sf(["moment_uid", "k", "segment", "price_tier", "er", "price_basis"])
+    if sf is None:
+        sf = load_sf(["moment_uid", "k", "segment", "price_tier", "er", "price_basis"])
     sf = sf[sf["k"].between(1, 4)].copy()
     sf["basis"] = np.where(sf["price_basis"] == "mid", "mid", "vwap")
     sf["cell"] = sf["segment"] + "|" + sf["k"].astype(str) + "|" + sf["price_tier"] + "|" + sf["basis"]

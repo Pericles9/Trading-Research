@@ -1,0 +1,64 @@
+{
+  "config_hash": "69794facdbe8",
+  "seconds": 44.7,
+  "events": 600,
+  "development_events": 7525,
+  "by_stratum": [
+    {
+      "year": 2020,
+      "tau_segment": "auction_close",
+      "n": 1
+    },
+    {
+      "year": 2020,
+      "tau_segment": "auction_open",
+      "n": 4
+    },
+    {
+      "year": 2020,
+      "tau_segment": "premarket",
+      "n": 66
+    },
+    {
+      "year": 2020,
+      "tau_segment": "regular",
+      "n": 198
+    },
+    {
+      "year": 2021,
+      "tau_segment": "auction_open",
+      "n": 1
+    },
+    {
+      "year": 2021,
+      "tau_segment": "premarket",
+      "n": 50
+    },
+    {
+      "year": 2021,
+      "tau_segment": "regular",
+      "n": 102
+    },
+    {
+      "year": 2022,
+      "tau_segment": "auction_open",
+      "n": 2
+    },
+    {
+      "year": 2022,
+      "tau_segment": "premarket",
+      "n": 49
+    },
+    {
+      "year": 2022,
+      "tau_segment": "regular",
+      "n": 127
+    }
+  ],
+  "in_suite_sample": 273,
+  "candle_minutes": 491739,
+  "candles": 328911,
+  "halt_labels": 0,
+  "halt_gaps": 1474,
+  "s1_type_missing": 1
+}

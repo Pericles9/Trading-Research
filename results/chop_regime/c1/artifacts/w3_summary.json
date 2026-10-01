@@ -1,0 +1,43 @@
+{
+  "config_hash": "69794facdbe8",
+  "seconds": 3.9,
+  "events": 600,
+  "events_built": 600,
+  "bytes": 32131592,
+  "bytes_per_event": 53553,
+  "sizes_tried": {
+    "600": 32127333
+  },
+  "rowWd_fires": false,
+  "data_hash": "2ad66433c97d",
+  "minutes": 337541,
+  "table_bytes": 21297080,
+  "candle_bytes": 5715860,
+  "shared_js": [
+    "fmt",
+    "bit",
+    "hval",
+    "val",
+    "ovrVal",
+    "finiteRange",
+    "sliderToVal",
+    "valToSlider",
+    "rangeOf",
+    "initState",
+    "noFilterValue",
+    "unavCount",
+    "activeConds",
+    "recompute",
+    "ceilingCells",
+    "syncControls",
+    "minutesOf"
+  ],
+  "events_in_suite_sample": 273,
+  "assertions": [
+    "development slice only",
+    "no A12",
+    "no hindsight, type or percentile / rank column in the conditions",
+    "no outcome array embedded",
+    "cost_noise ladder scaling exact"
+  ]
+}

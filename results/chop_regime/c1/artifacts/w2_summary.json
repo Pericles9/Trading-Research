@@ -1,0 +1,50 @@
+{
+  "config_hash": "69794facdbe8",
+  "build_seconds": 230.5,
+  "seconds": 234.1,
+  "events": 600,
+  "minutes": 337541,
+  "per_segment": {
+    "after_hours": {
+      "minutes": 143940,
+      "no_scale_free": 0.4626163679310824
+    },
+    "auction_close": {
+      "minutes": 600,
+      "no_scale_free": 1.0
+    },
+    "auction_open": {
+      "minutes": 172,
+      "no_scale_free": 1.0
+    },
+    "premarket": {
+      "minutes": 28863,
+      "no_scale_free": 0.05789418979316079
+    },
+    "regular": {
+      "minutes": 163966,
+      "no_scale_free": 0.031110108193161998
+    }
+  },
+  "flags": {
+    "g1": 17840,
+    "g2": 3205
+  },
+  "worker_seconds_max": 131.26972810004372,
+  "grid": "tau + j min, every minute until 20:00, weight 1 (moments.wall_minutes_every_1 = 960)",
+  "assertions": [
+    "causality and segment inside every measure function",
+    "every minute from tau",
+    "development slice only"
+  ],
+  "cache": {
+    "w2_moments.parquet": {
+      "rows": 337541,
+      "sha256_16": "4fb801dd30035217"
+    },
+    "w2_er_rungs.parquet": {
+      "rows": 1296986,
+      "sha256_16": "ea432556793cce1d"
+    }
+  }
+}

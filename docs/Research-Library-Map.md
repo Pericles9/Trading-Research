@@ -2811,9 +2811,12 @@ primary with a flagged VWAP fallback; row 3 splits into 3a (HARD STOP) and 3b (L
 HARD STOP; row 3b removed er from the suite's conditions (midpoint positive control missed in 2 of 100 cells); rows 5,
 6 and 7 LOG. Amendment 2 (2026-10-01, `prompts/chop_regime_c1_amendment_2.md`): the positive control is read per rung (24 of 24
 pass; the two misses sat at er's ceiling), er is reinstated, cells whose null 95th value is >= 0.95 are labelled "noise fills
-the scale here", panel A leads with per-segment counts; only T8 was rebuilt. Stopped with the suite in Cooper's hands.** Branch `explore/chop-regime-c1`, cut from
-`explore/shape-classifier-s2` at `e71b68a`. `prompts/chop_regime_c1.md`, `prompts/chop_regime_c1_amendment_1.md` and
-`prompts/chop_regime_c1_amendment_2.md` (filed verbatim); `config/chop_regime_c1.json` (Cooper's ruling R1, the D41 exception to D32; declared
+the scale here", panel A leads with per-segment counts; only T8 was rebuilt. Amendment 3 (2026-10-01,
+`prompts/chop_regime_c1_amendment_3.md`): a second instrument, the chart wall -- 1-minute candles with volume for 600
+seeded development-slice events, the filter shaded over them, driven by the suite's own filter code (lifted by name)
+and config format; the suite is unchanged. Stopped with the wall in Cooper's hands.** Branch `explore/chop-regime-c1`, cut from
+`explore/shape-classifier-s2` at `e71b68a`. `prompts/chop_regime_c1.md`, `prompts/chop_regime_c1_amendment_1.md`,
+`prompts/chop_regime_c1_amendment_2.md` and `prompts/chop_regime_c1_amendment_3.md` (filed verbatim); `config/chop_regime_c1.json` (Cooper's ruling R1, the D41 exception to D32; declared
 interpretations; the `amendment_1` block; committed before each run). D40 (2025 sealed for the book) and D41 appended
 to `docs/Universe-Decisions.md` in the T0 freeze. `research/chop_regime_c1/`: `c1common.py` (paths, population with
 S2's tau_d and V_pre, the D15 coverage join, the per-event tape with per-segment D26 collapse and prefix sums, the
@@ -2826,7 +2829,11 @@ and `t5b_blindness_detail.py` (first-run diagnoses, kept as the A1.0 record), `t
 per-moment and per-rung tables git-ignored with a tracked manifest), `t6b_null_bands.py` (the per-cell null bands),
 `t7_galleries.py` (G1-G3 flags, the embedded sample, pools and strips), `suitedata.py` and `suite_table.py` (the page's
 typed-array encoding and table, with the build-time assertions), `t8_suite.py` (the page), `t8_page_test.js` and
-`t8_page_test.py` (the page's JavaScript under node with a stub DOM), `c1charts.py`, `c1report.py`. Outputs in
+`t8_page_test.py` (the page's JavaScript under node with a stub DOM), `c1charts.py`, `c1report.py`; the wall:
+`w1_wall_events.py` (seeded stratified events, 1-minute candles from the C1 tape, halts, segment marks),
+`w2_wall_filter.py` (T1-T4 unchanged at every minute from tau, with G1-G3 as viewing labels), `w3_wall_page.py` (the
+page), `w4_wall_test.js` / `w4_wall_test.py` (page test and the config round trip with the suite under node) and
+`w4_wall_timing.js` (slider redraw in headless Chrome over the DevTools protocol). Outputs in
 `results/chop_regime/c1/` (`artifacts/`, `charts/t5/`, `charts/t6/`, `charts/t6b/`, `suite/chop_suite.html`,
-`REPORT.md`, copied to `results/reports/chop_regime_c1_report.md`); `cache/` holds the T6 parts and T7 strips and is
-git-ignored in place.
+`suite/chart_wall.html`, `REPORT.md`, copied to `results/reports/chop_regime_c1_report.md`); `cache/` holds the T6
+parts, T7 strips and the wall's filter table and candles, and is git-ignored in place.

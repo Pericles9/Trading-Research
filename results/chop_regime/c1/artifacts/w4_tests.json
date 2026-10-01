@@ -1,0 +1,105 @@
+{
+  "config_hash": "69794facdbe8",
+  "wall": "results/chop_regime/c1/suite/chart_wall.html",
+  "suite": "results/chop_regime/c1/suite/chop_suite.html",
+  "seed": 20261001,
+  "node_exit": 0,
+  "node_errors": [],
+  "test": {
+    "page": {
+      "init_ms": 2491,
+      "rows": 337541,
+      "events": 600,
+      "charts_on_load": 12,
+      "filtered_on_load": 0,
+      "shaded_charts_on_load": 0,
+      "hover_points_on_load": true,
+      "filter_computed_all_on": true,
+      "shading_traces_written": true,
+      "viewing_controls_walked": 12,
+      "export_load_reexport_identical": true,
+      "filtered_all_off": 0,
+      "shaded_charts_all_off": 0,
+      "plot_calls": 4795
+    },
+    "round_trip": {
+      "suite_init_ms": 9222,
+      "shared_minutes": 43897,
+      "shared_events": 273,
+      "value_mismatches": {
+        "c_trade_rate": 0,
+        "c_dollar_flow": 0,
+        "c_spread_bp": 0,
+        "c_spread_c": 0,
+        "c_quote_age": 0,
+        "c_depth_ask": 0,
+        "c_cn_w5": 0,
+        "c_cn_v025": 0,
+        "c_turnover_rate": 0,
+        "c_n_eff": 0,
+        "c_top3": 0,
+        "c_move_per_trade": 0,
+        "o_leg_s": 0,
+        "o_giveback": 0,
+        "o_act_ratio": 0,
+        "er_k0": 0,
+        "er_k1": 0,
+        "er_k2": 0,
+        "er_k3": 0,
+        "er_k4": 0,
+        "er_k5": 0,
+        "er_k6": 0,
+        "er_all": 0,
+        "seg": 0
+      },
+      "suite_to_wall": {
+        "configs": 25,
+        "configs_with_mismatch": 0,
+        "minutes_mismatched": 0,
+        "configs_filtering_some_shared_minute": 25,
+        "reexport_identical": true
+      },
+      "wall_to_suite": {
+        "configs": 25,
+        "configs_with_mismatch": 0,
+        "minutes_mismatched": 0,
+        "configs_filtering_some_shared_minute": 25,
+        "reexport_identical": true
+      }
+    },
+    "non_finite_plotted": 0,
+    "non_finite_examples": [],
+    "page_test_pass": true,
+    "round_trip_pass": true
+  },
+  "timing_exit": 0,
+  "timing": {
+    "selftest": {
+      "charts": 12,
+      "ms": [
+        639.3000000715256,
+        653.8999999761581,
+        667.1999999284744,
+        667.5,
+        669.1000000238419
+      ],
+      "median": 667.1999999284744,
+      "max": 669.1000000238419,
+      "parts_ms": {
+        "recompute": 48.5,
+        "counts": 9.600000023841858,
+        "event_state": 0.10000002384185791,
+        "hover_text_every_minute_not_on_redraw": 746.6999999284744,
+        "shade_and_paint": 546
+      },
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36"
+    },
+    "seconds_to_result": 9.259,
+    "page_exceptions": [],
+    "window": "1600x1000",
+    "debounce_ms": 60
+  },
+  "rowWc_fires": false,
+  "rowWe_fires": false,
+  "page_test_pass": true
+}
