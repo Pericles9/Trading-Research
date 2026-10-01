@@ -1,0 +1,149 @@
+{
+  "config_hash": "801c3bce59ed",
+  "seconds": 173.9,
+  "flags": {
+    "g1": 56155,
+    "g2": 21377,
+    "g3": 21251
+  },
+  "flags_moment_minutes": {
+    "g1": 221003,
+    "g2": 37589,
+    "g3": 48627
+  },
+  "sample": {
+    "fraction": 0.44,
+    "events_embedded": 3319,
+    "events": 7525,
+    "events_share": 0.441063122923588,
+    "moments_embedded": 534911,
+    "moments": 1211425,
+    "reserve_bytes": 35088000,
+    "table_bytes_by_f": {
+      "1.0": 144783152,
+      "0.5": 72660303,
+      "0.25": 36224300,
+      "0.37": 53627021,
+      "0.43": 62344685,
+      "0.46": 66849234,
+      "0.44": 63859078,
+      "0.45": 65353813
+    },
+    "by_stratum": [
+      {
+        "year": 2020,
+        "tau_segment": "after_hours",
+        "sum": 2,
+        "size": 3
+      },
+      {
+        "year": 2020,
+        "tau_segment": "auction_close",
+        "sum": 7,
+        "size": 14
+      },
+      {
+        "year": 2020,
+        "tau_segment": "auction_open",
+        "sum": 20,
+        "size": 45
+      },
+      {
+        "year": 2020,
+        "tau_segment": "premarket",
+        "sum": 366,
+        "size": 830
+      },
+      {
+        "year": 2020,
+        "tau_segment": "regular",
+        "sum": 1095,
+        "size": 2487
+      },
+      {
+        "year": 2021,
+        "tau_segment": "after_hours",
+        "sum": 1,
+        "size": 1
+      },
+      {
+        "year": 2021,
+        "tau_segment": "auction_close",
+        "sum": 1,
+        "size": 2
+      },
+      {
+        "year": 2021,
+        "tau_segment": "auction_open",
+        "sum": 6,
+        "size": 12
+      },
+      {
+        "year": 2021,
+        "tau_segment": "premarket",
+        "sum": 275,
+        "size": 625
+      },
+      {
+        "year": 2021,
+        "tau_segment": "regular",
+        "sum": 561,
+        "size": 1273
+      },
+      {
+        "year": 2022,
+        "tau_segment": "after_hours",
+        "sum": 2,
+        "size": 3
+      },
+      {
+        "year": 2022,
+        "tau_segment": "auction_close",
+        "sum": 2,
+        "size": 3
+      },
+      {
+        "year": 2022,
+        "tau_segment": "auction_open",
+        "sum": 9,
+        "size": 20
+      },
+      {
+        "year": 2022,
+        "tau_segment": "premarket",
+        "sum": 271,
+        "size": 614
+      },
+      {
+        "year": 2022,
+        "tau_segment": "regular",
+        "sum": 701,
+        "size": 1593
+      }
+    ],
+    "row5_fires": true
+  },
+  "pools": {
+    "G1": {
+      "n": 150,
+      "available": 25047
+    },
+    "G2": {
+      "n": 150,
+      "available": 9581
+    },
+    "G3": {
+      "n": 150,
+      "available": 9368
+    },
+    "random": {
+      "n": 300,
+      "available": 533227
+    }
+  },
+  "strips": {
+    "n": 749,
+    "raw_bytes": 15295956,
+    "max_prints_in_window": 1211810
+  }
+}
