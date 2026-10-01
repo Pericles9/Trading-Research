@@ -145,6 +145,23 @@ def mid_at(times: np.ndarray, qv: dict | None) -> np.ndarray:
     return out
 
 
+def vwap_log_path(ts: np.ndarray, px: np.ndarray, sz: np.ndarray, nb: int) -> tuple[np.ndarray, dict] | tuple[None, None]:
+    """[ln p0, ln VWAP_1 .. ln VWAP_nb] for a window's prints, p0 = the first print with volume.
+
+    The buckets are buckets_core's (Brief 1's rule); the value sums run on each print's deviation from p0
+    (px / p0 - 1), so a bucket whose prints all sit at one price gets exactly that price and two such buckets an exact
+    zero return. On raw dollar prefix sums a flat stretch returns rounding noise (~1e-12), which is not scale-invariant
+    (the section 6 blindness control would see it)."""
+    cv_end = np.cumsum(sz)
+    if not cv_end.size or cv_end[-1] <= 0:
+        return None, None
+    f = int(np.searchsorted(cv_end, 0.0, "right"))
+    p0 = float(px[f])
+    dev = px / p0 - 1.0
+    b = buckets_core(ts, dev, cv_end, np.cumsum(dev * sz), nb)
+    return math.log(p0) + np.log1p(np.r_[dev[f], b["vwap"]]), b
+
+
 def bucket_path(v: dict, qv: dict | None, a: int, t: int, nb: int, geo: tuple) -> dict | None:
     """Both bucket paths over [a, t]: log prices [p0, P_1 .. P_nb], p0 the window's opening price on the same basis."""
     C.assert_causal(t, v["ts"], v["ct"], None if qv is None else qv["vts"])
@@ -153,12 +170,11 @@ def bucket_path(v: dict, qv: dict | None, a: int, t: int, nb: int, geo: tuple) -
     lo, hi = int(np.searchsorted(ts, a, "left")), ts.size
     if hi <= lo:
         return None
-    cv_end = v["CS"][lo + 1:hi + 1] - v["CS"][lo]
-    cd_end = v["CD"][lo + 1:hi + 1] - v["CD"][lo]
-    b = buckets_core(ts[lo:hi], px[lo:hi], cv_end, cd_end, nb)
+    lp_v, b = vwap_log_path(ts[lo:hi], px[lo:hi], v["sz"][lo:hi], nb)
     if b is None:
         return None
-    lp_v = np.log(np.r_[b["p_first"], b["vwap"]])
+    tot = float(v["CD"][hi] - v["CD"][lo])
+    assert abs(float(np.exp(lp_v[1:]).sum()) * (b["V"] / nb) - tot) <= 1e-9 * abs(tot) + 1e-6, "bucket dollar value not conserved"
     m = mid_at(np.r_[b["t_first"], b["t_end"]], qv)
     ok = bool(np.isfinite(m).all() and (m > 0).all())
     return {"lp_vwap": lp_v, "lp_mid": np.log(m) if ok else None, "mid_ok": ok, "V": b["V"], "W_min": (t - a) / MIN_NS,
@@ -180,7 +196,7 @@ def vr_z(r: np.ndarray, q: int) -> tuple[np.ndarray, np.ndarray]:
     agg = cs[:, q:] - cs[:, :-q]
     m = q * (n - q + 1) * (1.0 - q / n)
     sc = ((agg - q * mu) ** 2).sum(axis=1) / m
-    with np.errstate(divide="ignore", invalid="ignore"):
+    with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
         vr = sc / sa
         th = np.zeros(M)
         d2 = d * d

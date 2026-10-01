@@ -2801,3 +2801,22 @@ positive: rule inputs gated, terminal_log reported), `t6_money.py` (with the A1.
 selector pages on the inlined plotly.js, each with a label selector), `build_report.py`. Outputs in `results/shape_classifier/s2/`
 (`artifacts/`, `charts/t4..t7/`, `REPORT.md`, copied to `results/reports/shape_classifier_s2_report.md`);
 `cache/` is rebuilt by T2 and git-ignored in place.
+
+**Chop regime filter C1 (2026-09-30) -- the per-moment regime measures and the by-eye tuning suite. Build,
+instrument check, interactive suite; fits nothing. HARD STOP at T5 (escalation row 3: both bucket prices fail the
+whole-pipeline control -- VWAP's vz2 median about +1.45, the averaging bias; the midpoint's robust variance-ratio z
+degenerate on sparse returns -- so the ruling table's fails / fails cell applies); state committed with a report
+generated from T0 and T5 as its record. T6-T9 (full build, galleries, suite) did not run.** Branch
+`explore/chop-regime-c1`, cut from `explore/shape-classifier-s2` at `e71b68a`. `prompts/chop_regime_c1.md` (filed
+verbatim); `config/chop_regime_c1.json` (Cooper's ruling R1, the D41 exception to D32; declared interpretations;
+committed before any run). D40 (2025 sealed for the book) and D41 appended to `docs/Universe-Decisions.md` in the
+T0 freeze. `research/chop_regime_c1/`: `c1common.py` (paths, population with S2's tau_d and V_pre, the D15 coverage
+join, the per-event tape with per-segment D26 collapse and prefix sums, the Phase 11 quote book sliced to <= t, the
+causality and segment assertions, the moment grid), `measures.py` (T1-T4 and the section 5 hindsight columns in one
+per-event builder: b2's R1 rate ladder, presence / cost / relative measures, Brief 1's bucket rule on prefix sums on
+both prices, ER and Lo-MacKinlay VR with their references, rung-0 context; the causality, segment and bucket-equality
+tests), `t0_population.py` (population asserts, quote-size unit census, timing), `t5_controls.py` (the section 6
+controls through the build's own window hook, the ruling, blindness), `t5a_whole_pipeline_diagnosis.py` (the
+whole-pipeline null under three constructions; measured at the stop), `t5b_blindness_detail.py` (the blindness
+mismatches' values; measured at the stop), `c1charts.py`, `c1report.py`. Outputs in `results/chop_regime/c1/`
+(`artifacts/`, `charts/t5/`, `REPORT.md`, copied to `results/reports/chop_regime_c1_report.md`).

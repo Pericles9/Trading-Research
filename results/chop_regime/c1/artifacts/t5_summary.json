@@ -1,0 +1,391 @@
+{
+  "config_hash": "2def9c08e0e6",
+  "seconds": 171.5,
+  "events": 53,
+  "windows_by_basis": {
+    "vwap": 40886,
+    "mid": 40484
+  },
+  "windows_by_rung": {
+    "0": 7563,
+    "1": 6824,
+    "2": 6164,
+    "3": 5351,
+    "4": 4467,
+    "5": 3642,
+    "6": 2882,
+    "7": 2011,
+    "8": 1175,
+    "9": 556,
+    "10": 183,
+    "11": 53,
+    "12": 12,
+    "13": 3
+  },
+  "moments": 8727,
+  "table": {
+    "references|mid": {
+      "pass": false,
+      "failing_rungs": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13"
+      ],
+      "all_rungs": {
+        "control": "references",
+        "basis": "mid",
+        "rung": "all",
+        "windows": 40408,
+        "er_statistic_median": 1.0081927577028582,
+        "vz2_n": 8059852,
+        "vz2_median": -0.013491562101989985,
+        "vz2_sd": 33290555971854.09,
+        "vz4_n": 8062124,
+        "vz4_median": -0.1406974196434021,
+        "vz4_sd": 26414787947431.832,
+        "pass_er": true,
+        "pass_vz": false,
+        "pass": false
+      }
+    },
+    "whole_pipeline|mid": {
+      "pass": false,
+      "failing_rungs": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13"
+      ],
+      "all_rungs": {
+        "control": "whole_pipeline",
+        "basis": "mid",
+        "rung": "all",
+        "windows": 40416,
+        "er_statistic_median": 0.8413000314851798,
+        "vz2_n": 806812,
+        "vz2_median": -0.06093418039381504,
+        "vz2_sd": 668667343470.9967,
+        "vz4_n": 807571,
+        "vz4_median": -0.200795978307724,
+        "vz4_sd": 1481245893903.6729,
+        "pass_er": false,
+        "pass_vz": false,
+        "pass": false
+      }
+    },
+    "positive_trend|mid": {
+      "pass": true,
+      "median_er_rel_by_d": {
+        "1": 1.321486234664917,
+        "2": 2.3051419258117676,
+        "4": 3.760939598083496
+      }
+    },
+    "positive_autocorrelation|mid": {
+      "pass": true,
+      "median_vz2_by_phi": {
+        "-0.50": -2.2941622734069824,
+        "-0.25": -1.403057336807251,
+        "+0.25": 1.489182710647583,
+        "+0.50": 2.44283390045166
+      }
+    },
+    "edge_of_detectability|mid": {
+      "report_only": true,
+      "median_vz2_phi_+0.25": 1.489182710647583,
+      "median_vz2_phi_-0.25": -1.403057336807251,
+      "median_er_rel_d1": 1.321486234664917
+    },
+    "null_parameter_sweep|mid": {
+      "report_only": true,
+      "er_rel": {
+        "32": 0.9910498497408838,
+        "16": 0.9912819181466316,
+        "rel_change_16": 0.00023416421061808206,
+        "abs_change_16": 0.0002320684057477429,
+        "64": 0.9846352097435772,
+        "rel_change_64": -0.006472570475626199,
+        "abs_change_64": -0.006414639997306626,
+        "bucket_dependent": false
+      },
+      "vz2": {
+        "32": 0.15831063692934447,
+        "16": 0.17905762227247382,
+        "rel_change_16": 0.13105237743682965,
+        "abs_change_16": 0.020746985343129354,
+        "64": 0.09836276150854602,
+        "rel_change_64": -0.3786724416221871,
+        "abs_change_64": -0.05994787542079845,
+        "bucket_dependent": true
+      },
+      "cost_noise_w5": {
+        "16": 0.5638943894528264,
+        "32": 0.5501928387401046,
+        "64": 0.5374235227028069,
+        "rel_change_16": 0.024903178936492944,
+        "rel_change_64": -0.023208800875231958,
+        "bucket_dependent": false
+      },
+      "cost_noise_w15": {
+        "16": 0.32556457754510904,
+        "32": 0.3176539835528038,
+        "64": 0.3102816155013025,
+        "rel_change_16": 0.024903178936492944,
+        "rel_change_64": -0.02320880087523207,
+        "bucket_dependent": false
+      },
+      "cost_noise_w60": {
+        "16": 0.16278228877255452,
+        "32": 0.1588269917764019,
+        "64": 0.15514080775065126,
+        "rel_change_16": 0.024903178936492944,
+        "rel_change_64": -0.02320880087523207,
+        "bucket_dependent": false
+      },
+      "cost_noise_v025": {
+        "16": 0.5204887828957921,
+        "32": 0.5043193194177191,
+        "64": 0.5016248828949743,
+        "rel_change_16": 0.03206195530391753,
+        "rel_change_64": -0.005342719223716786,
+        "bucket_dependent": false
+      },
+      "cost_noise_v05": {
+        "16": 0.3680411479171474,
+        "32": 0.3566076106436537,
+        "64": 0.3547023563069441,
+        "rel_change_16": 0.03206195530391773,
+        "rel_change_64": -0.005342719223716977,
+        "bucket_dependent": false
+      },
+      "cost_noise_v1": {
+        "16": 0.2602443914478961,
+        "32": 0.25215965970885956,
+        "64": 0.25081244144748716,
+        "rel_change_16": 0.03206195530391753,
+        "rel_change_64": -0.005342719223716786,
+        "bucket_dependent": false
+      }
+    },
+    "references|vwap": {
+      "pass": false,
+      "failing_rungs": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "all_rungs": {
+        "control": "references",
+        "basis": "vwap",
+        "rung": "all",
+        "windows": 40879,
+        "er_statistic_median": 1.004894779103818,
+        "vz2_n": 8175752,
+        "vz2_median": -0.014618043787777424,
+        "vz2_sd": 101180548.52468555,
+        "vz4_n": 8175767,
+        "vz4_median": -0.14017823338508606,
+        "vz4_sd": 166687977.73511386,
+        "pass_er": true,
+        "pass_vz": false,
+        "pass": false
+      }
+    },
+    "whole_pipeline|vwap": {
+      "pass": false,
+      "failing_rungs": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13"
+      ],
+      "all_rungs": {
+        "control": "whole_pipeline",
+        "basis": "vwap",
+        "rung": "all",
+        "windows": 40879,
+        "er_statistic_median": 0.40386239086036585,
+        "vz2_n": 817580,
+        "vz2_median": 1.450937032699585,
+        "vz2_sd": 1.0015475295545415,
+        "vz4_n": 817580,
+        "vz4_median": 0.9952332973480225,
+        "vz4_sd": 1.34096651347594,
+        "pass_er": false,
+        "pass_vz": false,
+        "pass": false
+      }
+    },
+    "positive_trend|vwap": {
+      "pass": true,
+      "median_er_rel_by_d": {
+        "1": 1.3277509212493896,
+        "2": 2.366154670715332,
+        "4": 3.925873279571533
+      }
+    },
+    "positive_autocorrelation|vwap": {
+      "pass": true,
+      "median_vz2_by_phi": {
+        "-0.50": -2.347635507583618,
+        "-0.25": -1.4019442796707153,
+        "+0.25": 1.4606692790985107,
+        "+0.50": 2.485588550567627
+      }
+    },
+    "edge_of_detectability|vwap": {
+      "report_only": true,
+      "median_vz2_phi_+0.25": 1.4606692790985107,
+      "median_vz2_phi_-0.25": -1.4019442796707153,
+      "median_er_rel_d1": 1.3277509212493896
+    },
+    "null_parameter_sweep|vwap": {
+      "report_only": true,
+      "er_rel": {
+        "32": 1.0042292706756506,
+        "16": 1.0654425337739986,
+        "rel_change_16": 0.060955465933753714,
+        "abs_change_16": 0.06121326309834796,
+        "64": 0.933204287766988,
+        "rel_change_64": -0.07072586408567495,
+        "abs_change_64": -0.07102498290866255,
+        "bucket_dependent": false
+      },
+      "vz2": {
+        "32": 1.2009570806434993,
+        "16": 1.0969477866654533,
+        "rel_change_16": -0.08660533807112862,
+        "abs_change_16": -0.10400929397804592,
+        "64": 1.191156517140882,
+        "rel_change_64": -0.008160627603249492,
+        "abs_change_64": -0.009800563502617265,
+        "bucket_dependent": false
+      },
+      "cost_noise_w5": {
+        "16": 0.5434181532232578,
+        "32": 0.47832134934435155,
+        "64": 0.41416403640851507,
+        "rel_change_16": 0.13609428884605773,
+        "rel_change_64": -0.13413014707325674,
+        "bucket_dependent": false
+      },
+      "cost_noise_w15": {
+        "16": 0.3137426170459772,
+        "32": 0.27615895980310645,
+        "64": 0.23911771790911812,
+        "rel_change_16": 0.13609428884605757,
+        "rel_change_64": -0.134130147073257,
+        "bucket_dependent": false
+      },
+      "cost_noise_w60": {
+        "16": 0.1568713085229886,
+        "32": 0.13807947990155323,
+        "64": 0.11955885895455906,
+        "rel_change_16": 0.13609428884605757,
+        "rel_change_64": -0.134130147073257,
+        "bucket_dependent": false
+      },
+      "cost_noise_v025": {
+        "16": 0.5056254433025713,
+        "32": 0.4439863413146097,
+        "64": 0.3829777481107522,
+        "rel_change_16": 0.13883107711253673,
+        "rel_change_64": -0.1374109685969521,
+        "bucket_dependent": false
+      },
+      "cost_noise_v05": {
+        "16": 0.35753117969970244,
+        "32": 0.31394575269776553,
+        "64": 0.2708061627326664,
+        "rel_change_16": 0.13883107711253684,
+        "rel_change_64": -0.1374109685969521,
+        "bucket_dependent": false
+      },
+      "cost_noise_v1": {
+        "16": 0.25281272165128565,
+        "32": 0.22199317065730484,
+        "64": 0.1914888740553761,
+        "rel_change_16": 0.13883107711253673,
+        "rel_change_64": -0.1374109685969521,
+        "bucket_dependent": false
+      }
+    }
+  },
+  "ruling": {
+    "case": "both_fail",
+    "primary": null,
+    "kept": [],
+    "whole_pipeline_mid_pass": false,
+    "whole_pipeline_vwap_pass": false
+  },
+  "gated": {
+    "blindness": false,
+    "causality": true,
+    "segment": true
+  },
+  "blindness": {
+    "passes": false,
+    "rule": "identical to 1e-9 = numpy.isclose(a, b, rtol=1e-9, atol=1e-9), with NaN and inf patterns equal. Set 2026-09-30 before the T5 run, after a one-event smoke run (MATX_2020-07-10) showed er_mid exactly 0 at x1 and 4e-15 at x0.1 (a midpoint (0.1 bid + 0.1 ask) / 2 is not bit-equal to 0.1 x (bid + ask) / 2), where a relative-only test is undefined; the relative-only worst case is reported beside it.",
+    "values_not_close": 0,
+    "x10_max_rel_diff_relative_only": 0.23051052714568415,
+    "x0.1_max_rel_diff_relative_only": 0.0673524077084448,
+    "nan_pattern_mismatches": 6,
+    "events_with_sub_dollar_prints": 15
+  },
+  "tests": {
+    "causality": {
+      "quote_state/quote": "raised",
+      "tw_spread/quote": "raised",
+      "rate_ladder/print": "raised",
+      "rate_measures/print": "raised",
+      "bucket_path/print": "raised",
+      "bucket_path/quote": "raised",
+      "clean_inputs_do_not_raise": "ok",
+      "passes": true
+    },
+    "segment": {
+      "regular_window_reaching_into_open_auction": "raised",
+      "regular_window_reaching_premarket": "raised",
+      "after_hours_window_holding_close_auction": "raised",
+      "premarket_window_before_0400": "raised",
+      "t_in_auction_minute": "raised",
+      "rate_measures_window_in_auction": "raised",
+      "bucket_path_window_in_auction": "raised",
+      "inside_regular_does_not_raise": "ok",
+      "passes": true
+    }
+  },
+  "hard_stop_row3": true
+}

@@ -1,0 +1,88 @@
+{
+  "config_hash": "69463d37b6ff",
+  "seconds": 270.8,
+  "events": 53,
+  "draws_per_window": 20,
+  "pooled": [
+    {
+      "kind": "bootstrap",
+      "basis": "mid",
+      "rung": "all",
+      "windows": 40484,
+      "er_statistic_median": 1.0665698831556008,
+      "vz2_median": -0.05890103802084923,
+      "vz2_sd": 47683330048.0,
+      "vz4_median": -0.1946999877691269,
+      "vz4_sd": 68083904512.0,
+      "pass": false
+    },
+    {
+      "kind": "bootstrap",
+      "basis": "vwap",
+      "rung": "all",
+      "windows": 40886,
+      "er_statistic_median": 1.2548675130128002,
+      "vz2_median": 1.4599764347076416,
+      "vz2_sd": 0.9838308095932007,
+      "vz4_median": 1.01305091381073,
+      "vz4_sd": 1.3238307237625122,
+      "pass": false
+    },
+    {
+      "kind": "bridge0",
+      "basis": "mid",
+      "rung": "all",
+      "windows": 40484,
+      "er_statistic_median": 3.335399090392736e-14,
+      "vz2_median": -0.08735384047031403,
+      "vz2_sd": Infinity,
+      "vz4_median": -0.2294473946094513,
+      "vz4_sd": 5161204842496.0,
+      "pass": false
+    },
+    {
+      "kind": "bridge0",
+      "basis": "vwap",
+      "rung": "all",
+      "windows": 40886,
+      "er_statistic_median": 0.13891436275948293,
+      "vz2_median": 1.447131872177124,
+      "vz2_sd": 0.9826361536979675,
+      "vz4_median": 0.9920086860656738,
+      "vz4_sd": 1.3258682489395142,
+      "pass": false
+    },
+    {
+      "kind": "literal",
+      "basis": "mid",
+      "rung": "all",
+      "windows": 40484,
+      "er_statistic_median": 0.8410847427488548,
+      "vz2_median": -0.063905268907547,
+      "vz2_sd": 43029245952.0,
+      "vz4_median": -0.20310012996196747,
+      "vz4_sd": 16533608448.0,
+      "pass": false
+    },
+    {
+      "kind": "literal",
+      "basis": "vwap",
+      "rung": "all",
+      "windows": 40886,
+      "er_statistic_median": 0.4029267128190318,
+      "vz2_median": 1.449406385421753,
+      "vz2_sd": 0.9846189618110657,
+      "vz4_median": 0.9945783615112305,
+      "vz4_sd": 1.325571894645691,
+      "pass": false
+    }
+  ],
+  "passes_every_rung": {
+    "literal|mid": false,
+    "literal|vwap": false,
+    "bridge0|mid": false,
+    "bridge0|vwap": false,
+    "bootstrap|mid": false,
+    "bootstrap|vwap": false
+  }
+}
