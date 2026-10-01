@@ -202,5 +202,104 @@
     "suite": "results/chop_regime/c1/suite/chop_suite.html",
     "report": "results/chop_regime/c1/REPORT.md (copy: results/reports/chop_regime_c1_report.md)"
   },
-  "seed": 20260930
+  "seed": 20260930,
+
+  "amendment_1": {
+    "brief": "prompts/chop_regime_c1_amendment_1.md",
+    "date": "2026-09-30",
+    "after": "HARD STOP at T5, commit 1be4f65",
+    "A1_1_variance_ratio": "dropped: vr2, vr4, vz2, vz4 are not built (measures.scale_free returns er, er0, er_rel, sum_r2); no VR condition; the AR(1) positive control is retired",
+    "A1_2_primary_basis": {
+      "primary": "mid",
+      "rule": "per window: er and sum_r2 on the midpoint where the window's 33-point D16 midpoint path exists, else VWAP with price_basis = vwap_fallback; the moment's primary columns follow its finest valid rung (er, cost_noise_h) or rung 0 (context)",
+      "check_column": "er_vwap_k, never a condition"
+    },
+    "A1_3_null": {
+      "construction_vwap": "the window's print-to-print log returns (every print in [a, t]), demeaned, drawn with replacement, re-integrated from the first print's log price with every print's time and size kept, then bucketed exactly as real data (measures.vwap_log_path: deviation from the synthetic first print with volume)",
+      "construction_mid": "the D17-valid quotes from the one prevailing at the window's first print through t: log midpoint changes, demeaned, drawn with replacement, re-integrated from the prevailing midpoint with the quote times kept, sampled at the first print and each bucket's last print",
+      "draws_per_window": 20,
+      "seed": 20260930,
+      "rng": "numpy default_rng([seed, S1 event_index, j, k, basis code (mid 0, vwap 1), 31])",
+      "cells": "t's segment (premarket, regular, after_hours) x rung k x price tier at tau (S1 s1_events price_tier: <$1, $1-3, $3-10, >=$10) x basis",
+      "dev_sample": "per cell, every valid scale-free window of the development-slice build ranked by u = default_rng([seed, event_index, j, k, 97]).random(); the 2,000 smallest u kept (all when fewer)",
+      "windows_per_cell_max": 2000,
+      "output": "per cell: windows in the cell, windows sampled, finite draws, null median, 5th and 95th values (pooled over sampled windows x draws); cells with fewer than 20 sampled windows labelled",
+      "min_windows_label": 20,
+      "fallback_reference": "a vwap_fallback window reads the VWAP null of its cell",
+      "suite_condition": "er < x on the primary basis, at a chosen rung (0-6) or at every valid rung k >= 1 (max over those rungs < x); er_rel and er_0 are columns, not conditions",
+      "G2_revised": "turnover_t < 0.01 AND dollar_flow >= $20,000/min at the finest rate rung AND at every valid scale-free rung k in 1..4 (at least one valid) er (that rung's primary basis) inside its cell's null [5th, 95th] values"
+    },
+    "A1_4_controls": {
+      "population": "the 53 quarantined events with tau, every valid scale-free window",
+      "negative": "the A1.3 null on every window of the 53 events, per cell and basis; reported, no band",
+      "positive_trend": {
+        "drift_noise_units": [
+          1,
+          2,
+          4
+        ],
+        "construction": "the same null draws (same seed) plus d x sd(demeaned steps) / sqrt(n steps) per step, i.e. d own-noise units of the null walk across the window",
+        "pass": "in every cell (segment x rung x tier, per basis) holding at least 20 windows: median er at d = 4 above that cell's 53-event null 95th value",
+        "bases": [
+          "mid",
+          "vwap"
+        ]
+      },
+      "null_parameter_sweep": {
+        "buckets": [
+          16,
+          32,
+          64
+        ],
+        "statistics": [
+          "er_mid",
+          "er_vwap",
+          "cost_noise_h (primary)"
+        ],
+        "label_threshold_rel": 0.2
+      },
+      "blindness": {
+        "tolerance_rule": "numpy.isclose(a, b, rtol=1e-9, atol=1e-9), NaN and inf patterns equal",
+        "presence_cost_row_3a": [
+          "trade_rate",
+          "raw_rate",
+          "n_rate_rungs_valid",
+          "spread_bp_t",
+          "spread_tw_bp",
+          "quote_age_s",
+          "cost_noise_<h> (primary and both bases)"
+        ],
+        "scale_free_row_3b": [
+          "er (both bases, every rung)",
+          "er0",
+          "er_rel",
+          "n_valid_rungs",
+          "finest_rung"
+        ],
+        "relative_and_context": [
+          "turnover_rate",
+          "n_eff",
+          "top3_share",
+          "move_per_trade",
+          "leg_s",
+          "giveback",
+          "since_high_min",
+          "since_high_vol",
+          "act_ratio"
+        ],
+        "relative_and_context_rule": "declared: the amendment names presence/cost (3a) and scale-free (3b) only; a relative or context measure failing blindness is handled as 3b (LOG, removed from conditions / the override, kept as a column, shown in the header)"
+      },
+      "price_basis_agreement": "Spearman of er, midpoint vs VWAP, per rung and segment (the 53 events in T5; the development slice in T6)",
+      "causality_segment": "measures.causality_test / segment_test re-run"
+    },
+    "A1_5_escalation": {
+      "1, 2, 8, 9, 10": "unchanged HARD STOP",
+      "3a": "a presence or cost measure fails blindness -> HARD STOP",
+      "3b": "a scale-free measure fails its positive or blindness control -> LOG; removed from the suite's conditions, kept as a column, failure shown in the suite header; the build continues",
+      "4-7": "unchanged LOG",
+      "no_other_stop_before_T9": true
+    },
+    "panel_B_references": "er: the cell's null 5-95% band and median beside the real er distribution (per rung, for t's segment and the tier in view); cost_noise_h = 1; the flat Phase 11 stack (70.98 bp, 2.512 cents) on the spread panels",
+    "artifact_storage": "T6's per-moment and per-rung tables (and their parts) are regenerable from committed config + code and are expected to exceed GitHub's per-file limit (sizes recorded in the manifest); they are git-ignored under results/chop_regime/c1/artifacts/t6_*.parquet and results/chop_regime/c1/cache/ (the Agent_Prompt_Standard v1.3 SS12 precedent in .gitignore), with a tracked t6_manifest.json (rows, columns, sha256 per file)"
+  }
 }
