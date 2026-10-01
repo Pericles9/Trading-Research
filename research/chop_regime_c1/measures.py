@@ -11,7 +11,8 @@ section 6 causality and segment tests (`causality_test`, `segment_test`) feed ea
     presence        trade_rate, dollar_flow, turnover_rate per valid rate rung; quote state at t; spread_tw
     relative        n_eff, top3_share, move_per_trade per valid rate rung
     scale-free      32 equal-volume buckets per valid rung (>= 64 collapsed trades), both prices: VWAP and the
-                    D16 midpoint at each bucket's last print; er, er_0, er_rel, VR(2), VR(4) and their robust z
+                    D16 midpoint at each bucket's last print; er, er_0, er_rel. Amendment 1: the variance ratio is not
+                    built (A1.1); the midpoint is primary, VWAP where a window has no midpoint path (A1.2)
     context         rung 0 (segment start -> t) bucketed to 32: the leg, giveback, time and volume since its high
     hindsight       forward return, MFE and MAE per horizon, entry = the first non-spike print after t; these read
                     the future by design and are never inputs to anything above
@@ -183,34 +184,9 @@ def bucket_path(v: dict, qv: dict | None, a: int, t: int, nb: int, geo: tuple) -
 
 # ====================================================================== scale-free statistics
 
-def vr_z(r: np.ndarray, q: int) -> tuple[np.ndarray, np.ndarray]:
-    """Lo and MacKinlay (1988) variance ratio with overlapping q-sums and their bias corrections, and the
-    heteroskedasticity-robust z*, for each row of r (M, n)."""
-    r = np.atleast_2d(r)
-    M, n = r.shape
-    mu = r.mean(axis=1, keepdims=True)
-    d = r - mu
-    ss = (d * d).sum(axis=1)
-    sa = ss / (n - 1)
-    cs = np.cumsum(np.c_[np.zeros(M), r], axis=1)
-    agg = cs[:, q:] - cs[:, :-q]
-    m = q * (n - q + 1) * (1.0 - q / n)
-    sc = ((agg - q * mu) ** 2).sum(axis=1) / m
-    with np.errstate(divide="ignore", invalid="ignore", over="ignore"):
-        vr = sc / sa
-        th = np.zeros(M)
-        d2 = d * d
-        for j in range(1, q):
-            th = th + (2.0 * (q - j) / q) ** 2 * (n * (d2[:, j:] * d2[:, :-j]).sum(axis=1) / (ss * ss))
-        z = math.sqrt(n) * (vr - 1.0) / np.sqrt(th)
-    bad = ~(ss > 0)
-    vr[bad], z[bad] = np.nan, np.nan
-    return vr, z
-
-
 def scale_free(R: np.ndarray) -> dict:
-    """er, the own-noise reference er_0 = sqrt(2 / (pi n)) s / mean|r - rbar|, er_rel, VR(2), VR(4), z*(2), z*(4) and
-    sum r^2 for each row of R (M, n)."""
+    """er, the closed-form reference er_0 = sqrt(2 / (pi n)) s / mean|r - rbar|, er_rel and sum r^2 for each row of R
+    (M, n). The variance ratio is not built (Amendment 1 A1.1); er_rel and er_0 are columns, not conditions (A1.3)."""
     R = np.atleast_2d(np.asarray(R, dtype=np.float64))
     n = R.shape[1]
     path = np.abs(R).sum(axis=1)
@@ -224,9 +200,7 @@ def scale_free(R: np.ndarray) -> dict:
     er[~(path > 0)] = np.nan
     er0[~(mad > 0)] = np.nan
     er_rel[~(path > 0) | ~(mad > 0)] = np.nan
-    vr2, z2 = vr_z(R, 2)
-    vr4, z4 = vr_z(R, 4)
-    return {"er": er, "er0": er0, "er_rel": er_rel, "vr2": vr2, "vr4": vr4, "vz2": z2, "vz4": z4, "sum_r2": (R * R).sum(axis=1)}
+    return {"er": er, "er0": er0, "er_rel": er_rel, "sum_r2": (R * R).sum(axis=1)}
 
 
 # ====================================================================== context (rung 0)
@@ -422,26 +396,30 @@ def build_event(rec: dict, cfg: dict, size_mult: float | None, halts: list, on_w
         row["scale_free_cutoff_k"] = cutoff
         if k_valid:
             st = {"vwap": scale_free(np.array(R_vwap)), "mid": scale_free(np.array(R_mid))}
+            prim = ["mid" if m[4]["mid_ok"] else "vwap" for m in meta]      # A1.2: the midpoint, VWAP where the window has no midpoint path
             for ii, (k, a, W_s, ncol, bp) in enumerate(meta):
-                sr = {"event_id": eid, "j": j, "k": k, "W_s": W_s, "n_collapsed": ncol, "shares": bp["V"], "mid_ok": bp["mid_ok"]}
+                sr = {"event_id": eid, "j": j, "k": k, "W_s": W_s, "n_collapsed": ncol, "shares": bp["V"], "mid_ok": bp["mid_ok"],
+                      "price_basis": "mid" if prim[ii] == "mid" else "vwap_fallback"}
                 for bs in C.BASES:
                     for c, arr in st[bs].items():
                         sr[f"{c}_{bs}"] = float(arr[ii])
+                sr["er"] = sr[f"er_{prim[ii]}"]
                 srows.append(sr)
                 if on_window is not None:
                     on_window({"event_id": eid, "j": j, "k": k, "t": t, "a": a, "seg": seg, "v": v, "qv": qv, "bp": bp, "W_s": W_s,
                                "r_vwap": R_vwap[ii], "r_mid": R_mid[ii] if bp["mid_ok"] else None, "spread_bp_t": row.get("spread_bp_t", np.nan),
-                               "v_pre": v_pre, "geo": geo})
+                               "v_pre": v_pre, "geo": geo, "event_index": rec.get("event_index")})
             kf = k_valid[-1]
             ii = len(k_valid) - 1
             row["finest_rung"] = kf
             fb = meta[ii][4]
             row["finest_mid_ok"] = fb["mid_ok"]
+            row["price_basis"] = "mid" if prim[ii] == "mid" else "vwap_fallback"
+            sp = row.get("spread_bp_t", np.nan)
             for bs in C.BASES:
-                for c in ("er", "er0", "er_rel", "vr2", "vr4", "vz2", "vz4"):
+                for c in ("er", "er0", "er_rel"):
                     row[f"{c}_{bs}"] = float(st[bs][c][ii])
                 s2 = float(st[bs]["sum_r2"][ii])
-                sp = row.get("spread_bp_t", np.nan)
                 for key in C.HORIZONS:
                     if key in C.WALL:
                         sig = math.sqrt(s2 / fb["W_min"] * C.WALL[key]) if np.isfinite(s2) else np.nan
@@ -452,14 +430,18 @@ def build_event(rec: dict, cfg: dict, size_mult: float | None, halts: list, on_w
                         row[f"cost_noise_{key}_{bs}"] = np.nan
                     else:                                          # a flat window has zero own noise: any cost is infinite against it
                         row[f"cost_noise_{key}_{bs}"] = sp / (1e4 * sig) if sig > 0 else np.inf
-            # every valid rung k >= 1, per basis (the "at every valid rung" option): max and min over those rungs
-            for bs in C.BASES:
-                sel = [ii for ii, (k, *_rest) in enumerate(meta) if k >= 1]
-                for c in ("er_rel", "vz2", "vz4"):
-                    vals = st[bs][c][sel] if sel else np.array([])
-                    vals = vals[np.isfinite(vals)]
-                    row[f"{c}_{bs}_allmax"] = float(vals.max()) if (sel and vals.size == len(sel)) else np.nan
-                    row[f"{c}_{bs}_allmin"] = float(vals.min()) if (sel and vals.size == len(sel)) else np.nan
+            pb = prim[ii]
+            for c in ("er", "er0", "er_rel"):
+                row[c] = row[f"{c}_{pb}"]
+            for key in C.HORIZONS:
+                row[f"sigma_{key}"] = row[f"sigma_{key}_{pb}"]
+                row[f"cost_noise_{key}"] = row[f"cost_noise_{key}_{pb}"]
+            # every valid rung k >= 1 (the "at every valid rung" option): the largest er over those rungs, each on its own primary
+            # basis; unavailable when a rung's er is undefined (a flat window)
+            sel = [ii2 for ii2, m in enumerate(meta) if m[0] >= 1]
+            vals = np.array([st[prim[ii2]]["er"][ii2] for ii2 in sel]) if sel else np.array([])
+            row["er_allmax"] = float(vals.max()) if (sel and np.isfinite(vals).all()) else np.nan
+            row["n_valid_rungs_k1"] = len(sel)
             # ---------------- T4: context on rung 0
             if meta[0][0] == 0:
                 bp0 = meta[0][4]
@@ -468,6 +450,11 @@ def build_event(rec: dict, cfg: dict, size_mult: float | None, halts: list, on_w
                     cx = context(bp0, bs, p_t, t, nb) if (bs == "vwap" or bp0["mid_ok"]) else {"leg_state": "no_path"}
                     for c, val in cx.items():
                         row[f"{c}_{bs}"] = val
+                cb = prim[0]
+                row["context_basis"] = "mid" if cb == "mid" else "vwap_fallback"
+                for c in ("leg_state", "leg_s", "leg_bp", "leg_c", "leg_low_px", "leg_high_px", "leg_low_ns", "leg_high_ns", "since_high_min",
+                          "since_high_vol", "giveback"):
+                    row[c] = row.get(f"{c}_{cb}", np.nan)
         rows.append(row)
     return {"rows": rows, "rate_rungs": rrows, "sf_rungs": srows, "n_prints": int(tape.ts.size), "n_quotes": 0 if q is None else int(q["ts"].size),
             "n_spikes": fwd.n_spikes if fwd is not None else None}
