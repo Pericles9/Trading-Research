@@ -2803,20 +2803,28 @@ selector pages on the inlined plotly.js, each with a label selector), `build_rep
 `cache/` is rebuilt by T2 and git-ignored in place.
 
 **Chop regime filter C1 (2026-09-30) -- the per-moment regime measures and the by-eye tuning suite. Build,
-instrument check, interactive suite; fits nothing. HARD STOP at T5 (escalation row 3: both bucket prices fail the
-whole-pipeline control -- VWAP's vz2 median about +1.45, the averaging bias; the midpoint's robust variance-ratio z
-degenerate on sparse returns -- so the ruling table's fails / fails cell applies); state committed with a report
-generated from T0 and T5 as its record. T6-T9 (full build, galleries, suite) did not run.** Branch
-`explore/chop-regime-c1`, cut from `explore/shape-classifier-s2` at `e71b68a`. `prompts/chop_regime_c1.md` (filed
-verbatim); `config/chop_regime_c1.json` (Cooper's ruling R1, the D41 exception to D32; declared interpretations;
-committed before any run). D40 (2025 sealed for the book) and D41 appended to `docs/Universe-Decisions.md` in the
-T0 freeze. `research/chop_regime_c1/`: `c1common.py` (paths, population with S2's tau_d and V_pre, the D15 coverage
-join, the per-event tape with per-segment D26 collapse and prefix sums, the Phase 11 quote book sliced to <= t, the
-causality and segment assertions, the moment grid), `measures.py` (T1-T4 and the section 5 hindsight columns in one
-per-event builder: b2's R1 rate ladder, presence / cost / relative measures, Brief 1's bucket rule on prefix sums on
-both prices, ER and Lo-MacKinlay VR with their references, rung-0 context; the causality, segment and bucket-equality
-tests), `t0_population.py` (population asserts, quote-size unit census, timing), `t5_controls.py` (the section 6
-controls through the build's own window hook, the ruling, blindness), `t5a_whole_pipeline_diagnosis.py` (the
-whole-pipeline null under three constructions; measured at the stop), `t5b_blindness_detail.py` (the blindness
-mismatches' values; measured at the stop), `c1charts.py`, `c1report.py`. Outputs in `results/chop_regime/c1/`
-(`artifacts/`, `charts/t5/`, `REPORT.md`, copied to `results/reports/chop_regime_c1_report.md`).
+instrument check, interactive suite; fits nothing. The first T5 run hit a HARD STOP (row 3: both bucket prices failed
+the whole-pipeline control; commit `1be4f65` and its report are the record). Amendment 1 (2026-09-30,
+`prompts/chop_regime_c1_amendment_1.md`): the whole-pipeline null becomes a with-replacement resample of demeaned
+print / quote-update returns, simulated per cell and drawn as a band; the variance ratio is dropped; the midpoint is
+primary with a flagged VWAP fallback; row 3 splits into 3a (HARD STOP) and 3b (LOG). The re-run went T5 -> T9 with no
+HARD STOP; row 3b removed er from the suite's conditions (midpoint positive control missed in 2 of 100 cells); rows 5,
+6 and 7 LOG. Stopped at T9 with the suite in Cooper's hands.** Branch `explore/chop-regime-c1`, cut from
+`explore/shape-classifier-s2` at `e71b68a`. `prompts/chop_regime_c1.md` and `prompts/chop_regime_c1_amendment_1.md`
+(filed verbatim); `config/chop_regime_c1.json` (Cooper's ruling R1, the D41 exception to D32; declared
+interpretations; the `amendment_1` block; committed before each run). D40 (2025 sealed for the book) and D41 appended
+to `docs/Universe-Decisions.md` in the T0 freeze. `research/chop_regime_c1/`: `c1common.py` (paths, population with
+S2's tau_d and V_pre, the D15 coverage join, the per-event tape with per-segment D26 collapse and prefix sums, the
+Phase 11 quote book sliced to <= t, the causality and segment assertions, the moment grid), `measures.py` (T1-T4 and
+the section 5 hindsight columns in one per-event builder: b2's R1 rate ladder, presence / cost / relative measures,
+Brief 1's bucket rule on prefix sums on both prices, er with its closed-form reference, rung-0 context; the
+causality, segment and bucket-equality tests), `nulls.py` (the A1.3 null with an identity wiring check),
+`t0_population.py`, `t5_controls.py` (the A1.4 controls through the build's window hook), `t5a_whole_pipeline_diagnosis.py`
+and `t5b_blindness_detail.py` (first-run diagnoses, kept as the A1.0 record), `t6_build.py` (the development-slice build;
+per-moment and per-rung tables git-ignored with a tracked manifest), `t6b_null_bands.py` (the per-cell null bands),
+`t7_galleries.py` (G1-G3 flags, the embedded sample, pools and strips), `suitedata.py` and `suite_table.py` (the page's
+typed-array encoding and table, with the build-time assertions), `t8_suite.py` (the page), `t8_page_test.js` and
+`t8_page_test.py` (the page's JavaScript under node with a stub DOM), `c1charts.py`, `c1report.py`. Outputs in
+`results/chop_regime/c1/` (`artifacts/`, `charts/t5/`, `charts/t6/`, `charts/t6b/`, `suite/chop_suite.html`,
+`REPORT.md`, copied to `results/reports/chop_regime_c1_report.md`); `cache/` holds the T6 parts and T7 strips and is
+git-ignored in place.
